@@ -144,3 +144,9 @@ html { scroll-padding-top: 88px; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
   .marquee-track { animation: none; }
 }
+
+/* Bobo the guide (Bobo.tsx): a small pop-in for the tip and panel, and a gentle bob on the corner button. */
+@keyframes bobo-pop { from { opacity: 0; transform: translateY(10px) scale(0.96); } }
+@keyframes bobo-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.bobo-pop { animation: bobo-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; transform-origin: bottom right; }
+.bobo-btn img { animation: bobo-bob 3.2s ease-in-out infinite; }

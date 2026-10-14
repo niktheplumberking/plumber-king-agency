@@ -99,7 +99,10 @@ export function WebsiteGrader() {
           <h2 id="grader-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
           <p className="mt-5 max-w-md text-lg text-slate">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to, free, no email needed.</p>
         </Reveal>
-        <Reveal delay={0.1} className="rounded-md border-2 border-ink bg-paper p-7 shadow-[8px_8px_0_var(--color-royal)] md:p-10">
+        <Reveal delay={0.1} className="relative mt-14 rounded-md border-2 border-ink bg-paper p-7 shadow-[8px_8px_0_var(--color-royal)] md:mt-0 md:p-10">
+          {/* Bobo reacts to the visitor's answers: thinking while they go, then cheering or sorry at the result. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={!done ? "/bobo/think.webp" : score >= 6 ? "/bobo/cheer.webp" : "/bobo/sorry.webp"} alt="" width={120} height={120} className="pointer-events-none absolute -top-[4.5rem] right-4 h-24 w-24 md:-top-24 md:h-28 md:w-28" />
           <div className="flex items-center justify-between text-sm font-semibold text-slate">
             <span>{done ? "Your result" : `Question ${step + 1} of ${questions.length}`}</span>
             <button type="button" onClick={reset} className="inline-flex min-h-11 items-center gap-1.5 rounded px-3 hover:text-ink"><RotateCcw className="h-4 w-4" aria-hidden />Start over</button>

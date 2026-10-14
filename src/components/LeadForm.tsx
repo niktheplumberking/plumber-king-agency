@@ -1,6 +1,6 @@
 "use client";
 import { useId, useState } from "react";
-import { ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { site } from "@/content/site";
 
 type Kind = "strategy-call" | "website-audit";
@@ -43,7 +43,8 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
   if (state === "sent") {
     return (
       <div role="status" className={`rounded-md border-2 border-ink p-8 ${dark ? "bg-white/[0.06] text-white" : "bg-ivory"}`}>
-        <CheckCircle2 className="h-10 w-10 text-royal" aria-hidden />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/bobo/cheer.webp" alt="" width={96} height={96} className="h-24 w-24" />
         <p className="mt-4 font-display text-2xl font-bold">Got it. Nick will be in touch.</p>
         <p className={`mt-2 ${dark ? "text-white/90" : "text-slate"}`}>Nick reads and replies to every request personally.</p>
       </div>

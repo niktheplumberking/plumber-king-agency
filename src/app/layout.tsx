@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { RevealObserver } from "@/components/RevealObserver";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { Bobo } from "@/components/Bobo";
 import { JsonLd } from "@/components/JsonLd";
 import { organizationLd, websiteLd } from "@/lib/seo";
 
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileCtaBar />
         <RevealObserver />
         <SmoothScroll />
+        <Bobo />
         <JsonLd data={[organizationLd(), websiteLd()]} />
       </body>
     </html>

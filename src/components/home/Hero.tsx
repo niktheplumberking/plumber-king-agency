@@ -32,7 +32,7 @@ export function Hero() {
         {/* White fade into the type column (desktop) and into the text below (phones). */}
         <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_top,#fff_0%,rgb(255_255_255/0)_38%)] md:bg-[linear-gradient(to_right,#fff_0%,rgb(255_255_255/0.85)_14%,rgb(255_255_255/0)_42%)]" />
 
-        <ul data-hero-leads className="absolute right-4 bottom-10 hidden w-[19rem] space-y-2.5 md:block lg:right-10 lg:bottom-14" aria-label="Example of leads arriving (illustration)">
+        <ul data-hero-leads className="absolute right-24 bottom-10 hidden w-[19rem] space-y-2.5 md:block lg:right-28 lg:bottom-14" aria-label="Example of leads arriving (illustration)">
           {leads.map((l, i) => (
             <li key={l.title} className="enter-slide flex gap-3 rounded-md border-2 border-ink bg-white p-3 text-ink shadow-[4px_4px_0_var(--color-ink)]" style={{ "--d": `${0.9 + i * 0.35}s` } as React.CSSProperties}>
               <span className={`grid h-10 w-10 shrink-0 place-items-center rounded ${l.tone}`}><l.icon className="h-5 w-5 text-white" aria-hidden /></span>

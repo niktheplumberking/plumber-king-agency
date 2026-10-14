@@ -25,7 +25,7 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${scrolled || open ? "bg-white/90 shadow-[0_1px_0_rgb(11_27_63/0.08)] backdrop-blur-xl" : "bg-white/90 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none"}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${scrolled || open ? "bg-white/90 shadow-[0_1px_0_rgb(11_27_63/0.08)] backdrop-blur-xl" : "bg-white lg:bg-transparent"}`}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded focus:bg-ribbon focus:px-4 focus:py-2 focus:text-ink">Skip to content</a>
       <div className="container-x flex h-20 items-center justify-between gap-6">
         <Logo tone="dark" />

@@ -18,7 +18,7 @@ import { organizationLd, websiteLd } from "@/lib/seo";
  */
 const criticalCss = `
 @keyframes pk-rise{from{transform:translateY(105%)}}
-@keyframes pk-fade{from{opacity:0;transform:translateY(14px)}}
+@keyframes pk-fade{from{transform:translateY(14px)}}
 @keyframes pk-slide{from{opacity:0;transform:translateX(40px) scale(.96)}}
 @keyframes pk-pulse{50%{transform:scale(1.08)}}
 @keyframes pk-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}

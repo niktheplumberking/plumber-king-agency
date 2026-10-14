@@ -1,0 +1,30 @@
+{
+  "name": "plumber-king-agency-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plumber King Agency marketing site (a Bennett Co. LLC company). Next.js static export for Hostinger.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && node scripts/postbuild.mjs",
+    "build:preview": "NEXT_PUBLIC_SHOW_PLACEHOLDERS=1 next build && node scripts/postbuild.mjs",
+    "typecheck": "tsc --noEmit",
+    "verify": "node scripts/verify.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "1.57.0",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "playwright": "1.63.0",
+    "sharp": "0.35.5",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
+  }
+}

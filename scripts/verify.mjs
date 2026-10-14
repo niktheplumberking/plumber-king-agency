@@ -65,9 +65,9 @@ for (const [d, ps] of descs) check(ps.length === 1, "", `duplicate description o
 
 const html404 = readFileSync(path.join(out, "404.html"), "utf-8");
 check(/noindex/.test(html404), "404 page is noindex", "404 page is indexable");
-check(readFileSync(path.join(out, "llms.txt"), "utf-8").includes("Bennett Co. LLC"), "llms.txt names Bennett Co. LLC", "llms.txt does not name the holding company");
+check(readFileSync(path.join(out, "llms.txt"), "utf-8").includes("Bennett & Co LLC"), "llms.txt names Bennett & Co LLC", "llms.txt does not name the holding company");
 const tos = readFileSync(path.join(out, "terms-of-service/index.html"), "utf-8");
-check(tos.includes("Bennett Co. LLC"), "Terms of Service names Bennett Co. LLC", "Terms of Service does not name Bennett Co. LLC");
+check(decode(tos).includes("Bennett & Co LLC") && tos.includes("Wyoming") && tos.includes("30 N Gould St"), "Terms of Service names Bennett & Co LLC, Wyoming law and address", "Terms of Service is missing the entity, Wyoming law or address");
 
 console.log(`checks passed: ${ok.filter(Boolean).length}`);
 if (fails.length) { console.log(`FAILED (${fails.length}):`); fails.forEach((f) => console.log("  - " + f)); process.exit(1); }

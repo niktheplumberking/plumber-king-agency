@@ -9,11 +9,16 @@ const envUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "");
 export const site = {
   name: "Plumber King Agency",
   shortName: "Plumber King",
-  /** Legal owner. Source: Nick, 2026-10-14 ("the holding company of Plumber King Agency is Bennett Co. LLC"). */
-  legalEntity: "Bennett Co. LLC",
   /**
-   * TO-CONFIRM: Nick does not own plumberkingagency.com yet (Nick, 2026-10-14: "I have to buy it").
-   * Set NEXT_PUBLIC_SITE_URL to the domain he buys before the live build; sitemap, canonicals and schema use it.
+   * Legal owner. Name, state and address as published on Nick's registered company site
+   * (bennettndco.com/terms and /privacy, last updated July 4, 2026; read 2026-10-14, Nick pointed us there).
+   */
+  legalEntity: "Bennett & Co LLC",
+  legalState: "Wyoming",
+  legalAddress: "30 N Gould St Ste R, Sheridan, WY 82801, USA",
+  /**
+   * TO-CONFIRM: Nick bought a domain on 2026-10-14 but has not said which one yet.
+   * Set NEXT_PUBLIC_SITE_URL to it before the live build; sitemap, canonicals and schema use it.
    */
   url: envUrl || "https://plumberkingagency.com",
   /** Where leads and enquiries go. Source: Nick, 2026-10-14. */
@@ -29,7 +34,8 @@ export const site = {
     instagram: "https://www.instagram.com/plumberkingagency/",
     threads: "https://www.threads.com/@plumberkingagency",
   },
-  bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL || "",
+  /** Strategy-call booking page. Source: Nick, 2026-10-14. */
+  bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL || "https://calendly.com/plumber-king-agency/30-minutes-detailed-call",
   /** Lead form target. Default: public/lead.php, which emails each lead to `email` from Hostinger (PHP mail). */
   formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT || "/lead.php",
   /** Brand files supplied by Nick on 2026-10-14 (logo, his photo, the crew banner), resized into public/brand/. */

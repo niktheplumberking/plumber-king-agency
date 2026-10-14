@@ -30,7 +30,7 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-3 py-6 pb-24 text-sm text-white/65 md:flex-row md:items-center md:justify-between md:pb-6">
-          <p>© {year} {site.name}, a {site.legalEntity} company. All rights reserved.</p>
+          <p>© {year} {site.name}, a {site.legalEntity} company · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex gap-5">
             <Link href="/privacy-policy/" className="inline-block py-1.5 hover:text-white">Privacy Policy</Link>
             <Link href="/terms-of-service/" className="inline-block py-1.5 hover:text-white">Terms of Service</Link>

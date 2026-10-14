@@ -6,8 +6,8 @@ export const metadata = pageMeta({ title: "Terms of Service", description: `Term
 
 /*
  * Based on the Terms on Nick's old site (Jan 2026), with the holding company added as Nick asked (2026-10-14).
- * NOT legal advice. TO-CONFIRM before launch, ideally with a lawyer: Bennett Co. LLC's state of organization and
- * registered address (for governing law and notices). Nothing here invents those.
+ * Entity name, governing law (Wyoming) and address match Bennett & Co LLC's own published terms (bennettndco.com/terms).
+ * Not legal advice; a lawyer's review is still recommended.
  */
 export default function TermsPage() {
   const e = site.legalEntity;
@@ -40,8 +40,10 @@ export default function TermsPage() {
       <p>Either party may end services with written notice as set out in the service agreement. On termination, you are responsible for payment for all work completed up to that point.</p>
       <h2>11. Changes to these Terms</h2>
       <p>We may update these Terms from time to time. Changes take effect when posted on this page, with the date above updated. Continued use of the website or our services after a change means you accept the updated Terms.</p>
-      <h2>12. Contact</h2>
-      <p>Questions about these Terms? Email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <h2>12. Governing law</h2>
+      <p>These Terms are governed by the laws of the State of {site.legalState}, United States.</p>
+      <h2>13. Contact</h2>
+      <p>Questions about these Terms? Email <a href={`mailto:${site.email}`}>{site.email}</a> or write to {e}, {site.legalAddress}.</p>
       <p><strong>{site.name} is a {e} company.</strong></p>
     </LegalPage>
   );

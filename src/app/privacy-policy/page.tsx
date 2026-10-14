@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <LegalPage title="Privacy Policy" path="/privacy-policy/" updated="October 14, 2026">
       <p>This policy explains how {site.name}, a business of <strong>{e}</strong> (&ldquo;we&rdquo;, &ldquo;us&rdquo;), handles personal information collected through this website.</p>
       <h2>1. Information we collect</h2>
-      <p>We collect the information you give us when you fill out a form, request a strategy call or website audit, or email us. This may include your name, business name, email address, phone number and website address. Our web host may also keep standard server logs (such as IP address, browser type and pages visited) for security and reliability.</p>
+      <p>We collect the information you give us when you fill out a form, request a strategy call or website audit, or email us. This may include your name, business name, email address, phone number and website address. Our web host may also keep standard server logs (such as IP address, browser type and pages visited) for security and reliability. When you book a call, the booking is handled by Calendly, which processes the details you enter under its own privacy policy.</p>
       <h2>2. How we use it</h2>
       <ul>
         <li>To respond to your inquiry and provide the services you ask for.</li>
@@ -33,7 +33,7 @@ export default function PrivacyPage() {
       <h2>8. Changes</h2>
       <p>We may update this policy. The date at the top shows the latest version.</p>
       <h2>9. Contact</h2>
-      <p>Questions or requests: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <p>Questions or requests: <a href={`mailto:${site.email}`}>{site.email}</a>, or write to {e}, {site.legalAddress}.</p>
     </LegalPage>
   );
 }

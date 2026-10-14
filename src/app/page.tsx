@@ -21,7 +21,7 @@ export const metadata = pageMeta({
 });
 
 export default function Home() {
-  const homeFaqs = faqs.slice(0, 6);
+  const homeFaqs = faqs.slice(0, 4);
   return (
     <>
       <Hero />

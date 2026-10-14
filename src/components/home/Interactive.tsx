@@ -52,11 +52,11 @@ export function JobValueCalculator() {
           <div className="space-y-8">
             <div>
               <div className="flex items-baseline justify-between gap-4"><label htmlFor={ids.t} className="font-semibold">Your average job value</label><output htmlFor={ids.t} className="font-display text-2xl font-bold text-white">{money(ticket)}{tag}</output></div>
-              <input id={ids.t} type="range" min={100} max={3000} step={50} value={ticket} onChange={(e) => { setTicket(+e.target.value); setTouched(true); }} className="mt-4 h-11 w-full cursor-pointer accent-[#ffffff]" />
+              <input id={ids.t} type="range" min={100} max={3000} step={50} value={ticket} onChange={(e) => { setTicket(+e.target.value); setTouched(true); }} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-royal)]" />
             </div>
             <div>
               <div className="flex items-baseline justify-between gap-4"><label htmlFor={ids.j} className="font-semibold">Extra booked jobs per week</label><output htmlFor={ids.j} className="font-display text-2xl font-bold text-white">{jobs}{tag}</output></div>
-              <input id={ids.j} type="range" min={1} max={20} step={1} value={jobs} onChange={(e) => { setJobs(+e.target.value); setTouched(true); }} className="mt-4 h-11 w-full cursor-pointer accent-[#ffffff]" />
+              <input id={ids.j} type="range" min={1} max={20} step={1} value={jobs} onChange={(e) => { setJobs(+e.target.value); setTouched(true); }} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-royal)]" />
             </div>
           </div>
           <div className="mt-10 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-2">

@@ -1,29 +1,30 @@
 @import "tailwindcss";
 
 /*
- * Palette "Copper & Pine" (Nick, 2026-10-14 16:12: drop blue/red/yellow): copper like copper pipe for buttons and accent
- * words, deep pine green for bands, warm white pages. The old token names are kept so every page re-themes at once:
- * "navy"/"royal" are pine greens, "ribbon"/"gold-600" are copper, "gold" is a light copper used only on pine bands.
+ * Palette "Charcoal & Hot Pink", light treatment (Nick, 2026-10-14 17:03; he wants light pages, not dark bands).
+ * Pages are white, bands are pale pink with charcoal text, the footer is the one charcoal block. Old token names are
+ * kept so every page re-themes at once: "navy-900/800/700" are the pale pink bands, "navy-950" is charcoal (footer),
+ * "royal" and "gold-600/700" are deep pinks for small text, "ribbon" is the hot pink for buttons (charcoal text on it).
  */
 @theme {
-  --color-navy-950: #0e302e;
-  --color-navy-900: #123c3a;
-  --color-navy-800: #1a4d4a;
-  --color-navy-700: #2a6460;
-  --color-royal: #155e57;
-  --color-royal-200: #cfe3df;
-  --color-sky: #eef3ef;
-  --color-gold: #e7a77a;
-  --color-gold-300: #f2c9a8;
-  --color-gold-600: #b4531f;
-  --color-gold-700: #9a4518;
-  --color-ribbon: #b4531f;
-  --color-ribbon-600: #9a4518;
-  --color-ivory: #f6f1ea;
-  --color-paper: #fffdf9;
-  --color-ink: #17211f;
-  --color-slate: #4f5c58;
-  --color-mist: #a9bab5;
+  --color-navy-950: #141414;
+  --color-navy-900: #ffe6f0;
+  --color-navy-800: #ffd6e7;
+  --color-navy-700: #ffc2dc;
+  --color-royal: #c2185b;
+  --color-royal-200: #ffd6e7;
+  --color-sky: #fff0f6;
+  --color-gold: #ff8fbf;
+  --color-gold-300: #ffc2dc;
+  --color-gold-600: #c2185b;
+  --color-gold-700: #9c1249;
+  --color-ribbon: #ff3d8b;
+  --color-ribbon-600: #f0277a;
+  --color-ivory: #faf8f9;
+  --color-paper: #ffffff;
+  --color-ink: #141414;
+  --color-slate: #5c5559;
+  --color-mist: #b8afb4;
 
   --font-display: var(--font-archivo), ui-sans-serif, sans-serif;
   --font-sans: var(--font-instrument), ui-sans-serif, sans-serif;
@@ -68,15 +69,15 @@ html { scroll-padding-top: 88px; }
 
   /* Headings: tight uppercase display type; .accent is the red italic word (one per heading). */
   .display { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em; line-height: 0.92; }
-  .accent { font-style: italic; color: var(--pk-accent, var(--color-ribbon)); padding-right: 0.06em; }
-  .on-blue .accent { color: var(--pk-accent-band, var(--color-gold-300)); }
-  .on-blue .bg-white .accent { color: var(--pk-accent, var(--color-ribbon)); }
+  .accent { font-style: italic; color: var(--color-royal); padding-right: 0.06em; }
+  .on-blue .accent { color: var(--color-royal); }
+  
 
   /* Small section index ("01 — The problem"): plain text and a rule, no pill. */
   .kicker { display: flex; align-items: center; gap: 0.75rem; font: 700 0.8rem/1 var(--font-sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-royal); }
   .kicker::before { content: ""; width: 2.25rem; height: 2px; background: currentColor; }
-  .on-blue .kicker { color: #fff; }
-  .on-blue .bg-white .kicker { color: var(--color-royal); }
+  .on-blue .kicker { color: var(--color-royal); }
+  
 
   /* Buttons: square-cornered, bold, with a hard offset shadow that presses in on hover (no pills, no glows). */
   .btn {
@@ -85,7 +86,7 @@ html { scroll-padding-top: 88px; }
     font: 800 0.95rem/1.15 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
     transition: transform 0.2s var(--ease-out-expo), box-shadow 0.2s var(--ease-out-expo), background-color 0.2s, color 0.2s;
   }
-  .btn-primary { background: var(--color-ribbon); color: var(--pk-on-cta, #fff); box-shadow: 4px 4px 0 var(--color-ink); }
+  .btn-primary { background: var(--color-ribbon); color: var(--pk-on-cta, var(--color-ink)); box-shadow: 4px 4px 0 var(--color-ink); }
   .btn-primary:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--color-ink); }
   .btn-primary:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--color-ink); }
   .on-blue .btn-primary { box-shadow: 4px 4px 0 var(--color-ink); }
@@ -100,16 +101,17 @@ html { scroll-padding-top: 88px; }
   .sticker {
     display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 0.9rem; border-radius: 8px;
     font: 900 0.8rem/1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase;
-    border: 3px solid #fff; box-shadow: 3px 4px 0 rgb(23 33 31 / 0.85); transform: rotate(var(--tilt, -4deg));
+    border: 3px solid #fff; box-shadow: 3px 4px 0 rgb(20 20 20 / 0.85); transform: rotate(var(--tilt, -4deg));
   }
 
   /* Blue band with a faint blueprint grid instead of grain and glows. */
   .blueprint {
-    background-color: var(--color-royal);
-    background-image: linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 1px);
+    background-color: var(--color-navy-900);
+    background-image: linear-gradient(rgb(20 20 20 / 0.05) 1px, transparent 1px), linear-gradient(90deg, rgb(20 20 20 / 0.05) 1px, transparent 1px);
     background-size: 44px 44px;
   }
   .grain { position: relative; }
+
 
   .prose-pk { max-width: 68ch; }
   .prose-pk h2 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); margin: 2.5rem 0 0.75rem; text-transform: none; }
@@ -122,9 +124,29 @@ html { scroll-padding-top: 88px; }
   .placeholder-badge {
     display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.55rem; border-radius: 4px;
     font: 700 0.72rem/1.2 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase;
-    background: repeating-linear-gradient(-45deg, #f8e3d6 0 8px, #f2cdb5 8px 16px); color: #4a2108; border: 1px solid #b4531f;
+    background: repeating-linear-gradient(-45deg, #ffe1ee 0 8px, #ffcde3 8px 16px); color: #5a0a2c; border: 1px solid #c2185b;
   }
 }
+
+/*
+ * "on-blue" bands are pale pink now (light palette, Nick 17:03). Their markup still says text-white, so inside a band
+ * white text reads as charcoal, except on chips that carry their own dark or pink background. Unlayered on purpose,
+ * so these beat the Tailwind utilities.
+ */
+.on-blue { color: var(--color-ink); }
+.on-blue .text-white:not(.bg-royal, .bg-ink, .bg-ribbon) { color: var(--color-ink); }
+.on-blue [class*="text-white/"]:not(.bg-royal, .bg-ink, .bg-ribbon) { color: var(--color-slate); }
+.on-blue .btn-ghost-light { color: var(--color-ink); border-color: var(--color-ink); }
+.on-blue .btn-ghost-light:hover { background: var(--color-ink); color: #fff; }
+
+/* Short class names for markup repeated many times (they also ship in the page's inline data, which counts toward the JS budget). */
+.flink { display: inline-block; padding-block: 0.375rem; }
+.flink:hover { color: #fff; }
+.cta-arrow { width: 1.125rem; height: 1.125rem; transition: transform 0.3s; }
+.group:hover .cta-arrow { transform: translateX(0.25rem); }
+.split-w { display: inline-block; overflow: hidden; padding-bottom: 0.06em; vertical-align: bottom; }
+.split-i { display: inline-block; }
+.foot-mark { padding-right: 0.4em; font-size: clamp(4rem, 2rem + 10vw, 12rem); line-height: 1; white-space: nowrap; color: rgb(255 255 255 / 0.09); }
 
 @keyframes pk-marquee { to { transform: translate3d(-50%, 0, 0); } }
 .marquee-track { animation: pk-marquee var(--dur, 40s) linear infinite; }

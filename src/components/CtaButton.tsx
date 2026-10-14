@@ -9,7 +9,7 @@ export function CtaButton({ variant = "primary", className = "", label = site.pr
   const inner = (
     <>
       {label}
-      <ArrowRight className="h-4.5 w-4.5 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
+      <ArrowRight className="cta-arrow" aria-hidden />
     </>
   );
   return external ? (

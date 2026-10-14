@@ -81,6 +81,13 @@ export function Bobo() {
     return () => { window.removeEventListener("scroll", on); clearTimeout(id); };
   }, [path]);
 
+  // A tip is a nudge, not a banner: it tucks itself away after a few seconds.
+  useEffect(() => {
+    if (!tip) return;
+    const id = window.setTimeout(() => setTip(null), 8000);
+    return () => clearTimeout(id);
+  }, [tip]);
+
   if (!ready || hidden || path.startsWith("/privacy") || path.startsWith("/terms")) return null;
 
   const choose = (g: Goal) => { setGoal(g); write("pk-bobo-goal", g); };
@@ -114,7 +121,7 @@ export function Bobo() {
                   const ext = a.href.startsWith("http");
                   return (
                     <a key={a.label} href={a.href} {...(ext ? { target: "_blank", rel: "noopener" } : {})} onClick={() => setOpen(false)}
-                      className={`flex items-center justify-between rounded-md px-4 py-3 text-[0.95rem] font-semibold ${i === plan.actions.length - 1 && ext ? "bg-ribbon text-white" : "border-2 border-ink/15 hover:border-ribbon hover:text-ribbon"}`}>
+                      className={`flex items-center justify-between rounded-md px-4 py-3 text-[0.95rem] font-semibold ${i === plan.actions.length - 1 && ext ? "bg-ribbon text-ink" : "border-2 border-ink/15 hover:border-ribbon hover:text-ribbon"}`}>
                       {a.label}<ArrowRight className="h-4 w-4" aria-hidden />
                     </a>
                   );

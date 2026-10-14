@@ -134,7 +134,7 @@ function ScreenTrusted() {
 function ScreenBooked() {
   return (
     <div className="enter-fade flex h-full flex-col items-center px-6 pt-14 text-center">
-      <span className="enter-pulse grid h-20 w-20 place-items-center rounded-full bg-ribbon shadow-[0_0_0_10px_rgb(200_55_45/0.2),0_0_0_22px_rgb(200_55_45/0.1)]">
+      <span className="enter-pulse grid h-20 w-20 place-items-center rounded-full bg-ribbon shadow-[0_0_0_10px_rgb(255_61_139/0.2),0_0_0_22px_rgb(255_61_139/0.1)]">
         <PhoneCall className="h-9 w-9" aria-hidden />
       </span>
       <p className="mt-8 text-[0.75rem] font-semibold text-white/90">Incoming call · from your website</p>

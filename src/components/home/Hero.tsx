@@ -3,7 +3,7 @@ import Link from "@/components/Link";
 import { CalendarCheck, MapPin, PhoneIncoming, Star, Wrench } from "lucide-react";
 import { site } from "@/content/site";
 import { CtaButton } from "../CtaButton";
-import { HeroMotion, HeroVideo } from "./HeroMotion";
+import { HeroMotion } from "./HeroMotion";
 
 const leads = [
   { icon: PhoneIncoming, title: "Incoming call", body: "Burst pipe under the kitchen sink", meta: "Cary, NC · just now", tone: "bg-ribbon" },
@@ -28,7 +28,7 @@ export function Hero() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/media/hero-768.webp" alt="A plumber fixing pipes under a kitchen sink (illustrative photo)" width={1920} height={1086} fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[72%_50%]" />
         </picture>
-        <HeroVideo />
+        {/* <HeroVideo /> from ./HeroMotion goes back here once hero-loop.webm/.mp4 are in public/media. */}
         {/* White fade into the type column (desktop) and into the text below (phones). */}
         <div aria-hidden className="absolute inset-0 bg-[linear-gradient(to_top,#fff_0%,rgb(255_255_255/0)_38%)] md:bg-[linear-gradient(to_right,#fff_0%,rgb(255_255_255/0.85)_14%,rgb(255_255_255/0)_42%)]" />
 
@@ -44,7 +44,7 @@ export function Hero() {
             </li>
           ))}
         </ul>
-        <span data-hero-sticker className="sticker absolute top-[22%] left-[6%] hidden bg-ribbon text-white md:inline-flex" style={{ "--tilt": "-8deg" } as React.CSSProperties} aria-hidden>
+        <span data-hero-sticker className="sticker absolute top-[22%] left-[6%] hidden bg-ribbon text-ink md:inline-flex" style={{ "--tilt": "-8deg" } as React.CSSProperties} aria-hidden>
           <Star className="h-3.5 w-3.5 fill-current" />Plumbers only
         </span>
       </div>
@@ -79,8 +79,8 @@ function SplitWords({ text, delay = 0 }: { text: string; delay?: number }) {
       {words.map((w, i) => (
         <Fragment key={i}>
           {i > 0 && " "}
-          <span className="inline-block overflow-hidden pb-[0.06em] align-bottom">
-            <span className="enter-rise inline-block" style={{ "--d": `${Math.min(0.6, delay + i * 0.05)}s` } as React.CSSProperties}>{w}</span>
+          <span className="split-w">
+            <span className="enter-rise split-i" style={{ "--d": `${Math.min(0.6, delay + i * 0.05)}s` } as React.CSSProperties}>{w}</span>
           </span>
         </Fragment>
       ))}

@@ -101,12 +101,12 @@ function TypicalSite() {
 function KingSite() {
   return (
     <div className="h-full bg-white p-4 sm:p-8">
-      <div className="flex items-center justify-between"><span className="display text-base text-royal italic sm:text-xl">Riverside <span className="text-ribbon">Plumbing</span></span><span className="flex items-center gap-1.5 rounded bg-ribbon px-2.5 py-1.5 text-[0.65rem] font-extrabold text-white uppercase sm:text-xs"><Phone className="h-3.5 w-3.5" />Call now</span></div>
+      <div className="flex items-center justify-between"><span className="display text-base text-royal italic sm:text-xl">Riverside <span className="text-ribbon">Plumbing</span></span><span className="flex items-center gap-1.5 rounded bg-ribbon px-2.5 py-1.5 text-[0.65rem] font-extrabold text-ink uppercase sm:text-xs"><Phone className="h-3.5 w-3.5" />Call now</span></div>
       <div className="mt-5 grid gap-5 sm:mt-8 sm:grid-cols-[1.2fr_1fr] sm:items-center">
         <div>
           <p className="display text-2xl leading-[0.95] text-ink sm:text-5xl">Burst pipe? <span className="accent">We&apos;re there in 60 minutes.</span></p>
           <div className="mt-3 flex items-center gap-1 text-ribbon">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}<span className="ml-2 text-xs font-semibold text-slate">Your Google reviews here</span></div>
-          <div className="mt-4 flex gap-2"><span className="rounded bg-ribbon px-3 py-2 text-xs font-extrabold text-white uppercase">Call now · SAMPLE</span><span className="rounded border-2 border-ink px-3 py-2 text-xs font-extrabold uppercase">Get a quote</span></div>
+          <div className="mt-4 flex gap-2"><span className="rounded bg-ribbon px-3 py-2 text-xs font-extrabold text-ink uppercase">Call now · SAMPLE</span><span className="rounded border-2 border-ink px-3 py-2 text-xs font-extrabold uppercase">Get a quote</span></div>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {["Water heaters", "Drains", "Repiping", "Leaks"].map((t) => <span key={t} className="rounded border-2 border-ink/10 bg-ivory px-2 py-3 text-center text-[0.7rem] font-bold text-ink sm:py-5 sm:text-sm">{t}</span>)}

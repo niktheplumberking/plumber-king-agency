@@ -31,8 +31,9 @@ export function Footer() {
       {/* Oversized wordmark that slides in from the side, like a sign on the shop wall. */}
       <div aria-hidden className="marquee overflow-hidden border-t border-white/10 py-6">
         <div className="marquee-track flex w-max" style={{ "--dur": "60s" } as React.CSSProperties}>
-          {Array.from({ length: 4 }).map((_, i) => (
-            <span key={i} className="display pr-[0.4em] text-[clamp(4rem,2rem+10vw,12rem)] leading-none whitespace-nowrap text-white/[0.09]">Plumber <span className="italic">King</span> ✦</span>
+          {/* Two copies are enough for a seamless loop: each one is wider than the screen. */}
+          {[0, 1].map((i) => (
+            <span key={i} className="foot-mark display">Plumber <i>King</i> ✦</span>
           ))}
         </div>
       </div>
@@ -40,9 +41,9 @@ export function Footer() {
         <div className="container-x flex flex-col gap-3 py-6 pb-24 text-sm text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">
           <p>© {year} {site.name}, a {site.legalEntity} company · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex gap-5">
-            <Link href="/privacy-policy/" className="inline-block py-1.5 hover:text-white">Privacy Policy</Link>
-            <Link href="/terms-of-service/" className="inline-block py-1.5 hover:text-white">Terms of Service</Link>
-            <a href="/sitemap.xml" className="inline-block py-1.5 hover:text-white">Sitemap</a>
+            <Link href="/privacy-policy/" className="flink">Privacy Policy</Link>
+            <Link href="/terms-of-service/" className="flink">Terms of Service</Link>
+            <a href="/sitemap.xml" className="flink">Sitemap</a>
           </nav>
         </div>
       </div>
@@ -55,7 +56,7 @@ function FooterCol({ title, links, className }: { title: string; links: { href: 
     <div className={className}>
       <h2 className="font-sans text-sm font-semibold tracking-wide text-gold">{title}</h2>
       <ul className="mt-3 space-y-1 text-[0.95rem]">
-        {links.map((l) => (<li key={l.href}><Link href={l.href} className="inline-block py-1.5 hover:text-white">{l.label}</Link></li>))}
+        {links.map((l) => (<li key={l.href}><Link href={l.href} className="flink">{l.label}</Link></li>))}
       </ul>
     </div>
   );

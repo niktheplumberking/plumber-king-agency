@@ -93,7 +93,7 @@ function TypicalSite() {
           <p className="mt-2 hidden sm:block">Our services include but are not limited to residential plumbing, commercial plumbing, repairs, installations and more. Call for details.</p>
         </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 bg-[#d9d6d0] px-4 py-2 text-[0.65rem] sm:px-8">© Copyright · Contact: (555) 010-0000 · Site last updated 2014</div>
+      <div className="absolute inset-x-0 bottom-0 bg-[#d9d6d0] px-4 py-2 text-[0.65rem] sm:px-8">© Copyright · Call us for details · Site last updated 2014</div>
     </div>
   );
 }
@@ -106,7 +106,7 @@ function KingSite() {
         <div>
           <p className="display text-2xl leading-[0.95] text-ink sm:text-5xl">Burst pipe? <span className="accent">We&apos;re there in 60 minutes.</span></p>
           <div className="mt-3 flex items-center gap-1 text-ribbon">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}<span className="ml-2 text-xs font-semibold text-slate">Your Google reviews here</span></div>
-          <div className="mt-4 flex gap-2"><span className="rounded bg-ribbon px-3 py-2 text-xs font-extrabold text-white uppercase">Call (555) 010-0000</span><span className="rounded border-2 border-ink px-3 py-2 text-xs font-extrabold uppercase">Get a quote</span></div>
+          <div className="mt-4 flex gap-2"><span className="rounded bg-ribbon px-3 py-2 text-xs font-extrabold text-white uppercase">Call now · SAMPLE</span><span className="rounded border-2 border-ink px-3 py-2 text-xs font-extrabold uppercase">Get a quote</span></div>
         </div>
         <div className="grid grid-cols-2 gap-2">
           {["Water heaters", "Drains", "Repiping", "Leaks"].map((t) => <span key={t} className="rounded border-2 border-ink/10 bg-ivory px-2 py-3 text-center text-[0.7rem] font-bold text-ink sm:py-5 sm:text-sm">{t}</span>)}

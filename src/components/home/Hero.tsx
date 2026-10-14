@@ -26,7 +26,7 @@ export function Hero() {
           <source media="(min-width: 1280px)" srcSet="/media/hero-1920.webp" />
           <source media="(min-width: 768px)" srcSet="/media/hero-1280.webp" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/media/hero-768.webp" alt="" width={1920} height={1086} fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[72%_50%]" />
+          <img src="/media/hero-768.webp" alt="A plumber fixing pipes under a kitchen sink (illustrative photo)" width={1920} height={1086} fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[72%_50%]" />
         </picture>
         <HeroVideo />
         {/* White fade into the type column (desktop) and into the text below (phones). */}

@@ -20,7 +20,7 @@ export function Footer() {
           </ul>
           <div className="mt-6 flex gap-2">
             {[{ href: site.social.facebook, label: "Facebook", Icon: FacebookIcon }, { href: site.social.instagram, label: "Instagram", Icon: InstagramIcon }, { href: site.social.threads, label: "Threads", Icon: ThreadsIcon }].map(({ href, label, Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener me" aria-label={`${site.name} on ${label}`} className="grid h-11 w-11 place-items-center rounded-md border-2 border-white/25 transition-colors hover:border-white hover:text-white"><Icon className="h-5 w-5" /></a>
+              <a key={label} href={href} target="_blank" rel="noopener me" aria-label={`${site.name} on ${label}`} className="soc-btn"><Icon className="h-5 w-5" /></a>
             ))}
           </div>
         </div>
@@ -49,7 +49,7 @@ export function Footer() {
 function FooterCol({ title, links, className }: { title: string; links: { href: string; label: string }[]; className?: string }) {
   return (
     <div className={className}>
-      <h2 className="font-sans text-sm font-semibold tracking-wide text-gold">{title}</h2>
+      <h2 className="proof-l">{title}</h2>
       <ul className="mt-3 space-y-1 text-[0.95rem]">
         {links.map((l) => (<li key={l.href}><Link href={l.href} className="flink">{l.label}</Link></li>))}
       </ul>

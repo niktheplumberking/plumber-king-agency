@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ArrowRight, X } from "lucide-react";
-import { ctaHref } from "@/content/site";
+import dynamic from "next/dynamic";
+import { X } from "lucide-react";
+const BoboPanel = dynamic(() => import("./BoboPanel").then((m) => m.BoboPanel), { ssr: false });
 
 /**
  * Bobo, the Plumber King duck: a small guide in the corner. Each page gets one short tip (shown once per page per
@@ -10,29 +11,7 @@ import { ctaHref } from "@/content/site";
  * scripted help, not a chatbot, so it never says anything we have not written. The choice is kept in this browser
  * only (localStorage); nothing is sent anywhere.
  */
-type Goal = "calls" | "site" | "look";
-type Action = { label: string; href: string };
-
-const goals: { id: Goal; label: string }[] = [
-  { id: "calls", label: "I need more calls" },
-  { id: "site", label: "I need a new website" },
-  { id: "look", label: "Just looking around" },
-];
-
-const forGoal: Record<Goal, { say: string; actions: Action[] }> = {
-  calls: {
-    say: "Let's find where your calls are leaking. Start with the 60-second check, then see what extra jobs are worth to you.",
-    actions: [{ label: "Take the 60-second check", href: "/#grader-h" }, { label: "Do the math", href: "/#calc-h" }, { label: "Book a free call", href: ctaHref }],
-  },
-  site: {
-    say: "Good call. Here's what a Plumber King website includes and how we build it, step by step.",
-    actions: [{ label: "Website design for plumbers", href: "/services/plumber-website-design/" }, { label: "See the 5 steps", href: "/process/" }, { label: "Book a free call", href: ctaHref }],
-  },
-  look: {
-    say: "Take your time. These free guides are a good place to start, and the audit costs nothing.",
-    actions: [{ label: "Free guides", href: "/resources/" }, { label: "Get a free website audit", href: "/free-website-audit/" }],
-  },
-};
+import type { Goal } from "./BoboPanel";
 
 function tipFor(path: string): string | null {
   if (path === "/") return "Hi, I'm Bobo! Want to see how many jobs your website might be missing? Tap me.";
@@ -92,47 +71,10 @@ export function Bobo() {
 
   const choose = (g: Goal) => { setGoal(g); write("pk-bobo-goal", g); };
   const hide = () => { setHidden(true); write("pk-bobo-hidden", "1"); };
-  const plan = goal ? forGoal[goal] : null;
 
   return (
     <div className="fixed right-4 bottom-24 z-50 flex flex-col items-end gap-3 md:right-6 md:bottom-6">
-      {open && (
-        <div role="dialog" aria-label="Bobo, your guide" className="bobo-pop relative w-[min(22rem,calc(100vw-2rem))] rounded-md border-2 border-ink bg-paper p-5 text-ink shadow-[6px_6px_0_var(--color-ink)]">
-          <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="absolute top-2 right-2 grid h-9 w-9 place-items-center rounded-md hover:bg-ink/5"><X className="h-4 w-4" /></button>
-          <div className="flex items-end gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={plan ? "/bobo/point.webp" : "/bobo/wave.webp"} alt="Bobo the duck waving" width={88} height={88} className="-mt-12 -ml-2 h-[5.5rem] w-[5.5rem] shrink-0" />
-            <p className="display pb-1 text-lg">{plan ? "Here's your path" : "Hi, I'm Bobo!"}</p>
-          </div>
-          {!plan ? (
-            <>
-              <p className="mt-3 text-[0.95rem] text-slate">I&apos;m the Plumber King duck. What brings you here today?</p>
-              <div className="mt-4 grid gap-2">
-                {goals.map((g) => (
-                  <button key={g.id} type="button" onClick={() => choose(g.id)} className="rounded-md border-2 border-ink/15 px-4 py-3 text-left text-[0.95rem] font-semibold transition-colors hover:border-ribbon hover:text-ribbon">{g.label}</button>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <p className="mt-3 text-[0.95rem] text-slate">{plan.say}</p>
-              <div className="mt-4 grid gap-2">
-                {plan.actions.map((a, i) => {
-                  const ext = a.href.startsWith("http");
-                  return (
-                    <a key={a.label} href={a.href} {...(ext ? { target: "_blank", rel: "noopener" } : {})} onClick={() => setOpen(false)}
-                      className={`flex items-center justify-between rounded-md px-4 py-3 text-[0.95rem] font-semibold ${i === plan.actions.length - 1 && ext ? "bg-ribbon text-ink" : "border-2 border-ink/15 hover:border-ribbon hover:text-ribbon"}`}>
-                      {a.label}<ArrowRight className="h-4 w-4" aria-hidden />
-                    </a>
-                  );
-                })}
-              </div>
-              <button type="button" onClick={() => setGoal(null)} className="mt-3 text-sm text-slate underline underline-offset-2">Change my answer</button>
-            </>
-          )}
-          <button type="button" onClick={hide} className="mt-4 block text-xs text-slate hover:text-ink">Hide Bobo</button>
-        </div>
-      )}
+      {open && <BoboPanel goal={goal} choose={choose} setGoal={setGoal} close={() => setOpen(false)} hide={hide} />}
 
       {tip && !open && (
         <div className="bobo-pop relative max-w-[16rem] rounded-md border-2 border-ink bg-paper py-3 pr-9 pl-4 text-[0.9rem] font-semibold text-ink shadow-[4px_4px_0_var(--color-ink)]">

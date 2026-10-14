@@ -47,18 +47,18 @@ export function SystemBento() {
         <ol className="mt-16 space-y-8 md:space-y-0">
           {system.map((s, i) => (
             <li key={s.title} data-stack-card className="md:sticky md:top-24 md:pb-10" style={{ zIndex: i + 1 }}>
-              <div className="group relative grid origin-top overflow-hidden rounded-md border-2 border-ink bg-white text-ink shadow-[8px_8px_0_var(--color-ink)] md:min-h-[26rem] md:grid-cols-[1.05fr_1fr]">
-                <div className="relative aspect-[4/3] overflow-hidden md:aspect-auto">
+              <div className="group svc-card">
+                <div className="svc-media">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={s.img} srcSet={`${s.img.replace(".webp", "-720.webp")} 720w, ${s.img} 1200w`} sizes="(min-width: 768px) 40rem, 92vw" alt={s.alt} width={1200} height={900} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={s.img} srcSet={`${s.img.replace(".webp", "-720.webp")} 720w, ${s.img} 1200w`} sizes="(min-width: 768px) 40rem, 92vw" alt={s.alt} width={1200} height={900} loading="lazy" decoding="async" className="zoom-img" />
                 </div>
-                <div className="flex flex-col justify-between gap-8 p-7 md:p-10">
+                <div className="svc-body">
                   <div>
-                    <p className="display text-[5rem] leading-none text-ribbon">0{i + 1}</p>
+                    <p className="big-num">0{i + 1}</p>
                     <h3 className="display mt-2 text-[clamp(1.8rem,1.2rem+1.6vw,2.8rem)]">{s.title}</h3>
                     <p className="mt-4 max-w-md text-lg text-slate">{s.body}</p>
                   </div>
-                  <Link href={s.href} className="inline-flex items-center gap-2 self-start border-b-2 border-ribbon pb-1 text-sm font-extrabold tracking-wider uppercase hover:text-ribbon">How it works<ArrowUpRight className="h-4 w-4" aria-hidden /></Link>
+                  <Link href={s.href} className="ul-link">How it works<ArrowUpRight className="h-4 w-4" aria-hidden /></Link>
                 </div>
               </div>
             </li>
@@ -98,9 +98,9 @@ export function ProcessTimeline({ compact = false }: { compact?: boolean }) {
           <ol data-track className="container-x flex flex-col gap-10 md:w-max md:max-w-none md:flex-row md:gap-6 md:pr-[30vw]">
             {process.map((p, i) => (
               <li key={p.title} className="relative md:w-[24rem]">
-                <span className="relative z-10 grid h-11 w-11 place-items-center rounded-md border-2 border-ink bg-white text-ribbon"><p.icon className="h-5 w-5" aria-hidden /></span>
-                <p className="display mt-6 text-[4.5rem] leading-none text-ribbon">0{i + 1}</p>
-                <h3 className="display mt-1 text-2xl md:text-3xl">{p.title}</h3>
+                <span className="step-ic"><p.icon className="h-5 w-5" aria-hidden /></span>
+                <p className="big-num mt-6">0{i + 1}</p>
+                <h3 className="svc-h">{p.title}</h3>
                 <p className="mt-3 max-w-[22rem] text-lg text-slate">{p.body}</p>
               </li>
             ))}

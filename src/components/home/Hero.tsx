@@ -34,12 +34,12 @@ export function Hero() {
 
         <ul data-hero-leads className="absolute right-24 bottom-10 hidden w-[19rem] space-y-2.5 md:block lg:right-28 lg:bottom-14" aria-label="Example of leads arriving (illustration)">
           {leads.map((l, i) => (
-            <li key={l.title} className="enter-slide flex gap-3 rounded-md border-2 border-ink bg-white p-3 text-ink shadow-[4px_4px_0_var(--color-ink)]" style={{ "--d": `${0.45 + i * 0.2}s` } as React.CSSProperties}>
+            <li key={l.title} className="enter-slide lead-card" style={{ "--d": `${0.45 + i * 0.2}s` } as React.CSSProperties}>
               <span className={`grid h-10 w-10 shrink-0 place-items-center rounded ${l.tone}`}><l.icon className="h-5 w-5 text-white" aria-hidden /></span>
               <span className="min-w-0">
-                <span className="block text-[0.82rem] font-extrabold uppercase tracking-wide">{l.title} <span className="font-semibold text-slate normal-case">(SAMPLE)</span></span>
+                <span className="lead-t">{l.title} <span className="font-semibold text-slate normal-case">(SAMPLE)</span></span>
                 <span className="block truncate text-[0.85rem]">{l.body}</span>
-                <span className="mt-0.5 flex items-center gap-1 text-[0.75rem] text-slate"><MapPin className="h-3 w-3" aria-hidden />{l.meta}</span>
+                <span className="lead-m"><MapPin className="h-3 w-3" aria-hidden />{l.meta}</span>
               </span>
             </li>
           ))}

@@ -148,6 +148,25 @@ html { scroll-padding-top: 88px; }
 .split-i { display: inline-block; }
 .foot-mark { padding-right: 0.4em; font-size: clamp(4rem, 2rem + 10vw, 12rem); line-height: 1; white-space: nowrap; color: rgb(255 255 255 / 0.09); }
 
+/* Short names for long class lists repeated on the home page (they ship in the page data, which counts toward the JS budget). */
+@layer components {
+  .svc-card { @apply relative grid origin-top overflow-hidden rounded-md border-2 border-ink bg-white text-ink shadow-[8px_8px_0_var(--color-ink)] md:min-h-[26rem] md:grid-cols-[1.05fr_1fr]; }
+  .ul-link { @apply inline-flex items-center gap-2 self-start border-b-2 border-ribbon pb-1 text-sm font-extrabold tracking-wider uppercase hover:text-ribbon; }
+  .step-ic { @apply relative z-10 grid h-11 w-11 place-items-center rounded-md border-2 border-ink bg-white text-ribbon; }
+  .zoom-img { @apply absolute inset-0 h-full w-full object-cover transition-transform duration-700; }
+  .group:hover .zoom-img { scale: 1.05; }
+  .soc-btn { @apply grid h-11 w-11 place-items-center rounded-md border-2 border-white/25 transition-colors hover:border-white hover:text-white; }
+  .lead-card { @apply flex gap-3 rounded-md border-2 border-ink bg-white p-3 text-ink shadow-[4px_4px_0_var(--color-ink)]; }
+  .big-num { @apply text-ribbon; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em; font-size: 4.5rem; line-height: 1; }
+  p.big-num:not(.mt-6) { font-size: 5rem; }
+  .svc-media { @apply relative aspect-[4/3] overflow-hidden md:aspect-auto; }
+  .svc-body { @apply flex flex-col justify-between gap-8 p-7 md:p-10; }
+  .lead-t { @apply block text-[0.82rem] font-extrabold uppercase tracking-wide; }
+  .lead-m { @apply mt-0.5 flex items-center gap-1 text-[0.75rem] text-slate; }
+  .proof-l { @apply font-sans text-sm font-semibold tracking-wide text-gold; }
+  .svc-h { @apply mt-1 text-2xl md:text-3xl; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em; line-height: 0.92; }
+}
+
 @keyframes pk-marquee { to { transform: translate3d(-50%, 0, 0); } }
 .marquee-track { animation: pk-marquee var(--dur, 40s) linear infinite; }
 .marquee-track.reverse { animation-direction: reverse; }

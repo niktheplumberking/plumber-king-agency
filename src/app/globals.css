@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Arial sized to match Archivo 900 widths (measured: upright 1.077x, italic 1.121x Next's default fallback). */
+@font-face { font-family: "PK Display Fallback"; src: local("Arial"), local("Liberation Sans"); size-adjust: 106.3%; ascent-override: 82.6%; descent-override: 19.8%; line-gap-override: 0%; }
+@font-face { font-family: "PK Display Fallback"; font-style: italic; src: local("Arial Italic"), local("Arial"), local("Liberation Sans Italic"); size-adjust: 110.6%; ascent-override: 79.4%; descent-override: 19%; line-gap-override: 0%; }
+
 /*
  * Palette "Charcoal & Hot Pink", light treatment (Nick, 2026-10-14 17:03; he wants light pages, not dark bands).
  * Pages are white, bands are pale pink with charcoal text, the footer is the one charcoal block. Old token names are

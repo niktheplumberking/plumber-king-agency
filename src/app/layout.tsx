@@ -32,7 +32,9 @@ const criticalCss = `
 
 // Archivo Black-weight uppercase headings with italic accents. Neither competitor uses it (both use Montserrat), and it is
 // not one of the fonts AI site builders default to. Two weights only, to keep the preloaded files small.
-const display = Archivo({ subsets: ["latin"], weight: ["800", "900"], style: ["normal", "italic"], variable: "--font-archivo", display: "swap" });
+// Its fallback is Arial stretched to Archivo 900's width (globals.css), so headings wrap the same before and after the
+// font loads and the page does not jump (contact page CLS was 0.13 with the default fallback).
+const display = Archivo({ subsets: ["latin"], weight: ["800", "900"], style: ["normal", "italic"], variable: "--font-archivo", display: "swap", adjustFontFallback: false, fallback: ["PK Display Fallback"] });
 const body = Instrument_Sans({ subsets: ["latin"], variable: "--font-instrument", display: "swap" });
 
 export const metadata: Metadata = {

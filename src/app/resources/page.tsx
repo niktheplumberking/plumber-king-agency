@@ -24,7 +24,7 @@ export default function ResourcesPage() {
                 <span className={`flex items-center gap-2 text-sm ${i === 0 ? "text-white/90" : "text-slate"}`}><Clock className="h-4 w-4" aria-hidden />{g.readMinutes} min read</span>
                 <h2 className={`mt-4 font-bold ${i === 0 ? "max-w-3xl text-3xl md:text-4xl" : "text-2xl"}`}>{g.title}</h2>
                 <p className={`mt-4 max-w-2xl ${i === 0 ? "text-white/90" : "text-slate"}`}>{g.description}</p>
-                <span className={`mt-auto inline-flex items-center gap-2 pt-6 font-semibold ${i === 0 ? "text-white" : "text-ribbon"}`}>Read the guide<ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden /></span>
+                <span className={`mt-auto inline-flex items-center gap-2 pt-6 font-semibold ${i === 0 ? "text-white" : "text-royal"}`}>Read the guide<ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden /></span>
               </Link>
             </Reveal>
           ))}

@@ -33,7 +33,7 @@ export function Footer() {
         <div className="marquee-track flex w-max" style={{ "--dur": "60s" } as React.CSSProperties}>
           {/* Two copies are enough for a seamless loop: each one is wider than the screen. */}
           {[0, 1].map((i) => (
-            <span key={i} className="foot-mark display">Plumber <i>King</i> ✦</span>
+            <span key={i} className="foot-mark display" data-a="Plumber " data-b="King ✦" />
           ))}
         </div>
       </div>

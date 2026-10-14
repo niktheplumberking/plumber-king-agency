@@ -101,7 +101,7 @@ export function Bobo() {
           <button type="button" onClick={() => setOpen(false)} aria-label="Close" className="absolute top-2 right-2 grid h-9 w-9 place-items-center rounded-md hover:bg-ink/5"><X className="h-4 w-4" /></button>
           <div className="flex items-end gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={plan ? "/bobo/point.webp" : "/bobo/wave.webp"} alt="" width={88} height={88} className="-mt-12 -ml-2 h-[5.5rem] w-[5.5rem] shrink-0" />
+            <img src={plan ? "/bobo/point.webp" : "/bobo/wave.webp"} alt="Bobo the duck waving" width={88} height={88} className="-mt-12 -ml-2 h-[5.5rem] w-[5.5rem] shrink-0" />
             <p className="display pb-1 text-lg">{plan ? "Here's your path" : "Hi, I'm Bobo!"}</p>
           </div>
           {!plan ? (
@@ -144,7 +144,7 @@ export function Bobo() {
       <button type="button" onClick={() => { setOpen((o) => !o); setTip(null); }} aria-expanded={open} aria-label={open ? "Close Bobo" : "Open Bobo, your guide"}
         className="bobo-btn grid h-16 w-16 place-items-center overflow-hidden rounded-xl border-2 border-ink bg-sky shadow-[4px_4px_0_var(--color-ink)] transition-transform hover:-rotate-6 active:translate-x-0.5 active:translate-y-0.5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/bobo/head.webp" alt="" width={64} height={64} className="h-full w-full object-cover" />
+        <img src="/bobo/head.webp" alt="Bobo the duck" width={64} height={64} className="h-full w-full object-cover" />
       </button>
     </div>
   );

@@ -55,7 +55,7 @@ export function SystemBento() {
                 </div>
                 <div className="flex flex-col justify-between gap-8 p-7 md:p-10">
                   <div>
-                    <p className="display text-[5rem] leading-none text-royal/15">0{i + 1}</p>
+                    <p className="display text-[5rem] leading-none text-ribbon">0{i + 1}</p>
                     <h3 className="display mt-2 text-[clamp(1.8rem,1.2rem+1.6vw,2.8rem)]">{s.title}</h3>
                     <p className="mt-4 max-w-md text-lg text-slate">{s.body}</p>
                   </div>
@@ -101,7 +101,7 @@ export function ProcessTimeline({ compact = false }: { compact?: boolean }) {
             {process.map((p, i) => (
               <li key={p.title} className="relative md:w-[24rem]">
                 <span className="relative z-10 grid h-11 w-11 place-items-center rounded-md border-2 border-ink bg-white text-ribbon"><p.icon className="h-5 w-5" aria-hidden /></span>
-                <p className="display mt-6 text-[4.5rem] leading-none text-royal/15">0{i + 1}</p>
+                <p className="display mt-6 text-[4.5rem] leading-none text-ribbon">0{i + 1}</p>
                 <h3 className="display mt-1 text-2xl md:text-3xl">{p.title}</h3>
                 <p className="mt-3 max-w-[22rem] text-lg text-slate">{p.body}</p>
               </li>

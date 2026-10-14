@@ -44,7 +44,7 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
     return (
       <div role="status" className={`rounded-md border-2 border-ink p-8 ${dark ? "bg-white/[0.06] text-white" : "bg-ivory"}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/bobo/cheer.webp" alt="" width={96} height={96} className="h-24 w-24" />
+        <img src="/bobo/cheer.webp" alt="Bobo the duck cheering" width={96} height={96} className="h-24 w-24" />
         <p className="mt-4 font-display text-2xl font-bold">Got it. Nick will be in touch.</p>
         <p className={`mt-2 ${dark ? "text-white/90" : "text-slate"}`}>Nick reads and replies to every request personally.</p>
       </div>
@@ -65,7 +65,7 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
           {kind === "website-audit" ? site.secondaryCta : site.primaryCta}
           <ArrowRight className="h-4.5 w-4.5" aria-hidden />
         </button>
-        {state === "error" && <p role="alert" className="mt-3 text-sm font-semibold text-ribbon">That didn&apos;t send. Please email <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> and we&apos;ll get right back to you.</p>}
+        {state === "error" && <p role="alert" className="mt-3 text-sm font-semibold text-royal">That didn&apos;t send. Please email <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> and we&apos;ll get right back to you.</p>}
         <p className={`mt-4 text-sm ${dark ? "text-white/90" : "text-slate"}`}>No commitment, no hard sell. By sending this you agree to our <a href="/privacy-policy/" className="underline">Privacy Policy</a>.</p>
       </div>
     </form>

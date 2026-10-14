@@ -75,7 +75,7 @@ function Compare({ value, onValueChange, before, after }: { value: number; onVal
         <span aria-hidden className="sticker absolute top-4 right-4 bg-royal text-white" style={{ "--tilt": "3deg" } as React.CSSProperties}>Plumber King</span>
       </div>
       <label htmlFor={id} className="sr-only">Compare a typical plumber website with a Plumber King website</label>
-      <input id={id} type="range" min={0} max={100} value={v} onChange={(e) => onValueChange(Number(e.target.value))} aria-valuetext={`${v}% typical site shown`} className="mt-4 w-full accent-[var(--color-ribbon)]" />
+      <input id={id} type="range" min={0} max={100} value={v} onChange={(e) => onValueChange(Number(e.target.value))} aria-valuetext={`${v}% typical site shown`} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-ribbon)]" />
       <figcaption className="mt-1 text-sm text-slate">Illustration (SAMPLE): two made-up plumbing companies, not real clients.</figcaption>
     </figure>
   );
@@ -87,13 +87,13 @@ function TypicalSite() {
       <div className="flex items-center justify-between border-b border-[#ccc] pb-3"><span className="text-lg italic sm:text-2xl">Smith Plumbing Services LLC</span><span className="hidden gap-3 text-xs sm:flex"><span>Home</span><span>About</span><span>Services</span><span>Gallery</span><span>Links</span></span></div>
       <div className="mt-4 grid gap-4 sm:mt-6 sm:grid-cols-[1fr_1.2fr]">
         <div className="aspect-[4/3] bg-[repeating-linear-gradient(45deg,#d6d3cd_0_10px,#dedbd6_10px_20px)]" />
-        <div className="text-[0.7rem] leading-relaxed sm:text-sm">
+        <div className="text-xs leading-relaxed sm:text-sm">
           <p className="font-bold">Welcome to our website!</p>
           <p className="mt-2">We are a family owned and operated business providing quality plumbing services to the area for many years. We take pride in our work and strive for customer satisfaction. Please browse our website to learn more about the services we offer. Contact us today.</p>
           <p className="mt-2 hidden sm:block">Our services include but are not limited to residential plumbing, commercial plumbing, repairs, installations and more. Call for details.</p>
         </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 bg-[#d9d6d0] px-4 py-2 text-[0.65rem] sm:px-8">© Copyright · Call us for details · Site last updated 2014</div>
+      <div className="absolute inset-x-0 bottom-0 bg-[#d9d6d0] px-4 py-2 text-xs sm:px-8">© Copyright · Call us for details · Site last updated 2014</div>
     </div>
   );
 }
@@ -101,7 +101,7 @@ function TypicalSite() {
 function KingSite() {
   return (
     <div className="h-full bg-white p-4 sm:p-8">
-      <div className="flex items-center justify-between"><span className="display text-base text-royal italic sm:text-xl">Riverside <span className="text-ribbon">Plumbing</span></span><span className="flex items-center gap-1.5 rounded bg-ribbon px-2.5 py-1.5 text-[0.65rem] font-extrabold text-ink uppercase sm:text-xs"><Phone className="h-3.5 w-3.5" />Call now</span></div>
+      <div className="flex items-center justify-between"><span className="display text-base text-royal italic sm:text-xl">Riverside <span className="text-ink">Plumbing</span></span><span className="flex items-center gap-1.5 rounded bg-ribbon px-2.5 py-1.5 text-xs font-extrabold text-ink uppercase sm:text-xs"><Phone className="h-3.5 w-3.5" />Call now</span></div>
       <div className="mt-5 grid gap-5 sm:mt-8 sm:grid-cols-[1.2fr_1fr] sm:items-center">
         <div>
           <p className="display text-2xl leading-[0.95] text-ink sm:text-5xl">Burst pipe? <span className="accent">We&apos;re there in 60 minutes.</span></p>
@@ -109,7 +109,7 @@ function KingSite() {
           <div className="mt-4 flex gap-2"><span className="rounded bg-ribbon px-3 py-2 text-xs font-extrabold text-ink uppercase">Call now · SAMPLE</span><span className="rounded border-2 border-ink px-3 py-2 text-xs font-extrabold uppercase">Get a quote</span></div>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          {["Water heaters", "Drains", "Repiping", "Leaks"].map((t) => <span key={t} className="rounded border-2 border-ink/10 bg-ivory px-2 py-3 text-center text-[0.7rem] font-bold text-ink sm:py-5 sm:text-sm">{t}</span>)}
+          {["Water heaters", "Drains", "Repiping", "Leaks"].map((t) => <span key={t} className="rounded border-2 border-ink/10 bg-ivory px-2 py-3 text-center text-xs font-bold text-ink sm:py-5 sm:text-sm">{t}</span>)}
         </div>
       </div>
     </div>

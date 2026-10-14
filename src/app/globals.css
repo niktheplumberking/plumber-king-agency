@@ -172,3 +172,7 @@ html { scroll-padding-top: 88px; }
 @keyframes bobo-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .bobo-pop { animation: bobo-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; transform-origin: bottom right; }
 .bobo-btn img { animation: bobo-bob 3.2s ease-in-out infinite; }
+
+/* Footer wordmark text lives in pseudo-elements: it is decoration (aria-hidden), not content to read. */
+.foot-mark::before { content: attr(data-a); }
+.foot-mark::after { content: attr(data-b); font-style: italic; }

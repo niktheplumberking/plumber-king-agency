@@ -8,7 +8,7 @@ export function HeroMotion({ className, children }: { className?: string; childr
   useGsap(ref, () => {
     const st = { trigger: ref.current, start: "top top", end: "bottom top", scrub: true };
     gsap.to("[data-hero-media] img, [data-hero-media] video", { scale: 1.14, ease: "none", scrollTrigger: st });
-    gsap.to("[data-hero-copy]", { yPercent: -18, opacity: 0.2, ease: "none", scrollTrigger: st });
+    gsap.to("[data-hero-copy]", { yPercent: -18, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-leads]", { y: -120, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-sticker]", { y: 160, rotate: 10, ease: "none", scrollTrigger: st });
   });

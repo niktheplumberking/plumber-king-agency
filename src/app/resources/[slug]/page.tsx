@@ -26,7 +26,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   return (
     <>
       <PageHero crumbs={[{ name: "Guides", path: "/resources/" }, { name: g.title.split(":")[0], path }]} title={g.title}>
-        <p className="mt-6 text-white/90">By {site.founder}, {site.name} · <time dateTime={g.published}>{date}</time> · {g.readMinutes} min read</p>
+        <p className="mt-6 text-slate">By {site.founder}, {site.name} · <time dateTime={g.published}>{date}</time> · {g.readMinutes} min read</p>
       </PageHero>
       <article className="bg-paper py-16 md:py-24">
         <div className="container-x grid gap-12 lg:grid-cols-[1fr_18rem]">

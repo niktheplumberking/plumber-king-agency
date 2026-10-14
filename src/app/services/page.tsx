@@ -27,7 +27,7 @@ export default function ServicesPage() {
                   <h2 className="text-3xl font-bold md:text-4xl">{s.name}</h2>
                   <p className="mt-3 max-w-2xl text-lg text-slate">{s.outcome}</p>
                 </span>
-                <span className="inline-flex items-center gap-2 font-semibold text-ribbon">Learn more<ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden /></span>
+                <span className="inline-flex items-center gap-2 font-semibold text-royal">Learn more<ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden /></span>
               </Link>
             </Reveal>
           ))}

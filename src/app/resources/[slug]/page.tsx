@@ -26,7 +26,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   return (
     <>
       <PageHero crumbs={[{ name: "Guides", path: "/resources/" }, { name: g.title.split(":")[0], path }]} title={g.title}>
-        <p className="mt-6 text-white/70">By {site.founder}, {site.name} · <time dateTime={g.published}>{date}</time> · {g.readMinutes} min read</p>
+        <p className="mt-6 text-white/90">By {site.founder}, {site.name} · <time dateTime={g.published}>{date}</time> · {g.readMinutes} min read</p>
       </PageHero>
       <article className="bg-paper py-16 md:py-24">
         <div className="container-x grid gap-12 lg:grid-cols-[1fr_18rem]">
@@ -44,9 +44,9 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             ))}
           </div>
           <aside className="lg:sticky lg:top-28 lg:self-start">
-            <div className="rounded-[1.5rem] bg-navy-900 p-6 text-white">
+            <div className="on-blue blueprint rounded-md border-2 border-ink p-6 text-white">
               <p className="font-display text-xl font-bold">Want us to check your site for you?</p>
-              <p className="mt-2 text-white/75">Free audit. Straight answers, no hard sell.</p>
+              <p className="mt-2 text-white/90">Free audit. Straight answers, no hard sell.</p>
               <Link href="/free-website-audit/" className="btn btn-gold mt-5 w-full">Free website audit</Link>
             </div>
             <nav aria-label="More guides" className="mt-6">

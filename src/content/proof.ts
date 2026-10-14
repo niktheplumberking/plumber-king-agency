@@ -52,8 +52,8 @@ export const testimonials: Testimonial[] = [
 export const stats: Stat[] = [];
 
 export const work: WorkItem[] = [
-  { status: "placeholder", name: "Your first client project", image: null, accent: "#1F4E9A" },
-  { status: "placeholder", name: "Your second client project", image: null, accent: "#8A1F1A" },
+  { status: "placeholder", name: "Your first client project", image: null, accent: "#2a6460" },
+  { status: "placeholder", name: "Your second client project", image: null, accent: "#9a4518" },
 ];
 
 export function visible<T extends { status: ProofStatus }>(items: T[], showPlaceholders: boolean): T[] {

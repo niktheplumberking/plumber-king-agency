@@ -1,6 +1,7 @@
 import { Hero } from "@/components/home/Hero";
 import { StoryScroll } from "@/components/home/StoryScroll";
-import { JobsMarquee, ProblemSplit, ProcessTimeline, SystemBento } from "@/components/home/Sections";
+import { ProblemSplit } from "@/components/home/Sections";
+import { JobsMarquee, ProcessTimeline, SystemBento } from "@/components/home/Showcase";
 import { JobValueCalculator, WebsiteGrader } from "@/components/home/Interactive";
 import { Founder } from "@/components/home/Founder";
 import { Proof } from "@/components/home/Proof";
@@ -36,7 +37,8 @@ export default function Home() {
       <section className="bg-paper py-24 md:py-32" aria-labelledby="faq-h">
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <Reveal>
-            <h2 id="faq-h" className="text-[clamp(2.2rem,1.5rem+3vw,4rem)] font-extrabold">Straight answers.</h2>
+            <p className="kicker">07 — FAQ</p>
+            <h2 id="faq-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Straight <span className="accent">answers.</span></h2>
             <p className="mt-5 max-w-sm text-lg text-slate">The questions plumbers ask us most. More on the <Link href="/faq/" className="font-semibold text-royal underline underline-offset-4">full FAQ page</Link>.</p>
           </Reveal>
           <FaqList items={homeFaqs} />

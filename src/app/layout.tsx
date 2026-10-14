@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
+import { Archivo, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content/site";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { RevealObserver } from "@/components/RevealObserver";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { JsonLd } from "@/components/JsonLd";
 import { organizationLd, websiteLd } from "@/lib/seo";
 
@@ -28,8 +29,9 @@ const criticalCss = `
 @media (prefers-reduced-motion:reduce){.enter-rise,.enter-fade,.enter-slide,.enter-draw,.enter-pulse{animation:none}}
 `;
 
-// No extra axes: the width and optical-size axes were unused and made the preloaded file 131 KB (slower first paint on phones).
-const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage", display: "swap" });
+// Archivo Black-weight uppercase headings with italic accents. Neither competitor uses it (both use Montserrat), and it is
+// not one of the fonts AI site builders default to. Two weights only, to keep the preloaded files small.
+const display = Archivo({ subsets: ["latin"], weight: ["800", "900"], style: ["normal", "italic"], variable: "--font-archivo", display: "swap" });
 const body = Instrument_Sans({ subsets: ["latin"], variable: "--font-instrument", display: "swap" });
 
 export const metadata: Metadata = {
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#071126",
+  themeColor: "#fffdf9",
   width: "device-width",
   initialScale: 1,
 };
@@ -65,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <MobileCtaBar />
         <RevealObserver />
+        <SmoothScroll />
         <JsonLd data={[organizationLd(), websiteLd()]} />
       </body>
     </html>

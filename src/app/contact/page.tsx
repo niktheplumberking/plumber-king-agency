@@ -13,10 +13,10 @@ export const metadata = pageMeta({
 export default function ContactPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Contact", path: "/contact/" }]} title={<>Let&apos;s get your <span className="text-gold">phone ringing.</span></>} intro="Tell us a little about your business. Nick will reply personally to set up your free strategy call." />
+      <PageHero crumbs={[{ name: "Contact", path: "/contact/" }]} title={<>Let&apos;s get your <span className="accent">phone ringing.</span></>} intro="Tell us a little about your business. Nick will reply personally to set up your free strategy call." />
       <section className="bg-paper py-20 md:py-28">
         <div className="container-x grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
-          <div className="rounded-[2rem] border border-navy-900/10 bg-white p-6 md:p-10"><LeadForm tone="light" /></div>
+          <div className="rounded-md border-2 border-ink bg-white p-6 md:p-10"><LeadForm tone="light" /></div>
           <div className="space-y-6">
             <div><h2 className="text-2xl font-bold">Prefer email?</h2><a href={`mailto:${site.email}`} className="mt-3 inline-flex items-center gap-2 text-lg font-semibold text-royal hover:underline"><Mail className="h-5 w-5" aria-hidden />{site.email}</a></div>
             <div><h2 className="text-2xl font-bold">Where we work</h2><p className="mt-3 flex items-center gap-2 text-lg text-slate"><MapPin className="h-5 w-5" aria-hidden />Serving USA &amp; Canada</p></div>

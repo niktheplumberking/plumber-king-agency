@@ -4,7 +4,6 @@ import { CrownMark } from "./CrownMark";
 
 /** The real logo once supplied (site.assets.logo); until then a wordmark with the crown. */
 export function Logo({ tone = "light" }: { tone?: "light" | "dark" }) {
-  const text = tone === "light" ? "text-white" : "text-ink";
   return (
     <Link href="/" className="flex items-center gap-2.5" aria-label={`${site.name} home`}>
       {site.assets.logo ? (
@@ -15,8 +14,10 @@ export function Logo({ tone = "light" }: { tone?: "light" | "dark" }) {
           <CrownMark className="h-5 w-6 text-gold" />
         </span>
       )}
-      <span className={`font-display text-[1.15rem] leading-none font-extrabold tracking-tight ${text}`}>
-        Plumber King<span className={`block text-[0.75rem] font-semibold tracking-[0.2em] uppercase ${tone === "light" ? "text-[#ff8a7f]" : "text-ribbon"}`}>Agency</span>
+      {/* Wordmark in the round-2 style: heavy italic caps, tilted up, PLUMBER in blue and KING in red. */}
+      <span className="-rotate-[4deg] leading-none">
+        <span className={`display block text-[1.05rem] italic ${tone === "light" ? "text-white" : "text-royal"}`}>Plumber <span className={tone === "light" ? "text-gold-300" : "text-ribbon"}>King</span></span>
+        <span className={`mt-0.5 block text-[0.62rem] font-extrabold tracking-[0.42em] uppercase ${tone === "light" ? "text-white/90" : "text-ink/70"}`}>Agency</span>
       </span>
     </Link>
   );

@@ -34,7 +34,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         <div className="container-x grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           {/* Above the fold on most screens: no scroll reveal, so it paints at once (LCP). */}
           <p className="max-w-[65ch] text-xl leading-relaxed text-ink">{s.intro}</p>
-          <div className="rounded-[2rem] bg-ivory p-8">
+          <div className="rounded-md border-2 border-ink bg-ivory p-8">
             <h2 className="text-2xl font-bold">Built for</h2>
             <ul className="mt-5 space-y-3">
               {s.forWho.map((w) => (<li key={w} className="flex gap-3 text-slate"><Check className="mt-1 h-5 w-5 shrink-0 text-ribbon" aria-hidden />{w}</li>))}
@@ -44,7 +44,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       </section>
       <section className="bg-ivory py-20 md:py-28" aria-labelledby="inc-h">
         <div className="container-x">
-          <h2 id="inc-h" className="max-w-2xl text-[clamp(2rem,1.4rem+2.6vw,3.4rem)] font-extrabold">What&apos;s included</h2>
+          <h2 id="inc-h" className="display max-w-2xl text-[clamp(2.2rem,1.4rem+3vw,4rem)]">What&apos;s included</h2>
           <dl className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
             {s.includes.map((inc, i) => (
               <Reveal key={inc.title} delay={(i % 2) * 0.08} className="border-t-2 border-navy-900 pt-5">
@@ -58,7 +58,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       <section className="bg-paper py-20 md:py-28" aria-labelledby="sfaq-h">
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
-            <h2 id="sfaq-h" className="text-[clamp(2rem,1.4rem+2.6vw,3.4rem)] font-extrabold">Questions about {s.name.toLowerCase()}</h2>
+            <h2 id="sfaq-h" className="display text-[clamp(2.2rem,1.4rem+3vw,4rem)]">Questions about {s.name.toLowerCase()}</h2>
             <p className="mt-5 text-lg text-slate">Also see: {others.map((o, i) => (<span key={o.slug}>{i > 0 && " and "}<Link href={`/services/${o.slug}/`} className="inline-block py-1.5 font-semibold text-royal underline underline-offset-4">{o.name}</Link></span>))}.</p>
           </div>
           <FaqList items={s.faqs} />

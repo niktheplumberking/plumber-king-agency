@@ -16,12 +16,12 @@ export const metadata = pageMeta({
 export default function ServicesPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Services", path: "/services/" }]} title={<>Everything a plumbing company needs to <span className="text-gold">get found, trusted and called.</span></>} intro="Three services that work as one system. Pick one or let us run all of it." />
+      <PageHero crumbs={[{ name: "Services", path: "/services/" }]} title={<>Everything a plumbing company needs to <span className="accent">get found, trusted and called.</span></>} intro="Three services that work as one system. Pick one or let us run all of it." />
       <section className="bg-paper py-20 md:py-28">
         <div className="container-x space-y-6">
           {services.map((s, i) => (
             <Reveal key={s.slug}>
-              <Link href={`/services/${s.slug}/`} className="group grid gap-6 rounded-[2rem] border border-navy-900/10 bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:border-navy-900/25 hover:shadow-[0_30px_80px_-40px_rgb(12_27_60/0.4)] md:grid-cols-[auto_1fr_auto] md:items-center md:p-10">
+              <Link href={`/services/${s.slug}/`} className="group grid gap-6 rounded-md border-2 border-ink bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:border-navy-900/25 hover:shadow-[6px_6px_0_var(--color-royal)] md:grid-cols-[auto_1fr_auto] md:items-center md:p-10">
                 <span className="font-display text-5xl font-extrabold text-gold-700">0{i + 1}</span>
                 <span>
                   <h2 className="text-3xl font-bold md:text-4xl">{s.name}</h2>

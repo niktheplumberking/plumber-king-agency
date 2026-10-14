@@ -9,18 +9,18 @@ import { FacebookIcon, InstagramIcon, ThreadsIcon } from "./SocialIcons";
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative overflow-hidden bg-navy-950 text-white/80">
+    <footer className="relative overflow-hidden bg-navy-950 text-white/90">
       <div className="container-x grid gap-12 pt-20 pb-28 md:grid-cols-12 md:pb-14">
         <div className="md:col-span-4">
           <Logo />
-          <p className="mt-5 max-w-sm text-white/75">Websites, SEO and AI-search visibility for plumbing companies across the USA and Canada.</p>
+          <p className="mt-5 max-w-sm text-white/90">Websites, SEO and AI-search visibility for plumbing companies across the USA and Canada.</p>
           <ul className="mt-6 space-y-2.5 text-[0.95rem]">
-            <li><a className="inline-flex min-h-8 items-center gap-2.5 hover:text-gold" href={`mailto:${site.email}`}><Mail className="h-4.5 w-4.5" aria-hidden />{site.email}</a></li>
+            <li><a className="inline-flex min-h-8 items-center gap-2.5 hover:text-white" href={`mailto:${site.email}`}><Mail className="h-4.5 w-4.5" aria-hidden />{site.email}</a></li>
             <li className="inline-flex items-center gap-2.5"><MapPin className="h-4.5 w-4.5" aria-hidden />Serving the USA and Canada</li>
           </ul>
           <div className="mt-6 flex gap-2">
             {[{ href: site.social.facebook, label: "Facebook", Icon: FacebookIcon }, { href: site.social.instagram, label: "Instagram", Icon: InstagramIcon }, { href: site.social.threads, label: "Threads", Icon: ThreadsIcon }].map(({ href, label, Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener me" aria-label={`${site.name} on ${label}`} className="grid h-11 w-11 place-items-center rounded-full border border-white/15 transition-colors hover:border-gold hover:text-gold"><Icon className="h-5 w-5" /></a>
+              <a key={label} href={href} target="_blank" rel="noopener me" aria-label={`${site.name} on ${label}`} className="grid h-11 w-11 place-items-center rounded-md border-2 border-white/25 transition-colors hover:border-white hover:text-white"><Icon className="h-5 w-5" /></a>
             ))}
           </div>
         </div>
@@ -28,8 +28,16 @@ export function Footer() {
         <FooterCol title="Company" className="md:col-span-2" links={[{ href: "/about/", label: "About Nick" }, { href: "/process/", label: "Our process" }, { href: "/faq/", label: "FAQ" }, { href: "/contact/", label: "Contact" }]} />
         <FooterCol title="Guides" className="md:col-span-3" links={guides.map((g) => ({ href: `/resources/${g.slug}/`, label: g.title.split(":")[0] }))} />
       </div>
+      {/* Oversized wordmark that slides in from the side, like a sign on the shop wall. */}
+      <div aria-hidden className="marquee overflow-hidden border-t border-white/10 py-6">
+        <div className="marquee-track flex w-max" style={{ "--dur": "60s" } as React.CSSProperties}>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <span key={i} className="display pr-[0.4em] text-[clamp(4rem,2rem+10vw,12rem)] leading-none whitespace-nowrap text-white/[0.09]">Plumber <span className="italic">King</span> ✦</span>
+          ))}
+        </div>
+      </div>
       <div className="border-t border-white/10">
-        <div className="container-x flex flex-col gap-3 py-6 pb-24 text-sm text-white/65 md:flex-row md:items-center md:justify-between md:pb-6">
+        <div className="container-x flex flex-col gap-3 py-6 pb-24 text-sm text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">
           <p>© {year} {site.name}, a {site.legalEntity} company · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex gap-5">
             <Link href="/privacy-policy/" className="inline-block py-1.5 hover:text-white">Privacy Policy</Link>

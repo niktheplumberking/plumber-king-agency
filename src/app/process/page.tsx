@@ -1,5 +1,5 @@
 import { PageHero } from "@/components/PageHero";
-import { ProcessTimeline } from "@/components/home/Sections";
+import { ProcessTimeline } from "@/components/home/Showcase";
 import { FinalCta } from "@/components/FinalCta";
 import { pageMeta } from "@/lib/seo";
 
@@ -12,7 +12,7 @@ export const metadata = pageMeta({
 export default function ProcessPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Process", path: "/process/" }]} title={<>From first call to a phone that <span className="text-gold">keeps ringing.</span></>} intro="No mystery, no disappearing agency. Here's exactly what happens, step by step." />
+      <PageHero crumbs={[{ name: "Process", path: "/process/" }]} title={<>From first call to a phone that <span className="accent">keeps ringing.</span></>} intro="No mystery, no disappearing agency. Here's exactly what happens, step by step." />
       <ProcessTimeline />
       <FinalCta />
     </>

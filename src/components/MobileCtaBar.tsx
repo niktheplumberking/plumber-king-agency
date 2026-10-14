@@ -12,7 +12,7 @@ export function MobileCtaBar() {
     return () => window.removeEventListener("scroll", on);
   }, []);
   return (
-    <div inert={!show} className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-navy-950/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-500 md:hidden ${show ? "translate-y-0" : "translate-y-full"}`}>
+    <div inert={!show} className={`fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white/95 backdrop-blur p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-transform duration-500 md:hidden ${show ? "translate-y-0" : "translate-y-full"}`}>
       <CtaButton className="w-full" />
     </div>
   );

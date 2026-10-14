@@ -54,16 +54,20 @@ export function HScrollFx({ className, children, ...rest }: { className?: string
   return <section ref={ref} className={className} {...rest}>{children}</section>;
 }
 
-/** A looping marquee row. Built on the client from a short list so the repeated copies never bloat the page payload. */
-export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery }: { items: string[]; dur: string; reverse?: boolean; itemClass: string; sep: string; outlineEvery?: boolean }) {
+/**
+ * A marquee row. Built on the client from a short list so the repeated copies never bloat the page payload.
+ * `still` rows do not loop (one looping band per page at most); they only move with the scroll effect around them.
+ * sep "dot" draws a round dot instead of a text glyph.
+ */
+export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery, still }: { items: string[]; dur: string; reverse?: boolean; itemClass: string; sep: string; outlineEvery?: boolean; still?: boolean }) {
   const row = [...items, ...items, ...items, ...items];
   return (
     <div className="marquee overflow-hidden">
-      <div className={`marquee-track flex w-max items-center ${reverse ? "reverse" : ""}`} style={{ "--dur": dur } as React.CSSProperties}>
+      <div className={`${still ? "" : "marquee-track"} flex w-max items-center ${reverse ? "reverse" : ""}`} style={{ "--dur": dur } as React.CSSProperties}>
         {row.map((t, i) => (
           <span key={i} aria-hidden={i >= items.length} className={itemClass}>
             <span className={outlineEvery && i % 2 ? "outline-text" : undefined}>{t}</span>
-            <span className="text-[max(0.5em,12px)] opacity-80">{sep}</span>
+            {sep === "dot" ? <span aria-hidden className="mx-[0.2em] inline-block h-[0.3em] w-[0.3em] rounded-full bg-current opacity-80" /> : <span className="text-[max(0.5em,12px)] opacity-80">{sep}</span>}
           </span>
         ))}
       </div>

@@ -28,14 +28,9 @@ export function Footer() {
         <FooterCol title="Company" className="md:col-span-2" links={[{ href: "/about/", label: "About Nick" }, { href: "/process/", label: "Our process" }, { href: "/faq/", label: "FAQ" }, { href: "/contact/", label: "Contact" }]} />
         <FooterCol title="Guides" className="md:col-span-3" links={guides.map((g) => ({ href: `/resources/${g.slug}/`, label: g.title.split(":")[0] }))} />
       </div>
-      {/* Oversized wordmark that slides in from the side, like a sign on the shop wall. */}
+      {/* Oversized wordmark, like a sign on the shop wall. Static: one looping band per page at most. */}
       <div aria-hidden className="marquee overflow-hidden border-t border-white/10 py-6">
-        <div className="marquee-track flex w-max" style={{ "--dur": "60s" } as React.CSSProperties}>
-          {/* Two copies are enough for a seamless loop: each one is wider than the screen. */}
-          {[0, 1].map((i) => (
-            <span key={i} className="foot-mark display" data-a="Plumber " data-b="King ✦" />
-          ))}
-        </div>
+        <span className="foot-mark display block" data-a="Plumber " data-b="King" />
       </div>
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-3 py-6 pb-24 text-sm text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">

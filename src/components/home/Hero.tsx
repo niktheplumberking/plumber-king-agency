@@ -34,7 +34,7 @@ export function Hero() {
 
         <ul data-hero-leads className="absolute right-24 bottom-10 hidden w-[19rem] space-y-2.5 md:block lg:right-28 lg:bottom-14" aria-label="Example of leads arriving (illustration)">
           {leads.map((l, i) => (
-            <li key={l.title} className="enter-slide flex gap-3 rounded-md border-2 border-ink bg-white p-3 text-ink shadow-[4px_4px_0_var(--color-ink)]" style={{ "--d": `${0.9 + i * 0.35}s` } as React.CSSProperties}>
+            <li key={l.title} className="enter-slide flex gap-3 rounded-md border-2 border-ink bg-white p-3 text-ink shadow-[4px_4px_0_var(--color-ink)]" style={{ "--d": `${0.45 + i * 0.2}s` } as React.CSSProperties}>
               <span className={`grid h-10 w-10 shrink-0 place-items-center rounded ${l.tone}`}><l.icon className="h-5 w-5 text-white" aria-hidden /></span>
               <span className="min-w-0">
                 <span className="block text-[0.82rem] font-extrabold uppercase tracking-wide">{l.title} <span className="font-semibold text-slate normal-case">(SAMPLE)</span></span>
@@ -51,7 +51,6 @@ export function Hero() {
 
       <div className="container-x relative pb-16 md:flex md:min-h-[100svh] md:items-center md:pt-28 md:pb-24">
         <div data-hero-copy className="-mt-8 max-w-[40rem] md:mt-0">
-          <p className="enter-fade kicker">Websites · SEO · AI search for plumbers</p>
           <h1 className="display mt-5 text-[clamp(3rem,1.6rem+6.4vw,7.2rem)] text-ink">
             <SplitWords text="Websites that keep plumbers" />{" "}
             <span className="accent"><SplitWords text="booked solid." delay={0.25} /></span>

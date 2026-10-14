@@ -15,14 +15,14 @@ const what = ["Websites", "Local SEO", "AI search", "Google Maps", "More calls"]
 const jobs = ["Water heaters", "Drain cleaning", "Burst pipes", "Repiping", "Sewer lines", "Leak detection", "Tankless installs", "Emergency calls", "Sump pumps"];
 
 export function JobsMarquee() {
-  // The bands loop on their own (CSS) and also slide against each other as the page scrolls (GSAP via ScrollFx).
+  // The top band loops (CSS); both bands slide against each other as the page scrolls (GSAP via ScrollFx).
   return (
     <ScrollFx as="section" aria-label="What we do and the jobs we help you win" className="relative overflow-hidden bg-white py-14 md:py-20">
       <div data-fx-x="-5%" className="relative z-10 -mx-10 -rotate-2 bg-royal py-4 md:py-5">
         <MarqueeRow items={what} dur="46s" itemClass="band-item text-[clamp(2.4rem,1.4rem+4vw,5.5rem)]" sep="✦" outlineEvery />
       </div>
       <div data-fx-x="5%" className="relative -mx-10 -mt-3 rotate-[1.5deg] bg-ribbon py-3 md:py-4">
-        <MarqueeRow items={jobs} dur="52s" reverse itemClass="band-item text-[clamp(1.3rem,1rem+1.4vw,2.2rem)]" sep="●" />
+        <MarqueeRow items={jobs} dur="52s" still itemClass="band-item text-[clamp(1.3rem,1rem+1.4vw,2.2rem)]" sep="dot" />
       </div>
     </ScrollFx>
   );
@@ -41,7 +41,6 @@ export function SystemBento() {
     <StackFx className="on-blue blueprint relative py-24 text-white md:py-32" aria-labelledby="system-h">
       <div className="container-x">
         <Reveal className="max-w-4xl">
-          <p className="kicker">02 — The system</p>
           <h2 id="system-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Everything it takes <span className="accent">to own your town.</span></h2>
           <p className="mt-6 max-w-2xl text-lg text-white/90">Built for plumbers only. We handle the tech so you can stay on the tools.</p>
         </Reveal>
@@ -90,7 +89,6 @@ export function ProcessTimeline({ compact = false }: { compact?: boolean }) {
       <div data-pin className="md:flex md:h-[100svh] md:flex-col md:justify-center">
         <div className="container-x flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="kicker">03 — How we work</p>
             <h2 id="process-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Five steps. <span className="accent">Zero guesswork.</span></h2>
           </div>
           <div className="max-w-sm"><p className="text-lg text-slate">From first call to a site that keeps working for you. You always know what&apos;s happening and what we need from you.</p></div>

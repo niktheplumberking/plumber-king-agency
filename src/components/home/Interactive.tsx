@@ -44,7 +44,7 @@ export function JobValueCalculator() {
     <section className="bg-paper py-24 md:py-32" aria-labelledby="calc-h">
       <div className="container-x grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <Reveal>
-          <p className="kicker">04 — Do the math</p>
+          <p className="kicker">Do the math</p>
           <h2 id="calc-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">What are a few extra jobs <span className="accent">worth to you?</span></h2>
           <p className="mt-5 max-w-lg text-lg text-slate">Move the sliders to your own numbers. This isn&apos;t a promise of results. It shows what&apos;s at stake when your website sends calls to someone else.</p>
         </Reveal>
@@ -95,7 +95,6 @@ export function WebsiteGrader() {
     <section className="bg-ivory py-24 md:py-32" aria-labelledby="grader-h">
       <div className="container-x grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal>
-          <p className="kicker">05 — Free website check</p>
           <h2 id="grader-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
           <p className="mt-5 max-w-md text-lg text-slate">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to, free, no email needed.</p>
         </Reveal>

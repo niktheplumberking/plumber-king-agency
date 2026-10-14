@@ -9,7 +9,6 @@ export function FinalCta({ kind = "strategy-call" }: { kind?: "strategy-call" | 
     <section id="book" className="on-blue blueprint relative overflow-hidden py-24 text-white md:py-32" aria-labelledby="final-h">
       <div className="container-x grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
         <Reveal>
-          <p className="kicker">Let&apos;s talk</p>
           <h2 id="final-h" className="display mt-5 text-[clamp(2.8rem,1.6rem+5vw,6.2rem)]">Ready to get your phone <span className="accent">ringing?</span></h2>
           <p className="mt-6 max-w-md text-lg text-white/90">Book a free 30-minute strategy call. We&apos;ll look at your website, your Google presence and your competitors, and tell you straight what would get you more calls.</p>
           <ul className="mt-8 space-y-3">

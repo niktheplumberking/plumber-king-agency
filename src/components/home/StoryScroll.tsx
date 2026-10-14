@@ -56,7 +56,6 @@ export function StoryScroll() {
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         <div className="container-x grid items-center gap-10 lg:grid-cols-2">
           <div>
-            <p className="kicker">How it plays out</p>
             <h2 id="story-h" className="display mt-5 max-w-xl text-[clamp(2.4rem,1.4rem+3.6vw,4.8rem)]">From invisible to <span className="accent">booked.</span></h2>
             <ol className="mt-8 flex gap-2" aria-label="Steps">
               {steps.map((s, i) => (

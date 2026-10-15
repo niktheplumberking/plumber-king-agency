@@ -30,7 +30,7 @@ export function Footer() {
       </div>
       {/* Oversized wordmark, like a sign on the shop wall. Static: one looping band per page at most. */}
       <div aria-hidden className="marquee overflow-hidden border-t border-white/10 py-6">
-        <span className="foot-mark display block" data-a="Plumber " data-b="King" />
+        <span className="foot-mark display block" data-a="Plumber King " data-b="Agency" />
       </div>
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-3 py-6 pb-24 text-sm text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">

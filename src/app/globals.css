@@ -150,7 +150,7 @@ html { scroll-padding-top: 88px; }
 .group:hover .cta-arrow { transform: translateX(0.25rem); }
 .split-w { display: inline-block; overflow: hidden; padding-bottom: 0.06em; vertical-align: bottom; }
 .split-i { display: inline-block; }
-.foot-mark { padding-right: 0.4em; font-size: clamp(4rem, 2rem + 10vw, 12rem); line-height: 1; white-space: nowrap; color: rgb(255 255 255 / 0.09); }
+.foot-mark { padding-inline: 0.2em; font-size: clamp(1.25rem, 6.4vw, 9.5rem); line-height: 1; white-space: nowrap; text-align: center; color: rgb(255 255 255 / 0.09); }
 
 /* Short names for long class lists repeated on the home page (they ship in the page data, which counts toward the JS budget). */
 @layer components {

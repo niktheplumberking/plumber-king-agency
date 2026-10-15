@@ -207,3 +207,16 @@ html { scroll-padding-top: 88px; }
 /* Footer wordmark text lives in pseudo-elements: it is decoration (aria-hidden), not content to read. */
 .foot-mark::before { content: attr(data-a); }
 .foot-mark::after { content: attr(data-b); color: rgb(255 61 139 / 0.22); }
+
+/* Section 2 promise stickers (Promises.tsx): colour, tilt and, on wide screens, a free-placed spot around Bobo. */
+.pstk { gap: 0.5rem; padding: 0.75rem 1rem; background: #fff; color: var(--color-ink); }
+.pstk:nth-of-type(3n+1) { background: var(--color-ink); color: #fff; }
+.pstk:nth-of-type(3n+2) { background: var(--color-ribbon); }
+.pstk:nth-of-type(1) { --tilt: -7deg; } .pstk:nth-of-type(2) { --tilt: 5deg; } .pstk:nth-of-type(3) { --tilt: 4deg; }
+.pstk:nth-of-type(4) { --tilt: -5deg; } .pstk:nth-of-type(5) { --tilt: -4deg; } .pstk:nth-of-type(6) { --tilt: 8deg; } .pstk:nth-of-type(7) { --tilt: -3deg; }
+@media (min-width: 1024px) {
+  .pstk { position: absolute; }
+  .pstk:nth-of-type(1) { left: 4%; top: 6%; } .pstk:nth-of-type(2) { right: 6%; top: 2%; } .pstk:nth-of-type(3) { left: 0; top: 44%; }
+  .pstk:nth-of-type(4) { right: 0; top: 38%; } .pstk:nth-of-type(5) { left: 8%; bottom: 6%; } .pstk:nth-of-type(6) { right: 10%; bottom: 4%; }
+  .pstk:nth-of-type(7) { left: 34%; bottom: -4%; }
+}

@@ -40,11 +40,10 @@ export function Hero() {
         {/* Nick in a hot-pink arch. Phones: below the copy, smaller. */}
         <div data-hero-media className="relative mx-auto aspect-[4/5] w-full max-w-[26rem] self-end md:max-w-none">
           <div aria-hidden className="absolute inset-x-[10%] top-[10%] bottom-0 rounded-t-full bg-ribbon" />
-          <div aria-hidden className="absolute inset-x-[10%] top-[10%] bottom-0 translate-x-3 -translate-y-3 rounded-t-full border-[3px] border-ink" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/nick-hero-520.webp" srcSet="/brand/nick-hero-520.webp 520w, /brand/nick-hero.webp 820w" sizes="(min-width: 768px) 46vw, 90vw" alt="Nick, founder of Plumber King Agency" width={820} height={1019} fetchPriority="high" decoding="async" className="absolute bottom-0 left-1/2 h-[96%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img data-hero-bobo src="/bobo/wave.webp" alt="" width={320} height={320} decoding="async" className="absolute right-[-2%] bottom-[14%] w-[30%] max-w-[10rem] -rotate-6" />
+          <img data-hero-bobo src="/bobo/wave.webp" alt="Bobo the duck waving" width={320} height={320} decoding="async" className="absolute right-[-2%] bottom-[14%] w-[30%] max-w-[10rem] -rotate-6" />
           <span data-hero-sticker className="sticker absolute top-[20%] left-[0%] bg-white text-ink" style={{ "--tilt": "-9deg" } as React.CSSProperties} aria-hidden>
             <Star className="h-3.5 w-3.5 fill-current" />Plumbers only
           </span>

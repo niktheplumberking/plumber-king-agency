@@ -19,7 +19,7 @@ export default function ResourcesPage() {
       <section className="bg-paper py-20 md:py-28">
         <ul className="container-x grid gap-6 md:grid-cols-2">
           {guides.map((g, i) => (
-            <Reveal as="li" key={g.slug} delay={(i % 2) * 0.08} className={i === 0 ? "md:col-span-2" : ""}>
+            <Reveal as="li" key={g.slug} off={i === 0} delay={(i % 2) * 0.08} className={i === 0 ? "md:col-span-2" : ""}>
               <Link href={`/resources/${g.slug}/`} className={`group flex h-full flex-col rounded-md p-8 transition-all duration-300 hover:-translate-y-1 md:p-10 ${i === 0 ? "on-blue blueprint border-2 border-ink text-white" : "border-2 border-ink bg-white hover:shadow-[6px_6px_0_var(--color-royal)]"}`}>
                 <h2 className={`font-bold ${i === 0 ? "max-w-3xl text-t2" : "text-t2"}`}>{g.title}</h2>
                 <p className={`mt-4 max-w-2xl ${i === 0 ? "text-white/90" : "text-slate"}`}>{g.description}</p>

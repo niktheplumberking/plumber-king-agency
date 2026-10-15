@@ -8,7 +8,7 @@ import { site } from "@/content/site";
  */
 export function BoboBadge({ variant = "light", className = "h-14 w-14" }: { variant?: "light" | "dark"; className?: string }) {
   const ring = variant === "light" ? "ring-ink/10" : "ring-white/15";
-  return <img src={`/brand/bobo-badge-${variant}.webp`} alt="" width={128} height={128} decoding="async" className={`rounded-full ring-1 ${ring} ${className}`} />;
+  return <img src={`/brand/bobo-badge-${variant}.webp`} alt="Plumber King Agency logo: Bobo the duck" width={128} height={128} decoding="async" className={`rounded-full ring-1 ${ring} ${className}`} />;
 }
 
 export function Logo({ tone = "light" }: { tone?: "light" | "dark" }) {

@@ -11,10 +11,10 @@ export function PageHero({ title, intro, crumbs, children }: { title: React.Reac
       <div aria-hidden className="blueprint pointer-events-none absolute inset-y-0 right-0 hidden w-[28%] border-l-2 border-ink lg:block" />
       <div className="container-x relative">
         <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1.5 text-t3 text-slate">
+          <ol className="flex items-center gap-1.5 overflow-hidden text-t3 whitespace-nowrap text-slate">
             {all.map((c, i) => (
-              <li key={c.path} className="flex items-center gap-1.5">
-                {i < all.length - 1 ? <Link href={c.path} className="inline-block py-1.5 hover:text-ink">{c.name}</Link> : <span aria-current="page" className="font-semibold text-ink">{c.name}</span>}
+              <li key={c.path} className="flex min-w-0 items-center gap-1.5 last:shrink">
+                {i < all.length - 1 ? <Link href={c.path} className="inline-block py-1.5 hover:text-ink">{c.name}</Link> : <span aria-current="page" className="truncate font-semibold text-ink">{c.name}</span>}
                 {i < all.length - 1 && <ChevronRight className="h-3.5 w-3.5" aria-hidden />}
               </li>
             ))}

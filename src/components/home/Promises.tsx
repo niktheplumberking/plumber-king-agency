@@ -8,15 +8,8 @@ import { SpreadFx } from "../ScrollFx";
  * (FAQ, services). Real reviews take this slot the day Nick has them. The stickers pile up on Bobo and spread out to
  * free-placed spots as you scroll (SpreadFx); on phones they sit in a loose, tilted cloud.
  */
-const promises = [
-  { t: "Plumbers only", pos: "lg:left-[4%] lg:top-[6%]", tone: "bg-ink text-white", tilt: "-7deg" },
-  { t: "You own your website", pos: "lg:right-[6%] lg:top-[2%]", tone: "bg-ribbon text-ink", tilt: "5deg" },
-  { t: "Free 30-minute strategy call", pos: "lg:left-[0%] lg:top-[44%]", tone: "bg-white text-ink", tilt: "4deg" },
-  { t: "Monthly report in plain English", pos: "lg:right-[0%] lg:top-[38%]", tone: "bg-ink text-white", tilt: "-5deg" },
-  { t: "Calls, forms and leads tracked", pos: "lg:left-[8%] lg:bottom-[6%]", tone: "bg-ribbon text-ink", tilt: "-4deg" },
-  { t: "Support after launch", pos: "lg:right-[10%] lg:bottom-[4%]", tone: "bg-white text-ink", tilt: "8deg" },
-  { t: "A timeline before we start", pos: "lg:left-[34%] lg:bottom-[-4%]", tone: "bg-ink text-white", tilt: "-3deg" },
-];
+// Positions and tilts live in globals.css (.pstk), so this list ships as short strings.
+const promises = ["Plumbers only", "You own your website", "Free 30-minute strategy call", "Monthly report in plain English", "Calls, forms and leads tracked", "Support after launch", "A timeline before we start"];
 
 export function Promises() {
   return (
@@ -33,11 +26,7 @@ export function Promises() {
               <img src="/bobo/cheer.webp" alt="Bobo, the Plumber King duck, cheering" width={320} height={320} loading="lazy" decoding="async" className="absolute -top-[14%] left-1/2 w-[112%] max-w-none -translate-x-1/2" />
             </div>
           </div>
-          {promises.map((p) => (
-            <span key={p.t} data-spread className={`sticker gap-2 px-4 py-3 ${p.tone} lg:absolute ${p.pos}`} style={{ "--tilt": p.tilt } as React.CSSProperties}>
-              <Check className="h-4 w-4" aria-hidden />{p.t}
-            </span>
-          ))}
+          {promises.map((t) => <span key={t} data-spread className="sticker pstk"><Check className="h-4 w-4" aria-hidden />{t}</span>)}
         </div>
         <div className="mt-14 flex justify-center lg:mt-16"><CtaButton /></div>
       </div>

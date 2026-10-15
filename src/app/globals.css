@@ -80,8 +80,8 @@ html.lenis, html.lenis body { height: auto; }
 html { scroll-padding-top: 88px; }
 
 @layer components {
-  .container-x { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1.25rem; }
-  @media (min-width: 768px) { .container-x { padding-inline: 2rem; } }
+  /* Wide grid (Nick, 2026-10-15: nav, footer and body felt tight): up to 100rem wide, side gutters grow with the screen. */
+  .container-x { width: 100%; max-width: 100rem; margin-inline: auto; padding-inline: clamp(1.25rem, 3.6vw, 4rem); }
 
   /* Headings: heavy Urbanist in mixed case. .accent is the emphasised phrase: on its own line, in hot pink. */
   .display { font-family: var(--font-display); font-weight: 900; letter-spacing: -0.025em; line-height: 0.98; }
@@ -89,10 +89,6 @@ html { scroll-padding-top: 88px; }
   .on-blue .accent, .blueprint .accent { color: var(--color-royal); }
   
 
-  /* Small section index ("01 — The problem"): plain text and a rule, no pill. */
-  .kicker { display: flex; align-items: center; gap: 0.75rem; font: 700 var(--text-t3)/1 var(--font-sans); color: var(--color-royal); }
-  .kicker::before { content: ""; width: 2.25rem; height: 2px; background: currentColor; }
-  .on-blue .kicker { color: var(--color-royal); }
   
 
   /* Buttons: square-cornered, bold, with a hard offset shadow that presses in on hover (no pills, no glows). */

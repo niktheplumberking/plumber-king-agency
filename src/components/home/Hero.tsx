@@ -51,7 +51,7 @@ export function Hero() {
 
       <div className="container-x relative pb-16 md:flex md:min-h-[100svh] md:items-center md:pt-28 md:pb-24">
         <div data-hero-copy className="-mt-8 max-w-[40rem] md:mt-0">
-          <h1 className="display mt-5 text-t1 text-ink">
+          <h1 className="display text-t1 text-ink">
             <SplitWords text="Websites that keep plumbers" />{" "}
             <span className="accent"><SplitWords text="booked solid." delay={0.25} /></span>
           </h1>

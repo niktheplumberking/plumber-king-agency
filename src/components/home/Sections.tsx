@@ -21,8 +21,7 @@ export function ProblemSplit() {
       <div className="container-x">
         <Reveal className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
           <div>
-            <p className="kicker">The problem</p>
-            <h2 id="problem-h" className="display mt-5 text-t1">Your website rings a phone. <span className="accent">Yours, or the other guy&apos;s.</span></h2>
+            <h2 id="problem-h" className="display text-t1">Your website rings a phone. <span className="accent">Yours, or the other guy&apos;s.</span></h2>
           </div>
           <p className="text-t3 text-slate">You didn&apos;t become a plumber to become a marketing expert. But a website that doesn&apos;t bring in calls is quietly sending your jobs to the plumber down the road. Drag the handle and see the difference.</p>
         </Reveal>

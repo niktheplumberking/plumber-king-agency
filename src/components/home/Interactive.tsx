@@ -44,8 +44,7 @@ export function JobValueCalculator() {
     <section className="bg-paper py-24 md:py-32" aria-labelledby="calc-h">
       <div className="container-x grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <Reveal>
-          <p className="kicker">Do the math</p>
-          <h2 id="calc-h" className="display mt-5 text-t1">What are a few extra jobs <span className="accent">worth to you?</span></h2>
+          <h2 id="calc-h" className="display text-t1">What are a few extra jobs <span className="accent">worth to you?</span></h2>
           <p className="mt-5 max-w-lg text-t3 text-slate">Move the sliders to your own numbers. This isn&apos;t a promise of results. It shows what&apos;s at stake when your website sends calls to someone else.</p>
         </Reveal>
         <Reveal delay={0.1} className="on-blue blueprint rounded-md border-2 border-ink p-7 text-white shadow-[8px_8px_0_var(--color-ink)] md:p-10">
@@ -95,7 +94,7 @@ export function WebsiteGrader() {
     <section className="bg-ivory py-24 md:py-32" aria-labelledby="grader-h">
       <div className="container-x grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal>
-          <h2 id="grader-h" className="display mt-5 text-t1">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
+          <h2 id="grader-h" className="display text-t1">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
           <p className="mt-5 max-w-md text-t3 text-slate">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to, free, no email needed.</p>
         </Reveal>
         <Reveal delay={0.1} className="relative mt-14 rounded-md border-2 border-ink bg-paper p-7 shadow-[8px_8px_0_var(--color-royal)] md:mt-0 md:p-10">

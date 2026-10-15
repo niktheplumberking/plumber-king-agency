@@ -41,7 +41,7 @@ export function SystemBento() {
     <StackFx className="on-blue blueprint relative py-24 text-white md:py-32" aria-labelledby="system-h">
       <div className="container-x">
         <Reveal className="max-w-4xl">
-          <h2 id="system-h" className="display mt-5 text-t1">Everything it takes <span className="accent">to own your town.</span></h2>
+          <h2 id="system-h" className="display text-t1">Everything it takes <span className="accent">to own your town.</span></h2>
           <p className="mt-6 max-w-2xl text-t3 text-white/90">Built for plumbers only. We handle the tech so you can stay on the tools.</p>
         </Reveal>
         <ol className="mt-16 space-y-8 md:space-y-0">
@@ -89,7 +89,7 @@ export function ProcessTimeline({ compact = false }: { compact?: boolean }) {
       <div data-pin className="md:flex md:h-[100svh] md:flex-col md:justify-center">
         <div className="container-x flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 id="process-h" className="display mt-5 text-t1">Five steps. <span className="accent">Zero guesswork.</span></h2>
+            <h2 id="process-h" className="display text-t1">Five steps. <span className="accent">Zero guesswork.</span></h2>
           </div>
           <div className="max-w-sm"><p className="text-t3 text-slate">From first call to a site that keeps working for you. You always know what&apos;s happening and what we need from you.</p></div>
         </div>

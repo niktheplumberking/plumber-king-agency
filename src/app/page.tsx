@@ -37,7 +37,7 @@ export default function Home() {
       <section className="bg-paper py-24 md:py-32" aria-labelledby="faq-h">
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <Reveal>
-            <h2 id="faq-h" className="display mt-5 text-t1">Straight <span className="accent">answers.</span></h2>
+            <h2 id="faq-h" className="display text-t1">Straight <span className="accent">answers.</span></h2>
             <p className="mt-5 max-w-sm text-t3 text-slate">The questions plumbers ask us most. More on the <Link href="/faq/" className="font-semibold text-royal underline underline-offset-4">full FAQ page</Link>.</p>
           </Reveal>
           <FaqList items={homeFaqs} />

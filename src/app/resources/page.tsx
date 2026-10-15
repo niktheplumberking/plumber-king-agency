@@ -21,9 +21,9 @@ export default function ResourcesPage() {
           {guides.map((g, i) => (
             <Reveal as="li" key={g.slug} delay={(i % 2) * 0.08} className={i === 0 ? "md:col-span-2" : ""}>
               <Link href={`/resources/${g.slug}/`} className={`group flex h-full flex-col rounded-md p-8 transition-all duration-300 hover:-translate-y-1 md:p-10 ${i === 0 ? "on-blue blueprint border-2 border-ink text-white" : "border-2 border-ink bg-white hover:shadow-[6px_6px_0_var(--color-royal)]"}`}>
-                <span className={`flex items-center gap-2 text-t3 ${i === 0 ? "text-white/90" : "text-slate"}`}><Clock className="h-4 w-4" aria-hidden />{g.readMinutes} min read</span>
-                <h2 className={`mt-4 font-bold ${i === 0 ? "max-w-3xl text-t2 " : "text-t2"}`}>{g.title}</h2>
+                <h2 className={`font-bold ${i === 0 ? "max-w-3xl text-t2" : "text-t2"}`}>{g.title}</h2>
                 <p className={`mt-4 max-w-2xl ${i === 0 ? "text-white/90" : "text-slate"}`}>{g.description}</p>
+                <span className={`mt-4 flex items-center gap-2 text-t3 ${i === 0 ? "text-white/90" : "text-slate"}`}><Clock className="h-4 w-4" aria-hidden />{g.readMinutes} min read</span>
                 <span className={`mt-auto inline-flex items-center gap-2 pt-6 font-semibold ${i === 0 ? "text-white" : "text-royal"}`}>Read the guide<ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden /></span>
               </Link>
             </Reveal>

@@ -43,7 +43,7 @@ export function StoryScroll() {
           <h2 id="story-h" className="display max-w-2xl text-t1">From invisible to <span className="accent">booked.</span></h2>
           <ol className="mt-12 grid gap-10 md:grid-cols-3">
             {steps.map((s, i) => (
-              <li key={s.key}><p className="display text-t2 text-ribbon">0{i + 1} {s.label}</p><h3 className="mt-2 text-t2 font-bold">{s.title}</h3><p className="mt-3 text-slate">{s.body}</p></li>
+              <li key={s.key}><h3 className="text-t2 font-bold"><span className="text-royal">0{i + 1} </span>{s.title}</h3><p className="mt-3 text-slate">{s.body}</p></li>
             ))}
           </ol>
         </div>
@@ -56,7 +56,7 @@ export function StoryScroll() {
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         <div className="container-x grid items-center gap-10 lg:grid-cols-2">
           <div>
-            <h2 id="story-h" className="display mt-5 max-w-xl text-t1">From invisible to <span className="accent">booked.</span></h2>
+            <h2 id="story-h" className="display max-w-xl text-t1">From invisible to <span className="accent">booked.</span></h2>
             <ol className="mt-8 flex gap-2" aria-label="Steps">
               {steps.map((s, i) => (
                 <li key={s.key} className={`rounded-md border-2 px-4 py-2 text-t3 font-extrabold tracking-wider uppercase transition-colors duration-500 ${i === active ? "border-ink bg-ink text-white" : "border-ink/15 text-slate"}`}>

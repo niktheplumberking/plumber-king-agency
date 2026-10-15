@@ -32,8 +32,7 @@ export function Founder({ full = false }: { full?: boolean }) {
         </div>
 
         <Reveal className="pt-10 lg:pt-0">
-          <p className="kicker">Who you work with</p>
-          <h2 id="founder-h" className="display mt-5 text-t1">The plumber&apos;s marketing guy. <span className="accent">Meet Nick.</span></h2>
+          <h2 id="founder-h" className="display text-t1">The plumber&apos;s marketing guy. <span className="accent">Meet Nick.</span></h2>
           <div className="mt-6 max-w-[62ch] space-y-4 text-t3 text-slate">
             <p>Most tradesmen are brilliant at the work, but nobody ever taught them how websites, Google or online marketing work, and you shouldn&apos;t have to figure that out on your own. Too many good plumbers end up with websites that don&apos;t bring in a single enquiry, while agencies take the money and disappear.</p>
             <p>I started Plumber King Agency because I kept seeing solid, hardworking plumbers losing out to competitors who simply had better online setups. That never sat right with me.</p>

@@ -14,8 +14,8 @@ export function Footer() {
         <div className="md:col-span-4">
           <Logo />
           <p className="mt-5 max-w-sm text-white/90">Websites, SEO and AI-search visibility for plumbing companies across the USA and Canada.</p>
-          <ul className="mt-6 space-y-2.5 text-[0.95rem]">
-            <li><a className="inline-flex min-h-8 items-center gap-2.5 hover:text-white" href={`mailto:${site.email}`}><Mail className="h-4.5 w-4.5" aria-hidden />{site.email}</a></li>
+          <ul className="mt-6 space-y-2.5 text-t3">
+            <li><a className="inline-flex min-h-8 items-center gap-2.5 [overflow-wrap:anywhere] hover:text-white" href={`mailto:${site.email}`}><Mail className="h-4.5 w-4.5" aria-hidden />{site.email}</a></li>
             <li className="inline-flex items-center gap-2.5"><MapPin className="h-4.5 w-4.5" aria-hidden />Serving the USA and Canada</li>
           </ul>
           <div className="mt-6 flex gap-2">
@@ -33,7 +33,7 @@ export function Footer() {
         <span className="foot-mark display block" data-a="Plumber King " data-b="Agency" />
       </div>
       <div className="border-t border-white/10">
-        <div className="container-x flex flex-col gap-3 py-6 pb-24 text-sm text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">
+        <div className="container-x flex flex-col gap-3 py-6 pb-24 text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">
           <p>© {year} {site.name}, a {site.legalEntity} company · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex gap-5">
             <Link href="/privacy-policy/" className="flink">Privacy Policy</Link>
@@ -50,7 +50,7 @@ function FooterCol({ title, links, className }: { title: string; links: { href: 
   return (
     <div className={className}>
       <h2 className="proof-l">{title}</h2>
-      <ul className="mt-3 space-y-1 text-[0.95rem]">
+      <ul className="mt-3 space-y-1 text-t3">
         {links.map((l) => (<li key={l.href}><Link href={l.href} className="flink">{l.label}</Link></li>))}
       </ul>
     </div>

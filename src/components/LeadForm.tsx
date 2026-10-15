@@ -14,8 +14,8 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
   const id = useId();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const dark = tone === "dark";
-  const field = `mt-2 block min-h-12 w-full rounded-md border-2 px-4 py-3 text-base outline-none transition-colors focus:border-ribbon ${dark ? "border-white/30 bg-white/10 text-white placeholder:text-white/75" : "border-ink/20 bg-white text-ink placeholder:text-slate/70"}`;
-  const label = `text-xs font-extrabold tracking-wider uppercase ${dark ? "text-white/90" : "text-ink"}`;
+  const field = `mt-2 block min-h-12 w-full rounded-md border-2 px-4 py-3 text-t3 outline-none transition-colors focus:border-ribbon ${dark ? "border-white/30 bg-white/10 text-white placeholder:text-white/75" : "border-ink/20 bg-white text-ink placeholder:text-slate/70"}`;
+  const label = `text-t3 font-extrabold tracking-wider uppercase ${dark ? "text-white/90" : "text-ink"}`;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,7 +45,7 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
       <div role="status" className={`rounded-md border-2 border-ink p-8 ${dark ? "bg-white/[0.06] text-white" : "bg-ivory"}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/bobo/cheer.webp" alt="Bobo the duck cheering" width={96} height={96} className="h-24 w-24" />
-        <p className="mt-4 font-display text-2xl font-bold">Got it. Nick will be in touch.</p>
+        <p className="mt-4 font-display text-t2 font-bold">Got it. Nick will be in touch.</p>
         <p className={`mt-2 ${dark ? "text-white/90" : "text-slate"}`}>Nick reads and replies to every request personally.</p>
       </div>
     );
@@ -65,8 +65,8 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
           {kind === "website-audit" ? site.secondaryCta : site.primaryCta}
           <ArrowRight className="h-4.5 w-4.5" aria-hidden />
         </button>
-        {state === "error" && <p role="alert" className="mt-3 text-sm font-semibold text-royal">That didn&apos;t send. Please email <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> and we&apos;ll get right back to you.</p>}
-        <p className={`mt-4 text-sm ${dark ? "text-white/90" : "text-slate"}`}>No commitment, no hard sell. By sending this you agree to our <a href="/privacy-policy/" className="underline">Privacy Policy</a>.</p>
+        {state === "error" && <p role="alert" className="mt-3 text-t3 font-semibold text-royal">That didn&apos;t send. Please email <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> and we&apos;ll get right back to you.</p>}
+        <p className={`mt-4 text-t3 ${dark ? "text-white/90" : "text-slate"}`}>No commitment, no hard sell. By sending this you agree to our <a href="/privacy-policy/" className="underline">Privacy Policy</a>.</p>
       </div>
     </form>
   );

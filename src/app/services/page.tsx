@@ -22,10 +22,10 @@ export default function ServicesPage() {
           {services.map((s, i) => (
             <Reveal key={s.slug}>
               <Link href={`/services/${s.slug}/`} className="group grid gap-6 rounded-md border-2 border-ink bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:border-navy-900/25 hover:shadow-[6px_6px_0_var(--color-royal)] md:grid-cols-[auto_1fr_auto] md:items-center md:p-10">
-                <span className="font-display text-5xl font-extrabold text-gold-700">0{i + 1}</span>
+                <span className="font-display text-t1 font-extrabold text-gold-700">0{i + 1}</span>
                 <span>
-                  <h2 className="text-3xl font-bold md:text-4xl">{s.name}</h2>
-                  <p className="mt-3 max-w-2xl text-lg text-slate">{s.outcome}</p>
+                  <h2 className="text-t2 font-bold">{s.name}</h2>
+                  <p className="mt-3 max-w-2xl text-t3 text-slate">{s.outcome}</p>
                 </span>
                 <span className="inline-flex items-center gap-2 font-semibold text-royal">Learn more<ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden /></span>
               </Link>

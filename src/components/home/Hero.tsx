@@ -38,32 +38,32 @@ export function Hero() {
               <span className={`grid h-10 w-10 shrink-0 place-items-center rounded ${l.tone}`}><l.icon className="h-5 w-5 text-white" aria-hidden /></span>
               <span className="min-w-0">
                 <span className="lead-t">{l.title} <span className="font-semibold text-slate normal-case">(SAMPLE)</span></span>
-                <span className="block truncate text-[0.85rem]">{l.body}</span>
+                <span className="block truncate text-t3">{l.body}</span>
                 <span className="lead-m"><MapPin className="h-3 w-3" aria-hidden />{l.meta}</span>
               </span>
             </li>
           ))}
         </ul>
-        <span data-hero-sticker className="sticker absolute top-[22%] left-[6%] hidden bg-ribbon text-ink md:inline-flex" style={{ "--tilt": "-8deg" } as React.CSSProperties} aria-hidden>
+        <span data-hero-sticker className="sticker absolute top-[9%] left-[34%] hidden bg-ribbon text-ink md:inline-flex" style={{ "--tilt": "-8deg" } as React.CSSProperties} aria-hidden>
           <Star className="h-3.5 w-3.5 fill-current" />Plumbers only
         </span>
       </div>
 
       <div className="container-x relative pb-16 md:flex md:min-h-[100svh] md:items-center md:pt-28 md:pb-24">
         <div data-hero-copy className="-mt-8 max-w-[40rem] md:mt-0">
-          <h1 className="display mt-5 text-[clamp(3rem,1.6rem+6.4vw,7.2rem)] text-ink">
+          <h1 className="display mt-5 text-t1 text-ink">
             <SplitWords text="Websites that keep plumbers" />{" "}
             <span className="accent"><SplitWords text="booked solid." delay={0.25} /></span>
           </h1>
           {/* No entrance on this paragraph: on phones it can be the largest text block, so it paints at once. */}
-          <p className="mt-7 max-w-[34rem] text-lg text-slate md:text-xl">
+          <p className="mt-7 max-w-[34rem] text-t3 text-slate md:text-t2">
             When a pipe bursts, homeowners call the first plumber they trust. We make sure that&apos;s you: a fast site built to convert, top spots on Google and AI search, and a call button under every thumb.
           </p>
-          <div className="enter-fade mt-9 flex flex-col gap-4 sm:flex-row" style={{ "--d": "0.3s" } as React.CSSProperties}>
+          <div className="enter-fade mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap" style={{ "--d": "0.3s" } as React.CSSProperties}>
             <CtaButton />
             <Link href="/free-website-audit/" className="btn btn-ghost-dark">{site.secondaryCta}</Link>
           </div>
-          <p className="enter-fade mt-6 text-sm text-slate" style={{ "--d": "0.4s" } as React.CSSProperties}>Free 30-minute strategy call · Plumbers only · You own your website</p>
+          <p className="enter-fade mt-6 text-t3 text-slate" style={{ "--d": "0.4s" } as React.CSSProperties}>Free 30-minute strategy call · Plumbers only · You own your website</p>
         </div>
       </div>
     </HeroMotion>

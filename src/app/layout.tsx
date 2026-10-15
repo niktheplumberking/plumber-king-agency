@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Instrument_Sans } from "next/font/google";
+import { Open_Sans, Urbanist } from "next/font/google";
 import "./globals.css";
 import { site } from "@/content/site";
 import { Header } from "@/components/Header";
@@ -30,12 +30,10 @@ const criticalCss = `
 @media (prefers-reduced-motion:reduce){.enter-rise,.enter-fade,.enter-slide,.enter-draw,.enter-pulse{animation:none}}
 `;
 
-// Archivo Black-weight uppercase headings with italic accents. Neither competitor uses it (both use Montserrat), and it is
-// not one of the fonts AI site builders default to. Two weights only, to keep the preloaded files small.
-// Its fallback is Arial stretched to Archivo 900's width (globals.css), so headings wrap the same before and after the
-// font loads and the page does not jump (contact page CLS was 0.13 with the default fallback).
-const display = Archivo({ subsets: ["latin"], weight: ["800", "900"], style: ["normal", "italic"], variable: "--font-archivo", display: "swap", adjustFontFallback: false, fallback: ["PK Display Fallback"] });
-const body = Instrument_Sans({ subsets: ["latin"], variable: "--font-instrument", display: "swap" });
+// Two fonts only, site-wide (Nick, 2026-10-15 13:13): Urbanist for titles, Open Sans for body. Next sizes each font's
+// fallback to its metrics (adjustFontFallback), so text wraps the same before and after the font loads.
+const display = Urbanist({ subsets: ["latin"], weight: ["800", "900"], variable: "--font-urbanist", display: "swap" });
+const body = Open_Sans({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-open-sans", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

@@ -11,7 +11,7 @@ export function PageHero({ title, intro, crumbs, children }: { title: React.Reac
       <div aria-hidden className="blueprint pointer-events-none absolute inset-y-0 right-0 hidden w-[28%] border-l-2 border-ink lg:block" />
       <div className="container-x relative">
         <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-slate">
+          <ol className="flex flex-wrap items-center gap-1.5 text-t3 text-slate">
             {all.map((c, i) => (
               <li key={c.path} className="flex items-center gap-1.5">
                 {i < all.length - 1 ? <Link href={c.path} className="inline-block py-1.5 hover:text-ink">{c.name}</Link> : <span aria-current="page" className="font-semibold text-ink">{c.name}</span>}
@@ -20,8 +20,8 @@ export function PageHero({ title, intro, crumbs, children }: { title: React.Reac
             ))}
           </ol>
         </nav>
-        <h1 className="display mt-6 max-w-4xl text-[clamp(2.6rem,1.6rem+4.4vw,5.8rem)] lg:max-w-[64%]">{title}</h1>
-        {intro && <div className="mt-6 max-w-2xl text-lg text-slate md:text-xl">{intro}</div>}
+        <h1 className="display mt-6 max-w-4xl text-t1 lg:max-w-[64%]">{title}</h1>
+        {intro && <div className="mt-6 max-w-2xl text-t3 text-slate md:text-t2">{intro}</div>}
         {children}
       </div>
       <JsonLd data={breadcrumbLd(all)} />

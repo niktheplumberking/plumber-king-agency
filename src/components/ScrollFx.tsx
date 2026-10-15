@@ -67,7 +67,7 @@ export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery, 
         {row.map((t, i) => (
           <span key={i} aria-hidden={i >= items.length} className={itemClass}>
             <span className={outlineEvery && i % 2 ? "outline-text" : undefined}>{t}</span>
-            {sep === "dot" ? <span aria-hidden className="mx-[0.2em] inline-block h-[0.3em] w-[0.3em] rounded-full bg-current opacity-80" /> : <span className="text-[max(0.5em,12px)] opacity-80">{sep}</span>}
+            {sep === "dot" ? <span aria-hidden className="mx-[0.2em] inline-block h-[0.3em] w-[0.3em] rounded-full bg-current opacity-80" /> : <span className="text-t3 opacity-80">{sep}</span>}
           </span>
         ))}
       </div>

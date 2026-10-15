@@ -40,10 +40,10 @@ export function StoryScroll() {
     return (
       <section className="bg-sky py-24" aria-labelledby="story-h">
         <div className="container-x">
-          <h2 id="story-h" className="display max-w-2xl text-5xl md:text-6xl">From invisible to <span className="accent">booked.</span></h2>
+          <h2 id="story-h" className="display max-w-2xl text-t1">From invisible to <span className="accent">booked.</span></h2>
           <ol className="mt-12 grid gap-10 md:grid-cols-3">
             {steps.map((s, i) => (
-              <li key={s.key}><p className="display text-xl text-ribbon">0{i + 1} {s.label}</p><h3 className="mt-2 text-2xl font-bold">{s.title}</h3><p className="mt-3 text-slate">{s.body}</p></li>
+              <li key={s.key}><p className="display text-t2 text-ribbon">0{i + 1} {s.label}</p><h3 className="mt-2 text-t2 font-bold">{s.title}</h3><p className="mt-3 text-slate">{s.body}</p></li>
             ))}
           </ol>
         </div>
@@ -56,18 +56,18 @@ export function StoryScroll() {
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         <div className="container-x grid items-center gap-10 lg:grid-cols-2">
           <div>
-            <h2 id="story-h" className="display mt-5 max-w-xl text-[clamp(2.4rem,1.4rem+3.6vw,4.8rem)]">From invisible to <span className="accent">booked.</span></h2>
+            <h2 id="story-h" className="display mt-5 max-w-xl text-t1">From invisible to <span className="accent">booked.</span></h2>
             <ol className="mt-8 flex gap-2" aria-label="Steps">
               {steps.map((s, i) => (
-                <li key={s.key} className={`rounded-md border-2 px-4 py-2 text-xs font-extrabold tracking-wider uppercase transition-colors duration-500 ${i === active ? "border-ink bg-ink text-white" : "border-ink/15 text-slate"}`}>
+                <li key={s.key} className={`rounded-md border-2 px-4 py-2 text-t3 font-extrabold tracking-wider uppercase transition-colors duration-500 ${i === active ? "border-ink bg-ink text-white" : "border-ink/15 text-slate"}`}>
                   0{i + 1} {s.label}
                 </li>
               ))}
             </ol>
             <div className="relative mt-8 min-h-[15rem] md:min-h-[13rem]">
               <div key={steps[active].key} className="enter-fade">
-                <h3 className="display text-3xl md:text-4xl">{steps[active].title}</h3>
-                <p className="mt-4 max-w-lg text-lg text-slate">{steps[active].body}</p>
+                <h3 className="display text-t2">{steps[active].title}</h3>
+                <p className="mt-4 max-w-lg text-t3 text-slate">{steps[active].body}</p>
               </div>
             </div>
             <div className="mt-6 h-1.5 w-full max-w-md overflow-hidden bg-ink/10" aria-hidden>
@@ -83,7 +83,7 @@ export function StoryScroll() {
                 {active === 2 && <ScreenBooked key="b" />}
               </div>
             </PhoneFrame>
-            <p className="mt-3 text-center text-sm text-slate">SAMPLE illustration</p>
+            <p className="mt-3 text-center text-t3 text-slate">SAMPLE illustration</p>
           </div>
         </div>
       </div>

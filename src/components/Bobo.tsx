@@ -77,7 +77,7 @@ export function Bobo() {
       {open && <BoboPanel goal={goal} choose={choose} setGoal={setGoal} close={() => setOpen(false)} hide={hide} />}
 
       {tip && !open && (
-        <div className="bobo-pop relative max-w-[16rem] rounded-md border-2 border-ink bg-paper py-3 pr-9 pl-4 text-[0.9rem] font-semibold text-ink shadow-[4px_4px_0_var(--color-ink)]">
+        <div className="bobo-pop relative max-w-[16rem] rounded-md border-2 border-ink bg-paper py-3 pr-9 pl-4 text-t3 font-semibold text-ink shadow-[4px_4px_0_var(--color-ink)]">
           <button type="button" onClick={() => setOpen(true)} className="text-left">{tip}</button>
           <button type="button" onClick={() => setTip(null)} aria-label="Dismiss tip" className="absolute top-1.5 right-1.5 grid h-7 w-7 place-items-center rounded hover:bg-ink/5"><X className="h-3.5 w-3.5" /></button>
         </div>

@@ -19,22 +19,22 @@ export function Founder({ full = false }: { full?: boolean }) {
             ) : (
               <div className="grain relative flex h-full flex-col items-center justify-center gap-4 text-gold">
                 <CrownMark className="h-20 w-28" />
-                <p className="font-display text-3xl font-bold text-white">Nick</p>
+                <p className="font-display text-t2 font-bold text-white">Nick</p>
                 <p className="text-white/90">Founder, Plumber King Agency</p>
                 {showPlaceholders && <PlaceholderBadge label="Nick's real photo goes here" />}
               </div>
             )}
           </div>
           <div data-fx-y="70" className="absolute -right-3 -bottom-6 max-w-[17rem] -rotate-2 rounded-md border-2 border-ink bg-ribbon p-5 text-ink shadow-[5px_5px_0_var(--color-ink)] sm:-right-10">
-            <p className="text-xs font-extrabold tracking-widest text-ink uppercase">Nick&apos;s rule</p>
-            <p className="mt-1 font-display text-lg leading-snug font-bold">{site.founderQuote}</p>
+            <p className="text-t3 font-extrabold tracking-widest text-ink uppercase">Nick&apos;s rule</p>
+            <p className="mt-1 font-display text-t3 leading-snug font-bold">{site.founderQuote}</p>
           </div>
         </div>
 
         <Reveal className="pt-10 lg:pt-0">
           <p className="kicker">Who you work with</p>
-          <h2 id="founder-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">The plumber&apos;s marketing guy. <span className="accent">Meet Nick.</span></h2>
-          <div className="mt-6 max-w-[62ch] space-y-4 text-lg text-slate">
+          <h2 id="founder-h" className="display mt-5 text-t1">The plumber&apos;s marketing guy. <span className="accent">Meet Nick.</span></h2>
+          <div className="mt-6 max-w-[62ch] space-y-4 text-t3 text-slate">
             <p>Most tradesmen are brilliant at the work, but nobody ever taught them how websites, Google or online marketing work, and you shouldn&apos;t have to figure that out on your own. Too many good plumbers end up with websites that don&apos;t bring in a single enquiry, while agencies take the money and disappear.</p>
             <p>I started Plumber King Agency because I kept seeing solid, hardworking plumbers losing out to competitors who simply had better online setups. That never sat right with me.</p>
             {full && <p>When you grow, I grow. If your phone starts ringing and you win better jobs, I get to show those results as a case study. I&apos;m as invested in your success as you are, and I only want to work with plumbers who are serious about growing.</p>}

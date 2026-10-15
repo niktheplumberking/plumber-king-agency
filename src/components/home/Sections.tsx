@@ -22,9 +22,9 @@ export function ProblemSplit() {
         <Reveal className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
           <div>
             <p className="kicker">The problem</p>
-            <h2 id="problem-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Your website rings a phone. <span className="accent">Yours, or the other guy&apos;s.</span></h2>
+            <h2 id="problem-h" className="display mt-5 text-t1">Your website rings a phone. <span className="accent">Yours, or the other guy&apos;s.</span></h2>
           </div>
-          <p className="text-lg text-slate">You didn&apos;t become a plumber to become a marketing expert. But a website that doesn&apos;t bring in calls is quietly sending your jobs to the plumber down the road. Drag the handle and see the difference.</p>
+          <p className="text-t3 text-slate">You didn&apos;t become a plumber to become a marketing expert. But a website that doesn&apos;t bring in calls is quietly sending your jobs to the plumber down the road. Drag the handle and see the difference.</p>
         </Reveal>
 
         <div data-compare className="mt-14">
@@ -33,11 +33,11 @@ export function ProblemSplit() {
 
         <div className="mt-10 grid gap-6 md:grid-cols-2">
           <Reveal className="rounded-md border-2 border-ink/15 bg-white p-7">
-            <h3 className="display text-xl text-slate">The typical plumber site</h3>
+            <h3 className="display text-t2 text-slate">The typical plumber site</h3>
             <ul className="mt-5 space-y-3">{oldWay.map((t) => <li key={t} className="flex gap-3 text-slate"><X className="mt-1 h-4 w-4 shrink-0 text-ribbon" aria-hidden />{t}</li>)}</ul>
           </Reveal>
           <Reveal delay={0.1} className="rounded-md border-2 border-ink bg-white p-7 shadow-[6px_6px_0_var(--color-royal)]">
-            <h3 className="display text-xl text-royal">A Plumber King site</h3>
+            <h3 className="display text-t2 text-royal">A Plumber King site</h3>
             <ul className="mt-5 space-y-3">{kingWay.map((t) => <li key={t} className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
         </div>
@@ -76,14 +76,14 @@ function Compare({ value, onValueChange, before, after }: { value: number; onVal
       </div>
       <label htmlFor={id} className="sr-only">Compare a typical plumber website with a Plumber King website</label>
       <input id={id} type="range" min={0} max={100} value={v} onChange={(e) => onValueChange(Number(e.target.value))} aria-valuetext={`${v}% typical site shown`} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-ribbon)]" />
-      <figcaption className="mt-1 text-sm text-slate">Illustration (SAMPLE): two made-up plumbing companies, not real clients.</figcaption>
+      <figcaption className="mt-1 text-t3 text-slate">Illustration (SAMPLE): two made-up plumbing companies, not real clients.</figcaption>
     </figure>
   );
 }
 
 function TypicalSite() {
   return (
-    <div className="h-full bg-[#eceae6] p-4 font-serif text-[#555] sm:p-8">
+    <div data-mock className="h-full bg-[#eceae6] p-4 font-serif text-[#555] sm:p-8">
       <div className="flex items-center justify-between border-b border-[#ccc] pb-3"><span className="text-lg italic sm:text-2xl">Smith Plumbing Services LLC</span><span className="hidden gap-3 text-xs sm:flex"><span>Home</span><span>About</span><span>Services</span><span>Gallery</span><span>Links</span></span></div>
       <div className="mt-4 grid gap-4 sm:mt-6 sm:grid-cols-[1fr_1.2fr]">
         <div className="aspect-[4/3] bg-[repeating-linear-gradient(45deg,#d6d3cd_0_10px,#dedbd6_10px_20px)]" />
@@ -100,7 +100,7 @@ function TypicalSite() {
 
 function KingSite() {
   return (
-    <div className="h-full bg-white p-4 sm:p-8">
+    <div data-mock className="h-full bg-white p-4 sm:p-8">
       <div className="flex items-center justify-between"><span className="display text-base text-royal italic sm:text-xl">Riverside <span className="text-ink">Plumbing</span></span><span className="flex items-center gap-1.5 rounded bg-ribbon px-2.5 py-1.5 text-xs font-extrabold text-ink uppercase sm:text-xs"><Phone className="h-3.5 w-3.5" />Call now</span></div>
       <div className="mt-5 grid gap-5 sm:mt-8 sm:grid-cols-[1.2fr_1fr] sm:items-center">
         <div>

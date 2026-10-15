@@ -35,13 +35,13 @@ export function Header() {
               const active = pathname?.startsWith(n.href);
               return (
                 <li key={n.href}>
-                  <Link href={n.href} className={`relative px-3.5 py-2.5 text-[0.82rem] font-bold tracking-[0.08em] uppercase transition-colors after:absolute after:inset-x-3.5 after:bottom-1 after:h-[2px] after:origin-left after:bg-ribbon after:transition-transform after:duration-300 ${active ? "text-ink after:scale-x-100" : "text-ink/75 after:scale-x-0 hover:text-ink hover:after:scale-x-100"}`}>{n.label}</Link>
+                  <Link href={n.href} className={`relative px-3.5 py-2.5 text-t3 font-bold tracking-[0.08em] uppercase transition-colors after:absolute after:inset-x-3.5 after:bottom-1 after:h-[2px] after:origin-left after:bg-ribbon after:transition-transform after:duration-300 ${active ? "text-ink after:scale-x-100" : "text-ink/75 after:scale-x-0 hover:text-ink hover:after:scale-x-100"}`}>{n.label}</Link>
                 </li>
               );
             })}
           </ul>
         </nav>
-        <div className="hidden lg:block"><CtaButton className="!min-h-11 !px-4 !text-[0.8rem]" label="Book a free call" /></div>
+        <div className="hidden lg:block"><CtaButton className="!min-h-11 !px-4" label="Book a free call" /></div>
         <button type="button" className="grid h-12 w-12 place-items-center rounded-md border-2 border-ink text-ink lg:hidden" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((o) => !o)}>
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -49,9 +49,9 @@ export function Header() {
       <div id="mobile-nav" hidden={!open} className="h-[calc(100dvh-5rem)] overflow-y-auto bg-white lg:hidden">
         <nav aria-label="Mobile" className="container-x flex flex-col gap-1 pt-6 pb-10">
           {nav.map((n) => (
-            <Link key={n.href} href={n.href} className="display border-b border-ink/10 py-4 text-3xl text-ink">{n.label}</Link>
+            <Link key={n.href} href={n.href} className="display border-b border-ink/10 py-4 text-t2 text-ink">{n.label}</Link>
           ))}
-          <Link href="/free-website-audit/" className="display accent border-b border-ink/10 py-4 text-3xl">Free website audit</Link>
+          <Link href="/free-website-audit/" className="display accent border-b border-ink/10 py-4 text-t2">Free website audit</Link>
           <CtaButton className="mt-8 w-full" />
         </nav>
       </div>

@@ -36,35 +36,35 @@ export function BoboPanel({ goal, choose, setGoal, close, hide }: { goal: Goal |
           <button type="button" onClick={close} aria-label="Close" className="absolute top-2 right-2 grid h-9 w-9 place-items-center rounded-md hover:bg-ink/5"><X className="h-4 w-4" /></button>
           <div className="flex items-end gap-3">
             <BoboModel poster={plan ? "/bobo/point.webp" : "/bobo/wave.webp"} className="-mt-16 -ml-3 w-28 shrink-0" />
-            <p className="display pb-1 text-lg">{plan ? "Here's your path" : "Hi, I'm Bobo!"}</p>
+            <p className="display pb-1 text-t3">{plan ? "Here's your path" : "Hi, I'm Bobo!"}</p>
           </div>
           {!plan ? (
             <>
-              <p className="mt-3 text-[0.95rem] text-slate">I&apos;m the Plumber King duck. What brings you here today?</p>
+              <p className="mt-3 text-t3 text-slate">I&apos;m the Plumber King duck. What brings you here today?</p>
               <div className="mt-4 grid gap-2">
                 {goals.map((g) => (
-                  <button key={g.id} type="button" onClick={() => choose(g.id)} className="rounded-md border-2 border-ink/15 px-4 py-3 text-left text-[0.95rem] font-semibold transition-colors hover:border-ribbon hover:text-ribbon">{g.label}</button>
+                  <button key={g.id} type="button" onClick={() => choose(g.id)} className="rounded-md border-2 border-ink/15 px-4 py-3 text-left text-t3 font-semibold transition-colors hover:border-ribbon hover:text-ribbon">{g.label}</button>
                 ))}
               </div>
             </>
           ) : (
             <>
-              <p className="mt-3 text-[0.95rem] text-slate">{plan.say}</p>
+              <p className="mt-3 text-t3 text-slate">{plan.say}</p>
               <div className="mt-4 grid gap-2">
                 {plan.actions.map((a, i) => {
                   const ext = a.href.startsWith("http");
                   return (
                     <a key={a.label} href={a.href} {...(ext ? { target: "_blank", rel: "noopener" } : {})} onClick={close}
-                      className={`flex items-center justify-between rounded-md px-4 py-3 text-[0.95rem] font-semibold ${i === plan.actions.length - 1 && ext ? "bg-ribbon text-ink" : "border-2 border-ink/15 hover:border-ribbon hover:text-ribbon"}`}>
+                      className={`flex items-center justify-between rounded-md px-4 py-3 text-t3 font-semibold ${i === plan.actions.length - 1 && ext ? "bg-ribbon text-ink" : "border-2 border-ink/15 hover:border-ribbon hover:text-ribbon"}`}>
                       {a.label}<ArrowRight className="h-4 w-4" aria-hidden />
                     </a>
                   );
                 })}
               </div>
-              <button type="button" onClick={() => setGoal(null)} className="mt-3 text-sm text-slate underline underline-offset-2">Change my answer</button>
+              <button type="button" onClick={() => setGoal(null)} className="mt-3 text-t3 text-slate underline underline-offset-2">Change my answer</button>
             </>
           )}
-          <button type="button" onClick={hide} className="mt-4 block text-xs text-slate hover:text-ink">Hide Bobo</button>
+          <button type="button" onClick={hide} className="mt-4 block text-t3 text-slate hover:text-ink">Hide Bobo</button>
         </div>
   );
 }

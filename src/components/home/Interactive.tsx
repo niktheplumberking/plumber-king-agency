@@ -37,7 +37,7 @@ export function JobValueCalculator() {
   // The starting values are only an example: they carry a visible SAMPLE tag until the visitor sets their own.
   const [touched, setTouched] = useState(false);
   // The leading space keeps "SAMPLE" a separate word next to the number (screen readers and the factory claims check read it).
-  const tag = touched ? null : <>{" "}<span className="ml-1 rounded bg-white/15 px-1.5 py-0.5 align-middle font-sans text-xs font-semibold text-white/90">SAMPLE</span></>;
+  const tag = touched ? null : <>{" "}<span className="ml-1 rounded bg-white/15 px-1.5 py-0.5 align-middle font-sans text-t3 font-semibold text-white/90">SAMPLE</span></>;
   const ids = { t: useId(), j: useId() };
   const yearly = ticket * jobs * 52;
   return (
@@ -45,23 +45,23 @@ export function JobValueCalculator() {
       <div className="container-x grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <Reveal>
           <p className="kicker">Do the math</p>
-          <h2 id="calc-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">What are a few extra jobs <span className="accent">worth to you?</span></h2>
-          <p className="mt-5 max-w-lg text-lg text-slate">Move the sliders to your own numbers. This isn&apos;t a promise of results. It shows what&apos;s at stake when your website sends calls to someone else.</p>
+          <h2 id="calc-h" className="display mt-5 text-t1">What are a few extra jobs <span className="accent">worth to you?</span></h2>
+          <p className="mt-5 max-w-lg text-t3 text-slate">Move the sliders to your own numbers. This isn&apos;t a promise of results. It shows what&apos;s at stake when your website sends calls to someone else.</p>
         </Reveal>
         <Reveal delay={0.1} className="on-blue blueprint rounded-md border-2 border-ink p-7 text-white shadow-[8px_8px_0_var(--color-ink)] md:p-10">
           <div className="space-y-8">
             <div>
-              <div className="flex items-baseline justify-between gap-4"><label htmlFor={ids.t} className="font-semibold">Your average job value</label><output htmlFor={ids.t} className="font-display text-2xl font-bold text-white">{money(ticket)}{tag}</output></div>
+              <div className="flex items-baseline justify-between gap-4"><label htmlFor={ids.t} className="font-semibold">Your average job value</label><output htmlFor={ids.t} className="font-display text-t2 font-bold text-white">{money(ticket)}{tag}</output></div>
               <input id={ids.t} type="range" min={100} max={3000} step={50} value={ticket} onChange={(e) => { setTicket(+e.target.value); setTouched(true); }} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-royal)]" />
             </div>
             <div>
-              <div className="flex items-baseline justify-between gap-4"><label htmlFor={ids.j} className="font-semibold">Extra booked jobs per week</label><output htmlFor={ids.j} className="font-display text-2xl font-bold text-white">{jobs}{tag}</output></div>
+              <div className="flex items-baseline justify-between gap-4"><label htmlFor={ids.j} className="font-semibold">Extra booked jobs per week</label><output htmlFor={ids.j} className="font-display text-t2 font-bold text-white">{jobs}{tag}</output></div>
               <input id={ids.j} type="range" min={1} max={20} step={1} value={jobs} onChange={(e) => { setJobs(+e.target.value); setTouched(true); }} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-royal)]" />
             </div>
           </div>
           <div className="mt-10 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-2">
-            <div><p className="text-sm text-white/90">Extra revenue per month</p><p className="font-display text-3xl font-extrabold" aria-live="polite"><AnimatedMoney value={Math.round(yearly / 12)} />{tag}</p></div>
-            <div><p className="text-sm text-white/90">Extra revenue per year</p><p className="font-display text-4xl font-extrabold text-white" aria-live="polite"><AnimatedMoney value={yearly} />{tag}</p></div>
+            <div><p className="text-t3 text-white/90">Extra revenue per month</p><p className="font-display text-t2 font-extrabold" aria-live="polite"><AnimatedMoney value={Math.round(yearly / 12)} />{tag}</p></div>
+            <div><p className="text-t3 text-white/90">Extra revenue per year</p><p className="font-display text-t2 font-extrabold text-white" aria-live="polite"><AnimatedMoney value={yearly} />{tag}</p></div>
           </div>
           <Link href="/free-website-audit/" className="btn btn-gold mt-8 w-full">See what your site is missing<ArrowRight className="h-4.5 w-4.5" aria-hidden /></Link>
         </Reveal>
@@ -95,14 +95,14 @@ export function WebsiteGrader() {
     <section className="bg-ivory py-24 md:py-32" aria-labelledby="grader-h">
       <div className="container-x grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal>
-          <h2 id="grader-h" className="display mt-5 text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
-          <p className="mt-5 max-w-md text-lg text-slate">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to, free, no email needed.</p>
+          <h2 id="grader-h" className="display mt-5 text-t1">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
+          <p className="mt-5 max-w-md text-t3 text-slate">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to, free, no email needed.</p>
         </Reveal>
         <Reveal delay={0.1} className="relative mt-14 rounded-md border-2 border-ink bg-paper p-7 shadow-[8px_8px_0_var(--color-royal)] md:mt-0 md:p-10">
           {/* Bobo reacts to the visitor's answers: thinking while they go, then cheering or sorry at the result. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={!done ? "/bobo/think.webp" : score >= 6 ? "/bobo/cheer.webp" : "/bobo/sorry.webp"} alt={!done ? "Bobo the duck thinking" : score >= 6 ? "Bobo the duck cheering" : "Bobo the duck looking worried"} width={120} height={120} className="pointer-events-none absolute -top-[4.5rem] right-4 h-24 w-24 md:-top-24 md:h-28 md:w-28" />
-          <div className="flex items-center justify-between text-sm font-semibold text-slate">
+          <div className="flex items-center justify-between text-t3 font-semibold text-slate">
             <span>{done ? "Your result" : `Question ${step + 1} of ${questions.length}`}</span>
             <button type="button" onClick={reset} className="inline-flex min-h-11 items-center gap-1.5 rounded px-3 hover:text-ink"><RotateCcw className="h-4 w-4" aria-hidden />Start over</button>
           </div>
@@ -112,7 +112,7 @@ export function WebsiteGrader() {
           <div className="mt-8 min-h-[16rem]" aria-live="polite">
             {!done ? (
                 <div key={step} className="enter-slide">
-                  <p className="font-display text-2xl font-extrabold md:text-3xl">{questions[step].q}</p>
+                  <p className="font-display text-t2 font-extrabold">{questions[step].q}</p>
                   <div className="mt-8 grid grid-cols-2 gap-3">
                     <button type="button" onClick={() => answer(true)} className="btn bg-royal text-white shadow-[4px_4px_0_var(--color-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_var(--color-ink)]"><Check className="h-5 w-5" aria-hidden />Yes</button>
                     <button type="button" onClick={() => answer(false)} className="btn btn-ghost-dark"><X className="h-5 w-5" aria-hidden />No / not sure</button>
@@ -120,8 +120,8 @@ export function WebsiteGrader() {
                 </div>
               ) : (
                 <div key="result" className="enter-fade">
-                  <p className="font-display text-6xl font-extrabold">{score}<span className="text-3xl text-slate">/{questions.length}</span></p>
-                  <p className="mt-3 text-lg font-semibold">{verdict}</p>
+                  <p className="font-display text-t1 font-extrabold">{score}<span className="text-t2 text-slate">/{questions.length}</span></p>
+                  <p className="mt-3 text-t3 font-semibold">{verdict}</p>
                   {score < questions.length && (
                     <ul className="mt-6 space-y-3">
                       {questions.map((q, i) => answers[i] === false && (

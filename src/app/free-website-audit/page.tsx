@@ -19,8 +19,8 @@ export default function AuditPage() {
       <section className="bg-paper py-20 md:py-28">
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <div>
-            <h2 className="text-3xl font-bold">What we look at</h2>
-            <ul className="mt-6 space-y-4">{checks.map((c) => (<li key={c} className="flex gap-3 text-lg text-slate"><Check className="mt-1 h-5 w-5 shrink-0 text-ribbon" aria-hidden />{c}</li>))}</ul>
+            <h2 className="text-t2 font-bold">What we look at</h2>
+            <ul className="mt-6 space-y-4">{checks.map((c) => (<li key={c} className="flex gap-3 text-t3 text-slate"><Check className="mt-1 h-5 w-5 shrink-0 text-ribbon" aria-hidden />{c}</li>))}</ul>
           </div>
           <div className="rounded-md border-2 border-ink bg-white p-6 md:p-10"><LeadForm kind="website-audit" tone="light" /></div>
         </div>

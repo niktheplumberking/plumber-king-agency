@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* Arial sized to match Archivo 900 widths (measured: upright 1.077x, italic 1.121x Next's default fallback). */
-@font-face { font-family: "PK Display Fallback"; src: local("Arial"), local("Liberation Sans"); size-adjust: 106.3%; ascent-override: 82.6%; descent-override: 19.8%; line-gap-override: 0%; }
-@font-face { font-family: "PK Display Fallback"; font-style: italic; src: local("Arial Italic"), local("Arial"), local("Liberation Sans Italic"); size-adjust: 110.6%; ascent-override: 79.4%; descent-override: 19%; line-gap-override: 0%; }
 
 /*
  * Palette "Charcoal & Hot Pink", light treatment (Nick, 2026-10-14 17:03; he wants light pages, not dark bands).
@@ -30,8 +27,21 @@
   --color-slate: #5c5559;
   --color-mist: #b8afb4;
 
-  --font-display: var(--font-archivo), ui-sans-serif, sans-serif;
-  --font-sans: var(--font-instrument), ui-sans-serif, sans-serif;
+  /* Two fonts only, site-wide (Nick, 2026-10-15): Urbanist for titles, Open Sans for everything else. */
+  --font-display: var(--font-urbanist), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-open-sans), ui-sans-serif, sans-serif;
+
+  /*
+   * Exactly three type sizes, site-wide (Nick, 2026-10-15). Never add a fourth: every text-size class in the markup
+   * is text-t1, text-t2 or text-t3. t1 = section titles and big numbers, t2 = card titles, buttons and lead lines,
+   * t3 = everything else. The mock-website illustrations inside device frames are pictures, not page text.
+   */
+  --text-t1: clamp(2.5rem, 1.35rem + 4.2vw, 5.25rem);
+  --text-t1--line-height: 1;
+  --text-t2: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  --text-t2--line-height: 1.25;
+  --text-t3: 1.0625rem;
+  --text-t3--line-height: 1.6;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -45,7 +55,7 @@
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 1.0625rem;
+    font-size: var(--text-t3);
     line-height: 1.6;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -56,6 +66,8 @@
     line-height: 1;
     text-wrap: balance;
   }
+  h1, h2 { font-size: var(--text-t1); }
+  h3, h4, h5, h6 { font-size: var(--text-t2); line-height: 1.25; }
   p { text-wrap: pretty; }
   ::selection { background: var(--color-royal); color: #fff; }
   :focus-visible { outline: 3px solid var(--color-ribbon); outline-offset: 3px; border-radius: 4px; }
@@ -71,14 +83,14 @@ html { scroll-padding-top: 88px; }
   .container-x { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1.25rem; }
   @media (min-width: 768px) { .container-x { padding-inline: 2rem; } }
 
-  /* Headings: tight uppercase display type; .accent is the red italic word (one per heading). */
-  .display { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em; line-height: 0.92; }
-  .accent { font-style: italic; color: var(--color-royal); padding-right: 0.06em; }
-  .on-blue .accent { color: var(--color-royal); }
+  /* Headings: heavy Urbanist in mixed case. .accent is the emphasised phrase: on its own line, in hot pink. */
+  .display { font-family: var(--font-display); font-weight: 900; letter-spacing: -0.025em; line-height: 0.98; }
+  .accent { display: block; color: var(--color-ribbon); }
+  .on-blue .accent, .blueprint .accent { color: var(--color-royal); }
   
 
   /* Small section index ("01 — The problem"): plain text and a rule, no pill. */
-  .kicker { display: flex; align-items: center; gap: 0.75rem; font: 700 0.8rem/1 var(--font-sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-royal); }
+  .kicker { display: flex; align-items: center; gap: 0.75rem; font: 700 var(--text-t3)/1 var(--font-sans); color: var(--color-royal); }
   .kicker::before { content: ""; width: 2.25rem; height: 2px; background: currentColor; }
   .on-blue .kicker { color: var(--color-royal); }
   
@@ -87,9 +99,10 @@ html { scroll-padding-top: 88px; }
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
     min-height: 3.4rem; padding: 0.9rem 1.5rem; border-radius: 6px;
-    font: 800 0.95rem/1.15 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+    font: 700 var(--text-t2)/1.15 var(--font-sans); text-align: center; text-wrap: balance;
     transition: transform 0.2s var(--ease-out-expo), box-shadow 0.2s var(--ease-out-expo), background-color 0.2s, color 0.2s;
   }
+  @media (min-width: 640px) { .btn { white-space: nowrap; } }
   .btn-primary { background: var(--color-ribbon); color: var(--pk-on-cta, var(--color-ink)); box-shadow: 4px 4px 0 var(--color-ink); }
   .btn-primary:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--color-ink); }
   .btn-primary:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--color-ink); }
@@ -104,7 +117,7 @@ html { scroll-padding-top: 88px; }
   /* Die-cut stickers: white border, slight tilt, hard shadow. */
   .sticker {
     display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 0.9rem; border-radius: 8px;
-    font: 900 0.8rem/1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase;
+    font: 800 var(--text-t3)/1 var(--font-display);
     border: 3px solid #fff; box-shadow: 3px 4px 0 rgb(20 20 20 / 0.85); transform: rotate(var(--tilt, -4deg));
   }
 
@@ -118,8 +131,8 @@ html { scroll-padding-top: 88px; }
 
 
   .prose-pk { max-width: 68ch; }
-  .prose-pk h2 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); margin: 2.5rem 0 0.75rem; text-transform: none; }
-  .prose-pk h3 { font-size: 1.25rem; margin: 1.75rem 0 0.5rem; }
+  .prose-pk h2 { font-size: var(--text-t2); margin: 2.5rem 0 0.75rem; }
+  .prose-pk h3 { font-size: var(--text-t2); margin: 1.75rem 0 0.5rem; }
   .prose-pk p { margin: 0 0 1rem; color: #24304a; }
   .prose-pk ul { margin: 0 0 1.25rem; padding-left: 1.25rem; list-style: disc; color: #24304a; }
   .prose-pk li { margin: 0.35rem 0; }
@@ -127,7 +140,7 @@ html { scroll-padding-top: 88px; }
 
   .placeholder-badge {
     display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.55rem; border-radius: 4px;
-    font: 700 0.72rem/1.2 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase;
+    font: 700 var(--text-t3)/1.2 var(--font-sans);
     background: repeating-linear-gradient(-45deg, #ffe1ee 0 8px, #ffcde3 8px 16px); color: #5a0a2c; border: 1px solid #c2185b;
   }
 }
@@ -155,26 +168,25 @@ html { scroll-padding-top: 88px; }
 /* Short names for long class lists repeated on the home page (they ship in the page data, which counts toward the JS budget). */
 @layer components {
   .svc-card { @apply relative grid origin-top overflow-hidden rounded-md border-2 border-ink bg-white text-ink shadow-[8px_8px_0_var(--color-ink)] md:min-h-[26rem] md:grid-cols-[1.05fr_1fr]; }
-  .ul-link { @apply inline-flex items-center gap-2 self-start border-b-2 border-ribbon pb-1 text-sm font-extrabold tracking-wider uppercase hover:text-ribbon; }
+  .ul-link { @apply inline-flex items-center gap-2 self-start border-b-2 border-ribbon pb-1 text-t3 font-bold hover:text-ribbon; }
   .step-ic { @apply relative z-10 grid h-11 w-11 place-items-center rounded-md border-2 border-ink bg-white text-ribbon; }
   .zoom-img { @apply absolute inset-0 h-full w-full object-cover transition-transform duration-700; }
   .group:hover .zoom-img { scale: 1.05; }
   .soc-btn { @apply grid h-11 w-11 place-items-center rounded-md border-2 border-white/25 transition-colors hover:border-white hover:text-white; }
   .lead-card { @apply flex gap-3 rounded-md border-2 border-ink bg-white p-3 text-ink shadow-[4px_4px_0_var(--color-ink)]; }
-  .big-num { @apply text-ribbon; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em; font-size: 4.5rem; line-height: 1; }
-  p.big-num:not(.mt-6) { font-size: 5rem; }
+  .big-num { @apply text-ribbon; font-family: var(--font-display); font-weight: 900; letter-spacing: -0.025em; font-size: var(--text-t1); line-height: 1; }
   .svc-media { @apply relative aspect-[4/3] overflow-hidden md:aspect-auto; }
   .svc-body { @apply flex flex-col justify-between gap-8 p-7 md:p-10; }
-  .lead-t { @apply block text-[0.82rem] font-extrabold uppercase tracking-wide; }
-  .lead-m { @apply mt-0.5 flex items-center gap-1 text-[0.75rem] text-slate; }
-  .proof-l { @apply font-sans text-sm font-semibold tracking-wide text-gold; }
-  .svc-h { @apply mt-1 text-2xl md:text-3xl; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em; line-height: 0.92; }
+  .lead-t { @apply block text-t3 font-bold; }
+  .lead-m { @apply mt-0.5 flex items-center gap-1 text-t3 text-slate; }
+  .proof-l { @apply font-sans text-t3 font-semibold text-gold; }
+  .svc-h { @apply mt-1 text-t2; font-family: var(--font-display); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; }
 }
 
 @keyframes pk-marquee { to { transform: translate3d(-50%, 0, 0); } }
 .marquee-track { animation: pk-marquee var(--dur, 40s) linear infinite; }
 .marquee-track.reverse { animation-direction: reverse; }
-.band-item { display: flex; align-items: center; gap: 0.5em; padding-right: 0.5em; white-space: nowrap; color: #fff; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -0.015em; line-height: 0.92; }
+.band-item { display: flex; align-items: center; gap: 0.5em; padding-right: 0.5em; white-space: nowrap; color: #fff; font-family: var(--font-display); font-weight: 900; letter-spacing: -0.025em; line-height: 1; }
 .outline-text { color: transparent; -webkit-text-stroke: 2px #fff; }
 .marquee:hover .marquee-track.pause-on-hover { animation-play-state: paused; }
 
@@ -198,4 +210,4 @@ html { scroll-padding-top: 88px; }
 
 /* Footer wordmark text lives in pseudo-elements: it is decoration (aria-hidden), not content to read. */
 .foot-mark::before { content: attr(data-a); }
-.foot-mark::after { content: attr(data-b); font-style: italic; }
+.foot-mark::after { content: attr(data-b); color: rgb(255 61 139 / 0.22); }

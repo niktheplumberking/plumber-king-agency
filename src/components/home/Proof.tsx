@@ -19,7 +19,7 @@ export function Proof() {
     <section className="on-blue overflow-hidden bg-navy-900 py-24 text-white md:py-32" aria-labelledby="proof-h">
       <div className="container-x">
         <Reveal className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <h2 id="proof-h" className="display max-w-2xl text-[clamp(2.4rem,1.4rem+4vw,5.2rem)]">Real plumbers. <span className="accent">Real websites.</span></h2>
+          <h2 id="proof-h" className="display max-w-2xl text-t1">Real plumbers. <span className="accent">Real websites.</span></h2>
           {showPlaceholders && <PlaceholderBadge label="Preview only: not confirmed real" />}
         </Reveal>
       </div>
@@ -30,7 +30,7 @@ export function Proof() {
             {numbers.map((s) => (
               <div key={s.label} className="flex flex-col-reverse gap-1">
                 <dt className="text-white/90">{s.label}</dt>
-                <dd className="font-display text-5xl font-extrabold text-white">{s.value}</dd>
+                <dd className="font-display text-t1 font-extrabold text-white">{s.value}</dd>
                 {s.status === "placeholder" && <PlaceholderBadge />}
               </div>
             ))}
@@ -59,7 +59,7 @@ function WorkRail({ items }: { items: typeof work }) {
               )}
             </div>
             <div className="mt-4 flex items-center justify-between gap-3">
-              <p className="font-display text-xl font-bold">{w.name}{w.place && <span className="font-sans text-base font-normal text-white/90"> · {w.place}</span>}</p>
+              <p className="font-display text-t2 font-bold">{w.name}{w.place && <span className="font-sans text-t3 font-normal text-white/90"> · {w.place}</span>}</p>
               {w.status === "placeholder" && <PlaceholderBadge />}
             </div>
             {w.result && <p className="mt-1 text-white/90">{w.result}</p>}
@@ -89,9 +89,9 @@ function ReviewMarquee({ quotes }: { quotes: typeof testimonials }) {
                     <div className="flex gap-0.5 text-ribbon" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-4 w-4 fill-current" aria-hidden />)}</div>
                     {t.status === "placeholder" && <PlaceholderBadge />}
                   </div>
-                  <blockquote className="mt-4 line-clamp-4 text-[1.02rem]">&ldquo;{t.quote}&rdquo;</blockquote>
-                  <p className="mt-4 text-sm font-extrabold tracking-wide uppercase">{t.name}<span className="font-semibold text-slate normal-case"> · {t.company}</span></p>
-                  {t.sourceUrl && <a href={t.sourceUrl} target="_blank" rel="noopener" className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-royal hover:underline">Read the original review<ArrowUpRight className="h-3.5 w-3.5" aria-hidden /></a>}
+                  <blockquote className="mt-4 line-clamp-4 text-t3">&ldquo;{t.quote}&rdquo;</blockquote>
+                  <p className="mt-4 text-t3 font-extrabold tracking-wide uppercase">{t.name}<span className="font-semibold text-slate normal-case"> · {t.company}</span></p>
+                  {t.sourceUrl && <a href={t.sourceUrl} target="_blank" rel="noopener" className="mt-2 inline-flex items-center gap-1 text-t3 font-semibold text-royal hover:underline">Read the original review<ArrowUpRight className="h-3.5 w-3.5" aria-hidden /></a>}
                 </li>
               ))}
             </ul>

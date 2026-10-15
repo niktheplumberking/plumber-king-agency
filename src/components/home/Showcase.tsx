@@ -15,14 +15,15 @@ const what = ["Websites", "Local SEO", "AI search", "Google Maps", "More calls"]
 const jobs = ["Water heaters", "Drain cleaning", "Burst pipes", "Repiping", "Sewer lines", "Leak detection", "Tankless installs", "Emergency calls", "Sump pumps"];
 
 export function JobsMarquee() {
-  // The top band loops (CSS); both bands slide against each other as the page scrolls (GSAP via ScrollFx).
+  // Two crossed bands laid over the seam between the hero and the next section (no box or background of their own).
+  // They move only with the scroll, in opposite directions, eased by the ScrollFx scrub: no autoplay loop to stutter.
   return (
-    <ScrollFx as="section" aria-label="What we do and the jobs we help you win" className="relative overflow-hidden bg-white py-14 md:py-20">
-      <div data-fx-x="-5%" className="relative z-10 -mx-10 -rotate-2 bg-royal py-4 md:py-5">
-        <MarqueeRow items={what} dur="46s" itemClass="band-item text-t1" sep="✦" outlineEvery />
+    <ScrollFx as="section" aria-label="What we do and the jobs we help you win" className="pointer-events-none relative z-20 -my-16 overflow-x-clip md:-my-24">
+      <div className="relative z-10 -mx-10 -rotate-2 bg-royal py-4 md:py-5">
+        <MarqueeRow items={what} still fx="-10%,-22%" itemClass="band-item text-t1" sep="✦" outlineEvery />
       </div>
-      <div data-fx-x="5%" className="relative -mx-10 -mt-3 rotate-[1.5deg] bg-ribbon py-3 md:py-4">
-        <MarqueeRow items={jobs} dur="52s" still itemClass="band-item text-t2" sep="dot" />
+      <div className="relative -mx-10 -mt-3 rotate-[1.5deg] bg-ribbon py-3 md:py-4">
+        <MarqueeRow items={jobs} still fx="-24%,-14%" itemClass="band-item text-t2" sep="dot" />
       </div>
     </ScrollFx>
   );

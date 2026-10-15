@@ -5,17 +5,22 @@ import { gsap, useGsap } from "@/lib/gsap";
 /**
  * One small client wrapper that lets server-rendered sections move on scroll without shipping their markup as JavaScript.
  * Any child with data-fx-y / data-fx-x (pixels, or "%" values) travels from +value to -value while the section crosses
- * the screen; data-fx-rotate="a,b" rotates between a and b degrees. Static under reduced motion.
+ * the screen, or from a to b when written "a,b"; data-fx-rotate="a,b" rotates between a and b degrees. The scrub is
+ * eased (0.6 s), so motion follows the scroll smoothly instead of stepping with each wheel tick. Static under reduced motion.
  */
 export function ScrollFx({ as: Tag = "div", className, children, ...rest }: { as?: "div" | "section"; className?: string; children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) {
   const ref = useRef<HTMLElement>(null);
   useGsap(ref, () => {
-    const st = { trigger: ref.current, start: "top bottom", end: "bottom top", scrub: true };
+    const st = { trigger: ref.current, start: "top bottom", end: "bottom top", scrub: 0.6 };
     ref.current!.querySelectorAll<HTMLElement>("[data-fx-y],[data-fx-x],[data-fx-rotate]").forEach((el) => {
       const from: gsap.TweenVars = {}, to: gsap.TweenVars = { ease: "none", scrollTrigger: st };
       const y = el.dataset.fxY, x = el.dataset.fxX, r = el.dataset.fxRotate;
-      if (y) { const pct = y.endsWith("%"); const n = parseFloat(y); from[pct ? "yPercent" : "y"] = n; to[pct ? "yPercent" : "y"] = -n; }
-      if (x) { const pct = x.endsWith("%"); const n = parseFloat(x); from[pct ? "xPercent" : "x"] = n; to[pct ? "xPercent" : "x"] = -n; }
+      const span = (v: string, axis: "x" | "y") => {
+        const [a, b] = v.split(",").map((p) => p.trim()), key = a.endsWith("%") ? `${axis}Percent` : axis;
+        from[key] = parseFloat(a); to[key] = b === undefined ? -parseFloat(a) : parseFloat(b);
+      };
+      if (y) span(y, "y");
+      if (x) span(x, "x");
       if (r) { const [a, b] = r.split(",").map(Number); from.rotate = a; to.rotate = b; }
       gsap.fromTo(el, from, to);
     });
@@ -56,14 +61,14 @@ export function HScrollFx({ className, children, ...rest }: { className?: string
 
 /**
  * A marquee row. Built on the client from a short list so the repeated copies never bloat the page payload.
- * `still` rows do not loop (one looping band per page at most); they only move with the scroll effect around them.
+ * `still` rows do not loop on their own; with `fx` (a data-fx-x span) the row slides with the scroll instead.
  * sep "dot" draws a round dot instead of a text glyph.
  */
-export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery, still }: { items: string[]; dur: string; reverse?: boolean; itemClass: string; sep: string; outlineEvery?: boolean; still?: boolean }) {
-  const row = [...items, ...items, ...items, ...items];
+export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery, still, fx }: { items: string[]; dur?: string; reverse?: boolean; itemClass: string; sep: string; outlineEvery?: boolean; still?: boolean; fx?: string }) {
+  const row = [...items, ...items, ...items, ...items, ...items, ...items];
   return (
     <div className="marquee overflow-hidden">
-      <div className={`${still ? "" : "marquee-track"} flex w-max items-center ${reverse ? "reverse" : ""}`} style={{ "--dur": dur } as React.CSSProperties}>
+      <div data-fx-x={fx} className={`${still ? "" : "marquee-track"} flex w-max items-center will-change-transform ${reverse ? "reverse" : ""}`} style={dur ? ({ "--dur": dur } as React.CSSProperties) : undefined}>
         {row.map((t, i) => (
           <span key={i} aria-hidden={i >= items.length} className={itemClass}>
             <span className={outlineEvery && i % 2 ? "outline-text" : undefined}>{t}</span>

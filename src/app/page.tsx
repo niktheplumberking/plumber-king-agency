@@ -2,6 +2,7 @@ import { Hero } from "@/components/home/Hero";
 import { StoryScroll } from "@/components/home/StoryScroll";
 import { ProblemSplit } from "@/components/home/Sections";
 import { JobsMarquee, ProcessTimeline, SystemBento } from "@/components/home/Showcase";
+import { Promises } from "@/components/home/Promises";
 import { JobValueCalculator, WebsiteGrader } from "@/components/home/Interactive";
 import { Founder } from "@/components/home/Founder";
 import { Proof } from "@/components/home/Proof";
@@ -26,6 +27,7 @@ export default function Home() {
     <>
       <Hero />
       <JobsMarquee />
+      <Promises />
       <StoryScroll />
       <ProblemSplit />
       <SystemBento />

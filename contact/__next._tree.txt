@@ -1,8 +1,8 @@
-:HL["/_next/static/chunks/1coahgiqaxxet.css","style"]
-:HL["/_next/static/media/113fa3cd4dc959e6.p.41entnodl3flq.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/_next/static/media/75affa71d1e2f6a7.p.17-aodiw50953.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/_next/static/media/f06bf9da926bae75-s.p.2874ccu1_u7jf.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/chunks/27u4oaibyvsqa.css","style"]
+:HL["/_next/static/media/5c8bbc89ca099f34-s.p.2qijkc4_gtkq0.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/cf514f5d0007dafa-s.p.1wc2mf9hp9pav.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/bobo/sorry.webp","image"]
+:HL["/brand/bobo-badge-dark.webp","image"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"contact","h":64,"c":"$Q2"}]]
-0:{"b":"exzP8CAai2Es6Gq2AX2KU","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"pPXkmKsamOI8iZTAvUDEY","t":{"t":{"s":"","h":16,"c":"$Q1"}}}

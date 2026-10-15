@@ -1,5 +1,6 @@
-:HL["/_next/static/chunks/1coahgiqaxxet.css","style"]
+:HL["/_next/static/chunks/27u4oaibyvsqa.css","style"]
 :HL["/bobo/sorry.webp","image"]
+:HL["/brand/bobo-badge-dark.webp","image"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":64,"c":"$Q2"}]]
-0:{"b":"exzP8CAai2Es6Gq2AX2KU","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"pPXkmKsamOI8iZTAvUDEY","t":{"t":{"s":"","h":16,"c":"$Q1"}}}

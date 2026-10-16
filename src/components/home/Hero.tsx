@@ -35,7 +35,7 @@ export function Hero() {
         <div data-hero-media className="relative order-first lg:order-last">
           <figure className="enter-pop relative" style={{ "--d": "0s" } as React.CSSProperties}>
             <div className="vsl-frame">
-              <div aria-hidden className="absolute inset-0 bg-[radial-gradient(120%_90%_at_70%_100%,var(--color-ribbon)_0%,var(--color-ribbon-deep)_55%,#9c1249_100%)]" />
+              <div aria-hidden className="vsl-bg" />
               <div aria-hidden className="hero-rays absolute inset-0" />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/brand/nick-hero-520.webp" srcSet="/brand/nick-hero-520.webp 520w, /brand/nick-hero.webp 820w" sizes="(min-width: 1024px) 34vw, 70vw" alt="Nick, founder of Plumber King Agency" width={820} height={1019} fetchPriority="high" decoding="async" className="absolute bottom-0 left-[58%] h-[104%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom" />

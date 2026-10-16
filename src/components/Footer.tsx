@@ -12,7 +12,7 @@ export function Footer() {
     <footer className="relative overflow-hidden bg-navy-950 text-white/90">
       <div className="container-x grid gap-12 pt-20 pb-28 md:grid-cols-12 md:pb-14">
         <div className="md:col-span-4">
-          <Logo className="h-24 w-auto" />
+          <Logo duckOnly className="h-24 w-auto" />
           <p className="mt-5 max-w-sm text-white/90">Websites, SEO and AI-search visibility for plumbing companies across the USA and Canada.</p>
           <ul className="mt-6 space-y-2.5 text-t3">
             <li><a className="inline-flex min-h-8 items-center gap-2.5 [overflow-wrap:anywhere] hover:text-white" href={`mailto:${site.email}`}><Mail className="h-4.5 w-4.5" aria-hidden />{site.email}</a></li>

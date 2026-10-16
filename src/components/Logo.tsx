@@ -10,10 +10,16 @@ export function BoboLogo({ className = "h-16 w-auto" }: { className?: string }) 
   return <img src="/brand/bobo-logo-96.webp" srcSet="/brand/bobo-logo-96.webp 1x, /brand/bobo-logo-192.webp 2x" alt="Plumber King Agency logo: Bobo the duck" width={84} height={96} decoding="async" className={className} />;
 }
 
-export function Logo({ className = "h-16 w-auto lg:h-[4.75rem]" }: { className?: string }) {
+/** The approved Brand DNA v4 lockup (Nick, 2026-10-16 18:13): Bobo left, PLUMBER KING over five stars and AGENCY. */
+export function Wordmark({ className = "h-11 w-auto sm:h-14 lg:h-[4.25rem]" }: { className?: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src="/brand/logo-wordmark-160.webp" srcSet="/brand/logo-wordmark-320.webp 2x" alt="Plumber King Agency" width={774} height={160} decoding="async" className={className} />;
+}
+
+export function Logo({ className, duckOnly = false }: { className?: string; duckOnly?: boolean }) {
   return (
     <Link href="/" className="inline-flex shrink-0 items-center" aria-label={`${site.name} home`}>
-      <BoboLogo className={className} />
+      {duckOnly ? <BoboLogo className={className ?? "h-16 w-auto"} /> : <Wordmark className={className} />}
     </Link>
   );
 }

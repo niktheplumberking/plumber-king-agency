@@ -31,7 +31,7 @@ export function WalkingBobo() {
     return () => io.disconnect();
   }, [load]);
   return (
-    <div ref={box} aria-hidden className="pointer-events-none absolute right-0 bottom-[calc(100%-3.85vw-0.6rem)] z-20 aspect-[1280/548] w-full lg:bottom-[calc(100%-2.3vw-0.6rem)] lg:w-[60%]">
+    <div ref={box} aria-hidden className="walk-bobo">
       {load && (still ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src="/bobo/walk.webp" alt="" width={720} height={308} decoding="async" className="h-full w-full" />

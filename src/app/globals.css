@@ -220,3 +220,8 @@ html { scroll-padding-top: 88px; }
 
 /* Section 2 strike: a background line on inline text, so it crosses every line when the text wraps. */
 .strike { background: linear-gradient(var(--color-ribbon), var(--color-ribbon)) 0 58% / 100% 3px no-repeat; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+/* Kept as plain CSS (not long utility strings) so the home page stays inside its 700 KB JavaScript budget. */
+.vsl-bg { position: absolute; inset: 0; background: radial-gradient(120% 90% at 70% 100%, var(--color-ribbon) 0%, var(--color-ribbon-deep) 55%, #9c1249 100%); }
+.walk-bobo { pointer-events: none; position: absolute; right: 0; z-index: 20; bottom: calc(100% - 3.85vw - 0.6rem); aspect-ratio: 1280 / 548; width: 100%; }
+@media (min-width: 64rem) { .walk-bobo { bottom: calc(100% - 2.3vw - 0.6rem); width: 60%; } }

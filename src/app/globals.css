@@ -217,3 +217,6 @@ html { scroll-padding-top: 88px; }
 @media (min-width: 640px) { .vsl-play { width: 6.5rem; height: 6.5rem; } }
 .hero-rays { background: repeating-conic-gradient(from 0deg at 58% 110%, rgb(255 255 255 / 0.07) 0deg 6deg, transparent 6deg 14deg); }
 .hero-dots { background-image: radial-gradient(var(--color-ribbon) 1.5px, transparent 1.6px); background-size: 22px 22px; opacity: 0.35; mask-image: linear-gradient(to right, #000, transparent); }
+
+/* Section 2 strike: a background line on inline text, so it crosses every line when the text wraps. */
+.strike { background: linear-gradient(var(--color-ribbon), var(--color-ribbon)) 0 58% / 100% 3px no-repeat; -webkit-box-decoration-break: clone; box-decoration-break: clone; }

@@ -51,7 +51,7 @@ export function Promises() {
               <li key={r.promise} data-row className="grid gap-2 border-b border-white/10 py-5 first:pt-0 last:border-0 last:pb-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center md:gap-8">
                 <p className="relative self-start text-t3 text-mist md:self-center">
                   {/* The strike is a background line on the inline text, so it crosses every line when the text wraps. */}
-                  <span data-pain className="bg-[linear-gradient(var(--color-ribbon),var(--color-ribbon))] bg-[length:100%_3px] bg-[position:0_58%] bg-no-repeat [box-decoration-break:clone]">{r.pain}</span>
+                  <span data-pain className="strike">{r.pain}</span>
                   <span className="sr-only"> (not with us)</span>
                 </p>
                 <p data-promise className="flex items-center gap-3 text-t2 font-bold">

@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   publisher: site.legalEntity,
   formatDetection: { telephone: false },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
-  icons: site.assets.logo ? { icon: site.assets.logo, apple: site.assets.logo } : undefined,
+  // Favicon and phone icon come from src/app/icon.png and apple-icon.png (head-only Bobo, Brand DNA 2026-10-16).
 };
 
 export const viewport: Viewport = {

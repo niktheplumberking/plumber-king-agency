@@ -84,9 +84,10 @@ export function Bobo() {
       )}
 
       <button type="button" onClick={() => { setOpen((o) => !o); setTip(null); }} aria-expanded={open} aria-label={open ? "Close Bobo" : "Open Bobo, your guide"}
-        className="bobo-btn grid h-16 w-16 place-items-center overflow-hidden rounded-xl border-2 border-ink bg-sky shadow-[4px_4px_0_var(--color-ink)] transition-transform hover:-rotate-6 active:translate-x-0.5 active:translate-y-0.5">
+        className="bobo-btn grid h-20 w-[4.4rem] place-items-center transition-transform hover:-rotate-6 active:translate-y-0.5">
+        {/* The duck alone, no box behind him (Nick, 2026-10-16). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/bobo/head.webp" alt="Bobo the duck" width={64} height={64} className="h-full w-full object-cover" />
+        <img src="/brand/bobo-logo-96.webp" srcSet="/brand/bobo-logo-96.webp 1x, /brand/bobo-logo-192.webp 2x" alt="Bobo the duck" width={84} height={96} className="h-full w-auto drop-shadow-[3px_4px_0_rgb(20_20_20/0.35)]" />
       </button>
     </div>
   );

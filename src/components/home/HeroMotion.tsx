@@ -2,13 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap, useGsap } from "@/lib/gsap";
 
-/** Hero wrapper: as it scrolls away Nick's photo sinks a little, Bobo floats up, the type lifts off faster than the page, and the lead cards drift. */
+/** Hero wrapper: as it scrolls away the video frame sinks a little, the type lifts off faster than the page, and the lead cards drift. */
 export function HeroMotion({ className, children }: { className?: string; children: React.ReactNode }) {
   const ref = useRef<HTMLElement>(null);
   useGsap(ref, () => {
     const st = { trigger: ref.current, start: "top top", end: "bottom top", scrub: true };
     gsap.to("[data-hero-media]", { yPercent: 8, ease: "none", scrollTrigger: st });
-    gsap.to("[data-hero-bobo]", { y: -90, rotate: 8, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-copy]", { yPercent: -18, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-leads]", { y: -120, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-sticker]", { y: 160, rotate: 10, ease: "none", scrollTrigger: st });

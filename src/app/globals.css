@@ -5,7 +5,8 @@
  * Palette "Charcoal & Hot Pink", light treatment (Nick, 2026-10-14 17:03; he wants light pages, not dark bands).
  * Pages are white, bands are pale pink with charcoal text, the footer is the one charcoal block. Old token names are
  * kept so every page re-themes at once: "navy-900/800/700" are the pale pink bands, "navy-950" is charcoal (footer),
- * "royal" and "gold-600/700" are deep pinks for small text, "ribbon" is the hot pink for buttons (charcoal text on it).
+ * "royal" and "gold-600/700" are deep pinks for small text, "ribbon" is the hot pink for buttons. Text on pink is ALWAYS white, never charcoal (Nick, 2026-10-16). Hot pink
+ * with white is 3.3:1, enough only for big bold text (buttons, titles); small white text sits on "ribbon-deep".
  */
 @theme {
   --color-navy-950: #141414;
@@ -21,6 +22,7 @@
   --color-gold-700: #9c1249;
   --color-ribbon: #ff3d8b;
   --color-ribbon-600: #f0277a;
+  --color-ribbon-deep: #db1a70;
   --color-ivory: #faf8f9;
   --color-paper: #ffffff;
   --color-ink: #141414;
@@ -36,7 +38,7 @@
    * is text-t1, text-t2 or text-t3. t1 = section titles and big numbers, t2 = card titles, buttons and lead lines,
    * t3 = everything else. The mock-website illustrations inside device frames are pictures, not page text.
    */
-  --text-t1: clamp(2.5rem, 1.35rem + 4.2vw, 5.25rem);
+  --text-t1: clamp(2.75rem, 1.2rem + 5vw, 6.5rem);
   --text-t1--line-height: 1;
   --text-t2: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
   --text-t2--line-height: 1.25;
@@ -81,7 +83,7 @@ html { scroll-padding-top: 88px; }
 
 @layer components {
   /* Wide grid (Nick, 2026-10-15: nav, footer and body felt tight): up to 100rem wide, side gutters grow with the screen. */
-  .container-x { width: 100%; max-width: 100rem; margin-inline: auto; padding-inline: clamp(1.25rem, 3.6vw, 4rem); }
+  .container-x { width: 100%; max-width: 120rem; margin-inline: auto; padding-inline: clamp(1rem, 2.2vw, 2.5rem); }
 
   /* Headings: heavy Urbanist in mixed case. .accent is the emphasised phrase: on its own line, in hot pink. */
   .display { font-family: var(--font-display); font-weight: 900; letter-spacing: -0.025em; line-height: 0.98; }
@@ -99,7 +101,7 @@ html { scroll-padding-top: 88px; }
     transition: transform 0.2s var(--ease-out-expo), box-shadow 0.2s var(--ease-out-expo), background-color 0.2s, color 0.2s;
   }
   @media (min-width: 640px) { .btn { white-space: nowrap; } }
-  .btn-primary { background: var(--color-ribbon); color: var(--pk-on-cta, var(--color-ink)); box-shadow: 4px 4px 0 var(--color-ink); }
+  .btn-primary { background: var(--color-ribbon); color: #fff; box-shadow: 4px 4px 0 var(--color-ink); }
   .btn-primary:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--color-ink); }
   .btn-primary:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--color-ink); }
   .on-blue .btn-primary { box-shadow: 4px 4px 0 var(--color-ink); }
@@ -208,15 +210,11 @@ html { scroll-padding-top: 88px; }
 .foot-mark::before { content: attr(data-a); }
 .foot-mark::after { content: attr(data-b); color: rgb(255 61 139 / 0.22); }
 
-/* Section 2 promise stickers (Promises.tsx): colour, tilt and, on wide screens, a free-placed spot around Bobo. */
-.pstk { gap: 0.5rem; padding: 0.75rem 1rem; background: #fff; color: var(--color-ink); }
-.pstk:nth-of-type(3n+1) { background: var(--color-ink); color: #fff; }
-.pstk:nth-of-type(3n+2) { background: var(--color-ribbon); }
-.pstk:nth-of-type(1) { --tilt: -7deg; } .pstk:nth-of-type(2) { --tilt: 5deg; } .pstk:nth-of-type(3) { --tilt: 4deg; }
-.pstk:nth-of-type(4) { --tilt: -5deg; } .pstk:nth-of-type(5) { --tilt: -4deg; } .pstk:nth-of-type(6) { --tilt: 8deg; } .pstk:nth-of-type(7) { --tilt: -3deg; }
-@media (min-width: 1024px) {
-  .pstk { position: absolute; }
-  .pstk:nth-of-type(1) { left: 4%; top: 6%; } .pstk:nth-of-type(2) { right: 6%; top: 2%; } .pstk:nth-of-type(3) { left: 0; top: 44%; }
-  .pstk:nth-of-type(4) { right: 0; top: 38%; } .pstk:nth-of-type(5) { left: 8%; bottom: 6%; } .pstk:nth-of-type(6) { right: 10%; bottom: 4%; }
-  .pstk:nth-of-type(7) { left: 34%; bottom: -4%; }
-}
+/* Home hero (Hero.tsx): the VSL frame, its play button and the background objects. */
+.vsl-frame { position: relative; overflow: hidden; aspect-ratio: 16 / 11; border: 4px solid var(--color-ink); border-radius: 22px; box-shadow: 12px 12px 0 var(--color-ink); transform: rotate(1.2deg); }
+@media (min-width: 1024px) { .vsl-frame { aspect-ratio: 16 / 12; } }
+.vsl-play { position: absolute; left: 50%; top: 46%; translate: -50% -50%; display: grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 999px; color: #fff; background: var(--color-ink); border: 4px solid #fff; box-shadow: 0 0 0 10px rgb(255 255 255 / 0.25); animation: pk-ring 2.4s ease-in-out infinite; }
+@media (min-width: 640px) { .vsl-play { width: 6.5rem; height: 6.5rem; } }
+@keyframes pk-ring { 50% { box-shadow: 0 0 0 20px rgb(255 255 255 / 0.08); } }
+.hero-rays { background: repeating-conic-gradient(from 0deg at 58% 110%, rgb(255 255 255 / 0.07) 0deg 6deg, transparent 6deg 14deg); }
+.hero-dots { background-image: radial-gradient(var(--color-ribbon) 1.5px, transparent 1.6px); background-size: 22px 22px; opacity: 0.35; mask-image: linear-gradient(to right, #000, transparent); }

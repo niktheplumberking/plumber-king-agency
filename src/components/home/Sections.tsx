@@ -1,6 +1,6 @@
 "use client";
 import { useId, useRef, useState } from "react";
-import { Check, ChevronsLeftRight, Phone, Star, X } from "lucide-react";
+import { Check, ChevronsLeftRight, X } from "lucide-react";
 import { gsap, useGsap } from "@/lib/gsap";
 import { Reveal } from "../Reveal";
 
@@ -8,6 +8,15 @@ import { Reveal } from "../Reveal";
 const oldWay = ["Template look, same as every competitor", "Phone number buried in the footer", "No reason to trust you over the next guy", "Slow on a phone with one bar of signal"];
 const kingWay = ["Built around the jobs you want more of", "Call button under every thumb", "Reviews, photos and promises up front", "Loads fast on any phone"];
 
+// The two site images (Higgsfield, 2026-10-16): one made-up plumbing company, before and after. They are pictures,
+// so the slider needs no fake markup. Flip on once the files are in public/work/ (Higgsfield's CDN is blocked here).
+const WORK_IMAGES_READY = false;
+
+/**
+ * Section 4, restructured 2026-10-16: the slider is the hero of the section and runs nearly full width; the two
+ * checklists float over its corners like notes pinned to the screen. Eye path: title, subline, the slider (with a
+ * one-time sweep that shows it can be dragged), then the two lists.
+ */
 export function ProblemSplit() {
   const ref = useRef<HTMLElement>(null);
   const [value, setValue] = useState(72);
@@ -17,27 +26,27 @@ export function ProblemSplit() {
     gsap.to(o, { v: 50, duration: 1.4, ease: "power3.inOut", onUpdate: () => setValue(Math.round(o.v)), scrollTrigger: { trigger: "[data-compare]", start: "top 70%", once: true } });
   });
   return (
-    <section ref={ref} className="bg-ivory py-24 md:py-32" aria-labelledby="problem-h">
-      <div className="container-x">
-        <Reveal className="grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-          <div>
-            <h2 id="problem-h" className="display text-t1">Your website rings a phone. <span className="accent">Yours, or the other guy&apos;s.</span></h2>
-          </div>
-          <p className="text-t3 text-slate">You didn&apos;t become a plumber to become a marketing expert. But a website that doesn&apos;t bring in calls is quietly sending your jobs to the plumber down the road. Drag the handle and see the difference.</p>
+    <section ref={ref} className="relative overflow-x-clip bg-ivory py-24 md:py-32" aria-labelledby="problem-h">
+      <div aria-hidden className="hero-dots pointer-events-none absolute top-16 right-0 h-72 w-[34%]" />
+      <div className="container-x relative">
+        <Reveal className="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-end">
+          <h2 id="problem-h" className="display text-t1">Your website rings a phone. <span className="accent">Yours, or the other guy&apos;s.</span></h2>
+          <p className="text-t3 text-slate md:text-t2">A website that doesn&apos;t bring in calls quietly sends your jobs to the plumber down the road. Drag the handle and see the difference.</p>
         </Reveal>
 
-        <div data-compare className="mt-14">
-          <Compare value={value} onValueChange={setValue} before={<TypicalSite />} after={<KingSite />} />
-        </div>
-
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <Reveal className="rounded-md border-2 border-ink/15 bg-white p-7">
+        <div className="relative mt-14 lg:mt-20 lg:px-[6%]">
+          <div data-compare>
+            <Compare value={value} onValueChange={setValue}
+              before={<Shot src="/work/ridgeline-before.webp" label="Typical plumber website" />}
+              after={<Shot src="/work/ridgeline-after.webp" label="Rebuilt plumber website" />} />
+          </div>
+          <Reveal className="relative z-10 mt-8 rounded-xl border-2 border-ink/15 bg-white p-6 shadow-[6px_6px_0_rgb(20_20_20/0.12)] lg:absolute lg:bottom-24 lg:-left-2 lg:mt-0 lg:w-[22rem] lg:-rotate-2">
             <h3 className="display text-t2 text-slate">The typical plumber site</h3>
-            <ul className="mt-5 space-y-3">{oldWay.map((t) => <li key={t} className="flex gap-3 text-slate"><X className="mt-1 h-4 w-4 shrink-0 text-ribbon" aria-hidden />{t}</li>)}</ul>
+            <ul className="mt-4 space-y-2.5">{oldWay.map((t) => <li key={t} className="flex gap-3 text-t3 text-slate"><X className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
-          <Reveal delay={0.1} className="rounded-md border-2 border-ink bg-white p-7 shadow-[6px_6px_0_var(--color-royal)]">
+          <Reveal delay={0.1} className="relative z-10 mt-6 rounded-xl border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)] lg:absolute lg:top-16 lg:-right-2 lg:mt-0 lg:w-[22rem] lg:rotate-2">
             <h3 className="display text-t2 text-royal">A Plumber King site</h3>
-            <ul className="mt-5 space-y-3">{kingWay.map((t) => <li key={t} className="flex gap-3"><Check className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
+            <ul className="mt-4 space-y-2.5">{kingWay.map((t) => <li key={t} className="flex gap-3 text-t3"><Check className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
         </div>
       </div>
@@ -45,9 +54,18 @@ export function ProblemSplit() {
   );
 }
 
+/** One side of the slider: the site image, or a grey placeholder until the image file is added. */
+function Shot({ src, label }: { src: string; label: string }) {
+  if (!WORK_IMAGES_READY) {
+    return <div className="grid h-full place-items-center bg-[repeating-linear-gradient(45deg,#e4e1e3_0_14px,#ecebec_14px_28px)] text-t3 font-semibold text-slate">{label} image goes here</div>;
+  }
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt="" width={1620} height={960} loading="lazy" decoding="async" className="h-full w-full object-cover object-top" draggable={false} />;
+}
+
 /**
  * Before/after slider adapted from the 21st.dev "Image Compare" component (0xuser64bit): pointer and touch drag on the
- * stage plus a real range input for keyboard and screen readers. Here the two layers are live HTML mockups instead of images.
+ * stage plus a real range input for keyboard and screen readers. Here the two layers are the before and after images.
  */
 function Compare({ value, onValueChange, before, after }: { value: number; onValueChange: (v: number) => void; before: React.ReactNode; after: React.ReactNode }) {
   const stage = useRef<HTMLDivElement>(null);
@@ -59,7 +77,7 @@ function Compare({ value, onValueChange, before, after }: { value: number; onVal
   };
   return (
     <figure>
-      <div ref={stage} className="relative aspect-[4/5] cursor-ew-resize touch-pan-y overflow-hidden rounded-md border-2 border-ink bg-white select-none sm:aspect-[16/9]"
+      <div ref={stage} className="relative aspect-[4/3] cursor-ew-resize touch-pan-y overflow-hidden rounded-xl border-4 border-ink bg-white shadow-[12px_12px_0_var(--color-ink)] select-none sm:aspect-[27/16]"
         onPointerDown={(e) => { if (e.button === 0) { e.currentTarget.setPointerCapture(e.pointerId); update(e.clientX); } }}
         onPointerMove={(e) => { if (e.currentTarget.hasPointerCapture(e.pointerId)) update(e.clientX); }}
         onPointerUp={(e) => { if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); }}>
@@ -71,47 +89,11 @@ function Compare({ value, onValueChange, before, after }: { value: number; onVal
           <span className="absolute top-1/2 left-0 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-md border-2 border-ink bg-white text-ink shadow-[3px_3px_0_var(--color-ink)]"><ChevronsLeftRight className="h-5 w-5" /></span>
         </span>
         <span aria-hidden className="sticker absolute top-4 left-4 bg-slate text-white" style={{ "--tilt": "-3deg" } as React.CSSProperties}>Typical site</span>
-        <span aria-hidden className="sticker absolute top-4 right-4 bg-royal text-white" style={{ "--tilt": "3deg" } as React.CSSProperties}>Plumber King</span>
+        <span aria-hidden className="sticker absolute top-4 right-4 bg-royal text-white" style={{ "--tilt": "3deg" } as React.CSSProperties}>Plumber King site</span>
       </div>
       <label htmlFor={id} className="sr-only">Compare a typical plumber website with a Plumber King website</label>
       <input id={id} type="range" min={0} max={100} value={v} onChange={(e) => onValueChange(Number(e.target.value))} aria-valuetext={`${v}% typical site shown`} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-ribbon)]" />
-      <figcaption className="mt-1 text-t3 text-slate">Illustration (SAMPLE): two made-up plumbing companies, not real clients.</figcaption>
+      <figcaption className="mt-1 text-t3 text-slate">Illustration: a made-up plumbing company, before and after. Not a real client.</figcaption>
     </figure>
   );
 }
-
-function TypicalSite() {
-  return (
-    <div data-mock className="h-full bg-[#eceae6] p-4 font-serif text-[#555] sm:p-8">
-      <div className="flex items-center justify-between border-b border-[#ccc] pb-3"><span className="text-lg italic sm:text-2xl">Smith Plumbing Services LLC</span><span className="hidden gap-3 text-xs sm:flex"><span>Home</span><span>About</span><span>Services</span><span>Gallery</span><span>Links</span></span></div>
-      <div className="mt-4 grid gap-4 sm:mt-6 sm:grid-cols-[1fr_1.2fr]">
-        <div className="aspect-[4/3] bg-[repeating-linear-gradient(45deg,#d6d3cd_0_10px,#dedbd6_10px_20px)]" />
-        <div className="text-xs leading-relaxed sm:text-sm">
-          <p className="font-bold">Welcome to our website!</p>
-          <p className="mt-2">We are a family owned and operated business providing quality plumbing services to the area for many years. We take pride in our work and strive for customer satisfaction. Please browse our website to learn more about the services we offer. Contact us today.</p>
-          <p className="mt-2 hidden sm:block">Our services include but are not limited to residential plumbing, commercial plumbing, repairs, installations and more. Call for details.</p>
-        </div>
-      </div>
-      <div className="absolute inset-x-0 bottom-0 bg-[#d9d6d0] px-4 py-2 text-xs sm:px-8">© Copyright · Call us for details · Site last updated 2014</div>
-    </div>
-  );
-}
-
-function KingSite() {
-  return (
-    <div data-mock className="h-full bg-white p-4 sm:p-8">
-      <div className="flex items-center justify-between"><span className="display text-base text-royal italic sm:text-xl">Riverside <span className="text-ink">Plumbing</span></span><span className="flex items-center gap-1.5 rounded bg-ribbon px-2.5 py-1.5 text-xs font-extrabold text-ink uppercase sm:text-xs"><Phone className="h-3.5 w-3.5" />Call now</span></div>
-      <div className="mt-5 grid gap-5 sm:mt-8 sm:grid-cols-[1.2fr_1fr] sm:items-center">
-        <div>
-          <p className="display text-2xl leading-[0.95] text-ink sm:text-5xl">Burst pipe? <span className="accent">We&apos;re there in 60 minutes.</span></p>
-          <div className="mt-3 flex items-center gap-1 text-ribbon">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}<span className="ml-2 text-xs font-semibold text-slate">Your Google reviews here</span></div>
-          <div className="mt-4 flex gap-2"><span className="rounded bg-ribbon px-3 py-2 text-xs font-extrabold text-ink uppercase">Call now · SAMPLE</span><span className="rounded border-2 border-ink px-3 py-2 text-xs font-extrabold uppercase">Get a quote</span></div>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {["Water heaters", "Drains", "Repiping", "Leaks"].map((t) => <span key={t} className="rounded border-2 border-ink/10 bg-ivory px-2 py-3 text-center text-xs font-bold text-ink sm:py-5 sm:text-sm">{t}</span>)}
-        </div>
-      </div>
-    </div>
-  );
-}
-

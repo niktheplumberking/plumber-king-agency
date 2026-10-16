@@ -46,7 +46,7 @@ export const site = {
   formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT || "/lead.php",
   /** Brand files supplied by Nick on 2026-10-14 (logo, his photo, the crew banner), resized into public/brand/. */
   assets: {
-    logo: "/brand/logo-160.webp" as string | null,
+    logo: "/brand/bobo-logo-192.webp" as string | null,
     founderPhoto: "/brand/nick-founder.webp" as string | null,
     banner: "/brand/banner.webp" as string | null,
   },

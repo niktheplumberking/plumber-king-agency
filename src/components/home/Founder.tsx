@@ -25,8 +25,8 @@ export function Founder({ full = false }: { full?: boolean }) {
               </div>
             )}
           </div>
-          <div data-fx-y="70" className="absolute -right-3 -bottom-6 max-w-[17rem] -rotate-2 rounded-md border-2 border-ink bg-ribbon p-5 text-ink shadow-[5px_5px_0_var(--color-ink)] sm:-right-10">
-            <p className="text-t3 font-extrabold tracking-widest text-ink uppercase">Nick&apos;s rule</p>
+          <div data-fx-y="70" className="absolute -right-3 -bottom-6 max-w-[17rem] -rotate-2 rounded-md border-2 border-ink bg-ribbon-deep p-5 text-white shadow-[5px_5px_0_var(--color-ink)] sm:-right-10">
+            <p className="text-t3 font-extrabold tracking-widest text-white uppercase">Nick&apos;s rule</p>
             <p className="mt-1 font-display text-t3 leading-snug font-bold">{site.founderQuote}</p>
           </div>
         </div>

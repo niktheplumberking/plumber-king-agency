@@ -1,3 +1,4 @@
+import { WalkingBobo } from "./WalkingBobo";
 import Link from "@/components/Link";
 import { ArrowUpRight, ClipboardList, LifeBuoy, PenTool, Rocket, Search } from "lucide-react";
 import { services } from "@/content/services";
@@ -19,6 +20,7 @@ export function JobsMarquee() {
   // They move only with the scroll, in opposite directions, eased by the ScrollFx scrub: no autoplay loop to stutter.
   return (
     <ScrollFx as="section" aria-label="What we do and the jobs we help you win" className="pointer-events-none relative z-20 -my-16 overflow-x-clip md:-my-24">
+      <WalkingBobo />
       <div className="relative z-10 -mx-10 -rotate-2 bg-royal py-4 md:py-5">
         <MarqueeRow items={what} still fx="-10%,-22%" itemClass="band-item text-t1" sep="✦" outlineEvery />
       </div>

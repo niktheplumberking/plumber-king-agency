@@ -55,7 +55,7 @@ export function BoboPanel({ goal, choose, setGoal, close, hide }: { goal: Goal |
                   const ext = a.href.startsWith("http");
                   return (
                     <a key={a.label} href={a.href} {...(ext ? { target: "_blank", rel: "noopener" } : {})} onClick={close}
-                      className={`flex items-center justify-between rounded-md px-4 py-3 text-t3 font-semibold ${i === plan.actions.length - 1 && ext ? "bg-ribbon text-ink" : "border-2 border-ink/15 hover:border-ribbon hover:text-ribbon"}`}>
+                      className={`flex items-center justify-between rounded-md px-4 py-3 text-t3 font-semibold ${i === plan.actions.length - 1 && ext ? "bg-ribbon-deep text-white" : "border-2 border-ink/15 hover:border-ribbon hover:text-ribbon"}`}>
                       {a.label}<ArrowRight className="h-4 w-4" aria-hidden />
                     </a>
                   );

@@ -79,27 +79,3 @@ export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery, 
     </div>
   );
 }
-
-/**
- * Stack-and-spread, after the 21st.dev "Stack Spread" pattern (hyperiux): the [data-spread] items start piled on the
- * centre of [data-spread-stage] and fly out to their free-placed spots while the section is pinned. Desktop only;
- * phones and reduced motion get the final layout with no pin.
- */
-export function SpreadFx({ className, children, ...rest }: { className?: string; children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) {
-  const ref = useRef<HTMLElement>(null);
-  useGsap(ref, ({ mobile }) => {
-    if (mobile) return;
-    const stage = ref.current!.querySelector<HTMLElement>("[data-spread-stage]")!;
-    const items = gsap.utils.toArray<HTMLElement>("[data-spread]");
-    const tl = gsap.timeline({ scrollTrigger: { trigger: stage, start: "center center", end: "+=70%", scrub: 0.6, pin: ref.current!.querySelector("[data-spread-pin]"), invalidateOnRefresh: true } });
-    items.forEach((el, i) => {
-      tl.from(el, {
-        x: () => { const s = stage.getBoundingClientRect(), r = el.getBoundingClientRect(); return s.left + s.width / 2 - (r.left + r.width / 2); },
-        y: () => { const s = stage.getBoundingClientRect(), r = el.getBoundingClientRect(); return s.top + s.height * 0.55 - (r.top + r.height / 2); },
-        scale: 0.6, rotate: (i % 2 ? 1 : -1) * (6 + i * 3), opacity: 0, ease: "power2.out", duration: 1,
-      }, i * 0.08);
-    });
-    tl.from("[data-spread-center]", { scale: 0.8, ease: "power2.out", duration: 1 }, 0);
-  });
-  return <section ref={ref} className={className} {...rest}>{children}</section>;
-}

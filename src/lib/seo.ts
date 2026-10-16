@@ -36,7 +36,7 @@ export function organizationLd() {
     email: site.email,
     description: site.description,
     slogan: "We build websites that get plumbers booked.",
-    ...(site.assets.logo ? { logo: abs("/brand/logo-512.png"), image: abs("/brand/logo-512.png") } : {}),
+    ...(site.assets.logo ? { logo: abs("/brand/bobo-logo-512.png"), image: abs("/brand/bobo-logo-512.png") } : {}),
     parentOrganization: { "@type": "Organization", name: site.legalEntity, legalName: site.legalEntity },
     founder: { "@id": personId },
     areaServed: site.areaServed.map((name) => ({ "@type": "Country", name })),

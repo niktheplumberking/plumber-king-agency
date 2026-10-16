@@ -16,7 +16,7 @@ export function FaqList({ items, tone = "light", level = 3 }: { items: { q: stri
             <H className="m-0 font-sans text-t3 font-extrabold tracking-wide uppercase">
               <button type="button" id={`${base}-q${i}`} aria-expanded={isOpen} aria-controls={`${base}-a${i}`} onClick={() => setOpen(isOpen ? null : i)} className="flex min-h-16 w-full items-center justify-between gap-6 px-5 py-4 text-left md:px-6">
                 {f.q}
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded bg-ribbon text-ink"><Plus className={`h-4.5 w-4.5 transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`} aria-hidden /></span>
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded bg-ribbon-deep text-white"><Plus className={`h-4.5 w-4.5 transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`} aria-hidden /></span>
               </button>
             </H>
             {/* Answers stay in the HTML when closed (hidden), so search engines and AI assistants can read every one. */}

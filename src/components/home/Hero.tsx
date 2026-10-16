@@ -46,13 +46,13 @@ export function Hero() {
               </figcaption>
             </div>
           </figure>
-          <span data-hero-sticker className="sticker enter-in absolute -top-5 left-[6%] z-10 bg-white text-ink" style={{ "--tilt": "-8deg", "--d": "1s" } as React.CSSProperties} aria-hidden>
+          <span data-hero-sticker className="sticker enter-in absolute -top-5 left-[6%] z-10 bg-white text-ink" style={{ "--tilt": "-8deg", "--d": "0.7s" } as React.CSSProperties} aria-hidden>
             <Star className="h-3.5 w-3.5 fill-current" />Plumbers only
           </span>
-          <span className="sticker enter-in absolute -right-2 top-[18%] z-10 bg-ink text-white" style={{ "--tilt": "6deg", "--d": "1.1s" } as React.CSSProperties}>Nick · Founder</span>
+          <span className="sticker enter-in absolute -right-2 top-[18%] z-10 bg-ink text-white" style={{ "--tilt": "6deg", "--d": "0.8s" } as React.CSSProperties}>Nick · Founder</span>
           <ul data-hero-leads className="absolute -bottom-14 -left-[14%] z-10 hidden w-[17.5rem] space-y-2.5 2xl:block" aria-label="Example of leads arriving (illustration)">
             {leads.map((l, i) => (
-              <li key={l.title} className="enter-slide lead-card" style={{ "--d": `${1.2 + i * 0.15}s` } as React.CSSProperties}>
+              <li key={l.title} className="enter-slide lead-card" style={{ "--d": `${0.75 + i * 0.12}s` } as React.CSSProperties}>
                 <span className={`grid h-10 w-10 shrink-0 place-items-center rounded ${l.tone}`}><l.icon className="h-5 w-5 text-white" aria-hidden /></span>
                 <span className="min-w-0">
                   <span className="lead-t">{l.title} <span className="font-semibold text-slate normal-case">(SAMPLE)</span></span>
@@ -73,16 +73,16 @@ export function Hero() {
             <span className="accent"><span className="enter-swipe" style={{ "--d": "0.39s" } as React.CSSProperties}>booked solid.</span></span>
           </h1>
           {/* 3) The subline. */}
-          <p className="enter-fade mt-7 max-w-[36rem] text-t3 text-slate md:text-t2" style={{ "--d": "0.75s" } as React.CSSProperties}>
+          <p className="enter-fade mt-7 max-w-[36rem] text-t3 text-slate md:text-t2" style={{ "--d": "0.6s" } as React.CSSProperties}>
             When a pipe bursts, homeowners call the first plumber they trust. I make sure that&apos;s you: a fast site built to convert, top spots on Google and AI search, and a call button under every thumb.
           </p>
           {/* 4) The buttons. */}
-          <div className="enter-fade mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap" style={{ "--d": "0.9s" } as React.CSSProperties}>
+          <div className="enter-fade mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap" style={{ "--d": "0.7s" } as React.CSSProperties}>
             <CtaButton />
             <Link href="/free-website-audit/" className="btn btn-ghost-dark">{site.secondaryCta}</Link>
           </div>
           {/* 5) Logos: where your customers search. */}
-          <div className="enter-in mt-10" style={{ "--d": "1.05s" } as React.CSSProperties}>
+          <div className="enter-in mt-10" style={{ "--d": "0.8s" } as React.CSSProperties}>
             <p className="text-t3 font-semibold text-slate">Get found where homeowners search:</p>
             <ul className="mt-3 flex flex-wrap gap-2" aria-label="Search platforms we optimise for">
               {foundOn.map((f) => <li key={f} className="rounded-md border-2 border-ink/10 bg-white px-3 py-1.5 text-t3 font-bold text-ink">{f}</li>)}

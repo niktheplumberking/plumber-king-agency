@@ -45,7 +45,7 @@ export function Promises() {
         {/* The panel runs off the right edge of the screen on wide layouts. */}
         <div data-panel className="relative lg:-mr-[clamp(1rem,2.2vw,2.5rem)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img data-panel-bobo src="/brand/bobo-full.webp" alt="" aria-hidden width={480} height={549} loading="lazy" decoding="async" className="absolute -top-24 right-6 z-10 w-28 md:-top-32 md:w-36" />
+          <img data-panel-bobo src="/brand/bobo-full.webp" alt="Bobo the duck" width={480} height={549} loading="lazy" decoding="async" className="absolute -top-24 right-6 z-10 w-28 md:-top-32 md:w-36" />
           <ol className="relative rounded-3xl bg-ink px-5 py-8 text-white shadow-[12px_12px_0_var(--color-ribbon)] md:px-10 md:py-12 lg:rounded-r-none">
             {rows.map((r, i) => (
               <li key={r.promise} data-row className="grid gap-2 border-b border-white/10 py-5 first:pt-0 last:border-0 last:pb-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center md:gap-8">

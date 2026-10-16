@@ -16,7 +16,7 @@ const steps = [
     key: "trusted",
     label: "Trusted",
     title: "They land. They trust you in seconds.",
-    body: "Real photos of you and your trucks, your license and insurance, your reviews and your guarantee, right where a worried homeowner looks first. No stock-photo models, no walls of text.",
+    body: "Real photos of you and your trucks, your best reviews and what makes you different, right where a worried homeowner looks first. No stock-photo models, no walls of text.",
   },
   {
     key: "booked",
@@ -35,7 +35,7 @@ const steps = [
  */
 const parked = [
   { icon: Search, text: "emergency plumber near me", cls: "top-[8%] -left-[22%] bg-white text-ink", tilt: "-6deg" },
-  { icon: ShieldCheck, text: "Licensed & insured", cls: "top-[42%] -right-[26%] bg-ink text-white", tilt: "5deg" },
+  { icon: ShieldCheck, text: "Real photos, real you", cls: "top-[42%] -right-[26%] bg-ink text-white", tilt: "5deg" },
   { icon: PhoneCall, text: "New call from your site", cls: "bottom-[10%] -left-[18%] bg-ribbon-deep text-white", tilt: "-4deg" },
 ] as const;
 
@@ -58,7 +58,7 @@ export function StoryScroll() {
         const Icon = parked[i].icon;
         const on = i <= cur;
         return (
-          <li key={s.key} className={`relative transition-opacity duration-500 ${on ? "opacity-100" : "opacity-45"}`}>
+          <li key={s.key} className={`relative transition-colors duration-500 ${on ? "text-ink" : "text-slate"}`}>
             <span className={`absolute top-0 -left-14 grid h-10 w-10 place-items-center rounded-full border-2 transition-colors duration-500 ${on ? "border-ribbon-deep bg-ribbon-deep text-white" : "border-ink/15 bg-white text-slate"}`}><Icon className="h-5 w-5" aria-hidden /></span>
             <h3 className="display text-t2">{s.label}: {s.title}</h3>
             <p className="mt-2 max-w-lg text-t3 text-slate">{s.body}</p>

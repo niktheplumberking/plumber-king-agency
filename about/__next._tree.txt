@@ -6,4 +6,4 @@
 :HL["/brand/nick-founder.webp","image",{"imageSrcSet":"/brand/nick-founder-480.webp 480w, /brand/nick-founder.webp 900w","imageSizes":"(min-width: 1024px) 28rem, 90vw","fetchPriority":"high"}]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"about","h":64,"c":"$Q2"}]]
-0:{"b":"GS50ev-pf_7CxmvENuur1","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"9Wv0XLiM2EihWvIcBWsnX","t":{"t":{"s":"","h":16,"c":"$Q1"}}}

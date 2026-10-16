@@ -9,8 +9,8 @@ const oldWay = ["Template look, same as every competitor", "Phone number buried 
 const kingWay = ["Built around the jobs you want more of", "Call button under every thumb", "Reviews, photos and promises up front", "Loads fast on any phone"];
 
 // The two site images (Higgsfield, 2026-10-16): one made-up plumbing company, before and after. They are pictures,
-// so the slider needs no fake markup. Flip on once the files are in public/work/ (Higgsfield's CDN is blocked here).
-const WORK_IMAGES_READY = false;
+// so the slider needs no fake markup. Files in public/work/ (Nick brought them over from Higgsfield).
+const WORK_IMAGES_READY = true;
 
 /**
  * Section 4, restructured 2026-10-16: the slider is the hero of the section and runs nearly full width; the two
@@ -40,11 +40,11 @@ export function ProblemSplit() {
               before={<Shot src="/work/ridgeline-before.webp" label="Typical plumber website" />}
               after={<Shot src="/work/ridgeline-after.webp" label="Rebuilt plumber website" />} />
           </div>
-          <Reveal className="relative z-10 mt-8 rounded-xl border-2 border-ink/15 bg-white p-6 shadow-[6px_6px_0_rgb(20_20_20/0.12)] lg:absolute lg:bottom-24 lg:-left-2 lg:mt-0 lg:w-[22rem] lg:-rotate-2">
+          <Reveal className="relative z-10 mt-8 rounded-xl border-2 border-ink/15 bg-white p-6 shadow-[6px_6px_0_rgb(20_20_20/0.12)] lg:absolute lg:bottom-10 lg:-left-2 lg:mt-0 lg:w-[22rem] lg:-rotate-2">
             <h3 className="display text-t2 text-slate">The typical plumber site</h3>
             <ul className="mt-4 space-y-2.5">{oldWay.map((t) => <li key={t} className="flex gap-3 text-t3 text-slate"><X className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
-          <Reveal delay={0.1} className="relative z-10 mt-6 rounded-xl border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)] lg:absolute lg:top-16 lg:-right-2 lg:mt-0 lg:w-[22rem] lg:rotate-2">
+          <Reveal delay={0.1} className="relative z-10 mt-6 rounded-xl border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)] lg:absolute lg:top-[42%] lg:-right-2 lg:mt-0 lg:w-[22rem] lg:rotate-2">
             <h3 className="display text-t2 text-royal">A Plumber King site</h3>
             <ul className="mt-4 space-y-2.5">{kingWay.map((t) => <li key={t} className="flex gap-3 text-t3"><Check className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
@@ -60,7 +60,7 @@ function Shot({ src, label }: { src: string; label: string }) {
     return <div className="grid h-full place-items-center bg-[repeating-linear-gradient(45deg,#e4e1e3_0_14px,#ecebec_14px_28px)] text-t3 font-semibold text-slate">{label} image goes here</div>;
   }
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt="" width={1620} height={960} loading="lazy" decoding="async" className="h-full w-full object-cover object-top" draggable={false} />;
+  return <img src={src} alt={label} width={1296} height={768} loading="lazy" decoding="async" className="h-full w-full object-cover object-top" draggable={false} />;
 }
 
 /**

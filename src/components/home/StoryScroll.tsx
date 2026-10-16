@@ -16,7 +16,7 @@ const steps = [
     key: "trusted",
     label: "Trusted",
     title: "They land. They trust you in seconds.",
-    body: "Real photos of you and your trucks, your best reviews and what makes you different, right where a worried homeowner looks first. No stock-photo models, no walls of text.",
+    body: "Real photos of you and your trucks, your real reviews and what makes you different, right where a worried homeowner looks first. No stock-photo models, no walls of text.",
   },
   {
     key: "booked",

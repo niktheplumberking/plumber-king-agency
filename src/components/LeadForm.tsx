@@ -7,7 +7,7 @@ type Kind = "strategy-call" | "website-audit";
 
 /**
  * Short form (fewer fields, more leads). POSTs JSON to site.formEndpoint (default /lead.php on Hostinger, which emails
- * the lead to support@bennettndco.com). If sending fails, the visitor is shown the email address instead, so a lead
+ * the lead to nick@plumberkingagency.com). If sending fails, the visitor is shown the email address instead, so a lead
  * is never silently lost.
  */
 export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kind; tone?: "dark" | "light" }) {

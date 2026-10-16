@@ -1,9 +1,9 @@
 <?php
 // Lead form handler for Hostinger (PHP). Emails each enquiry to the address below and answers with JSON.
-// Source of the address: Nick, 2026-10-14. Only POSTed JSON from this site's own forms is accepted.
+// Source of the address: Nick, 2026-10-16 (business inbox). Only POSTed JSON from this site's own forms is accepted.
 declare(strict_types=1);
 
-const LEAD_TO = 'support@bennettndco.com';
+const LEAD_TO = 'nick@plumberkingagency.com';
 const MAX_LEN = 300;
 
 header('Content-Type: application/json; charset=utf-8');

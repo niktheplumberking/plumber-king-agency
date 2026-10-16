@@ -42,7 +42,7 @@ export function organizationLd() {
     areaServed: site.areaServed.map((name) => ({ "@type": "Country", name })),
     knowsAbout: ["Plumber website design", "Local SEO for plumbers", "Google Business Profile optimization", "Generative engine optimization", "Lead generation for plumbing companies"],
     audience: { "@type": "BusinessAudience", audienceType: "Plumbing companies" },
-    sameAs: Object.values(site.social),
+    sameAs: Object.values(site.social).filter(Boolean),
     contactPoint: { "@type": "ContactPoint", contactType: "sales", email: site.email, areaServed: ["US", "CA"], availableLanguage: "English" },
   };
 }

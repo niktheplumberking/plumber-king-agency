@@ -21,19 +21,25 @@ export const site = {
    * Set NEXT_PUBLIC_SITE_URL to it before the live build; sitemap, canonicals and schema use it.
    */
   url: envUrl || "https://plumberkingagency.com",
-  /** Where leads and enquiries go. Source: Nick, 2026-10-14. */
-  email: "support@bennettndco.com",
+  /**
+   * Public trade line, worded as Bennett & Co LLC's accountant advised (2026-10-16): there is no DBA yet,
+   * so the brand is always shown as owned by the LLC. Invoices and contracts stay in the LLC's name.
+   */
+  ownership: "Plumber King Agency - Owned by Bennett & Co LLC",
+  /** Business email: public contact and lead inbox. Source: Nick, 2026-10-16. */
+  email: "nick@plumberkingagency.com",
   founder: "Nick",
   areaServed: ["United States", "Canada"],
   tagline: "Websites, SEO and AI-search visibility for plumbing companies.",
   description:
     "Plumber King Agency builds fast, conversion-focused websites, local SEO and AI-search visibility for plumbing companies in the USA and Canada, so homeowners find you, trust you and call you.",
   founderQuote: "If your phone ain't ringing, I haven't done my job.",
+  /** Source: Nick, 2026-10-16. LinkedIn: Nick sends the link within 7 days; an empty value hides its icon. */
   social: {
-    facebook: "https://www.facebook.com/profile.php?id=61585878251720",
-    instagram: "https://www.instagram.com/plumberkingagency/",
-    threads: "https://www.threads.com/@plumberkingagency",
-  },
+    instagram: "https://www.instagram.com/nick.bennettx/",
+    facebook: "https://www.facebook.com/profile.php?id=61595692701094",
+    linkedin: "",
+  } as Record<"instagram" | "facebook" | "linkedin", string>,
   /** Strategy-call booking page. Source: Nick, 2026-10-14. */
   bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL || "https://calendly.com/plumber-king-agency/30-minutes-detailed-call",
   /** Lead form target. Default: public/lead.php, which emails each lead to `email` from Hostinger (PHP mail). */

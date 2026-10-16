@@ -4,7 +4,7 @@ import { site } from "@/content/site";
 import { services } from "@/content/services";
 import { guides } from "@/content/guides";
 import { Logo } from "./Logo";
-import { FacebookIcon, InstagramIcon, ThreadsIcon } from "./SocialIcons";
+import { FacebookIcon, InstagramIcon, LinkedInIcon } from "./SocialIcons";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -19,7 +19,7 @@ export function Footer() {
             <li className="inline-flex items-center gap-2.5"><MapPin className="h-4.5 w-4.5" aria-hidden />Serving the USA and Canada</li>
           </ul>
           <div className="mt-6 flex gap-2">
-            {[{ href: site.social.facebook, label: "Facebook", Icon: FacebookIcon }, { href: site.social.instagram, label: "Instagram", Icon: InstagramIcon }, { href: site.social.threads, label: "Threads", Icon: ThreadsIcon }].map(({ href, label, Icon }) => (
+            {[{ href: site.social.instagram, label: "Instagram", Icon: InstagramIcon }, { href: site.social.facebook, label: "Facebook", Icon: FacebookIcon }, { href: site.social.linkedin, label: "LinkedIn", Icon: LinkedInIcon }].filter((s) => s.href).map(({ href, label, Icon }) => (
               <a key={label} href={href} target="_blank" rel="noopener me" aria-label={`${site.name} on ${label}`} className="soc-btn"><Icon className="h-5 w-5" /></a>
             ))}
           </div>
@@ -34,7 +34,7 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-3 py-6 pb-24 text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">
-          <p>© {year} {site.name}, a {site.legalEntity} company · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
+          <p>© {year} {site.ownership} · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex gap-5">
             <Link href="/privacy-policy/" className="flink">Privacy Policy</Link>
             <Link href="/terms-of-service/" className="flink">Terms of Service</Link>

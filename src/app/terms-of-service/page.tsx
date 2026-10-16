@@ -14,7 +14,7 @@ export default function TermsPage() {
   return (
     <LegalPage title="Terms of Service" path="/terms-of-service/" updated="October 14, 2026">
       <h2>1. Who we are</h2>
-      <p>{site.name} (&ldquo;Plumber King&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) is a business owned and operated by <strong>{e}</strong>, its holding company. References to {site.name} in these Terms include {e}. You can reach us at <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <p>{site.name} (&ldquo;Plumber King&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) is a brand owned and operated by <strong>{e}</strong>. All services are provided, contracted and invoiced by {e}. References to {site.name} in these Terms include {e}. You can reach us at <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
       <h2>2. Acceptance of these Terms</h2>
       <p>By accessing or using the {site.name} website ({site.url.replace("https://", "")}) or our services, you agree to these Terms of Service. If you do not agree, please do not use the website or our services.</p>
       <h2>3. Our services</h2>
@@ -44,7 +44,7 @@ export default function TermsPage() {
       <p>These Terms are governed by the laws of the State of {site.legalState}, United States.</p>
       <h2>13. Contact</h2>
       <p>Questions about these Terms? Email <a href={`mailto:${site.email}`}>{site.email}</a> or write to {e}, {site.legalAddress}.</p>
-      <p><strong>{site.name} is a {e} company.</strong></p>
+      <p><strong>{site.ownership}.</strong></p>
     </LegalPage>
   );
 }

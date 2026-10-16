@@ -34,6 +34,7 @@ export default function PrivacyPage() {
       <p>We may update this policy. The date at the top shows the latest version.</p>
       <h2>9. Contact</h2>
       <p>Questions or requests: <a href={`mailto:${site.email}`}>{site.email}</a>, or write to {e}, {site.legalAddress}.</p>
+      <p><strong>{site.ownership}.</strong></p>
     </LegalPage>
   );
 }

@@ -26,7 +26,7 @@ export function Promises() {
   useGsap(ref, () => {
     gsap.utils.toArray<HTMLElement>("[data-row]").forEach((row) => {
       const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: "top 82%", once: true } });
-      tl.from(row.querySelector("[data-strike]"), { scaleX: 0, duration: 0.45, ease: "power3.inOut" })
+      tl.from(row.querySelector("[data-pain]"), { backgroundSize: "0% 3px", duration: 0.45, ease: "power3.inOut" })
         .from(row.querySelector("[data-promise]"), { xPercent: 12, autoAlpha: 0, rotate: 3, duration: 0.55, ease: "back.out(1.6)" }, "<0.1");
     });
     gsap.from("[data-panel-bobo]", { y: 60, rotate: -12, ease: "back.out(1.4)", duration: 0.9, scrollTrigger: { trigger: "[data-panel]", start: "top 75%", once: true } });
@@ -50,8 +50,8 @@ export function Promises() {
             {rows.map((r, i) => (
               <li key={r.promise} data-row className="grid gap-2 border-b border-white/10 py-5 first:pt-0 last:border-0 last:pb-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-center md:gap-8">
                 <p className="relative self-start text-t3 text-mist md:self-center">
-                  <span data-pain>{r.pain}</span>
-                  <span data-strike aria-hidden className="absolute top-1/2 left-0 h-[3px] w-full origin-left -translate-y-1/2 bg-ribbon" />
+                  {/* The strike is a background line on the inline text, so it crosses every line when the text wraps. */}
+                  <span data-pain className="bg-[linear-gradient(var(--color-ribbon),var(--color-ribbon))] bg-[length:100%_3px] bg-[position:0_58%] bg-no-repeat [box-decoration-break:clone]">{r.pain}</span>
                   <span className="sr-only"> (not with us)</span>
                 </p>
                 <p data-promise className="flex items-center gap-3 text-t2 font-bold">

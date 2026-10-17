@@ -43,8 +43,8 @@ export function WalkingBobo() {
   return (
     <div ref={box} className="walk-bobo">
       {load && (
-        <button type="button" onClick={toggle} aria-pressed={paused} aria-label={paused ? "Play Bobo walking animation" : "Pause Bobo walking animation"} className="tap pointer-events-auto absolute top-2 right-3 z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-ink bg-white text-ink">
-          {paused ? <Play className="h-4 w-4 fill-current" aria-hidden /> : <Pause className="h-4 w-4 fill-current" aria-hidden />}
+        <button type="button" onClick={toggle} aria-pressed={paused} aria-label={paused ? "Play Bobo walking animation" : "Pause Bobo walking animation"} className="pointer-events-auto absolute bottom-1 left-3 z-10 md:right-3 md:left-auto inline-flex h-11 items-center gap-1.5 rounded-full border-2 border-ink bg-white px-3 text-t3 font-semibold text-ink">
+          {paused ? <Play className="h-4 w-4 fill-current" aria-hidden /> : <Pause className="h-4 w-4 fill-current" aria-hidden />}<span aria-hidden>{paused ? "Play" : "Pause"} Bobo</span>
         </button>
       )}
       <div aria-hidden className="h-full w-full">{load && (still ? (paused ? null : (

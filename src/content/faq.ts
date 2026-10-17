@@ -1,8 +1,9 @@
 /**
  * Main FAQ (also emitted as FAQPage schema for Google and AI answer engines).
- * Sources: old site FAQ and Terms (ownership after full payment, USA and Canada, ongoing support, audit-first
- * approach for existing sites, how success is measured). Answers that would need a business decision Nick has not
- * given (prices, fixed timelines) say so honestly instead of inventing a number. TO-CONFIRM: pricing and timeline.
+ * Sources: old site FAQ and Terms (ownership after full payment, USA and Canada, audit-first approach for existing
+ * sites, how success is measured) and Nick 2026-10-17: 1 to 2 week builds, price quoted per scope on the call,
+ * no long-term contract by default, 3 months of post-launch fixes in the contract then paid support, optional yearly
+ * hosting and maintenance, hosting plus security package for premium clients.
  */
 export const faqs: { q: string; a: string }[] = [
   {
@@ -11,7 +12,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     q: "How long does it take to build a plumber website?",
-    a: "It depends on the size of the site and how quickly content and feedback come back. We give you a timeline on the strategy call and keep you updated at every step: strategy, content, design and build, launch.",
+    a: "Usually 1 to 2 weeks from start to launch, sometimes less. Waiting on logins or content is what slows it down.",
   },
   {
     q: "Do I own my website?",
@@ -38,11 +39,15 @@ export const faqs: { q: string; a: string }[] = [
     a: "Nobody controls what AI assistants say. What we can do is make your business easy for them to understand and trust: clear answers to common plumbing questions on your site, consistent name, address and phone details across the web, reviews, and structured data that describes your services and service area. That is what AI search tools rely on.",
   },
   {
+    q: "Do I have to sign a long-term contract?",
+    a: "No. By default the contract runs for your project and ends once the site is launched and optimized. If you want ongoing SEO, maintenance and upgrades, we can agree a longer plan that fits you.",
+  },
+  {
     q: "What happens after launch?",
-    a: "We do not disappear. After launch you get ongoing support for edits, updates and fixes, so your site stays fresh and working and you are never left chasing a developer.",
+    a: "Every website comes with 3 months of support after launch, written into the contract: if something breaks, we fix it. After that, support is paid. We also offer yearly hosting and maintenance, and a hosting and security package for clients who want everything handled.",
   },
   {
     q: "How do you measure success?",
-    a: "We track what matters: phone calls, form submissions and real leads, plus your traffic and search rankings, in a monthly report written in plain English. Real results, not vanity metrics.",
+    a: "We track what matters: phone calls, form submissions and real leads, plus your traffic and search rankings, in reports written in plain English. Real results, not vanity metrics.",
   },
 ];

@@ -1,6 +1,6 @@
 /**
  * Services. Source: the "Plumber King System" section of Nick's old site (websites, plumber SEO, lead systems,
- * conversion optimization, dedicated support, speed, reputation management, monthly reporting).
+ * conversion optimization, dedicated support, speed, reputation management, reporting).
  * AI-search visibility (GEO/AEO) is written as part of how sites are built and optimised: TO-CONFIRM with Nick
  * that he sells it as part of SEO.
  */
@@ -59,7 +59,7 @@ export const services: Service[] = [
       { title: "Technical SEO", body: "Fast pages, clean structure, a sitemap submitted to Google and Bing Search Console, and schema markup so search engines know exactly who you are and where you work." },
       { title: "AI search (GEO and AEO)", body: "Clear, quotable answers and structured data so AI assistants and Google's AI Overviews can understand your business and cite it." },
       { title: "Reviews and reputation", body: "A simple system to ask happy customers for Google reviews, so your star rating keeps working for you." },
-      { title: "Monthly reporting", body: "Calls, form leads, rankings and traffic in plain English, so you know what is working." },
+      { title: "Plain-English reporting", body: "Calls, form leads, rankings and traffic, at launch and every month on an ongoing SEO plan, so you know what is working." },
     ],
     forWho: ["Plumbers stuck below competitors on Google", "Shops paying for ads and wanting free organic calls too", "Owners who want to show up in AI search before their competitors do"],
     faqs: [

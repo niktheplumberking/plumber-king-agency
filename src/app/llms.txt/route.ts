@@ -26,7 +26,7 @@ export function GET() {
     "## Key pages",
     "",
     `- [About Nick](${abs("/about/")}): who runs Plumber King Agency and why.`,
-    `- [Process](${abs("/process/")}): discovery and strategy, content and wireframe, design and build, launch, ongoing support.`,
+    `- [Process](${abs("/process/")}): discovery and strategy, content and wireframe, design and build, launch, 3 months of support after launch.`,
     `- [FAQ](${abs("/faq/")}): pricing approach, ownership, timelines, SEO and AI search.`,
     `- [Free website audit](${abs("/free-website-audit/")}): request a free review of a plumbing website.`,
     `- [Contact](${abs("/contact/")}): book a free strategy call.`,

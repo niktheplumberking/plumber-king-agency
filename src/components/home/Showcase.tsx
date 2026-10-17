@@ -79,7 +79,7 @@ const process = [
   { icon: ClipboardList, title: "Content & wireframe", body: "We gather the right content or write it for you. Then a clean wireframe so the structure is right before design starts." },
   { icon: PenTool, title: "Design & build", body: "Your custom site, designed and built with SEO baked in. Every element is there to turn a visitor into a call." },
   { icon: Rocket, title: "Launch", body: "Once you approve, we go live with SEO set up, the sitemap submitted to Google and Bing, and tracking in place." },
-  { icon: LifeBuoy, title: "Ongoing support", body: "Edits, updates and tweaks whenever you need them, so you're never left chasing a developer." },
+  { icon: LifeBuoy, title: "Support after launch", body: "3 months of fixes included in your contract. After that, paid support or a yearly maintenance plan." },
 ];
 
 /**

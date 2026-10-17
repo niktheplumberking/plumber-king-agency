@@ -15,7 +15,7 @@ const rows = [
   { pain: "An agency that learns your trade on your dime", promise: "Plumbers only" },
   { pain: "Your website held hostage if you ever leave", promise: "You own your website" },
   { pain: "A sales pitch before a straight answer", promise: "Free 30-minute strategy call" },
-  { pain: "Reports full of jargon nobody reads", promise: "Monthly report in plain English" },
+  { pain: "Reports full of jargon nobody reads", promise: "Reports in plain English" },
   { pain: "No idea which calls came from the website", promise: "Calls, forms and leads tracked" },
   { pain: "They vanish the day the site goes live", promise: "Support after launch" },
   { pain: "Projects that drag on with no end date", promise: "A timeline before we start" },

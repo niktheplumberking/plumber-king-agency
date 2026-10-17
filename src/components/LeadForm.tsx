@@ -10,17 +10,38 @@ type Kind = "strategy-call" | "website-audit";
  * the lead to nick@plumberkingagency.com). If sending fails, the visitor is shown the email address instead, so a lead
  * is never silently lost.
  */
+/** What is missing or wrong, per field name, in plain words a plumber can act on. */
+function check(fd: FormData, kind: Kind) {
+  const v = (k: string) => String(fd.get(k) ?? "").trim();
+  const e: Record<string, string> = {};
+  if (!v("name")) e.name = "Please enter your name.";
+  if (!v("business")) e.business = "Please enter your business name.";
+  if (!v("email")) e.email = "Please enter your email so Nick can reply.";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("email"))) e.email = "That email looks incomplete. Check it has an @ and a domain, like mike@johnsonplumbing.com.";
+  if (v("phone").replace(/\D/g, "").length < 7) e.phone = v("phone") ? "That phone number looks too short. Include the area code." : "Please enter a phone number.";
+  if (kind === "website-audit" && !v("website")) e.website = "Please enter your website address so Nick can audit it.";
+  return e;
+}
+
 export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kind; tone?: "dark" | "light" }) {
   const id = useId();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const dark = tone === "dark";
-  const field = `mt-2 block min-h-12 w-full rounded-md border-2 px-4 py-3 text-t3 outline-none transition-colors focus:border-ribbon ${dark ? "border-white/30 bg-white/10 text-white placeholder:text-white/75" : "border-ink/20 bg-white text-ink placeholder:text-slate/70"}`;
+  const field = `mt-2 block min-h-12 w-full rounded-md border-2 px-4 py-3 text-t3 outline-none transition-colors focus:border-ribbon ${dark ? "aria-[invalid=true]:border-white border-white/30 bg-white/10 text-white placeholder:text-white/75" : "aria-[invalid=true]:border-ribbon-deep border-ink/20 bg-white text-ink placeholder:text-slate/70"}`;
+  const err = `mt-2 text-t3 font-semibold ${dark ? "text-white" : "text-ribbon-deep"}`;
   const label = `text-t3 font-extrabold tracking-wider uppercase ${dark ? "text-white/90" : "text-ink"}`;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     if (fd.get("company_website_hp")) return; // honeypot: bots fill hidden fields
+    // Our own inline errors (not the browser's pop-ups): each one sits under its field and is tied to it for screen readers.
+    const found = check(fd, kind);
+    setErrors(found);
+    const first = Object.keys(found)[0];
+    if (first) { (form.elements.namedItem(first) as HTMLElement | null)?.focus(); return; }
     const data = Object.fromEntries(fd.entries());
     delete (data as Record<string, unknown>).company_website_hp;
     const payload = { ...data, kind, page: window.location.pathname, submittedAt: new Date().toISOString() };
@@ -52,12 +73,12 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-5 sm:grid-cols-2" noValidate={false}>
-      <div><label htmlFor={`${id}-name`} className={label}>Your name</label><input id={`${id}-name`} name="name" required autoComplete="name" className={field} placeholder="Mike Johnson" /></div>
-      <div><label htmlFor={`${id}-co`} className={label}>Business name</label><input id={`${id}-co`} name="business" required autoComplete="organization" className={field} placeholder="Johnson Plumbing" /></div>
-      <div><label htmlFor={`${id}-email`} className={label}>Email</label><input id={`${id}-email`} name="email" type="email" required autoComplete="email" className={field} placeholder="mike@johnsonplumbing.com" /></div>
-      <div><label htmlFor={`${id}-phone`} className={label}>Phone</label><input id={`${id}-phone`} name="phone" type="tel" required autoComplete="tel" className={field} placeholder="(555) 555-0123" /></div>
-      <div className="sm:col-span-2"><label htmlFor={`${id}-site`} className={label}>{kind === "website-audit" ? "Your current website" : "Current website (if you have one)"}</label><input id={`${id}-site`} name="website" type="text" inputMode="url" required={kind === "website-audit"} className={field} placeholder="johnsonplumbing.com" /></div>
+    <form onSubmit={onSubmit} className="grid gap-5 sm:grid-cols-2" noValidate>
+      <div><label htmlFor={`${id}-name`} className={label}>Your name</label><input id={`${id}-name`} name="name" required autoComplete="name" className={field} aria-invalid={errors.name ? true : undefined} aria-describedby={errors.name ? `${id}-name-err` : undefined} placeholder="Mike Johnson" />{errors.name && <p id={`${id}-name-err`} className={err}>{errors.name}</p>}</div>
+      <div><label htmlFor={`${id}-co`} className={label}>Business name</label><input id={`${id}-co`} name="business" required autoComplete="organization" className={field} aria-invalid={errors.business ? true : undefined} aria-describedby={errors.business ? `${id}-business-err` : undefined} placeholder="Johnson Plumbing" />{errors.business && <p id={`${id}-business-err`} className={err}>{errors.business}</p>}</div>
+      <div><label htmlFor={`${id}-email`} className={label}>Email</label><input id={`${id}-email`} name="email" type="email" required autoComplete="email" className={field} aria-invalid={errors.email ? true : undefined} aria-describedby={errors.email ? `${id}-email-err` : undefined} placeholder="mike@johnsonplumbing.com" />{errors.email && <p id={`${id}-email-err`} className={err}>{errors.email}</p>}</div>
+      <div><label htmlFor={`${id}-phone`} className={label}>Phone</label><input id={`${id}-phone`} name="phone" type="tel" required autoComplete="tel" className={field} aria-invalid={errors.phone ? true : undefined} aria-describedby={errors.phone ? `${id}-phone-err` : undefined} placeholder="(555) 555-0123" />{errors.phone && <p id={`${id}-phone-err`} className={err}>{errors.phone}</p>}</div>
+      <div className="sm:col-span-2"><label htmlFor={`${id}-site`} className={label}>{kind === "website-audit" ? "Your current website" : "Current website (if you have one)"}</label><input id={`${id}-site`} name="website" type="text" inputMode="url" required={kind === "website-audit"} className={field} aria-invalid={errors.website ? true : undefined} aria-describedby={errors.website ? `${id}-website-err` : undefined} placeholder="johnsonplumbing.com" />{errors.website && <p id={`${id}-website-err`} className={err}>{errors.website}</p>}</div>
       <div aria-hidden className="absolute -left-[9999px]"><label htmlFor={`${id}-hp`}>Leave empty</label><input id={`${id}-hp`} name="company_website_hp" tabIndex={-1} autoComplete="off" /></div>
       <div className="sm:col-span-2">
         <button type="submit" disabled={state === "sending"} className="btn btn-primary w-full sm:w-auto">

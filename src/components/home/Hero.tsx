@@ -16,7 +16,7 @@ const foundOn = ["Google Search", "Google Maps", "ChatGPT", "Perplexity", "Bing"
 /**
  * Home hero, built around the eye path Nick set (2026-10-16): 1) the video, 2) the headline, 3) the subline,
  * 4) the buttons, 5) logos, 6) the menu. The entrances are staged in that order (plain CSS, see layout.tsx):
- * the video frame pops in first, each headline line is wiped in by a pink bar, then the copy, buttons and the
+ * the video frame is there from the first paint (it is the main image, so it must not be animated: audit 2026-10-17), each headline line is wiped in by a pink bar, then the copy, buttons and the
  * "found on" row follow, and the header fades in last. Until Nick's VSL exists the frame shows his photo.
  */
 export function Hero() {
@@ -33,7 +33,7 @@ export function Hero() {
       <div className="container-x relative grid items-center gap-x-10 gap-y-10 pt-28 pb-44 lg:min-h-[100svh] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] lg:pt-24 lg:pb-60">
         {/* 1) The video. First in reading order on every screen. */}
         <div data-hero-media className="relative order-first lg:order-last">
-          <figure className="enter-pop relative" style={{ "--d": "0s" } as React.CSSProperties}>
+          <figure className="relative">
             <div className="vsl-frame">
               <div aria-hidden className="vsl-bg" />
               <div aria-hidden className="hero-rays absolute inset-0" />

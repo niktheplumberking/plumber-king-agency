@@ -22,7 +22,7 @@
   --color-gold-700: #9c1249;
   --color-ribbon: #ff3d8b;
   --color-ribbon-600: #f0277a;
-  --color-ribbon-deep: #db1a70;
+  --color-ribbon-deep: #c2185b;
   --color-ivory: #faf8f9;
   --color-paper: #ffffff;
   --color-ink: #141414;
@@ -186,7 +186,7 @@ html { scroll-padding-top: 88px; }
 .marquee-track.reverse { animation-direction: reverse; }
 .band-item { display: flex; align-items: center; gap: 0.5em; padding-right: 0.5em; white-space: nowrap; color: #fff; font-family: var(--font-display); font-weight: 900; letter-spacing: -0.025em; line-height: 1; }
 .outline-text { color: transparent; -webkit-text-stroke: 2px #fff; }
-.marquee:hover .marquee-track.pause-on-hover { animation-play-state: paused; }
+.marquee:hover .marquee-track.pause-on-hover, .marquee:focus-within .marquee-track { animation-play-state: paused; }
 
 /* Scroll reveal (see Reveal.tsx): transform and opacity only, done within 1.1 s. */
 @media (prefers-reduced-motion: no-preference) {
@@ -225,3 +225,10 @@ html { scroll-padding-top: 88px; }
 .vsl-bg { position: absolute; inset: 0; background: radial-gradient(120% 90% at 70% 100%, var(--color-ribbon) 0%, var(--color-ribbon-deep) 55%, #9c1249 100%); }
 .walk-bobo { pointer-events: none; position: absolute; right: 0; z-index: 20; bottom: calc(100% - 3.85vw - 0.6rem); aspect-ratio: 1280 / 548; width: 100%; }
 @media (min-width: 64rem) { .walk-bobo { bottom: calc(100% - 2.3vw - 0.6rem); width: 60%; } }
+
+/* Touch screens: every stand-alone link and button is at least 44 x 44 px (agency rule, audit 2026-10-17).
+   Links inside a sentence are left at text height (WCAG 2.5.8 inline exception). */
+@media (pointer: coarse) {
+  .flink, .ul-link, .tap { min-height: 44px; min-width: 44px; }
+  .flink, .ul-link { display: inline-flex; align-items: center; }
+}

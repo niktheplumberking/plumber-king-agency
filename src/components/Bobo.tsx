@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { X } from "lucide-react";
@@ -60,6 +60,19 @@ export function Bobo() {
     return () => { window.removeEventListener("scroll", on); clearTimeout(id); };
   }, [path]);
 
+  // Esc closes the panel (or the tip) and puts focus back on Bobo's button.
+  const btn = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open && !tip) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (open) btn.current?.focus();
+      setOpen(false); setTip(null);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, tip]);
+
   // A tip is a nudge, not a banner: it tucks itself away after a few seconds.
   useEffect(() => {
     if (!tip) return;
@@ -79,11 +92,11 @@ export function Bobo() {
       {tip && !open && (
         <div className="bobo-pop relative max-w-[16rem] rounded-md border-2 border-ink bg-paper py-3 pr-9 pl-4 text-t3 font-semibold text-ink shadow-[4px_4px_0_var(--color-ink)]">
           <button type="button" onClick={() => setOpen(true)} className="text-left">{tip}</button>
-          <button type="button" onClick={() => setTip(null)} aria-label="Dismiss tip" className="absolute top-1.5 right-1.5 grid h-7 w-7 place-items-center rounded hover:bg-ink/5"><X className="h-3.5 w-3.5" /></button>
+          <button type="button" onClick={() => setTip(null)} aria-label="Dismiss tip" className="tap absolute top-1.5 right-1.5 grid h-7 w-7 place-items-center rounded hover:bg-ink/5"><X className="h-3.5 w-3.5" /></button>
         </div>
       )}
 
-      <button type="button" onClick={() => { setOpen((o) => !o); setTip(null); }} aria-expanded={open} aria-label={open ? "Close Bobo" : "Open Bobo, your guide"}
+      <button ref={btn} type="button" onClick={() => { setOpen((o) => !o); setTip(null); }} aria-expanded={open} aria-label={open ? "Close Bobo" : "Open Bobo, your guide"}
         className="bobo-btn grid h-20 w-[4.4rem] place-items-center transition-transform hover:-rotate-6 active:translate-y-0.5">
         {/* The duck alone, no box behind him (Nick, 2026-10-16). */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -37,7 +37,7 @@ export function JobValueCalculator() {
   // The starting values are only an example: they carry a visible SAMPLE tag until the visitor sets their own.
   const [touched, setTouched] = useState(false);
   // The leading space keeps "SAMPLE" a separate word next to the number (screen readers and the factory claims check read it).
-  const tag = touched ? null : <>{" "}<span className="ml-1 rounded bg-white/15 px-1.5 py-0.5 align-middle font-sans text-t3 font-semibold text-white/90">SAMPLE</span></>;
+  const tag = touched ? null : <>{" "}<span className="ml-1 align-middle font-sans text-t3 font-semibold text-white/90">SAMPLE</span></>;
   const ids = { t: useId(), j: useId() };
   const yearly = ticket * jobs * 52;
   return (

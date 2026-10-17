@@ -33,7 +33,7 @@ export function BoboPanel({ goal, choose, setGoal, close, hide }: { goal: Goal |
   const plan = goal ? forGoal[goal] : null;
   return (
         <div role="dialog" aria-label="Bobo, your guide" className="bobo-pop relative w-[min(22rem,calc(100vw-2rem))] rounded-md border-2 border-ink bg-paper p-5 text-ink shadow-[6px_6px_0_var(--color-ink)]">
-          <button type="button" onClick={close} aria-label="Close" className="absolute top-2 right-2 grid h-9 w-9 place-items-center rounded-md hover:bg-ink/5"><X className="h-4 w-4" /></button>
+          <button type="button" onClick={close} aria-label="Close" className="tap absolute top-2 right-2 grid h-9 w-9 place-items-center rounded-md hover:bg-ink/5"><X className="h-4 w-4" /></button>
           <div className="flex items-end gap-3">
             <BoboModel poster={plan ? "/bobo/point.webp" : "/bobo/wave.webp"} className="-mt-16 -ml-3 w-28 shrink-0" />
             <p className="display pb-1 text-t3">{plan ? "Here's your path" : "Hi, I'm Bobo!"}</p>

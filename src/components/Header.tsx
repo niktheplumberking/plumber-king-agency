@@ -1,7 +1,7 @@
 "use client";
 import Link from "@/components/Link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { nav } from "@/content/site";
 import { Logo } from "./Logo";
@@ -12,6 +12,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const toggle = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 24);
@@ -20,8 +21,24 @@ export function Header() {
     return () => window.removeEventListener("scroll", on);
   }, []);
   useEffect(() => setOpen(false), [pathname]);
+  // While the full-screen menu is open: no page scroll, the page behind it is inert (focus stays in the menu),
+  // and Esc closes it and puts focus back on the menu button.
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
+    const bar = toggle.current?.closest("header");
+    const behind = Array.from(document.body.children).filter((el): el is HTMLElement => el instanceof HTMLElement && el !== bar && !el.contains(bar ?? null));
+    behind.forEach((el) => (el.inert = open));
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      toggle.current?.focus();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      behind.forEach((el) => (el.inert = false));
+    };
   }, [open]);
 
   return (
@@ -36,14 +53,14 @@ export function Header() {
               const active = pathname?.startsWith(n.href);
               return (
                 <li key={n.href}>
-                  <Link href={n.href} className={`relative whitespace-nowrap px-3.5 py-2.5 text-t3 font-bold tracking-[0.08em] uppercase transition-colors after:absolute after:inset-x-3.5 after:bottom-1 after:h-[2px] after:origin-left after:bg-ribbon after:transition-transform after:duration-300 ${active ? "text-ink after:scale-x-100" : "text-ink/75 after:scale-x-0 hover:text-ink hover:after:scale-x-100"}`}>{n.label}</Link>
+                  <Link href={n.href} aria-current={active ? "page" : undefined} className={`relative whitespace-nowrap px-3.5 py-2.5 text-t3 font-bold tracking-[0.08em] uppercase transition-colors after:absolute after:inset-x-3.5 after:bottom-1 after:h-[2px] after:origin-left after:bg-ribbon after:transition-transform after:duration-300 ${active ? "text-ink after:scale-x-100" : "text-ink/75 after:scale-x-0 hover:text-ink hover:after:scale-x-100"}`}>{n.label}</Link>
                 </li>
               );
             })}
           </ul>
         </nav>
         <div className="hidden xl:block"><CtaButton className="!min-h-11 !px-4" label="Book a free call" /></div>
-        <button type="button" className="grid h-12 w-12 place-items-center rounded-md border-2 border-ink text-ink xl:hidden" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((o) => !o)}>
+        <button ref={toggle} type="button" className="grid h-12 w-12 place-items-center rounded-md border-2 border-ink text-ink xl:hidden" aria-expanded={open} aria-controls="mobile-nav" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((o) => !o)}>
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>

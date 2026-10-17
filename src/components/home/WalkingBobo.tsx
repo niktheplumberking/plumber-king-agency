@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { Pause, Play } from "lucide-react";
 
 /**
  * Bobo walks along the scroll strips (Nick, 2026-10-16): a looping clip with a see-through background, made in
@@ -18,6 +19,9 @@ export function WalkingBobo() {
   const vid = useRef<HTMLVideoElement>(null);
   const [load, setLoad] = useState(false);
   const [still, setStill] = useState(false);
+  // WCAG 2.2.2: anything that moves for more than 5 seconds gets a pause button. Paused stays paused while scrolling.
+  const [paused, setPaused] = useState(false);
+  const stop = useRef(false);
   useEffect(() => {
     const el = box.current;
     const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
@@ -25,21 +29,32 @@ export function WalkingBobo() {
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) { setStill(isSafari()); setLoad(true); }
       const v = vid.current;
-      if (v) { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }
+      if (v) { if (e.isIntersecting && !stop.current) v.play().catch(() => {}); else v.pause(); }
     }, { rootMargin: "300px 0px" });
     io.observe(el);
     return () => io.disconnect();
   }, [load]);
+  const toggle = () => {
+    stop.current = !paused;
+    setPaused(!paused);
+    const v = vid.current;
+    if (v) { if (paused) v.play().catch(() => {}); else v.pause(); }
+  };
   return (
-    <div ref={box} aria-hidden className="walk-bobo">
-      {load && (still ? (
+    <div ref={box} className="walk-bobo">
+      {load && (
+        <button type="button" onClick={toggle} aria-pressed={paused} aria-label={paused ? "Play Bobo walking animation" : "Pause Bobo walking animation"} className="tap pointer-events-auto absolute top-2 right-3 z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-ink bg-white text-ink">
+          {paused ? <Play className="h-4 w-4 fill-current" aria-hidden /> : <Pause className="h-4 w-4 fill-current" aria-hidden />}
+        </button>
+      )}
+      <div aria-hidden className="h-full w-full">{load && (still ? (paused ? null : (
         // eslint-disable-next-line @next/next/no-img-element
         <img src="/bobo/walk.webp" alt="" width={720} height={308} decoding="async" className="h-full w-full" />
-      ) : (
+      )) : (
         <video ref={vid} muted loop playsInline autoPlay preload="auto" className="h-full w-full">
           <source src="/bobo/walk.webm" type="video/webm" />
         </video>
-      ))}
+      ))}</div>
     </div>
   );
 }

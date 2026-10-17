@@ -30,7 +30,7 @@ export function Hero() {
         <div className="hero-dots absolute bottom-[6%] left-[-2%] h-56 w-[38%]" />
       </div>
 
-      <div className="container-x relative grid items-center gap-x-10 gap-y-10 pt-28 pb-44 lg:min-h-[100svh] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] lg:pt-24 lg:pb-60">
+      <div className="container-x relative grid items-center gap-x-10 gap-y-10 pt-28 pb-44 lg:min-h-[100svh] lg:grid-cols-[minmax(0,1.32fr)_minmax(0,1fr)] lg:pt-24 lg:pb-60">
         {/* 1) The video. First in reading order on every screen. */}
         <div data-hero-media className="relative order-first lg:order-last">
           <figure className="relative">
@@ -64,9 +64,9 @@ export function Hero() {
           </ul>
         </div>
 
-        <div data-hero-copy className="relative z-10">
+        <div data-hero-copy className="hero-copy relative z-10">
           {/* 2) The headline: each line is wiped in by a pink bar, top to bottom. */}
-          <h1 className="display text-t1 text-ink">
+          <h1 className="display hero-title text-ink">
             {lines.map((l, i) => (
               <span key={l} className="block"><span className="enter-swipe" style={{ "--d": `${0.15 + i * 0.12}s`, "--wipe": "#141414" } as React.CSSProperties}>{l}</span></span>
             ))}

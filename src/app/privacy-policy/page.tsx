@@ -5,11 +5,11 @@ import { pageMeta } from "@/lib/seo";
 export const metadata = pageMeta({ title: "Privacy Policy", description: `How ${site.name} (a ${site.legalEntity} company) collects, uses and protects your information.`, path: "/privacy-policy/" });
 
 /* Based on the old site's policy (Jan 2026), with the owning entity named. NOT legal advice; review with a lawyer before launch,
- * and update section 5 if analytics, ad pixels or a CRM are added. */
+ * and update section 6 if analytics, ad pixels or a CRM are added. */
 export default function PrivacyPage() {
   const e = site.legalEntity;
   return (
-    <LegalPage title="Privacy Policy" path="/privacy-policy/" updated="October 14, 2026">
+    <LegalPage title="Privacy Policy" path="/privacy-policy/" updated="October 17, 2026">
       <p>This policy explains how {site.name}, a business of <strong>{e}</strong> (&ldquo;we&rdquo;, &ldquo;us&rdquo;), handles personal information collected through this website.</p>
       <h2>1. Information we collect</h2>
       <p>We collect the information you give us when you fill out a form, request a strategy call or website audit, or email us. This may include your name, business name, email address, phone number and website address. Our web host may also keep standard server logs (such as IP address, browser type and pages visited) for security and reliability. When you book a call, the booking is handled by Calendly, which processes the details you enter under its own privacy policy.</p>
@@ -22,17 +22,21 @@ export default function PrivacyPage() {
       </ul>
       <h2>3. Sharing</h2>
       <p>We do not sell your personal information. We share it only with service providers who help us run our business (such as hosting, email and customer-management tools), under confidentiality obligations, or when required by law.</p>
-      <h2>4. Security and retention</h2>
+      {/* Added 2026-10-17 at Nick's request: we work with AI, say so plainly in the legal pages. */}
+      <h2>4. Use of artificial intelligence</h2>
+      <p>We work with artificial intelligence (AI). Our website, content and services are produced and delivered with the help of AI tools. Information you send us (for example through our forms, by email or on a call) may be processed with AI tools to help us understand your request, prepare proposals and deliver your project. Those tools are provided by third-party service providers and are used under their own terms.</p>
+      <p>Images, videos and text on this website may be generated or edited by AI, and people, businesses and results shown in examples may be AI-generated rather than real. AI makes mistakes, so AI-assisted content can contain errors. If you notice something wrong, please tell us at the address below.</p>
+      <h2>5. Security and retention</h2>
       <p>We use reasonable safeguards to protect your information, but no method of sending data over the internet is completely secure. We keep information only as long as we need it for the purposes above or as the law requires.</p>
-      <h2>5. Cookies and analytics</h2>
+      <h2>6. Cookies and analytics</h2>
       <p>This website may use cookies and similar technologies to keep it working and to understand how visitors use it. You can block or delete cookies in your browser settings, though some features may not work as intended.</p>
-      <h2>6. Your rights</h2>
+      <h2>7. Your rights</h2>
       <p>Depending on where you live (for example California or Canada), you may have the right to access, correct or delete the personal information we hold about you, and to opt out of marketing. To make a request, email us at the address below.</p>
-      <h2>7. Children</h2>
+      <h2>8. Children</h2>
       <p>This website is meant for businesses and is not directed at children under 16.</p>
-      <h2>8. Changes</h2>
+      <h2>9. Changes</h2>
       <p>We may update this policy. The date at the top shows the latest version.</p>
-      <h2>9. Contact</h2>
+      <h2>10. Contact</h2>
       <p>Questions or requests: <a href={`mailto:${site.email}`}>{site.email}</a>, or write to {e}, {site.legalAddress}.</p>
       <p><strong>{site.ownership}.</strong></p>
     </LegalPage>

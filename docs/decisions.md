@@ -22,3 +22,27 @@ Decisions that close audit items, with who made them and when.
 - Stand-alone links and buttons are at least 44 x 44 px on touch screens. Links inside a sentence (for example
   "Privacy Policy" under the forms) stay at text height. WCAG 2.5.8 exempts inline links; padding them to 44 px
   would break the line spacing.
+
+## Home page may go over the factory's 700 KB JavaScript budget (Lenis stays)
+
+- **Decision:** keep Lenis smooth scrolling and the round 6 sections even though the home page now measures about
+  712 KB of JavaScript against the WFACT factory's 700 KB "Track B" budget (`packages/rendered-qa`, `TRACK_B_BUDGET`).
+- **Who and when:** Nick, 2026-10-17 17:37 ("I don't want to drop smooth scroll ... we can just skip that").
+- **What it means:** the factory QA reports `render.js-budget` as FAIL on the home page; that failure is accepted, not a
+  bug. The budget counts only JavaScript (it drives load speed on phones). Images and the VSL video do not count toward
+  it; they are judged by the load-speed checks (LCP) instead, so the video must still load only when played.
+
+## Repeating attention motion (button shakes, ringing card)
+
+- **Decision:** about 65% of buttons shake briefly every 6.5 s and the Plumber King comparison card "rings" every 5 s,
+  for as long as the page is open.
+- **Who and when:** Nick, 2026-10-17 17:05 (explicit request).
+- **What it means:** the factory design rule DR-GRATUITOUS-MOTION (at most one endless loop per page) reports FAIL;
+  accepted as Nick's design call. Safeguards kept: everything stops under reduced motion, a hovered or focused button
+  stops shaking, and the "Pause motion" button stops all of it (WCAG 2.2.2).
+
+## Extra type sizes Nick asked for
+
+- The site keeps 3 text sizes, with these agreed exceptions, each sized to fill its space: the hero headline, the
+  comparison card titles, "Five steps." and the giant slanted "0 GUESSWORK", the step titles in the process
+  timeline, the footer name, and big numbers. Source: Nick 2026-10-17 ("much bigger", "stretch it", "increase the titles").

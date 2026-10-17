@@ -1,29 +1,56 @@
-import { CalendarCheck, Check } from "lucide-react";
+import { CalendarCheck, Check, FileCheck2, Handshake, KeyRound, LifeBuoy } from "lucide-react";
 import { LeadForm } from "./LeadForm";
 import { Reveal } from "./Reveal";
 import { CtaButton } from "./CtaButton";
 
-/** Closing call to action on a blue blueprint band: book the call on Calendly, or send the short form. */
+/** Promises we already make in the FAQ and Terms, shown where the visitor decides. */
+const word = [
+  { icon: Handshake, t: "No commitment, no hard sell" },
+  { icon: KeyRound, t: "You own your website" },
+  { icon: LifeBuoy, t: "3 months of support in the contract" },
+  { icon: FileCheck2, t: "A timeline before we start" },
+];
+
+/**
+ * Closing call to action, rebuilt 2026-10-17 (Nick: "make it as easy as possible to take the next step"). Two clear
+ * paths side by side, after the 21st.dev "Contact 01" (shadcnspace) layout: pick a time on Calendly, or send the
+ * two-step form. Under them, the promises we stand behind, and a personal note from Nick, so the visitor knows who
+ * answers.
+ */
 export function FinalCta({ kind = "strategy-call" }: { kind?: "strategy-call" | "website-audit" }) {
   return (
     <section id="book" className="on-blue blueprint relative overflow-hidden py-24 text-white md:py-32" aria-labelledby="final-h">
-      <div className="container-x grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
-        <Reveal>
+      <div className="container-x">
+        <Reveal className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-end">
           <h2 id="final-h" className="display text-t1">Ready to get your phone <span className="accent">ringing?</span></h2>
-          <p className="mt-6 max-w-md text-t3 text-white/90">Book a free 30-minute strategy call. We&apos;ll look at your website, your Google presence and your competitors, and tell you straight what would get you more calls.</p>
-          <ul className="mt-8 space-y-3">
-            {["A straight answer on what's holding your site back", "What your top local competitors are doing", "Clear next steps for your business"].map((t) => (
-              <li key={t} className="flex gap-3"><Check className="mt-1 h-5 w-5 shrink-0 text-white" aria-hidden />{t}</li>
-            ))}
-          </ul>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <CtaButton />
-            <span className="flex items-center gap-2 text-t3 text-white/90"><CalendarCheck className="h-4 w-4" aria-hidden />Pick a time that suits you</span>
+          <div className="flex items-center gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/nick-founder-480.webp" alt="Nick" width={480} height={640} loading="lazy" decoding="async" className="h-16 w-16 shrink-0 rounded-full border-2 border-ink object-cover object-top" />
+            <p className="text-t3 text-ink">You talk to me, Nick, not a sales team. I read and answer every request myself.</p>
           </div>
         </Reveal>
-        <Reveal delay={0.1} className="rounded-md border-2 border-ink bg-white p-6 text-ink shadow-[8px_8px_0_var(--color-ink)] md:p-10">
-          <p className="display text-t2">Rather write? <span className="accent">Send the details.</span></p>
-          <div className="mt-6"><LeadForm kind={kind} tone="light" /></div>
+        <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
+          <Reveal className="fc-card fc-call">
+            <span className="fc-tag"><CalendarCheck className="h-4 w-4" aria-hidden />Fastest</span>
+            <p className="display text-t2">Pick a time for a free 30-minute strategy call.</p>
+            <ul className="mt-6 space-y-3">
+              {["A straight answer on what's holding your site back", "What your top local competitors are doing", "Clear next steps for your business"].map((t) => (
+                <li key={t} className="flex gap-3 text-t3"><Check className="mt-1 h-5 w-5 shrink-0 text-ribbon" aria-hidden />{t}</li>
+              ))}
+            </ul>
+            <CtaButton className="mt-8" />
+          </Reveal>
+          <Reveal delay={0.1} className="fc-card">
+            <span className="fc-tag light">2 quick steps</span>
+            <p className="display text-t2">Rather write? <span className="accent">Send the details.</span></p>
+            <div className="mt-6"><LeadForm kind={kind} tone="light" /></div>
+          </Reveal>
+        </div>
+        <Reveal as="section" className="mt-6">
+          <h3 className="sr-only">What we stand behind</h3>
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {word.map((w) => <li key={w.t} className="fc-word"><w.icon className="h-5 w-5" aria-hidden />{w.t}</li>)}
+          </ul>
         </Reveal>
       </div>
     </section>

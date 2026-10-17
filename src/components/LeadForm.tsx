@@ -6,7 +6,10 @@ import { site } from "@/content/site";
 type Kind = "strategy-call" | "website-audit";
 
 /**
- * Short form (fewer fields, more leads). POSTs JSON to site.formEndpoint (default /lead.php on Hostinger, which emails
+ * Short two-step form (2026-10-17, Nick: "as easy as possible to take the next step"): step 1 asks only for a name and a
+ * phone number, step 2 for the business, email and website. Splitting it keeps the first ask tiny, which is the
+ * pattern the 21st.dev "Multi-Step Form" (ravikatiyar162) is built on. The server still gets every field it needs.
+ * Fewer fields per screen, more leads. POSTs JSON to site.formEndpoint (default /lead.php on Hostinger, which emails
  * the lead to nick@plumberkingagency.com). If sending fails, the visitor is shown the email address instead, so a lead
  * is never silently lost.
  */
@@ -27,6 +30,7 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
   const id = useId();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [stage, setStage] = useState<1 | 2>(1);
   const dark = tone === "dark";
   const field = `mt-2 block min-h-12 w-full rounded-md border-2 px-4 py-3 text-t3 outline-none transition-colors focus:border-ribbon ${dark ? "aria-[invalid=true]:border-white border-white/30 bg-white/10 text-white placeholder:text-white/75" : "aria-[invalid=true]:border-ribbon-deep border-ink/20 bg-white text-ink placeholder:text-slate/70"}`;
   const err = `mt-2 text-t3 font-semibold ${dark ? "text-white" : "text-ribbon-deep"}`;
@@ -38,10 +42,14 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
     const fd = new FormData(form);
     if (fd.get("company_website_hp")) return; // honeypot: bots fill hidden fields
     // Our own inline errors (not the browser's pop-ups): each one sits under its field and is tied to it for screen readers.
-    const found = check(fd, kind);
+    const all = check(fd, kind);
+    // Step 1 checks only its own two fields, then moves on to step 2.
+    const found = stage === 1 ? Object.fromEntries(Object.entries(all).filter(([k]) => k === "name" || k === "phone")) : all;
     setErrors(found);
     const first = Object.keys(found)[0];
-    if (first) { (form.elements.namedItem(first) as HTMLElement | null)?.focus(); return; }
+    const focus = (k: string) => setTimeout(() => (form.elements.namedItem(k) as HTMLElement | null)?.focus(), 0);
+    if (first) { if (first === "name" || first === "phone") setStage(1); focus(first); return; }
+    if (stage === 1) { setStage(2); focus("business"); return; }
     const data = Object.fromEntries(fd.entries());
     delete (data as Record<string, unknown>).company_website_hp;
     const payload = { ...data, kind, page: window.location.pathname, submittedAt: new Date().toISOString() };
@@ -74,18 +82,29 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
 
   return (
     <form onSubmit={onSubmit} className="grid gap-5 sm:grid-cols-2" noValidate>
+      <div className="sm:col-span-2 flex items-center gap-3" aria-live="polite">
+        <span className={`text-t3 font-bold ${dark ? "text-white" : "text-ink"}`}>Step {stage} of 2</span>
+        <span aria-hidden className="lf-bar"><span style={{ transform: `scaleX(${stage / 2})` }} /></span>
+      </div>
+      <div hidden={stage !== 1} className="contents">
       <div><label htmlFor={`${id}-name`} className={label}>Your name</label><input id={`${id}-name`} name="name" required autoComplete="name" className={field} aria-invalid={errors.name ? true : undefined} aria-describedby={errors.name ? `${id}-name-err` : undefined} placeholder="Mike Johnson" />{errors.name && <p id={`${id}-name-err`} className={err}>{errors.name}</p>}</div>
+      <div><label htmlFor={`${id}-phone`} className={label}>Phone</label><input id={`${id}-phone`} name="phone" type="tel" required autoComplete="tel" className={field} aria-invalid={errors.phone ? true : undefined} aria-describedby={errors.phone ? `${id}-phone-err` : undefined} placeholder="(555) 555-0123" />{errors.phone && <p id={`${id}-phone-err`} className={err}>{errors.phone}</p>}</div>
+      </div>
+      <div hidden={stage !== 2} className="contents">
       <div><label htmlFor={`${id}-co`} className={label}>Business name</label><input id={`${id}-co`} name="business" required autoComplete="organization" className={field} aria-invalid={errors.business ? true : undefined} aria-describedby={errors.business ? `${id}-business-err` : undefined} placeholder="Johnson Plumbing" />{errors.business && <p id={`${id}-business-err`} className={err}>{errors.business}</p>}</div>
       <div><label htmlFor={`${id}-email`} className={label}>Email</label><input id={`${id}-email`} name="email" type="email" required autoComplete="email" className={field} aria-invalid={errors.email ? true : undefined} aria-describedby={errors.email ? `${id}-email-err` : undefined} placeholder="mike@johnsonplumbing.com" />{errors.email && <p id={`${id}-email-err`} className={err}>{errors.email}</p>}</div>
-      <div><label htmlFor={`${id}-phone`} className={label}>Phone</label><input id={`${id}-phone`} name="phone" type="tel" required autoComplete="tel" className={field} aria-invalid={errors.phone ? true : undefined} aria-describedby={errors.phone ? `${id}-phone-err` : undefined} placeholder="(555) 555-0123" />{errors.phone && <p id={`${id}-phone-err`} className={err}>{errors.phone}</p>}</div>
       <div className="sm:col-span-2"><label htmlFor={`${id}-site`} className={label}>{kind === "website-audit" ? "Your current website" : "Current website (if you have one)"}</label><input id={`${id}-site`} name="website" type="text" inputMode="url" required={kind === "website-audit"} className={field} aria-invalid={errors.website ? true : undefined} aria-describedby={errors.website ? `${id}-website-err` : undefined} placeholder="johnsonplumbing.com" />{errors.website && <p id={`${id}-website-err`} className={err}>{errors.website}</p>}</div>
+      </div>
       <div aria-hidden className="absolute -left-[9999px]"><label htmlFor={`${id}-hp`}>Leave empty</label><input id={`${id}-hp`} name="company_website_hp" tabIndex={-1} autoComplete="off" /></div>
       <div className="sm:col-span-2">
-        <button type="submit" disabled={state === "sending"} className="btn btn-primary w-full sm:w-auto">
-          {state === "sending" ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden /> : null}
-          {kind === "website-audit" ? site.secondaryCta : site.primaryCta}
-          <ArrowRight className="h-4.5 w-4.5" aria-hidden />
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          {stage === 2 && <button type="button" onClick={() => setStage(1)} className={`min-h-11 px-3 font-bold underline underline-offset-4 ${dark ? "text-white" : "text-ink"}`}>Back</button>}
+          <button type="submit" disabled={state === "sending"} className="btn btn-primary w-full sm:w-auto">
+            {state === "sending" ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden /> : null}
+            {stage === 1 ? "Next: your business" : kind === "website-audit" ? site.secondaryCta : site.primaryCta}
+            <ArrowRight className="h-4.5 w-4.5" aria-hidden />
+          </button>
+        </div>
         {state === "error" && <p role="alert" className="mt-3 text-t3 font-semibold text-royal">That didn&apos;t send. Please email <a className="underline" href={`mailto:${site.email}`}>{site.email}</a> and we&apos;ll get right back to you.</p>}
         <p className={`mt-4 text-t3 ${dark ? "text-white/90" : "text-slate"}`}>No commitment, no hard sell. By sending this you agree to our <a href="/privacy-policy/" className="underline">Privacy Policy</a>.</p>
       </div>

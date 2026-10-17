@@ -41,6 +41,9 @@ const criticalCss = `
 // Two fonts only, site-wide (Nick, 2026-10-15 13:13): Urbanist for titles, Open Sans for body. Next sizes each font's
 // fallback to its metrics (adjustFontFallback), so text wraps the same before and after the font loads.
 const display = Urbanist({ subsets: ["latin"], weight: ["800", "900"], variable: "--font-urbanist", display: "swap" });
+// Urbanist's own italic (same family), only for the slanted giant words Nick asked for (2026-10-17): "0 GUESSWORK"
+// and the footer name. Not preloaded, so it never competes with the first paint.
+const slant = Urbanist({ subsets: ["latin"], weight: ["900"], style: ["italic"], variable: "--font-urbanist-italic", display: "swap", preload: false });
 const body = Open_Sans({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-open-sans", display: "swap" });
 
 export const metadata: Metadata = {
@@ -65,7 +68,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-US" suppressHydrationWarning className={`${display.variable} ${body.variable}`}>
+    <html lang="en-US" suppressHydrationWarning className={`${display.variable} ${slant.variable} ${body.variable}`}>
       <head>
         <style dangerouslySetInnerHTML={{ __html: criticalCss }} />
         {/* Scroll reveals hide content only when JavaScript is running to show it again. */}

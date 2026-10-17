@@ -50,4 +50,24 @@ export const faqs: { q: string; a: string }[] = [
     q: "How do you measure success?",
     a: "We track what matters: phone calls, form submissions and real leads, plus your traffic and search rankings, in reports written in plain English. Real results, not vanity metrics.",
   },
+  {
+    q: "Who is a good fit for Plumber King Agency?",
+    a: "Plumbing companies in the USA and Canada that are serious about growing and know which jobs they want more of. If our first call shows we are not the right fit, we tell you straight instead of taking a project that would waste your time and money.",
+  },
+  {
+    q: "What happens on the free strategy call?",
+    a: "It is a free 30-minute call. We look at your website, your Google presence and your competitors, and tell you straight what would get you more calls. If we are a good fit, you get a proposal with the scope, price and timeline.",
+  },
+  {
+    q: "What do you need from me?",
+    a: "Your logins (domain, Google Business Profile and hosting, if you have them), a few real photos, and quick feedback on drafts. Waiting on logins or content is the main thing that slows a project down.",
+  },
+  {
+    q: "Do I need to write the content?",
+    a: "No. We gather what we need on the strategy call and write the copy for you, focused on the jobs you actually want. You review and approve it before anything goes live.",
+  },
+  {
+    q: "Do you offer hosting and maintenance?",
+    a: "Yes. Every website comes with 3 months of support after launch. After that you can choose yearly hosting and maintenance, and a hosting and security package is available for clients who want everything handled.",
+  },
 ];

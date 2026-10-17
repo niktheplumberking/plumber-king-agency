@@ -45,20 +45,6 @@ export function ScrollFx({ as: Tag = "div", className, children, ...rest }: { as
   return <Comp ref={ref} className={className} {...rest}>{children}</Comp>;
 }
 
-/** Stacking cards: each [data-stack-card] pins (CSS sticky) and the one beneath shrinks and dims as the next slides over it. Desktop only. */
-export function StackFx({ className, children, ...rest }: { className?: string; children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) {
-  const ref = useRef<HTMLElement>(null);
-  useGsap(ref, ({ mobile }) => {
-    if (mobile) return;
-    const cards = gsap.utils.toArray<HTMLElement>("[data-stack-card]");
-    cards.forEach((card, i) => {
-      if (i === cards.length - 1) return;
-      gsap.to(card.firstElementChild, { scale: 0.92, yPercent: -4, ease: "none", scrollTrigger: { trigger: cards[i + 1], start: "top bottom", end: "top 18%", scrub: true } });
-    });
-  });
-  return <section ref={ref} className={className} {...rest}>{children}</section>;
-}
-
 /**
  * Pinned horizontal track, after the 21st.dev "Product Timeline" (hyperiux): [data-pin] is pinned while [data-track]
  * slides left and [data-rail] draws itself. Phones and reduced motion keep the plain vertical list.
@@ -66,11 +52,25 @@ export function StackFx({ className, children, ...rest }: { className?: string; 
 export function HScrollFx({ className, children, ...rest }: { className?: string; children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) {
   const ref = useRef<HTMLElement>(null);
   useGsap(ref, ({ mobile }) => {
-    if (mobile) return;
+    const stations = gsap.utils.toArray<HTMLElement>("[data-station]", ref.current);
+    if (mobile) {
+      // Phones: each station swells while it crosses the middle of the screen.
+      stations.forEach((el) => ScrollTrigger.create({ trigger: el, start: "top 50%", end: "bottom 50%", toggleClass: "on" }));
+      return;
+    }
     const track = ref.current!.querySelector<HTMLElement>("[data-track]")!;
+    const rail = ref.current!.querySelector<HTMLElement>("[data-rail]")!;
     const distance = () => track.scrollWidth - window.innerWidth + 64;
-    const tl = gsap.timeline({ scrollTrigger: { trigger: ref.current!.querySelector("[data-pin]"), start: "top top", end: () => `+=${distance()}`, scrub: 0.6, pin: true, invalidateOnRefresh: true } });
-    tl.to(track, { x: () => -distance(), ease: "none" }, 0).fromTo(ref.current!.querySelector("[data-rail]"), { scaleX: 0 }, { scaleX: 1, ease: "none" }, 0);
+    // The rail's head is the train: the station it has most recently reached is "on" (the wave), the others settle.
+    let cur = -1;
+    const wave = () => {
+      const head = rail.getBoundingClientRect().right;
+      let on = -1;
+      stations.forEach((el, i) => { if (el.getBoundingClientRect().left <= head) on = i; });
+      if (on !== cur) { stations.forEach((el, i) => el.classList.toggle("on", i === on)); cur = on; }
+    };
+    const tl = gsap.timeline({ scrollTrigger: { trigger: ref.current!.querySelector("[data-pin]"), start: "top top", end: () => `+=${distance()}`, scrub: 0.6, pin: true, invalidateOnRefresh: true }, onUpdate: wave });
+    tl.to(track, { x: () => -distance(), ease: "none" }, 0).fromTo(rail, { scaleX: 0 }, { scaleX: 1, ease: "none" }, 0);
   });
   return <section ref={ref} className={className} {...rest}>{children}</section>;
 }

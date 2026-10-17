@@ -45,12 +45,13 @@ export function Promises() {
         {/* The panel runs off the right edge of the screen on wide layouts. */}
         <div data-panel className="relative mt-14 lg:mt-0 lg:-mr-[clamp(1rem,2.2vw,2.5rem)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img data-panel-bobo src="/brand/bobo-full.webp" alt="Bobo the duck" width={480} height={549} loading="lazy" decoding="async" className="absolute -top-24 right-6 z-10 w-28 md:-top-[11rem] md:w-36" />
-          <div className="relative rounded-3xl bg-ink px-5 pt-8 pb-8 text-white shadow-[12px_12px_0_var(--color-ribbon)] md:px-10 md:pt-10 md:pb-12 lg:rounded-r-none">
-          {/* Column titles, each sized to fill its half of the card on one line (Nick, 2026-10-17). */}
-          <div aria-hidden className="mb-6 grid gap-2 border-b border-white/10 pb-6 md:mb-8 md:grid-cols-2 md:gap-8 md:pb-8">
-            <div className="fit-box"><p className="fit-title display text-mist [--fit:8.2]">OTHER AGENCIES</p></div>
-            <div className="fit-box"><p className="fit-title display text-white [--fit:11.2]">PLUMBER <span className="text-ribbon">KING</span> AGENCY</p></div>
+          <img data-panel-bobo src="/brand/bobo-full.webp" alt="Bobo the duck" width={480} height={549} loading="lazy" decoding="async" className="absolute -top-[5.25rem] right-6 w-28 md:-top-[9.5rem] md:w-36" />
+          <div className="relative z-10 rounded-3xl bg-ink px-5 pt-8 pb-8 text-white shadow-[12px_12px_0_var(--color-ribbon)] md:px-10 md:pt-10 md:pb-12 lg:rounded-r-none">
+          {/* Column titles: one size for both, sized so PLUMBER KING AGENCY fills its half, then stretched taller; OTHER
+              AGENCIES is letter-spaced out to the same width (Nick, 2026-10-17: "same font, bigger, extend in height"). */}
+          <div aria-hidden className="mb-6 grid gap-3 border-b border-white/10 pb-6 md:mb-8 md:grid-cols-2 md:gap-8 md:pb-8">
+            <div className="fit-box"><p className="fit-title tall display text-mist [--fit:11.2] [letter-spacing:1.7cqi]">OTHER AGENCIES</p></div>
+            <div className="fit-box"><p className="fit-title tall display text-white [--fit:11.2]">PLUMBER <span className="text-ribbon">KING</span> AGENCY</p></div>
           </div>
           <h3 className="sr-only">Other agencies compared with Plumber King Agency</h3>
           <ol className="relative">

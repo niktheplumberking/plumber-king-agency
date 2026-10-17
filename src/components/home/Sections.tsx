@@ -44,9 +44,12 @@ export function ProblemSplit() {
             <h3 className="display text-t2 text-slate">The typical plumber site</h3>
             <ul className="mt-4 space-y-2.5">{oldWay.map((t) => <li key={t} className="flex gap-3 text-t3 text-slate"><X className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
-          <Reveal delay={0.1} className="relative z-10 mt-6 rounded-xl border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)] lg:absolute lg:top-[42%] lg:-right-2 lg:mt-0 lg:w-[22rem] lg:rotate-2">
-            <h3 className="display text-t2 text-royal">A Plumber King site</h3>
-            <ul className="mt-4 space-y-2.5">{kingWay.map((t) => <li key={t} className="flex gap-3 text-t3"><Check className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
+          {/* Our card "rings" every 5 s (Nick 2026-10-17): a wiggle that speeds up, a short shake, then it settles. CSS only. */}
+          <Reveal delay={0.1} className="relative z-10 mt-6 lg:absolute lg:top-[42%] lg:-right-2 lg:mt-0 lg:w-[22rem]">
+            <div className="ring-card rounded-xl border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)] lg:rotate-2">
+              <h3 className="display text-t2 text-royal">A Plumber King site</h3>
+              <ul className="mt-4 space-y-2.5">{kingWay.map((t) => <li key={t} className="flex gap-3 text-t3"><Check className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
+            </div>
           </Reveal>
         </div>
       </div>
@@ -93,7 +96,6 @@ function Compare({ value, onValueChange, before, after }: { value: number; onVal
       </div>
       <label htmlFor={id} className="sr-only">Compare a typical plumber website with a Plumber King website</label>
       <input id={id} type="range" min={0} max={100} value={v} onChange={(e) => onValueChange(Number(e.target.value))} aria-valuetext={`${v}% typical site shown`} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-ribbon)]" />
-      <figcaption className="mt-1 text-t3 text-slate">Illustration: a made-up plumbing company, before and after. Not a real client.</figcaption>
     </figure>
   );
 }

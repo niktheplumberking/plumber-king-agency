@@ -1,7 +1,7 @@
 "use client";
 import Link from "@/components/Link";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
+import { ArrowRight, Check, Lock, RotateCcw, ShieldCheck, Wrench, X } from "lucide-react";
 import { site } from "@/content/site";
 import { Reveal } from "../Reveal";
 
@@ -80,7 +80,12 @@ const questions = [
   { q: "Is your Google Business Profile complete and linked to your website?", fix: "Fill in categories, services, service area, hours and photos, and link it to your site." },
 ];
 
-/** 60-second website check: yes/no questions, a score and the fixes that matter. */
+/**
+ * 60-second website check: yes/no questions, a score and the fixes that matter. Rebuilt 2026-10-17 (Nick: "push
+ * harder, maximum conversion"): the left side says why the check can be trusted (free, nothing sent, real fixes);
+ * the card has a segmented progress bar, a live score ring, big answer tiles, Bobo reacting, and a result screen
+ * with both next steps. Patterns from the 21st.dev "Questionnaire" (uiable) one-question-at-a-time flow.
+ */
 export function WebsiteGrader() {
   const [answers, setAnswers] = useState<(boolean | null)[]>(() => questions.map(() => null));
   const step = answers.findIndex((a) => a === null);
@@ -88,49 +93,63 @@ export function WebsiteGrader() {
   const score = useMemo(() => answers.filter(Boolean).length, [answers]);
   const answer = (v: boolean) => setAnswers((a) => a.map((x, i) => (i === step ? v : x)));
   const reset = () => setAnswers(questions.map(() => null));
+  const n = questions.length;
   const verdict = score >= 7 ? "Strong foundation. A few tweaks could squeeze more calls out of it." : score >= 4 ? "You're leaving calls on the table. The fixes below are where to start." : "Your website is probably costing you jobs every week. Good news: it's fixable.";
 
   return (
-    <section className="bg-ivory py-24 md:py-32" aria-labelledby="grader-h">
+    <section className="relative overflow-hidden bg-ivory py-24 md:py-32" aria-labelledby="grader-h">
+      <div aria-hidden className="hero-dots pointer-events-none absolute bottom-10 left-0 h-72 w-[30%]" />
       <div className="container-x grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal>
           <h2 id="grader-h" className="display text-t1">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
-          <p className="mt-5 max-w-md text-t3 text-slate">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to, free, no email needed.</p>
+          <p className="mt-5 max-w-md text-t3 text-slate md:text-t2">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to.</p>
+          <ul className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {[[ShieldCheck, "Free, no email needed"], [Lock, "Nothing is sent anywhere"], [Wrench, "Real fixes, not a pitch"]].map(([Ic, t]) => {
+              const I = Ic as typeof Check;
+              return <li key={t as string} className="gr-trust"><I className="h-5 w-5" aria-hidden />{t as string}</li>;
+            })}
+          </ul>
         </Reveal>
-        <Reveal delay={0.1} className="relative mt-14 rounded-md border-2 border-ink bg-paper p-7 shadow-[8px_8px_0_var(--color-royal)] md:mt-0 md:p-10">
+        <Reveal delay={0.1} className="gr-card">
           {/* Bobo reacts to the visitor's answers: thinking while they go, then cheering or sorry at the result. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={!done ? "/bobo/think.webp" : score >= 6 ? "/bobo/cheer.webp" : "/bobo/sorry.webp"} alt={!done ? "Bobo the duck thinking" : score >= 6 ? "Bobo the duck cheering" : "Bobo the duck looking worried"} width={120} height={120} className="pointer-events-none absolute -top-[4.5rem] right-4 h-24 w-24 md:-top-24 md:h-28 md:w-28" />
-          <div className="flex items-center justify-between text-t3 font-semibold text-slate">
-            <span>{done ? "Your result" : `Question ${step + 1} of ${questions.length}`}</span>
+          <div className="flex items-center justify-between gap-4 text-t3 font-semibold text-slate">
+            <span>{done ? "Your result" : `Question ${step + 1} of ${n}`}</span>
             <button type="button" onClick={reset} className="inline-flex min-h-11 items-center gap-1.5 rounded px-3 hover:text-ink"><RotateCcw className="h-4 w-4" aria-hidden />Start over</button>
           </div>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-navy-900/10" aria-hidden>
-            <div className="h-full origin-left bg-ribbon transition-transform duration-500" style={{ transform: `scaleX(${(done ? questions.length : step) / questions.length})` }} />
-          </div>
-          <div className="mt-8 min-h-[16rem]" aria-live="polite">
+          <ol aria-hidden className="mt-3 grid gap-1.5" style={{ gridTemplateColumns: `repeat(${n},1fr)` }}>
+            {answers.map((a, i) => <li key={i} className={`gr-seg ${a === true ? "yes" : a === false ? "no" : i === step ? "now" : ""}`} />)}
+          </ol>
+          <div className="mt-8 grid min-h-[17rem] gap-8 md:grid-cols-[minmax(0,1fr)_auto]" aria-live="polite">
             {!done ? (
-                <div key={step} className="enter-slide">
-                  <p className="font-display text-t2 font-extrabold">{questions[step].q}</p>
-                  <div className="mt-8 grid grid-cols-2 gap-3">
-                    <button type="button" onClick={() => answer(true)} className="btn bg-royal text-white shadow-[4px_4px_0_var(--color-ink)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_var(--color-ink)]"><Check className="h-5 w-5" aria-hidden />Yes</button>
-                    <button type="button" onClick={() => answer(false)} className="btn btn-ghost-dark"><X className="h-5 w-5" aria-hidden />No / not sure</button>
-                  </div>
+              <div key={step} className="enter-slide">
+                <p className="font-display text-t2 font-extrabold">{questions[step].q}</p>
+                <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                  <button type="button" onClick={() => answer(true)} className="gr-ans yes"><Check className="h-6 w-6" aria-hidden />Yes</button>
+                  <button type="button" onClick={() => answer(false)} className="gr-ans"><X className="h-6 w-6" aria-hidden />No / not sure</button>
                 </div>
-              ) : (
-                <div key="result" className="enter-fade">
-                  <p className="font-display text-t1 font-extrabold">{score}<span className="text-t2 text-slate">/{questions.length}</span></p>
-                  <p className="mt-3 text-t3 font-semibold">{verdict}</p>
-                  {score < questions.length && (
-                    <ul className="mt-6 space-y-3">
-                      {questions.map((q, i) => answers[i] === false && (
-                        <li key={q.q} className="flex gap-3 text-slate"><ArrowRight className="mt-1 h-4 w-4 shrink-0 text-ribbon" aria-hidden />{q.fix}</li>
-                      ))}
-                    </ul>
-                  )}
-                  <Link href="/free-website-audit/" className="btn btn-primary mt-8">{site.secondaryCta}<ArrowRight className="h-4.5 w-4.5" aria-hidden /></Link>
+              </div>
+            ) : (
+              <div key="result" className="enter-fade">
+                <p className="mt-1 text-t3 font-semibold">{verdict}</p>
+                {score < n && (
+                  <ul className="mt-6 space-y-3">
+                    {questions.map((q, i) => answers[i] === false && (
+                      <li key={q.q} className="gr-fix"><ArrowRight className="mt-1 h-4 w-4 shrink-0 text-ribbon-deep" aria-hidden />{q.fix}</li>
+                    ))}
+                  </ul>
+                )}
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link href="/free-website-audit/" className="btn btn-primary">{site.secondaryCta}<ArrowRight className="h-4.5 w-4.5" aria-hidden /></Link>
                 </div>
-              )}
+              </div>
+            )}
+            {/* Live score ring: fills as "yes" answers add up. */}
+            <div className="gr-ring order-first md:order-none" role="img" aria-label={`Score so far: ${score} of ${n}`}>
+              <svg viewBox="0 0 64 64" aria-hidden><circle cx="32" cy="32" r="27" /><circle cx="32" cy="32" r="27" className="fill" style={{ strokeDashoffset: 169.6 * (1 - score / n) }} /></svg>
+              <p><b className="font-display">{score}</b><span>/{n}</span></p>
+            </div>
           </div>
         </Reveal>
       </div>

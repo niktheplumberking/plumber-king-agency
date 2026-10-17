@@ -33,9 +33,9 @@ export function Footer() {
         <FooterCol title="Company" className="md:col-span-2" links={[{ href: "/about/", label: "About Nick" }, { href: "/process/", label: "Our process" }, { href: "/faq/", label: "FAQ" }, { href: "/contact/", label: "Contact" }]} />
         <FooterCol title="Guides" className="md:col-span-3" links={guides.map((g) => ({ href: `/resources/${g.slug}/`, label: g.title.split(":")[0] }))} />
       </div>
-      {/* Oversized wordmark, like a sign on the shop wall. Static: one looping band per page at most. */}
-      <div aria-hidden className="marquee overflow-hidden border-t border-white/10 py-6">
-        <span className="foot-mark display block" data-a="Plumber King " data-b="Agency" />
+      {/* Oversized wordmark, like a sign on the shop wall: full width, slanted, white with KING in deep pink (Nick 2026-10-17). */}
+      <div aria-hidden className="fit-box overflow-hidden border-t border-white/10 px-[2vw] py-8">
+        <span className="foot-mark slant block">Plumber <b>King</b> Agency</span>
       </div>
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-3 py-6 pb-24 text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">

@@ -4,6 +4,7 @@ import { PINNED, useReducedMotion, useScrollProgress } from "@/lib/scroll";
 import { PhoneCall, Search, ShieldCheck } from "lucide-react";
 import { PhoneFrame } from "./PhoneFrame";
 import { CtaButton } from "../CtaButton";
+import { WalkingBobo } from "./WalkingBobo";
 
 const steps = [
   {
@@ -59,7 +60,7 @@ export function StoryScroll() {
      page keeps exactly 3 type sizes) and its title fades linearly from ink to pink; earlier steps go back to normal.
      `all` lights every icon for the reduced-motion list, where nothing moves. */
   const steps3 = (cur: number, all = false) => (
-    <ol className="relative mt-10 space-y-8 pl-14">
+    <ol className="relative mt-10 space-y-14 pl-14">
       <div aria-hidden className="absolute top-2 bottom-2 left-[1.1rem] w-1 rounded bg-ink/10">
         <div ref={rail} className="h-full w-full origin-top scale-y-0 rounded bg-ribbon" />
       </div>
@@ -91,7 +92,8 @@ export function StoryScroll() {
 
   return (
     <section ref={ref} className="relative overflow-x-clip bg-sky lg:h-[240vh]" aria-labelledby="story-h">
-      <div className="py-24 lg:sticky lg:top-0 lg:flex lg:h-[100svh] lg:items-center lg:overflow-hidden lg:py-0">
+      <div className="relative pt-24 pb-44 lg:sticky lg:top-0 lg:flex lg:h-[100svh] lg:items-center lg:overflow-hidden lg:py-0">
+        <WalkingBobo />
         <div aria-hidden className="hero-dots pointer-events-none absolute top-[12%] right-0 h-64 w-[30%] rotate-180" />
         <div className="container-x grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
           {/* 1) Media: the phone in a pink arch, with the parked objects around it. */}

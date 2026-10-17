@@ -22,10 +22,13 @@ export function WalkingBobo() {
   // WCAG 2.2.2: anything that moves for more than 5 seconds gets a pause button. Paused stays paused while scrolling.
   const [paused, setPaused] = useState(false);
   const stop = useRef(false);
+  const [moving, setMoving] = useState(false);
   useEffect(() => {
     const el = box.current;
     const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
-    if (!el || !WALK_READY || window.matchMedia("(prefers-reduced-motion: reduce)").matches || nav.connection?.saveData) return;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setMoving(true); // the strips loop whenever motion is allowed, so the pause button shows even without the video
+    if (!WALK_READY || nav.connection?.saveData) return;
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) { setStill(isSafari()); setLoad(true); }
       const v = vid.current;
@@ -34,27 +37,29 @@ export function WalkingBobo() {
     io.observe(el);
     return () => io.disconnect();
   }, [load]);
+  // One button pauses everything that moves on its own here: Bobo and the two strips (ScrollFx listens for pk-motion).
   const toggle = () => {
+    window.dispatchEvent(new CustomEvent("pk-motion", { detail: !paused }));
     stop.current = !paused;
     setPaused(!paused);
     const v = vid.current;
     if (v) { if (paused) v.play().catch(() => {}); else v.pause(); }
   };
   return (
-    <div ref={box} className="walk-bobo">
-      {load && (
-        <button type="button" onClick={toggle} aria-pressed={paused} aria-label={paused ? "Play Bobo walking animation" : "Pause Bobo walking animation"} className="pointer-events-auto absolute bottom-1 left-3 z-10 md:right-3 md:left-auto inline-flex h-11 items-center gap-1.5 rounded-full border-2 border-ink bg-white px-3 text-t3 font-semibold text-ink">
-          {paused ? <Play className="h-4 w-4 fill-current" aria-hidden /> : <Pause className="h-4 w-4 fill-current" aria-hidden />}<span aria-hidden>{paused ? "Play" : "Pause"} Bobo</span>
+    <>
+      {moving && (
+        <button type="button" onClick={toggle} aria-pressed={paused} aria-label={paused ? "Play the moving strips and Bobo" : "Pause the moving strips and Bobo"} className="pause-pill">
+          {paused ? <Play className="h-4 w-4 fill-current" aria-hidden /> : <Pause className="h-4 w-4 fill-current" aria-hidden />}<span aria-hidden>{paused ? "Play" : "Pause"} motion</span>
         </button>
       )}
-      <div aria-hidden className="h-full w-full">{load && (still ? (paused ? null : (
+      <div ref={box} aria-hidden className="walk-bobo">{load && (still ? (paused ? null : (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src="/bobo/walk.webp" alt="" width={720} height={308} decoding="async" className="h-full w-full" />
+        <img src="/bobo/walk.webp" alt="" width={480} height={205} decoding="async" className="h-full w-full" />
       )) : (
         <video ref={vid} muted loop playsInline autoPlay preload="auto" className="h-full w-full">
           <source src="/bobo/walk.webm" type="video/webm" />
         </video>
       ))}</div>
-    </div>
+    </>
   );
 }

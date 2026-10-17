@@ -17,15 +17,15 @@ const jobs = ["Water heaters", "Drain cleaning", "Burst pipes", "Repiping", "Sew
 
 export function JobsMarquee() {
   // Two crossed bands laid over the seam between the hero and the next section (no box or background of their own).
-  // They move only with the scroll, in opposite directions, eased by the ScrollFx scrub: no autoplay loop to stutter.
+  // They loop on their own in opposite directions and get an eased push when the visitor scrolls (ScrollFx).
   return (
     <ScrollFx as="section" aria-label="What we do and the jobs we help you win" className="pointer-events-none relative z-20 -my-16 overflow-x-clip md:-my-24">
       <WalkingBobo />
       <div className="relative z-10 -mx-10 -rotate-2 bg-royal py-4 md:py-5">
-        <MarqueeRow items={what} still fx="-10%,-22%" itemClass="band-item text-t1" sep="✦" outlineEvery />
+        <MarqueeRow items={what} loop="1" itemClass="band-item text-t1" sep="✦" outlineEvery />
       </div>
       <div className="relative -mx-10 -mt-3 rotate-[1.5deg] bg-ribbon py-3 md:py-4">
-        <MarqueeRow items={jobs} still fx="-24%,-14%" itemClass="band-item text-t2" sep="dot" />
+        <MarqueeRow items={jobs} loop="-1" itemClass="band-item text-t2" sep="dot" />
       </div>
     </ScrollFx>
   );

@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { gsap, useGsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger, useGsap } from "@/lib/gsap";
 
 /**
  * One small client wrapper that lets server-rendered sections move on scroll without shipping their markup as JavaScript.
@@ -24,6 +24,22 @@ export function ScrollFx({ as: Tag = "div", className, children, ...rest }: { as
       if (r) { const [a, b] = r.split(",").map(Number); from.rotate = a; to.rotate = b; }
       gsap.fromTo(el, from, to);
     });
+    // Looping strips (Nick, 2026-10-17): each [data-loop] row ("1" = left to right, "-1" = right to left) drifts on its
+    // own. Scrolling pushes it: the speed ramps up and back down in straight lines, never a jump. The page's
+    // "Pause motion" button (pk-motion event) stops and restarts them.
+    const loops = ref.current!.querySelectorAll<HTMLElement>("[data-loop]");
+    if (!loops.length) return;
+    const tws = [...loops].map((el) => el.dataset.loop === "1"
+      ? gsap.fromTo(el, { xPercent: -50 }, { xPercent: 0, duration: 46, ease: "none", repeat: -1 })
+      : gsap.fromTo(el, { xPercent: 0 }, { xPercent: -50, duration: 40, ease: "none", repeat: -1 }));
+    const push = (v: number) => tws.forEach((t) => gsap.to(t, {
+      timeScale: 1 + Math.min(Math.abs(v) / 450, 5), duration: 0.5, ease: "none", overwrite: true,
+      onComplete: () => { gsap.to(t, { timeScale: 1, duration: 1.4, ease: "none" }); },
+    }));
+    ScrollTrigger.create({ trigger: ref.current, start: "top bottom", end: "bottom top", onUpdate: (st) => push(st.getVelocity()) });
+    const onMotion = (e: Event) => tws.forEach((t) => ((e as CustomEvent<boolean>).detail ? t.pause() : t.play()));
+    window.addEventListener("pk-motion", onMotion);
+    return () => window.removeEventListener("pk-motion", onMotion);
   });
   const Comp = Tag as React.ElementType;
   return <Comp ref={ref} className={className} {...rest}>{children}</Comp>;
@@ -61,14 +77,14 @@ export function HScrollFx({ className, children, ...rest }: { className?: string
 
 /**
  * A marquee row. Built on the client from a short list so the repeated copies never bloat the page payload.
- * `still` rows do not loop on their own; with `fx` (a data-fx-x span) the row slides with the scroll instead.
+ * `loop` rows ("1" or "-1") are driven by the ScrollFx around them (see above) instead of the CSS loop.
  * sep "dot" draws a round dot instead of a text glyph.
  */
-export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery, still, fx }: { items: string[]; dur?: string; reverse?: boolean; itemClass: string; sep: string; outlineEvery?: boolean; still?: boolean; fx?: string }) {
+export function MarqueeRow({ items, dur, reverse, itemClass, sep, outlineEvery, loop }: { items: string[]; dur?: string; reverse?: boolean; itemClass: string; sep: string; outlineEvery?: boolean; loop?: "1" | "-1" }) {
   const row = [...items, ...items, ...items, ...items, ...items, ...items];
   return (
     <div className="marquee overflow-hidden">
-      <div data-fx-x={fx} className={`${still ? "" : "marquee-track"} flex w-max items-center will-change-transform ${reverse ? "reverse" : ""}`} style={dur ? ({ "--dur": dur } as React.CSSProperties) : undefined}>
+      <div data-loop={loop} className={`${loop ? "" : "marquee-track"} flex w-max items-center will-change-transform ${reverse ? "reverse" : ""}`} style={dur ? ({ "--dur": dur } as React.CSSProperties) : undefined}>
         {row.map((t, i) => (
           <span key={i} aria-hidden={i >= items.length} className={itemClass}>
             <span className={outlineEvery && i % 2 ? "outline-text" : undefined}>{t}</span>

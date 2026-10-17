@@ -55,19 +55,22 @@ export function StoryScroll() {
     if (rail.current) rail.current.style.transform = `scaleY(${Math.min(1, p * 1.15)})`;
   }, true);
 
-  const steps3 = (cur: number) => (
+  /* Nick 2026-10-17: only the step being read is lit. Its icon turns pink, its title and text grow (a scale, so the
+     page keeps exactly 3 type sizes) and its title fades linearly from ink to pink; earlier steps go back to normal.
+     `all` lights every icon for the reduced-motion list, where nothing moves. */
+  const steps3 = (cur: number, all = false) => (
     <ol className="relative mt-10 space-y-8 pl-14">
       <div aria-hidden className="absolute top-2 bottom-2 left-[1.1rem] w-1 rounded bg-ink/10">
         <div ref={rail} className="h-full w-full origin-top scale-y-0 rounded bg-ribbon" />
       </div>
       {steps.map((s, i) => {
         const Icon = parked[i].icon;
-        const on = i <= cur;
+        const on = i === cur;
         return (
-          <li key={s.key} className={`relative transition-colors duration-500 ${on ? "text-ink" : "text-slate"}`}>
-            <span className={`absolute top-0 -left-14 grid h-10 w-10 place-items-center rounded-full border-2 transition-colors duration-500 ${on ? "border-ribbon-deep bg-ribbon-deep text-white" : "border-ink/15 bg-white text-slate"}`}><Icon className="h-5 w-5" aria-hidden /></span>
+          <li key={s.key} aria-current={on ? "step" : undefined} className={`step ${on ? "on" : ""}`}>
+            <span className={`step-dot ${on || all ? "on" : ""}`}><Icon className="h-5 w-5" aria-hidden /></span>
             <h3 className="display text-t2">{s.label}: {s.title}</h3>
-            <p className="mt-2 max-w-lg text-t3 text-slate">{s.body}</p>
+            <p className="mt-2 max-w-lg text-t3">{s.body}</p>
           </li>
         );
       })}
@@ -79,7 +82,7 @@ export function StoryScroll() {
       <section className="bg-sky py-24" aria-labelledby="story-h">
         <div className="container-x max-w-4xl">
           <h2 id="story-h" className="display text-t1">From invisible to <span className="accent">booked.</span></h2>
-          {steps3(2)}
+          {steps3(-1, true)}
           <div className="mt-12"><CtaButton /></div>
         </div>
       </section>

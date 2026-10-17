@@ -19,7 +19,7 @@ Plumber King Agency is owned by Bennett & Co LLC. It works only with plumbing co
 ## Key pages
 
 - [About Nick](https://plumberkingagency.com/about/): who runs Plumber King Agency and why.
-- [Process](https://plumberkingagency.com/process/): discovery and strategy, content and wireframe, design and build, launch, ongoing support.
+- [Process](https://plumberkingagency.com/process/): discovery and strategy, content and wireframe, design and build, launch, 3 months of support after launch.
 - [FAQ](https://plumberkingagency.com/faq/): pricing approach, ownership, timelines, SEO and AI search.
 - [Free website audit](https://plumberkingagency.com/free-website-audit/): request a free review of a plumbing website.
 - [Contact](https://plumberkingagency.com/contact/): book a free strategy call.
@@ -32,7 +32,7 @@ It depends on how many services and service areas you need and whether you want 
 
 ### How long does it take to build a plumber website?
 
-It depends on the size of the site and how quickly content and feedback come back. We give you a timeline on the strategy call and keep you updated at every step: strategy, content, design and build, launch.
+Usually 1 to 2 weeks from start to launch, sometimes less. Waiting on logins or content is what slows it down.
 
 ### Do I own my website?
 
@@ -58,10 +58,34 @@ SEO builds over months, not days, and it depends on your city and how strong you
 
 Nobody controls what AI assistants say. What we can do is make your business easy for them to understand and trust: clear answers to common plumbing questions on your site, consistent name, address and phone details across the web, reviews, and structured data that describes your services and service area. That is what AI search tools rely on.
 
+### Do I have to sign a long-term contract?
+
+No. By default the contract runs for your project and ends once the site is launched and optimized. If you want ongoing SEO, maintenance and upgrades, we can agree a longer plan that fits you.
+
 ### What happens after launch?
 
-We do not disappear. After launch you get ongoing support for edits, updates and fixes, so your site stays fresh and working and you are never left chasing a developer.
+Every website comes with 3 months of support after launch, written into the contract: if something breaks, we fix it. After that, support is paid. We also offer yearly hosting and maintenance, and a hosting and security package for clients who want everything handled.
 
 ### How do you measure success?
 
-We track what matters: phone calls, form submissions and real leads, plus your traffic and search rankings, in a monthly report written in plain English. Real results, not vanity metrics.
+We track what matters: phone calls, form submissions and real leads, plus your traffic and search rankings, in reports written in plain English. Real results, not vanity metrics.
+
+### Who is a good fit for Plumber King Agency?
+
+Plumbing companies in the USA and Canada that are serious about growing and know which jobs they want more of. If our first call shows we are not the right fit, we tell you straight instead of taking a project that would waste your time and money.
+
+### What happens on the free strategy call?
+
+It is a free 30-minute call. We look at your website, your Google presence and your competitors, and tell you straight what would get you more calls. If we are a good fit, you get a proposal with the scope, price and timeline.
+
+### What do you need from me?
+
+Your logins (domain, Google Business Profile and hosting, if you have them), a few real photos, and quick feedback on drafts. Waiting on logins or content is the main thing that slows a project down.
+
+### Do I need to write the content?
+
+No. We gather what we need on the strategy call and write the copy for you, focused on the jobs you actually want. You review and approve it before anything goes live.
+
+### Do you offer hosting and maintenance?
+
+Yes. Every website comes with 3 months of support after launch. After that you can choose yearly hosting and maintenance, and a hosting and security package is available for clients who want everything handled.

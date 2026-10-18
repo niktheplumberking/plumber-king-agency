@@ -1,5 +1,5 @@
 import { PageHero } from "@/components/PageHero";
-import { Founder } from "@/components/home/Founder";
+import { AboutFolders } from "@/components/home/AboutFolders";
 import { ProblemSplit } from "@/components/home/Sections";
 import { FinalCta } from "@/components/FinalCta";
 import { JsonLd } from "@/components/JsonLd";
@@ -16,7 +16,7 @@ export default function AboutPage() {
   return (
     <>
       <PageHero crumbs={[{ name: "About Nick", path: "/about/" }]} title={<>Built for plumbers, <span className="accent">by someone in your corner.</span></>} intro={<p>{site.name} is a {site.legalEntity} company serving plumbing businesses across the USA and Canada.</p>} />
-      <Founder full />
+      <AboutFolders />
       {site.assets.banner && (
         <section className="bg-paper pb-24" aria-label="The Plumber King crew">
           <div className="container-x">

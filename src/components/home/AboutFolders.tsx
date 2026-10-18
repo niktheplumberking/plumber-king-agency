@@ -1,0 +1,40 @@
+import Link from "@/components/Link";
+import { ArrowUpRight } from "lucide-react";
+import { folders, founderFull } from "@/content/about";
+import { site } from "@/content/site";
+import { Reveal } from "../Reveal";
+import { CtaButton } from "../CtaButton";
+import { FolderSlot } from "./FolderSlot";
+
+/**
+ * "Meet Nick", rebuilt 2026-10-18 (Nick): three glass folders after the 21st.dev "Glass Folder Cards" component.
+ * Each folder is one page about Nick Bennett: about me, portfolio, my story. Hover leans the glass, a click opens the
+ * folder and fans its files (each file links into that page), and the link under each folder opens the page itself.
+ */
+export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
+  const H = headingLevel === 1 ? "h1" : "h2";
+  return (
+    <section id="founder" className="relative overflow-hidden bg-paper py-24 md:py-32" aria-labelledby="founder-h">
+      <div aria-hidden className="hero-dots pointer-events-none absolute top-10 right-0 h-72 w-[30%]" />
+      <div className="container-x">
+        <Reveal className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-end">
+          <H id="founder-h" className="display text-t1">I&apos;m {founderFull}. <span className="accent">The face behind Plumber King.</span></H>
+          <p className="text-t3 text-slate md:text-t2">You deal with me, not a sales team. Open a folder to see who I am, what I have built and where I am taking this.</p>
+        </Reveal>
+        <ul className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-3">
+          {folders.map((f, i) => (
+            <li key={f.id} className="flex flex-col items-center text-center">
+              <FolderSlot folder={f} delay={i * 160} />
+              <p className="mt-6 max-w-[22rem] text-t3 text-slate">{f.blurb}</p>
+              <Link href={f.href} className="ul-link mt-3 min-h-11 self-center">{f.linkText}<ArrowUpRight className="h-4 w-4" aria-hidden /></Link>
+            </li>
+          ))}
+        </ul>
+        <Reveal className="mt-20 flex flex-col items-center gap-5 text-center">
+          <p className="display max-w-3xl text-t2">&ldquo;{site.founderQuote}&rdquo;</p>
+          <CtaButton />
+        </Reveal>
+      </div>
+    </section>
+  );
+}

@@ -4,7 +4,7 @@ import { ProblemSplit } from "@/components/home/Sections";
 import { JobsMarquee, ProcessTimeline, SystemBento } from "@/components/home/Showcase";
 import { Promises } from "@/components/home/Promises";
 import { JobValueCalculator, WebsiteGrader } from "@/components/home/Interactive";
-import { Founder } from "@/components/home/Founder";
+import { AboutFolders } from "@/components/home/AboutFolders";
 import { Proof } from "@/components/home/Proof";
 import { FaqList } from "@/components/Faq";
 import { FinalCta } from "@/components/FinalCta";
@@ -34,7 +34,7 @@ export default function Home() {
       <ProblemSplit />
       <SystemBento />
       <JobValueCalculator />
-      <Founder />
+      <AboutFolders />
       <Proof />
       <ProcessTimeline />
       <WebsiteGrader />

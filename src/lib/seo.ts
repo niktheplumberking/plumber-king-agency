@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { founderFull } from "@/content/about";
 import { site } from "@/content/site";
 
 export const abs = (path: string) => `${site.url}${path.startsWith("/") ? path : `/${path}`}`;
@@ -56,10 +57,14 @@ export function personLd() {
     "@context": "https://schema.org",
     "@type": "Person",
     "@id": personId,
-    name: site.founder,
-    jobTitle: "Founder",
+    name: founderFull,
+    givenName: "Nick",
+    familyName: "Bennett",
+    jobTitle: "Founder and web designer",
     worksFor: { "@id": orgId },
-    url: abs("/about/"),
+    url: abs("/about/nick-bennett/"),
+    knowsAbout: ["Plumber website design", "Web design", "E-commerce websites", "Branding", "Local SEO for plumbers"],
+    sameAs: Object.values(site.social).filter(Boolean),
     ...(site.assets.founderPhoto ? { image: abs(site.assets.founderPhoto) } : {}),
   };
 }
@@ -103,7 +108,7 @@ export function articleLd(g: { title: string; description: string; path: string;
     mainEntityOfPage: abs(g.path),
     datePublished: g.published,
     dateModified: g.published,
-    author: { "@id": personId, "@type": "Person", name: site.founder },
+    author: { "@id": personId, "@type": "Person", name: founderFull },
     publisher: { "@id": orgId, "@type": "Organization", name: site.name },
     inLanguage: "en-US",
   };

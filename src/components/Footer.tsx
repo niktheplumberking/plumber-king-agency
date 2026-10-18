@@ -4,6 +4,7 @@ import { site } from "@/content/site";
 import { services } from "@/content/services";
 import { guides } from "@/content/guides";
 import { Logo } from "./Logo";
+import { FooterWordmark } from "./FooterWordmark";
 import { FacebookIcon, InstagramIcon, LinkedInIcon } from "./SocialIcons";
 
 export function Footer() {
@@ -34,9 +35,7 @@ export function Footer() {
         <FooterCol title="Guides" className="md:col-span-3" links={guides.map((g) => ({ href: `/resources/${g.slug}/`, label: g.title.split(":")[0] }))} />
       </div>
       {/* Oversized wordmark, like a sign on the shop wall: full width, slanted, white with KING in deep pink (Nick 2026-10-17). */}
-      <div aria-hidden className="fit-box overflow-hidden border-t border-white/10 px-[2vw] py-8">
-        <span className="foot-mark slant block">Plumber <b>King</b> Agency</span>
-      </div>
+      <FooterWordmark />
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col gap-3 py-6 pb-24 text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">
           <p>© {year} {site.ownership} · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>

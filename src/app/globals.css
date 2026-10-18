@@ -161,8 +161,35 @@ html { scroll-padding-top: 88px; }
 .group:hover .cta-arrow { transform: translateX(0.25rem); }
 .split-w { display: inline-block; overflow: hidden; padding-bottom: 0.06em; vertical-align: bottom; }
 .split-i { display: inline-block; }
-.foot-mark { font-size: calc(100cqi / 9.8); line-height: 1.05; white-space: nowrap; color: #fff; transform: scaleY(1.18); transform-origin: bottom; }
-.foot-mark b { font-weight: inherit; color: var(--color-ribbon-deep); }
+/* Footer wordmark (FooterWordmark.tsx). Nick 2026-10-18: a few px bigger (the width is already edge to edge, so the
+   extra size goes into height: scaleY 1.18 -> 1.34; the font size is fitted in JS, calc() is the no-JS fallback), about 15% more lean, "Agency" stretched to
+   the right edge; letters rise in once, lift under the pointer, and a pink glow follows the pointer. No beam. */
+@property --fw-g { syntax: "<number>"; inherits: true; initial-value: 0; }
+.fw { --fw-g: 0; transition: --fw-g 0.5s ease; }
+.fw.fw-lit { --fw-g: 1; }
+.fw-line { display: block; font-size: calc(100cqi / 10.4); line-height: 1.05; white-space: nowrap; padding: 0.2em 0 0.36em; overflow-x: visible; overflow-y: clip;
+  transform: scaleY(1.34) skewX(-1.5deg); transform-origin: 0 100%; }
+.fw-w { position: relative; display: inline-block; --fw-top: #ffffff; --fw-foot: #ffe6f0; --fw-lit: 255 61 139; }
+.fw-king { --fw-top: var(--color-ribbon-deep); --fw-foot: var(--color-ribbon-deep); --fw-lit: 255 143 191; }
+.fw-stretch { transform-origin: 0 50%; }
+.fw-sp { display: inline-block; width: 0.22em; }
+.fw-lw { display: inline-block; translate: 0 0; transition: translate 1.25s cubic-bezier(.16,.84,.2,1) var(--fw-d, 0ms); }
+.fw[data-in="false"] .fw-lw { translate: 0 115%; }
+/* The padding (cancelled by the margin) makes the box tall enough for the g and y tails; text outside the box gets no
+   background-clip paint and would vanish. */
+.fw-l { display: inline-block; padding: 0.12em 0.04em 0.32em; margin: -0.12em -0.04em -0.32em; color: transparent; -webkit-background-clip: text; background-clip: text; background-repeat: no-repeat;
+  background-size: var(--fw-ww, 100%) var(--fw-wh, 100%), 100% 100%; background-position: calc(var(--fw-x, 0px) * -1) calc(var(--fw-y, 0px) * -1), 0 0;
+  background-image: radial-gradient(circle 14cqi at var(--fw-px, -999px) var(--fw-py, -999px), rgb(var(--fw-lit) / var(--fw-g)), rgb(var(--fw-lit) / 0) 70%),
+    linear-gradient(180deg, var(--fw-top) 25%, var(--fw-foot) 80%);
+  transform-origin: 50% 100%; transition: transform 0.5s cubic-bezier(.2,.9,.25,1.2), filter 0.4s; }
+.fw-l:hover { transform: translateY(-0.05em) scale(1.08); filter: drop-shadow(0 0 0.12em rgb(255 61 139 / 0.55)); }
+.fw-l.is-hop { animation: fw-hop 0.75s cubic-bezier(.2,.8,.2,1); }
+@keyframes fw-hop { 0% { transform: translateY(0) scale(1, 1); } 18% { transform: translateY(0.02em) scale(1.06, 0.9); } 45% { transform: translateY(-0.14em) scale(0.97, 1.05); } 70% { transform: translateY(0.01em) scale(1.02, 0.97); } 100% { transform: translateY(-0.05em) scale(1.08); } }
+@media (prefers-reduced-motion: reduce) {
+  .fw .fw-lw, .fw .fw-l { transition: none !important; animation: none !important; }
+  .fw[data-in="false"] .fw-lw { translate: none; }
+  .fw-l:hover { transform: none; }
+}
 
 /* Short names for long class lists repeated on the home page (they ship in the page data, which counts toward the JS budget). */
 @layer components {
@@ -226,9 +253,10 @@ html { scroll-padding-top: 88px; }
 /* Half size since 2026-10-17 (Nick). Feet sit at 91% of the clip's height, so the box hangs 9% of its height below the strip's top. */
 /* Walking Bobo on the bottom edge of the story section (Nick 2026-10-17 17:05): bottom-left, feet (91% down the clip)
    on the line where the pink section ends. While the section is pinned he stays at the bottom of the screen. */
-.walk-bobo { pointer-events: none; position: absolute; left: 0; bottom: 0; z-index: 5; aspect-ratio: 960 / 412; width: min(62vw, 22rem); transform: translateY(9%);
-  /* The loop walks right to left across its frame; fade the right edge so Bobo walks in instead of popping in. */
-  -webkit-mask-image: linear-gradient(to left, transparent, #000 24%); mask-image: linear-gradient(to left, transparent, #000 24%); }
+/* Nick 2026-10-18: mirrored, so Bobo walks in from the screen's left edge, waves and walks back off it to the left. The
+   clip starts and ends with him fully out of its frame, and its left edge sits on the screen's left edge, so the
+   screen edge itself hides him (no fade needed). */
+.walk-bobo { pointer-events: none; position: absolute; left: 0; bottom: 0; z-index: 5; aspect-ratio: 960 / 412; width: min(62vw, 22rem); transform: translateY(9%); scale: -1 1; }
 @media (min-width: 64rem) { .walk-bobo { width: min(26vw, 26rem); } }
 
 /* Touch screens: every stand-alone link and button is at least 44 x 44 px (agency rule, audit 2026-10-17).
@@ -248,6 +276,14 @@ html { scroll-padding-top: 88px; }
 .step-dot { position: absolute; top: 0; left: -3.5rem; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 9999px; border: 2px solid rgb(20 20 20 / 0.15); background: #fff; color: var(--color-slate); transition: background-color 0.38s linear, border-color 0.38s linear, color 0.38s linear; }
 .step-dot.on { border-color: var(--color-ribbon); background: var(--color-ribbon); color: #fff; }
 @media (prefers-reduced-motion: reduce) { .step, .step h3, .step-dot { transition: none; } }
+/* Pinned story on laptop-height screens (2026-10-18): the title was sliding under the header at 1440x900 and off the
+   screen at 1280x800. There, only the step being read shows its paragraph, and the column hangs from the top so the
+   title stays put while the paragraphs open and close. Tall screens keep all three paragraphs. */
+@media (min-width: 64rem) and (max-height: 1000px) {
+  .story-pin { align-items: start; align-self: start; margin-top: 2rem; }
+  .story-steps .step p { max-height: 12em; overflow: hidden; transition: max-height 0.45s ease, opacity 0.35s ease; }
+  .story-steps .step:not(.on) p { max-height: 0; opacity: 0; margin-top: 0; }
+}
 /* "Pause motion" pill above the strips (WalkingBobo), kept here to save page JS. */
 .pause-pill { pointer-events: auto; position: absolute; top: 0; left: clamp(1rem, 2.2vw, 2.5rem); z-index: 30; transform: translateY(calc(-100% - 0.75rem)); display: inline-flex; height: 2.75rem; align-items: center; gap: 0.375rem; border-radius: 9999px; border: 2px solid var(--color-ink); background: #fff; padding: 0 0.75rem; font-size: var(--text-t3); line-height: var(--text-t3--line-height, 1.5); font-weight: 600; color: var(--color-ink); }
 /* Taller fitted titles (comparison card): same width, stretched 1.5x in height; the padding keeps the stretch in layout. */
@@ -451,3 +487,34 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .sys-s2 { top: 30%; right: 9%; }
 .sys-s3 { bottom: 16%; left: 54%; }
 @media (max-width: 47.99rem) { .sys-o1 { width: 18rem; } .sys-o2 { width: 20rem; border-width: 1.5rem; } .sys-o3 { display: none; } .sys-s2 { display: none; } }
+
+/* Fluid expanding grid, "From invisible to booked" left side (Nick 2026-10-18). */
+.story-grid { height: 26rem; }
+@media (min-width: 40rem) { .story-grid { height: 32rem; } }
+@media (min-width: 64rem) { .story-grid { height: min(34rem, 68svh); } }
+@media (min-width: 64rem) and (max-height: 820px) { .story-pin { margin-top: 0.5rem; } .story-grid { height: 58svh; } }
+.feg-tile { cursor: pointer; border-radius: 28px; min-height: 44px; }
+.feg-tile:focus-visible { outline-offset: 4px; border-radius: 28px; }
+.feg-edge { pointer-events: none; border: 2px solid var(--color-ink); box-shadow: 6px 6px 0 var(--color-ribbon); transition: box-shadow 0.4s; }
+.feg-tile.is-open .feg-edge { box-shadow: 8px 8px 0 var(--color-ribbon); }
+.feg-shade { background: linear-gradient(to top, rgb(20 20 20 / 0.82) 0%, rgb(20 20 20 / 0.25) 55%, rgb(20 20 20 / 0.05) 100%); }
+.feg-after { transition: scale 1s cubic-bezier(.16,1,.3,1); }
+.feg-tile:hover .feg-after { scale: 1.05; }
+.feg-before { clip-path: inset(0 100% 0 0); transition: clip-path 0.9s cubic-bezier(.16,1,.3,1) 0.15s; }
+.feg-grey { filter: grayscale(1) brightness(0.62) contrast(0.9); }
+.feg-tile.is-open .feg-before { clip-path: inset(0 50% 0 0); }
+/* The white seam between "without" and "with". */
+.feg-tile.is-open .feg-shade::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; translate: -50% 0; background: linear-gradient(#fff 45%, rgb(255 255 255 / 0) 62%); }
+.feg-label { display: inline-block; border-radius: 999px; background: var(--color-ribbon-deep); padding: 0.125rem 0.75rem; font-family: var(--font-display); font-weight: 800; font-size: var(--text-t3); line-height: 1.5; }
+.feg-title { line-height: 1.1; text-wrap: balance; }
+.feg-stat { color: #fff; opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.4s, max-height 0.4s; }
+.feg-tile.is-open .feg-stat { opacity: 0.92; max-height: 4em; }
+.feg-ba { opacity: 0; translate: 0 -0.5rem; transition: opacity 0.4s, translate 0.5s cubic-bezier(.16,1,.3,1); pointer-events: none; }
+.feg-tile.is-open .feg-ba { opacity: 1; translate: 0 0; transition-delay: 0.35s; }
+.feg-pill { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0.125rem; border-radius: 1rem; background: var(--color-ribbon-deep); color: #fff; padding: 0.5rem 0.875rem; font-family: var(--font-display); font-weight: 800; font-size: var(--text-t3); line-height: 1.2; box-shadow: 4px 4px 0 var(--color-ink); }
+.feg-pill b { font-weight: 900; font-size: var(--text-t2); line-height: 1; }
+.feg-pill-dim { background: var(--color-ink); box-shadow: 4px 4px 0 #fff; }
+.feg-tile:not(.is-open) .feg-title { font-size: var(--text-t3); }
+@media (max-width: 40rem) { .feg-tile:not(.is-open) .feg-title { display: none; } }
+html.pk-still .feg-before, html.pk-still .feg-ba, html.pk-still .feg-after, html.pk-still .feg-stat { transition: none; }
+@media (prefers-reduced-motion: reduce) { .feg-before, .feg-ba, .feg-after, .feg-stat { transition: none !important; } }

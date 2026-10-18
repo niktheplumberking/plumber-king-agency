@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { PINNED, useReducedMotion, useScrollProgress } from "@/lib/scroll";
 import { PhoneCall, Search, ShieldCheck } from "lucide-react";
-import { PhoneFrame } from "./PhoneFrame";
+import { FluidExpandingGrid, type GalleryItem } from "../ui/fluid-expanding-grid";
 import { CtaButton } from "../CtaButton";
 import { WalkingBobo } from "./WalkingBobo";
 
@@ -28,23 +28,20 @@ const steps = [
 ] as const;
 
 /**
- * Section 3, rebuilt 2026-10-16. Media first (Nick's eye path): a big phone in a pink arch plays the story while
- * all three steps stay readable beside it, a pink rail fills as you scroll, and each step parks an object around
- * the phone, so the stage fills up instead of emptying. The button arrives after step 3. Phones and reduced motion
- * get a plain vertical timeline. Patterns from 21st.dev "Scroll Reveal Content A" (abui) and "Scroll animated
- * timeline" (ibrandify), ported to our scroll hook (no extra library).
+ * Section 3. Right: the title and three steps on a pink rail that fills as you scroll (2026-10-16). Left, rebuilt
+ * 2026-10-18 (Nick: "something more interactive"): the 21st.dev Fluid Expanding Grid. The step being read opens its
+ * tile; any tile opens on click. An open tile splits into "without us" and "with us" with example numbers, clearly
+ * labelled as examples, never as a promise. Phones and reduced motion get the same grid without the pinned scroll.
  */
-const parked = [
-  { icon: Search, text: "emergency plumber near me", cls: "top-[8%] -left-[22%] bg-white text-ink", tilt: "-6deg" },
-  { icon: ShieldCheck, text: "Real photos, real you", cls: "top-[42%] -right-[26%] bg-ink text-white", tilt: "5deg" },
-  { icon: PhoneCall, text: "New call from your site", cls: "bottom-[10%] -left-[18%] bg-ribbon-deep text-white", tilt: "-4deg" },
-] as const;
+const icons = [Search, ShieldCheck, PhoneCall] as const;
 
-const screens = [
-  { src: "/media/screen-found.webp", alt: "Phone search for emergency plumber near me: an AI answer and the map list both show Your Plumbing Co. first" },
-  { src: "/media/screen-trusted.webp", alt: "Phone showing the plumber's website: a headline, five stars, a Call now button and trust points" },
-  { src: "/media/screen-booked.webp", alt: "Phone showing an incoming call from the website: new customer, water heater leaking" },
-] as const;
+/* Example figures only (Nick: "hypothetically present some expected increases… easy to get to"). Kept modest, and the
+   caption under the grid says they are examples, not a guarantee. */
+const tiles: GalleryItem[] = [
+  { id: "found", label: "Found", title: steps[0].title, image: "/media/svc-maps-720.webp", alt: "A homeowner searching a map on a phone next to a leaking sink", stat: "Calls from Google a month", from: "8", to: "14" },
+  { id: "trusted", label: "Trusted", title: steps[1].title, image: "/media/svc-web-720.webp", alt: "A plumber's website open on a laptop and a phone", stat: "Visitors who call, out of 100", from: "2", to: "5" },
+  { id: "booked", label: "Booked", title: steps[2].title, image: "/media/svc-leads-720.webp", alt: "A plumber in his van taking a call", stat: "Web leads answered in 5 minutes, out of 10", from: "4", to: "10" },
+];
 
 export function StoryScroll() {
   const ref = useRef<HTMLElement>(null);
@@ -60,12 +57,12 @@ export function StoryScroll() {
      page keeps exactly 3 type sizes) and its title fades linearly from ink to pink; earlier steps go back to normal.
      `all` lights every icon for the reduced-motion list, where nothing moves. */
   const steps3 = (cur: number, all = false) => (
-    <ol className="relative mt-10 space-y-14 pl-14">
+    <ol className={`relative mt-10 space-y-14 pl-14 lg:mt-6 lg:space-y-10 ${all ? "" : "story-steps"}`}>
       <div aria-hidden className="absolute top-2 bottom-2 left-[1.1rem] w-1 rounded bg-ink/10">
         <div ref={rail} className="h-full w-full origin-top scale-y-0 rounded bg-ribbon" />
       </div>
       {steps.map((s, i) => {
-        const Icon = parked[i].icon;
+        const Icon = icons[i];
         const on = i === cur;
         return (
           <li key={s.key} aria-current={on ? "step" : undefined} className={`step ${on ? "on" : ""}`}>
@@ -83,6 +80,10 @@ export function StoryScroll() {
       <section className="bg-sky py-24" aria-labelledby="story-h">
         <div className="container-x max-w-4xl">
           <h2 id="story-h" className="display text-t1">From invisible to <span className="accent">booked.</span></h2>
+          <div className="mt-10">
+            <FluidExpandingGrid items={tiles} id="story-grid-still" className="story-grid" />
+            <p className="mt-3 text-t3 text-slate">Example figures, not a guarantee. Results depend on your market.</p>
+          </div>
           {steps3(-1, true)}
           <div className="mt-12"><CtaButton /></div>
         </div>
@@ -92,35 +93,21 @@ export function StoryScroll() {
 
   return (
     <section ref={ref} className="relative overflow-x-clip bg-sky lg:h-[240vh]" aria-labelledby="story-h">
-      <div className="relative pt-24 pb-44 lg:sticky lg:top-0 lg:flex lg:h-[100svh] lg:items-center lg:overflow-hidden lg:py-0">
+      <div className="relative pt-24 pb-44 lg:sticky lg:top-0 lg:flex lg:h-[100svh] lg:items-center lg:overflow-hidden lg:pt-24 lg:pb-4">
         <WalkingBobo />
         <div aria-hidden className="hero-dots pointer-events-none absolute top-[12%] right-0 h-64 w-[30%] rotate-180" />
-        <div className="container-x grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
-          {/* 1) Media: the phone in a pink arch, with the parked objects around it. */}
-          <div className="relative mx-auto w-full max-w-[19rem] lg:max-w-[22rem]">
-            <div aria-hidden className="absolute -inset-x-[30%] top-[6%] -bottom-[6%] rounded-t-full bg-[linear-gradient(180deg,var(--color-ribbon),var(--color-ribbon-deep))]" />
-            <div className="relative -rotate-3">
-              <PhoneFrame>
-                <div className="h-[30rem]">
-                  {/* The phone screens are pictures (made from the old mock markup), so the page keeps exactly 3 text sizes. */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img key={active} src={screens[active].src} alt={screens[active].alt} width={333} height={481} loading="lazy" decoding="async" className="enter-fade block h-full w-full object-cover object-top" />
-                </div>
-              </PhoneFrame>
-            </div>
-            {parked.map((o, i) => (
-              <span key={o.text} aria-hidden className={`sticker absolute hidden transition-[opacity,translate,scale] duration-700 ease-[cubic-bezier(.16,1,.3,1)] lg:inline-flex ${o.cls} ${i <= active ? "translate-y-0 scale-100 opacity-100" : "translate-y-6 scale-75 opacity-0"}`} style={{ "--tilt": o.tilt } as React.CSSProperties}>
-                <o.icon className="h-4 w-4" />{o.text}
-              </span>
-            ))}
-            <p className="relative mt-4 text-center text-t3 text-white">SAMPLE illustration</p>
+        <div className="story-pin container-x grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
+          {/* 1) Media: the expanding before/after grid. */}
+          <div className="relative w-full">
+            <FluidExpandingGrid items={tiles} open={tiles[active].id} id="story-grid" className="story-grid" />
+            <p className="relative mt-3 text-t3 text-slate">Example figures, not a guarantee. Results depend on your market.</p>
           </div>
 
           {/* 2) Title, 3) the three steps on a filling rail, 4) the button after step 3. */}
           <div>
             <h2 id="story-h" className="display text-t1">From invisible to <span className="accent">booked.</span></h2>
             {steps3(active)}
-            <div className={`mt-10 transition-[opacity,translate] duration-700 lg:pl-14 ${active === 2 ? "translate-y-0 opacity-100" : "lg:translate-y-4 lg:opacity-0"}`}><CtaButton /></div>
+            <div className={`mt-10 transition-[opacity,translate] duration-700 lg:mt-8 lg:pl-14 ${active === 2 ? "translate-y-0 opacity-100" : "lg:translate-y-4 lg:opacity-0"}`}><CtaButton /></div>
           </div>
         </div>
       </div>

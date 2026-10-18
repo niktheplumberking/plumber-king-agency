@@ -95,7 +95,7 @@ export const process = [
  * track slides sideways, the pink line draws, and each step draws its stem and dot and reveals its words line by line.
  * The version before this is kept as ProcessTimelineClassic (Classic.tsx) in case Nick wants it back.
  */
-export function ProcessTimeline() {
+export function ProcessTimeline({ eager = false }: { eager?: boolean }) {
   return (
     <Timeline
       steps={process.map(({ title, body }) => ({ title, body }))}
@@ -108,6 +108,8 @@ export function ProcessTimeline() {
         </div>
       }
       imageUrl="/media/svc-web.webp"
+      imageSmallUrl="/media/svc-web-720.webp"
+      eager={eager}
       imageAlt="Laptop and phone showing a clean website next to plumbing tools"
       duration={1.4}
     />

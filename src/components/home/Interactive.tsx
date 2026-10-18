@@ -83,10 +83,10 @@ const questions = [
 
 /** Words on the spinning trust badge, each with the picture it reveals. Only claims the site already makes. */
 const badge = [
-  { text: "Plumbers only", image: "/media/svc-leads-720.webp" },
-  { text: "More calls", image: "/bobo/cheer.webp" },
-  { text: "You own it", image: "/media/svc-web-720.webp" },
-  { text: "USA & Canada", image: "/media/svc-maps-720.webp" },
+  { text: "Plumbers only", image: "/media/svc-leads-720.webp", alt: "Plumber in his van answering a call" },
+  { text: "More calls", image: "/bobo/cheer.webp", alt: "Bobo the duck cheering" },
+  { text: "You own it", image: "/media/svc-web-720.webp", alt: "Laptop and phone showing a plumber's website" },
+  { text: "USA & Canada", image: "/media/svc-maps-720.webp", alt: "Phone with a map pin over a kitchen sink" },
 ];
 
 /**
@@ -169,7 +169,7 @@ export function WebsiteGrader() {
               label="Plumbers only. More calls. You own it. USA and Canada."
               centerText={
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src="/bobo/head.webp" alt="" width={64} height={64} loading="lazy" className="h-12 w-12 md:h-16 md:w-16" />
+                <img src="/bobo/head.webp" alt="Bobo the duck, Plumber King mascot" width={64} height={64} loading="lazy" className="h-12 w-12 md:h-16 md:w-16" />
               }
             />
           </div>

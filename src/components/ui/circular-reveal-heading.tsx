@@ -13,6 +13,7 @@ import { useStill } from "@/lib/useStill"
 interface TextItem {
     text: string;
     image: string;
+    alt?: string;
 }
 
 interface CircularRevealHeadingProps {
@@ -91,7 +92,7 @@ const usePreloadImages = (images: string[], enabled: boolean) => {
     return loaded;
 };
 
-const ImageOverlay = ({ image, size = 'md' }: { image: string, size?: keyof typeof sizeConfig }) => (
+const ImageOverlay = ({ image, alt, size = 'md' }: { image: string, alt: string, size?: keyof typeof sizeConfig }) => (
     <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -101,7 +102,7 @@ const ImageOverlay = ({ image, size = 'md' }: { image: string, size?: keyof type
     >
         <motion.img
             src={image}
-            alt=""
+            alt={alt}
             className={cn(
                 sizeConfig[size].imageSize,
                 "object-cover rounded-full"
@@ -199,6 +200,7 @@ export const CircularRevealHeading = ({
             <motion.div
                 ref={box}
                 aria-hidden={label ? true : undefined}
+                tabIndex={-1}
                 whileHover={{
                     boxShadow: `14px 14px 30px ${DARK}, -14px -14px 30px #ffffff`
                 }}
@@ -214,7 +216,7 @@ export const CircularRevealHeading = ({
             >
                 <AnimatePresence>
                     {activeImage && imagesLoaded && (
-                        <ImageOverlay image={activeImage} size={size} />
+                        <ImageOverlay image={activeImage} alt={items.find(i => i.image === activeImage)?.alt || items.find(i => i.image === activeImage)?.text || ""} size={size} />
                     )}
                 </AnimatePresence>
 

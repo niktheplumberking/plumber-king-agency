@@ -2,6 +2,9 @@
  * Nick Bennett's three "about" folders (home page) and the three pages they open (Nick, 2026-10-18).
  * Facts come from Nick's own words (2026-10-14 to 2026-10-18) and from the project repos on his GitHub.
  * Client results we cannot back with a source are left out on purpose: the site must not mislead (US law).
+ * 2026-10-18 Nick confirmed he can back up: MindXBridge ~$150,000, Health Steps' company is multi-billion-dollar, and that
+ * MindXBridge, Health Steps, RIZM and CourtHub are our projects where we helped their growth. SmartThings and Gray Berlin
+ * stay unnamed for now. "Multi-billion-dollar" describes the company, never a result we produced.
  */
 
 export const founderFull = "Nick Bennett";
@@ -34,7 +37,7 @@ export const projects: Project[] = [
     kind: "Research incubator · brand and website",
     where: "Ireland and Saudi Arabia",
     what: "A research incubator and publication pipeline for students, clinicians and early-career researchers, run with universities in Ireland and Saudi Arabia. The business has brought in around $150,000 so far.",
-    did: ["Built the complete brand", "Designed and built the website"],
+    did: ["Built the complete brand", "Designed and built the website", "Helped grow the business"],
     image: { src: "/work/portfolio/mindxbridge-1200.webp", small: "/work/portfolio/mindxbridge-600.webp", alt: "The MindXBridge homepage: Your Complete Research Incubator and Publication Pipeline, with a glowing blue brain", h: 675 },
   },
   {
@@ -42,7 +45,7 @@ export const projects: Project[] = [
     name: "CourtHub",
     kind: "Padel e-commerce · Dubai, UAE",
     where: "United Arab Emirates",
-    what: "Court Hub Group builds padel courts and sells rackets and gear in the UAE. Their online store runs in English and Arabic and takes card payments in dirhams.",
+    what: "Court Hub Group builds padel courts and sells rackets and gear in the UAE. Their online store runs in English and Arabic and takes card payments in dirhams. We helped them grow their online sales.",
     image: { src: "/work/portfolio/courthub-1200.webp", small: "/work/portfolio/courthub-600.webp", alt: "The CourtHub homepage: Experience Padel Elevated, with a featured NOX padel racket", h: 750 },
     did: ["Designed and built the online store", "English and Arabic versions", "Online checkout, product admin and Instagram product import"],
   },
@@ -50,7 +53,7 @@ export const projects: Project[] = [
     id: "rizm",
     name: "RIZM Technologies",
     kind: "App development partner · website",
-    what: "RIZM builds mobile apps and software. They are our partner for app development.",
+    what: "RIZM builds mobile apps and software. They are our partner for app development, and we helped grow their presence online.",
     image: { src: "/work/portfolio/rizm-1200.webp", small: "/work/portfolio/rizm-600.webp", alt: "The RIZM homepage: Your digital transformation partner, with a glass cube graphic", h: 750 },
     did: ["Built their website and digital presence"],
   },
@@ -59,14 +62,14 @@ export const projects: Project[] = [
     name: "Health Steps",
     kind: "Gym membership app · with RIZM",
     where: "Saudi Arabia",
-    what: "A gym membership app used across Saudi Arabia.",
-    did: ["Worked on the app together with RIZM"],
+    what: "A gym membership app used across Saudi Arabia, from a multi-billion-dollar company.",
+    did: ["Worked on the app together with RIZM", "Helped with its growth"],
   },
   {
     id: "ecommerce",
     name: "E-commerce and clothing brands",
     kind: "Online stores · fashion and retail",
-    what: "Before plumbing, I spent years building online stores for clothing brands and e-commerce companies, including Gray Berlin.",
+    what: "Before plumbing, I spent years building online stores for clothing brands and e-commerce companies.",
     did: ["Store design and build", "Product pages that sell", "Brand look and feel"],
   },
 ];

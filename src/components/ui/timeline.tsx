@@ -89,6 +89,9 @@ export type TimelineProps = {
   backgroundColor?: string;
   imageUrl?: string;
   imageAlt?: string;
+  /** Smaller copy of the image for phones (srcset), and whether it loads right away (it is the main image on /process/). */
+  imageSmallUrl?: string;
+  eager?: boolean;
   /** Reveal animation duration, in seconds. */
   duration?: number;
   /** Fallback reveal duration when `duration` is omitted, in seconds. */
@@ -135,6 +138,8 @@ export default function Timeline({
   backgroundColor = "#ffffff",
   imageUrl = "/media/svc-web.webp",
   imageAlt = "",
+  imageSmallUrl,
+  eager = false,
   duration,
   scrollDuration = 1.2,
 }: TimelineProps) {
@@ -202,6 +207,17 @@ export default function Timeline({
     const slideEnd = isMobile ? "72% 50%" : "92% bottom";
     const lineEnd = isMobile ? "70% 50%" : "92% bottom";
 
+    // The line is drawn with scaleX over its full measured length (the original grows its width, which re-lays out
+    // the page on every scroll frame).
+    const setLine = () => gsap.set(".journey-line", { width: measure().lineWidth, transformOrigin: "left center" });
+    setLine();
+    ScrollTrigger.addEventListener("refreshInit", setLine);
+
+    // Reduced motion: no pinning and no sliding; the track is a plain row you can swipe or scroll sideways (below).
+    if (reducedMotion) {
+      return () => ScrollTrigger.removeEventListener("refreshInit", setLine);
+    }
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
@@ -221,13 +237,8 @@ export default function Timeline({
       { x: () => -measure().travel },
     );
 
-    if (reducedMotion) {
-      gsap.set(".journey-line", { width: measure().lineWidth });
-      return;
-    }
-
-    gsap.fromTo(".journey-line", { width: 0 }, {
-      width: () => measure().lineWidth,
+    gsap.fromTo(".journey-line", { scaleX: 0 }, {
+      scaleX: 1,
       ease: "none",
       scrollTrigger: {
         trigger: section,
@@ -237,6 +248,7 @@ export default function Timeline({
         invalidateOnRefresh: true,
       },
     });
+    return () => ScrollTrigger.removeEventListener("refreshInit", setLine);
   }, { dependencies: [reducedMotion], scope: sectionRef });
 
   useGSAP(() => {
@@ -275,14 +287,17 @@ export default function Timeline({
     const descriptionSplits: Partial<Record<string, SplitTextInstance>> = {};
 
     items.forEach((item) => {
+      // Only lines are animated, so only lines are split, and the text stays as it is for screen readers.
       titleSplits[item.id] = new SplitText(`.title-${item.id}`, {
-        type: "chars, words, lines",
+        type: "lines",
         mask: "lines",
+        aria: "none",
       });
 
       descriptionSplits[item.id] = new SplitText(`.description-${item.id}`, {
-        type: "chars, words, lines",
+        type: "lines",
         mask: "lines",
+        aria: "none",
       });
     });
 
@@ -387,10 +402,10 @@ export default function Timeline({
       ref={sectionRef}
       id="process"
       aria-labelledby={titleId}
-      className="h-[165vw] max-[600px]:h-[300vh] w-full relative"
+      className={reducedMotion ? "w-full relative py-16" : "h-[165vw] max-[600px]:h-[300vh] w-full relative"}
       style={sectionStyle}
     >
-      <div className="h-screen w-full sticky top-[0%] pt-[10%] overflow-hidden max-[600px]:top-[5%] max-[600px]:pt-[16vw]">
+      <div tabIndex={reducedMotion ? 0 : undefined} className={reducedMotion ? "w-full overflow-x-auto" : "h-screen w-full sticky top-[0%] pt-[10%] overflow-hidden max-[600px]:top-[5%] max-[600px]:pt-[16vw]"}>
         <div
           ref={wholeSliderRef}
           className="mr-[2vw] flex h-[34vw] w-[205vw] items-center gap-[5vw] px-[5vw] max-[600px]:h-[66vh] max-[600px]:w-[560vw] max-[600px]:px-[7vw]"
@@ -399,9 +414,12 @@ export default function Timeline({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imageUrl}
+              srcSet={imageSmallUrl ? `${imageSmallUrl} 720w, ${imageUrl} 1200w` : undefined}
+              sizes="(max-width: 600px) 85vw, 30vw"
               alt={imageAlt}
               draggable={false}
-              loading="lazy"
+              loading={eager ? "eager" : "lazy"}
+              fetchPriority={eager ? "high" : undefined}
               className="h-full w-full object-cover"
             />
           </div>

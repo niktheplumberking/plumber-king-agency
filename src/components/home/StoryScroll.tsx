@@ -36,7 +36,7 @@ const steps = [
 const icons = [Search, ShieldCheck, PhoneCall] as const;
 
 /* Example figures only (Nick: "hypothetically present some expected increases… easy to get to"). Kept modest, and the
-   caption under the grid says they are examples, not a guarantee. */
+   caption under the grid says they are examples only. */
 const tiles: GalleryItem[] = [
   { id: "found", label: "Found", title: steps[0].title, image: "/media/svc-maps-720.webp", alt: "A homeowner searching a map on a phone next to a leaking sink", stat: "Calls from Google a month", from: "8", to: "14" },
   { id: "trusted", label: "Trusted", title: steps[1].title, image: "/media/svc-web-720.webp", alt: "A plumber's website open on a laptop and a phone", stat: "Visitors who call, out of 100", from: "2", to: "5" },
@@ -48,9 +48,12 @@ export function StoryScroll() {
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
   const rail = useRef<HTMLDivElement>(null);
+  // The scroll callback is kept from the first render, so it reads reduced motion through a ref (the list stays still).
+  const reduceRef = useRef(reduce);
+  reduceRef.current = reduce;
   useScrollProgress(ref, PINNED, (p) => {
     setActive(Math.min(2, Math.floor(p * 3.2)));
-    if (rail.current) rail.current.style.transform = `scaleY(${Math.min(1, p * 1.15)})`;
+    if (rail.current && !reduceRef.current) rail.current.style.transform = `scaleY(${Math.min(1, p * 1.15)})`;
   }, true);
 
   /* Nick 2026-10-17: only the step being read is lit. Its icon turns pink, its title and text grow (a scale, so the
@@ -82,7 +85,7 @@ export function StoryScroll() {
           <h2 id="story-h" className="display text-t1">From invisible to <span className="accent">booked.</span></h2>
           <div className="mt-10">
             <FluidExpandingGrid items={tiles} id="story-grid-still" className="story-grid" />
-            <p className="mt-3 text-t3 text-slate">Example figures, not a guarantee. Results depend on your market.</p>
+            <p className="mt-3 text-t3 text-slate">Example figures only. Real results depend on your market.</p>
           </div>
           {steps3(-1, true)}
           <div className="mt-12"><CtaButton /></div>
@@ -100,7 +103,7 @@ export function StoryScroll() {
           {/* 1) Media: the expanding before/after grid. */}
           <div className="relative w-full">
             <FluidExpandingGrid items={tiles} open={tiles[active].id} id="story-grid" className="story-grid" />
-            <p className="relative mt-3 text-t3 text-slate">Example figures, not a guarantee. Results depend on your market.</p>
+            <p className="relative mt-3 text-t3 text-slate">Example figures only. Real results depend on your market.</p>
           </div>
 
           {/* 2) Title, 3) the three steps on a filling rail, 4) the button after step 3. */}

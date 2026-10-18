@@ -114,7 +114,7 @@ export function FooterWordmark() {
         {words.map((w, wi) => (
           <span key={w.text} className={`fw-w ${w.cls}`}>
             {Array.from(w.text).map((ch, i) => {
-              const d = 260 + n++ * 75;
+              const d = n++ * 34; // the whole rise ends inside the 1.5 s motion budget
               return (
                 <span key={i} className="fw-lw" style={{ "--fw-d": `${d}ms` } as React.CSSProperties}>
                   <span className="fw-l" onClick={hop} onAnimationEnd={(e) => e.currentTarget.classList.remove("is-hop")}>{ch}</span>

@@ -173,7 +173,7 @@ html { scroll-padding-top: 88px; }
 .fw-king { --fw-top: var(--color-ribbon-deep); --fw-foot: var(--color-ribbon-deep); --fw-lit: 255 143 191; }
 .fw-stretch { transform-origin: 0 50%; }
 .fw-sp { display: inline-block; width: 0.22em; }
-.fw-lw { display: inline-block; translate: 0 0; transition: translate 1.25s cubic-bezier(.16,.84,.2,1) var(--fw-d, 0ms); }
+.fw-lw { display: inline-block; translate: 0 0; transition: translate 0.85s cubic-bezier(.16,.84,.2,1) var(--fw-d, 0ms); }
 .fw[data-in="false"] .fw-lw { translate: 0 115%; }
 /* The padding (cancelled by the margin) makes the box tall enough for the g and y tails; text outside the box gets no
    background-clip paint and would vanish. */
@@ -281,7 +281,7 @@ html { scroll-padding-top: 88px; }
    title stays put while the paragraphs open and close. Tall screens keep all three paragraphs. */
 @media (min-width: 64rem) and (max-height: 1000px) {
   .story-pin { align-items: start; align-self: start; margin-top: 2rem; }
-  .story-steps .step p { max-height: 12em; overflow: hidden; transition: max-height 0.45s ease, opacity 0.35s ease; }
+  .story-steps .step p { max-height: 12em; overflow: hidden; transition: opacity 0.35s ease; }
   .story-steps .step:not(.on) p { max-height: 0; opacity: 0; margin-top: 0; }
 }
 /* "Pause motion" pill above the strips (WalkingBobo), kept here to save page JS. */
@@ -507,7 +507,7 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .feg-tile.is-open .feg-shade::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; translate: -50% 0; background: linear-gradient(#fff 45%, rgb(255 255 255 / 0) 62%); }
 .feg-label { display: inline-block; border-radius: 999px; background: var(--color-ribbon-deep); padding: 0.125rem 0.75rem; font-family: var(--font-display); font-weight: 800; font-size: var(--text-t3); line-height: 1.5; }
 .feg-title { line-height: 1.1; text-wrap: balance; }
-.feg-stat { color: #fff; opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.4s, max-height 0.4s; }
+.feg-stat { color: #fff; opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.4s; }
 .feg-tile.is-open .feg-stat { opacity: 0.92; max-height: 4em; }
 .feg-ba { opacity: 0; translate: 0 -0.5rem; transition: opacity 0.4s, translate 0.5s cubic-bezier(.16,1,.3,1); pointer-events: none; }
 .feg-tile.is-open .feg-ba { opacity: 1; translate: 0 0; transition-delay: 0.35s; }

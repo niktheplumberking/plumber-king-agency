@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { LayoutGroup, LazyMotion, domMax, m as motion } from "framer-motion";
+import { LayoutGroup, LazyMotion, MotionConfig, domMax, m as motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useStill } from "@/lib/useStill";
 
@@ -64,9 +64,10 @@ export function FluidExpandingGrid({ items, open, className, id = "fluid-gallery
 
   return (
     <LazyMotion features={domMax} strict>
+      <MotionConfig reducedMotion="user">
       <div className={cn("feg w-full", className)}>
         <LayoutGroup id={id}>
-          <motion.div layout transition={spring} className="feg-grid grid h-full w-full grid-cols-2 grid-rows-2 gap-3 sm:gap-5">
+          <motion.div layout={!still} transition={spring} className="feg-grid grid h-full w-full grid-cols-2 grid-rows-2 gap-3 sm:gap-5">
             {items.map((item) => {
               const isRow1 = layout.row1.includes(item.id);
               const rowArr = isRow1 ? layout.row1 : layout.row2;
@@ -113,6 +114,7 @@ export function FluidExpandingGrid({ items, open, className, id = "fluid-gallery
           </motion.div>
         </LayoutGroup>
       </div>
+      </MotionConfig>
     </LazyMotion>
   );
 }

@@ -428,3 +428,26 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .pf:hover .pf-shot img { scale: 1.04; }
 @media (min-width: 64rem) { .pf { padding: 2.5rem; } .pf-img { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; } }
 @media (prefers-reduced-motion: reduce) { .ab-tab, .ph, .pf-shot img { transition: none; } }
+
+/* Grader trust badge (Nick 2026-10-18): centred on the card's bottom-right corner on wide screens (the card steps in
+   from the right so the whole circle stays on screen); on narrower screens it sits on the bottom edge at the right. */
+.gr-badge { position: absolute; z-index: 5; right: -0.25rem; bottom: 0; translate: 0 45%; }
+.gr-card:has(.gr-badge) { padding-bottom: 7rem; }
+@media (min-width: 1024px) {
+  .gr-card:has(.gr-badge) { margin-right: 6rem; padding-bottom: 2.5rem; }
+  .gr-badge { right: 0; translate: 50% 50%; }
+}
+
+/* ---------- "Everything it takes": photo-string carousel band (SystemBento, Nick 2026-10-18) ---------- */
+.sys { --sys-h: 46rem; }
+@media (min-width: 768px) { .sys { --sys-h: 48rem; } }
+.sys-o { position: absolute; display: block; border-radius: 999px; }
+.sys-o1 { top: -8rem; right: -6rem; width: 30rem; aspect-ratio: 1; background: #fff; opacity: 0.75; }
+.sys-o2 { bottom: 4rem; left: -10rem; width: 34rem; aspect-ratio: 1; border: 2.5rem solid #fff; opacity: 0.6; }
+.sys-o3 { top: 42%; left: 38%; width: 7rem; aspect-ratio: 1; background: #fff; opacity: 0.85; }
+.sys-o4 { bottom: -5rem; right: 18%; width: 16rem; aspect-ratio: 1; border: 1.25rem solid #fff; opacity: 0.7; }
+.sys-spark { position: absolute; color: #fff; font-size: var(--text-t1); line-height: 1; }
+.sys-s1 { top: 18%; left: 6%; }
+.sys-s2 { top: 30%; right: 9%; }
+.sys-s3 { bottom: 16%; left: 54%; }
+@media (max-width: 47.99rem) { .sys-o1 { width: 18rem; } .sys-o2 { width: 20rem; border-width: 1.5rem; } .sys-o3 { display: none; } .sys-s2 { display: none; } }

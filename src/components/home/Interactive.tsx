@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ArrowRight, Check, Lock, RotateCcw, ShieldCheck, Wrench, X } from "lucide-react";
 import { site } from "@/content/site";
 import { Reveal } from "../Reveal";
+import { CircularRevealHeading } from "../ui/circular-reveal-heading";
 
 const money = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
@@ -80,6 +81,14 @@ const questions = [
   { q: "Is your Google Business Profile complete and linked to your website?", fix: "Fill in categories, services, service area, hours and photos, and link it to your site." },
 ];
 
+/** Words on the spinning trust badge, each with the picture it reveals. Only claims the site already makes. */
+const badge = [
+  { text: "Plumbers only", image: "/media/svc-leads-720.webp" },
+  { text: "More calls", image: "/bobo/cheer.webp" },
+  { text: "You own it", image: "/media/svc-web-720.webp" },
+  { text: "USA & Canada", image: "/media/svc-maps-720.webp" },
+];
+
 /**
  * 60-second website check: yes/no questions, a score and the fixes that matter. Rebuilt 2026-10-17 (Nick: "push
  * harder, maximum conversion"): the left side says why the check can be trusted (free, nothing sent, real fixes);
@@ -150,6 +159,19 @@ export function WebsiteGrader() {
               <svg viewBox="0 0 64 64" aria-hidden><circle cx="32" cy="32" r="27" /><circle cx="32" cy="32" r="27" className="fill" style={{ strokeDashoffset: 169.6 * (1 - score / n) }} /></svg>
               <p><b className="font-display">{score}</b><span>/{n}</span></p>
             </div>
+          </div>
+          {/* Trust badge (21st.dev Circular Reveal Heading, Nick 2026-10-18): spins on the card's bottom-right corner.
+              Pointing at a word shows its picture in the middle. */}
+          <div className="gr-badge">
+            <CircularRevealHeading
+              size="badge"
+              items={badge}
+              label="Plumbers only. More calls. You own it. USA and Canada."
+              centerText={
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src="/bobo/head.webp" alt="" width={64} height={64} loading="lazy" className="h-12 w-12 md:h-16 md:w-16" />
+              }
+            />
           </div>
         </Reveal>
       </div>

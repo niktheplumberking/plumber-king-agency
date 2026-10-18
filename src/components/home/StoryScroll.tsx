@@ -37,10 +37,16 @@ const icons = [Search, ShieldCheck, PhoneCall] as const;
 
 /* Example figures only (Nick: "hypothetically present some expected increases… easy to get to"). Kept modest, and the
    caption under the grid says they are examples only. */
+const set = (n: string) => ({ src: `/media/story-${n}-720.webp`, srcSet: `/media/story-${n}-720.webp 720w, /media/story-${n}-1200.webp 1200w` });
+/* Photos made in Higgsfield for this section (Nick 2026-10-18), mood pictures, not real clients. */
+const tile = (id: string, label: string, title: string, pos: string, beforePos: string, alt: string, beforeAlt: string, stat: string, from: string, to: string): GalleryItem => {
+  const a = set(`${id}-after`), b = set(`${id}-before`);
+  return { id, label, title, image: a.src, imageSrcSet: a.srcSet, pos, before: b.src, beforeSrcSet: b.srcSet, beforePos, alt, beforeAlt, stat, from, to };
+};
 const tiles: GalleryItem[] = [
-  { id: "found", label: "Found", title: steps[0].title, image: "/media/svc-maps-720.webp", alt: "A homeowner searching a map on a phone next to a leaking sink", stat: "Calls from Google a month", from: "8", to: "14" },
-  { id: "trusted", label: "Trusted", title: steps[1].title, image: "/media/svc-web-720.webp", alt: "A plumber's website open on a laptop and a phone", stat: "Visitors who call, out of 100", from: "2", to: "5" },
-  { id: "booked", label: "Booked", title: steps[2].title, image: "/media/svc-leads-720.webp", alt: "A plumber in his van taking a call", stat: "Web leads answered in 5 minutes, out of 10", from: "4", to: "10" },
+  tile("found", "Found", steps[0].title, "54% 40%", "50% 45%", "A smiling plumber taking a call beside his van", "A plumber sitting in his van staring at a quiet phone", "Calls from Google a month", "8", "14"),
+  tile("trusted", "Trusted", steps[1].title, "42% 40%", "18% 50%", "A relieved homeowner calling a plumber from her kitchen", "A worried homeowner frowning at an outdated plumbing website", "Visitors who call, out of 100", "2", "5"),
+  tile("booked", "Booked", steps[2].title, "47% 50%", "55% 50%", "A plumber's gloved hand holding a phone with a full week of booked jobs", "A dusty cracked phone on a workbench with a missed-call dot", "Web leads answered in 5 minutes, out of 10", "4", "10"),
 ];
 
 export function StoryScroll() {

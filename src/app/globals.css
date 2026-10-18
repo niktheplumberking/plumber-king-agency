@@ -501,8 +501,10 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .feg-after { transition: scale 1s cubic-bezier(.16,1,.3,1); }
 .feg-tile:hover .feg-after { scale: 1.05; }
 .feg-before { clip-path: inset(0 100% 0 0); transition: clip-path 0.9s cubic-bezier(.16,1,.3,1) 0.15s; }
+.feg-after-half { opacity: 0; transition: opacity 0.6s ease 0.2s; }
+.feg-tile.is-open .feg-after-half { opacity: 1; }
 .feg-grey { filter: grayscale(1) brightness(0.62) contrast(0.9); }
-.feg-tile.is-open .feg-before { clip-path: inset(0 50% 0 0); }
+.feg-tile.is-open .feg-before { clip-path: inset(0 0 0 0); }
 /* The white seam between "without" and "with". */
 .feg-tile.is-open .feg-shade::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; translate: -50% 0; background: linear-gradient(#fff 45%, rgb(255 255 255 / 0) 62%); }
 .feg-label { display: inline-block; border-radius: 999px; background: var(--color-ribbon-deep); padding: 0.125rem 0.75rem; font-family: var(--font-display); font-weight: 800; font-size: var(--text-t3); line-height: 1.5; }
@@ -516,5 +518,8 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .feg-pill-dim { background: var(--color-ink); box-shadow: 4px 4px 0 #fff; }
 .feg-tile:not(.is-open) .feg-title { font-size: var(--text-t3); }
 @media (max-width: 40rem) { .feg-tile:not(.is-open) .feg-title { display: none; } }
-html.pk-still .feg-before, html.pk-still .feg-ba, html.pk-still .feg-after, html.pk-still .feg-stat { transition: none; }
-@media (prefers-reduced-motion: reduce) { .feg-before, .feg-ba, .feg-after, .feg-stat { transition: none !important; } }
+/* Phones: the number pills would sit on the faces, so the numbers move into the caption line instead. */
+.feg-num-m { display: none; }
+@media (max-width: 40rem) { .feg-ba { display: none; } .feg-num-m { display: block; font-weight: 700; } }
+html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba, html.pk-still .feg-after, html.pk-still .feg-stat { transition: none; }
+@media (prefers-reduced-motion: reduce) { .feg-before, .feg-after-half, .feg-ba, .feg-after, .feg-stat { transition: none !important; } }

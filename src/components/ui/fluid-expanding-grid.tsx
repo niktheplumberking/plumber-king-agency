@@ -17,9 +17,16 @@ export interface GalleryItem {
   label: string;
   title: string;
   image: string;
+  imageSrcSet?: string;
+  /** Where the subject sits across the picture (CSS object-position), so the open tile's halves keep it in frame. */
+  pos?: string;
   /** The "without us" picture. Missing: the same picture in grey. */
   before?: string;
+  beforeSrcSet?: string;
+  beforePos?: string;
+  /** Describes the "with us" picture; beforeAlt the "without us" one. */
   alt: string;
+  beforeAlt?: string;
   stat: string;
   from: string;
   to: string;
@@ -31,6 +38,9 @@ interface FluidExpandingGridProps {
   className?: string;
   id?: string;
 }
+
+const SIZES = "(min-width: 64rem) 45vw, 100vw";
+const HALF = "(min-width: 64rem) 23vw, 50vw";
 
 const split = (ids: string[], first: string) => {
   const i = ids.indexOf(first);
@@ -88,10 +98,12 @@ export function FluidExpandingGrid({ items, open, className, id = "fluid-gallery
                 >
                   <motion.div layoutId={`${id}-${item.id}-mask-wrapper`} transition={spring} className="absolute inset-0 overflow-hidden bg-sky" style={{ borderRadius: 28 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.image} alt={item.alt} loading="lazy" decoding="async" className="feg-after absolute inset-0 h-full w-full object-cover" />
-                    {/* The "without us" half: slides in from the left when the tile opens. */}
+                    <img src={item.image} srcSet={item.imageSrcSet} sizes={SIZES} alt={item.alt} loading="lazy" decoding="async" className="feg-after absolute inset-0 h-full w-full object-cover" style={{ objectPosition: item.pos }} />
+                    {/* Open tile: "without us" slides in on the left half, "with us" fades in on the right half, each framed on its subject. */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.before ?? item.image} alt={`${item.alt}, without us`} loading="lazy" decoding="async" className={cn("feg-before absolute inset-0 h-full w-full object-cover", !item.before && "feg-grey")} />
+                    <img src={item.before ?? item.image} srcSet={item.before ? item.beforeSrcSet : item.imageSrcSet} sizes={HALF} alt={item.beforeAlt ?? `${item.alt}, without us`} loading="lazy" decoding="async" className={cn("feg-before absolute inset-y-0 left-0 h-full w-1/2 object-cover", !item.before && "feg-grey")} style={{ objectPosition: item.beforePos ?? item.pos }} />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={item.image} srcSet={item.imageSrcSet} sizes={HALF} alt={item.alt} loading="lazy" decoding="async" className="feg-after-half absolute inset-y-0 right-0 h-full w-1/2 object-cover" style={{ objectPosition: item.pos }} />
                     <span className="feg-shade absolute inset-0" />
                   </motion.div>
 
@@ -106,7 +118,7 @@ export function FluidExpandingGrid({ items, open, className, id = "fluid-gallery
                   <motion.span layout="position" transition={spring} aria-hidden className="absolute inset-x-0 bottom-0 block p-4 text-white select-none sm:p-6">
                     <span className="feg-label">{item.label}</span>
                     <span className="feg-title display mt-1 block text-t2">{item.title}</span>
-                    <span className="feg-stat mt-1 block text-t3">{item.stat}</span>
+                    <span className="feg-stat mt-1 block text-t3">{item.stat}<b className="feg-num-m">{item.from} without us → {item.to} with us</b></span>
                   </motion.span>
                 </motion.button>
               );

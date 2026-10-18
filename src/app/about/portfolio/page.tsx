@@ -29,7 +29,7 @@ export default function PortfolioPage() {
               {p.image && (
                 <div className="pf-shot">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.image.src} srcSet={`${p.image.small} 600w, ${p.image.src} 1200w`} sizes="(min-width: 1024px) 50vw, 92vw" alt={p.image.alt} width={1200} height={675} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
+                  <img src={p.image.src} srcSet={`${p.image.small} 600w, ${p.image.src} 1200w`} sizes="(min-width: 1024px) 50vw, 92vw" alt={p.image.alt} width={1200} height={p.image.h} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
                 </div>
               )}
               <div className="pf-body">

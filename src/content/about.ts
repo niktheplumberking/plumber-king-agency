@@ -22,7 +22,7 @@ export type Project = {
   where?: string;
   what: string;
   did: string[];
-  image?: { src: string; small: string; alt: string };
+  image?: { src: string; small: string; alt: string; h: number };
   url?: string;
 };
 
@@ -35,14 +35,15 @@ export const projects: Project[] = [
     where: "Ireland and Saudi Arabia",
     what: "A research incubator and publication pipeline for students, clinicians and early-career researchers, run with universities in Ireland and Saudi Arabia. The business has brought in around $150,000 so far.",
     did: ["Built the complete brand", "Designed and built the website"],
-    image: { src: "/work/portfolio/mindxbridge-1200.webp", small: "/work/portfolio/mindxbridge-600.webp", alt: "The MindXBridge homepage: Your Complete Research Incubator and Publication Pipeline, with a glowing blue brain" },
+    image: { src: "/work/portfolio/mindxbridge-1200.webp", small: "/work/portfolio/mindxbridge-600.webp", alt: "The MindXBridge homepage: Your Complete Research Incubator and Publication Pipeline, with a glowing blue brain", h: 675 },
   },
   {
     id: "courthub",
     name: "CourtHub",
     kind: "Padel e-commerce · Dubai, UAE",
     where: "United Arab Emirates",
-    what: "Court Hub Group sells padel rackets and gear in the UAE. Their online store runs in English and Arabic and takes card payments in dirhams.",
+    what: "Court Hub Group builds padel courts and sells rackets and gear in the UAE. Their online store runs in English and Arabic and takes card payments in dirhams.",
+    image: { src: "/work/portfolio/courthub-1200.webp", small: "/work/portfolio/courthub-600.webp", alt: "The CourtHub homepage: Experience Padel Elevated, with a featured NOX padel racket", h: 750 },
     did: ["Designed and built the online store", "English and Arabic versions", "Online checkout, product admin and Instagram product import"],
   },
   {
@@ -50,6 +51,7 @@ export const projects: Project[] = [
     name: "RIZM Technologies",
     kind: "App development partner · website",
     what: "RIZM builds mobile apps and software. They are our partner for app development.",
+    image: { src: "/work/portfolio/rizm-1200.webp", small: "/work/portfolio/rizm-600.webp", alt: "The RIZM homepage: Your digital transformation partner, with a glass cube graphic", h: 750 },
     did: ["Built their website and digital presence"],
   },
   {
@@ -105,8 +107,8 @@ export const folders: Folder[] = [
     image: "/work/portfolio/mindxbridge-600.webp",
     files: [
       { name: "E-commerce", meta: "Stores", href: "/about/portfolio/#ecommerce" },
-      { name: "CourtHub", meta: "Dubai", href: "/about/portfolio/#courthub" },
-      { name: "RIZM", meta: "Partner", href: "/about/portfolio/#rizm" },
+      { name: "CourtHub", meta: "Dubai", href: "/about/portfolio/#courthub", image: "/work/portfolio/courthub-600.webp" },
+      { name: "RIZM", meta: "Partner", href: "/about/portfolio/#rizm", image: "/work/portfolio/rizm-600.webp" },
       { name: "MindXBridge", meta: "Brand + site", href: "/about/portfolio/#mindxbridge", image: "/work/portfolio/mindxbridge-600.webp" },
     ],
   },

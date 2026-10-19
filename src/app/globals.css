@@ -479,13 +479,14 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .sys-o2 { bottom: 4rem; left: -10rem; width: 34rem; aspect-ratio: 1; border: 2.5rem solid #fff; opacity: 0.6; }
 .sys-o3 { top: 42%; left: 38%; width: 7rem; aspect-ratio: 1; background: #fff; opacity: 0.85; }
 .sys-o4 { bottom: -5rem; right: 18%; width: 16rem; aspect-ratio: 1; border: 1.25rem solid #fff; opacity: 0.7; }
-.sys-spark { position: absolute; display: block; color: #fff; width: clamp(3.5rem, 6vw, 6rem); aspect-ratio: 1; }
+.sys-spark { position: absolute; display: block; color: #fff; width: clamp(3rem, 4.5vw, 4.5rem); aspect-ratio: 1; }
 .sys-spark svg { width: 100%; height: 100%; stroke-width: 2.25; }
-/* The objects sit in the band between the title and the string, clear of the cards and the captions. */
-.sys-s1 { top: 24%; left: 4%; }
-.sys-s2 { top: 26%; right: 6%; }
-.sys-s3 { top: 27%; left: 31%; }
-.sys-s4 { top: 25%; right: 31%; }
+/* Two objects sit in the dip of the string under the title, two at the sides behind the cards; none over the title or
+   the captions. */
+.sys-s1 { top: 50%; left: 2%; }
+.sys-s2 { top: 54%; right: 3%; }
+.sys-s3 { top: 31%; left: 31%; }
+.sys-s4 { top: 31.5%; right: 31%; }
 @media (max-width: 47.99rem) { .sys-o1 { width: 18rem; } .sys-o2 { width: 20rem; border-width: 1.5rem; } .sys-o3 { display: none; } .sys-s2, .sys-s4 { display: none; } }
 
 /* Fluid expanding grid, "From invisible to booked" left side (Nick 2026-10-18). */

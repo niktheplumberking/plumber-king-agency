@@ -51,7 +51,7 @@ export default function Home() {
             <div className="fq-ask">
               <SittingBobo className="fq-bobo" fallback={
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src="/bobo/think.webp" alt="Bobo the duck sitting on the question box" width={120} height={120} loading="lazy" className="h-full w-full" />
+                <img src="/bobo/sit-still.webp" alt="Bobo the duck sitting on the question box" width={216} height={384} loading="lazy" className="h-full w-full object-contain" />
               } />
               <p className="display text-t2">Still got a question?</p>
               <p className="mt-2 text-t3 text-slate">Ask Nick on a free call, or read the <Link href="/faq/" className="font-semibold text-ribbon-deep underline underline-offset-4">full FAQ page</Link>.</p>

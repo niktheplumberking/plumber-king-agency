@@ -437,7 +437,10 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 @media (min-width: 768px) { .fq-a { padding: 0 1.75rem 1.75rem calc(1.75rem + 2.2rem + 1.25rem); } }
 @media (prefers-reduced-motion: reduce) { .fq, .fq::before, .fq-ic { transition: none; } }
 .fq-ask { position: relative; margin-top: 2.5rem; border-radius: 1.5rem; border: 2px solid var(--color-ink); background: #fff; padding: 1.75rem; box-shadow: 8px 8px 0 var(--color-ribbon); }
-.fq-bobo { position: absolute; top: -4.25rem; right: 1rem; width: 6rem; height: 6rem; transition: rotate 0.5s cubic-bezier(.34,1.56,.64,1); }
+/* Sitting Bobo (Nick 2026-10-19): the box is 9:16 (the square video is cropped to it), his seat is 77% down it and his feet hang to 94%, so the seat
+   line lands on the card's top edge and the feet dangle over its front. */
+.fq-bobo { position: absolute; z-index: 1; top: calc(var(--fb-h) * -0.77); right: 0.75rem; width: calc(var(--fb-h) * 0.5625); height: var(--fb-h); --fb-h: 10rem; transform-origin: 50% 77%; transition: rotate 0.5s cubic-bezier(.34,1.56,.64,1); }
+@media (min-width: 48rem) { .fq-bobo { --fb-h: 12rem; right: 1.25rem; } }
 .fq-ask:hover .fq-bobo { rotate: -10deg; }
 
 /* ---------- About Nick Bennett pages (2026-10-18) ---------- */
@@ -576,5 +579,6 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
    7rem right of this field's left edge and (18rem + 2.5rem + 7rem) below its top; radius 17rem. */
 .gr-dots-w { background-image: radial-gradient(#fff 1.5px, transparent 1.6px); opacity: 1; mask-image: none; clip-path: circle(17rem at 7rem 27.5rem); }
 /* Room for Bobo above the "Still got a question?" card under the bigger FAQ title. */
-.fq-title + .fq-ask { margin-top: 5.5rem; }
+.fq-title + .fq-ask { margin-top: 9rem; }
+@media (min-width: 48rem) { .fq-title + .fq-ask { margin-top: 10rem; } }
 @media (min-width: 64rem) { .fn-sub { margin-top: 0.5em; } }

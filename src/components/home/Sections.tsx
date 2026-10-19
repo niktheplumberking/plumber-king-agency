@@ -29,9 +29,14 @@ export function ProblemSplit() {
     <section ref={ref} className="relative overflow-x-clip bg-ivory py-24 md:py-32" aria-labelledby="problem-h">
       <div aria-hidden className="hero-dots pointer-events-none absolute top-16 right-0 h-72 w-[34%]" />
       <div className="container-x relative">
-        <Reveal className="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-end">
-          <h2 id="problem-h" className="display text-t1">Your website rings a phone. <span className="accent">Yours, or the other guy&apos;s.</span></h2>
-          <p className="text-t3 text-slate md:text-t2">A website that doesn&apos;t bring in calls quietly sends your jobs to the plumber down the road. Drag the handle and see the difference.</p>
+        {/* Title as an enormous zig-zag (Nick 2026-10-19: same words, much bigger, only the title block changes): four
+            lines at one size, alternating left and right, with the subline tucked into the gap beside the last line. */}
+        <Reveal className="ps-head fit-box">
+          <h2 id="problem-h" className="display ps-title">
+            <span className="ps-l">Your website</span> <span className="ps-l ps-r">rings a phone.</span>{" "}
+            <span className="accent"><span className="ps-l">Yours, or the</span> <span className="ps-l ps-r">other guy&apos;s.</span></span>
+          </h2>
+          <p className="ps-sub text-t3 text-slate md:text-t2">A website that doesn&apos;t bring in calls quietly sends your jobs to the plumber down the road. Drag the handle and see the difference.</p>
         </Reveal>
 
         <div className="relative mt-14 lg:mt-20 lg:px-[6%]">

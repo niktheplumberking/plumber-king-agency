@@ -2,15 +2,18 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 
 /**
- * The giant "Plumber King Agency" at the foot of every page. From 21st.dev "Beam Wordmark Footer" Nick took exactly
- * three things (2026-10-18): letters rise in, one after another, the first time the footer is seen; each letter lifts
- * and grows under the pointer (and hops when clicked); a soft pink glow follows the pointer and lights the letters it
- * passes. The drifting beam of light was left out on purpose. "Agency" is stretched so the line runs edge to edge.
- * Reduced motion: no rise, no lift, no hop (the glow only moves when the pointer does). Decorative: the footer
- * already names the business in text, so screen readers skip this.
+ * The giant "Plumber King Agency" at the foot of every page. From 21st.dev "Beam Wordmark Footer" Nick took (2026-10-18):
+ * letters rise in, one after another, the first time the footer is seen, and each letter lifts and grows under the
+ * pointer (and hops when clicked). Nick 2026-10-19: the pointer glow is gone, so hover changes no colour, only the lift.
+ * The drifting beam of light was left out on purpose. "Agency" is stretched so the line runs edge to edge.
+ * Reduced motion: no rise, no lift, no hop. Decorative: the footer already names the business in text, so screen
+ * readers skip this.
  */
 /** How much wider "Agency" is drawn than the other two words (Nick: "stretch the word Agency even more"). */
 const STRETCH = 1.12;
+/** Where the ink starts and ends inside the line box, in em of the fitted font size (measured on the built page). */
+const INK_TOP = 0.4204;
+const INK_BOTTOM = 0.3969;
 
 const words = [
   { text: "Plumber", cls: "" },
@@ -49,15 +52,17 @@ export function FooterWordmark() {
       const reach = stretch.getBoundingClientRect().right - left;
       if (!(reach > 0)) return;
       line.style.fontSize = ((100 * (right - left)) / reach).toFixed(2) + "px";
-      // Each letter paints a background the size of its word, shifted back by its own offset, so one glow spans the word.
-      for (const g of groups) {
-        g.style.setProperty("--fw-ww", g.offsetWidth + "px");
-        g.style.setProperty("--fw-wh", g.offsetHeight * 1.6 + "px"); // tall enough for the g and y tails
-        g.querySelectorAll<HTMLElement>(".fw-l").forEach((l) => {
-          l.style.setProperty("--fw-x", l.offsetLeft + "px");
-          l.style.setProperty("--fw-y", l.offsetTop + "px");
-        });
-      }
+      // Equal space above and below the name inside its band (Nick 2026-10-19), measured from the letters' ink.
+      line.style.marginTop = line.style.marginBottom = "0px";
+      const band = el.getBoundingClientRect();
+      const fs = parseFloat(line.style.fontSize);
+      const ink = line.getBoundingClientRect();
+      // Gaps from the band's top line (its border) and its bottom line (the next row's top edge) to the ink.
+      const top = ink.top + INK_TOP * fs - band.top;
+      const bottom = band.bottom - (ink.bottom - INK_BOTTOM * fs);
+      const shift = (bottom - top) / 2;
+      line.style.marginTop = shift.toFixed(1) + "px";
+      line.style.marginBottom = (-shift).toFixed(1) + "px";
     };
     let frame = 0;
     const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(fit); };
@@ -65,27 +70,6 @@ export function FooterWordmark() {
     document.fonts?.ready.then(schedule);
     const ro = new ResizeObserver(schedule);
     ro.observe(el);
-
-    // Pointer glow: the pointer in each word's own unscaled coordinates.
-    let px = 0, py = 0, pending = false;
-    const paint = () => {
-      pending = false;
-      for (const g of groups) {
-        const r = g.getBoundingClientRect();
-        const sx = r.width / (g.offsetWidth || 1);
-        const sy = r.height / (g.offsetHeight || 1);
-        g.style.setProperty("--fw-px", ((px - r.left) / sx).toFixed(1) + "px");
-        g.style.setProperty("--fw-py", ((py - r.top) / sy).toFixed(1) + "px");
-      }
-    };
-    const onMove = (e: PointerEvent) => {
-      px = e.clientX; py = e.clientY;
-      el.classList.add("fw-lit");
-      if (!pending) { pending = true; requestAnimationFrame(paint); }
-    };
-    const onLeave = () => el.classList.remove("fw-lit");
-    el.addEventListener("pointermove", onMove);
-    el.addEventListener("pointerleave", onLeave);
 
     // Rise in once, the first time it is on screen.
     const io = new IntersectionObserver(([e]) => {
@@ -95,7 +79,6 @@ export function FooterWordmark() {
 
     return () => {
       cancelAnimationFrame(frame); ro.disconnect(); io.disconnect();
-      el.removeEventListener("pointermove", onMove); el.removeEventListener("pointerleave", onLeave);
     };
   }, []);
 

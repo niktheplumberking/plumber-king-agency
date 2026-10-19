@@ -402,13 +402,13 @@ export default function Timeline({
       ref={sectionRef}
       id="process"
       aria-labelledby={titleId}
-      className={reducedMotion ? "w-full relative py-16" : "h-[165vw] max-[600px]:h-[300vh] w-full relative"}
+      className={reducedMotion ? "w-full relative py-16" : "h-[180vw] max-[600px]:h-[300vh] w-full relative"}
       style={sectionStyle}
     >
       <div tabIndex={reducedMotion ? 0 : undefined} className={reducedMotion ? "w-full overflow-x-auto" : "h-screen w-full sticky top-[0%] pt-[10%] overflow-hidden max-[600px]:top-[5%] max-[600px]:pt-[16vw]"}>
         <div
           ref={wholeSliderRef}
-          className="mr-[2vw] flex h-[34vw] w-[205vw] items-center gap-[5vw] px-[5vw] max-[600px]:h-[66vh] max-[600px]:w-[560vw] max-[600px]:px-[7vw]"
+          className="mr-[2vw] flex h-[34vw] w-[225vw] items-center gap-[5vw] px-[5vw] max-[600px]:h-[66vh] max-[600px]:w-[560vw] max-[600px]:px-[7vw]"
         >
           <div className="h-full w-[30vw] shrink-0 overflow-hidden rounded-[1vw] border-2 border-ink shadow-[8px_8px_0_var(--color-ribbon)] max-[600px]:h-[65vw] max-[600px]:w-[85vw] max-[600px]:rounded-[5vw]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -452,7 +452,7 @@ export default function Timeline({
                   <div
                     key={`top-${item.id}`}
                     data-step={item.id}
-                    className="relative h-full w-[30vw] shrink-0 px-[3vw] max-[600px]:flex max-[600px]:w-[70vw] max-[600px]:flex-col max-[600px]:px-[7vw]"
+                    className="relative h-full w-[38vw] shrink-0 px-[3vw] max-[600px]:flex max-[600px]:w-[70vw] max-[600px]:flex-col max-[600px]:px-[7vw]"
                   >
                     <div className="w-full absolute left-0 bottom-0 top-0 h-full">
                       <div
@@ -467,12 +467,12 @@ export default function Timeline({
 
                     <div className="mt-[-1vw] space-y-[1vw] max-[600px]:mt-[-2vw]">
                       <h3
-                        className={`title-${item.id} font-display text-t2 font-black leading-tight`}
+                        className={`title-${item.id} tl-t font-display text-t2 font-black leading-tight`}
                       >
                         <span className="text-ribbon-deep">{item.num}</span> {item.title}
                       </h3>
                       <p
-                        className={`description-${item.id} w-[90%] text-t3 max-[600px]:w-[90%]`}
+                        className={`description-${item.id} tl-d w-[90%] text-t3 max-[600px]:w-[90%]`}
                         style={mutedTextStyle}
                       >
                         {item.content}
@@ -493,7 +493,7 @@ export default function Timeline({
                   <div
                     key={`bottom-${item.id}`}
                     data-step={item.id}
-                    className="relative h-full w-[30vw] shrink-0 px-[3vw] max-[600px]:w-[70vw] max-[600px]:px-[7vw]"
+                    className="relative h-full w-[38vw] shrink-0 px-[3vw] max-[600px]:w-[70vw] max-[600px]:px-[7vw]"
                   >
                     <div className="w-full absolute left-0 bottom-[-1%] h-full">
                       <div
@@ -508,12 +508,12 @@ export default function Timeline({
 
                     <div className="flex h-full w-full flex-col justify-end space-y-[1vw]">
                       <h3
-                        className={`title-${item.id} font-display text-t2 font-black leading-tight`}
+                        className={`title-${item.id} tl-t font-display text-t2 font-black leading-tight`}
                       >
                         <span className="text-ribbon-deep">{item.num}</span> {item.title}
                       </h3>
                       <p
-                        className={`description-${item.id} w-[90%] text-t3 max-[600px]:w-[90%]`}
+                        className={`description-${item.id} tl-d w-[90%] text-t3 max-[600px]:w-[90%]`}
                         style={mutedTextStyle}
                       >
                         {item.content}

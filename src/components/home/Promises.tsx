@@ -29,7 +29,9 @@ export function Promises() {
       tl.from(row.querySelector("[data-pain]"), { autoAlpha: 0, x: -16, duration: 0.4, ease: "power2.out" })
         .from(row.querySelector("[data-promise]"), { xPercent: 12, autoAlpha: 0, rotate: 3, duration: 0.55, ease: "back.out(1.6)" }, "<0.1");
     });
-    gsap.from("[data-panel-bobo]", { y: 60, rotate: -12, ease: "back.out(1.4)", duration: 0.9, scrollTrigger: { trigger: "[data-panel]", start: "top 75%", once: true } });
+    // Bobo stands up as the panel comes in and ducks back behind it at the same point on the way back up, every time
+    // (Nick 2026-10-19: not one-time only).
+    gsap.from("[data-panel-bobo]", { y: 60, rotate: -12, ease: "back.out(1.4)", duration: 0.9, scrollTrigger: { trigger: "[data-panel]", start: "top 75%", toggleActions: "play none none reverse" } });
   });
 
   return (

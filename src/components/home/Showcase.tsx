@@ -1,5 +1,5 @@
 import { PauseMotion } from "./WalkingBobo";
-import { ClipboardList, LifeBuoy, PenTool, Rocket, Search } from "lucide-react";
+import { ClipboardList, Droplets, Faucet, LifeBuoy, PenTool, Rocket, Search, ShowerHead, Wrench } from "lucide-react";
 import { services } from "@/content/services";
 import { Reveal } from "../Reveal";
 import { CtaButton } from "../CtaButton";
@@ -54,14 +54,16 @@ export function SystemBento() {
         <span className="sys-o sys-o2" data-fx-y="-60" />
         <span className="sys-o sys-o3" data-fx-y="110" />
         <span className="sys-o sys-o4" data-fx-y="-90" />
-        <span className="sys-spark sys-s1" data-fx-rotate="-30,60">✦</span>
-        <span className="sys-spark sys-s2" data-fx-rotate="20,-70">✦</span>
-        <span className="sys-spark sys-s3" data-fx-rotate="0,90">✦</span>
+        {/* Plumbing objects instead of stars (Nick 2026-10-19: stay inside the trade). Lucide icons, MIT licence. */}
+        <span className="sys-spark sys-s1" data-fx-rotate="-30,60"><Wrench /></span>
+        <span className="sys-spark sys-s2" data-fx-rotate="20,-70"><Droplets /></span>
+        <span className="sys-spark sys-s3" data-fx-rotate="0,90"><Faucet /></span>
+        <span className="sys-spark sys-s4" data-fx-rotate="10,-50"><ShowerHead /></span>
       </div>
       <div className="container-x relative">
-        <Reveal className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] lg:items-end">
-          <h2 id="system-h" className="display text-t1">Everything it takes <span className="accent">to own your town.</span></h2>
-          <p className="text-t3 text-white/90 md:text-t2">Built for plumbers only. We handle the tech so you can stay on the tools.</p>
+        {/* Title centred at the top and about 1.6x bigger; the subline was dropped (Nick 2026-10-19). */}
+        <Reveal className="fit-box">
+          <h2 id="system-h" className="display sys-title text-t1">Everything it takes <span className="accent">to own your town.</span></h2>
         </Reveal>
       </div>
       <PolaroidLineCarousel

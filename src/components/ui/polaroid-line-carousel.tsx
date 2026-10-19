@@ -142,7 +142,7 @@ export default function PolaroidLineCarousel({
   stillRef.current = still
   const [active, setActive] = React.useState(0)
   const [dragging, setDragging] = React.useState(false)
-  const [size, setSize] = React.useState({ w: 1200, h: 800, cw: cardWidth })
+  const [size, setSize] = React.useState({ w: 1200, h: 800, cw: cardWidth, y: 0 })
   const rootRef = React.useRef(null as HTMLDivElement | null)
   const pathRef = React.useRef(null as SVGPathElement | null)
   const cards = React.useRef([] as (HTMLDivElement | null)[])
@@ -167,7 +167,9 @@ export default function PolaroidLineCarousel({
     const ro = new ResizeObserver(() => {
       const r = root.getBoundingClientRect()
       const cw = Math.round(Math.max(150, Math.min(cardWidth, r.width * 0.42, r.height * 0.42)))
-      setSize({ w: r.width, h: r.height, cw })
+      // Optional fixed string height from CSS (--pl-line-y), so the page can raise the line without resizing the stage.
+      const y = parseFloat(getComputedStyle(root).getPropertyValue("--pl-line-y")) || 0
+      setSize({ w: r.width, h: r.height, cw, y })
     })
     ro.observe(root)
     return () => ro.disconnect()
@@ -198,7 +200,7 @@ export default function PolaroidLineCarousel({
       const dt = Math.min(0.033, (now - prev) / 1000)
       prev = now
       const { w, h, cw } = size
-      const y0 = Math.max(40, h * 0.2)
+      const y0 = size.y || Math.max(40, h * 0.2)
       const d = drag.current
       let lineVel: number
       if (d && d.moved) {

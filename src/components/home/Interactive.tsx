@@ -108,7 +108,10 @@ export function WebsiteGrader() {
   return (
     <section className="relative overflow-hidden bg-ivory py-24 md:py-32" aria-labelledby="grader-h">
       <div aria-hidden className="hero-dots pointer-events-none absolute bottom-10 left-0 h-72 w-[30%]" />
-      <div className="container-x grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+      {/* The same dot field in white, shown only where the FAQ's pink disc (next section) reaches up over it: the disc's
+          centre is 112 px right of this field's left edge and 440 px below its top (see .gr-dots-w). */}
+      <div aria-hidden className="hero-dots gr-dots-w pointer-events-none absolute bottom-10 left-0 z-[2] h-72 w-[30%]" />
+      <div className="container-x relative z-[3] grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal>
           <h2 id="grader-h" className="display text-t1">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
           <p className="mt-5 max-w-md text-t3 text-slate md:text-t2">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to.</p>
@@ -169,7 +172,7 @@ export function WebsiteGrader() {
               label="Plumbers only. More calls. You own it. USA and Canada."
               centerText={
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src="/bobo/head.webp" alt="Bobo the duck, Plumber King mascot" width={64} height={64} loading="lazy" className="h-12 w-12 md:h-16 md:w-16" />
+                <img src="/brand/logo-stacked-text.webp" alt="Plumber King Agency" width={240} height={179} loading="lazy" className="h-auto w-[78px] max-w-none md:w-[97px] lg:w-[90px]" />
               }
             />
           </div>

@@ -17,9 +17,15 @@ export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
     <section id="founder" className="relative overflow-hidden bg-paper py-24 md:py-32" aria-labelledby="founder-h">
       <div aria-hidden className="hero-dots pointer-events-none absolute top-10 right-0 h-72 w-[30%]" />
       <div className="container-x">
-        <Reveal className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-end">
-          <H id="founder-h" className="display text-t1">I&apos;m {founderFull}. <span className="accent">The face behind Plumber King.</span></H>
-          <p className="text-t3 text-slate md:text-t2">You deal with me, not a sales team. Open a folder to see who I am, what I have built and where I am taking this.</p>
+        {/* Title as a name wordmark (Nick 2026-10-19: the big-left, small-right layout read as "AI slop"): a small
+            "I'm", then the name across the full width, then the pink line with the subline beside it. Same words. */}
+        <Reveal className="fn-head fit-box">
+          <H id="founder-h" className="display fn-title">
+            <span className="fn-im">I&apos;m</span>{" "}
+            <span className="fn-name">{founderFull}.</span>{" "}
+            <span className="accent fn-sub">The face behind Plumber King.</span>
+          </H>
+          <p className="fn-p text-t3 text-slate md:text-t2">You deal with me, not a sales team. Open a folder to see who I am, what I have built and where I am taking this.</p>
         </Reveal>
         <ul className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-3">
           {folders.map((f, i) => (
@@ -31,7 +37,7 @@ export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
           ))}
         </ul>
         <Reveal className="mt-20 flex flex-col items-center gap-5 text-center">
-          <p className="display max-w-3xl text-t2">&ldquo;{site.founderQuote}&rdquo;</p>
+          <p className="display quote-big max-w-[16em]">&ldquo;{site.founderQuote}&rdquo;</p>
           <CtaButton />
         </Reveal>
       </div>

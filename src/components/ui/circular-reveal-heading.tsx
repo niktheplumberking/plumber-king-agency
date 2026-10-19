@@ -59,12 +59,14 @@ const sizeConfig = {
         textStyle: 'font-medium'
     },
     // Trust badge on the corner of a card: smaller circle, so the words are set larger in the circle's own units.
+    // Nick 2026-10-19: circle 15% smaller, words about 10% bigger on screen (28.4 units at 196 px vs 22 at 230 px), so
+    // the text runs on a slightly tighter path (radius 150) with shorter gaps to keep each word's room.
     badge: {
-        container: 'h-[200px] w-[200px] md:h-[250px] md:w-[250px] lg:h-[230px] lg:w-[230px]',
-        fontSize: 'text-[22px]',
-        tracking: 'tracking-[0.12em]',
-        radius: 160,
-        gap: 22,
+        container: 'h-[170px] w-[170px] md:h-[212px] md:w-[212px] lg:h-[196px] lg:w-[196px]',
+        fontSize: 'text-[28.4px]',
+        tracking: 'tracking-[0.06em]',
+        radius: 150,
+        gap: 6,
         imageSize: 'w-[66%] h-[66%]',
         textStyle: 'font-black'
     }
@@ -182,7 +184,7 @@ export const CircularRevealHeading = ({
                             className="hover:fill-[#141414]"
                             fill={`url(#${gradId})`}
                             startOffset={startOffset}
-                            textLength={`${segmentDegrees * 2.6}`}
+                            textLength={`${(segmentDegrees * Math.PI * config.radius) / 180}`}
                             lengthAdjust="spacingAndGlyphs"
                         >
                             {item.text}
@@ -244,7 +246,7 @@ export const CircularRevealHeading = ({
                                 exit={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.3 }}
-                                className="relative z-10 p-6 rounded-3xl"
+                                className={cn("relative z-10 rounded-3xl", size === "badge" ? "p-1" : "p-6")}
                                 style={{ backgroundColor: BG }}
                                 whileHover={{
                                     boxShadow: `inset 3px 3px 6px ${INSET}, inset -3px -3px 6px #ffffff`

@@ -162,15 +162,13 @@ html { scroll-padding-top: 88px; }
 .split-w { display: inline-block; overflow: hidden; padding-bottom: 0.06em; vertical-align: bottom; }
 .split-i { display: inline-block; }
 /* Footer wordmark (FooterWordmark.tsx). Nick 2026-10-18: a few px bigger (the width is already edge to edge, so the
-   extra size goes into height: scaleY 1.18 -> 1.34; the font size is fitted in JS, calc() is the no-JS fallback), about 15% more lean, "Agency" stretched to
-   the right edge; letters rise in once, lift under the pointer, and a pink glow follows the pointer. No beam. */
-@property --fw-g { syntax: "<number>"; inherits: true; initial-value: 0; }
-.fw { --fw-g: 0; transition: --fw-g 0.5s ease; }
-.fw.fw-lit { --fw-g: 1; }
+   extra size goes into height: scaleY 1.34; the font size is fitted in JS, calc() is the no-JS fallback), "Agency"
+   stretched to the right edge; letters rise in once and lift under the pointer. Nick 2026-10-19: no glow and no colour
+   change on hover (only the lift), another ~2 degrees of lean, and the name sits centred between the two lines. */
 .fw-line { display: block; font-size: calc(100cqi / 10.4); line-height: 1.05; white-space: nowrap; padding: 0.2em 0 0.36em; overflow-x: visible; overflow-y: clip;
-  transform: scaleY(1.34) skewX(-1.5deg); transform-origin: 0 100%; }
-.fw-w { position: relative; display: inline-block; --fw-top: #ffffff; --fw-foot: #ffe6f0; --fw-lit: 255 61 139; }
-.fw-king { --fw-top: var(--color-ribbon-deep); --fw-foot: var(--color-ribbon-deep); --fw-lit: 255 143 191; }
+  transform: scaleY(1.34) skewX(-3.5deg); transform-origin: 0 100%; }
+.fw-w { position: relative; display: inline-block; --fw-top: #ffffff; --fw-foot: #ffe6f0; }
+.fw-king { --fw-top: var(--color-ribbon-deep); --fw-foot: var(--color-ribbon-deep); }
 .fw-stretch { transform-origin: 0 50%; }
 .fw-sp { display: inline-block; width: 0.22em; }
 .fw-lw { display: inline-block; translate: 0 0; transition: translate 0.85s cubic-bezier(.16,.84,.2,1) var(--fw-d, 0ms); }
@@ -178,11 +176,9 @@ html { scroll-padding-top: 88px; }
 /* The padding (cancelled by the margin) makes the box tall enough for the g and y tails; text outside the box gets no
    background-clip paint and would vanish. */
 .fw-l { display: inline-block; padding: 0.12em 0.04em 0.32em; margin: -0.12em -0.04em -0.32em; color: transparent; -webkit-background-clip: text; background-clip: text; background-repeat: no-repeat;
-  background-size: var(--fw-ww, 100%) var(--fw-wh, 100%), 100% 100%; background-position: calc(var(--fw-x, 0px) * -1) calc(var(--fw-y, 0px) * -1), 0 0;
-  background-image: radial-gradient(circle 14cqi at var(--fw-px, -999px) var(--fw-py, -999px), rgb(var(--fw-lit) / var(--fw-g)), rgb(var(--fw-lit) / 0) 70%),
-    linear-gradient(180deg, var(--fw-top) 25%, var(--fw-foot) 80%);
-  transform-origin: 50% 100%; transition: transform 0.5s cubic-bezier(.2,.9,.25,1.2), filter 0.4s; }
-.fw-l:hover { transform: translateY(-0.05em) scale(1.08); filter: drop-shadow(0 0 0.12em rgb(255 61 139 / 0.55)); }
+  background-image: linear-gradient(180deg, var(--fw-top) 25%, var(--fw-foot) 80%);
+  transform-origin: 50% 100%; transition: transform 0.5s cubic-bezier(.2,.9,.25,1.2); }
+.fw-l:hover { transform: translateY(-0.05em) scale(1.08); }
 .fw-l.is-hop { animation: fw-hop 0.75s cubic-bezier(.2,.8,.2,1); }
 @keyframes fw-hop { 0% { transform: translateY(0) scale(1, 1); } 18% { transform: translateY(0.02em) scale(1.06, 0.9); } 45% { transform: translateY(-0.14em) scale(0.97, 1.05); } 70% { transform: translateY(0.01em) scale(1.02, 0.97); } 100% { transform: translateY(-0.05em) scale(1.08); } }
 @media (prefers-reduced-motion: reduce) {
@@ -475,18 +471,22 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 }
 
 /* ---------- "Everything it takes": photo-string carousel band (SystemBento, Nick 2026-10-18) ---------- */
-.sys { --sys-h: 46rem; }
-@media (min-width: 768px) { .sys { --sys-h: 48rem; } }
+.sys { --sys-h: 52rem; }
+@media (min-width: 768px) { .sys { --sys-h: 60rem; } }
 .sys-o { position: absolute; display: block; border-radius: 999px; }
-.sys-o1 { top: -8rem; right: -6rem; width: 30rem; aspect-ratio: 1; background: #fff; opacity: 0.75; }
+/* The big disc on the right takes the section above's background (ivory), so that section seems to flow down into this one (Nick 2026-10-19). */
+.sys-o1 { top: -8rem; right: -6rem; width: 30rem; aspect-ratio: 1; background: var(--color-ivory); }
 .sys-o2 { bottom: 4rem; left: -10rem; width: 34rem; aspect-ratio: 1; border: 2.5rem solid #fff; opacity: 0.6; }
 .sys-o3 { top: 42%; left: 38%; width: 7rem; aspect-ratio: 1; background: #fff; opacity: 0.85; }
 .sys-o4 { bottom: -5rem; right: 18%; width: 16rem; aspect-ratio: 1; border: 1.25rem solid #fff; opacity: 0.7; }
-.sys-spark { position: absolute; color: #fff; font-size: var(--text-t1); line-height: 1; }
-.sys-s1 { top: 18%; left: 6%; }
-.sys-s2 { top: 30%; right: 9%; }
-.sys-s3 { bottom: 16%; left: 54%; }
-@media (max-width: 47.99rem) { .sys-o1 { width: 18rem; } .sys-o2 { width: 20rem; border-width: 1.5rem; } .sys-o3 { display: none; } .sys-s2 { display: none; } }
+.sys-spark { position: absolute; display: block; color: #fff; width: clamp(3.5rem, 6vw, 6rem); aspect-ratio: 1; }
+.sys-spark svg { width: 100%; height: 100%; stroke-width: 2.25; }
+/* The objects sit in the band between the title and the string, clear of the cards and the captions. */
+.sys-s1 { top: 24%; left: 4%; }
+.sys-s2 { top: 26%; right: 6%; }
+.sys-s3 { top: 27%; left: 31%; }
+.sys-s4 { top: 25%; right: 31%; }
+@media (max-width: 47.99rem) { .sys-o1 { width: 18rem; } .sys-o2 { width: 20rem; border-width: 1.5rem; } .sys-o3 { display: none; } .sys-s2, .sys-s4 { display: none; } }
 
 /* Fluid expanding grid, "From invisible to booked" left side (Nick 2026-10-18). */
 .story-grid { height: 26rem; }
@@ -523,3 +523,57 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 @media (max-width: 40rem) { .feg-ba { display: none; } .feg-num-m { display: block; font-weight: 700; } }
 html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba, html.pk-still .feg-after, html.pk-still .feg-stat { transition: none; }
 @media (prefers-reduced-motion: reduce) { .feg-before, .feg-after-half, .feg-ba, .feg-after, .feg-stat { transition: none !important; } }
+
+/*
+ * Homepage batch 1 (Nick 2026-10-19): a few titles go far beyond t1 on purpose ("I really like when the text is
+ * enormously large"). Each is sized from its container width (cqi), so it fills the same share of the row on every
+ * screen. The em widths in the comments were measured with the built Urbanist 900 (measure.mjs).
+ */
+/* "Your website rings a phone." zig-zag: longest line "rings a phone." = 6.076em; "other guy's." = 5.012em. */
+.ps-title { --ps-w: 0.98; font-size: calc(var(--ps-w) * 100cqi / 6.076); line-height: 0.9; letter-spacing: -0.03em; text-wrap: nowrap; }
+.ps-l { display: block; width: fit-content; white-space: nowrap; }
+.ps-r { margin-left: auto; }
+.ps-sub { margin-top: 1.75rem; max-width: 36rem; }
+@media (min-width: 64rem) {
+  .ps-head { position: relative; }
+  .ps-title { --ps-w: 0.8; }
+  .ps-sub { position: absolute; left: 0; bottom: 0.4rem; margin: 0; width: calc(100cqi - 100cqi * 0.8 * 5.012 / 6.076 - 3rem); max-width: 30rem; }
+}
+
+/* "Everything it takes": centred title, "Everything it takes" = 8.118em wide, filling 92% of the row on laptops and up. */
+.sys-title { text-align: center; }
+@media (min-width: 64rem) { .sys-title { font-size: calc(0.92 * 100cqi / 8.118); line-height: 0.92; } }
+/* The four service captions are what people read here, so they get the big sizes (title t1, line t2), and the string
+   sits 20 px higher to make room (Nick 2026-10-19). */
+.sys { --pl-line-y: 127px; }
+.sys .pl-title { font-size: var(--text-t1); line-height: 0.95; white-space: normal; text-overflow: clip; padding-bottom: 0.08em; }
+.sys .pl-sub { font-size: var(--text-t2); line-height: 1.35; max-width: 56rem; margin-top: 0.6rem; }
+@media (min-width: 768px) { .sys { --pl-line-y: 134px; } }
+/* Five steps: numbers, titles and lines 1.3x bigger, same proportions (Nick 2026-10-19). Phones keep the base sizes:
+   their step boxes are too narrow for more. */
+@media (min-width: 601px) {
+  .tl-t { font-size: calc(var(--text-t2) * 1.3); }
+  .tl-d { font-size: calc(var(--text-t3) * 1.3); line-height: 1.5; }
+}
+/* Meet Nick: the founder's line, about 2.6x its old size. */
+.quote-big { font-size: calc(var(--text-t2) * 2.6); line-height: 1.02; }
+/* Meet Nick title. Measured: "Nick Bennett." = 5.674em, "The face behind Plumber King." = 13.323em. */
+.fn-title { line-height: 0.9; }
+.fn-im { display: block; font-size: calc(100cqi / 9); color: var(--color-slate); }
+.fn-name { display: block; white-space: nowrap; font-size: calc(0.99 * 100cqi / 5.674); line-height: 0.86; letter-spacing: -0.035em; }
+.fn-sub { margin-top: 0.35em; font-size: calc(100cqi / 7.2); line-height: 0.95; }
+.fn-p { margin-top: 1.25rem; max-width: 36rem; }
+@media (min-width: 64rem) {
+  .fn-head { position: relative; }
+  .fn-im, .fn-sub { font-size: calc(0.6 * 100cqi / 13.323); }
+  .fn-sub { white-space: nowrap; }
+  .fn-p { position: absolute; right: 0; bottom: 0.2rem; margin: 0; width: calc(100cqi * 0.4 - 3rem); max-width: 30rem; }
+}
+/* FAQ title: "answers." (3.832em) spans the full width of the card under it. */
+.fq-title { font-size: calc(100cqi / 3.832); line-height: 0.9; letter-spacing: -0.03em; }
+/* White dots over the FAQ disc. The disc is 34rem wide at -10rem/-10rem from the FAQ's top-left, so its centre sits
+   7rem right of this field's left edge and (18rem + 2.5rem + 7rem) below its top; radius 17rem. */
+.gr-dots-w { background-image: radial-gradient(#fff 1.5px, transparent 1.6px); opacity: 1; mask-image: none; clip-path: circle(17rem at 7rem 27.5rem); }
+/* Room for Bobo above the "Still got a question?" card under the bigger FAQ title. */
+.fq-title + .fq-ask { margin-top: 5.5rem; }
+@media (min-width: 64rem) { .fn-sub { margin-top: 0.5em; } }

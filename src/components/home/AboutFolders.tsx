@@ -23,9 +23,9 @@ export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
           <H id="founder-h" className="display fn-title">
             <span className="fn-im">I&apos;m</span>{" "}
             <span className="fn-name">{founderFull}.</span>{" "}
-            <span className="accent fn-sub">The face behind Plumber King.</span>
+            <span className="accent fn-sub">You deal with me, not a sales team.</span>
           </H>
-          <p className="fn-p text-t3 text-slate md:text-t2">You deal with me, not a sales team. Open a folder to see who I am, what I have built and where I am taking this.</p>
+          <p className="fn-p text-t3 text-slate md:text-t2">Open a folder to see who I am, what I have built and where I am taking this.</p>
         </Reveal>
         <ul className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-3">
           {folders.map((f, i) => (

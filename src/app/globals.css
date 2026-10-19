@@ -546,7 +546,8 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 
 /* "Everything it takes": centred title, "Everything it takes" = 8.118em wide, filling 92% of the row on laptops and up. */
 .sys-title { text-align: center; }
-@media (min-width: 64rem) { .sys-title { font-size: calc(0.92 * 100cqi / 8.118); line-height: 0.92; } }
+/* "to get found in your town." = 11.033em is the longer line. */
+@media (min-width: 64rem) { .sys-title { font-size: calc(0.92 * 100cqi / 11.033); line-height: 0.92; } }
 /* The four service captions are what people read here, so they get the big sizes (title t1, line t2), and the string
    sits 20 px higher to make room (Nick 2026-10-19). */
 .sys { --pl-line-y: 127px; }
@@ -561,7 +562,7 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 }
 /* Meet Nick: the founder's line, about 2.6x its old size. */
 .fn-motto { font-size: calc(var(--text-t2) * 2.6); line-height: 1.02; }
-/* Meet Nick title. Measured: "Nick Bennett." = 5.674em, "The face behind Plumber King." = 13.323em. */
+/* Meet Nick title. Measured: "Nick Bennett." = 5.674em, "You deal with me, not a sales team." = 15.297em. */
 .fn-title { line-height: 0.9; }
 .fn-im { display: block; font-size: calc(100cqi / 9); color: var(--color-slate); }
 .fn-name { display: block; white-space: nowrap; font-size: calc(0.99 * 100cqi / 5.674); line-height: 0.86; letter-spacing: -0.035em; }
@@ -569,7 +570,7 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .fn-p { margin-top: 1.25rem; max-width: 36rem; }
 @media (min-width: 64rem) {
   .fn-head { position: relative; }
-  .fn-im, .fn-sub { font-size: calc(0.6 * 100cqi / 13.323); }
+  .fn-im, .fn-sub { font-size: calc(0.55 * 100cqi / 15.297); }
   .fn-sub { white-space: nowrap; }
   .fn-p { position: absolute; right: 0; bottom: 0.2rem; margin: 0; width: calc(100cqi * 0.4 - 3rem); max-width: 30rem; }
 }

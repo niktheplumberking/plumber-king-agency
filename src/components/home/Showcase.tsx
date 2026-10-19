@@ -61,9 +61,10 @@ export function SystemBento() {
         <span className="sys-spark sys-s4" data-fx-rotate="10,-50"><ShowerHead /></span>
       </div>
       <div className="container-x relative">
-        {/* Title centred at the top and about 1.6x bigger; the subline was dropped (Nick 2026-10-19). */}
+        {/* Title centred at the top and bigger; the subline was dropped (Nick 2026-10-19). Words picked by Jev over "own your town"
+            (clearer, lower risk of reading as an overclaim). */}
         <Reveal className="fit-box">
-          <h2 id="system-h" className="display sys-title text-t1">Everything it takes <span className="accent">to own your town.</span></h2>
+          <h2 id="system-h" className="display sys-title text-t1">Everything it takes <span className="accent">to get found in your town.</span></h2>
         </Reveal>
       </div>
       <PolaroidLineCarousel

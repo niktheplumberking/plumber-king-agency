@@ -37,7 +37,7 @@ export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
           ))}
         </ul>
         <Reveal className="mt-20 flex flex-col items-center gap-5 text-center">
-          <p className="display quote-big max-w-[16em]">&ldquo;{site.founderQuote}&rdquo;</p>
+          <p className="display fn-motto max-w-[16em]">&ldquo;{site.founderQuote}&rdquo;</p>
           <CtaButton />
         </Reveal>
       </div>

@@ -59,7 +59,8 @@ export type PolaroidLineCarouselProps = {
   /** Image shown under the caption title, left of the paragraph. */
   capIcon?: string
   /** Wide screens (1024 px+): the caption, count and buttons stand in a column on the left and the active print hangs
-   *  on the right at up to `cardWidth`, so the prints can be much bigger; prints are cut away where they slide over the caption. */
+   *  on the right at up to 85% of `cardWidth`. A print that has had its turn keeps sliding left along the string and
+   *  shrinks into a row above the caption, so at the end every print is on screen (Nick 2026-10-20). */
   side?: boolean
 }
 
@@ -131,6 +132,7 @@ const PL_CSS = [
   ".pl-btn:focus-visible,.pl-link:focus-visible{outline:3px solid #c2185b;outline-offset:2px}",
   ".pl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}",
   "@keyframes pl-in{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}",
+  ".pl-root[data-side] .pl-card[data-on='0'] .pl-print{transform:none}",
   ".pl-bar[data-side]{bottom:clamp(28px,6vh,64px)}.pl-bar[data-side] .pl-cap{flex-basis:100%}.pl-bar[data-side] .pl-title{white-space:normal}",
   "@media (max-width:640px){.pl-cap{flex-basis:100%}.pl-count{margin-right:auto}.pl-title{white-space:normal}}",
   "@media (prefers-reduced-motion:reduce){.pl-cap>*{animation:none}.pl-print{transition:none}}",
@@ -165,6 +167,9 @@ export default function PolaroidLineCarousel({
   const rootRef = React.useRef(null as HTMLDivElement | null)
   const pathRef = React.useRef(null as SVGPathElement | null)
   const cards = React.useRef([] as (HTMLDivElement | null)[])
+  // Side layout: highest the caption bar has reached (px from the stage top) since the last resize; the row of
+  // finished prints has to stay above it whichever caption is showing.
+  const barTop = React.useRef(Infinity)
   const sim = React.useRef({ off: 0, vel: 0, target: 0, a: [] as number[], w: [] as number[] })
   const drag = React.useRef(null as null | { x: number; off: number; lx: number; lt: number; v: number; moved: boolean })
   const lastTouch = React.useRef(0)
@@ -220,11 +225,18 @@ export default function PolaroidLineCarousel({
       const wide = side && r.width >= 1024
       const bar = root.querySelector(".pl-bar") as HTMLElement | null
       const room = wide ? r.height - y - sag - 86 - 40 : y ? r.height - y - sag - 86 - 24 - (bar ? r.bottom - bar.getBoundingClientRect().top : 0) : r.height * 0.42
-      const cw = Math.round(Math.max(150, Math.min(cardWidth, r.width * (wide ? 0.45 : 0.42), room)))
+      // Side layout: 15% smaller than the room allows (Nick 2026-10-20), so the finished prints have space too.
+      const cw = Math.round(Math.max(150, Math.min(cardWidth, r.width * (wide ? 0.45 : 0.42), room) * (wide ? 0.85 : 1)))
+      barTop.current = bar ? bar.getBoundingClientRect().top - r.top : Infinity
       setSize({ w: r.width, h: r.height, cw, y, side: wide })
     })
     ro.observe(root)
-    return () => ro.disconnect()
+    const bar = root.querySelector(".pl-bar")
+    const rb = new ResizeObserver(() => {
+      if (bar) barTop.current = Math.min(barTop.current, bar.getBoundingClientRect().top - root.getBoundingClientRect().top)
+    })
+    if (bar) rb.observe(bar)
+    return () => { ro.disconnect(); rb.disconnect() }
   }, [cardWidth, sag, side])
 
   // keep the target on the active print when the spacing changes
@@ -253,11 +265,19 @@ export default function PolaroidLineCarousel({
       prev = now
       const { w, h, cw } = size
       // Side layout: the active print's centre sits one print-half in from the right gutter; the caption column ends
-      // 48 px before the print, and prints fade as they slide over it.
+      // 48 px before the print. Finished prints park in a row over the caption column, from its right edge back to
+      // the left gutter, scaled down to fit both that width and the height above the caption.
       const pad = Math.max(16, Math.min(56, w * 0.04))
       const anchor = size.side ? w - pad - cw / 2 : w / 2
       const barRight = w - pad - cw - 48
       const y0 = size.y || Math.max(40, h * 0.2)
+      const slots = Math.max(1, n - 1)
+      const printH = cw + 56
+      const fitW = (barRight - pad - (slots - 1) * 24) / slots / cw
+      const fitH = Number.isFinite(barTop.current) ? (barTop.current - 28 - (y0 + opts.current.sag)) / printH : 1
+      const ps = clamp(Math.min(fitW, fitH), 0.2, 1)
+      const pGap = slots > 1 ? (barRight - pad - slots * ps * cw) / (slots - 1) : 0
+      const slotX = (d: number) => barRight - (ps * cw) / 2 - d * (ps * cw + pGap)
       if (scrubbing.current) S.target = scrubProgress() * (n - 1) * spacing
       const d = drag.current
       let lineVel: number
@@ -274,18 +294,23 @@ export default function PolaroidLineCarousel({
       for (let i = 0; i < n; i++) {
         const el = cards.current[i]
         if (!el) continue
-        const x = anchor + i * spacing - S.off
+        // r: places from the active spot (0 = active, 1 = next one in, -1 = the one before).
+        const r = i - S.off / spacing
+        // Side layout: the next print waits fully off the right edge (no sliver showing) before it slides in.
+        let x = anchor + r * (size.side && r > 0 ? Math.max(spacing, pad + cw + 8) : spacing)
+        let sc = 1
+        if (size.side && r < 0) {
+          // Leaving: slide from the active spot to the first parking place, shrinking early so it clears the caption.
+          // Already parked: move one place left each time another print arrives.
+          const t = Math.min(1, -r)
+          x = -r <= 1 ? anchor + (slotX(0) - anchor) * t : slotX(Math.min(slots - 1, -r - 1))
+          sc = 1 - (1 - ps) * Math.sqrt(t)
+        }
         if (x < -cw * 1.5 || x > w + cw * 1.5) {
           el.style.visibility = "hidden"
           continue
         }
         el.style.visibility = "visible"
-        // Side layout: the part of a print that slides over the caption column is cut away (no see-through fade, so
-        // whatever shows of the print keeps full contrast).
-        if (size.side) {
-          const cut = clamp(barRight - (x - cw / 2), 0, cw + 40)
-          el.style.clipPath = cut > 0 ? "inset(-40px -40px -40px " + cut.toFixed(0) + "px)" : ""
-        }
         let a = S.a[i] || 0
         let av = S.w[i] || 0
         ;[a, av] = swingStep(a, av, lineVel, dt, g)
@@ -293,7 +318,7 @@ export default function PolaroidLineCarousel({
         S.a[i] = a
         S.w[i] = av
         const y = stringY(x, w, y0, o.sag) - 6
-        el.style.transform = "translate(" + (x - cw / 2).toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + a.toFixed(4) + "rad)"
+        el.style.transform = "translate(" + (x - cw / 2).toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + a.toFixed(4) + "rad)" + (sc < 1 ? " scale(" + sc.toFixed(4) + ")" : "")
         el.style.zIndex = String(i === near ? n + 1 : n - Math.abs(i - near))
       }
       pathRef.current?.setAttribute("d", "M0 " + y0 + " Q" + w / 2 + " " + (y0 + 2 * o.sag) + " " + w + " " + y0)
@@ -400,6 +425,7 @@ export default function PolaroidLineCarousel({
         ...style,
       }}
       data-drag={dragging ? "1" : "0"}
+      data-side={size.side ? "1" : undefined}
       role="region"
       aria-roledescription="carousel"
       aria-label={ariaLabel}

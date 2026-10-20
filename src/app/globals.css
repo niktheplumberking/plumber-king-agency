@@ -391,7 +391,10 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .gr-trust svg { color: var(--color-ribbon-deep); flex-shrink: 0; }
 .gr-trust:hover { border-color: var(--color-ribbon); translate: 4px 0; }
 /* Lying Bobo (batch 3): belly on the card's top edge (the clip has ~0.6% margin under him), at the top-right corner. */
-.gr-lie { position: absolute; z-index: 4; right: 1.5rem; bottom: calc(100% - 3px); width: clamp(9rem, 16vw, 14rem); aspect-ratio: 1000 / 642; pointer-events: none; }
+/* Lying Bobo (batch 3). Nick 2026-10-20: his elbow (frame row 594 of 642) and foot (row ~600) rest on the box's top
+   line, so the frame hangs 7% of its height below it; the wrench dips a few px past the line, which he accepted.
+   10% smaller than first built so the crown clears the top of the section (the section above was cutting it off). */
+.gr-lie { position: absolute; z-index: 4; right: 1.5rem; bottom: calc(100% - 1px); translate: 0 7%; width: clamp(8.1rem, 14.4vw, 12.6rem); aspect-ratio: 1000 / 642; pointer-events: none; }
 .gr-card { position: relative; margin-top: 3.5rem; border-radius: 1.5rem; border: 2px solid var(--color-ink); background: #fff; padding: 1.75rem; box-shadow: 10px 10px 0 var(--color-ribbon); }
 @media (min-width: 768px) { .gr-card { margin-top: 0; padding: 2.5rem; } }
 .gr-seg { height: 0.5rem; border-radius: 99px; background: rgb(20 20 20 / 0.1); transition: background-color 0.3s; }

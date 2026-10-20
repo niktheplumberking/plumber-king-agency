@@ -98,8 +98,6 @@ function Compare({ value, onValueChange, before, after }: { value: number; onVal
           <span className="absolute inset-y-0 left-0 w-[3px] -translate-x-1/2 bg-ink" />
           <span className="absolute top-1/2 left-0 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-md border-2 border-ink bg-white text-ink shadow-[3px_3px_0_var(--color-ink)]"><ChevronsLeftRight className="h-5 w-5" /></span>
         </span>
-        <span aria-hidden className="sticker absolute top-4 left-4 bg-slate text-white" style={{ "--tilt": "-3deg" } as React.CSSProperties}>Typical site</span>
-        <span aria-hidden className="sticker absolute top-4 right-4 bg-royal text-white" style={{ "--tilt": "3deg" } as React.CSSProperties}>Plumber King site</span>
       </div>
       <label htmlFor={id} className="sr-only">Compare a typical plumber website with a Plumber King website</label>
       <input id={id} type="range" min={0} max={100} value={v} onChange={(e) => onValueChange(Number(e.target.value))} aria-valuetext={`${v}% typical site shown`} className="mt-4 h-11 w-full cursor-pointer accent-[var(--color-ribbon)]" />

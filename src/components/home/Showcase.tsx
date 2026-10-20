@@ -111,7 +111,7 @@ export const process = [
  * The version before this is kept as ProcessTimelineClassic (Classic.tsx) in case Nick wants it back.
  */
 /** `photo`: which of Nick's photos sits beside the steps (home and /process/ each get their own, one use per picture). */
-export function ProcessTimeline({ eager = false, photo = nick.deskBack }: { eager?: boolean; photo?: NickPhoto }) {
+export function ProcessTimeline({ eager = false, photo = nick.wallA }: { eager?: boolean; photo?: NickPhoto }) {
   return (
     <Timeline
       steps={process.map(({ title, body }) => ({ title, body }))}

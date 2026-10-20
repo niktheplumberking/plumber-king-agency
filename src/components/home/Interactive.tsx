@@ -45,9 +45,9 @@ export function JobValueCalculator() {
   return (
     <section className="bg-paper py-24 md:py-32" aria-labelledby="calc-h">
       <div className="container-x grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+        {/* Title only, centred on the box beside it (Nick 2026-10-20: the line under it went). */}
         <Reveal>
           <h2 id="calc-h" className="display text-t1">What are a few extra jobs <span className="accent">worth to you?</span></h2>
-          <p className="mt-5 max-w-lg text-t3 text-slate">Move the sliders to your own numbers. This isn&apos;t a promise of results. It shows what&apos;s at stake when your website sends calls to someone else.</p>
         </Reveal>
         <Reveal delay={0.1} className="on-blue blueprint rounded-md border-2 border-ink p-7 text-white shadow-[8px_8px_0_var(--color-ink)] md:p-10">
           <div className="space-y-8">

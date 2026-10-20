@@ -60,7 +60,8 @@ export type PolaroidLineCarouselProps = {
   capIcon?: string
   /** Wide screens (1024 px+): the caption, count and buttons stand in a column on the left and the active print hangs
    *  on the right at up to 85% of `cardWidth`. A print that has had its turn keeps sliding left along the string and
-   *  shrinks into a row above the caption, so at the end every print is on screen (Nick 2026-10-20). */
+   *  shrinks into a row above the caption, so at the end every print is on screen (Nick 2026-10-20). A print grows
+   *  from 88% as it arrives, and once the hold ends the last one shrinks into the row beside the others. */
   side?: boolean
 }
 
@@ -170,7 +171,7 @@ export default function PolaroidLineCarousel({
   // Side layout: highest the caption bar has reached (px from the stage top) since the last resize; the row of
   // finished prints has to stay above it whichever caption is showing.
   const barTop = React.useRef(Infinity)
-  const sim = React.useRef({ off: 0, vel: 0, target: 0, a: [] as number[], w: [] as number[] })
+  const sim = React.useRef({ off: 0, vel: 0, target: 0, exit: 0, a: [] as number[], w: [] as number[] })
   const drag = React.useRef(null as null | { x: number; off: number; lx: number; lt: number; v: number; moved: boolean })
   const lastTouch = React.useRef(0)
   const activeRef = React.useRef(0)
@@ -193,6 +194,12 @@ export default function PolaroidLineCarousel({
     const g = scrubRun()
     if (!g || g.len <= 0) return 0
     return clamp((g.top0 - g.run.getBoundingClientRect().top) / g.len, 0, 1)
+  }
+  /** 0..1 over the first 35% of a screen of scrolling after the stage lets go (the hold has ended). */
+  const scrubExit = () => {
+    const g = scrubRun()
+    if (!g || g.len <= 0) return 0
+    return clamp((g.top0 - g.run.getBoundingClientRect().top - g.len) / (window.innerHeight * 0.35), 0, 1)
   }
   React.useEffect(() => {
     const g = scrubRun()
@@ -279,6 +286,8 @@ export default function PolaroidLineCarousel({
       const pGap = slots > 1 ? (barRight - pad - slots * ps * cw) / (slots - 1) : 0
       const slotX = (d: number) => barRight - (ps * cw) / 2 - d * (ps * cw + pGap)
       if (scrubbing.current) S.target = scrubProgress() * (n - 1) * spacing
+      // Side layout: once the hold ends, the last print joins the row like the others (eased, reverses on the way up).
+      S.exit += ((scrubbing.current && size.side ? scrubExit() : 0) - S.exit) * Math.min(1, dt * 12)
       const d = drag.current
       let lineVel: number
       if (d && d.moved) {
@@ -305,6 +314,15 @@ export default function PolaroidLineCarousel({
           const t = Math.min(1, -r)
           x = -r <= 1 ? anchor + (slotX(0) - anchor) * t : slotX(Math.min(slots - 1, -r - 1))
           sc = 1 - (1 - ps) * Math.sqrt(t)
+        } else if (size.side && r > 0) {
+          // Coming in: grows from 88% to full size as it reaches the active spot, so the one being read stands out.
+          sc = 1 - 0.12 * Math.min(1, r)
+        }
+        if (size.side && i === n - 1 && S.exit > 0.001) {
+          // Hold over: the last print shrinks to the row size and takes the place right of the third (Nick 2026-10-20).
+          const e = S.exit
+          x = anchor + (slotX(-1) - anchor) * e
+          sc = 1 - (1 - ps) * Math.sqrt(e)
         }
         if (x < -cw * 1.5 || x > w + cw * 1.5) {
           el.style.visibility = "hidden"

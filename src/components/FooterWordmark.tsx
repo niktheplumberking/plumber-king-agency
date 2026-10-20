@@ -14,8 +14,8 @@ const STRETCH = 1.12;
 /** Where the ink starts and ends inside the line box, in em of the fitted font size (measured on the built page). */
 const INK_TOP = 0.4314;
 const INK_BOTTOM = 0.3859;
-/** Space between the letters and each of the two lines around them, px (Nick 2026-10-20: first "about 10 pixels", then 20-25). */
-const GAP = 22;
+/** Space between the letters and each of the two lines around them, px (Nick 2026-10-20: first "about 10 pixels", then 20-25, then 35-40). */
+const GAP = 38;
 
 const words = [
   { text: "Plumber", cls: "" },

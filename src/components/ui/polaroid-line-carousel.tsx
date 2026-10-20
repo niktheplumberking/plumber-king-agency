@@ -59,7 +59,7 @@ export type PolaroidLineCarouselProps = {
   /** Image shown under the caption title, left of the paragraph. */
   capIcon?: string
   /** Wide screens (1024 px+): the caption, count and buttons stand in a column on the left and the active print hangs
-   *  on the right at up to `cardWidth`, so the prints can be much bigger; prints that slide past the caption fade out. */
+   *  on the right at up to `cardWidth`, so the prints can be much bigger; prints are cut away where they slide over the caption. */
   side?: boolean
 }
 
@@ -280,7 +280,12 @@ export default function PolaroidLineCarousel({
           continue
         }
         el.style.visibility = "visible"
-        if (size.side) el.style.opacity = String(clamp((x + cw / 2 - barRight) / (cw * 0.6), 0, 1))
+        // Side layout: the part of a print that slides over the caption column is cut away (no see-through fade, so
+        // whatever shows of the print keeps full contrast).
+        if (size.side) {
+          const cut = clamp(barRight - (x - cw / 2), 0, cw + 40)
+          el.style.clipPath = cut > 0 ? "inset(-40px -40px -40px " + cut.toFixed(0) + "px)" : ""
+        }
         let a = S.a[i] || 0
         let av = S.w[i] || 0
         ;[a, av] = swingStep(a, av, lineVel, dt, g)

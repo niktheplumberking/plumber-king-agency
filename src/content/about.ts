@@ -9,14 +9,34 @@
 
 export const founderFull = "Nick Bennett";
 
-/** Slots for Nick's photos. Only the first is a real photo today; the rest wait for his shoot. */
-export const nickPhotos: { src: string | null; alt: string }[] = [
-  { src: "/brand/nick-founder.webp", alt: "Nick Bennett, founder of Plumber King Agency, at his desk" },
-  { src: null, alt: "Photo of Nick Bennett coming soon" },
-  { src: null, alt: "Photo of Nick Bennett coming soon" },
-  { src: null, alt: "Photo of Nick Bennett coming soon" },
-  { src: null, alt: "Photo of Nick Bennett coming soon" },
-];
+/**
+ * Nick's 13 hand-picked photos (Nick, 2026-10-20: "completely new content… integrated throughout the website").
+ * AI-made from real photos of him (disclosed on the legal pages only). `w` is the large file's width; each has a small
+ * file at `s` px wide. Portraits are 4:5, the three wide ones 16:9. Alt text names no venue: the pictures were generated.
+ */
+export type NickPhoto = { key: string; w: number; s: number; h: number; alt: string; pos?: string };
+const P = (key: string, alt: string, pos?: string): NickPhoto => ({ key, w: 1200, s: 640, h: 1490, alt, pos });
+const L = (key: string, alt: string, pos?: string): NickPhoto => ({ key, w: 1920, s: 960, h: 1072, alt, pos });
+export const nick = {
+  shelves: L("shelves", "Nick Bennett smiling at home in front of white shelves", "53% 40%"),
+  studio: L("studio", "Nick Bennett at his desk at night under purple light, arms crossed", "50% 30%"),
+  pool: L("pool", "Nick Bennett holding a pool cue next to a pool table", "50% 40%"),
+  deskBack: P("desk-back", "Nick Bennett at his desk, working on a website on his monitor", "50% 40%"),
+  deskWave: P("desk-wave", "Nick Bennett at his desk, talking to the camera", "50% 30%"),
+  deskPoint: P("desk-point", "Nick Bennett at his desk, smiling and pointing at a website on his monitor", "50% 30%"),
+  figma: P("figma", "Over Nick Bennett's shoulder: a website design open on his laptop at a café", "50% 40%"),
+  sketch: P("sketch", "Nick Bennett sketching a website wireframe on paper at an outdoor café table", "60% 40%"),
+  coworkA: P("cowork-a", "Nick Bennett typing on his laptop with headphones round his neck, by a window over the city", "50% 40%"),
+  coworkB: P("cowork-b", "Nick Bennett working on his laptop at a long desk by a window over the city", "55% 40%"),
+  wallA: P("wall-a", "Nick Bennett drawing a website sitemap on a glass wall", "50% 25%"),
+  wallB: P("wall-b", "Nick Bennett planning a website sitemap on a glass wall", "60% 30%"),
+  ads: P("ads", "Nick Bennett taking notes next to his laptop, which shows a grid of ad research", "50% 40%"),
+} satisfies Record<string, NickPhoto>;
+export const nickSrc = (p: NickPhoto) => `/nick/${p.key}-${p.w}.webp`;
+export const nickSrcSet = (p: NickPhoto) => `/nick/${p.key}-${p.s}.webp ${p.s}w, /nick/${p.key}-${p.w}.webp ${p.w}w`;
+
+/** The photo wall on Nick's page: all 13, Nick's favourite first. */
+export const nickPhotos: NickPhoto[] = [nick.shelves, nick.deskPoint, nick.sketch, nick.studio, nick.wallB, nick.figma, nick.pool, nick.deskWave, nick.ads, nick.coworkA, nick.wallA, nick.coworkB, nick.deskBack];
 
 export type Project = {
   id: string;
@@ -93,11 +113,11 @@ export const folders: Folder[] = [
     href: "/about/nick-bennett/",
     linkText: "Meet Nick Bennett",
     blurb: "The face of the brand, and the person you talk to.",
-    image: "/brand/nick-founder-480.webp",
+    image: "/nick/folder-cover.webp",
     files: [
       { name: "Who I am", href: "/about/nick-bennett/#who" },
       { name: "What I do", href: "/about/nick-bennett/#what" },
-      { name: "Photos", meta: "Nick", href: "/about/nick-bennett/#photos", image: "/brand/nick-founder-480.webp" },
+      { name: "Photos", meta: "Nick", href: "/about/nick-bennett/#photos", image: "/nick/folder-sheet.webp" },
     ],
   },
   {

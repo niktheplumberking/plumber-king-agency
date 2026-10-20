@@ -47,7 +47,7 @@ export const site = {
   /** Brand files supplied by Nick on 2026-10-14 (logo, his photo, the crew banner), resized into public/brand/. */
   assets: {
     logo: "/brand/bobo-logo-192.webp" as string | null,
-    founderPhoto: "/brand/nick-founder.webp" as string | null,
+    founderPhoto: "/nick/shelves-1920.webp" as string | null,
     banner: "/brand/banner.webp" as string | null,
   },
   /** The one primary action, labelled the same everywhere (factory rule DQ-CONTENT-HIERARCHY). */

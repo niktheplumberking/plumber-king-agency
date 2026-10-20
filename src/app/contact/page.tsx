@@ -1,6 +1,7 @@
 import { Mail, MapPin } from "lucide-react";
 import { site } from "@/content/site";
 import { PageHero } from "@/components/PageHero";
+import { nick } from "@/content/about";
 import { LeadForm } from "@/components/LeadForm";
 import { pageMeta } from "@/lib/seo";
 
@@ -13,7 +14,7 @@ export const metadata = pageMeta({
 export default function ContactPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Contact", path: "/contact/" }]} title={<>Let&apos;s get your <span className="accent">phone ringing.</span></>} intro="Tell us a little about your business. Nick will reply personally to set up your free strategy call." />
+      <PageHero photo={nick.deskWave} crumbs={[{ name: "Contact", path: "/contact/" }]} title={<>Let&apos;s get your <span className="accent">phone ringing.</span></>} intro="Tell us a little about your business. Nick will reply personally to set up your free strategy call." />
       <section className="bg-paper py-20 md:py-28">
         <div className="container-x grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
           <div className="rounded-md border-2 border-ink bg-white p-6 md:p-10"><LeadForm tone="light" /></div>

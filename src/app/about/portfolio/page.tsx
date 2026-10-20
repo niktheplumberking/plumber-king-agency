@@ -5,7 +5,7 @@ import { CtaButton } from "@/components/CtaButton";
 import { FinalCta } from "@/components/FinalCta";
 import { JsonLd } from "@/components/JsonLd";
 import { Reveal } from "@/components/Reveal";
-import { founderFull, projects } from "@/content/about";
+import { founderFull, projects, nick } from "@/content/about";
 import { abs, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
@@ -17,7 +17,7 @@ export const metadata = pageMeta({
 export default function PortfolioPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "About", path: "/about/" }, { name: "Portfolio", path: "/about/portfolio/" }]} title={<>Brands, stores and websites <span className="accent">I have built.</span></>} intro={<p>Before I focused on plumbers, I built for research platforms, sports retailers, app studios and fashion brands. The same work now goes into every plumber website.</p>}>
+      <PageHero photo={nick.figma} crumbs={[{ name: "About", path: "/about/" }, { name: "Portfolio", path: "/about/portfolio/" }]} title={<>Brands, stores and websites <span className="accent">I have built.</span></>} intro={<p>Before I focused on plumbers, I built for research platforms, sports retailers, app studios and fashion brands. The same work now goes into every plumber website.</p>}>
         <AboutTabs current="work" />
       </PageHero>
 

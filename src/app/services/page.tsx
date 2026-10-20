@@ -2,6 +2,7 @@ import Link from "@/components/Link";
 import { ArrowRight } from "lucide-react";
 import { services } from "@/content/services";
 import { PageHero } from "@/components/PageHero";
+import { nick } from "@/content/about";
 import { Reveal } from "@/components/Reveal";
 import { FinalCta } from "@/components/FinalCta";
 import { JsonLd } from "@/components/JsonLd";
@@ -16,7 +17,7 @@ export const metadata = pageMeta({
 export default function ServicesPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Services", path: "/services/" }]} title={<>Everything a plumbing company needs to <span className="accent">get found, trusted and called.</span></>} intro="Three services that work as one system. Pick one or let us run all of it." />
+      <PageHero photo={nick.ads} crumbs={[{ name: "Services", path: "/services/" }]} title={<>Everything a plumbing company needs to <span className="accent">get found, trusted and called.</span></>} intro="Three services that work as one system. Pick one or let us run all of it." />
       <section className="bg-paper py-20 md:py-28">
         <div className="container-x space-y-6">
           {services.map((s, i) => (

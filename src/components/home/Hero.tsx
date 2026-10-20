@@ -3,6 +3,7 @@ import { MapPin, Play, PhoneIncoming, Star, Wrench } from "lucide-react";
 import { site } from "@/content/site";
 import { CtaButton } from "../CtaButton";
 import { PlaceholderBadge } from "../PlaceholderBadge";
+import { nick, nickSrc, nickSrcSet } from "@/content/about";
 import { HeroMotion } from "./HeroMotion";
 
 const leads = [
@@ -35,10 +36,10 @@ export function Hero() {
           <figure className="relative">
             <div className="vsl-frame">
               <div aria-hidden className="vsl-bg" />
-              <div aria-hidden className="hero-rays absolute inset-0" />
+              {/* Nick 2026-10-20: his own night-desk photo is the video's cover (it matches the purple-lit VSL). */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/brand/nick-hero-520.webp" srcSet="/brand/nick-hero-520.webp 520w, /brand/nick-hero.webp 820w" sizes="(min-width: 1024px) 34vw, 70vw" alt="Nick, founder of Plumber King Agency" width={820} height={1019} fetchPriority="high" decoding="async" className="absolute bottom-0 left-[58%] h-[104%] w-auto max-w-none -translate-x-1/2 object-contain object-bottom" />
-              <span className="vsl-play" aria-hidden><Play className="h-9 w-9 translate-x-0.5 fill-current" /></span>
+              <img src={nickSrc(nick.studio)} srcSet={nickSrcSet(nick.studio)} sizes="(min-width: 1024px) 40vw, 92vw" alt={nick.studio.alt} width={nick.studio.w} height={nick.studio.h} fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: nick.studio.pos }} />
+              <span className="vsl-play vsl-play-low" aria-hidden><Play className="h-9 w-9 translate-x-0.5 fill-current" /></span>
               <figcaption className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 flex flex-wrap items-center gap-2">
                 <span className="hidden rounded-md bg-ink px-3 py-1.5 text-t3 font-bold text-white sm:inline-block">Watch: how I get plumbers booked</span>
                 <PlaceholderBadge label="Video coming soon" />

@@ -1,4 +1,5 @@
 import { PageHero } from "@/components/PageHero";
+import { nick } from "@/content/about";
 import { FaqList } from "@/components/Faq";
 import { FinalCta } from "@/components/FinalCta";
 import { JsonLd } from "@/components/JsonLd";
@@ -16,7 +17,7 @@ export default function FaqPage() {
   const all = [...faqs, ...services.flatMap((s) => s.faqs)];
   return (
     <>
-      <PageHero crumbs={[{ name: "FAQ", path: "/faq/" }]} title={<>Straight answers to <span className="accent">what plumbers ask us.</span></>} intro="If your question isn't here, ask it on a free strategy call." />
+      <PageHero photo={nick.wallA} crumbs={[{ name: "FAQ", path: "/faq/" }]} title={<>Straight answers to <span className="accent">what plumbers ask us.</span></>} intro="If your question isn't here, ask it on a free strategy call." />
       <section className="bg-paper py-20 md:py-28">
         <div className="container-x max-w-4xl"><FaqList items={all} level={2} /></div>
       </section>

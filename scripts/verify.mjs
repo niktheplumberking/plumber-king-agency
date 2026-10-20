@@ -16,7 +16,7 @@ const rel = (p) => "/" + path.relative(out, p).split(path.sep).join("/").replace
 const pages = htmlFiles.filter((p) => !/\/(404|_not-found)(\/|\.html)/.test(p) && !p.endsWith("404.html"));
 
 // Launch files
-for (const f of ["robots.txt", "sitemap.xml", "llms.txt", "404.html", "og-image.png", "manifest.webmanifest", ".htaccess", "icon.png", "apple-icon.png", "lead.php", "brand/logo-160.webp", "brand/nick-founder.webp"]) check(existsSync(path.join(out, f)), `${f} present`, `${f} missing`);
+for (const f of ["robots.txt", "sitemap.xml", "llms.txt", "404.html", "og-image.png", "manifest.webmanifest", ".htaccess", "icon.png", "apple-icon.png", "lead.php", "brand/logo-160.webp", "nick/shelves-1920.webp"]) check(existsSync(path.join(out, f)), `${f} present`, `${f} missing`);
 const robots = readFileSync(path.join(out, "robots.txt"), "utf-8");
 const sitemap = readFileSync(path.join(out, "sitemap.xml"), "utf-8");
 const siteUrl = (sitemap.match(/<loc>(https:\/\/[^/<]+)\//) ?? [])[1];

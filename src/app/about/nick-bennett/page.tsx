@@ -6,7 +6,7 @@ import { CtaButton } from "@/components/CtaButton";
 import { FinalCta } from "@/components/FinalCta";
 import { JsonLd } from "@/components/JsonLd";
 import { Reveal } from "@/components/Reveal";
-import { founderFull } from "@/content/about";
+import { founderFull, nick } from "@/content/about";
 import { site } from "@/content/site";
 import { pageMeta, personLd } from "@/lib/seo";
 import { FacebookIcon, InstagramIcon } from "@/components/SocialIcons";
@@ -27,7 +27,7 @@ const what = [
 export default function NickPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "About", path: "/about/" }, { name: founderFull, path: "/about/nick-bennett/" }]} title={<>Hi, I&apos;m {founderFull}. <span className="accent">I build websites for plumbers.</span></>} intro={<p>I&apos;m the founder of {site.name} and the person you talk to, from the first call to launch day and after.</p>}>
+      <PageHero photo={nick.deskPoint} crumbs={[{ name: "About", path: "/about/" }, { name: founderFull, path: "/about/nick-bennett/" }]} title={<>Hi, I&apos;m {founderFull}. <span className="accent">I build websites for plumbers.</span></>} intro={<p>I&apos;m the founder of {site.name} and the person you talk to, from the first call to launch day and after.</p>}>
         <AboutTabs current="me" />
       </PageHero>
 

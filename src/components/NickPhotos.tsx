@@ -1,17 +1,13 @@
-import { nickPhotos } from "@/content/about";
+import { nickPhotos, nickSrc, nickSrcSet } from "@/content/about";
 
-/** Nick's photo wall: real photos where we have them, labelled grey slots until his shoot is in. */
+/** Nick's photo wall: all 13 of his picks (2026-10-20), a masonry of columns so portrait and wide shots keep their shape. */
 export function NickPhotos() {
   return (
     <ul className="ph-grid">
-      {nickPhotos.map((p, i) => (
-        <li key={i} className={`ph ph-${i}`}>
-          {p.src ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={p.src} alt={p.alt} width={900} height={1200} loading="lazy" decoding="async" />
-          ) : (
-            <span className="ph-empty">Photo coming soon</span>
-          )}
+      {nickPhotos.map((p) => (
+        <li key={p.key} className="ph">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={nickSrc(p)} srcSet={nickSrcSet(p)} sizes="(min-width: 64rem) 31vw, 46vw" alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" />
         </li>
       ))}
     </ul>

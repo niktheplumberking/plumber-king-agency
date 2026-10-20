@@ -2,7 +2,7 @@ import { PageHero } from "@/components/PageHero";
 import { AboutTabs } from "@/components/AboutTabs";
 import { FinalCta } from "@/components/FinalCta";
 import { Reveal } from "@/components/Reveal";
-import { founderFull } from "@/content/about";
+import { founderFull, nick } from "@/content/about";
 import { site } from "@/content/site";
 import { pageMeta } from "@/lib/seo";
 
@@ -44,7 +44,7 @@ const chapters = [
 export default function StoryPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "About", path: "/about/" }, { name: "My story", path: "/about/story/" }]} title={<>My story, and <span className="accent">where I&apos;m taking it.</span></>} intro={<p>{founderFull} on how he got into web design and what he wants to build for the plumbing community.</p>}>
+      <PageHero photo={nick.coworkB} crumbs={[{ name: "About", path: "/about/" }, { name: "My story", path: "/about/story/" }]} title={<>My story, and <span className="accent">where I&apos;m taking it.</span></>} intro={<p>{founderFull} on how he got into web design and what he wants to build for the plumbing community.</p>}>
         <AboutTabs current="story" />
       </PageHero>
       <article className="bg-paper py-20 md:py-28">

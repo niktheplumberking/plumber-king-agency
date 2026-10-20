@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
+import { nick } from "@/content/about";
 import { LeadForm } from "@/components/LeadForm";
 import { WebsiteGrader } from "@/components/home/Interactive";
 import { pageMeta } from "@/lib/seo";
@@ -15,7 +16,7 @@ const checks = ["Mobile experience: can a homeowner call you in one tap?", "Spee
 export default function AuditPage() {
   return (
     <>
-      <PageHero crumbs={[{ name: "Free website audit", path: "/free-website-audit/" }]} title={<>Find out what your website is <span className="accent">costing you.</span></>} intro="Send us your site. Nick will review it personally and tell you straight what's holding it back." />
+      <PageHero photo={nick.deskBack} crumbs={[{ name: "Free website audit", path: "/free-website-audit/" }]} title={<>Find out what your website is <span className="accent">costing you.</span></>} intro="Send us your site. Nick will review it personally and tell you straight what's holding it back." />
       <section className="bg-paper py-20 md:py-28">
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <div>

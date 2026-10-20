@@ -164,9 +164,10 @@ html { scroll-padding-top: 88px; }
 /* Footer wordmark (FooterWordmark.tsx). Nick 2026-10-18: a few px bigger (the width is already edge to edge, so the
    extra size goes into height: scaleY 1.34; the font size is fitted in JS, calc() is the no-JS fallback), "Agency"
    stretched to the right edge; letters rise in once and lift under the pointer. Nick 2026-10-19: no glow and no colour
-   change on hover (only the lift), another ~2 degrees of lean, and the name sits centred between the two lines. */
+   change on hover (only the lift), and the name sits centred between the two lines. Nick 2026-10-20: lean raised
+   from -3.5 to -8 degrees of skew (on top of the italic), and the two lines sit about 10 px from the letters. */
 .fw-line { display: block; font-size: calc(100cqi / 10.4); line-height: 1.05; white-space: nowrap; padding: 0.2em 0 0.36em; overflow-x: visible; overflow-y: clip;
-  transform: scaleY(1.34) skewX(-3.5deg); transform-origin: 0 100%; }
+  transform: scaleY(1.34) skewX(-8deg); transform-origin: 0 100%; }
 .fw-w { position: relative; display: inline-block; --fw-top: #ffffff; --fw-foot: #ffe6f0; }
 .fw-king { --fw-top: var(--color-ribbon-deep); --fw-foot: var(--color-ribbon-deep); }
 .fw-stretch { transform-origin: 0 50%; }
@@ -481,8 +482,10 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .sys-o1 { top: -8rem; right: -6rem; width: 30rem; aspect-ratio: 1; background: var(--color-ivory); }
 .sys-o2 { bottom: 4rem; left: -10rem; width: 34rem; aspect-ratio: 1; border: 2.5rem solid #fff; opacity: 0.6; }
 .sys-o3 { top: 42%; left: 38%; width: 7rem; aspect-ratio: 1; background: #fff; opacity: 0.85; }
-.sys-o4 { bottom: -5rem; right: 18%; width: 16rem; aspect-ratio: 1; border: 1.25rem solid #fff; opacity: 0.7; }
-.sys-spark { position: absolute; display: block; color: #fff; width: clamp(3rem, 4.5vw, 4.5rem); aspect-ratio: 1; }
+/* Nick 2026-10-20: solid white like the section below, so the half ring melts into it. */
+.sys-o4 { bottom: -5rem; right: 18%; width: 16rem; aspect-ratio: 1; border: 1.25rem solid #fff; }
+/* Plumbing icons 1.5x (Nick 2026-10-20); positions unchanged. */
+.sys-spark { position: absolute; display: block; color: #fff; width: clamp(4.5rem, 6.75vw, 6.75rem); aspect-ratio: 1; }
 .sys-spark svg { width: 100%; height: 100%; stroke-width: 2.25; }
 /* Two objects sit in the dip of the string under the title, two at the sides behind the cards; none over the title or
    the captions. */
@@ -537,11 +540,9 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .ps-title { --ps-w: 0.98; font-size: calc(var(--ps-w) * 100cqi / 6.076); line-height: 0.9; letter-spacing: -0.03em; text-wrap: nowrap; }
 .ps-l { display: block; width: fit-content; white-space: nowrap; }
 .ps-r { margin-left: auto; }
-.ps-sub { margin-top: 1.75rem; max-width: 36rem; }
 @media (min-width: 64rem) {
   .ps-head { position: relative; }
   .ps-title { --ps-w: 0.8; }
-  .ps-sub { position: absolute; left: 0; bottom: 0.4rem; margin: 0; width: calc(100cqi - 100cqi * 0.8 * 5.012 / 6.076 - 3rem); max-width: 30rem; }
 }
 
 /* "Everything it takes": centred title, "Everything it takes" = 8.118em wide, filling 92% of the row on laptops and up. */
@@ -566,13 +567,11 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .fn-title { line-height: 0.9; }
 .fn-im { display: block; font-size: calc(100cqi / 9); color: var(--color-slate); }
 .fn-name { display: block; white-space: nowrap; font-size: calc(0.99 * 100cqi / 5.674); line-height: 0.86; letter-spacing: -0.035em; }
-.fn-sub { margin-top: 0.35em; font-size: calc(100cqi / 7.2); line-height: 0.95; }
-.fn-p { margin-top: 1.25rem; max-width: 36rem; }
+.fn-sub { display: block; margin-top: 0.35em; font-size: calc(100cqi / 7.2); line-height: 0.95; text-align: right; }
 @media (min-width: 64rem) {
   .fn-head { position: relative; }
   .fn-im, .fn-sub { font-size: calc(0.55 * 100cqi / 15.297); }
   .fn-sub { white-space: nowrap; }
-  .fn-p { position: absolute; right: 0; bottom: 0.2rem; margin: 0; width: calc(100cqi * 0.4 - 3rem); max-width: 30rem; }
 }
 /* FAQ title: "answers." (3.832em) spans the full width of the card under it. */
 .fq-title { font-size: calc(100cqi / 3.832); line-height: 0.9; letter-spacing: -0.03em; }
@@ -583,3 +582,53 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .fq-title + .fq-ask { margin-top: 9rem; }
 @media (min-width: 48rem) { .fq-title + .fq-ask { margin-top: 10rem; } }
 @media (min-width: 64rem) { .fn-sub { margin-top: 0.5em; } }
+
+/* Duck-head bullet (Nick 2026-10-20), drawn as a background so it stays decorative. */
+.duck-tick { display: inline-block; flex-shrink: 0; width: 1.25rem; height: 1.25rem; background: url(/bobo/head.webp) center / contain no-repeat; }
+
+/* "Everything it takes" scroll lock (Nick 2026-10-20): the title scrolls past, then the photo string and caption
+   (.sys-stage, the screen height under the menu) stick while the run (.sys-run) is tall enough for three photo-to-photo
+   moves. Reduced motion keeps the old, normal-height carousel. */
+.sys { --hdr: 5rem; }
+@media (min-width: 768px) { .sys { --hdr: 6rem; } }
+.sys-stage { position: relative; height: var(--sys-h); }
+@media (prefers-reduced-motion: no-preference) {
+  .sys-run { height: calc(100svh - var(--hdr) + 3 * 75svh); }
+  .sys-stage { position: sticky; top: var(--hdr); height: calc(100svh - var(--hdr)); --pl-line-y: 72px; }
+}
+
+/* Website check title (Nick 2026-10-20). Measured in Urbanist 900: "costing you jobs?" = 7.376em, "60 seconds." =
+   5.013em. Rows 1-2 at t1, allowed up to 12% past the column; "60 seconds." ends under the question mark and is
+   stretched 1.45x tall (like the footer name) so it fills the third and fourth rows. */
+.gr-title { --gr-f: min(var(--text-t1), calc(100cqi * 1.12 / 7.376)); font-size: var(--gr-f); line-height: 0.92; }
+.gr-l { display: block; width: max-content; white-space: nowrap; }
+.gr-big { display: block; width: max-content; white-space: nowrap; font-size: calc(var(--gr-f) * 7.376 / 5.013); line-height: 0.92; margin-top: 0.08em; transform: scaleY(1.45); transform-origin: 0 0; margin-bottom: 0.42em; }
+
+/* Final call to action (Nick 2026-10-20). */
+.fc-ring { display: block; font-size: 1.15em; line-height: 1; }
+.fc-h { font-size: calc(var(--text-t2) * 1.3); line-height: 1.15; }
+@media (min-width: 640px) { .fc-note { white-space: nowrap; } }
+/* The call button holds still (no nudge, no press-in on hover) and only grows, at an even speed, while hovered. */
+.btn-primary.fc-btn, .btn-primary.fc-btn:hover { transform: scale(1); box-shadow: 4px 4px 0 var(--color-ink); transition: transform 0.35s linear; }
+.btn-primary.fc-btn:hover { transform: scale(1.06); }
+.btn-primary.fc-btn:active { transform: scale(1.03); }
+.fc-call:hover { translate: none; }
+
+/* Lead form step 1 (Nick 2026-10-20): name box as wide as the "Next" button below it (both sit in a max-content
+   column), then the country box and the phone. Phones: name on its own row, country and phone side by side. */
+.lf-s1 { grid-template-columns: auto minmax(0, 1fr); }
+.lf-s1 .lf-name { grid-column: 1 / -1; }
+@media (min-width: 640px) {
+  .lf-s1 { grid-template-columns: max-content auto minmax(0, 1fr); }
+  .lf-s1 .lf-name { grid-column: auto; }
+  .lf-s1 .lf-foot { display: grid; grid-template-columns: subgrid; row-gap: 0; }
+  .lf-s1 .lf-foot > * { grid-column: 1 / -1; }
+  .lf-s1 .lf-foot > .lf-btns { grid-column: 1; }
+  .lf-s1 .lf-btns .btn { width: 100%; }
+}
+.lf-cc { display: flex; align-items: center; gap: 0.5rem; min-height: 3rem; border-radius: 0.375rem; border: 2px solid rgb(20 20 20 / 0.2); background: #fff; padding: 0 0.5rem 0 0.75rem; transition: border-color 0.2s; }
+.lf-cc:focus-within { border-color: var(--color-ribbon); }
+.lf-cc-dark { border-color: rgb(255 255 255 / 0.3); background: rgb(255 255 255 / 0.1); }
+.lf-flag { width: 1.6rem; height: auto; flex-shrink: 0; border-radius: 2px; box-shadow: 0 0 0 1px rgb(20 20 20 / 0.15); }
+.lf-cc-sel { min-height: 2.75rem; border: 0; background: transparent; font: 600 var(--text-t3)/1 var(--font-sans); cursor: pointer; outline: none; }
+.lf-cc-sel option { color: var(--color-ink); }

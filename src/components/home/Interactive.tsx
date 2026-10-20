@@ -112,8 +112,10 @@ export function WebsiteGrader() {
           centre is 112 px right of this field's left edge and 440 px below its top (see .gr-dots-w). */}
       <div aria-hidden className="hero-dots gr-dots-w pointer-events-none absolute bottom-10 left-0 z-[2] h-72 w-[30%]" />
       <div className="container-x relative z-[3] grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-        <Reveal>
-          <h2 id="grader-h" className="display text-t1">Is your website costing you jobs? <span className="accent">60 seconds.</span></h2>
+        <Reveal className="fit-box">
+          {/* Nick 2026-10-20: "Is your website / costing you jobs?" on two rows (the second may run a little past the
+              column), then "60 seconds." as wide as the line above and stretched tall over rows three and four. */}
+          <h2 id="grader-h" className="display gr-title"><span className="gr-l">Is your website</span> <span className="gr-l">costing you jobs?</span>{" "}<span className="accent gr-big">60 seconds.</span></h2>
           <p className="mt-5 max-w-md text-t3 text-slate md:text-t2">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to.</p>
           <ul className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
             {[[ShieldCheck, "Free, no email needed"], [Lock, "Nothing is sent anywhere"], [Wrench, "Real fixes, not a pitch"]].map(([Ic, t]) => {

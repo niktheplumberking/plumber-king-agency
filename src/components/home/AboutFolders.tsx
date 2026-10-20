@@ -18,14 +18,14 @@ export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
       <div aria-hidden className="hero-dots pointer-events-none absolute top-10 right-0 h-72 w-[30%]" />
       <div className="container-x">
         {/* Title as a name wordmark (Nick 2026-10-19: the big-left, small-right layout read as "AI slop"): a small
-            "I'm", then the name across the full width, then the pink line with the subline beside it. Same words. */}
+            "I'm", then the name across the full width, then the pink line, set flush right (Nick 2026-10-20; the subline
+            beside it is gone). */}
         <Reveal className="fn-head fit-box">
           <H id="founder-h" className="display fn-title">
             <span className="fn-im">I&apos;m</span>{" "}
             <span className="fn-name">{founderFull}.</span>{" "}
             <span className="accent fn-sub">You deal with me, not a sales team.</span>
           </H>
-          <p className="fn-p text-t3 text-slate md:text-t2">Open a folder to see who I am, what I have built and where I am taking this.</p>
         </Reveal>
         <ul className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-3">
           {folders.map((f, i) => (

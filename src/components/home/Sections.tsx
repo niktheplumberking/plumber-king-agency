@@ -1,6 +1,6 @@
 "use client";
 import { useId, useRef, useState } from "react";
-import { Check, ChevronsLeftRight, X } from "lucide-react";
+import { ChevronsLeftRight, X } from "lucide-react";
 import { gsap, useGsap } from "@/lib/gsap";
 import { Reveal } from "../Reveal";
 
@@ -30,30 +30,31 @@ export function ProblemSplit() {
       <div aria-hidden className="hero-dots pointer-events-none absolute top-16 right-0 h-72 w-[34%]" />
       <div className="container-x relative">
         {/* Title as an enormous zig-zag (Nick 2026-10-19: same words, much bigger, only the title block changes): four
-            lines at one size, alternating left and right, with the subline tucked into the gap beside the last line. */}
+            lines at one size, alternating left and right. Nick 2026-10-20: the subline is gone, the title stays as it is. */}
         <Reveal className="ps-head fit-box">
           <h2 id="problem-h" className="display ps-title">
             <span className="ps-l">Your website</span> <span className="ps-l ps-r">rings a phone.</span>{" "}
             <span className="accent"><span className="ps-l">Yours, or the</span> <span className="ps-l ps-r">other guy&apos;s.</span></span>
           </h2>
-          <p className="ps-sub text-t3 text-slate md:text-t2">A website that doesn&apos;t bring in calls quietly sends your jobs to the plumber down the road. Drag the handle and see the difference.</p>
         </Reveal>
 
-        <div className="relative mt-14 lg:mt-20 lg:px-[6%]">
+        {/* Nick 2026-10-20: the compare box runs the full grid width (logo's left edge to the call button's right edge);
+            the two cards keep their size and now hang a little past the grid. */}
+        <div className="relative mt-14 lg:mt-20">
           <div data-compare>
             <Compare value={value} onValueChange={setValue}
               before={<Shot src="/work/ridgeline-before.webp" label="Typical plumber website" />}
               after={<Shot src="/work/ridgeline-after.webp" label="Rebuilt plumber website" />} />
           </div>
           <Reveal className="relative z-10 mt-8 rounded-xl border-2 border-ink/15 bg-white p-6 shadow-[6px_6px_0_rgb(20_20_20/0.12)] lg:absolute lg:bottom-10 lg:-left-2 lg:mt-0 lg:w-[22rem] lg:-rotate-2">
-            <h3 className="display text-t2 text-slate">The typical plumber site</h3>
+            <h3 className="display text-t2 text-slate uppercase">Random plumbing agency</h3>
             <ul className="mt-4 space-y-2.5">{oldWay.map((t) => <li key={t} className="flex gap-3 text-t3 text-slate"><X className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
           {/* Our card "rings" every 5 s (Nick 2026-10-17): a wiggle that speeds up, a short shake, then it settles. CSS only. */}
           <Reveal delay={0.1} className="relative z-10 mt-6 lg:absolute lg:top-[42%] lg:-right-2 lg:mt-0 lg:w-[22rem]">
             <div className="ring-card rounded-xl border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)] lg:rotate-2">
-              <h3 className="display text-t2 text-royal">A Plumber King site</h3>
-              <ul className="mt-4 space-y-2.5">{kingWay.map((t) => <li key={t} className="flex gap-3 text-t3"><Check className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
+              <h3 className="display text-t2 uppercase">Plumber <span className="text-royal">King</span> Agency</h3>
+              <ul className="mt-4 space-y-2.5">{kingWay.map((t) => <li key={t} className="flex gap-3 text-t3"><span aria-hidden className="duck-tick mt-0.5" />{t}</li>)}</ul>
             </div>
           </Reveal>
         </div>

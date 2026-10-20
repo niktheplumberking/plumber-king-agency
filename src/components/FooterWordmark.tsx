@@ -12,8 +12,10 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 /** How much wider "Agency" is drawn than the other two words (Nick: "stretch the word Agency even more"). */
 const STRETCH = 1.12;
 /** Where the ink starts and ends inside the line box, in em of the fitted font size (measured on the built page). */
-const INK_TOP = 0.4204;
-const INK_BOTTOM = 0.3969;
+const INK_TOP = 0.4314;
+const INK_BOTTOM = 0.3859;
+/** Space between the letters and each of the two lines around them, px (Nick 2026-10-20: "about 10 pixels"). */
+const GAP = 10;
 
 const words = [
   { text: "Plumber", cls: "" },
@@ -52,7 +54,7 @@ export function FooterWordmark() {
       const reach = stretch.getBoundingClientRect().right - left;
       if (!(reach > 0)) return;
       line.style.fontSize = ((100 * (right - left)) / reach).toFixed(2) + "px";
-      // Equal space above and below the name inside its band (Nick 2026-10-19), measured from the letters' ink.
+      // The two lines sit GAP px from the top and the bottom of the letters (Nick 2026-10-20), measured from the ink.
       line.style.marginTop = line.style.marginBottom = "0px";
       const band = el.getBoundingClientRect();
       const fs = parseFloat(line.style.fontSize);
@@ -60,9 +62,8 @@ export function FooterWordmark() {
       // Gaps from the band's top line (its border) and its bottom line (the next row's top edge) to the ink.
       const top = ink.top + INK_TOP * fs - band.top;
       const bottom = band.bottom - (ink.bottom - INK_BOTTOM * fs);
-      const shift = (bottom - top) / 2;
-      line.style.marginTop = shift.toFixed(1) + "px";
-      line.style.marginBottom = (-shift).toFixed(1) + "px";
+      line.style.marginTop = (GAP - top).toFixed(1) + "px";
+      line.style.marginBottom = (GAP - bottom).toFixed(1) + "px";
     };
     let frame = 0;
     const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(fit); };

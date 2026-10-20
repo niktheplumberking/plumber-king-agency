@@ -17,6 +17,11 @@ import { useStill } from "@/lib/useStill"
  * changes only: brand type and colours, 44 px arrow buttons, an optional link per slide in the caption bar, the
  * page's Pause button and reduced motion stop the sway and the autoplay, and the painted-landscape fallback is left
  * out (every slide here has a photo).
+ *
+ * Nick 2026-10-20: `scrub` mode. The section holds still on screen (its sticky stage, set up by the page) and the
+ * visitor's own scrolling slides the prints from the first to the last, and back again on the way up. Nothing moves
+ * by itself; arrows, keys and a click scroll the page to that print. `capIcon` puts a small picture under each
+ * caption title with the paragraph beside it.
  */
 
 export type Slide = {
@@ -49,6 +54,10 @@ export type PolaroidLineCarouselProps = {
   className?: string
   style?: React.CSSProperties
   ariaLabel?: string
+  /** Drive the prints from the scroll position of the closest <section> (it must be taller than the screen). */
+  scrub?: boolean
+  /** Image shown under the caption title, left of the paragraph. */
+  capIcon?: string
 }
 
 // #region logic
@@ -107,6 +116,9 @@ const PL_CSS = [
   ".pl-cap>*{display:block;animation:pl-in .55s cubic-bezier(.2,.8,.2,1) both}",
   ".pl-title{font:900 var(--text-t2)/1.15 var(--font-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
   ".pl-sub{margin-top:4px;max-width:44rem;font:400 var(--text-t3)/1.5 var(--font-sans);color:var(--pl-muted)}",
+  ".pl-subrow{display:flex!important;align-items:flex-start;gap:clamp(.75rem,1.5vw,1.25rem);margin-top:.6rem}",
+  ".pl-subrow .pl-sub{margin-top:0}",
+  ".pl-ico{flex-shrink:0;width:clamp(2.5rem,3.6vw,3.5rem);aspect-ratio:1;background:center/contain no-repeat}",
   ".pl-count{font:800 var(--text-t3)/1 var(--font-display);letter-spacing:.14em;color:var(--pl-muted)}",
   ".pl-count b{color:var(--pl-ink);font-weight:900}",
   ".pl-btn{appearance:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--pl-ink);background:#fff;color:inherit;display:grid;place-items:center;cursor:pointer;transition:background .2s ease,color .2s ease}",
@@ -134,6 +146,8 @@ export default function PolaroidLineCarousel({
   className,
   style,
   ariaLabel = "Image carousel",
+  scrub = false,
+  capIcon,
 }: PolaroidLineCarouselProps) {
   const n = slides.length
   const srcs = slides.map((sl) => sl.image || "")
@@ -154,6 +168,34 @@ export default function PolaroidLineCarousel({
   opts.current = { sag, swing }
 
   const spacing = size.cw * 1.08
+  // Scrub mode is on only while the page has made the section tall (motion allowed); reduced motion keeps the plain carousel.
+  const scrubbing = React.useRef(false)
+  // The run is the closest [data-scrub] element; its sticky child (the stage holding this carousel) stays on screen
+  // while the run scrolls past, and progress 0..1 is how far through that the page is.
+  const scrubRun = () => {
+    const run = rootRef.current ? (rootRef.current.closest("[data-scrub]") as HTMLElement | null) : null
+    const stage = rootRef.current?.parentElement
+    if (!run || !stage) return null
+    const top0 = parseFloat(getComputedStyle(stage).top) || 0
+    return { run, top0, len: run.offsetHeight - stage.offsetHeight }
+  }
+  const scrubProgress = () => {
+    const g = scrubRun()
+    if (!g || g.len <= 0) return 0
+    return clamp((g.top0 - g.run.getBoundingClientRect().top) / g.len, 0, 1)
+  }
+  React.useEffect(() => {
+    const g = scrubRun()
+    scrubbing.current = scrub && !!g && g.len > 80
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrub, size])
+  /** Scroll the page so print i is the one in the middle. */
+  const scrollToPrint = (i: number) => {
+    const g = scrubRun()
+    if (!g) return
+    const top = g.run.getBoundingClientRect().top + window.scrollY - g.top0
+    window.scrollTo({ top: top + (clamp(i, 0, n - 1) / Math.max(1, n - 1)) * g.len, behavior: "smooth" })
+  }
   const goTo = React.useCallback(
     (i: number) => {
       sim.current.target = clamp(i, 0, n - 1) * spacing
@@ -201,6 +243,7 @@ export default function PolaroidLineCarousel({
       prev = now
       const { w, h, cw } = size
       const y0 = size.y || Math.max(40, h * 0.2)
+      if (scrubbing.current) S.target = scrubProgress() * (n - 1) * spacing
       const d = drag.current
       let lineVel: number
       if (d && d.moved) {
@@ -266,6 +309,11 @@ export default function PolaroidLineCarousel({
 
   const onDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest(".pl-bar")) return
+    if (scrubbing.current) {
+      const card = (e.target as HTMLElement).closest("[data-i]")
+      if (card) scrollToPrint(Number(card.getAttribute("data-i")))
+      return
+    }
     lastTouch.current = performance.now()
     drag.current = { x: e.clientX, off: sim.current.off, lx: e.clientX, lt: e.timeStamp, v: 0, moved: false }
   }
@@ -305,6 +353,7 @@ export default function PolaroidLineCarousel({
   }
   const step = (dir: number) => {
     lastTouch.current = performance.now()
+    if (scrubbing.current) return scrollToPrint(activeRef.current + dir)
     goTo(clamp(activeRef.current + dir, 0, n - 1))
   }
   const onKey = (e: React.KeyboardEvent) => {
@@ -356,7 +405,12 @@ export default function PolaroidLineCarousel({
       <div className="pl-bar">
         <div className="pl-cap" key={active}>
           {s.title ? <span className="pl-title">{s.title}</span> : null}
-          {s.caption ? <span className="pl-sub">{s.caption}</span> : null}
+          {s.caption && capIcon ? (
+            <span className="pl-subrow">
+              <span className="pl-ico" aria-hidden="true" style={{ backgroundImage: "url(" + capIcon + ")" }} />
+              <span className="pl-sub">{s.caption}</span>
+            </span>
+          ) : s.caption ? <span className="pl-sub">{s.caption}</span> : null}
         </div>
         <span className="pl-count" aria-hidden="true">
           <b>{pad2(active + 1)}</b> / {pad2(n)}

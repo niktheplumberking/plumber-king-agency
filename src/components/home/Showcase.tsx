@@ -45,11 +45,13 @@ export const system = [
  * instant photos pegged to a sagging string. Drag, arrows, keys or a click move them; they sway and play on their own
  * until someone touches them (the Pause button and reduced motion stop that). The pale pink band stays, the grid is
  * gone, and white shapes drift behind at different speeds for depth.
+ * Nick 2026-10-20: no autoplay any more. Like "Five steps", the section holds still on screen (a sticky stage inside a
+ * tall section) while the visitor's scrolling slides the photos from the first to the last, and back on the way up.
  */
 export function SystemBento() {
   return (
-    <ScrollFx as="section" className="on-blue sys relative overflow-clip bg-navy-900 pt-24 md:pt-32" aria-labelledby="system-h">
-      <div aria-hidden className="pointer-events-none absolute inset-0">
+    <ScrollFx as="section" className="on-blue sys relative overflow-x-clip bg-navy-900 pt-24 md:pt-32" aria-labelledby="system-h">
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-clip">
         <span className="sys-o sys-o1" data-fx-y="70" />
         <span className="sys-o sys-o2" data-fx-y="-60" />
         <span className="sys-o sys-o3" data-fx-y="110" />
@@ -67,19 +69,27 @@ export function SystemBento() {
           <h2 id="system-h" className="display sys-title text-t1">Everything it takes <span className="accent">to get found in your town.</span></h2>
         </Reveal>
       </div>
-      <PolaroidLineCarousel
-        className="relative"
-        ariaLabel="What we do for plumbers"
-        height="var(--sys-h)"
-        cardWidth={320}
-        sag={46}
-        autoplay={4500}
-        string="#c2185b"
-        background="transparent"
-        ink="#141414"
-        style={{ ["--pl-muted" as string]: "#5c5559" }}
-        slides={system.map((s) => ({ image: s.img.replace(".webp", "-720.webp"), title: s.title, caption: s.body, alt: s.alt, href: s.href, linkText: "How it works" }))}
-      />
+      {/* The title scrolls past as usual; then the string of photos and their caption hold still under the menu while
+          scrolling moves the photos (data-scrub is the run, .sys-stage the part that stays on screen). */}
+      <div data-scrub className="sys-run">
+        <div className="sys-stage">
+          <PolaroidLineCarousel
+            className="relative"
+            ariaLabel="What we do for plumbers"
+            height="100%"
+            cardWidth={320}
+            sag={46}
+            autoplay={0}
+            scrub
+            capIcon="/bobo/head.webp"
+            string="#c2185b"
+            background="transparent"
+            ink="#141414"
+            style={{ ["--pl-muted" as string]: "#5c5559" }}
+            slides={system.map((s) => ({ image: s.img.replace(".webp", "-720.webp"), title: s.title, caption: s.body, alt: s.alt, href: s.href, linkText: "How it works" }))}
+          />
+        </div>
+      </div>
     </ScrollFx>
   );
 }

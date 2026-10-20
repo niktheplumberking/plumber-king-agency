@@ -12,7 +12,34 @@ type Kind = "strategy-call" | "website-audit";
  * Fewer fields per screen, more leads. POSTs JSON to site.formEndpoint (default /lead.php on Hostinger, which emails
  * the lead to nick@plumberkingagency.com). If sending fails, the visitor is shown the email address instead, so a lead
  * is never silently lost.
+ * Nick 2026-10-20: on step 1 the name box is as wide as the "Next" button under it, and the room that frees holds a
+ * country box (US +1 by default, Canada +1 too) in front of the phone. The code is added to the phone number sent.
  */
+const COUNTRIES = [
+  { v: "US", label: "United States +1", code: "+1" },
+  { v: "CA", label: "Canada +1", code: "+1" },
+] as const;
+
+/** Small flag drawn inline, so it shows on every system (Windows does not draw flag emoji). */
+function Flag({ c }: { c: "US" | "CA" }) {
+  if (c === "CA")
+    return (
+      <svg viewBox="0 0 30 20" className="lf-flag" aria-hidden>
+        <rect width="30" height="20" fill="#fff" />
+        <rect width="7.5" height="20" fill="#d52b1e" />
+        <rect x="22.5" width="7.5" height="20" fill="#d52b1e" />
+        <path fill="#d52b1e" d="M15 4.2l1 1.9 1.3-.5-.4 3 1.6-1.5.4 1.1 1.7-.3-.6 1.8.8.4-2.9 2.3.3 1.1-2.8-.4.1 2.7h-1l.1-2.7-2.8.4.3-1.1-2.9-2.3.8-.4-.6-1.8 1.7.3.4-1.1 1.6 1.5-.4-3 1.3.5z" />
+      </svg>
+    );
+  return (
+    <svg viewBox="0 0 30 20" className="lf-flag" aria-hidden>
+      <rect width="30" height="20" fill="#fff" />
+      {[0, 2, 4, 6, 8, 10, 12].map((i) => <rect key={i} y={(i * 20) / 13} width="30" height={20 / 13} fill="#b22234" />)}
+      <rect width="13" height={(7 * 20) / 13} fill="#3c3b6e" />
+      {[0, 1, 2, 3].map((r) => [0, 1, 2, 3, 4].map((k) => <circle key={`${r}-${k}`} cx={1.6 + k * 2.45} cy={1.5 + r * 2.6} r="0.55" fill="#fff" />))}
+    </svg>
+  );
+}
 /** What is missing or wrong, per field name, in plain words a plumber can act on. */
 function check(fd: FormData, kind: Kind) {
   const v = (k: string) => String(fd.get(k) ?? "").trim();
@@ -31,6 +58,7 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [stage, setStage] = useState<1 | 2>(1);
+  const [country, setCountry] = useState<"US" | "CA">("US");
   const dark = tone === "dark";
   const field = `mt-2 block min-h-12 w-full rounded-md border-2 px-4 py-3 text-t3 outline-none transition-colors focus:border-ribbon ${dark ? "aria-[invalid=true]:border-white border-white/30 bg-white/10 text-white placeholder:text-white/75" : "aria-[invalid=true]:border-ribbon-deep border-ink/20 bg-white text-ink placeholder:text-slate/70"}`;
   const err = `mt-2 text-t3 font-semibold ${dark ? "text-white" : "text-ribbon-deep"}`;
@@ -50,8 +78,12 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
     const focus = (k: string) => setTimeout(() => (form.elements.namedItem(k) as HTMLElement | null)?.focus(), 0);
     if (first) { if (first === "name" || first === "phone") setStage(1); focus(first); return; }
     if (stage === 1) { setStage(2); focus("business"); return; }
-    const data = Object.fromEntries(fd.entries());
-    delete (data as Record<string, unknown>).company_website_hp;
+    const data = Object.fromEntries(fd.entries()) as Record<string, unknown>;
+    delete data.company_website_hp;
+    // The server keeps a fixed set of fields, so the country rides along inside the phone number.
+    const cc = COUNTRIES.find((c) => c.v === data.country) ?? COUNTRIES[0];
+    data.phone = `${cc.code} ${String(data.phone ?? "").trim()} (${cc.v})`;
+    delete data.country;
     const payload = { ...data, kind, page: window.location.pathname, submittedAt: new Date().toISOString() };
     if (!site.formEndpoint) {
       const body = Object.entries(payload).map(([k, v]) => `${k}: ${v}`).join("\n");
@@ -81,14 +113,22 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-5 sm:grid-cols-2" noValidate>
-      <div className="sm:col-span-2 flex items-center gap-3" aria-live="polite">
+    <form onSubmit={onSubmit} className={`grid gap-5 ${stage === 1 ? "lf-s1" : "sm:grid-cols-2"}`} noValidate>
+      <div className="col-span-full flex items-center gap-3" aria-live="polite">
         <span className={`text-t3 font-bold ${dark ? "text-white" : "text-ink"}`}>Step {stage} of 2</span>
         <span aria-hidden className="lf-bar"><span style={{ transform: `scaleX(${stage / 2})` }} /></span>
       </div>
       <div hidden={stage !== 1} className="contents">
-      <div><label htmlFor={`${id}-name`} className={label}>Your name</label><input id={`${id}-name`} name="name" required autoComplete="name" className={field} aria-invalid={errors.name ? true : undefined} aria-describedby={errors.name ? `${id}-name-err` : undefined} placeholder="Mike Johnson" />{errors.name && <p id={`${id}-name-err`} className={err}>{errors.name}</p>}</div>
-      <div><label htmlFor={`${id}-phone`} className={label}>Phone</label><input id={`${id}-phone`} name="phone" type="tel" required autoComplete="tel" className={field} aria-invalid={errors.phone ? true : undefined} aria-describedby={errors.phone ? `${id}-phone-err` : undefined} placeholder="(555) 555-0123" />{errors.phone && <p id={`${id}-phone-err`} className={err}>{errors.phone}</p>}</div>
+      <div className="lf-name min-w-0"><label htmlFor={`${id}-name`} className={label}>Your name</label><input id={`${id}-name`} name="name" required autoComplete="name" size={8} className={`${field} min-w-0`} aria-invalid={errors.name ? true : undefined} aria-describedby={errors.name ? `${id}-name-err` : undefined} placeholder="Mike Johnson" />{errors.name && <p id={`${id}-name-err`} className={err}>{errors.name}</p>}</div>
+      <div className="min-w-0"><label htmlFor={`${id}-cc`} className={label}>Country</label>
+        <div className={`lf-cc mt-2 ${dark ? "lf-cc-dark" : ""}`}>
+          <Flag c={country} />
+          <select id={`${id}-cc`} name="country" value={country} onChange={(e) => setCountry(e.target.value as "US" | "CA")} autoComplete="country" className={`lf-cc-sel ${dark ? "text-white" : "text-ink"}`} aria-label="Country code">
+            {COUNTRIES.map((c) => <option key={c.v} value={c.v}>{c.code}</option>)}
+          </select>
+        </div>
+      </div>
+      <div className="min-w-0"><label htmlFor={`${id}-phone`} className={label}>Phone</label><input id={`${id}-phone`} name="phone" type="tel" required autoComplete="tel" className={field} aria-invalid={errors.phone ? true : undefined} aria-describedby={errors.phone ? `${id}-phone-err` : undefined} placeholder="(555) 555-0123" />{errors.phone && <p id={`${id}-phone-err`} className={err}>{errors.phone}</p>}</div>
       </div>
       <div hidden={stage !== 2} className="contents">
       <div><label htmlFor={`${id}-co`} className={label}>Business name</label><input id={`${id}-co`} name="business" required autoComplete="organization" className={field} aria-invalid={errors.business ? true : undefined} aria-describedby={errors.business ? `${id}-business-err` : undefined} placeholder="Johnson Plumbing" />{errors.business && <p id={`${id}-business-err`} className={err}>{errors.business}</p>}</div>
@@ -96,8 +136,8 @@ export function LeadForm({ kind = "strategy-call", tone = "dark" }: { kind?: Kin
       <div className="sm:col-span-2"><label htmlFor={`${id}-site`} className={label}>{kind === "website-audit" ? "Your current website" : "Current website (if you have one)"}</label><input id={`${id}-site`} name="website" type="text" inputMode="url" required={kind === "website-audit"} className={field} aria-invalid={errors.website ? true : undefined} aria-describedby={errors.website ? `${id}-website-err` : undefined} placeholder="johnsonplumbing.com" />{errors.website && <p id={`${id}-website-err`} className={err}>{errors.website}</p>}</div>
       </div>
       <div aria-hidden className="absolute -left-[9999px]"><label htmlFor={`${id}-hp`}>Leave empty</label><input id={`${id}-hp`} name="company_website_hp" tabIndex={-1} autoComplete="off" /></div>
-      <div className="sm:col-span-2">
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="col-span-full lf-foot">
+        <div className="lf-btns flex flex-wrap items-center gap-3">
           {stage === 2 && <button type="button" onClick={() => setStage(1)} className={`min-h-11 px-3 font-bold underline underline-offset-4 ${dark ? "text-white" : "text-ink"}`}>Back</button>}
           <button type="submit" disabled={state === "sending"} className="btn btn-primary w-full sm:w-auto">
             {state === "sending" ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden /> : null}

@@ -193,7 +193,7 @@ export default function Timeline({
     const travel = Math.max(0, lastRight - vw * (isMobile ? 0.98 : 0.94));
     const lineEl = section.querySelector<HTMLElement>(".journey-line")!;
     const lineLeft = lineEl.getBoundingClientRect().left - (gsap.getProperty(slider, "x") as number) - sliderLeft;
-    return { vw, isMobile, lefts, travel, lineWidth: Math.max(0, lefts[lefts.length - 1] - lineLeft + vw * 0.04) };
+    return { vw, isMobile, lefts, travel, lineLeft, lineWidth: Math.max(0, lefts[lefts.length - 1] - lineLeft + vw * 0.04) };
   };
 
   useGSAP(() => {
@@ -301,19 +301,21 @@ export default function Timeline({
       });
     });
 
-    // The original's fixed reveal points ("6% 30%" ... "65% 85%"), worked out instead from where each step sits:
-    // a step starts drawing as it slides in from the right and has finished by the time it nears the middle.
+    // When each step draws (Nick 2026-10-20: "the line is a train, each step a station"). A step's stem, dot, title
+    // and text start the moment the tip of the pink line reaches that step's stem, and finish a short scroll later.
+    // Worked out from the line's own scroll range (start "top 25%", end "92% bottom"; phones "top 30%" / "70% 50%"),
+    // so the step can never appear before the train arrives. The earlier version keyed it to where the step sat on
+    // screen, which ran ahead of the line.
     const positions = (index: number): [number, number] => {
-      const { vw, isMobile, lefts, travel } = measure();
+      const { isMobile, lefts, lineLeft, lineWidth } = measure();
+      const top = section.getBoundingClientRect().top + window.scrollY;
       const H = section.offsetHeight;
       const vh = window.innerHeight;
-      const slideLen = isMobile ? 0.72 * H - 0.5 * vh : 0.92 * H - vh;
-      const at = (screenX: number) => {
-        const shift = Math.min(travel, Math.max(0, lefts[index] - screenX));
-        return travel ? (shift / travel) * slideLen : 0;
-      };
-      const pct = (scroll: number, edge: number) => ((scroll + edge * vh) / H) * 100;
-      return [pct(at(vw * (isMobile ? 0.75 : 0.82)), 0.3), pct(at(vw * (isMobile ? 0.2 : 0.42)), 0.5)];
+      const s0 = top - (isMobile ? 0.3 : 0.25) * vh;
+      const s1 = isMobile ? top + 0.7 * H - 0.5 * vh : top + 0.92 * H - vh;
+      const reach = lineWidth ? Math.min(1, Math.max(0, (lefts[index] - lineLeft) / lineWidth)) : 0;
+      const at = s0 + reach * (s1 - s0);
+      return [at, at + vh * (isMobile ? 0.2 : 0.25)];
     };
 
     const createItemTimeline = (
@@ -334,8 +336,8 @@ export default function Timeline({
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: () => `${positions(index)[0]}% 30%`,
-          end: () => `${Math.max(positions(index)[1], positions(index)[0] + 2)}% 50%`,
+          start: () => positions(index)[0],
+          end: () => positions(index)[1],
           scrub: true,
           invalidateOnRefresh: true,
         },

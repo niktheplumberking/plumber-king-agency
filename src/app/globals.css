@@ -552,8 +552,8 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .sys { --pl-line-y: 127px; }
 .sys .pl-title { font-size: var(--text-t1); line-height: 0.95; white-space: normal; text-overflow: clip; padding-bottom: 0.08em; }
 .sys .pl-sub { font-size: var(--text-t2); line-height: 1.35; max-width: 56rem; margin-top: 0.6rem; }
-/* Side layout (batch 3): the caption stands in a left column beside the big print, so its title shrinks to keep
-   "Recommended" (6.83 em, the longest word) inside that column. */
+/* Side layout (batch 3): the caption sits under the row of four prints; its title shrinks if the bar is ever too narrow
+   for "Recommended" (6.83 em, the longest word). */
 .sys .pl-bar[data-side] { container-type: inline-size; }
 .sys .pl-bar[data-side] .pl-title { font-size: min(var(--text-t1), 100cqi / 7); }
 @media (min-width: 768px) { .sys { --pl-line-y: 134px; } }

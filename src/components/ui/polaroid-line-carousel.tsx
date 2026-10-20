@@ -58,10 +58,9 @@ export type PolaroidLineCarouselProps = {
   scrub?: boolean
   /** Image shown under the caption title, left of the paragraph. */
   capIcon?: string
-  /** Wide screens (1024 px+): the caption, count and buttons stand in a column on the left and the active print hangs
-   *  on the right at up to 85% of `cardWidth`. A print that has had its turn keeps sliding left along the string and
-   *  shrinks into a row above the caption, so at the end every print is on screen (Nick 2026-10-20). A print grows
-   *  from 88% as it arrives, and once the hold ends the last one shrinks into the row beside the others. */
+  /**
+   *  Wide screens (1024 px+): the prints hang still in one row across the stage with the caption, count and buttons
+   *  under them; the print the counter shows is 1.25x and swaps at an even rate with the next (Nick 2026-10-20). */
   side?: boolean
 }
 
@@ -195,11 +194,11 @@ export default function PolaroidLineCarousel({
     if (!g || g.len <= 0) return 0
     return clamp((g.top0 - g.run.getBoundingClientRect().top) / g.len, 0, 1)
   }
-  /** 0..1 over the first 35% of a screen of scrolling after the stage lets go (the hold has ended). */
+  /** 0..1 over the first 15% of a screen of scrolling after the stage lets go (the hold has ended). */
   const scrubExit = () => {
     const g = scrubRun()
     if (!g || g.len <= 0) return 0
-    return clamp((g.top0 - g.run.getBoundingClientRect().top - g.len) / (window.innerHeight * 0.35), 0, 1)
+    return clamp((g.top0 - g.run.getBoundingClientRect().top - g.len) / (window.innerHeight * 0.15), 0, 1)
   }
   React.useEffect(() => {
     const g = scrubRun()
@@ -232,8 +231,12 @@ export default function PolaroidLineCarousel({
       const wide = side && r.width >= 1024
       const bar = root.querySelector(".pl-bar") as HTMLElement | null
       const room = wide ? r.height - y - sag - 86 - 40 : y ? r.height - y - sag - 86 - 24 - (bar ? r.bottom - bar.getBoundingClientRect().top : 0) : r.height * 0.42
-      // Side layout: 15% smaller than the room allows (Nick 2026-10-20), so the finished prints have space too.
-      const cw = Math.round(Math.max(150, Math.min(cardWidth, r.width * (wide ? 0.45 : 0.42), room) * (wide ? 0.85 : 1)))
+      // Side layout: four prints side by side across the stage, each with room to grow to 1.25x beside its neighbours
+      // (centre to centre is a quarter of the row; 1.25/2 + 1/2 = 1.125 print widths plus a 24 px gap).
+      const rowPad = Math.max(16, Math.min(56, r.width * 0.04))
+      const cw = wide
+        ? Math.round(Math.max(150, Math.min(cardWidth, ((r.width - 2 * rowPad) / Math.max(1, n) - 24) / 1.125)))
+        : Math.round(Math.max(150, Math.min(cardWidth, r.width * 0.42, room)))
       barTop.current = bar ? bar.getBoundingClientRect().top - r.top : Infinity
       setSize({ w: r.width, h: r.height, cw, y, side: wide })
     })
@@ -244,7 +247,7 @@ export default function PolaroidLineCarousel({
     })
     if (bar) rb.observe(bar)
     return () => { ro.disconnect(); rb.disconnect() }
-  }, [cardWidth, sag, side])
+  }, [cardWidth, sag, side, n])
 
   // keep the target on the active print when the spacing changes
   React.useEffect(() => {
@@ -271,22 +274,15 @@ export default function PolaroidLineCarousel({
       const dt = Math.min(0.033, (now - prev) / 1000)
       prev = now
       const { w, h, cw } = size
-      // Side layout: the active print's centre sits one print-half in from the right gutter; the caption column ends
-      // 48 px before the print. Finished prints park in a row over the caption column, from its right edge back to
-      // the left gutter, scaled down to fit both that width and the height above the caption.
       const pad = Math.max(16, Math.min(56, w * 0.04))
-      const anchor = size.side ? w - pad - cw / 2 : w / 2
-      const barRight = w - pad - cw - 48
       const y0 = size.y || Math.max(40, h * 0.2)
-      const slots = Math.max(1, n - 1)
-      const printH = cw + 56
-      const fitW = (barRight - pad - (slots - 1) * 24) / slots / cw
-      const fitH = Number.isFinite(barTop.current) ? (barTop.current - 28 - (y0 + opts.current.sag)) / printH : 1
-      const ps = clamp(Math.min(fitW, fitH), 0.2, 1)
-      const pGap = slots > 1 ? (barRight - pad - slots * ps * cw) / (slots - 1) : 0
-      const slotX = (d: number) => barRight - (ps * cw) / 2 - d * (ps * cw + pGap)
       if (scrubbing.current) S.target = scrubProgress() * (n - 1) * spacing
-      // Side layout: once the hold ends, the last print joins the row like the others (eased, reverses on the way up).
+      // Side layout (Nick 2026-10-20): the four prints hang still in one row and the one the counter shows is 1.25x.
+      // Between two counts the old one shrinks and the new one grows at an even rate, over the middle 40% of the scroll
+      // between them (the counter flips halfway). Once the hold ends, the last one goes back to 1x.
+      // fit: shrinks the whole row if the grown print would reach the caption on a short screen.
+      const rowX = (i: number) => pad + ((w - 2 * pad) * (i + 0.5)) / Math.max(1, n)
+      const fit = Number.isFinite(barTop.current) ? clamp((barTop.current - 24 - (y0 + opts.current.sag)) / (1.25 * (cw + 56)), 0.5, 1) : 1
       S.exit += ((scrubbing.current && size.side ? scrubExit() : 0) - S.exit) * Math.min(1, dt * 12)
       const d = drag.current
       let lineVel: number
@@ -295,7 +291,8 @@ export default function PolaroidLineCarousel({
       } else {
         const before = S.off
         ;[S.off, S.vel] = springStep(S.off, S.vel, S.target, dt)
-        lineVel = -(S.off - before) / Math.max(dt, 1e-3)
+        // The row itself never moves, so scrolling gives it no swing.
+        lineVel = size.side ? 0 : -(S.off - before) / Math.max(dt, 1e-3)
       }
       const o = opts.current
       const g = reduce || stillRef.current ? 0 : o.swing
@@ -303,26 +300,14 @@ export default function PolaroidLineCarousel({
       for (let i = 0; i < n; i++) {
         const el = cards.current[i]
         if (!el) continue
-        // r: places from the active spot (0 = active, 1 = next one in, -1 = the one before).
-        const r = i - S.off / spacing
-        // Side layout: the next print waits fully off the right edge (no sliver showing) before it slides in.
-        let x = anchor + r * (size.side && r > 0 ? Math.max(spacing, pad + cw + 8) : spacing)
+        let x = w / 2 + i * spacing - S.off
         let sc = 1
-        if (size.side && r < 0) {
-          // Leaving: slide from the active spot to the first parking place, shrinking early so it clears the caption.
-          // Already parked: move one place left each time another print arrives.
-          const t = Math.min(1, -r)
-          x = -r <= 1 ? anchor + (slotX(0) - anchor) * t : slotX(Math.min(slots - 1, -r - 1))
-          sc = 1 - (1 - ps) * Math.sqrt(t)
-        } else if (size.side && r > 0) {
-          // Coming in: grows from 88% to full size as it reaches the active spot, so the one being read stands out.
-          sc = 1 - 0.12 * Math.min(1, r)
-        }
-        if (size.side && i === n - 1 && S.exit > 0.001) {
-          // Hold over: the last print shrinks to the row size and takes the place right of the third (Nick 2026-10-20).
-          const e = S.exit
-          x = anchor + (slotX(-1) - anchor) * e
-          sc = 1 - (1 - ps) * Math.sqrt(e)
+        if (size.side) {
+          x = rowX(i)
+          const k = S.off / spacing
+          let grow = clamp(1 - (Math.abs(i - k) - 0.3) / 0.4, 0, 1)
+          if (i === n - 1) grow *= 1 - S.exit
+          sc = fit * (1 + 0.25 * grow)
         }
         if (x < -cw * 1.5 || x > w + cw * 1.5) {
           el.style.visibility = "hidden"
@@ -336,7 +321,7 @@ export default function PolaroidLineCarousel({
         S.a[i] = a
         S.w[i] = av
         const y = stringY(x, w, y0, o.sag) - 6
-        el.style.transform = "translate(" + (x - cw / 2).toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + a.toFixed(4) + "rad)" + (sc < 1 ? " scale(" + sc.toFixed(4) + ")" : "")
+        el.style.transform = "translate(" + (x - cw / 2).toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + a.toFixed(4) + "rad)" + (sc !== 1 ? " scale(" + sc.toFixed(4) + ")" : "")
         el.style.zIndex = String(i === near ? n + 1 : n - Math.abs(i - near))
       }
       pathRef.current?.setAttribute("d", "M0 " + y0 + " Q" + w / 2 + " " + (y0 + 2 * o.sag) + " " + w + " " + y0)
@@ -467,7 +452,7 @@ export default function PolaroidLineCarousel({
           <div className="pl-peg" />
         </div>
       ))}
-      <div className="pl-bar" data-side={size.side ? "1" : undefined} style={size.side ? { right: size.cw + Math.max(16, Math.min(56, size.w * 0.04)) + 48 } : undefined}>
+      <div className="pl-bar" data-side={size.side ? "1" : undefined} >
         <div className="pl-cap" key={active}>
           {s.title ? <span className="pl-title">{s.title}</span> : null}
           {s.caption && capIcon ? (

@@ -28,8 +28,12 @@ export function PageHero({ title, intro, crumbs, children, photo }: { title: Rea
       {/* One image for both layouts: under the intro on phones, the right-hand strip on desktop (the wrapper drops out). */}
       {photo && (
         <div className="container-x mt-10 lg:mt-0 lg:contents">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={nickSrc(photo)} srcSet={nickSrcSet(photo)} sizes="(min-width: 1024px) 28vw, 92vw" alt={photo.alt} width={photo.w} height={photo.h} decoding="async" className="aspect-[4/3] w-full rounded-[1.25rem] border-2 border-ink object-cover lg:absolute lg:inset-y-0 lg:right-0 lg:aspect-auto lg:h-full lg:w-[28%] lg:rounded-none lg:border-0 lg:border-l-2" style={{ objectPosition: photo.pos }} />
+          {/* Phones get a small ready-cropped 4:3 file (keeps their first paint fast); desktop gets the full photo. */}
+          <picture>
+            <source media="(max-width: 1023px)" srcSet={`/nick/${photo.key}-card.webp`} width={800} height={600} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={nickSrc(photo)} srcSet={nickSrcSet(photo)} sizes="28vw" alt={photo.alt} width={photo.w} height={photo.h} fetchPriority="high" decoding="async" className="aspect-[4/3] w-full rounded-[1.25rem] border-2 border-ink object-cover lg:absolute lg:inset-y-0 lg:right-0 lg:aspect-auto lg:h-full lg:w-[28%] lg:rounded-none lg:border-0 lg:border-l-2" style={{ objectPosition: photo.pos }} />
+          </picture>
         </div>
       )}
       <JsonLd data={breadcrumbLd(all)} />

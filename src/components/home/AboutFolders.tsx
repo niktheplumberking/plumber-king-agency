@@ -11,7 +11,8 @@ import { FolderSlot } from "./FolderSlot";
  * Each folder is one page about Nick Bennett: about me, portfolio, my story. Hover leans the glass, a click opens the
  * folder and fans its files (each file links into that page), and the link under each folder opens the page itself.
  */
-export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
+/** `noPictures`: plain pink folders, for pages other than home (Nick 2026-10-20: every picture appears once on the site). */
+export function AboutFolders({ headingLevel = 2, noPictures = false }: { headingLevel?: 1 | 2; noPictures?: boolean }) {
   const H = headingLevel === 1 ? "h1" : "h2";
   return (
     <section id="founder" className="relative overflow-hidden bg-paper py-24 md:py-32" aria-labelledby="founder-h">
@@ -30,7 +31,7 @@ export function AboutFolders({ headingLevel = 2 }: { headingLevel?: 1 | 2 }) {
         <ul className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-3">
           {folders.map((f, i) => (
             <li key={f.id} className="flex flex-col items-center text-center">
-              <FolderSlot folder={f} delay={i * 160} />
+              <FolderSlot folder={noPictures ? { ...f, image: undefined } : f} delay={i * 160} />
               <p className="mt-6 max-w-[22rem] text-t3 text-slate">{f.blurb}</p>
               <Link href={f.href} className="ul-link mt-3 min-h-11 self-center">{f.linkText}<ArrowUpRight className="h-4 w-4" aria-hidden /></Link>
             </li>

@@ -1,7 +1,6 @@
 import { Bot, MapPin, MonitorSmartphone, PhoneCall, Search, ShieldCheck } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { AboutTabs } from "@/components/AboutTabs";
-import { NickPhotos } from "@/components/NickPhotos";
 import { CtaButton } from "@/components/CtaButton";
 import { FinalCta } from "@/components/FinalCta";
 import { JsonLd } from "@/components/JsonLd";
@@ -27,7 +26,7 @@ const what = [
 export default function NickPage() {
   return (
     <>
-      <PageHero photo={nick.deskPoint} crumbs={[{ name: "About", path: "/about/" }, { name: founderFull, path: "/about/nick-bennett/" }]} title={<>Hi, I&apos;m {founderFull}. <span className="accent">I build websites for plumbers.</span></>} intro={<p>I&apos;m the founder of {site.name} and the person you talk to, from the first call to launch day and after.</p>}>
+      <PageHero photo={nick.shelves} crumbs={[{ name: "About", path: "/about/" }, { name: founderFull, path: "/about/nick-bennett/" }]} title={<>Hi, I&apos;m {founderFull}. <span className="accent">I build websites for plumbers.</span></>} intro={<p>I&apos;m the founder of {site.name} and the person you talk to, from the first call to launch day and after.</p>}>
         <AboutTabs current="me" />
       </PageHero>
 
@@ -69,13 +68,6 @@ export default function NickPage() {
             <span className="bt-chip"><ShieldCheck className="h-5 w-5" aria-hidden />Plumbers only</span>
             <span className="bt-chip"><MapPin className="h-5 w-5" aria-hidden />USA and Canada</span>
           </div>
-        </div>
-      </section>
-
-      <section id="photos" className="bg-paper py-20 md:py-28" aria-labelledby="photos-h">
-        <div className="container-x">
-          <Reveal><h2 id="photos-h" className="display text-t1">The face <span className="accent">behind the brand</span></h2></Reveal>
-          <div className="mt-12"><NickPhotos /></div>
         </div>
       </section>
 

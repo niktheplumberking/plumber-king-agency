@@ -44,7 +44,7 @@ const chapters = [
 export default function StoryPage() {
   return (
     <>
-      <PageHero photo={nick.coworkB} crumbs={[{ name: "About", path: "/about/" }, { name: "My story", path: "/about/story/" }]} title={<>My story, and <span className="accent">where I&apos;m taking it.</span></>} intro={<p>{founderFull} on how he got into web design and what he wants to build for the plumbing community.</p>}>
+      <PageHero photo={nick.pool} crumbs={[{ name: "About", path: "/about/" }, { name: "My story", path: "/about/story/" }]} title={<>My story, and <span className="accent">where I&apos;m taking it.</span></>} intro={<p>{founderFull} on how he got into web design and what he wants to build for the plumbing community.</p>}>
         <AboutTabs current="story" />
       </PageHero>
       <article className="bg-paper py-20 md:py-28">

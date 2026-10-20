@@ -450,25 +450,21 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .ab-tab { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1.1rem; border: 2px solid var(--color-ink); border-radius: 0.75rem 0.75rem 0.25rem 0.25rem; background: #fff; font-weight: 700; transition: background-color 0.2s, color 0.2s, translate 0.2s; }
 .ab-tab:hover { translate: 0 -3px; background: var(--color-sky); }
 .ab-tab.on { background: var(--color-ribbon-deep); border-color: var(--color-ribbon-deep); color: #fff; }
-.ph-grid { columns: 2; column-gap: 1rem; }
-.ph { break-inside: avoid; margin-bottom: 1rem; overflow: hidden; border: 2px solid var(--color-ink); border-radius: 1.25rem; background: var(--color-sky); transition: translate 0.35s cubic-bezier(.2,.8,.2,1), rotate 0.35s cubic-bezier(.2,.8,.2,1); }
-.ph:hover { translate: 0 -6px; rotate: -1deg; }
-.ph img { display: block; width: 100%; height: auto; }
-@media (min-width: 64rem) { .ph-grid { columns: 3; column-gap: 1.5rem; } .ph { margin-bottom: 1.5rem; } }
 .pf { position: relative; display: grid; gap: 2rem; border: 2px solid var(--color-ink); border-radius: 1.5rem; background: #fff; padding: 1.5rem; box-shadow: 6px 6px 0 var(--color-ink); }
 .pf-shot { overflow: hidden; border-radius: 1rem; border: 2px solid var(--color-ink); background: var(--color-ink); }
 .pf-shot img { display: block; width: 100%; height: auto; transition: scale 0.6s cubic-bezier(.2,.8,.2,1); }
 .pf:hover .pf-shot img { scale: 1.04; }
 @media (min-width: 64rem) { .pf { padding: 2.5rem; } .pf-img { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; } }
-@media (prefers-reduced-motion: reduce) { .ab-tab, .ph, .pf-shot img { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ab-tab, .pf-shot img { transition: none; } }
 
-/* Grader trust badge (Nick 2026-10-18): centred on the card's bottom-right corner on wide screens (the card steps in
-   from the right so the whole circle stays on screen); on narrower screens it sits on the bottom edge at the right. */
-.gr-badge { position: absolute; z-index: 5; right: -0.25rem; bottom: 0; translate: 0 45%; }
+/* Grader trust badge: centred on the card's bottom-left corner on wide screens (batch 3, Nick 2026-10-20; was bottom-right),
+   so it hangs past the grid. It never goes closer than 8 px to the screen edge: where the page margin is narrower than half
+   the circle (102 px), it slides right just enough to stay whole. On narrower screens it sits on the bottom edge at the left. */
+.gr-badge { position: absolute; z-index: 5; left: -0.25rem; bottom: 0; translate: 0 45%; }
 .gr-card:has(.gr-badge) { padding-bottom: 7rem; }
 @media (min-width: 1024px) {
-  .gr-card:has(.gr-badge) { margin-right: 6rem; padding-bottom: 2.5rem; }
-  .gr-badge { right: 0; translate: 50% 50%; }
+  .gr-card:has(.gr-badge) { padding-bottom: 2.5rem; }
+  .gr-badge { --gr-gut: clamp(1rem, 2.2vw, 2.5rem); --gr-side: max(0px, (100vw - 120rem) / 2); left: max(-102px, 8px - var(--gr-gut) - var(--gr-side)); translate: 0 50%; }
 }
 
 /* ---------- "Everything it takes": photo-string carousel band (SystemBento, Nick 2026-10-18) ---------- */
@@ -551,6 +547,10 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .sys { --pl-line-y: 127px; }
 .sys .pl-title { font-size: var(--text-t1); line-height: 0.95; white-space: normal; text-overflow: clip; padding-bottom: 0.08em; }
 .sys .pl-sub { font-size: var(--text-t2); line-height: 1.35; max-width: 56rem; margin-top: 0.6rem; }
+/* Side layout (batch 3): the caption stands in a left column beside the big print, so its title shrinks to keep
+   "Recommended" (6.83 em, the longest word) inside that column. */
+.sys .pl-bar[data-side] { container-type: inline-size; }
+.sys .pl-bar[data-side] .pl-title { font-size: min(var(--text-t1), 100cqi / 7); }
 @media (min-width: 768px) { .sys { --pl-line-y: 134px; } }
 /* Five steps: numbers, titles and lines 1.3x bigger, same proportions (Nick 2026-10-19). Phones keep the base sizes:
    their step boxes are too narrow for more. */
@@ -581,7 +581,12 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 @media (min-width: 64rem) { .fn-sub { margin-top: 0.5em; } }
 
 /* Duck-head bullet (Nick 2026-10-20), drawn as a background so it stays decorative. */
-.duck-tick { display: inline-block; flex-shrink: 0; width: 1.25rem; height: 1.25rem; background: url(/bobo/head.webp) center / contain no-repeat; }
+/* Old layout x 1/0.88: the card stood 6% of the row + 8 px outside the box; scaled with the box that is 6.82% + 9 px. */
+@media (min-width: 64rem) {
+  .ps-card-l { bottom: 2.85rem; left: max(calc(-6.82% - 9px), calc((100% - 100vw) / 2 + 12px)); }
+  .ps-card-r { right: max(calc(-6.82% - 9px), calc((100% - 100vw) / 2 + 12px)); }
+}
+.duck-tick { display: inline-block; flex-shrink: 0; width: 1.6rem; height: 1.6rem; background: url(/bobo/fav-head.webp) center / contain no-repeat; }
 
 /* "Everything it takes" scroll lock (Nick 2026-10-20): the title scrolls past, then the photo string and caption
    (.sys-stage, the screen height under the menu) stick while the run (.sys-run) is tall enough for three photo-to-photo
@@ -592,12 +597,13 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 @media (prefers-reduced-motion: no-preference) {
   .sys-run { height: calc(100svh - var(--hdr) + 3 * 75svh); }
   .sys-stage { position: sticky; top: var(--hdr); height: calc(100svh - var(--hdr)); --pl-line-y: 72px; }
+  @media (min-width: 1024px) { .sys-stage { --pl-line-y: 56px; } }
 }
 
 /* Website check title (Nick 2026-10-20). Measured in Urbanist 900: "costing you jobs?" = 7.376em, "60 seconds." =
    5.013em. Rows 1-2 at t1, allowed up to 12% past the column; "60 seconds." ends under the question mark and is
    stretched 1.45x tall (like the footer name) so it fills the third and fourth rows. */
-.gr-title { --gr-f: min(var(--text-t1), calc(100cqi * 1.12 / 7.376)); font-size: var(--gr-f); line-height: 0.92; }
+.gr-title { --gr-f: calc(100cqi / 7.376); font-size: var(--gr-f); line-height: 0.92; }
 .gr-l { display: block; width: max-content; white-space: nowrap; }
 .gr-big { display: block; width: max-content; white-space: nowrap; font-size: calc(var(--gr-f) * 7.376 / 5.013); line-height: 0.92; margin-top: 0.08em; transform: scaleY(1.45); transform-origin: 0 0; margin-bottom: 0.42em; }
 

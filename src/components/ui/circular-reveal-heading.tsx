@@ -12,7 +12,8 @@ import { useStill } from "@/lib/useStill"
 
 interface TextItem {
     text: string;
-    image: string;
+    /** Picture shown in the middle while the word is pointed at; leave it out for none. */
+    image?: string;
     alt?: string;
 }
 
@@ -72,7 +73,7 @@ const sizeConfig = {
     }
 };
 
-const usePreloadImages = (images: string[], enabled: boolean) => {
+const usePreloadImages = (images: (string | undefined)[], enabled: boolean) => {
     const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
@@ -85,7 +86,7 @@ const usePreloadImages = (images: string[], enabled: boolean) => {
                 img.onerror = reject;
             });
 
-        Promise.all(images.map(loadImage))
+        Promise.all(images.filter((u): u is string => !!u).map(loadImage))
             .then(() => setLoaded(true))
             .catch(err => console.error('Error preloading images:', err));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,7 +173,7 @@ export const CircularRevealHeading = ({
                             config.textStyle,
                             "uppercase cursor-pointer transition-all duration-300"
                         )}
-                        onMouseEnter={() => imagesLoaded && setActiveImage(item.image)}
+                        onMouseEnter={() => imagesLoaded && setActiveImage(item.image ?? null)}
                         onMouseLeave={() => setActiveImage(null)}
                         style={{
                             fontFamily: 'var(--font-display)',

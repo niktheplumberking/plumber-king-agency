@@ -5,6 +5,7 @@ import { Reveal } from "../Reveal";
 import { CtaButton } from "../CtaButton";
 import { MarqueeRow, ScrollFx } from "../ScrollFx";
 import PolaroidLineCarousel from "../ui/polaroid-line-carousel";
+import { nick, nickSrc, type NickPhoto } from "@/content/about";
 import Timeline from "../ui/timeline";
 
 /*
@@ -77,11 +78,12 @@ export function SystemBento() {
             className="relative"
             ariaLabel="What we do for plumbers"
             height="100%"
-            cardWidth={320}
+            cardWidth={640}
             sag={46}
             autoplay={0}
             scrub
-            capIcon="/bobo/head.webp"
+            side
+            capIcon="/bobo/fav-head.webp"
             string="#c2185b"
             background="transparent"
             ink="#141414"
@@ -108,7 +110,8 @@ export const process = [
  * track slides sideways, the pink line draws, and each step draws its stem and dot and reveals its words line by line.
  * The version before this is kept as ProcessTimelineClassic (Classic.tsx) in case Nick wants it back.
  */
-export function ProcessTimeline({ eager = false }: { eager?: boolean }) {
+/** `photo`: which of Nick's photos sits beside the steps (home and /process/ each get their own, one use per picture). */
+export function ProcessTimeline({ eager = false, photo = nick.coworkB }: { eager?: boolean; photo?: NickPhoto }) {
   return (
     <Timeline
       steps={process.map(({ title, body }) => ({ title, body }))}
@@ -120,10 +123,10 @@ export function ProcessTimeline({ eager = false }: { eager?: boolean }) {
           <CtaButton />
         </div>
       }
-      imageUrl="/media/svc-web.webp"
-      imageSmallUrl="/media/svc-web-720.webp"
+      imageUrl={nickSrc(photo)}
+      imageSmallUrl={`/nick/${photo.key}-640.webp`}
       eager={eager}
-      imageAlt="Laptop and phone showing a clean website next to plumbing tools"
+      imageAlt={photo.alt}
       duration={1.4}
     />
   );

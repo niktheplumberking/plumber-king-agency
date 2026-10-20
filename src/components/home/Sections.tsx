@@ -38,20 +38,21 @@ export function ProblemSplit() {
           </h2>
         </Reveal>
 
-        {/* Nick 2026-10-20: the compare box runs the full grid width (logo's left edge to the call button's right edge);
-            the two cards keep their size and now hang a little past the grid. */}
+        {/* Nick 2026-10-20: the compare box runs the full grid width (logo's left edge to the call button's right edge).
+            Batch 3: the two cards sit where they would if the old layout (box inset 6% each side) had been scaled up with
+            the box, so they hang past its edges again (see .ps-card-l / .ps-card-r), never closer than 12 px to the screen edge. */}
         <div className="relative mt-14 lg:mt-20">
           <div data-compare>
             <Compare value={value} onValueChange={setValue}
               before={<Shot src="/work/ridgeline-before.webp" label="Typical plumber website" />}
               after={<Shot src="/work/ridgeline-after.webp" label="Rebuilt plumber website" />} />
           </div>
-          <Reveal className="relative z-10 mt-8 rounded-xl border-2 border-ink/15 bg-white p-6 shadow-[6px_6px_0_rgb(20_20_20/0.12)] lg:absolute lg:bottom-10 lg:-left-2 lg:mt-0 lg:w-[22rem] lg:-rotate-2">
+          <Reveal className="relative z-10 mt-8 rounded-xl border-2 border-ink/15 bg-white p-6 shadow-[6px_6px_0_rgb(20_20_20/0.12)] lg:absolute ps-card-l lg:mt-0 lg:w-[22rem] lg:-rotate-2">
             <h3 className="display text-t2 text-slate uppercase">Random plumbing agency</h3>
             <ul className="mt-4 space-y-2.5">{oldWay.map((t) => <li key={t} className="flex gap-3 text-t3 text-slate"><X className="mt-1 h-4 w-4 shrink-0 text-royal" aria-hidden />{t}</li>)}</ul>
           </Reveal>
           {/* Our card "rings" every 5 s (Nick 2026-10-17): a wiggle that speeds up, a short shake, then it settles. CSS only. */}
-          <Reveal delay={0.1} className="relative z-10 mt-6 lg:absolute lg:top-[42%] lg:-right-2 lg:mt-0 lg:w-[22rem]">
+          <Reveal delay={0.1} className="relative z-10 mt-6 lg:absolute lg:top-[42%] ps-card-r lg:mt-0 lg:w-[22rem]">
             <div className="ring-card rounded-xl border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)] lg:rotate-2">
               <h3 className="display text-t2 uppercase">Plumber <span className="text-royal">King</span> Agency</h3>
               <ul className="mt-4 space-y-2.5">{kingWay.map((t) => <li key={t} className="flex gap-3 text-t3"><span aria-hidden className="duck-tick mt-0.5" />{t}</li>)}</ul>

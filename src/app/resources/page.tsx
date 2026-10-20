@@ -2,7 +2,6 @@ import Link from "@/components/Link";
 import { ArrowRight, Clock } from "lucide-react";
 import { guides } from "@/content/guides";
 import { PageHero } from "@/components/PageHero";
-import { nick } from "@/content/about";
 import { Reveal } from "@/components/Reveal";
 import { FinalCta } from "@/components/FinalCta";
 import { pageMeta } from "@/lib/seo";
@@ -16,7 +15,7 @@ export const metadata = pageMeta({
 export default function ResourcesPage() {
   return (
     <>
-      <PageHero photo={nick.coworkA} crumbs={[{ name: "Guides", path: "/resources/" }]} title={<>Straight-talking guides for <span className="accent">plumbing business owners.</span></>} intro="No fluff. What works online for plumbers, and what to fix first." />
+      <PageHero crumbs={[{ name: "Guides", path: "/resources/" }]} title={<>Straight-talking guides for <span className="accent">plumbing business owners.</span></>} intro="No fluff. What works online for plumbers, and what to fix first." />
       <section className="bg-paper py-20 md:py-28">
         <ul className="container-x grid gap-6 md:grid-cols-2">
           {guides.map((g, i) => (

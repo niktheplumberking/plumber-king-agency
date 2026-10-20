@@ -1,7 +1,6 @@
 import { PageHero } from "@/components/PageHero";
 import { nick } from "@/content/about";
 import { AboutFolders } from "@/components/home/AboutFolders";
-import { ProblemSplit } from "@/components/home/Sections";
 import { FinalCta } from "@/components/FinalCta";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/content/site";
@@ -17,7 +16,7 @@ export default function AboutPage() {
   return (
     <>
       <PageHero photo={nick.sketch} crumbs={[{ name: "About Nick", path: "/about/" }]} title={<>Built for plumbers, <span className="accent">by someone in your corner.</span></>} intro={<p>{site.name} is a {site.legalEntity} company serving plumbing businesses across the USA and Canada.</p>} />
-      <AboutFolders />
+      <AboutFolders noPictures />
       {site.assets.banner && (
         <section className="bg-paper pb-24" aria-label="The Plumber King crew">
           <div className="container-x">
@@ -26,7 +25,6 @@ export default function AboutPage() {
           </div>
         </section>
       )}
-      <ProblemSplit />
       <FinalCta />
       <JsonLd data={personLd()} />
     </>

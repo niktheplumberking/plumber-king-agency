@@ -58,6 +58,9 @@ export type PolaroidLineCarouselProps = {
   scrub?: boolean
   /** Image shown under the caption title, left of the paragraph. */
   capIcon?: string
+  /** Wide screens (1024 px+): the caption, count and buttons stand in a column on the left and the active print hangs
+   *  on the right at up to `cardWidth`, so the prints can be much bigger; prints that slide past the caption fade out. */
+  side?: boolean
 }
 
 // #region logic
@@ -128,6 +131,7 @@ const PL_CSS = [
   ".pl-btn:focus-visible,.pl-link:focus-visible{outline:3px solid #c2185b;outline-offset:2px}",
   ".pl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}",
   "@keyframes pl-in{from{transform:translateY(100%);opacity:0}to{transform:none;opacity:1}}",
+  ".pl-bar[data-side]{bottom:clamp(28px,6vh,64px)}.pl-bar[data-side] .pl-cap{flex-basis:100%}.pl-bar[data-side] .pl-title{white-space:normal}",
   "@media (max-width:640px){.pl-cap{flex-basis:100%}.pl-count{margin-right:auto}.pl-title{white-space:normal}}",
   "@media (prefers-reduced-motion:reduce){.pl-cap>*{animation:none}.pl-print{transition:none}}",
 ].join("\n")
@@ -148,6 +152,7 @@ export default function PolaroidLineCarousel({
   ariaLabel = "Image carousel",
   scrub = false,
   capIcon,
+  side = false,
 }: PolaroidLineCarouselProps) {
   const n = slides.length
   const srcs = slides.map((sl) => sl.image || "")
@@ -156,7 +161,7 @@ export default function PolaroidLineCarousel({
   stillRef.current = still
   const [active, setActive] = React.useState(0)
   const [dragging, setDragging] = React.useState(false)
-  const [size, setSize] = React.useState({ w: 1200, h: 800, cw: cardWidth, y: 0 })
+  const [size, setSize] = React.useState({ w: 1200, h: 800, cw: cardWidth, y: 0, side: false })
   const rootRef = React.useRef(null as HTMLDivElement | null)
   const pathRef = React.useRef(null as SVGPathElement | null)
   const cards = React.useRef([] as (HTMLDivElement | null)[])
@@ -208,14 +213,19 @@ export default function PolaroidLineCarousel({
     if (!root) return
     const ro = new ResizeObserver(() => {
       const r = root.getBoundingClientRect()
-      const cw = Math.round(Math.max(150, Math.min(cardWidth, r.width * 0.42, r.height * 0.42)))
       // Optional fixed string height from CSS (--pl-line-y), so the page can raise the line without resizing the stage.
       const y = parseFloat(getComputedStyle(root).getPropertyValue("--pl-line-y")) || 0
-      setSize({ w: r.width, h: r.height, cw, y })
+      // The print is a square photo plus ~86 px of frame and note, hanging from the string. Below the caption bar, or
+      // (side layout) beside it, where only the stage height limits it.
+      const wide = side && r.width >= 1024
+      const bar = root.querySelector(".pl-bar") as HTMLElement | null
+      const room = wide ? r.height - y - sag - 86 - 40 : y ? r.height - y - sag - 86 - 24 - (bar ? r.bottom - bar.getBoundingClientRect().top : 0) : r.height * 0.42
+      const cw = Math.round(Math.max(150, Math.min(cardWidth, r.width * (wide ? 0.45 : 0.42), room)))
+      setSize({ w: r.width, h: r.height, cw, y, side: wide })
     })
     ro.observe(root)
     return () => ro.disconnect()
-  }, [cardWidth])
+  }, [cardWidth, sag, side])
 
   // keep the target on the active print when the spacing changes
   React.useEffect(() => {
@@ -242,6 +252,11 @@ export default function PolaroidLineCarousel({
       const dt = Math.min(0.033, (now - prev) / 1000)
       prev = now
       const { w, h, cw } = size
+      // Side layout: the active print's centre sits one print-half in from the right gutter; the caption column ends
+      // 48 px before the print, and prints fade as they slide over it.
+      const pad = Math.max(16, Math.min(56, w * 0.04))
+      const anchor = size.side ? w - pad - cw / 2 : w / 2
+      const barRight = w - pad - cw - 48
       const y0 = size.y || Math.max(40, h * 0.2)
       if (scrubbing.current) S.target = scrubProgress() * (n - 1) * spacing
       const d = drag.current
@@ -259,12 +274,13 @@ export default function PolaroidLineCarousel({
       for (let i = 0; i < n; i++) {
         const el = cards.current[i]
         if (!el) continue
-        const x = w / 2 + i * spacing - S.off
+        const x = anchor + i * spacing - S.off
         if (x < -cw * 1.5 || x > w + cw * 1.5) {
           el.style.visibility = "hidden"
           continue
         }
         el.style.visibility = "visible"
+        if (size.side) el.style.opacity = String(clamp((x + cw / 2 - barRight) / (cw * 0.6), 0, 1))
         let a = S.a[i] || 0
         let av = S.w[i] || 0
         ;[a, av] = swingStep(a, av, lineVel, dt, g)
@@ -402,7 +418,7 @@ export default function PolaroidLineCarousel({
           <div className="pl-peg" />
         </div>
       ))}
-      <div className="pl-bar">
+      <div className="pl-bar" data-side={size.side ? "1" : undefined} style={size.side ? { right: size.cw + Math.max(16, Math.min(56, size.w * 0.04)) + 48 } : undefined}>
         <div className="pl-cap" key={active}>
           {s.title ? <span className="pl-title">{s.title}</span> : null}
           {s.caption && capIcon ? (

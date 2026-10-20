@@ -28,7 +28,7 @@ export function FinalCta({ kind = "strategy-call" }: { kind?: "strategy-call" | 
         </Reveal>
         <Reveal className="mt-14 flex items-center gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/nick/avatar-192.webp" alt="Nick" width={192} height={192} loading="lazy" decoding="async" className="h-16 w-16 shrink-0 rounded-full border-2 border-ink object-cover object-top" />
+          <img src="/nick/avatar-w5-192.webp" alt="Nick" width={192} height={192} loading="lazy" decoding="async" className="h-16 w-16 shrink-0 rounded-full border-2 border-ink object-cover object-top" />
           <p className="fc-note text-t3 text-ink">You work exclusively with me, and me only. Contract included.</p>
         </Reveal>
         <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">

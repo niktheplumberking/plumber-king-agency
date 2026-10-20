@@ -13,8 +13,8 @@ export const metadata = pageMeta({
 export default function ProcessPage() {
   return (
     <>
-      <PageHero photo={nick.wallB} crumbs={[{ name: "Process", path: "/process/" }]} title={<>From first call to a phone that <span className="accent">keeps ringing.</span></>} intro="No mystery, no disappearing agency. Here's exactly what happens, step by step." />
-      <ProcessTimeline eager />
+      <PageHero crumbs={[{ name: "Process", path: "/process/" }]} title={<>From first call to a phone that <span className="accent">keeps ringing.</span></>} intro="No mystery, no disappearing agency. Here's exactly what happens, step by step." />
+      <ProcessTimeline eager photo={nick.wallA} />
       <FinalCta />
     </>
   );

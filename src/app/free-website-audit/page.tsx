@@ -26,7 +26,7 @@ export default function AuditPage() {
           <div className="rounded-md border-2 border-ink bg-white p-6 md:p-10"><LeadForm kind="website-audit" tone="light" /></div>
         </div>
       </section>
-      <WebsiteGrader />
+      <WebsiteGrader plain />
     </>
   );
 }

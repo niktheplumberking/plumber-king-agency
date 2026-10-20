@@ -81,13 +81,9 @@ const questions = [
   { q: "Is your Google Business Profile complete and linked to your website?", fix: "Fill in categories, services, service area, hours and photos, and link it to your site." },
 ];
 
-/** Words on the spinning trust badge, each with the picture it reveals. Only claims the site already makes. */
-const badge = [
-  { text: "Plumbers only", image: "/media/svc-leads-720.webp", alt: "Plumber in his van answering a call" },
-  { text: "More calls", image: "/bobo/cheer.webp", alt: "Bobo the duck cheering" },
-  { text: "You own it", image: "/media/svc-web-720.webp", alt: "Laptop and phone showing a plumber's website" },
-  { text: "USA & Canada", image: "/media/svc-maps-720.webp", alt: "Phone with a map pin over a kitchen sink" },
-];
+/** Words on the spinning trust badge. Only claims the site already makes. Batch 3 (Nick 2026-10-20: no picture may appear
+ * twice on the site): the hover pictures repeated the photo carousel and Bobo, so pointing at a word now only darkens it. */
+const badge = [{ text: "Plumbers only" }, { text: "More calls" }, { text: "You own it" }, { text: "USA & Canada" }];
 
 /**
  * 60-second website check: yes/no questions, a score and the fixes that matter. Rebuilt 2026-10-17 (Nick: "push
@@ -95,7 +91,8 @@ const badge = [
  * the card has a segmented progress bar, a live score ring, big answer tiles, Bobo reacting, and a result screen
  * with both next steps. Patterns from the 21st.dev "Questionnaire" (uiable) one-question-at-a-time flow.
  */
-export function WebsiteGrader() {
+/** `plain`: no Bobo and no badge, for the Free audit page (the home page already shows them; one use per picture). */
+export function WebsiteGrader({ plain = false }: { plain?: boolean }) {
   const [answers, setAnswers] = useState<(boolean | null)[]>(() => questions.map(() => null));
   const step = answers.findIndex((a) => a === null);
   const done = step === -1;
@@ -111,12 +108,14 @@ export function WebsiteGrader() {
       {/* The same dot field in white, shown only where the FAQ's pink disc (next section) reaches up over it: the disc's
           centre is 112 px right of this field's left edge and 440 px below its top (see .gr-dots-w). */}
       <div aria-hidden className="hero-dots gr-dots-w pointer-events-none absolute bottom-10 left-0 z-[2] h-72 w-[30%]" />
-      <div className="container-x relative z-[3] grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+      {/* Batch 3 (Nick 2026-10-20): flipped. The quiz box sits on the left, its left edge on the logo's line; the text sits on
+          the right, still left-aligned, and runs to the call button's right edge. Phones keep text first. */}
+      <div className="container-x relative z-[3] grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
         <Reveal className="fit-box">
           {/* Nick 2026-10-20: "Is your website / costing you jobs?" on two rows (the second may run a little past the
               column), then "60 seconds." as wide as the line above and stretched tall over rows three and four. */}
           <h2 id="grader-h" className="display gr-title"><span className="gr-l">Is your website</span> <span className="gr-l">costing you jobs?</span>{" "}<span className="accent gr-big">60 seconds.</span></h2>
-          <p className="mt-5 max-w-md text-t3 text-slate md:text-t2">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to.</p>
+          <p className="mt-5 text-t3 text-slate md:text-t2">Eight yes-or-no questions. You get a score and the exact fixes for anything you answer no to.</p>
           <ul className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
             {[[ShieldCheck, "Free, no email needed"], [Lock, "Nothing is sent anywhere"], [Wrench, "Real fixes, not a pitch"]].map(([Ic, t]) => {
               const I = Ic as typeof Check;
@@ -124,10 +123,10 @@ export function WebsiteGrader() {
             })}
           </ul>
         </Reveal>
-        <Reveal delay={0.1} className="gr-card">
+        <Reveal delay={0.1} className="gr-card lg:order-first">
           {/* Bobo reacts to the visitor's answers: thinking while they go, then cheering or sorry at the result. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={!done ? "/bobo/think.webp" : score >= 6 ? "/bobo/cheer.webp" : "/bobo/sorry.webp"} alt={!done ? "Bobo the duck thinking" : score >= 6 ? "Bobo the duck cheering" : "Bobo the duck looking worried"} width={120} height={120} className="pointer-events-none absolute -top-[4.5rem] right-4 h-24 w-24 md:-top-24 md:h-28 md:w-28" />
+          {!plain && <img src={!done ? "/bobo/think.webp" : score >= 6 ? "/bobo/cheer.webp" : "/bobo/sorry.webp"} alt={!done ? "Bobo the duck thinking" : score >= 6 ? "Bobo the duck cheering" : "Bobo the duck looking worried"} width={120} height={120} className="pointer-events-none absolute -top-[4.5rem] right-4 h-24 w-24 md:-top-24 md:h-28 md:w-28" />}
           <div className="flex items-center justify-between gap-4 text-t3 font-semibold text-slate">
             <span>{done ? "Your result" : `Question ${step + 1} of ${n}`}</span>
             <button type="button" onClick={reset} className="inline-flex min-h-11 items-center gap-1.5 rounded px-3 hover:text-ink"><RotateCcw className="h-4 w-4" aria-hidden />Start over</button>
@@ -165,9 +164,10 @@ export function WebsiteGrader() {
               <p><b className="font-display">{score}</b><span>/{n}</span></p>
             </div>
           </div>
-          {/* Trust badge (21st.dev Circular Reveal Heading, Nick 2026-10-18): spins on the card's bottom-right corner.
+          {/* Trust badge (21st.dev Circular Reveal Heading, Nick 2026-10-18): spins centred on the card's bottom-left corner
+              (batch 3, was bottom-right), so on desktop it hangs past the grid.
               Pointing at a word shows its picture in the middle. */}
-          <div className="gr-badge">
+          {!plain && <div className="gr-badge">
             <CircularRevealHeading
               size="badge"
               items={badge}
@@ -177,7 +177,7 @@ export function WebsiteGrader() {
                 <img src="/brand/logo-stacked-text.webp" alt="Plumber King Agency" width={240} height={179} loading="lazy" className="h-auto w-[78px] max-w-none md:w-[97px] lg:w-[90px]" />
               }
             />
-          </div>
+          </div>}
         </Reveal>
       </div>
     </section>

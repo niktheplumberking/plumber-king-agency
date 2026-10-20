@@ -11,6 +11,7 @@ export const founderFull = "Nick Bennett";
 
 /**
  * Nick's 13 hand-picked photos (Nick, 2026-10-20: "completely new content… integrated throughout the website").
+ * Batch 3 rule (Nick 2026-10-20): every picture appears once on the whole site, so each one has exactly one slot.
  * AI-made from real photos of him (disclosed on the legal pages only). `w` is the large file's width; each has a small
  * file at `s` px wide. Portraits are 4:5, the three wide ones 16:9. Alt text names no venue: the pictures were generated.
  */
@@ -35,8 +36,6 @@ export const nick = {
 export const nickSrc = (p: NickPhoto) => `/nick/${p.key}-${p.w}.webp`;
 export const nickSrcSet = (p: NickPhoto) => `/nick/${p.key}-${p.s}.webp ${p.s}w, /nick/${p.key}-${p.w}.webp ${p.w}w`;
 
-/** The photo wall on Nick's page: all 13, Nick's favourite first. */
-export const nickPhotos: NickPhoto[] = [nick.shelves, nick.deskPoint, nick.sketch, nick.studio, nick.wallB, nick.figma, nick.pool, nick.deskWave, nick.ads, nick.coworkA, nick.wallA, nick.coworkB, nick.deskBack];
 
 export type Project = {
   id: string;
@@ -113,11 +112,11 @@ export const folders: Folder[] = [
     href: "/about/nick-bennett/",
     linkText: "Meet Nick Bennett",
     blurb: "The face of the brand, and the person you talk to.",
-    image: "/nick/folder-cover.webp",
+    // Batch 3: the glass front hides the lower part, so the photo puts Nick's whole face in the visible top band.
+    image: "/nick/folder-about.webp",
     files: [
       { name: "Who I am", href: "/about/nick-bennett/#who" },
       { name: "What I do", href: "/about/nick-bennett/#what" },
-      { name: "Photos", meta: "Nick", href: "/about/nick-bennett/#photos", image: "/nick/folder-sheet.webp" },
     ],
   },
   {
@@ -127,12 +126,13 @@ export const folders: Folder[] = [
     href: "/about/portfolio/",
     linkText: "See my portfolio",
     blurb: "Brands, websites and apps I have built.",
-    image: "/work/portfolio/mindxbridge-600.webp",
+    // Nick's own screenshot of the MindXBridge hero (batch 3). No sheet repeats a portfolio-page picture (one use per picture).
+    image: "/work/portfolio/mindxbridge-folder.webp",
     files: [
       { name: "E-commerce", meta: "Stores", href: "/about/portfolio/#ecommerce" },
-      { name: "CourtHub", meta: "Dubai", href: "/about/portfolio/#courthub", image: "/work/portfolio/courthub-600.webp" },
-      { name: "RIZM", meta: "Partner", href: "/about/portfolio/#rizm", image: "/work/portfolio/rizm-600.webp" },
-      { name: "MindXBridge", meta: "Brand + site", href: "/about/portfolio/#mindxbridge", image: "/work/portfolio/mindxbridge-600.webp" },
+      { name: "CourtHub", meta: "Dubai", href: "/about/portfolio/#courthub" },
+      { name: "RIZM", meta: "Partner", href: "/about/portfolio/#rizm" },
+      { name: "MindXBridge", meta: "Brand + site", href: "/about/portfolio/#mindxbridge" },
     ],
   },
   {

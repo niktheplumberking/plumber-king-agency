@@ -5,4 +5,4 @@
 :HL["/brand/bobo-logo-96.webp","image",{"imageSrcSet":"/brand/bobo-logo-96.webp 1x, /brand/bobo-logo-192.webp 2x"}]
 :HL["/nick/studio-1920.webp","image",{"imageSrcSet":"/nick/studio-960.webp 960w, /nick/studio-1920.webp 1920w","imageSizes":"(min-width: 1024px) 40vw, 92vw","fetchPriority":"high"}]
 1:[["children",{"s":"__PAGE__","h":128}]]
-0:{"b":"M0tzdb5cqkR9Ub5o2WXEm","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"jSTDh227BV5XCcVprWRE_","t":{"t":{"s":"","h":16,"c":"$Q1"}}}

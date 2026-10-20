@@ -8,7 +8,9 @@ import { useEffect, useRef, useState } from "react";
  * animated WebP (sit.webp). Reduced motion, Save-Data and the Pause motion button show the still first frame instead.
  */
 
-export function SittingBobo({ fallback, className }: { fallback: React.ReactNode; className?: string }) {
+/** `name` picks the loop: "sit" (FAQ card) or "lie" (Bobo lying on the website-check box, batch 3: 8 s, blinks at 3 s and 6 s).
+ *  Each has <name>.webm, <name>.webp and <name>-still.webp in /bobo/. */
+export function SittingBobo({ fallback, className, name = "sit", w = 216, h = 384 }: { fallback: React.ReactNode; className?: string; name?: string; w?: number; h?: number }) {
   const box = useRef<HTMLSpanElement>(null);
   const vid = useRef<HTMLVideoElement>(null);
   const [on, setOn] = useState(false);
@@ -42,10 +44,10 @@ export function SittingBobo({ fallback, className }: { fallback: React.ReactNode
     <span ref={box} aria-hidden className={className}>
       {on && safari ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={paused ? "/bobo/sit-still.webp" : "/bobo/sit.webp"} alt="" width={216} height={384} className="h-full w-full object-contain" />
+        <img src={paused ? `/bobo/${name}-still.webp` : `/bobo/${name}.webp`} alt="" width={w} height={h} className="h-full w-full object-contain" />
       ) : on ? (
-        <video ref={vid} muted loop playsInline autoPlay preload="auto" poster="/bobo/sit-still.webp" className="h-full w-full object-cover">
-          <source src="/bobo/sit.webm" type="video/webm" />
+        <video ref={vid} muted loop playsInline autoPlay preload="auto" poster={`/bobo/${name}-still.webp`} className="h-full w-full object-cover">
+          <source src={`/bobo/${name}.webm`} type="video/webm" />
         </video>
       ) : fallback}
     </span>

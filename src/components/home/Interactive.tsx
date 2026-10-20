@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ArrowRight, Check, Lock, RotateCcw, ShieldCheck, Wrench, X } from "lucide-react";
 import { site } from "@/content/site";
 import { Reveal } from "../Reveal";
+import { SittingBobo } from "../SittingBobo";
 import { CircularRevealHeading } from "../ui/circular-reveal-heading";
 
 const money = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -124,9 +125,11 @@ export function WebsiteGrader({ plain = false }: { plain?: boolean }) {
           </ul>
         </Reveal>
         <Reveal delay={0.1} className="gr-card lg:order-first">
-          {/* Bobo reacts to the visitor's answers: thinking while they go, then cheering or sorry at the result. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {!plain && <img src={!done ? "/bobo/think.webp" : score >= 6 ? "/bobo/cheer.webp" : "/bobo/sorry.webp"} alt={!done ? "Bobo the duck thinking" : score >= 6 ? "Bobo the duck cheering" : "Bobo the duck looking worried"} width={120} height={120} className="pointer-events-none absolute -top-[4.5rem] right-4 h-24 w-24 md:-top-24 md:h-28 md:w-28" />}
+          {/* Batch 3 (Nick 2026-10-20): Bobo lies on the box's top edge at the right, head on his wing, blinking (8 s loop). */}
+          {!plain && <SittingBobo name="lie" w={1000} h={642} className="gr-lie" fallback={
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src="/bobo/lie-still.webp" alt="Bobo the duck lying on the website check" width={1000} height={642} loading="lazy" className="h-full w-full object-contain" />
+          } />}
           <div className="flex items-center justify-between gap-4 text-t3 font-semibold text-slate">
             <span>{done ? "Your result" : `Question ${step + 1} of ${n}`}</span>
             <button type="button" onClick={reset} className="inline-flex min-h-11 items-center gap-1.5 rounded px-3 hover:text-ink"><RotateCcw className="h-4 w-4" aria-hidden />Start over</button>

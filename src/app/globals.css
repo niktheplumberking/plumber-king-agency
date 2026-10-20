@@ -390,6 +390,8 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .gr-trust { display: flex; align-items: center; gap: 0.6rem; border-radius: 0.9rem; border: 2px solid rgb(20 20 20 / 0.1); background: #fff; padding: 0.85rem 1rem; font-weight: 700; transition: border-color 0.2s, translate 0.3s; }
 .gr-trust svg { color: var(--color-ribbon-deep); flex-shrink: 0; }
 .gr-trust:hover { border-color: var(--color-ribbon); translate: 4px 0; }
+/* Lying Bobo (batch 3): belly on the card's top edge (the clip has ~0.6% margin under him), at the top-right corner. */
+.gr-lie { position: absolute; z-index: 4; right: 1.5rem; bottom: calc(100% - 3px); width: clamp(9rem, 16vw, 14rem); aspect-ratio: 1000 / 642; pointer-events: none; }
 .gr-card { position: relative; margin-top: 3.5rem; border-radius: 1.5rem; border: 2px solid var(--color-ink); background: #fff; padding: 1.75rem; box-shadow: 10px 10px 0 var(--color-ribbon); }
 @media (min-width: 768px) { .gr-card { margin-top: 0; padding: 2.5rem; } }
 .gr-seg { height: 0.5rem; border-radius: 99px; background: rgb(20 20 20 / 0.1); transition: background-color 0.3s; }

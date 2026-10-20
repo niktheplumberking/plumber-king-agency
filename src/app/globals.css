@@ -610,7 +610,7 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 /* Final call to action (Nick 2026-10-20). */
 .fc-ring { display: block; font-size: 1.15em; line-height: 1; }
 .fc-h { font-size: calc(var(--text-t2) * 1.3); line-height: 1.15; }
-@media (min-width: 640px) { .fc-note { white-space: nowrap; } }
+@media (min-width: 1024px) { .fc-note { white-space: nowrap; } }
 /* The call button holds still (no nudge, no press-in on hover) and only grows, at an even speed, while hovered. */
 .btn-primary.fc-btn, .btn-primary.fc-btn:hover { transform: scale(1); box-shadow: 4px 4px 0 var(--color-ink); transition: transform 0.35s linear; }
 .btn-primary.fc-btn:hover { transform: scale(1.06); }

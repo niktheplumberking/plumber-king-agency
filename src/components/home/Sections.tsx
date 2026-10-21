@@ -3,6 +3,7 @@ import { useId, useRef, useState } from "react";
 import { ChevronsLeftRight, X } from "lucide-react";
 import { gsap, useGsap } from "@/lib/gsap";
 import { Reveal } from "../Reveal";
+import { TrailLayer } from "../ui/svg-follow-scroll";
 
 /* ---------- The problem: drag between a typical plumber site and a Plumber King site ---------- */
 const oldWay = ["Template look, same as every competitor", "Phone number buried in the footer", "No reason to trust you over the next guy", "Slow on a phone with one bar of signal"];
@@ -26,7 +27,8 @@ export function ProblemSplit() {
     gsap.to(o, { v: 50, duration: 1.4, ease: "power3.inOut", onUpdate: () => setValue(Math.round(o.v)), scrollTrigger: { trigger: "[data-compare]", start: "top 70%", once: true } });
   });
   return (
-    <section ref={ref} className="relative overflow-x-clip bg-ivory py-24 md:py-32" aria-labelledby="problem-h">
+    <section ref={ref} className="relative isolate overflow-x-clip bg-ivory py-24 md:py-32" aria-labelledby="problem-h">
+      <TrailLayer tone="pink" />
       <div aria-hidden className="hero-dots pointer-events-none absolute top-16 right-0 h-72 w-[34%]" />
       <div className="container-x relative">
         {/* Title as an enormous zig-zag (Nick 2026-10-19: same words, much bigger, only the title block changes): four
@@ -34,7 +36,7 @@ export function ProblemSplit() {
         <Reveal className="ps-head fit-box">
           <h2 id="problem-h" className="display ps-title">
             <span className="ps-l">Your website</span> <span className="ps-l ps-r">rings a phone.</span>{" "}
-            <span className="accent"><span className="ps-l">Yours, or the</span> <span className="ps-l ps-r">other guy&apos;s.</span></span>
+            <span className="accent"><span className="ps-l">Yours, or the</span> <span className="ps-l ps-r">other guy&apos;s<span data-trail-end="">.</span></span></span>
           </h2>
         </Reveal>
 

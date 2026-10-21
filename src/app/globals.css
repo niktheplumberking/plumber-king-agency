@@ -649,3 +649,18 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .lf-flag { width: 1.6rem; height: auto; flex-shrink: 0; border-radius: 2px; box-shadow: 0 0 0 1px rgb(20 20 20 / 0.15); }
 .lf-cc-sel { min-height: 2.75rem; border: 0; background: transparent; font: 600 var(--text-t3)/1 var(--font-sans); cursor: pointer; outline: none; }
 .lf-cc-sel option { color: var(--color-ink); }
+
+/* From invisible to booked, rebuilt 2026-10-21 (21st.dev "How it works", Nick): tilted cards on the pink section,
+   zigzag, cards 02-05 off the straight columns. Phones: stacked with a small tilt. Hover lifts a card on top. */
+.how-card { rotate: calc(var(--tilt) * 0.375); transition: scale 0.3s ease; }
+.how-card:hover { scale: 1.05; z-index: 30; }
+@media (min-width: 64rem) {
+  .how-card { top: var(--top); left: var(--left); right: var(--right); rotate: var(--tilt); }
+}
+.how-peg { position: absolute; top: -0.7rem; left: 50%; z-index: 2; width: 3.25rem; height: 1.4rem; translate: -50% 0; border-radius: 0.45rem; background: linear-gradient(90deg, #c2185b, #ff3d8b 45%, #9c1249); box-shadow: 0 2px 0 rgb(20 20 20 / 0.18); }
+@media (prefers-reduced-motion: no-preference) {
+  .how-dash { animation: how-flow 3s linear infinite; }
+}
+@keyframes how-flow { to { stroke-dashoffset: -140; } }
+html.pk-still .how-dash { animation: none; }
+@media (prefers-reduced-motion: reduce) { .how-card { transition: none; } }

@@ -5,8 +5,8 @@ import { createContext, useContext, useEffect, useLayoutEffect, useRef, type Rea
 /*
  * Scroll-drawn line (after Skiper19 "svg follow scroll", Nick 2026-10-21). One playful path is drawn in step with the
  * scroll and undrawn when scrolling back up. It starts a few px off card 05's bottom-right corner in "From invisible to
- * booked", loops on the pink, swings off screen, crosses into "Your website rings a phone." and ends 12 px short of the
- * dot after "guy's", arriving from about 2 o'clock.
+ * booked", waves across the pink, swings off screen, comes back in from the left behind "Your website rings a phone." and
+ * ends 12 px short of the dot after "guy's", arriving from about 2 o'clock.
  *
  * Path (rebuilt after Nick's review, 2026-10-21): like the original component, the line is one smooth stroke drawn at a
  * steady rate, a fixed share of its length per pixel scrolled. It is made only of straight runs and true circles: each
@@ -176,39 +176,47 @@ export function TrailRun({ children }: { children: ReactNode }) {
       const en = Math.atan2(-ed[1], -ed[0]) - (e0.d * Math.PI) / 2;
       e0.c = [E[0] - e0.r * Math.cos(en), E[1] - e0.r * Math.sin(en)];
 
-      /* Part A, on the pink: out of the card's corner, one loop, then away past the right edge. Every loop leaves in a
-         clearly different direction from the one it came in on (Nick 2026-10-21), so it reads as a hand-drawn loop, not
-         a ring sitting on a line. */
-      // Loop 1 is placed so the line reaches it still heading out of the card's corner, circles clockwise under itself
-      // and leaves to the right: a turn of about 300 degrees, like the loop Nick liked.
-      const t1 = loopR * 0.8, ux = startDir[0], uy = startDir[1];
-      const loop1: Ring = { c: [S[0] + t1 * ux - loopR * uy, S[1] + t1 * uy + loopR * ux], r: loopR, d: 1, loop: true };
+      /* Part A, on the pink: out of the card's corner in one calm wave (down, up, down) and away past the right edge. No
+         loop here (Nick 2026-10-21: a ring right after the start looks terrible). A wave is made of the same parts as
+         everything else: arcs of true circles joined on shared tangents, so it never kinks or wobbles. */
+      // The crest keeps clear of the dip on narrow screens, so the wave never folds back on itself.
+      const R1 = Math.min(turnR, below * 0.45), R2 = Math.min(R1 * 1.6, (W - S[0]) * 0.3);
+      const vx = S[0] + R1 * 1.3, cx = Math.max(S[0] + (W - S[0]) * 0.55, vx + (R1 + R2) * 1.2);
       const ringsA: Ring[] = [
         s0,
-        ...(phone ? [] : [loop1]),
-        { c: [W + 0.05 * W, S[1] - (phone ? 0.4 : 1.3) * below], r: 0, d: 1 },
+        ...(phone ? [] : [
+          { c: [vx, S[1] + below * 0.72 - R1] as Pt, r: R1, d: -1 as const },
+          { c: [cx, S[1] + below * 0.05 + R2] as Pt, r: R2, d: 1 as const },
+        ]),
+        { c: [Math.max(W * 1.05, cx + R2 * 2), S[1] + (phone ? -0.4 : 0.45) * below], r: 0, d: 1 },
       ];
 
-      /* Part B, on the ivory: it comes in from the left edge, loops in the empty space left of "rings a phone." (the same
-         loop Nick liked on the right, mirrored), drops through "Yours,", swings round in the empty space left of
-         "other guy's.", climbs at a slant to a second loop right of "Yours, or the", and curls into the dot from 2 o'clock. */
+      /* Part B, on the ivory (Nick 2026-10-21 12:26): it comes in from the left edge, makes the loop he liked in the empty
+         space left of "rings a phone.", then waves to the right BEHIND the black "Your website / rings a phone." (never
+         across the pink "Yours, or the other guy's."), turns down on the right side and curls into the dot from 2 o'clock. */
       const lines = Array.from(endEl.closest("h2")?.querySelectorAll<HTMLElement>(".ps-l") ?? []);
       const box2 = (i: number) => {
         const l = lines[i];
         const lo = l ? docOffset(l) : { x: o.x, y: o.y + B };
         return { x0: lo.x - o.x, x1: lo.x - o.x + (l?.offsetWidth ?? 0), y: lo.y - o.y, h: l?.offsetHeight ?? 100 };
       };
-      const L1 = box2(0), L2 = box2(1), L3 = box2(2), L4 = box2(3);
+      const L1 = box2(0), L2 = box2(1);
       const lh = L2.h;
       const ringsB: Ring[] = [{ c: [-0.05 * W, L1.y - 0.2 * lh], r: 0, d: 1 }];
+      const rA = Math.min(loopR * 1.3, L2.x0 / 2 - 24, lh * 0.42);
+      const loopA = !phone && rA >= 30;
+      // Clockwise, against the overall left turn, so the line crosses itself like a written loop (about 280 degrees).
+      if (loopA) ringsB.push({ c: [L2.x0 * 0.5, L2.y + 0.5 * lh], r: rA, d: 1, loop: true });
+      // The wave behind the black title: up through "Your website", down through "rings a phone.", up again.
+      const Rw = Math.min(lh * 1.1, W * 0.09);
+      const x0 = loopA ? L2.x0 : W * 0.05, span = W - x0;
       if (!phone) {
-        const rA = Math.min(loopR * 1.3, L2.x0 / 2 - 24, lh * 0.42);
-        if (rA >= 30) ringsB.push({ c: [L2.x0 * 0.5, L2.y + 0.5 * lh], r: rA, d: -1, loop: true });
-        const rT = Math.min(lh * 0.55, L4.x0 * 0.35);
-        ringsB.push({ c: [Math.max(rT + 16, L4.x0 * 0.42), L4.y + L4.h - rT * 1.05], r: rT, d: -1 });
-        const room = W - L3.x1, rB = Math.min(loopR * 1.3, room / 2 - 24, lh * 0.42);
-        if (rB >= 30) ringsB.push({ c: [Math.min(e0.c[0] + e0.r + rB, W - rB - 12), L3.y + 0.1 * lh], r: rB, d: -1, loop: true });
-      }
+        ringsB.push({ c: [x0 + span * 0.22, L1.y + 0.45 * lh + Rw], r: Rw, d: 1 });
+        ringsB.push({ c: [x0 + span * 0.52, L2.y + 0.8 * lh - Rw], r: Rw, d: -1 });
+      } // Phones: too narrow for a wave, the line runs straight behind "Your website" to the turn.
+      // The turn down on the right side, then straight down past the end of "Yours, or the" into the curl.
+      const rR = Math.min(lh * 0.6, W * 0.06);
+      ringsB.push({ c: [W - rR - Math.max(16, W * 0.03), L1.y + 0.5 * lh + rR], r: rR, d: 1 });
       ringsB.push(e0);
 
       const A = beltPath(ringsA, sn, 0);

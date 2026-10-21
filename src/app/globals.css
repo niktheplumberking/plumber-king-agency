@@ -5,24 +5,25 @@
  * Palette "Charcoal & Hot Pink", light treatment (Nick, 2026-10-14 17:03; he wants light pages, not dark bands).
  * Pages are white, bands are pale pink with charcoal text, the footer is the one charcoal block. Old token names are
  * kept so every page re-themes at once: "navy-900/800/700" are the pale pink bands, "navy-950" is charcoal (footer),
- * "royal" and "gold-600/700" are deep pinks for small text, "ribbon" is the hot pink for buttons. Text on pink is ALWAYS white, never charcoal (Nick, 2026-10-16). Hot pink
- * with white is 3.3:1, enough only for big bold text (buttons, titles); small white text sits on "ribbon-deep".
+ * "royal", "gold-600/700" and "ribbon-deep" were deep pinks (#c2185b, #9c1249); Nick 2026-10-21 replaced that
+ * Bordeaux with the main hot pink everywhere, so all of them now equal "ribbon". Text on pink is ALWAYS white, never
+ * charcoal (Nick, 2026-10-16). Hot pink is 3.2:1 against white either way, below the 4.5:1 small-text level: his call.
  */
 @theme {
   --color-navy-950: #141414;
   --color-navy-900: #ffe6f0;
   --color-navy-800: #ffd6e7;
   --color-navy-700: #ffc2dc;
-  --color-royal: #c2185b;
+  --color-royal: #ff3d8b;
   --color-royal-200: #ffd6e7;
   --color-sky: #fff0f6;
   --color-gold: #ff8fbf;
   --color-gold-300: #ffc2dc;
-  --color-gold-600: #c2185b;
-  --color-gold-700: #9c1249;
+  --color-gold-600: #ff3d8b;
+  --color-gold-700: #ff3d8b;
   --color-ribbon: #ff3d8b;
   --color-ribbon-600: #f0277a;
-  --color-ribbon-deep: #c2185b;
+  --color-ribbon-deep: #ff3d8b;
   --color-ivory: #faf8f9;
   --color-paper: #ffffff;
   --color-ink: #141414;
@@ -248,7 +249,7 @@ html { scroll-padding-top: 88px; }
 .fit-title { font-size: calc(100cqi / var(--fit)); line-height: 0.95; white-space: nowrap; }
 
 /* Kept as plain CSS (not long utility strings) so the home page stays inside its 700 KB JavaScript budget. */
-.vsl-bg { position: absolute; inset: 0; background: radial-gradient(120% 90% at 70% 100%, var(--color-ribbon) 0%, var(--color-ribbon-deep) 55%, #9c1249 100%); }
+.vsl-bg { position: absolute; inset: 0; background: radial-gradient(120% 90% at 70% 100%, var(--color-ribbon) 0%, #c2185b 55%, #9c1249 100%); }
 /* Half size since 2026-10-17 (Nick). Feet sit at 91% of the clip's height, so the box hangs 9% of its height below the strip's top. */
 /* Walking Bobo on the bottom edge of the story section (Nick 2026-10-17 17:05): bottom-left, feet (91% down the clip)
    on the line where the pink section ends. While the section is pinned he stays at the bottom of the screen. */
@@ -565,7 +566,8 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 }
 /* Meet Nick: the founder's line, about 2.6x its old size. */
 .fn-motto { font-size: calc(var(--text-t2) * 2.6); line-height: 1.02; }
-/* Meet Nick title. Measured: "Nick Bennett." = 5.674em, "You deal with me, not a sales team." = 15.297em. */
+/* Meet Nick title. Measured: "Nick Bennett." = 5.674em, the old line "You deal with me, not a sales team." = 15.297em.
+   Nick 2026-10-21 changed only the words of that line, so its size still comes from the old measure. */
 .fn-title { line-height: 0.9; }
 .fn-im { display: block; font-size: calc(100cqi / 9); color: var(--color-slate); }
 .fn-name { display: block; white-space: nowrap; font-size: calc(0.99 * 100cqi / 5.674); line-height: 0.86; letter-spacing: -0.035em; }

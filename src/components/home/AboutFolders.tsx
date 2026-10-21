@@ -25,7 +25,7 @@ export function AboutFolders({ headingLevel = 2, noPictures = false }: { heading
           <H id="founder-h" className="display fn-title">
             <span className="fn-im">I&apos;m</span>{" "}
             <span className="fn-name">{founderFull}.</span>{" "}
-            <span className="accent fn-sub">You deal with me, not a sales team.</span>
+            <span className="accent fn-sub">Plumbing industry specialist, and a really charismatic guy</span>
           </H>
         </Reveal>
         <ul className="mt-16 grid gap-x-8 gap-y-20 md:grid-cols-3">

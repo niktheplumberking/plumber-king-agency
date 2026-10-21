@@ -84,7 +84,7 @@ export function SystemBento() {
             scrub
             side
             capIcon="/bobo/fav-head.webp"
-            string="#c2185b"
+            string="#ff3d8b"
             background="transparent"
             ink="#141414"
             style={{ ["--pl-muted" as string]: "#5c5559" }}

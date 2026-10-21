@@ -267,7 +267,7 @@ export const CircularRevealHeading = ({
                         <defs>
                             <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="#FF3D8B" />
-                                <stop offset="100%" stopColor="#C2185B" />
+                                <stop offset="100%" stopColor="#FF3D8B" />
                             </linearGradient>
                         </defs>
                         <path

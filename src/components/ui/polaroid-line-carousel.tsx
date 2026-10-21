@@ -120,7 +120,7 @@ const PL_CSS = [
   ".pl-cap>*{display:block;animation:pl-in .55s cubic-bezier(.2,.8,.2,1) both}",
   ".pl-title{font:900 var(--text-t2)/1.15 var(--font-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
   ".pl-sub{margin-top:4px;max-width:44rem;font:400 var(--text-t3)/1.5 var(--font-sans);color:var(--pl-muted)}",
-  ".pl-subrow{display:flex!important;align-items:flex-start;gap:clamp(.75rem,1.5vw,1.25rem);margin-top:.6rem}",
+  ".pl-subrow{display:flex!important;align-items:center;gap:clamp(.75rem,1.5vw,1.25rem);margin-top:.6rem}",
   ".pl-subrow .pl-sub{margin-top:0}",
   ".pl-ico{flex-shrink:0;width:clamp(2.5rem,3.6vw,3.5rem);aspect-ratio:1;background:center/contain no-repeat}",
   ".pl-count{font:800 var(--text-t3)/1 var(--font-display);letter-spacing:.14em;color:var(--pl-muted)}",

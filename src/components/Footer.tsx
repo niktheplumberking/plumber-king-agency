@@ -11,8 +11,10 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="relative overflow-hidden bg-navy-950 text-white/90">
-      <div className="container-x grid gap-12 pt-20 pb-28 md:grid-cols-12 md:pb-14">
-        <div className="md:col-span-4">
+      <div className="container-x grid gap-12 pt-20 pb-28 md:grid-cols-3 md:pb-14 lg:grid-cols-12">
+        {/* Tablets: the brand block gets its own row, the three link columns sit under it (QA 2026-10-21: at 768 px the
+            brand text was squeezed into a narrow column). */}
+        <div className="md:col-span-3 lg:col-span-4">
           {/* Nick 2026-10-21: the line sits beside the duck, centred on it; the contact rows move up into its old place.
               The gap from the duck to the line equals the gap from the duck down to the email row (29 px of ink, measured). */}
           <div className="flex items-center gap-[27px]">
@@ -34,14 +36,16 @@ export function Footer() {
             )}
           </div>
         </div>
-        <FooterCol title="Services" className="md:col-span-3" links={[...services.map((s) => ({ href: `/services/${s.slug}/`, label: s.name })), { href: "/free-website-audit/", label: "Free website audit" }]} />
-        <FooterCol title="Company" className="md:col-span-2" links={[{ href: "/about/", label: "About Nick" }, { href: "/process/", label: "Our process" }, { href: "/faq/", label: "FAQ" }, { href: "/contact/", label: "Contact" }]} />
-        <FooterCol title="Guides" className="md:col-span-3" links={guides.map((g) => ({ href: `/resources/${g.slug}/`, label: g.title.split(":")[0] }))} />
+        <FooterCol title="Services" className="lg:col-span-3" links={[...services.map((s) => ({ href: `/services/${s.slug}/`, label: s.name })), { href: "/free-website-audit/", label: "Free website audit" }]} />
+        <FooterCol title="Company" className="lg:col-span-2" links={[{ href: "/about/", label: "About Nick" }, { href: "/process/", label: "Our process" }, { href: "/faq/", label: "FAQ" }, { href: "/contact/", label: "Contact" }]} />
+        <FooterCol title="Guides" className="lg:col-span-3" links={guides.map((g) => ({ href: `/resources/${g.slug}/`, label: g.title.split(":")[0] }))} />
       </div>
       {/* Oversized wordmark, like a sign on the shop wall: full width, slanted, white with KING in deep pink (Nick 2026-10-17). */}
       <FooterWordmark />
       <div className="border-t border-white/10">
-        <div className="container-x flex flex-col gap-3 py-6 pb-24 text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pb-6">
+        {/* Bottom room so nothing here sits under Bobo or the phone call bar at the very end of the page (QA 2026-10-21:
+            they covered Sitemap, Privacy and Terms). */}
+        <div className="container-x flex flex-col gap-3 py-6 pb-52 text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pr-32 md:pb-8">
           <p>© {year} {site.ownership} · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex gap-5">
             <Link href="/privacy-policy/" className="flink">Privacy Policy</Link>

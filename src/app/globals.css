@@ -554,9 +554,14 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .sys .pl-title { font-size: var(--text-t1); line-height: 0.95; white-space: normal; text-overflow: clip; padding-bottom: 0.08em; }
 .sys .pl-sub { font-size: var(--text-t2); line-height: 1.35; max-width: 56rem; margin-top: 0.6rem; }
 /* Side layout (batch 3): the caption sits under the row of four prints; its title shrinks if the bar is ever too narrow
-   for "Recommended" (6.83 em, the longest word). */
-.sys .pl-bar[data-side] { container-type: inline-size; }
-.sys .pl-bar[data-side] .pl-title { font-size: min(var(--text-t1), 100cqi / 7); }
+   for "Recommended" (6.83 em, the longest word).
+   QA 2026-10-21: at 640-1023 px (no side layout) "Recommended" was cut off too, so the limit now works at every width,
+   measured on the caption column itself. */
+.sys .pl-cap { container-type: inline-size; }
+.sys .pl-title { font-size: min(var(--text-t1), 100cqi / 7); }
+/* QA 2026-10-21: on tablets the caption was squeezed into a 315 px column beside the arrows; it now uses the full width,
+   with the counter and arrows on the row under it, the same as on phones. */
+@media (min-width: 641px) and (max-width: 1023px) { .sys .pl-cap { flex-basis: 100%; } .sys .pl-count { margin-right: auto; } }
 @media (min-width: 768px) { .sys { --pl-line-y: 134px; } }
 /* Five steps: numbers, titles and lines 1.3x bigger, same proportions (Nick 2026-10-19). Phones keep the base sizes:
    their step boxes are too narrow for more. */

@@ -13,7 +13,7 @@ export function BoboLogo({ className = "h-16 w-auto" }: { className?: string }) 
 /** The approved Brand DNA v4 lockup (Nick, 2026-10-16 18:13): Bobo left, PLUMBER KING over five stars and AGENCY. */
 export function Wordmark({ className = "h-11 w-auto sm:h-14 lg:h-[4.25rem]" }: { className?: string }) {
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src="/brand/logo-wordmark-160.webp" srcSet="/brand/logo-wordmark-320.webp 2x" alt="Plumber King Agency" width={774} height={160} decoding="async" className={className} />;
+  return <img src="/brand/logo-wordmark-160.webp" alt="Plumber King Agency" width={774} height={160} decoding="async" className={className} />;
 }
 
 export function Logo({ className, duckOnly = false }: { className?: string; duckOnly?: boolean }) {

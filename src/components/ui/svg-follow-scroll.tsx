@@ -140,6 +140,14 @@ export function TrailRun({ children }: { children: ReactNode }) {
           l.paths[1].style.strokeDasharray = dash;
           l.paths[1].style.strokeDashoffset = "0";
           l.paths[1].style.opacity = segs.length ? "1" : "0";
+          // Its ends are square, so a switch next to a letter's edge reads as the line slipping under it; while the line
+          // is still being drawn through a front stretch, a dot gives it the same round tip as the copy behind.
+          const dot = l.svg.querySelector("circle");
+          const live = parts[1] < 1 && g.over.some(([a, b]) => parts[1] > a && parts[1] < b);
+          if (dot) {
+            dot.style.opacity = live ? "1" : "0";
+            if (live) { const q = l.paths[1].getPointAtLength(parts[1] * g.lens[2]); dot.setAttribute("cx", String(q.x)); dot.setAttribute("cy", String(q.y)); }
+          }
           continue;
         }
         l.paths.forEach((path, i) => {
@@ -272,6 +280,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       };
       const t1 = lines[0]?.textContent ?? "", t2 = lines[1]?.textContent ?? "", ph = t2.indexOf("phone");
       const gb = glyph(lines[0], t1.lastIndexOf("b"));
+      const yo = t1.indexOf("our"), [gYo, gYu, gYr] = [0, 1, 2].map((k) => glyph(lines[0], yo < 0 ? -1 : yo + k));
       const [gp, gh, go, gn, ge, gd] = [0, 1, 2, 3, 4, 5].map((k) => glyph(lines[1], ph < 0 ? -1 : ph + k));
       const tail = lines[3] ? (lines[3].firstChild?.textContent ?? "") : "";
       const pinkEnd = [tail.length - 1, tail.length - 2].map((k) => glyph(lines[3], k));
@@ -372,7 +381,21 @@ export function TrailRun({ children }: { children: ReactNode }) {
                 }
                 }
               }
-        if (best) { Bp = best.B; over = best.over; }
+        if (best) {
+          Bp = best.B; over = best.over;
+          /* Nick 14:01: on the way up from the loop the line stays behind the "o" of "Your" and goes in front of the "u"
+             and the "r", switching where it crosses clear background (between the o and the u, and just after the r). */
+          const pts = Bp.pts;
+          const inkAt = (g: Glyph | null, p: Pt) => !!g && p[0] > g.x0 && p[0] < g.x1 && p[1] > g.y0 && p[1] < g.y1 && g.ink(p[0], p[1]);
+          const lastInk = (g: Glyph | null, from = 0) => { let k = -1; for (let i = from; i < pts.length && pts[i].s < (over[0]?.[0] ?? 1) * Bp.len; i++) if (inkAt(g, pts[i].p)) k = i; return k; };
+          const firstInk = (g: Glyph | null, from = 0) => { for (let i = from; i < pts.length; i++) if (inkAt(g, pts[i].p)) return i; return -1; };
+          const oEnd = lastInk(gYo), uStart = firstInk(gYu, Math.max(0, oEnd)), rEnd = lastInk(gYr);
+          if (uStart > 0 && rEnd > uStart) {
+            const a = oEnd >= 0 ? (pts[oEnd].s + pts[uStart].s) / 2 : pts[uStart].s - sw;
+            const b = pts[Math.min(pts.length - 1, rEnd + Math.ceil(sw / 3))].s;
+            if (b / Bp.len < (over[0]?.[0] ?? 1)) over = [[a / Bp.len, b / Bp.len], ...over];
+          }
+        }
       }
 
       const A = beltPath(ringsA, sn, 0);
@@ -388,6 +411,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
           path.setAttribute("d", i ? Bp.d : A.d);
           path.setAttribute("stroke-width", String(sw));
         });
+        l.svg.querySelector("circle")?.setAttribute("r", String(sw / 2));
       }
       paint();
     };
@@ -430,8 +454,9 @@ export function TrailLayer({ tone, over = false }: { tone: "white" | "pink"; ove
     <div ref={el} aria-hidden className={`pointer-events-none absolute inset-0 overflow-hidden ${over ? "z-10" : "-z-10"}`}>
       <svg ref={svg} className="absolute left-0 overflow-visible" width="0" height="0">
         {[pathA, pathB].map((r, i) => (
-          <path key={i} ref={r} fill="none" stroke={tone === "white" ? "#ffffff" : "#ff3d8b"} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" style={{ strokeDashoffset: 1, opacity: 0 }} />
+          <path key={i} ref={r} fill="none" stroke={tone === "white" ? "#ffffff" : "#ff3d8b"} strokeLinecap={over ? "butt" : "round"} strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" style={{ strokeDashoffset: 1, opacity: 0 }} />
         ))}
+        {over && <circle r={0} fill="#ff3d8b" style={{ opacity: 0 }} />}
       </svg>
     </div>
   );

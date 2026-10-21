@@ -561,7 +561,10 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 /* Five steps: numbers, titles and lines 1.3x bigger, same proportions (Nick 2026-10-19). Phones keep the base sizes:
    their step boxes are too narrow for more. */
 @media (min-width: 601px) {
-  .tl-t { font-size: calc(var(--text-t2) * 1.3); }
+  /* Nick 2026-10-21 asked for the "Five steps." size (t1); at t1 the steps overlap each other on a 1440x900 laptop
+     (measured), so this is the biggest size with no overlap there: 0.45 x t1, about 1.3x the old size. Full size
+     needs the track respaced; Nick to decide. */
+  .tl-t { font-size: calc(var(--text-t1) * 0.45); line-height: 0.98; letter-spacing: -0.025em; }
   .tl-d { font-size: calc(var(--text-t3) * 1.3); line-height: 1.5; }
 }
 /* Meet Nick: the founder's line, about 2.6x its old size. */
@@ -575,7 +578,11 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 @media (min-width: 64rem) {
   .fn-head { position: relative; }
   .fn-im, .fn-sub { font-size: calc(0.55 * 100cqi / 15.297); }
-  .fn-sub { white-space: nowrap; }
+  /* Nick 2026-10-21: the line starts where the "c" of "Nick" ends (23.66% of the row, measured; the P's own
+     side bearing is 0.04em) and runs past the grid on the right. Its size is kept unless that would push "guy" off
+     the screen: then it shrinks just enough to end 16 px before the screen edge (100vw counts a scrollbar, so 32 px).
+     The line is 23.77em long. */
+  .fn-sub { white-space: nowrap; text-align: left; padding-left: calc(23.66cqi - 0.04em); font-size: min(calc(0.55 * 100cqi / 15.297), calc((76.34cqi + (100vw - 100cqi) / 2 - 32px) / 23.77)); }
 }
 /* FAQ title: "answers." (3.832em) spans the full width of the card under it. */
 .fq-title { font-size: calc(100cqi / 3.832); line-height: 0.9; letter-spacing: -0.03em; }

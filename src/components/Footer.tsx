@@ -13,9 +13,12 @@ export function Footer() {
     <footer className="relative overflow-hidden bg-navy-950 text-white/90">
       <div className="container-x grid gap-12 pt-20 pb-28 md:grid-cols-12 md:pb-14">
         <div className="md:col-span-4">
-          <Logo duckOnly className="h-24 w-auto" />
-          <p className="mt-5 max-w-sm text-white/90">Websites, SEO and AI-search visibility for plumbing companies across the USA and Canada.</p>
-          <ul className="mt-6 space-y-2.5 text-t3">
+          {/* Nick 2026-10-21: the line sits beside the duck, centred on it; the contact rows move up into its old place. */}
+          <div className="flex items-center gap-5">
+            <Logo duckOnly className="h-24 w-auto shrink-0" />
+            <p className="max-w-sm text-white/90">Websites, SEO and AI-search visibility for plumbing companies across the USA and Canada.</p>
+          </div>
+          <ul className="mt-5 space-y-2.5 text-t3">
             <li><a className="tap inline-flex min-h-8 items-center gap-2.5 [overflow-wrap:anywhere] hover:text-white" href={`mailto:${site.email}`}><Mail className="h-4.5 w-4.5" aria-hidden />{site.email}</a></li>
             <li className="inline-flex items-center gap-2.5"><MapPin className="h-4.5 w-4.5" aria-hidden />Serving the USA and Canada</li>
           </ul>

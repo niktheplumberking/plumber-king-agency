@@ -35,10 +35,10 @@ export function JobsMarquee() {
 
 /* ---------- The system: four picture panels that open on hover ---------- */
 export const system = [
-  { img: "/media/svc-web.webp", alt: "Laptop and phone showing a clean website next to plumbing tools", href: `/services/${services[0].slug}/`, title: "Websites that actually convert", body: "Not brochures. Click-to-call on every screen, a page for every job and every town, and trust signals exactly where homeowners look." },
+  { img: "/media/svc-web.webp", alt: "Laptop and phone showing a clean website next to plumbing tools", href: `/services/${services[0].slug}/`, title: "Websites that actually convert", accent: "convert", body: "Not brochures. Click-to-call on every screen, a page for every job and every town, and trust signals exactly where homeowners look." },
   { img: "/media/svc-maps.webp", alt: "Homeowner holding a phone with a map pin, a leak under the kitchen sink behind", href: `/services/${services[1].slug}/`, title: "Top of Google and the map pack", body: "Service pages, Google Business Profile and technical SEO built around the searches that turn into jobs in your towns." },
   { img: "/media/svc-ai.webp", alt: "Phone with an answer card surrounded by plumbing fittings", href: `/services/${services[1].slug}/`, title: "Recommended by AI search", body: "Clear answers and structured data so ChatGPT, Gemini and Google's AI Overviews can understand you and recommend you." },
-  { img: "/media/svc-leads.webp", alt: "Plumber in his van answering a call", href: `/services/${services[2].slug}/`, title: "Every lead on your phone", body: "Calls and quote requests sent to you the moment they land, so you call back before the homeowner calls someone else." },
+  { img: "/media/svc-leads.webp", alt: "Plumber in his van answering a call", href: `/services/${services[2].slug}/`, title: "Every lead on your phone", accent: "lead", body: "Calls and quote requests sent to you the moment they land, so you call back before the homeowner calls someone else." },
 ];
 
 /**
@@ -88,7 +88,7 @@ export function SystemBento() {
             background="transparent"
             ink="#141414"
             style={{ ["--pl-muted" as string]: "#5c5559" }}
-            slides={system.map((s) => ({ image: s.img.replace(".webp", "-720.webp"), title: s.title, caption: s.body, alt: s.alt, href: s.href, linkText: "How it works" }))}
+            slides={system.map((s) => ({ image: s.img.replace(".webp", "-720.webp"), title: s.title, accent: "accent" in s ? s.accent : undefined, caption: s.body, alt: s.alt, href: s.href, linkText: "How it works" }))}
           />
         </div>
       </div>

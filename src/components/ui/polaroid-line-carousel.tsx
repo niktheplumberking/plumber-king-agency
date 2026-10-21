@@ -27,6 +27,8 @@ import { useStill } from "@/lib/useStill"
 export type Slide = {
   image?: string
   title?: string
+  /** One word of the title drawn in the main pink in the caption bar (Nick 2026-10-21: "convert" ... "lead"). */
+  accent?: string
   caption?: string
   alt?: string
   /** Optional link shown in the caption bar while this print is in the middle. */
@@ -454,7 +456,7 @@ export default function PolaroidLineCarousel({
       ))}
       <div className="pl-bar" data-side={size.side ? "1" : undefined} >
         <div className="pl-cap" key={active}>
-          {s.title ? <span className="pl-title">{s.title}</span> : null}
+          {s.title ? <span className="pl-title">{s.accent && s.title.includes(s.accent) ? <>{s.title.slice(0, s.title.indexOf(s.accent))}<span style={{ color: "var(--color-ribbon)" }}>{s.accent}</span>{s.title.slice(s.title.indexOf(s.accent) + s.accent.length)}</> : s.title}</span> : null}
           {s.caption && capIcon ? (
             <span className="pl-subrow">
               <span className="pl-ico" aria-hidden="true" style={{ backgroundImage: "url(" + capIcon + ")" }} />

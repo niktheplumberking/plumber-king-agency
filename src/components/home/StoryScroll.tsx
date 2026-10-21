@@ -20,13 +20,14 @@ const steps: HowStep[] = [
   { word: "Booked", icon: CalendarCheck, title: "You call back first. The job is yours.", body: "Every call and quote request lands on your phone straight away, so you get the job before they call someone else." },
 ];
 
-/* Left-hand cards lean right (+8), right-hand cards lean left (-8). Heights kept from the component. */
+/* Places from Nick's marked screenshot (2026-10-21, 2560 px screen): 01 and 02 keep their height, 03 and 04 drop a
+   little (03 also left, 04 also right), 05 keeps its X and drops. Left-hand cards lean right (+8), right-hand left (-8). */
 const places: HowPlace[] = [
-  { top: 0, left: "15%", tilt: 8 },
-  { top: 120, right: "11%", tilt: -8 },
-  { top: 450, left: "3%", tilt: 8 },
-  { top: 570, right: "3%", tilt: -8 },
-  { top: 850, left: "32%", tilt: 8 },
+  { top: 0, k: -0.924, tilt: 8 },
+  { top: 120, k: 1, tilt: -8 },
+  { top: 533, k: -0.635, tilt: 8 },
+  { top: 608, k: 0.661, tilt: -8 },
+  { top: 970, k: -0.048, tilt: 8 },
 ];
 
 export function StoryScroll() {
@@ -35,8 +36,8 @@ export function StoryScroll() {
       <TrailLayer tone="white" />
       <WalkingBobo />
       <div className="container-x relative">
-        <h2 id="story-h" className="display text-center text-t1">From invisible to <span className="accent">booked.</span></h2>
-        <HowItWorks steps={steps} places={places} height={1200} className="mt-16 lg:mt-24" lastCardAttr="data-trail-start" />
+        <h2 id="story-h" className="display text-center text-t1">From invisible to <span className="accent story-booked">booked.</span></h2>
+        <HowItWorks steps={steps} places={places} height={1330} className="mt-16 lg:mt-24" lastCardAttr="data-trail-start" />
       </div>
     </section>
   );

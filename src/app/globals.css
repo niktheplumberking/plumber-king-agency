@@ -655,7 +655,9 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .how-card { rotate: calc(var(--tilt) * 0.375); transition: scale 0.3s ease; }
 .how-card:hover { scale: 1.05; z-index: 30; }
 @media (min-width: 64rem) {
-  .how-card { top: var(--top); left: var(--left); right: var(--right); rotate: var(--tilt); }
+  /* Card centre sits at k x (half the board - 172 px) from the board's centre: on a 2560 px screen that is exactly where
+     Nick marked them (2026-10-21); narrower screens pull the cards in proportionally so they never leave the screen. */
+  .how-card { top: var(--top); left: calc(50% + (50% - 172px) * var(--k) - 150px); rotate: var(--tilt); }
 }
 .how-peg { position: absolute; top: -0.7rem; left: 50%; z-index: 2; width: 3.25rem; height: 1.4rem; translate: -50% 0; border-radius: 0.45rem; background: linear-gradient(90deg, #c2185b, #ff3d8b 45%, #9c1249); box-shadow: 0 2px 0 rgb(20 20 20 / 0.18); }
 @media (prefers-reduced-motion: no-preference) {
@@ -664,3 +666,5 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 @keyframes how-flow { to { stroke-dashoffset: -140; } }
 html.pk-still .how-dash { animation: none; }
 @media (prefers-reduced-motion: reduce) { .how-card { transition: none; } }
+/* Nick 2026-10-21: "booked." (word and dot) grows until it is at least as wide as "From invisible to" above it. */
+.story-booked { font-size: calc(var(--text-t1) * 2); line-height: 0.9; }

@@ -15,32 +15,49 @@ import { useLayoutEffect, useRef, useState, type ComponentType } from "react";
  */
 
 export type HowStep = { word: string; title: string; body: string; icon: ComponentType<{ className?: string }> };
-/** Desktop place of each card: `top` in px, and `left` or `right` as a share of the 1000 px board; `tilt` in degrees. */
-export type HowPlace = { top: number; left?: string; right?: string; tilt: number };
+/** Desktop place of each card: `top` in px; `k` = the card centre's distance from the board centre, as a share of the room
+ *  each side (-1 = far left, 1 = far right); `tilt` in degrees. */
+export type HowPlace = { top: number; k: number; tilt: number };
 
 export function HowItWorks({ steps, places, height, className, lastCardAttr }: { steps: HowStep[]; places: HowPlace[]; height: number; className?: string; lastCardAttr?: string }) {
   const board = useRef<HTMLDivElement>(null);
   const [d, setD] = useState("");
 
-  // The dashed line runs from each card's side to the next card's facing side, at 45% of the card's height.
+  /* The dashed line joins the cards in order, 01 to 05. Each piece leaves the middle of a card's side square to that side
+     (measured on the tilted card, just past its edge and pink shadow) and arrives the same way at the next card, so every
+     piece is one calm S-curve with no kinks. */
   useLayoutEffect(() => {
     const el = board.current;
     if (!el) return;
     const draw = () => {
       if (window.innerWidth < 1024) return setD("");
       const cards = Array.from(el.querySelectorAll<HTMLElement>("[data-how-card]"));
+      // A point just outside the tilted card at local (lx, ly) from its centre, and the outward direction there.
+      const edge = (c: HTMLElement, lx: number, ly: number, nx: number, ny: number) => {
+        const a = (parseFloat(getComputedStyle(c).rotate) || 0) * (Math.PI / 180);
+        const cos = Math.cos(a), sin = Math.sin(a);
+        const x = c.offsetLeft + c.offsetWidth / 2 + lx * cos - ly * sin, y = c.offsetTop + c.offsetHeight / 2 + lx * sin + ly * cos;
+        return { x, y, n: [nx * cos - ny * sin, nx * sin + ny * cos] as [number, number] };
+      };
+      const side = (c: HTMLElement, right: boolean) => edge(c, (right ? 1 : -1) * (c.offsetWidth / 2 + (right ? 18 : 10)), -0.05 * c.offsetHeight, right ? 1 : -1, 0);
+      const f = (v: number) => v.toFixed(1);
       let path = "";
       for (let i = 0; i < cards.length - 1; i++) {
         const a = cards[i], b = cards[i + 1];
-        const aMid = a.offsetLeft + a.offsetWidth / 2, bMid = b.offsetLeft + b.offsetWidth / 2;
-        const right = bMid > aMid;
-        const x1 = right ? a.offsetLeft + a.offsetWidth : a.offsetLeft, y1 = a.offsetTop + a.offsetHeight * 0.45;
-        const x2 = right ? b.offsetLeft : b.offsetLeft + b.offsetWidth, y2 = b.offsetTop + b.offsetHeight * 0.45;
-        const k = (x2 - x1) * 0.6;
-        path += (i ? " " : "M " + x1.toFixed(0) + " " + y1.toFixed(0)) + (i ? " L " + x1.toFixed(0) + " " + y1.toFixed(0) : "") +
-          " C " + (x1 + k).toFixed(0) + " " + y1.toFixed(0) + ", " + (x2 - k).toFixed(0) + " " + y2.toFixed(0) + ", " + x2.toFixed(0) + " " + y2.toFixed(0);
+        const right = b.offsetLeft > a.offsetLeft;
+        let p = side(a, right);
+        const q = side(b, !right);
+        let kp = Math.max(40, (q.x - p.x) * (right ? 1 : -1) * 0.5), kq = kp;
+        // Cards whose facing sides nearly meet: leave the bottom of the first (on the side of the next card) and come into
+        // the next card's facing side, one smooth quarter-turn, so no piece doubles back.
+        if ((q.x - p.x) * (right ? 1 : -1) < 40) {
+          p = edge(a, (right ? 1 : -1) * 0.3 * a.offsetWidth, a.offsetHeight / 2 + 18, 0, 1);
+          kp = Math.max(50, Math.abs(q.y - p.y) * 0.6);
+          kq = Math.max(50, Math.abs(q.x - p.x) * 0.6);
+        }
+        path += `M ${f(p.x)} ${f(p.y)} C ${f(p.x + p.n[0] * kp)} ${f(p.y + p.n[1] * kp)}, ${f(q.x + q.n[0] * kq)} ${f(q.y + q.n[1] * kq)}, ${f(q.x)} ${f(q.y)} `;
       }
-      setD(path);
+      setD(path.trim());
     };
     draw();
     const ro = new ResizeObserver(draw);
@@ -50,10 +67,10 @@ export function HowItWorks({ steps, places, height, className, lastCardAttr }: {
   }, []);
 
   return (
-    <div ref={board} className={`relative mx-auto flex w-full max-w-[1000px] flex-col gap-12 lg:block lg:h-[var(--how-h)] ${className ?? ""}`} style={{ "--how-h": `${height}px` } as React.CSSProperties}>
+    <div ref={board} className={`relative mx-auto flex w-full max-w-[1588px] flex-col gap-12 lg:block lg:h-[var(--how-h)] ${className ?? ""}`} style={{ "--how-h": `${height}px` } as React.CSSProperties}>
       {d ? (
         <svg aria-hidden className="pointer-events-none absolute inset-0 hidden h-full w-full overflow-visible lg:block">
-          <path d={d} className="how-dash" fill="none" stroke="var(--color-ribbon)" strokeOpacity="0.45" strokeWidth="2" strokeDasharray="8 6" strokeLinecap="round" />
+          <path d={d} className="how-dash" fill="none" stroke="var(--color-ribbon)" strokeOpacity="0.6" strokeWidth="2.5" strokeDasharray="10 8" strokeLinecap="round" />
         </svg>
       ) : null}
       {steps.map((s, i) => {
@@ -65,7 +82,7 @@ export function HowItWorks({ steps, places, height, className, lastCardAttr }: {
             data-how-card=""
             {...(i === steps.length - 1 && lastCardAttr ? { [lastCardAttr]: "" } : {})}
             className={`how-card relative z-10 w-[86%] max-w-[24rem] lg:absolute lg:mx-0 lg:w-[300px] lg:max-w-none ${i % 2 ? "ml-auto" : ""}`}
-            style={{ "--tilt": `${p.tilt}deg`, "--top": `${p.top}px`, "--left": p.left ?? "auto", "--right": p.right ?? "auto" } as React.CSSProperties}
+            style={{ "--tilt": `${p.tilt}deg`, "--top": `${p.top}px`, "--k": p.k } as React.CSSProperties}
           >
             <span aria-hidden className="how-peg" />
             <div className="rounded-[1.5rem] border-2 border-ink bg-white p-6 shadow-[8px_8px_0_var(--color-ribbon)]">

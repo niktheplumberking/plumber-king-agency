@@ -8,6 +8,11 @@ import { createContext, useContext, useEffect, useLayoutEffect, useRef, type Rea
  * booked", loops on the pink, swings off screen, crosses into "Your website rings a phone." and ends 12 px short of the
  * dot after "guy's", arriving from about 2 o'clock.
  *
+ * Path (rebuilt after Nick's review, 2026-10-21): like the original component, the line is one smooth stroke drawn at a
+ * steady rate, a fixed share of its length per pixel scrolled. It is made only of straight runs and true circles: each
+ * turn or loop is an arc of one circle, and every straight run leaves one circle and meets the next exactly on their
+ * shared tangent. So the line never kinks, never wobbles, and keeps the same thickness everywhere.
+ *
  * Layering (Nick: "1. background 2. the line 3. everything after"): each section is `isolate` and holds its own copy of
  * the path in a `-z-10` layer, so the line paints just above that section's background and below all its content. Each
  * layer clips at its section's edges, so the white copy shows only on the pink section and the pink copy only on the
@@ -30,33 +35,52 @@ function docOffset(el: HTMLElement) {
   return { x, y };
 }
 
-/** Smooth path through the points: tangents from the neighbours, handle lengths from each segment (keeps loops round). */
-function smooth(pts: Pt[], t0: Pt, t1: Pt) {
-  const n = pts.length;
-  const dir = (i: number): Pt => {
-    if (i === 0) return t0;
-    if (i === n - 1) return t1;
-    const dx = pts[i + 1][0] - pts[i - 1][0], dy = pts[i + 1][1] - pts[i - 1][1];
-    const l = Math.hypot(dx, dy) || 1;
-    return [dx / l, dy / l];
-  };
-  const segs: [Pt, Pt, Pt, Pt][] = [];
-  for (let i = 0; i < n - 1; i++) {
-    const a = pts[i], b = pts[i + 1], da = dir(i), db = dir(i + 1);
-    const h = (Math.hypot(b[0] - a[0], b[1] - a[1]) / 3) * 1.17;
-    segs.push([a, [a[0] + da[0] * h, a[1] + da[1] * h], [b[0] - db[0] * h, b[1] - db[1] * h], b]);
+/** A circle the line wraps around. `d`: 1 turns clockwise on screen, -1 anticlockwise. `loop`: go once fully round. */
+type Ring = { c: Pt; r: number; d: 1 | -1; loop?: boolean };
+
+const TAU = Math.PI * 2;
+const at = (g: Ring, a: number): Pt => [g.c[0] + g.r * Math.cos(a), g.c[1] + g.r * Math.sin(a)];
+/** Where a line heading at angle `h` touches ring `g` (moving with the ring's turn). */
+const touch = (g: Ring, h: number) => h - (g.d * Math.PI) / 2;
+
+/** The straight run that leaves ring `a` and meets ring `b` on a shared tangent: its heading. */
+function bridge(a: Ring, b: Ring) {
+  const dx = b.c[0] - a.c[0], dy = b.c[1] - a.c[1];
+  const D = Math.hypot(dx, dy), psi = Math.atan2(dy, dx);
+  const k = Math.max(-1, Math.min(1, (b.r * b.d - a.r * a.d) / D));
+  for (const h of [psi - Math.asin(k), psi - Math.PI + Math.asin(k)]) {
+    const p = at(a, touch(a, h)), q = at(b, touch(b, h));
+    if ((q[0] - p[0]) * Math.cos(h) + (q[1] - p[1]) * Math.sin(h) > 0) return h;
   }
-  return segs;
+  return psi;
 }
 
-/** A loop the line runs once around. `right`: entered at the bottom heading right; otherwise entered at the top heading left. */
-const loop = (cx: number, cy: number, r: number, right: boolean): Pt[] =>
-  right ? [[cx, cy + r], [cx + r, cy], [cx, cy - r], [cx - r, cy]] : [[cx, cy - r], [cx - r, cy], [cx, cy + r], [cx + r, cy]];
+/** The SVG path: start ring (through S), rings in between, end ring (through E), joined by straight tangent runs. */
+function beltPath(rings: Ring[], startAngle: number, endAngle: number) {
+  const f = (n: number) => n.toFixed(1);
+  const heads: number[] = [];
+  for (let i = 0; i < rings.length - 1; i++) heads.push(bridge(rings[i], rings[i + 1]));
+  let d = "";
+  rings.forEach((g, i) => {
+    const a0 = i === 0 ? startAngle : touch(g, heads[i - 1]);
+    const a1 = i === rings.length - 1 ? endAngle : touch(g, heads[i]);
+    let sweep = (((a1 - a0) * g.d) % TAU + TAU) % TAU;
+    if (g.loop && sweep < Math.PI * 1.25) sweep += TAU;
+    const p0 = at(g, a0);
+    d += i === 0 ? `M ${f(p0[0])} ${f(p0[1])}` : ` L ${f(p0[0])} ${f(p0[1])}`;
+    const n = Math.max(1, Math.ceil(sweep / (Math.PI * 0.9)));
+    for (let j = 1; j <= n; j++) {
+      const p = at(g, a0 + g.d * sweep * (j / n));
+      d += ` A ${f(g.r)} ${f(g.r)} 0 0 ${g.d > 0 ? 1 : 0} ${f(p[0])} ${f(p[1])}`;
+    }
+  });
+  return d;
+}
 
 export function TrailRun({ children }: { children: ReactNode }) {
   const wrap = useRef<HTMLDivElement>(null);
   const layers = useRef(new Set<Layer>());
-  const geo = useRef<{ table: { s: number; u: number }[]; L: number; sDoc: number; eDoc: number } | null>(null);
+  const geo = useRef<{ sDoc: number; eDoc: number } | null>(null);
   const redraw = useRef<() => void>(() => {});
   const store = useRef<Store>({
     add: (l) => { layers.current.add(l); redraw.current(); return () => { layers.current.delete(l); }; },
@@ -72,15 +96,11 @@ export function TrailRun({ children }: { children: ReactNode }) {
       if (!g) return;
       let p = 1;
       if (!reduce.matches) {
+        // Steady drawing, as in the original: the drawn share grows in a straight line with the scroll, from card 05's
+        // corner at 80% down the screen to the dot at half way.
         const vh = window.innerHeight;
-        const q = Math.min(1, Math.max(0, (window.scrollY + vh * 0.6 - g.sDoc) / (g.eDoc - g.sDoc)));
-        // Find the drawn length whose blended progress equals q (the table is increasing).
-        const t = g.table;
-        let lo = 0, hi = t.length - 1;
-        while (hi - lo > 1) { const m = (lo + hi) >> 1; if (t[m].u < q) lo = m; else hi = m; }
-        const a = t[lo], b = t[hi];
-        const s = b.u === a.u ? a.s : a.s + ((q - a.u) / (b.u - a.u)) * (b.s - a.s);
-        p = Math.min(1, Math.max(0, s / g.L));
+        const from = g.sDoc - vh * 0.8, to = g.eDoc - vh * 0.5;
+        p = Math.min(1, Math.max(0, (window.scrollY - from) / (to - from)));
       }
       for (const l of layers.current) {
         l.path.style.strokeDashoffset = String(1 - p);
@@ -126,51 +146,50 @@ export function TrailRun({ children }: { children: ReactNode }) {
       const ed: Pt = [Math.cos(END_ANGLE), -Math.sin(END_ANGLE)];
       const E: Pt = [dotX + ed[0] * (r + GAP_END + sw / 2), dotY + ed[1] * (r + GAP_END + sw / 2)];
 
-      // The border between the two sections.
+      // The border between the two sections, and the sizes of the turns and loops.
       const first = root.firstElementChild as HTMLElement | null;
       const B = first ? first.offsetHeight : S[1] + 200;
-      const lr = Math.min(80, Math.max(34, W * 0.05));
-      const below = Math.max(60, B - S[1]);
-      const down = Math.max(120, E[1] - B);
+      const phone = W < 768;
+      const loopR = Math.min(72, Math.max(34, W * 0.045));
+      const turnR = Math.min(150, Math.max(56, W * 0.085));
+      const below = Math.max(80, B - S[1]);
+      const down = Math.max(160, E[1] - B);
 
-      const pts: Pt[] = [
-        S,
-        // Loop 1, on the pink just right of card 05 (on phones it tucks back under the card).
-        ...loop(Math.min(S[0] + 3 * lr, W - 1.3 * lr), S[1] + (W < 768 ? 0.45 * below : Math.min(0.2 * below, 40)), lr, true),
-        [W + 0.06 * W, B - 0.15 * below], // out past the right edge
-        [0.72 * W, B + 0.25 * down], // back in across the border
-        // Loop 2, behind the big title (left out on phones, where the title is too small to carry it).
-        ...(W < 768 ? [] : loop(0.42 * W, B + 0.47 * down, lr * 1.3, false)),
-        [-0.05 * W, B + 0.78 * down], // out past the left edge
-        [0.55 * W, E[1] - 0.62 * down], // up across the title
-        [Math.min(E[0] + 0.03 * W, W - sw), E[1] - Math.max(70, 0.09 * W)], // above the dot, then a small hook in from 2 o'clock
-        E,
-      ];
-      const segs = smooth(pts, startDir, [-ed[0], -ed[1]]);
-      const f = (n: number) => n.toFixed(1);
-      const d = "M " + f(S[0]) + " " + f(S[1]) + segs.map(([, a, b, z]) => ` C ${f(a[0])} ${f(a[1])}, ${f(b[0])} ${f(b[1])}, ${f(z[0])} ${f(z[1])}`).join("");
+      // Start ring: the line leaves the card heading out of the corner and turns gently to the right.
+      const s0: Ring = { r: turnR * 0.8, d: -1, c: [0, 0] };
+      const sn = Math.atan2(startDir[1], startDir[0]) - (s0.d * Math.PI) / 2;
+      s0.c = [S[0] - s0.r * Math.cos(sn), S[1] - s0.r * Math.sin(sn)];
+      // End ring: the line comes over the top and curls in to the dot from 2 o'clock.
+      const e0: Ring = { r: turnR * 0.5, d: 1, c: [0, 0] };
+      const en = Math.atan2(-ed[1], -ed[0]) - (e0.d * Math.PI) / 2;
+      e0.c = [E[0] - e0.r * Math.cos(en), E[1] - e0.r * Math.sin(en)];
 
-      // Length table, and the blended progress u = half drawn length, half deepest point reached so far.
-      const table: { s: number; y: number }[] = [{ s: 0, y: S[1] }];
-      let s = 0, prev = S, maxY = S[1];
-      for (const [a, b1, b2, z] of segs) {
-        for (let i = 1; i <= 40; i++) {
-          const t = i / 40, mt = 1 - t;
-          const x = mt * mt * mt * a[0] + 3 * mt * mt * t * b1[0] + 3 * mt * t * t * b2[0] + t * t * t * z[0];
-          const y = mt * mt * mt * a[1] + 3 * mt * mt * t * b1[1] + 3 * mt * t * t * b2[1] + t * t * t * z[1];
-          s += Math.hypot(x - prev[0], y - prev[1]);
-          prev = [x, y];
-          maxY = Math.max(maxY, y);
-          table.push({ s, y: maxY });
-        }
+      // Empty corners of the title: right of line 1 and right of line 3 (both lines are left-aligned).
+      const lines = Array.from(endEl.closest("h2")?.querySelectorAll<HTMLElement>(".ps-l") ?? []);
+      const titleLoops: Ring[] = [];
+      for (const i of [0, 2]) {
+        const l = lines[i];
+        if (!l) continue;
+        const lo = docOffset(l);
+        const lh = l.offsetHeight, room = W - (lo.x - o.x + l.offsetWidth);
+        const r = Math.min(loopR * 1.3, room / 2 - 24, lh * 0.42);
+        if (r < 30) continue;
+        titleLoops.push({ c: [W - room / 2, lo.y - o.y + lh * (i ? 0.45 : 0.55)], r, d: 1, loop: true });
       }
-      const L = s, span = Math.max(1, E[1] - S[1]);
-      geo.current = {
-        L,
-        table: table.map((r2) => ({ s: r2.s, u: 0.5 * (r2.s / L) + 0.5 * Math.min(1, Math.max(0, (r2.y - S[1]) / span)) })),
-        sDoc: o.y + S[1],
-        eDoc: o.y + E[1],
-      };
+
+      const rings: Ring[] = [
+        s0,
+        // Loop 1, on the pink to the right of card 05 (phones have no room beside the card, so no loop there).
+        ...(phone ? [] : [{ c: [Math.min(S[0] + 3.8 * loopR, W - 1.4 * loopR), S[1] + 0.1 * below] as Pt, r: loopR, d: -1 as const, loop: true }]),
+        // Wide turn past the right edge: the line leaves the pink and comes back on the ivory heading left.
+        { c: [W + 0.03 * W, B - 0.2 * below], r: turnR * 1.1, d: 1 },
+        // Then it stays in the empty corners of the zig-zag title: a loop right of "Your website", a steep drop past
+        // "phone.", a loop right of "Yours, or the", and the curl into the dot. It crosses words only steeply.
+        ...titleLoops,
+        e0,
+      ];
+      const d = beltPath(rings, sn, en);
+      geo.current = { sDoc: o.y + S[1], eDoc: o.y + E[1] };
 
       for (const l of layers.current) {
         const top = docOffset(l.el).y - o.y;

@@ -1,6 +1,6 @@
-:HL["/_next/static/chunks/40ns8i8r3egfi.css","style"]
+:HL["/_next/static/chunks/2ib5jjcr27d39.css","style"]
 :HL["/bobo/sorry.webp","image"]
 :HL["/brand/bobo-logo-96.webp","image",{"imageSrcSet":"/brand/bobo-logo-96.webp 1x, /brand/bobo-logo-192.webp 2x"}]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":64,"c":"$Q2"}]]
-0:{"b":"L9p410Ru5jZD9o3pLUvO6","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"mpOHrBmklANueePeeYeFV","t":{"t":{"s":"","h":16,"c":"$Q1"}}}

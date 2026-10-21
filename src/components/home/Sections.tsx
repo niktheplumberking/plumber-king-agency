@@ -62,6 +62,8 @@ export function ProblemSplit() {
           </Reveal>
         </div>
       </div>
+      {/* The stretches where the line weaves in front of the black letters (Nick 2026-10-21 13:10). */}
+      <TrailLayer tone="pink" over />
     </section>
   );
 }

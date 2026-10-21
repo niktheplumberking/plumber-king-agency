@@ -157,6 +157,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       }
     };
 
+    const route: { key: string; Bp: ReturnType<typeof beltPath> | null; over: [number, number][] } = { key: "", Bp: null, over: [] };
     const measure = () => {
       const startEl = root.querySelector<HTMLElement>("[data-trail-start]");
       const endEl = root.querySelector<HTMLElement>("[data-trail-end]");
@@ -313,7 +314,12 @@ export function TrailRun({ children }: { children: ReactNode }) {
 
       let Bp = beltPath([entry, { c: [W - lh, L1.y + lh], r: Math.min(lh * 0.6, W * 0.06), d: 1 }, e0], 0, en);
       let over: [number, number][] = [];
-      if (!phone && gb && gp && gh && go && ge) {
+      /* The route search below is the slowest thing on the page (QA 2026-10-21: it froze a fresh load for seconds on a
+         laptop), so it runs only when the layout it depends on has changed, and its last answer is reused otherwise. */
+      const key = [W, H, S, E, L1, L2, L3, box2(3), lines.map((l) => getComputedStyle(l).fontSize), document.fonts?.status]
+        .flat(2).map((v) => (typeof v === "number" ? Math.round(v * 2) / 2 : String(v))).join();
+      if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; }
+      else if (!phone && gb && gp && gh && go && ge) {
         const fsz = parseFloat(getComputedStyle(lines[1]).fontSize);
         const topInk = (g: Glyph) => { for (let y = Math.floor(g.y0); y < g.base; y++) for (let x = g.x0; x < g.x1; x++) if (g.ink(x, y)) return y; return g.base; };
         const xh = go.base - topInk(go);
@@ -337,14 +343,20 @@ export function TrailRun({ children }: { children: ReactNode }) {
         const tc = Pb[0] - L1.x0 > Rw * 1.2 ? Math.min(lh * 0.6, (Pb[0] - L1.x0) * 0.4) : lh * 0.3;
         const crest: Ring = { c: [Pb[0] - ux * tc - Rw * uy, Pb[1] - uy * tc + Rw * ux], r: Rw, d: 1 };
         let best: { score: number; B: ReturnType<typeof beltPath>; over: [number, number][] } | null = null;
+        // Coarse pass over the half-circle size (every 0.2 em), then a fine pass (0.1 em) next to the best one found.
+        let bestRk = -1;
+        const tries = (pass: number) => pass === 0 ? Array.from({ length: 11 }, (_, k) => 0.5 + k * 0.2) : [bestRk - 0.1, bestRk + 0.1].filter((v) => v >= 0.5 && v <= 2.65);
         if (ux > 0.2)
+          for (let pass = 0; pass < 2; pass++)
           for (const tk of [0, 0.05, 0.1, 0.2, 0.35])
             for (const rd of [0.3, 0.45, 0.6, 0.75, 0.9])
-              for (const rk of Array.from({ length: 22 }, (_, k) => 0.5 + k * 0.1)) {
+              for (const rk of tries(pass)) {
                 const t = tk * fsz, r2 = rd * fsz, R = rk * fsz;
                 const dip: Ring = { c: [Pp[0] + ux * t + r2 * uy, Pp[1] + uy * t - r2 * ux], r: r2, d: -1 };
-                for (const spiral of [true, false]) {
                 const Q: Ring = { c: [edge - R, hTop + R], r: R, d: 1 };
+                // Once a route meets every rule, routes that hook back out of the dip can never win: skip them unbuilt.
+                { const h = bridge(dip, Q); if (best && best.score < 1e5 && (Math.cos(h) < 0.35 || Math.sin(h) > 0)) continue; }
+                for (const spiral of [true, false]) {
                 // Spiral finish: the end curl sits inside the half circle and touches it, so the line goes over at the height
                 // of the "h", round the half circle and straight on into the smaller curl, closer and closer to the dot,
                 // with no straight run at all. Only possible when the dot lies inside the half circle.
@@ -378,25 +390,37 @@ export function TrailRun({ children }: { children: ReactNode }) {
                   if (sB >= 0 && sP > sB) ov.push([sB / cand.len, sP / cand.len]);
                   if (sO >= 0) ov.push([sO / cand.len, 1]);
                   best = { score, B: cand, over: ov };
+                  if (pass === 0) bestRk = rk;
                 }
                 }
               }
         if (best) {
           Bp = best.B; over = best.over;
-          /* Nick 14:01: on the way up from the loop the line stays behind the "o" of "Your" and goes in front of the "u"
+          /* Nick 14:01: on the way up from the loop the line stays behind the "o" of "Your" and goes in front of the "u"'s second stroke
              and the "r", switching where it crosses clear background (between the o and the u, and just after the r). */
           const pts = Bp.pts;
           const inkAt = (g: Glyph | null, p: Pt) => !!g && p[0] > g.x0 && p[0] < g.x1 && p[1] > g.y0 && p[1] < g.y1 && g.ink(p[0], p[1]);
           const lastInk = (g: Glyph | null, from = 0) => { let k = -1; for (let i = from; i < pts.length && pts[i].s < (over[0]?.[0] ?? 1) * Bp.len; i++) if (inkAt(g, pts[i].p)) k = i; return k; };
           const firstInk = (g: Glyph | null, from = 0) => { for (let i = from; i < pts.length; i++) if (inkAt(g, pts[i].p)) return i; return -1; };
           const oEnd = lastInk(gYo), uStart = firstInk(gYu, Math.max(0, oEnd)), rEnd = lastInk(gYr);
-          if (uStart > 0 && rEnd > uStart) {
-            const a = oEnd >= 0 ? (pts[oEnd].s + pts[uStart].s) / 2 : pts[uStart].s - sw;
+          /* Nick 14:59: behind the "u"'s first stroke too; in front only from its second (right) stroke. Its left edge is
+             the start of the last ink run across the middle of the u's x-height. */
+          let stem2 = Infinity;
+          if (gYu) {
+            const yRow = gYu.base - (gYo ? gYo.base - topInk(gYo) : 0) * 0.55;
+            let prev = false;
+            for (let x = gYu.x0; x < gYu.x1; x += 0.5) { const on = gYu.ink(x, yRow); if (on && !prev) stem2 = x; prev = on; }
+          }
+          let uFront = -1;
+          if (uStart > 0 && Number.isFinite(stem2)) for (let i = uStart; i < pts.length; i++) if (pts[i].p[0] >= stem2) { uFront = i; break; }
+          if (uFront > 0 && rEnd > uFront) {
+            const a = pts[uFront].s;
             const b = pts[Math.min(pts.length - 1, rEnd + Math.ceil(sw / 3))].s;
             if (b / Bp.len < (over[0]?.[0] ?? 1)) over = [[a / Bp.len, b / Bp.len], ...over];
           }
         }
       }
+      route.key = key; route.Bp = Bp; route.over = over;
 
       const A = beltPath(ringsA, sn, 0);
       geo.current = { sDoc: o.y + S[1], eDoc: o.y + E[1], lens: [A.len, W * 0.6, Bp.len], over };
@@ -416,21 +440,30 @@ export function TrailRun({ children }: { children: ReactNode }) {
       paint();
     };
 
-    redraw.current = measure;
-    measure();
+    // Measuring waits for an idle moment, so it never holds up the page's first animations; calls close together run once.
+    let pending = 0;
+    const idle = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (id: number) => void };
+    const schedule = () => {
+      if (pending) return;
+      const run = () => { pending = 0; measure(); };
+      pending = idle.requestIdleCallback ? idle.requestIdleCallback(run, { timeout: 700 }) : window.setTimeout(run, 60);
+    };
+    redraw.current = schedule;
+    schedule();
     let raf = 0;
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; paint(); }); };
-    const ro = new ResizeObserver(() => measure());
+    const ro = new ResizeObserver(schedule);
     ro.observe(root);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("load", measure);
+    window.addEventListener("load", schedule);
     reduce.addEventListener("change", paint);
-    document.fonts?.ready.then(measure);
+    document.fonts?.ready.then(schedule);
     return () => {
       ro.disconnect();
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("load", measure);
+      window.removeEventListener("load", schedule);
+      if (pending) { if (idle.cancelIdleCallback) idle.cancelIdleCallback(pending); else clearTimeout(pending); }
       reduce.removeEventListener("change", paint);
     };
   }, []);

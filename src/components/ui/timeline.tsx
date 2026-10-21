@@ -301,6 +301,13 @@ export default function Timeline({
       });
     });
 
+    // Every line starts hidden below its mask right away (Nick 2026-10-21: on a first visit, lines of steps further
+    // along showed before their station was reached, because a scrubbed tween only sets its start state once its
+    // scroll range has been passed).
+    items.forEach((item) => {
+      gsap.set([...(titleSplits[item.id]?.lines ?? []), ...(descriptionSplits[item.id]?.lines ?? [])], { y: 100 });
+    });
+
     // When each step draws (Nick 2026-10-20: "the line is a train, each step a station"). A step's stem, dot, title
     // and text start the moment the tip of the pink line reaches that step's stem, and finish a short scroll later.
     // Worked out from the line's own scroll range (start "top 25%", end "92% bottom"; phones "top 30%" / "70% 50%"),

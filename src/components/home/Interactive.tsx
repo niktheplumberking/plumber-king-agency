@@ -116,7 +116,7 @@ export function WebsiteGrader({ plain = false }: { plain?: boolean }) {
           {/* Nick 2026-10-20: "Is your website / costing you jobs?" on two rows (the second may run a little past the
               column), then "60 seconds." as wide as the line above and stretched tall over rows three and four. */}
           <h2 id="grader-h" className="display gr-title"><span className="gr-l">Is your website</span> <span className="gr-l">costing you jobs?</span>{" "}<span className="accent gr-big">60 seconds.</span></h2>
-          <p className="mt-5 text-t3 text-slate md:text-t2">Is all you need to find out if your site is missing out on leads and revenue.</p>
+          <p className="mt-5 text-t3 text-slate md:text-t2">Is all you need to find out if your site is missing out on leads and <br className="hidden md:inline" /><span className="whitespace-nowrap">potential revenue.</span></p>
           <ul className="mt-8 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
             {[[ShieldCheck, "Free, no email needed"], [Lock, "Nothing is sent anywhere"], [Wrench, "Real fixes, not a pitch"]].map(([Ic, t]) => {
               const I = Ic as typeof Check;

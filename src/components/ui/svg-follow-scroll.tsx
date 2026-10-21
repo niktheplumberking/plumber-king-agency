@@ -19,7 +19,7 @@ import { createContext, useContext, useEffect, useLayoutEffect, useRef, type Rea
  * ivory one: the colour changes exactly at the border. No `motion` package: plain scroll events and a dash offset.
  */
 
-type Layer = { el: HTMLDivElement; svg: SVGSVGElement; path: SVGPathElement };
+type Layer = { el: HTMLDivElement; svg: SVGSVGElement; paths: SVGPathElement[] };
 type Store = { add: (l: Layer) => () => void };
 const Ctx = createContext<Store | null>(null);
 
@@ -55,32 +55,38 @@ function bridge(a: Ring, b: Ring) {
   return psi;
 }
 
-/** The SVG path: start ring (through S), rings in between, end ring (through E), joined by straight tangent runs. */
+/** The SVG path and its length: rings joined by straight tangent runs. A ring with r = 0 is a plain point. The first
+ *  ring is entered at `startAngle`, the last left at `endAngle` (ignored for points). */
 function beltPath(rings: Ring[], startAngle: number, endAngle: number) {
   const f = (n: number) => n.toFixed(1);
   const heads: number[] = [];
   for (let i = 0; i < rings.length - 1; i++) heads.push(bridge(rings[i], rings[i + 1]));
-  let d = "";
+  let d = "", len = 0, prev: Pt | null = null;
   rings.forEach((g, i) => {
     const a0 = i === 0 ? startAngle : touch(g, heads[i - 1]);
     const a1 = i === rings.length - 1 ? endAngle : touch(g, heads[i]);
+    const p0 = at(g, a0);
+    if (prev) len += Math.hypot(p0[0] - prev[0], p0[1] - prev[1]);
+    d += i === 0 ? `M ${f(p0[0])} ${f(p0[1])}` : ` L ${f(p0[0])} ${f(p0[1])}`;
+    prev = p0;
+    if (!g.r) return;
     let sweep = (((a1 - a0) * g.d) % TAU + TAU) % TAU;
     if (g.loop && sweep < Math.PI * 1.25) sweep += TAU;
-    const p0 = at(g, a0);
-    d += i === 0 ? `M ${f(p0[0])} ${f(p0[1])}` : ` L ${f(p0[0])} ${f(p0[1])}`;
+    len += g.r * sweep;
     const n = Math.max(1, Math.ceil(sweep / (Math.PI * 0.9)));
     for (let j = 1; j <= n; j++) {
-      const p = at(g, a0 + g.d * sweep * (j / n));
-      d += ` A ${f(g.r)} ${f(g.r)} 0 0 ${g.d > 0 ? 1 : 0} ${f(p[0])} ${f(p[1])}`;
+      const q = at(g, a0 + g.d * sweep * (j / n));
+      d += ` A ${f(g.r)} ${f(g.r)} 0 0 ${g.d > 0 ? 1 : 0} ${f(q[0])} ${f(q[1])}`;
+      prev = q;
     }
   });
-  return d;
+  return { d, len };
 }
 
 export function TrailRun({ children }: { children: ReactNode }) {
   const wrap = useRef<HTMLDivElement>(null);
   const layers = useRef(new Set<Layer>());
-  const geo = useRef<{ sDoc: number; eDoc: number } | null>(null);
+  const geo = useRef<{ sDoc: number; eDoc: number; lens: [number, number, number] } | null>(null);
   const redraw = useRef<() => void>(() => {});
   const store = useRef<Store>({
     add: (l) => { layers.current.add(l); redraw.current(); return () => { layers.current.delete(l); }; },
@@ -102,9 +108,15 @@ export function TrailRun({ children }: { children: ReactNode }) {
         const from = g.sDoc - vh * 0.8, to = g.eDoc - vh * 0.5;
         p = Math.min(1, Math.max(0, (window.scrollY - from) / (to - from)));
       }
+      // Two strokes drawn one after the other: the pink-section part (it leaves past the right edge), a pause while the
+      // line is "off screen", then the title part (it comes in from the left edge).
+      const [la, gap, lb] = g.lens, s = p * (la + gap + lb);
+      const parts = [Math.min(1, s / la), Math.min(1, Math.max(0, (s - la - gap) / lb))];
       for (const l of layers.current) {
-        l.path.style.strokeDashoffset = String(1 - p);
-        l.path.style.opacity = p < 0.002 ? "0" : "1";
+        l.paths.forEach((path, i) => {
+          path.style.strokeDashoffset = String(1 - parts[i]);
+          path.style.opacity = parts[i] < 0.002 ? "0" : "1";
+        });
       }
     };
 
@@ -156,7 +168,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       const down = Math.max(160, E[1] - B);
 
       // Start ring: the line leaves the card heading out of the corner and turns gently to the right.
-      const s0: Ring = { r: turnR * 0.8, d: -1, c: [0, 0] };
+      const s0: Ring = { r: 2, d: -1, c: [0, 0] };
       const sn = Math.atan2(startDir[1], startDir[0]) - (s0.d * Math.PI) / 2;
       s0.c = [S[0] - s0.r * Math.cos(sn), S[1] - s0.r * Math.sin(sn)];
       // End ring: the line comes over the top and curls in to the dot from 2 o'clock.
@@ -164,32 +176,44 @@ export function TrailRun({ children }: { children: ReactNode }) {
       const en = Math.atan2(-ed[1], -ed[0]) - (e0.d * Math.PI) / 2;
       e0.c = [E[0] - e0.r * Math.cos(en), E[1] - e0.r * Math.sin(en)];
 
-      // Empty corners of the title: right of line 1 and right of line 3 (both lines are left-aligned).
-      const lines = Array.from(endEl.closest("h2")?.querySelectorAll<HTMLElement>(".ps-l") ?? []);
-      const titleLoops: Ring[] = [];
-      for (const i of [0, 2]) {
-        const l = lines[i];
-        if (!l) continue;
-        const lo = docOffset(l);
-        const lh = l.offsetHeight, room = W - (lo.x - o.x + l.offsetWidth);
-        const r = Math.min(loopR * 1.3, room / 2 - 24, lh * 0.42);
-        if (r < 30) continue;
-        titleLoops.push({ c: [W - room / 2, lo.y - o.y + lh * (i ? 0.45 : 0.55)], r, d: 1, loop: true });
-      }
-
-      const rings: Ring[] = [
+      /* Part A, on the pink: out of the card's corner, one loop, then away past the right edge. Every loop leaves in a
+         clearly different direction from the one it came in on (Nick 2026-10-21), so it reads as a hand-drawn loop, not
+         a ring sitting on a line. */
+      // Loop 1 is placed so the line reaches it still heading out of the card's corner, circles clockwise under itself
+      // and leaves to the right: a turn of about 300 degrees, like the loop Nick liked.
+      const t1 = loopR * 0.8, ux = startDir[0], uy = startDir[1];
+      const loop1: Ring = { c: [S[0] + t1 * ux - loopR * uy, S[1] + t1 * uy + loopR * ux], r: loopR, d: 1, loop: true };
+      const ringsA: Ring[] = [
         s0,
-        // Loop 1, on the pink to the right of card 05 (phones have no room beside the card, so no loop there).
-        ...(phone ? [] : [{ c: [Math.min(S[0] + 3.8 * loopR, W - 1.4 * loopR), S[1] + 0.1 * below] as Pt, r: loopR, d: -1 as const, loop: true }]),
-        // Wide turn past the right edge: the line leaves the pink and comes back on the ivory heading left.
-        { c: [W + 0.03 * W, B - 0.2 * below], r: turnR * 1.1, d: 1 },
-        // Then it stays in the empty corners of the zig-zag title: a loop right of "Your website", a steep drop past
-        // "phone.", a loop right of "Yours, or the", and the curl into the dot. It crosses words only steeply.
-        ...titleLoops,
-        e0,
+        ...(phone ? [] : [loop1]),
+        { c: [W + 0.05 * W, S[1] - (phone ? 0.4 : 1.3) * below], r: 0, d: 1 },
       ];
-      const d = beltPath(rings, sn, en);
-      geo.current = { sDoc: o.y + S[1], eDoc: o.y + E[1] };
+
+      /* Part B, on the ivory: it comes in from the left edge, loops in the empty space left of "rings a phone." (the same
+         loop Nick liked on the right, mirrored), drops through "Yours,", swings round in the empty space left of
+         "other guy's.", climbs at a slant to a second loop right of "Yours, or the", and curls into the dot from 2 o'clock. */
+      const lines = Array.from(endEl.closest("h2")?.querySelectorAll<HTMLElement>(".ps-l") ?? []);
+      const box2 = (i: number) => {
+        const l = lines[i];
+        const lo = l ? docOffset(l) : { x: o.x, y: o.y + B };
+        return { x0: lo.x - o.x, x1: lo.x - o.x + (l?.offsetWidth ?? 0), y: lo.y - o.y, h: l?.offsetHeight ?? 100 };
+      };
+      const L1 = box2(0), L2 = box2(1), L3 = box2(2), L4 = box2(3);
+      const lh = L2.h;
+      const ringsB: Ring[] = [{ c: [-0.05 * W, L1.y - 0.2 * lh], r: 0, d: 1 }];
+      if (!phone) {
+        const rA = Math.min(loopR * 1.3, L2.x0 / 2 - 24, lh * 0.42);
+        if (rA >= 30) ringsB.push({ c: [L2.x0 * 0.5, L2.y + 0.5 * lh], r: rA, d: -1, loop: true });
+        const rT = Math.min(lh * 0.55, L4.x0 * 0.35);
+        ringsB.push({ c: [Math.max(rT + 16, L4.x0 * 0.42), L4.y + L4.h - rT * 1.05], r: rT, d: -1 });
+        const room = W - L3.x1, rB = Math.min(loopR * 1.3, room / 2 - 24, lh * 0.42);
+        if (rB >= 30) ringsB.push({ c: [Math.min(e0.c[0] + e0.r + rB, W - rB - 12), L3.y + 0.1 * lh], r: rB, d: -1, loop: true });
+      }
+      ringsB.push(e0);
+
+      const A = beltPath(ringsA, sn, 0);
+      const Bp = beltPath(ringsB, 0, en);
+      geo.current = { sDoc: o.y + S[1], eDoc: o.y + E[1], lens: [A.len, W * 0.6, Bp.len] };
 
       for (const l of layers.current) {
         const top = docOffset(l.el).y - o.y;
@@ -197,8 +221,10 @@ export function TrailRun({ children }: { children: ReactNode }) {
         l.svg.setAttribute("height", String(H));
         l.svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
         l.svg.style.top = `${-top}px`;
-        l.path.setAttribute("d", d);
-        l.path.setAttribute("stroke-width", String(sw));
+        l.paths.forEach((path, i) => {
+          path.setAttribute("d", i ? Bp.d : A.d);
+          path.setAttribute("stroke-width", String(sw));
+        });
       }
       paint();
     };
@@ -230,15 +256,18 @@ export function TrailLayer({ tone }: { tone: "white" | "pink" }) {
   const store = useContext(Ctx);
   const el = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
-  const path = useRef<SVGPathElement>(null);
+  const pathA = useRef<SVGPathElement>(null);
+  const pathB = useRef<SVGPathElement>(null);
   useEffect(() => {
-    if (!store || !el.current || !svg.current || !path.current) return;
-    return store.add({ el: el.current, svg: svg.current, path: path.current });
+    if (!store || !el.current || !svg.current || !pathA.current || !pathB.current) return;
+    return store.add({ el: el.current, svg: svg.current, paths: [pathA.current, pathB.current] });
   }, [store]);
   return (
     <div ref={el} aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <svg ref={svg} className="absolute left-0 overflow-visible" width="0" height="0">
-        <path ref={path} fill="none" stroke={tone === "white" ? "#ffffff" : "#ff3d8b"} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" style={{ strokeDashoffset: 1, opacity: 0 }} />
+        {[pathA, pathB].map((r, i) => (
+          <path key={i} ref={r} fill="none" stroke={tone === "white" ? "#ffffff" : "#ff3d8b"} strokeLinecap="round" strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" style={{ strokeDashoffset: 1, opacity: 0 }} />
+        ))}
       </svg>
     </div>
   );

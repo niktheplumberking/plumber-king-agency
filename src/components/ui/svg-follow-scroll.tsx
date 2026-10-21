@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useId, useLayoutEffect, useRef, type ReactNode } from "react";
 
 /*
  * Scroll-drawn line (after Skiper19 "svg follow scroll", Nick 2026-10-21). One playful path is drawn in step with the
@@ -104,7 +104,7 @@ type Glyph = { x0: number; y0: number; x1: number; y1: number; base: number; ink
 export function TrailRun({ children }: { children: ReactNode }) {
   const wrap = useRef<HTMLDivElement>(null);
   const layers = useRef(new Set<Layer>());
-  const geo = useRef<{ sDoc: number; eDoc: number; lens: [number, number, number]; over: [number, number][] } | null>(null);
+  const geo = useRef<{ sDoc: number; eDoc: number; lens: [number, number, number]; over: [number, number][]; cut: string } | null>(null);
   const redraw = useRef<() => void>(() => {});
   const store = useRef<Store>({
     add: (l) => { layers.current.add(l); redraw.current(); return () => { layers.current.delete(l); }; },
@@ -157,7 +157,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       }
     };
 
-    const route: { key: string; Bp: ReturnType<typeof beltPath> | null; over: [number, number][] } = { key: "", Bp: null, over: [] };
+    const route: { key: string; Bp: ReturnType<typeof beltPath> | null; over: [number, number][]; cut: string } = { key: "", Bp: null, over: [], cut: "" };
     const measure = () => {
       const startEl = root.querySelector<HTMLElement>("[data-trail-start]");
       const endEl = root.querySelector<HTMLElement>("[data-trail-end]");
@@ -318,7 +318,8 @@ export function TrailRun({ children }: { children: ReactNode }) {
          laptop), so it runs only when the layout it depends on has changed, and its last answer is reused otherwise. */
       const key = [W, H, S, E, L1, L2, L3, box2(3), lines.map((l) => getComputedStyle(l).fontSize), document.fonts?.status]
         .flat(2).map((v) => (typeof v === "number" ? Math.round(v * 2) / 2 : String(v))).join();
-      if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; }
+      let cut = "";
+      if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; cut = route.cut; }
       else if (!phone && gb && gp && gh && go && ge) {
         const fsz = parseFloat(getComputedStyle(lines[1]).fontSize);
         const topInk = (g: Glyph) => { for (let y = Math.floor(g.y0); y < g.base; y++) for (let x = g.x0; x < g.x1; x++) if (g.ink(x, y)) return y; return g.base; };
@@ -413,17 +414,22 @@ export function TrailRun({ children }: { children: ReactNode }) {
           }
           let uFront = -1;
           if (uStart > 0 && Number.isFinite(stem2)) for (let i = uStart; i < pts.length; i++) if (pts[i].p[0] >= stem2) { uFront = i; break; }
-          if (uFront > 0 && rEnd > uFront) {
-            const a = pts[uFront].s;
+          if (uFront > 0 && rEnd > uFront && gYu) {
+            /* Nick 18:01: where the u's bowl joins its second stroke there is no clear background to switch in, and a square
+               end across the line read as a break. So the copy in front starts back at the u's left edge and is cut away
+               up to the second stroke along a straight upright edge, the stroke's own edge: the line slips out from under
+               the bowl exactly where the stroke begins. */
+            const a = pts[uStart].s;
+            cut = `M${gYu.x0 - sw} ${L1.y - sw}H${stem2}V${L1.y + L1.h + sw}H${gYu.x0 - sw}Z`;
             const b = pts[Math.min(pts.length - 1, rEnd + Math.ceil(sw / 3))].s;
             if (b / Bp.len < (over[0]?.[0] ?? 1)) over = [[a / Bp.len, b / Bp.len], ...over];
           }
         }
       }
-      route.key = key; route.Bp = Bp; route.over = over;
+      route.key = key; route.Bp = Bp; route.over = over; route.cut = cut;
 
       const A = beltPath(ringsA, sn, 0);
-      geo.current = { sDoc: o.y + S[1], eDoc: o.y + E[1], lens: [A.len, W * 0.6, Bp.len], over };
+      geo.current = { sDoc: o.y + S[1], eDoc: o.y + E[1], lens: [A.len, W * 0.6, Bp.len], over, cut };
 
       for (const l of layers.current) {
         const top = docOffset(l.el).y - o.y;
@@ -436,6 +442,8 @@ export function TrailRun({ children }: { children: ReactNode }) {
           path.setAttribute("stroke-width", String(sw));
         });
         l.svg.querySelector("circle")?.setAttribute("r", String(sw / 2));
+        // Everything outside the cut-away boxes (one big box with the cut boxes as holes).
+        l.svg.querySelector("clipPath path")?.setAttribute("d", `M-99999 -99999H99999V99999H-99999Z${cut}`);
       }
       paint();
     };
@@ -475,6 +483,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
  *  copy that shows above the title on the stretches where the line weaves in front of the letters. */
 export function TrailLayer({ tone, over = false }: { tone: "white" | "pink"; over?: boolean }) {
   const store = useContext(Ctx);
+  const clip = useId().replace(/:/g, "");
   const el = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const pathA = useRef<SVGPathElement>(null);
@@ -486,10 +495,11 @@ export function TrailLayer({ tone, over = false }: { tone: "white" | "pink"; ove
   return (
     <div ref={el} aria-hidden className={`pointer-events-none absolute inset-0 overflow-hidden ${over ? "z-10" : "-z-10"}`}>
       <svg ref={svg} className="absolute left-0 overflow-visible" width="0" height="0">
+        {over && <defs><clipPath id={clip} clipPathUnits="userSpaceOnUse"><path clipRule="evenodd" d="M-99999 -99999H99999V99999H-99999Z" /></clipPath></defs>}
         {[pathA, pathB].map((r, i) => (
-          <path key={i} ref={r} fill="none" stroke={tone === "white" ? "#ffffff" : "#ff3d8b"} strokeLinecap={over ? "butt" : "round"} strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" style={{ strokeDashoffset: 1, opacity: 0 }} />
+          <path key={i} ref={r} fill="none" stroke={tone === "white" ? "#ffffff" : "#ff3d8b"} strokeLinecap={over ? "butt" : "round"} strokeLinejoin="round" pathLength={1} strokeDasharray="1 1" clipPath={over ? `url(#${clip})` : undefined} style={{ strokeDashoffset: 1, opacity: 0 }} />
         ))}
-        {over && <circle r={0} fill="#ff3d8b" style={{ opacity: 0 }} />}
+        {over && <circle r={0} fill="#ff3d8b" clipPath={`url(#${clip})`} style={{ opacity: 0 }} />}
       </svg>
     </div>
   );

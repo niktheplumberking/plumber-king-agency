@@ -486,8 +486,12 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .pf-shot { overflow: hidden; border-radius: 1rem; border: 2px solid var(--color-ink); background: var(--color-ink); }
 .pf-shot img { display: block; width: 100%; height: auto; transition: scale 0.6s cubic-bezier(.2,.8,.2,1); }
 .pf:hover .pf-shot img { scale: 1.04; }
+.pf-link { margin-top: 1.5rem; display: inline-flex; min-height: 2.75rem; align-items: center; gap: 0.4rem; border: 2px solid var(--color-ink); border-radius: 99px; background: #fff; padding: 0.4rem 1.1rem; font-weight: 800; color: var(--color-ink); box-shadow: 3px 3px 0 var(--color-ink); transition: translate 0.2s, box-shadow 0.2s; }
+.pf-link svg { color: var(--color-ribbon-deep); }
+.pf-link:hover { translate: -2px -2px; box-shadow: 5px 5px 0 var(--color-ink); }
+.pf-link:focus-visible { outline: 3px solid var(--color-ribbon-deep); outline-offset: 3px; }
 @media (min-width: 64rem) { .pf { padding: 2.5rem; } .pf-img { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; } }
-@media (prefers-reduced-motion: reduce) { .ab-tab, .pf-shot img { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ab-tab, .pf-shot img, .pf-link { transition: none; } }
 
 /* Grader trust badge: centred on the card's bottom-left corner on wide screens (batch 3, Nick 2026-10-20; was bottom-right),
    so it hangs past the grid. It never goes closer than 8 px to the screen edge: where the page margin is narrower than half

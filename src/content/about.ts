@@ -45,6 +45,7 @@ export type Project = {
   what: string;
   did: string[];
   image?: { src: string; small: string; alt: string; h: number };
+  /** The project's live website. 2026-10-22: mindxbridge.com and courthub.ae opened and matched our screenshots. */
   url?: string;
 };
 
@@ -58,6 +59,7 @@ export const projects: Project[] = [
     what: "A research incubator and publication pipeline for students, clinicians and early-career researchers, run with universities in Ireland and Saudi Arabia. The business has brought in around $150,000 so far.",
     did: ["Built the complete brand", "Designed and built the website", "Helped grow the business"],
     image: { src: "/work/portfolio/mindxbridge-1200.webp", small: "/work/portfolio/mindxbridge-600.webp", alt: "The MindXBridge homepage: Your Complete Research Incubator and Publication Pipeline, with a glowing blue brain", h: 675 },
+    url: "https://mindxbridge.com/",
   },
   {
     id: "courthub",
@@ -67,6 +69,7 @@ export const projects: Project[] = [
     what: "Court Hub Group builds padel courts and sells rackets and gear in the UAE. Their online store runs in English and Arabic and takes card payments in dirhams. We helped them grow their online sales.",
     image: { src: "/work/portfolio/courthub-1200.webp", small: "/work/portfolio/courthub-600.webp", alt: "The CourtHub homepage: Experience Padel Elevated, with a featured NOX padel racket", h: 750 },
     did: ["Designed and built the online store", "English and Arabic versions", "Online checkout, product admin and Instagram product import"],
+    url: "https://courthub.ae/",
   },
   {
     id: "rizm",

@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { AboutTabs } from "@/components/AboutTabs";
 import { CtaButton } from "@/components/CtaButton";
@@ -40,6 +40,11 @@ export default function PortfolioPage() {
                 <ul className="mt-5 space-y-2">
                   {p.did.map((d) => <li key={d} className="flex gap-3 text-t3"><Check className="mt-1 h-5 w-5 shrink-0 text-ribbon" aria-hidden />{d}</li>)}
                 </ul>
+                {p.url && (
+                  <a href={p.url} target="_blank" rel="noopener noreferrer" className="pf-link">
+                    Visit {new URL(p.url).hostname}<ArrowUpRight className="h-5 w-5" aria-hidden /><span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                )}
               </div>
             </Reveal>
           ))}
@@ -49,7 +54,7 @@ export default function PortfolioPage() {
       </section>
 
       <FinalCta />
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Portfolio of Nick Bennett", url: abs("/about/portfolio/"), about: { "@type": "Person", name: founderFull }, hasPart: projects.map((p) => ({ "@type": "CreativeWork", name: p.name, description: p.what })) }} />
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "CollectionPage", name: "Portfolio of Nick Bennett", url: abs("/about/portfolio/"), about: { "@type": "Person", name: founderFull }, hasPart: projects.map((p) => ({ "@type": "CreativeWork", name: p.name, description: p.what, ...(p.url ? { url: p.url } : {}) })) }} />
     </>
   );
 }

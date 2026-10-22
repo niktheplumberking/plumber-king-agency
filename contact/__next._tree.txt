@@ -5,4 +5,4 @@
 :HL["/brand/bobo-logo-96.webp","image",{"imageSrcSet":"/brand/bobo-logo-96.webp 1x, /brand/bobo-logo-192.webp 2x"}]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"contact","h":64,"c":"$Q2"}]]
-0:{"b":"QTMGw2Du8WopDuOGhV8YH","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
+0:{"b":"77im2ql5QYCMqwEEGV0tj","t":{"t":{"s":"","h":16,"c":"$Q1"}}}

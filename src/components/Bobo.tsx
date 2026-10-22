@@ -73,6 +73,17 @@ export function Bobo() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open, tip]);
 
+  // Phones: at the very end of the page Bobo steps aside so he never covers the legal links (Nick 2026-10-22 wants no
+  // extra room under them).
+  const [aside, setAside] = useState(false);
+  useEffect(() => {
+    const legal = document.querySelector('nav[aria-label="Legal"]');
+    if (!legal) return;
+    const io = new IntersectionObserver(([e]) => setAside(e.isIntersecting && window.innerWidth < 768));
+    io.observe(legal);
+    return () => io.disconnect();
+  }, [path, ready]);
+
   // A tip is a nudge, not a banner: it tucks itself away after a few seconds.
   useEffect(() => {
     if (!tip) return;
@@ -87,7 +98,7 @@ export function Bobo() {
 
   return (
     // The corner box itself lets clicks through, so the empty space beside Bobo never blocks links under it (QA 2026-10-21).
-    <div className="pointer-events-none fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex flex-col items-end gap-3 *:pointer-events-auto md:right-6 md:bottom-6">
+    <div className={`pointer-events-none fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex flex-col items-end gap-3 transition-[opacity,translate] duration-300 md:right-6 md:bottom-6 ${aside && !open ? "translate-y-6 opacity-0" : "*:pointer-events-auto"}`}>
       {open && <BoboPanel goal={goal} choose={choose} setGoal={setGoal} close={() => setOpen(false)} hide={hide} />}
 
       {tip && !open && (

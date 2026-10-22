@@ -127,7 +127,6 @@ export const CircularRevealHeading = ({
     const config = sizeConfig[size];
     const imagesLoaded = usePreloadImages(items.map(item => item.image), near);
     const uid = useId().replace(/:/g, '');
-    const curveId = `curve-${uid}`;
     const gradId = `textGradient-${uid}`;
 
     // The original loops: a 5 s float (y 0 → -8 → 0, ease in-out) and a 30 s linear turn. Advanced each frame so they
@@ -156,41 +155,62 @@ export const CircularRevealHeading = ({
         rotate.set((t * 12) % 360);
     });
 
+    // Each letter is placed and turned on its own along the circle. Safari clipped the first and last letter of every
+    // word when the words were drawn along a path (Nick's iPhone, 2026-10-22), so no text path is used. Letter widths
+    // come from the real font once it has loaded; until then every letter gets the same room.
+    const fontPx = parseFloat(config.fontSize.replace(/[^\d.]/g, '')) || 16;
+    const trackEm = parseFloat(config.tracking.replace(/[^\d.]/g, '')) || 0;
+    const [widths, setWidths] = useState<number[][] | null>(null);
+    useEffect(() => {
+        let gone = false;
+        const measure = () => {
+            const ctx = document.createElement('canvas').getContext('2d');
+            if (!ctx || gone) return;
+            const family = getComputedStyle(document.documentElement).getPropertyValue('--font-display') || 'sans-serif';
+            ctx.font = `${config.textStyle === 'font-black' ? 900 : 500} ${fontPx}px ${family}`;
+            setWidths(items.map((it) => [...it.text.toUpperCase()].map((ch) => ctx.measureText(ch).width)));
+        };
+        measure();
+        document.fonts?.ready.then(measure);
+        return () => { gone = true; };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [items.map((i) => i.text).join('|'), fontPx]);
+
     const createTextSegments = () => {
         const totalItems = items.length;
         const totalGapDegrees = config.gap * totalItems; // Total space for gaps
         const availableDegrees = 360 - totalGapDegrees; // Remaining space for text
         const segmentDegrees = availableDegrees / totalItems; // Space per text segment
+        const R = config.radius;
+        const segLen = (segmentDegrees * Math.PI * R) / 180;
         return items.map((item, index) => {
-            const startPosition = index * (segmentDegrees + config.gap);
-            const startOffset = `${(startPosition / 360) * 100}%`;
+            const startDeg = index * (segmentDegrees + config.gap);
+            const chars = [...item.text.toUpperCase()];
+            const w = widths?.[index] ?? chars.map(() => fontPx * 0.62);
+            // Each letter's room is its width plus the tracking; the gaps grow (letters never stretch) so the word fills
+            // its stretch of the circle, the way the original fitted it.
+            // A word too long for its stretch is narrowed letter by letter (as the original's spacingAndGlyphs did).
+            const natural = w.reduce((a, b) => a + b, 0) + trackEm * fontPx * chars.length;
+            const k = Math.min(1, segLen / natural);
+            const room = w.map((x) => (x + trackEm * fontPx) * k);
+            const extra = chars.length > 1 ? Math.max(0, segLen - room.reduce((a, b) => a + b, 0)) / (chars.length - 1) : 0;
+            let s = 0;
             return (
-                <g key={index}>
-                    <text
-                        className={cn(
-                            config.fontSize,
-                            config.tracking,
-                            config.textStyle,
-                            "uppercase cursor-pointer transition-all duration-300"
-                        )}
-                        onMouseEnter={() => imagesLoaded && setActiveImage(item.image ?? null)}
-                        onMouseLeave={() => setActiveImage(null)}
-                        style={{
-                            fontFamily: 'var(--font-display)',
-                            transition: 'all 0.3s ease'
-                        }}
-                    >
-                        <textPath
-                            href={`#${curveId}`}
-                            className="hover:fill-[#141414]"
-                            fill={`url(#${gradId})`}
-                            startOffset={startOffset}
-                            textLength={`${(segmentDegrees * Math.PI * config.radius) / 180}`}
-                            lengthAdjust="spacingAndGlyphs"
-                        >
-                            {item.text}
-                        </textPath>
-                    </text>
+                <g key={index}
+                    className={cn(config.fontSize, config.textStyle, "cursor-pointer hover:fill-[#141414]")}
+                    style={{ fontFamily: 'var(--font-display)' }}
+                    fill={`url(#${gradId})`}
+                    onMouseEnter={() => imagesLoaded && setActiveImage(item.image ?? null)}
+                    onMouseLeave={() => setActiveImage(null)}
+                >
+                    {chars.map((ch, i) => {
+                        const mid = s + (w[i] * k) / 2;
+                        s += room[i] + extra;
+                        // The circle path starts at 9 o'clock and runs clockwise over the top.
+                        const a = Math.PI + (startDeg * Math.PI) / 180 + mid / R;
+                        const x = 200 + R * Math.cos(a), y = 200 + R * Math.sin(a);
+                        return <text key={i} x={x} y={y} textAnchor="middle" transform={`rotate(${(a * 180) / Math.PI + 90} ${x} ${y})${k < 1 ? ` translate(${x * (1 - k)} 0) scale(${k} 1)` : ""}`}>{ch}</text>;
+                    })}
                 </g>
             );
         });
@@ -271,11 +291,6 @@ export const CircularRevealHeading = ({
                                 <stop offset="100%" stopColor="#FF3D8B" />
                             </linearGradient>
                         </defs>
-                        <path
-                            id={curveId}
-                            fill="none"
-                            d={`M 200,200 m -${config.radius},0 a ${config.radius},${config.radius} 0 1,1 ${config.radius * 2},0 a ${config.radius},${config.radius} 0 1,1 -${config.radius * 2},0`}
-                        />
                         {createTextSegments()}
                     </svg>
                 </motion.div>

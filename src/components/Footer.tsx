@@ -43,9 +43,9 @@ export function Footer() {
       {/* Oversized wordmark, like a sign on the shop wall: full width, slanted, white with KING in deep pink (Nick 2026-10-17). */}
       <FooterWordmark />
       <div className="border-t border-white/10">
-        {/* Bottom room so nothing here sits under Bobo or the phone call bar at the very end of the page (QA 2026-10-21:
-            they covered Sitemap, Privacy and Terms). */}
-        <div className="container-x flex flex-col gap-3 py-6 pb-52 text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pr-32 md:pb-8">
+        {/* Phones (Nick 2026-10-22): the room under the legal links matches the room above the copyright line, now the
+            call bar is gone. Bobo sits right, clear of the links on the left. Desktop keeps room right for Bobo. */}
+        <div className="container-x flex flex-col gap-3 pt-6 pb-[17px] text-t3 text-white/90 md:flex-row md:items-center md:justify-between md:pr-32 md:pb-8">
           <p>© {year} {site.ownership} · {site.legalAddress.replace(", USA", "")}. All rights reserved.</p>
           <nav aria-label="Legal" className="flex gap-5">
             <Link href="/privacy-policy/" className="flink">Privacy Policy</Link>

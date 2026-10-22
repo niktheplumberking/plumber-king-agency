@@ -2,10 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap, useGsap } from "@/lib/gsap";
 
-/** Hero wrapper: as it scrolls away the video frame sinks a little, the type lifts off faster than the page. */
+/** Hero wrapper: as it scrolls away the video frame sinks a little, the type lifts off faster than the page. Phones and
+ *  touch screens keep the hero still: there the video and the title moving apart read as tearing (Nick 2026-10-22). */
 export function HeroMotion({ className, children }: { className?: string; children: React.ReactNode }) {
   const ref = useRef<HTMLElement>(null);
-  useGsap(ref, () => {
+  useGsap(ref, ({ mobile }) => {
+    if (mobile || window.matchMedia("(hover: none) and (pointer: coarse)").matches) return;
     const st = { trigger: ref.current, start: "top top", end: "bottom top", scrub: true };
     gsap.to("[data-hero-media]", { yPercent: 8, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-copy]", { yPercent: -18, ease: "none", scrollTrigger: st });

@@ -393,7 +393,12 @@ export default function Timeline({
       createItemTimeline(item, index);
     });
 
+    // Width changes only: on phones the browser bar showing or hiding is a height-only resize, and a forced refresh
+    // there scrolled the page to the top and back mid-swipe (Nick's iPhone glitch, 2026-10-22).
+    let lastWidth = window.innerWidth;
     const handleResize = () => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       ScrollTrigger.refresh();
     };
 

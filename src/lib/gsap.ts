@@ -3,7 +3,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLayoutEffect, useEffect, type RefObject } from "react";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+  // Phones: the browser bar slides in and out whenever the swipe direction changes, which fires a height-only resize.
+  // A refresh then jumps the page to the top and back (Nick's iPhone "glitch", 2026-10-22), so only width changes count.
+  ScrollTrigger.config({ ignoreMobileResize: true });
+}
 
 export { gsap, ScrollTrigger };
 

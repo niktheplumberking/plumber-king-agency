@@ -241,6 +241,11 @@ html { scroll-padding-top: 88px; }
 @media (min-width: 640px) { .vsl-play { width: 6.5rem; height: 6.5rem; } }
 /* The play button sits low on the photo cover so it stays off Nick's face. */
 .vsl-play-low { top: 64%; }
+.vsl-start:focus-visible { outline: 4px solid #c2185b; outline-offset: -8px; border-radius: 18px; }
+.vsl-start .vsl-play { transition: scale 0.2s; }
+.vsl-start:hover .vsl-play { scale: 1.08; }
+[data-hero-media] > .sticker { transition: opacity 0.3s; }
+[data-hero-media][data-playing] > .sticker { opacity: 0; pointer-events: none; }
 .hero-rays { background: repeating-conic-gradient(from 0deg at 58% 110%, rgb(255 255 255 / 0.07) 0deg 6deg, transparent 6deg 14deg); }
 .hero-dots { background-image: radial-gradient(var(--color-ribbon) 1.5px, transparent 1.6px); background-size: 22px 22px; opacity: 0.35; mask-image: linear-gradient(to right, #000, transparent); }
 

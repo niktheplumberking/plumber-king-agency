@@ -1,10 +1,9 @@
 import Link from "@/components/Link";
-import { MapPin, Play, PhoneIncoming, Star, Wrench } from "lucide-react";
+import { MapPin, PhoneIncoming, Star, Wrench } from "lucide-react";
 import { site } from "@/content/site";
 import { CtaButton } from "../CtaButton";
-import { PlaceholderBadge } from "../PlaceholderBadge";
-import { nick, nickSrc, nickSrcSet } from "@/content/about";
 import { HeroMotion } from "./HeroMotion";
+import { VslPlayer } from "./VslPlayer";
 
 const leads = [
   { icon: PhoneIncoming, title: "Incoming call", body: "Burst pipe under the kitchen sink", meta: "Cary, NC · just now", tone: "bg-ribbon-deep" },
@@ -17,7 +16,7 @@ const foundOn = ["Google Search", "Google Maps", "ChatGPT", "Perplexity", "Bing"
 /**
  * Home hero, built around the eye path Nick set (2026-10-16): 1) the video, 2) the headline, 3) the subline,
  * 4) the buttons, 5) logos, 6) the menu. Nick 2026-10-19: no load-in animation anywhere in the hero (or its header);
- * everything is there from the first paint. Until Nick's VSL exists the frame shows his photo.
+ * everything is there from the first paint. His photo is the video's cover until play is pressed.
  */
 export function Hero() {
   const lines = ["Websites that", "keep plumbers"];
@@ -33,19 +32,8 @@ export function Hero() {
       <div className="container-x relative grid items-center gap-x-10 gap-y-10 pt-28 pb-44 lg:min-h-[100svh] lg:grid-cols-[minmax(0,1.32fr)_minmax(0,1fr)] lg:pt-24 lg:pb-60">
         {/* 1) The video. First in reading order on every screen. */}
         <div data-hero-media className="relative order-first lg:order-last">
-          <figure className="relative">
-            <div className="vsl-frame">
-              <div aria-hidden className="vsl-bg" />
-              {/* Nick 2026-10-20: his own night-desk photo is the video's cover (it matches the purple-lit VSL). */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={nickSrc(nick.studio)} srcSet={nickSrcSet(nick.studio)} sizes="(min-width: 1024px) 40vw, 92vw" alt={nick.studio.alt} width={nick.studio.w} height={nick.studio.h} fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: nick.studio.pos }} />
-              <span className="vsl-play vsl-play-low" aria-hidden><Play className="h-9 w-9 translate-x-0.5 fill-current" /></span>
-              <figcaption className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 flex flex-wrap items-center gap-2">
-                <span className="hidden rounded-md bg-ink px-3 py-1.5 text-t3 font-bold text-white sm:inline-block">Watch: how I get plumbers booked</span>
-                <PlaceholderBadge label="Video coming soon" />
-              </figcaption>
-            </div>
-          </figure>
+          {/* Nick's VSL (filmed 2026-10-21). Loads only when someone presses play. */}
+          <VslPlayer />
           <span data-hero-sticker className="sticker absolute -top-5 left-[6%] z-10 bg-white text-ink" style={{ "--tilt": "-8deg" } as React.CSSProperties} aria-hidden>
             <Star className="h-3.5 w-3.5 fill-current" />Plumbers only
           </span>

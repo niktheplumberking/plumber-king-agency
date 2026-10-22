@@ -436,7 +436,9 @@ export function TrailRun({ children }: { children: ReactNode }) {
         const sB = belly(Bp.pts, gb), sP = belly(Bp.pts, gp, Math.max(0, sB)), sO = belly(Bp.pts, go, Math.max(0, sP));
         over = [];
         if (sB >= 0 && sP > sB) over.push([sB / Bp.len, sP / Bp.len]);
-        if (sO >= 0) over.push([sO / Bp.len, 1]);
+        // In front only until the gap inside the n (Nick 14:09): its second stroke and the e stay on top of the line.
+        const sN = sO >= 0 ? belly(Bp.pts, gn, sO) : -1;
+        if (sO >= 0) over.push([sO / Bp.len, sN > sO ? sN / Bp.len : 1]);
         sY = y0;
       }
       else if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; cut = route.cut; }

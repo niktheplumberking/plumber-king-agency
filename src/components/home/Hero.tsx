@@ -1,5 +1,4 @@
 import Link from "@/components/Link";
-import { Star } from "lucide-react";
 import { site } from "@/content/site";
 import { CtaButton } from "../CtaButton";
 import { HeroMotion } from "./HeroMotion";
@@ -29,10 +28,9 @@ export function Hero() {
         <div data-hero-media className="relative order-first lg:order-last">
           {/* Nick's VSL (filmed 2026-10-21). Loads only when someone presses play. */}
           <VslPlayer />
-          <span data-hero-sticker className="sticker absolute -top-5 left-[6%] z-10 bg-white text-ink" style={{ "--tilt": "-8deg" } as React.CSSProperties} aria-hidden>
-            <Star className="h-3.5 w-3.5 fill-current" />Plumbers only
-          </span>
-          <span className="sticker absolute -right-2 top-[18%] z-10 bg-ink text-white" style={{ "--tilt": "6deg" } as React.CSSProperties}>Nick · Founder</span>
+          {/* Nick 2026-10-22: the "Plumbers only" sticker is gone; the founder sticker took its spot, tilted 35° left,
+              1.3x, pink with white type. */}
+          <span data-hero-sticker className="sticker absolute top-0 left-[6%] z-10 bg-ribbon sm:-top-5 text-white" style={{ "--tilt": "-35deg", scale: "1.3" } as React.CSSProperties}>Nick · Founder</span>
         </div>
 
         <div data-hero-copy className="hero-copy relative z-10">

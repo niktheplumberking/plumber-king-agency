@@ -241,6 +241,14 @@ html { scroll-padding-top: 88px; }
 @media (min-width: 640px) { .vsl-play { width: 6.5rem; height: 6.5rem; } }
 .vsl-start:focus-visible { outline: 4px solid #c2185b; outline-offset: -8px; border-radius: 18px; }
 .vsl-start .vsl-play { transition: scale 0.2s; }
+/* Label on the cover (Nick 2026-10-22): every screen; sizes are the 1440 px desktop look (17 px type on a 585 px
+   frame), shrunk in proportion on narrower frames, never grown past it. */
+.vsl-start { container-type: inline-size; }
+.vsl-label {
+  position: absolute; left: min(1rem, 2.74cqi); bottom: min(1rem, 2.74cqi); padding: min(6px, 1.03cqi) min(12px, 2.05cqi);
+  border-radius: min(6px, 1.03cqi); background: var(--color-ink); color: #fff; font-weight: 700; text-align: left;
+  font-size: min(var(--text-t3), 2.95cqi); line-height: 1.6;
+}
 .vsl-start:hover .vsl-play { scale: 1.08; }
 [data-hero-media] > .sticker { transition: opacity 0.3s; }
 [data-hero-media][data-playing] > .sticker { opacity: 0; pointer-events: none; }

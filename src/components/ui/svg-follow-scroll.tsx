@@ -130,7 +130,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       /* Two strokes drawn one after the other: the pink-section part (it leaves past the right edge), then the title part
          (it comes in from the left edge). Nick 2026-10-22: no scrolling without the line moving, so the title part starts
          the moment the first part is off screen; the pause is cut, so the line reaches the dot that much sooner. */
-      const parts = [Math.min(1, s / la), Math.min(1, Math.max(0, (s - la) / lb))];
+      const parts = [la ? Math.min(1, s / la) : 0, Math.min(1, Math.max(0, (s - la) / lb))];
       // The copy above the letters shows only on its stretches, and only as far as the line has been drawn.
       const segs = g.over.map(([a, b]) => [a, Math.min(b, parts[1])]).filter(([a, b]) => b > a);
       let dash = "0 " + segs.map(([a, b], k) => `${a - (k ? segs[k - 1][1] : 0)} ${b - a}`).join(" ") + " 2";
@@ -335,13 +335,14 @@ export function TrailRun({ children }: { children: ReactNode }) {
         .flat(2).map((v) => (typeof v === "number" ? Math.round(v * 2) / 2 : String(v))).join();
       let cut = "", waiting = false;
       const route0 = Bp;
-      let eY = E[1], phoneA: ReturnType<typeof beltPath> | null = null;
+      let eY = E[1], sY = S[1], phoneA: ReturnType<typeof beltPath> | null = null;
       if (phone && gb && gp && go) {
-        /* Phones (Nick 2026-10-22, second recording): one simple line. From the card's corner it bends straight down
-           towards the b of "website", turns pink where it crosses onto the light section, runs down through the b and
-           the p, turns inside the p and goes straight right through "one." and off the screen. No line from the left,
-           no end at the dot. Over the letters from the middle of the b's belly to the middle of the p's, and again from
-           the middle of the o's. */
+        /* Phones (Nick 2026-10-22, 11:58, from his drawing): no line on the pink section at all. The pink line comes in
+           from the left edge just above "Your website", rises a little and drops (a small wave), runs on to the right,
+           goes once round a true circle above "site" (crossing itself, like a written loop) and leaves it heading down
+           into the b. From there it is the route he approved earlier: down through the b and the p, a turn inside the
+           p and straight right through "one." and off the screen. Over the letters from the middle of the b's belly to
+           the middle of the p's, and again from the middle of the o's. */
         const topInk = (g: Glyph) => { for (let y = Math.floor(g.y0); y < g.base; y++) for (let x = g.x0; x < g.x1; x++) if (g.ink(x, y)) return y; return g.base; };
         const xh = go.base - topInk(go);
         const mid = (g: Glyph): Pt => {
@@ -355,31 +356,32 @@ export function TrailRun({ children }: { children: ReactNode }) {
         };
         const Pb = mid(gb), Pp = mid(gp), yO = mid(go)[1];
         const ul = Math.hypot(Pp[0] - Pb[0], Pp[1] - Pb[1]), u: Pt = [(Pp[0] - Pb[0]) / ul, (Pp[1] - Pb[1]) / ul];
-        // The bend off the card: a circle touching the start direction and the b-p line (a fillet at their crossing).
-        const [sx, sy] = startDir;
-        const den = sx * u[1] - sy * u[0];
-        const tX = ((Pb[0] - S[0]) * u[1] - (Pb[1] - S[1]) * u[0]) / den; // distance along the start direction to the crossing
-        const X: Pt = [S[0] + sx * tX, S[1] + sy * tX];
-        const turn = Math.acos(Math.max(-1, Math.min(1, sx * u[0] + sy * u[1])));
-        const r1 = Math.max(8, Math.min(turnR, (tX - 4) / Math.max(0.05, Math.tan(turn / 2))));
-        const t1 = r1 * Math.tan(turn / 2);
-        const P1: Pt = [X[0] - sx * t1, X[1] - sy * t1];
-        const bend: Ring = { c: [P1[0] - r1 * sy, P1[1] + r1 * sx], r: r1, d: 1 };
+        // Room between the section's top edge and the top of the tallest letter (the b).
+        const top = B + sw / 2 + 6, yBot = topInk(gb) - sw / 2 - Math.max(8, sw);
+        // The loop: anticlockwise, its bottom on the run in, touching the b-p line on its right (so leaving it heading down).
+        const R = Math.max(10, Math.min(W * 0.085, (yBot - top) / 2));
+        const tL = (yBot - R + u[0] * R - Pb[1]) / u[1]; // the touching point that puts the loop's bottom on the run in
+        const PL: Pt = [Pb[0] + u[0] * tL, Pb[1] + u[1] * tL];
+        const loop: Ring = { c: [PL[0] + R * u[1], PL[1] - R * u[0]], r: R, d: -1, loop: true };
+        // The wave before it: up over a crest, down into a trough whose bottom is level with the loop's.
+        const hW = Math.max(4, R * 0.7);
+        const Rc = W * 0.16, Rt = W * 0.1;
+        const crest: Ring = { c: [W * 0.12, yBot - hW + Rc], r: Rc, d: 1 };
+        const trough: Ring = { c: [Math.min(loop.c[0] - R - Rt - sw, W * 0.4), yBot - Rt], r: Rt, d: -1 };
+        const entry: Ring = { c: [-sw * 4, yBot - hW * 0.45], r: 0, d: 1 };
         // The turn inside the p: anticlockwise, its bottom on the o's middle row, leaving heading right.
         const r2 = Math.max(4, xh * 0.25);
         const tq = (yO - r2 + r2 * u[0] - Pb[1]) / u[1];
         const Pq: Pt = [Pb[0] + u[0] * tq, Pb[1] + u[1] * tq];
         const dip: Ring = { c: [Pq[0] + r2 * u[1], Pq[1] - r2 * u[0]], r: r2, d: -1 };
         const out: Ring = { c: [W + sw * 4, yO], r: 0, d: 1 };
-        // Where the b-p line crosses onto the light section, the white line hands over to the pink one.
-        const tB = (B - Pb[1]) / u[1];
-        const T: Ring = { c: [Pb[0] + u[0] * tB, B], r: 0, d: 1 };
-        phoneA = beltPath([s0, bend, T], sn, 0);
-        Bp = beltPath([T, dip, out], 0, 0);
+        phoneA = { d: "", len: 0, pts: [], sweeps: [], kinked: false };
+        Bp = beltPath([entry, crest, trough, loop, dip, out], 0, 0);
         const sB = belly(Bp.pts, gb), sP = belly(Bp.pts, gp, Math.max(0, sB)), sO = belly(Bp.pts, go, Math.max(0, sP));
         over = [];
         if (sB >= 0 && sP > sB) over.push([sB / Bp.len, sP / Bp.len]);
         if (sO >= 0) over.push([sO / Bp.len, 1]);
+        sY = entry.c[1];
         eY = yO;
       }
       else if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; cut = route.cut; }
@@ -513,7 +515,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       if (!waiting) { route.key = key; route.Bp = Bp; route.over = over; route.cut = cut; }
 
       const A = phoneA ?? beltPath(ringsA, sn, 0);
-      geo.current = { sDoc: o.y + S[1], eDoc: o.y + eY, lens: [A.len, W * 0.6, Bp.len], over, cut };
+      geo.current = { sDoc: o.y + sY, eDoc: o.y + eY, lens: [A.len, phoneA ? 0 : W * 0.6, Bp.len], over, cut };
 
       for (const l of layers.current) {
         const top = docOffset(l.el).y - o.y;

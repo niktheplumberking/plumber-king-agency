@@ -50,7 +50,7 @@ export function VslPlayer() {
       ) : (
         <button type="button" onClick={start} aria-label="Play video: how I get plumbers booked" className="vsl-start absolute inset-0 cursor-pointer">
           <span className="vsl-play" aria-hidden><Play className="h-9 w-9 translate-x-0.5 fill-current" /></span>
-          <span className="absolute bottom-3 left-3 hidden rounded-md bg-ink px-3 py-1.5 text-t3 font-bold text-white sm:bottom-4 sm:left-4 sm:inline-block">Watch: how I get plumbers booked</span>
+          <span className="vsl-label">WARNING: Watch <span className="text-ribbon">ONLY</span> if you want <span className="text-ribbon">INCREASED REVENUE</span></span>
         </button>
       )}
     </div>

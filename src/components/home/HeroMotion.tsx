@@ -11,7 +11,7 @@ export function HeroMotion({ className, children }: { className?: string; childr
     const st = { trigger: ref.current, start: "top top", end: "bottom top", scrub: true };
     gsap.to("[data-hero-media]", { yPercent: 8, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-copy]", { yPercent: -18, ease: "none", scrollTrigger: st });
-    gsap.to("[data-hero-sticker]", { y: 160, rotate: 10, ease: "none", scrollTrigger: st });
+    gsap.to("[data-hero-sticker]", { y: 160, rotate: "+=18", ease: "none", scrollTrigger: st });
   });
   return <section ref={ref} className={className}>{children}</section>;
 }

@@ -2,6 +2,8 @@
 # TO-CONFIRM with Nick: the live domain is the non-www https://plumberkingagency.com (matches the canonical tags).
 Options -Indexes
 ErrorDocument 404 /404.html
+# The hero VSL: the right type, so browsers play it (nosniff is on below).
+AddType video/mp4 .mp4
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -25,8 +27,8 @@ ErrorDocument 404 /404.html
   <FilesMatch "\.(js|css|woff2)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
-  # Images keep their names when swapped (logo, photos), so a week only.
-  <FilesMatch "\.(webp|png|jpg|jpeg|svg|ico)$">
+  # Images and the VSL keep their names when swapped (logo, photos, video), so a week only.
+  <FilesMatch "\.(webp|png|jpg|jpeg|svg|ico|mp4)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
   <FilesMatch "\.(html|xml|txt)$">

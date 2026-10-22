@@ -402,15 +402,42 @@ export function TrailRun({ children }: { children: ReactNode }) {
         const dip: Ring = { c: [Pq[0] + r2 * u[1], Pq[1] - r2 * u[0]], r: r2, d: -1 };
         const out: Ring = { c: [W + sw * 4, yO], r: 0, d: 1 };
         phoneA = { d: "", len: 0, pts: [], sweeps: [], kinked: false };
-        // From the loop's bottom (heading right) the line is the belt of circles it was before.
-        const belt = beltPath([loop, dip, out], Math.PI / 2, 0);
-        Bp = { ...belt, d: wd + belt.d.replace(/^M/, " L"), len: wl + belt.len, pts: [...wave, ...belt.pts.slice(1).map((q) => ({ p: q.p, s: q.s + wl }))] };
+        /* The end (Nick 13:44): once past the first stroke after the o (the n's) the line curves down, the same flowing half wave as the
+           start, to the middle of the row "Yours, or the" (cap top to baseline of its Y), then runs on right off the screen. */
+        // Where the drop starts: just past the first black stroke after the o (the n's first stroke).
+        let oRight = go.x1;
+        for (let x = go.x1; x > go.x0; x--) if (go.ink(x, yO)) { oRight = x; break; }
+        if (gn) {
+          let x = gn.x0;
+          while (x < gn.x1 && !gn.ink(x, yO)) x++;
+          while (x < gn.x1 && gn.ink(x, yO)) x++;
+          if (x < gn.x1) oRight = x;
+        }
+        const gY = glyph(lines[2], 0);
+        const yR = gY ? (topInk(gY) + gY.base) / 2 : yO + lh;
+        const xs = oRight + sw * 0.5, x2 = Math.max(xs + 40, W * 0.97);
+        // From the loop's bottom (heading right) the line is the belt of circles it was before, as far as the drop.
+        const belt = beltPath([loop, dip, { c: [xs, yO], r: 0, d: 1 }], Math.PI / 2, 0);
+        const tailPts: { p: Pt; s: number }[] = [];
+        let td = "", tl = 0, prev: Pt = [xs, yO];
+        for (let x = xs; x < W + sw * 4; ) {
+          x = Math.min(W + sw * 4, x + 2);
+          const q: Pt = [x, x >= x2 ? yR : yO + ((yR - yO) * (1 - Math.cos((Math.PI * (x - xs)) / (x2 - xs)))) / 2];
+          tl += Math.hypot(q[0] - prev[0], q[1] - prev[1]);
+          tailPts.push({ p: q, s: tl });
+          td += ` L ${q[0].toFixed(1)} ${q[1].toFixed(1)}`;
+          prev = q;
+        }
+        const head = wl + belt.len;
+        Bp = { ...belt, d: wd + belt.d.replace(/^M/, " L") + td, len: head + tl, pts: [...wave, ...belt.pts.slice(1).map((q) => ({ p: q.p, s: q.s + wl })), ...tailPts.map((q) => ({ p: q.p, s: q.s + head }))] };
+        // Same drawing speed as before the drop was added: the extra length gets proportionally more scroll.
+        const vh0 = window.innerHeight, oldLen = wl + beltPath([loop, dip, out], Math.PI / 2, 0).len;
+        eY = yO + ((Bp.len - oldLen) * (yO - y0 + vh0 * 0.3)) / oldLen;
         const sB = belly(Bp.pts, gb), sP = belly(Bp.pts, gp, Math.max(0, sB)), sO = belly(Bp.pts, go, Math.max(0, sP));
         over = [];
         if (sB >= 0 && sP > sB) over.push([sB / Bp.len, sP / Bp.len]);
         if (sO >= 0) over.push([sO / Bp.len, 1]);
         sY = y0;
-        eY = yO;
       }
       else if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; cut = route.cut; }
       else if (gb && gp && gh && go && ge) {

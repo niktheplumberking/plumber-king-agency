@@ -471,6 +471,8 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
    the circle (102 px), it slides right just enough to stay whole. On narrower screens it sits on the bottom edge at the left. */
 .gr-badge { position: absolute; z-index: 5; left: -0.25rem; bottom: 0; translate: 0 45%; }
 .gr-card:has(.gr-badge) { padding-bottom: 7rem; }
+/* Phones (Nick 2026-10-22): the whole badge at 0.75x, still hung on the card's bottom-left corner. */
+@media (max-width: 47.99rem) { .gr-badge { scale: 0.75; transform-origin: 0 50%; } }
 @media (min-width: 1024px) {
   .gr-card:has(.gr-badge) { padding-bottom: 2.5rem; }
   .gr-badge { --gr-gut: clamp(1rem, 2.2vw, 2.5rem); --gr-side: max(0px, (100vw - 120rem) / 2); left: max(-102px, 8px - var(--gr-gut) - var(--gr-side)); translate: 0 50%; }
@@ -583,6 +585,8 @@ html.pk-still .feg-before, html.pk-still .feg-after-half, html.pk-still .feg-ba,
 .fn-im { display: block; font-size: calc(100cqi / 9); color: var(--color-slate); }
 .fn-name { display: block; white-space: nowrap; font-size: calc(0.99 * 100cqi / 5.674); line-height: 0.86; letter-spacing: -0.035em; }
 .fn-sub { display: block; margin-top: 0.35em; font-size: calc(100cqi / 7.2); line-height: 0.95; text-align: right; }
+/* Phones (Nick 2026-10-22): "I'm" at half its old size, and the pink line at that same size. */
+@media (max-width: 47.99rem) { .fn-im, .fn-sub { font-size: calc(100cqi / 18); } .fn-sub { line-height: 1.05; } }
 @media (min-width: 64rem) {
   .fn-head { position: relative; }
   .fn-im, .fn-sub { font-size: calc(0.55 * 100cqi / 15.297); }

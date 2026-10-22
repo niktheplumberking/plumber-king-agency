@@ -11,7 +11,8 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 export function SmoothScroll() {
   const pathname = usePathname();
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Touch screens keep the phone's own scrolling (Nick 2026-10-22: scrolling felt glitchy on his iPhone).
+    if (window.matchMedia("(prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse)").matches) return;
     const lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 1, anchors: { offset: -88 } });
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (t: number) => lenis.raf(t * 1000);

@@ -4,7 +4,6 @@ import "./globals.css";
 import { site } from "@/content/site";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { MobileCtaBar } from "@/components/MobileCtaBar";
 import { RevealObserver } from "@/components/RevealObserver";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Bobo } from "@/components/Bobo";
@@ -78,7 +77,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main id="main">{children}</main>
         <Footer />
-        <MobileCtaBar />
         <RevealObserver />
         <SmoothScroll />
         <Bobo />

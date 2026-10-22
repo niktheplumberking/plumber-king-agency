@@ -231,8 +231,9 @@ export const CircularRevealHeading = ({
                     }}
                 />
 
+                {/* Badge: the inner ring sits just outside the words; at 12 px its edge ran through their tops (Nick 2026-10-22). */}
                 <motion.div
-                    className="absolute inset-[12px] rounded-full"
+                    className={cn("absolute rounded-full", size === "badge" ? "inset-[7px]" : "inset-[12px]")}
                     style={{
                         backgroundColor: BG,
                         boxShadow: `inset 4px 4px 8px ${INSET}, inset -4px -4px 8px #ffffff`

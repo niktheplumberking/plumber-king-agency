@@ -159,6 +159,22 @@ export function TrailRun({ children }: { children: ReactNode }) {
     };
 
     const route: { key: string; Bp: ReturnType<typeof beltPath> | null; over: [number, number][]; cut: string } = { key: "", Bp: null, over: [], cut: "" };
+    type Found = { Bp: ReturnType<typeof beltPath>; over: [number, number][]; cut: string };
+    let job: { key: string; it: Generator<void, Found> } | null = null;
+    let slice = 0, alive = true;
+    // Runs the route search a slice at a time; when it is done the answer is cached and the line measured again.
+    const pump = () => {
+      if (slice) return;
+      slice = window.setTimeout(() => {
+        slice = 0;
+        if (!alive || !job) return;
+        const r = job.it.next();
+        if (!r.done) { pump(); return; }
+        route.key = job.key; route.Bp = r.value.Bp; route.over = r.value.over; route.cut = r.value.cut;
+        job = null;
+        redraw.current?.();
+      }, 16);
+    };
     const measure = () => {
       const startEl = root.querySelector<HTMLElement>("[data-trail-start]");
       const endEl = root.querySelector<HTMLElement>("[data-trail-end]");
@@ -200,6 +216,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       // The border between the two sections, and the sizes of the turns and loops.
       const first = root.firstElementChild as HTMLElement | null;
       const B = first ? first.offsetHeight : S[1] + 200;
+      // Phones follow the same route as desktop (Nick 2026-10-22), only without the written loop before "Your".
       const phone = W < 768;
       const loopR = Math.min(72, Math.max(34, W * 0.045));
       const turnR = Math.min(150, Math.max(56, W * 0.085));
@@ -213,7 +230,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       // End ring: the line comes down the right and curls in to the dot from 2 o'clock. As big as the room right of the
       // dot allows, so the last stretch is one slow curve closing in on the dot, not a straight run (Nick 13:10).
       const roomR = (W - Math.max(sw, W * 0.012) - sw / 2 - E[0]) / (1 - Math.cos(Math.PI / 2 - END_ANGLE));
-      const e0: Ring = { r: phone ? turnR * 0.5 : Math.max(turnR * 0.5, Math.min(roomR * 0.85, turnR * 3.2)), d: 1, c: [0, 0] };
+      const e0: Ring = { r: Math.max(turnR * 0.5, Math.min(roomR * 0.85, turnR * 3.2)), d: 1, c: [0, 0] };
       const en = Math.atan2(-ed[1], -ed[0]) - (e0.d * Math.PI) / 2;
       e0.c = [E[0] - e0.r * Math.cos(en), E[1] - e0.r * Math.sin(en)];
 
@@ -225,11 +242,9 @@ export function TrailRun({ children }: { children: ReactNode }) {
       const vx = S[0] + R1 * 1.3, cx = Math.max(S[0] + (W - S[0]) * 0.55, vx + (R1 + R2) * 1.2);
       const ringsA: Ring[] = [
         s0,
-        ...(phone ? [] : [
-          { c: [vx, S[1] + below * 0.72 - R1] as Pt, r: R1, d: -1 as const },
-          { c: [cx, S[1] + below * 0.05 + R2] as Pt, r: R2, d: 1 as const },
-        ]),
-        { c: [Math.max(W * 1.05, cx + R2 * 2), S[1] + (phone ? -0.4 : 0.45) * below], r: 0, d: 1 },
+        { c: [vx, S[1] + below * 0.72 - R1] as Pt, r: R1, d: -1 as const },
+        { c: [cx, S[1] + below * 0.05 + R2] as Pt, r: R2, d: 1 as const },
+        { c: [Math.max(W * 1.05, cx + R2 * 2), S[1] + 0.45 * below], r: 0, d: 1 },
       ];
 
       /* Part B, on the ivory (Nick 2026-10-21 12:26 and 13:10): in from the left edge, the written loop left of "rings a
@@ -319,115 +334,146 @@ export function TrailRun({ children }: { children: ReactNode }) {
          laptop), so it runs only when the layout it depends on has changed, and its last answer is reused otherwise. */
       const key = [W, H, S, E, L1, L2, L3, box2(3), lines.map((l) => getComputedStyle(l).fontSize), document.fonts?.status]
         .flat(2).map((v) => (typeof v === "number" ? Math.round(v * 2) / 2 : String(v))).join();
-      let cut = "";
+      let cut = "", waiting = false;
+      const route0 = Bp;
       if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; cut = route.cut; }
-      else if (!phone && gb && gp && gh && go && ge) {
-        const fsz = parseFloat(getComputedStyle(lines[1]).fontSize);
-        const topInk = (g: Glyph) => { for (let y = Math.floor(g.y0); y < g.base; y++) for (let x = g.x0; x < g.x1; x++) if (g.ink(x, y)) return y; return g.base; };
-        const xh = go.base - topInk(go);
-        // The middle of a belly: on the row half an x-height above the baseline, the gap between the first two strokes.
-        const mid = (g: Glyph): Pt => {
-          const y = g.base - xh / 2;
-          let run = 0, a0 = -1;
-          for (let x = g.x0; x < g.x1; x++) {
-            const k = g.ink(x, y);
-            if (run === 0 && k) run = 1; else if (run === 1 && !k) { run = 2; a0 = x; } else if (run === 2 && k) return [(a0 + x) / 2, y];
-          }
-          return [(g.x0 + g.x1) / 2, y];
-        };
-        const Pb = mid(gb), Pp = mid(gp);
-        const hTop = topInk(gh);
-        // The descent is one straight run through the middle of the b's belly and the middle of the p's belly. The crest
-        // before it and the dip after it both sit on that run's line, so it meets them on their tangents.
-        const ux0 = Pp[0] - Pb[0], uy0 = Pp[1] - Pb[1], ul = Math.hypot(ux0, uy0);
-        const ux = ux0 / ul, uy = uy0 / ul;
-        const Rw = Math.min(lh * 0.9, W * 0.08);
-        const tc = Pb[0] - L1.x0 > Rw * 1.2 ? Math.min(lh * 0.6, (Pb[0] - L1.x0) * 0.4) : lh * 0.3;
-        const crest: Ring = { c: [Pb[0] - ux * tc - Rw * uy, Pb[1] - uy * tc + Rw * ux], r: Rw, d: 1 };
-        let best: { score: number; B: ReturnType<typeof beltPath>; over: [number, number][] } | null = null;
-        // Coarse pass over the half-circle size (every 0.2 em), then a fine pass (0.1 em) next to the best one found.
-        let bestRk = -1;
-        const tries = (pass: number) => pass === 0 ? Array.from({ length: 11 }, (_, k) => 0.5 + k * 0.2) : [bestRk - 0.1, bestRk + 0.1].filter((v) => v >= 0.5 && v <= 2.65);
-        if (ux > 0.2)
-          for (let pass = 0; pass < 2; pass++)
-          for (const tk of [0, 0.05, 0.1, 0.2, 0.35])
-            for (const rd of [0.3, 0.45, 0.6, 0.75, 0.9])
-              for (const rk of tries(pass)) {
-                const t = tk * fsz, r2 = rd * fsz, R = rk * fsz;
-                const dip: Ring = { c: [Pp[0] + ux * t + r2 * uy, Pp[1] + uy * t - r2 * ux], r: r2, d: -1 };
-                const Q: Ring = { c: [edge - R, hTop + R], r: R, d: 1 };
-                // Once a route meets every rule, routes that hook back out of the dip can never win: skip them unbuilt.
-                { const h = bridge(dip, Q); if (best && best.score < 1e5 && (Math.cos(h) < 0.35 || Math.sin(h) > 0)) continue; }
-                for (const spiral of [true, false]) {
-                // Spiral finish: the end curl sits inside the half circle and touches it, so the line goes over at the height
-                // of the "h", round the half circle and straight on into the smaller curl, closer and closer to the dot,
-                // with no straight run at all. Only possible when the dot lies inside the half circle.
-                let end = e0;
-                if (spiral) {
-                  const ux2 = Math.cos(en), uy2 = Math.sin(en);
-                  const gap = (r: number) => Math.hypot(Q.c[0] - (E[0] - r * ux2), Q.c[1] - (E[1] - r * uy2)) - (R - r);
-                  if (gap(4) >= 0) continue;
-                  let lo = 4, hi = R;
-                  for (let it = 0; it < 40; it++) { const m = (lo + hi) / 2; if (gap(m) < 0) lo = m; else hi = m; }
-                  const r = (lo + hi) / 2;
-                  if (r < sw * 3) continue;
-                  end = { c: [E[0] - r * ux2, E[1] - r * uy2], r, d: 1 };
+      else if (gb && gp && gh && go && ge) {
+        /* The search runs in short slices between frames (Nick 2026-10-22: a phone froze while it ran in one go); until it
+           finishes, the simple route above stands in. The section is far below the first screen, so it is done long before
+           anyone scrolls there. */
+        waiting = true;
+        if (job?.key !== key) {
+          const gB = gb, gP = gp, gH = gh, gO = go, gE = ge;
+          function* search(): Generator<void, { Bp: ReturnType<typeof beltPath>; over: [number, number][]; cut: string }> {
+            const [gb, gp, gh, go, ge] = [gB, gP, gH, gO, gE];
+            let Bp = route0, over: [number, number][] = [], cut = "", t0 = performance.now();
+          const fsz = parseFloat(getComputedStyle(lines[1]).fontSize);
+          const topInk = (g: Glyph) => { for (let y = Math.floor(g.y0); y < g.base; y++) for (let x = g.x0; x < g.x1; x++) if (g.ink(x, y)) return y; return g.base; };
+          const xh = go.base - topInk(go);
+          // The middle of a belly: on the row half an x-height above the baseline, the gap between the first two strokes.
+          const mid = (g: Glyph): Pt => {
+            const y = g.base - xh / 2;
+            let run = 0, a0 = -1;
+            for (let x = g.x0; x < g.x1; x++) {
+              const k = g.ink(x, y);
+              if (run === 0 && k) run = 1; else if (run === 1 && !k) { run = 2; a0 = x; } else if (run === 2 && k) return [(a0 + x) / 2, y];
+            }
+            return [(g.x0 + g.x1) / 2, y];
+          };
+          const Pb = mid(gb), Pp = mid(gp);
+          const hTop = topInk(gh);
+          // The descent is one straight run through the middle of the b's belly and the middle of the p's belly. The crest
+          // before it and the dip after it both sit on that run's line, so it meets them on their tangents.
+          const ux0 = Pp[0] - Pb[0], uy0 = Pp[1] - Pb[1], ul = Math.hypot(ux0, uy0);
+          const ux = ux0 / ul, uy = uy0 / ul;
+          const Rw = Math.min(lh * 0.9, W * 0.08);
+          const tc = Pb[0] - L1.x0 > Rw * 1.2 ? Math.min(lh * 0.6, (Pb[0] - L1.x0) * 0.4) : lh * 0.3;
+          const crest: Ring = { c: [Pb[0] - ux * tc - Rw * uy, Pb[1] - uy * tc + Rw * ux], r: Rw, d: 1 };
+          let best = null as { score: number; B: ReturnType<typeof beltPath>; over: [number, number][] } | null;
+          // Coarse pass over the half-circle size (every 0.2 em), then a fine pass (0.1 em) next to the best one found.
+          let bestRk = -1;
+          const tries = (pass: number) => pass === 0 ? Array.from({ length: 11 }, (_, k) => 0.5 + k * 0.2) : [bestRk - 0.1, bestRk + 0.1].filter((v) => v >= 0.5 && v <= 2.65);
+          /* Phones: the b of "website" sits almost straight above the p of "phone", so the descent runs nearly straight down, and with no
+             loop the line comes in low from the left edge so it still rises through "Your" (tried at a few heights). */
+          const l3Text = lines[2]?.textContent ?? "";
+          const l3Glyphs = phone ? [...l3Text].map((ch, k) => (ch.trim() ? glyph(lines[2], k) : null)).filter((g): g is Glyph => !!g) : [];
+          const entries: Ring[] = phone ? [0.35, 0.6, 0.85, 1.1, 1.35, 1.6, 1.9, 2.2].map((f) => ({ c: [-0.05 * W, L1.y + f * lh] as Pt, r: 0, d: 1 as const })) : [entry];
+          if (phone ? uy > 0.5 : ux > 0.2)
+            for (const ent of entries)
+            for (let pass = 0; pass < 2; pass++)
+            for (const tk of [0, 0.05, 0.1, 0.2, 0.35])
+              for (const rd of [0.3, 0.45, 0.6, 0.75, 0.9])
+                for (const rk of tries(pass)) {
+                  const t = tk * fsz, r2 = rd * fsz, R = rk * fsz;
+                  const dip: Ring = { c: [Pp[0] + ux * t + r2 * uy, Pp[1] + uy * t - r2 * ux], r: r2, d: -1 };
+                  const Q: Ring = { c: [edge - R, hTop + R], r: R, d: 1 };
+                  // Once a route meets every rule, routes that hook back out of the dip can never win: skip them unbuilt.
+                  { const h = bridge(dip, Q); if (best && best.score < 1e5 && (Math.cos(h) < 0.35 || Math.sin(h) > 0)) continue; }
+                  for (const spiral of [true, false]) {
+                  // Spiral finish: the end curl sits inside the half circle and touches it, so the line goes over at the height
+                  // of the "h", round the half circle and straight on into the smaller curl, closer and closer to the dot,
+                  // with no straight run at all. Only possible when the dot lies inside the half circle.
+                  let end = e0;
+                  if (spiral) {
+                    const ux2 = Math.cos(en), uy2 = Math.sin(en);
+                    const gap = (r: number) => Math.hypot(Q.c[0] - (E[0] - r * ux2), Q.c[1] - (E[1] - r * uy2)) - (R - r);
+                    if (gap(4) >= 0) continue;
+                    let lo = 4, hi = R;
+                    for (let it = 0; it < 40; it++) { const m = (lo + hi) / 2; if (gap(m) < 0) lo = m; else hi = m; }
+                    const r = (lo + hi) / 2;
+                    if (r < sw * 3) continue;
+                    end = { c: [E[0] - r * ux2, E[1] - r * uy2], r, d: 1 };
+                  }
+                  const rings: Ring[] = [ent, ...(loopA ? [ringA] : []), crest, dip, Q, end];
+                  const cand = beltPath(rings, 0, en);
+                  if (performance.now() - t0 > 8) { yield; t0 = performance.now(); }
+                  const sB = belly(cand.pts, gb), sP = belly(cand.pts, gp, Math.max(0, sB)), sO = belly(cand.pts, go, Math.max(0, sP));
+                  let bad = 0;
+                  if (sB < 0) bad += 3; if (sP < 0) bad += 3; if (sO < 0) bad += 3;
+                  if (touches(cand.pts, ge) || touches(cand.pts, gd)) bad += 4;
+                  if (pinkEnd.some((g) => touches(cand.pts, g))) bad += 4;
+                  // Phones have no loop to bring the line up through "Your", so the route itself must cross its u and r.
+                  if (phone && !(touches(cand.pts, gYu) && touches(cand.pts, gYr))) bad += 3;
+                  // Never across the pink "Yours, or the". Phones test the letters themselves: the line has to dip just above them.
+                  if (phone ? l3Glyphs.some((g) => touches(cand.pts, g)) : cand.pts.some(({ p }) => p[1] > L3.y - rad && p[1] < L3.y + L3.h && p[0] < L3.x1 + rad)) bad += 4;
+                  // No turn may wrap round on itself (only the written loop does that).
+                  if (cand.kinked || cand.sweeps.some((w) => w > Math.PI * 1.15)) bad += 5;
+                  // Out of the dip the line keeps heading right and up to the half circle, never hooking back.
+                  { const h = bridge(dip, Q); if (Math.cos(h) < 0.35 || Math.sin(h) > 0) bad += 5; }
+                  // Preferences, in order: every rule met, the spiral finish (no straight run), crossing the n, a shorter line.
+                  const score = bad * 1e5 + (spiral ? 0 : 3000) + (touches(cand.pts, gn) ? 0 : 800) + cand.len;
+                  if (!best || score < best.score) {
+                    const ov: [number, number][] = [];
+                    if (sB >= 0 && sP > sB) ov.push([sB / cand.len, sP / cand.len]);
+                    if (sO >= 0) ov.push([sO / cand.len, 1]);
+                    best = { score, B: cand, over: ov };
+                    if (pass === 0) bestRk = rk;
+                  }
+                  }
                 }
-                const rings: Ring[] = [entry, ...(loopA ? [ringA] : []), crest, dip, Q, end];
-                const cand = beltPath(rings, 0, en);
-                const sB = belly(cand.pts, gb), sP = belly(cand.pts, gp, Math.max(0, sB)), sO = belly(cand.pts, go, Math.max(0, sP));
-                let bad = 0;
-                if (sB < 0) bad += 3; if (sP < 0) bad += 3; if (sO < 0) bad += 3;
-                if (touches(cand.pts, ge) || touches(cand.pts, gd)) bad += 4;
-                if (pinkEnd.some((g) => touches(cand.pts, g))) bad += 4;
-                if (cand.pts.some(({ p }) => p[1] > L3.y - rad && p[1] < L3.y + L3.h && p[0] < L3.x1 + rad)) bad += 4;
-                // No turn may wrap round on itself (only the written loop does that).
-                if (cand.kinked || cand.sweeps.some((w) => w > Math.PI * 1.15)) bad += 5;
-                // Out of the dip the line keeps heading right and up to the half circle, never hooking back.
-                { const h = bridge(dip, Q); if (Math.cos(h) < 0.35 || Math.sin(h) > 0) bad += 5; }
-                // Preferences, in order: every rule met, the spiral finish (no straight run), crossing the n, a shorter line.
-                const score = bad * 1e5 + (spiral ? 0 : 3000) + (touches(cand.pts, gn) ? 0 : 800) + cand.len;
-                if (!best || score < best.score) {
-                  const ov: [number, number][] = [];
-                  if (sB >= 0 && sP > sB) ov.push([sB / cand.len, sP / cand.len]);
-                  if (sO >= 0) ov.push([sO / cand.len, 1]);
-                  best = { score, B: cand, over: ov };
-                  if (pass === 0) bestRk = rk;
-                }
-                }
-              }
-        if (best) {
-          Bp = best.B; over = best.over;
-          /* Nick 14:01: on the way up from the loop the line stays behind the "o" of "Your" and goes in front of the "u"'s second stroke
-             and the "r", switching where it crosses clear background (between the o and the u, and just after the r). */
-          const pts = Bp.pts;
-          const inkAt = (g: Glyph | null, p: Pt) => !!g && p[0] > g.x0 && p[0] < g.x1 && p[1] > g.y0 && p[1] < g.y1 && g.ink(p[0], p[1]);
-          const lastInk = (g: Glyph | null, from = 0) => { let k = -1; for (let i = from; i < pts.length && pts[i].s < (over[0]?.[0] ?? 1) * Bp.len; i++) if (inkAt(g, pts[i].p)) k = i; return k; };
-          const firstInk = (g: Glyph | null, from = 0) => { for (let i = from; i < pts.length; i++) if (inkAt(g, pts[i].p)) return i; return -1; };
-          const oEnd = lastInk(gYo), uStart = firstInk(gYu, Math.max(0, oEnd)), rEnd = lastInk(gYr);
-          /* Nick 14:59: behind the "u"'s first stroke too; in front only from its second (right) stroke. Its left edge is
-             the start of the last ink run across the middle of the u's x-height. */
-          let stem2 = Infinity;
-          if (gYu) {
-            const yRow = gYu.base - (gYo ? gYo.base - topInk(gYo) : 0) * 0.55;
-            let prev = false;
-            for (let x = gYu.x0; x < gYu.x1; x += 0.5) { const on = gYu.ink(x, yRow); if (on && !prev) stem2 = x; prev = on; }
+          if (best) {
+            Bp = best.B; over = best.over;
+            /* Nick 14:01: on the way up from the loop the line stays behind the "o" of "Your" and goes in front of the "u"'s second stroke
+               and the "r", switching where it crosses clear background (between the o and the u, and just after the r). */
+            const pts = Bp.pts;
+            const inkAt = (g: Glyph | null, p: Pt) => !!g && p[0] > g.x0 && p[0] < g.x1 && p[1] > g.y0 && p[1] < g.y1 && g.ink(p[0], p[1]);
+            const lastInk = (g: Glyph | null, from = 0) => { let k = -1; for (let i = from; i < pts.length && pts[i].s < (over[0]?.[0] ?? 1) * Bp.len; i++) if (inkAt(g, pts[i].p)) k = i; return k; };
+            const firstInk = (g: Glyph | null, from = 0) => { for (let i = from; i < pts.length; i++) if (inkAt(g, pts[i].p)) return i; return -1; };
+            const oEnd = lastInk(gYo), uStart = firstInk(gYu, Math.max(0, oEnd));
+            // Phones: the line can clip the r's top with its edge only, so the r counts wherever the painted width touches it.
+            let rEnd = lastInk(gYr);
+            if (rEnd < 0 && gYr) for (let i = 0; i < pts.length && pts[i].s < (over[0]?.[0] ?? 1) * Bp.len; i++) {
+              const p = pts[i].p;
+              if (inkAt(gYr, p) || ring8.some(([dx, dy]) => inkAt(gYr, [p[0] + dx, p[1] + dy]))) rEnd = i;
+            }
+            /* Nick 14:59: behind the "u"'s first stroke too; in front only from its second (right) stroke. Its left edge is
+               the start of the last ink run across the middle of the u's x-height. */
+            let stem2 = Infinity;
+            if (gYu) {
+              const yRow = gYu.base - (gYo ? gYo.base - topInk(gYo) : 0) * 0.55;
+              let prev = false;
+              for (let x = gYu.x0; x < gYu.x1; x += 0.5) { const on = gYu.ink(x, yRow); if (on && !prev) stem2 = x; prev = on; }
+            }
+            let uFront = -1;
+            if (uStart > 0 && Number.isFinite(stem2)) for (let i = uStart; i < pts.length; i++) if (pts[i].p[0] >= stem2) { uFront = i; break; }
+            if (uFront > 0 && rEnd > uFront && gYu) {
+              /* Nick 18:01: where the u's bowl joins its second stroke there is no clear background to switch in, and a square
+                 end across the line read as a break. So the copy in front starts back at the u's left edge and is cut away
+                 up to the second stroke along a straight upright edge, the stroke's own edge: the line slips out from under
+                 the bowl exactly where the stroke begins. */
+              const a = pts[uStart].s;
+              cut = `M${gYu.x0 - sw} ${L1.y - sw}H${stem2}V${L1.y + L1.h + sw}H${gYu.x0 - sw}Z`;
+              const b = pts[Math.min(pts.length - 1, rEnd + Math.ceil(sw / 3))].s;
+              if (b / Bp.len < (over[0]?.[0] ?? 1)) over = [[a / Bp.len, b / Bp.len], ...over];
+            }
           }
-          let uFront = -1;
-          if (uStart > 0 && Number.isFinite(stem2)) for (let i = uStart; i < pts.length; i++) if (pts[i].p[0] >= stem2) { uFront = i; break; }
-          if (uFront > 0 && rEnd > uFront && gYu) {
-            /* Nick 18:01: where the u's bowl joins its second stroke there is no clear background to switch in, and a square
-               end across the line read as a break. So the copy in front starts back at the u's left edge and is cut away
-               up to the second stroke along a straight upright edge, the stroke's own edge: the line slips out from under
-               the bowl exactly where the stroke begins. */
-            const a = pts[uStart].s;
-            cut = `M${gYu.x0 - sw} ${L1.y - sw}H${stem2}V${L1.y + L1.h + sw}H${gYu.x0 - sw}Z`;
-            const b = pts[Math.min(pts.length - 1, rEnd + Math.ceil(sw / 3))].s;
-            if (b / Bp.len < (over[0]?.[0] ?? 1)) over = [[a / Bp.len, b / Bp.len], ...over];
+            return { Bp, over, cut };
           }
+          job = { key, it: search() };
+          pump();
         }
       }
-      route.key = key; route.Bp = Bp; route.over = over; route.cut = cut;
+      if (!waiting) { route.key = key; route.Bp = Bp; route.over = over; route.cut = cut; }
 
       const A = beltPath(ringsA, sn, 0);
       geo.current = { sDoc: o.y + S[1], eDoc: o.y + E[1], lens: [A.len, W * 0.6, Bp.len], over, cut };
@@ -473,6 +519,7 @@ export function TrailRun({ children }: { children: ReactNode }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("load", schedule);
       if (pending) { if (idle.cancelIdleCallback) idle.cancelIdleCallback(pending); else clearTimeout(pending); }
+      alive = false; clearTimeout(slice);
       reduce.removeEventListener("change", paint);
     };
   }, []);

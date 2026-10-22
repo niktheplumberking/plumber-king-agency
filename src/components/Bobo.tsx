@@ -87,7 +87,7 @@ export function Bobo() {
 
   return (
     // The corner box itself lets clicks through, so the empty space beside Bobo never blocks links under it (QA 2026-10-21).
-    <div className="pointer-events-none fixed right-4 bottom-24 z-50 flex flex-col items-end gap-3 *:pointer-events-auto md:right-6 md:bottom-6">
+    <div className="pointer-events-none fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex flex-col items-end gap-3 *:pointer-events-auto md:right-6 md:bottom-6">
       {open && <BoboPanel goal={goal} choose={choose} setGoal={setGoal} close={() => setOpen(false)} hide={hide} />}
 
       {tip && !open && (

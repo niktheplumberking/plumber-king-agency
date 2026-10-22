@@ -115,6 +115,10 @@ export function TrailRun({ children }: { children: ReactNode }) {
     if (!root) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+    // Touch screens: the length drawn so far (-1 = not drawn yet, take the scroll position as is) and when it last moved.
+    const touch = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    let shown = -1, lastT = 0, gliding = false;
+    const chase = () => onScroll();
     const paint = () => {
       const g = geo.current;
       if (!g) return;
@@ -126,6 +130,17 @@ export function TrailRun({ children }: { children: ReactNode }) {
         const vh = window.innerHeight;
         const from = g.sDoc - vh * 0.8, to = g.eDoc - vh * 0.5;
         s = Math.min(la + lb, Math.max(0, ((window.scrollY - from) * (la + gap + lb)) / (to - from)));
+        /* Touch screens (Nick 2026-10-22): a fast swipe moves the page hundreds of px per frame, so the line jumped on in
+           big chunks. There the drawn tip glides after the scroll position instead (desktop already glides with Lenis),
+           so even a fling is seen being drawn. Same mapping, so it ends exactly where it did; only the jumps are gone. */
+        if (touch) {
+          const now = performance.now(), dt = gliding ? Math.min(50, now - lastT) : 16.7; // a fresh swipe starts with one frame's step
+          lastT = now;
+          shown = shown < 0 ? s : Math.min(la + lb, shown) + (s - Math.min(la + lb, shown)) * (1 - Math.pow(0.88, dt / 16.7));
+          gliding = Math.abs(s - shown) >= 0.5;
+          if (gliding) chase(); else shown = s;
+          s = shown;
+        }
       }
       /* Two strokes drawn one after the other: the pink-section part (it leaves past the right edge), then the title part
          (it comes in from the left edge). Nick 2026-10-22: no scrolling without the line moving, so the title part starts

@@ -11,7 +11,7 @@ export function HeroMotion({ className, children }: { className?: string; childr
     const st = { trigger: ref.current, start: "top top", end: "bottom top", scrub: true };
     gsap.to("[data-hero-media]", { yPercent: 8, ease: "none", scrollTrigger: st });
     gsap.to("[data-hero-copy]", { yPercent: -18, ease: "none", scrollTrigger: st });
-    gsap.to("[data-hero-sticker]", { y: 160, rotate: "+=18", ease: "none", scrollTrigger: st });
+    // The founder sticker rides with the video frame (no drift of its own), so it stays centred on the frame's top border.
   });
   return <section ref={ref} className={className}>{children}</section>;
 }

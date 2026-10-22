@@ -363,12 +363,23 @@ export function TrailRun({ children }: { children: ReactNode }) {
         const tL = (yBot - R + u[0] * R - Pb[1]) / u[1]; // the touching point that puts the loop's bottom on the run in
         const PL: Pt = [Pb[0] + u[0] * tL, Pb[1] + u[1] * tL];
         const loop: Ring = { c: [PL[0] + R * u[1], PL[1] - R * u[0]], r: R, d: -1, loop: true };
-        // The wave before it: up over a crest, down into a trough whose bottom is level with the loop's.
-        const hW = Math.max(4, R * 0.7);
-        const Rc = W * 0.16, Rt = W * 0.1;
-        const crest: Ring = { c: [W * 0.12, yBot - hW + Rc], r: Rc, d: 1 };
-        const trough: Ring = { c: [Math.min(loop.c[0] - R - Rt - sw, W * 0.4), yBot - Rt], r: Rt, d: -1 };
-        const entry: Ring = { c: [-sw * 4, yBot - hW * 0.45], r: 0, d: 1 };
+        /* The wave before it (Nick 12:55: one flowing curve, no visible corners or straight runs): two half waves of a
+           cosine, rising from off the left edge to a crest and falling to the loop's bottom, where it arrives level, the way
+           the loop leaves. The slope never jumps, and the bend changes gradually instead of switching at an arc's end. */
+        const hW = Math.max(6, Math.min(yBot - top, W * 0.085));
+        const x0 = -W * 0.12, xc = W * 0.25, x1 = loop.c[0], y0 = yBot - hW * 0.15, yC = yBot - hW;
+        const waveY = (x: number) => x <= xc
+          ? y0 + ((yC - y0) * (1 - Math.cos((Math.PI * (x - x0)) / (xc - x0)))) / 2
+          : yC + ((yBot - yC) * (1 - Math.cos((Math.PI * (x - xc)) / (x1 - xc)))) / 2;
+        const wave: { p: Pt; s: number }[] = [];
+        let wd = "", wl = 0;
+        for (let x = x0, i = 0; ; x = Math.min(x1, x + 2), i++) {
+          const q: Pt = [x, waveY(x)];
+          if (i) wl += Math.hypot(q[0] - wave[i - 1].p[0], q[1] - wave[i - 1].p[1]);
+          wave.push({ p: q, s: wl });
+          wd += `${i ? " L" : "M"} ${q[0].toFixed(1)} ${q[1].toFixed(1)}`;
+          if (x >= x1) break;
+        }
         // The turn inside the p: anticlockwise, its bottom on the o's middle row, leaving heading right.
         const r2 = Math.max(4, xh * 0.25);
         const tq = (yO - r2 + r2 * u[0] - Pb[1]) / u[1];
@@ -376,12 +387,14 @@ export function TrailRun({ children }: { children: ReactNode }) {
         const dip: Ring = { c: [Pq[0] + r2 * u[1], Pq[1] - r2 * u[0]], r: r2, d: -1 };
         const out: Ring = { c: [W + sw * 4, yO], r: 0, d: 1 };
         phoneA = { d: "", len: 0, pts: [], sweeps: [], kinked: false };
-        Bp = beltPath([entry, crest, trough, loop, dip, out], 0, 0);
+        // From the loop's bottom (heading right) the line is the belt of circles it was before.
+        const belt = beltPath([loop, dip, out], Math.PI / 2, 0);
+        Bp = { ...belt, d: wd + belt.d.replace(/^M/, " L"), len: wl + belt.len, pts: [...wave, ...belt.pts.slice(1).map((q) => ({ p: q.p, s: q.s + wl }))] };
         const sB = belly(Bp.pts, gb), sP = belly(Bp.pts, gp, Math.max(0, sB)), sO = belly(Bp.pts, go, Math.max(0, sP));
         over = [];
         if (sB >= 0 && sP > sB) over.push([sB / Bp.len, sP / Bp.len]);
         if (sO >= 0) over.push([sO / Bp.len, 1]);
-        sY = entry.c[1];
+        sY = y0;
         eY = yO;
       }
       else if (key === route.key && route.Bp) { Bp = route.Bp; over = route.over; cut = route.cut; }

@@ -1,14 +1,9 @@
 import Link from "@/components/Link";
-import { MapPin, PhoneIncoming, Star, Wrench } from "lucide-react";
+import { Star } from "lucide-react";
 import { site } from "@/content/site";
 import { CtaButton } from "../CtaButton";
 import { HeroMotion } from "./HeroMotion";
 import { VslPlayer } from "./VslPlayer";
-
-const leads = [
-  { icon: PhoneIncoming, title: "Incoming call", body: "Burst pipe under the kitchen sink", meta: "Cary, NC · just now", tone: "bg-ribbon-deep" },
-  { icon: Wrench, title: "Quote request", body: "Water heater replacement, 50 gal", meta: "Raleigh, NC · 4 min ago", tone: "bg-ink" },
-];
 
 /** Where plumbers get found. These are the places we optimise for, not partners or endorsements. */
 const foundOn = ["Google Search", "Google Maps", "ChatGPT", "Perplexity", "Bing"];
@@ -38,18 +33,6 @@ export function Hero() {
             <Star className="h-3.5 w-3.5 fill-current" />Plumbers only
           </span>
           <span className="sticker absolute -right-2 top-[18%] z-10 bg-ink text-white" style={{ "--tilt": "6deg" } as React.CSSProperties}>Nick · Founder</span>
-          <ul data-hero-leads className="absolute -bottom-14 -left-[14%] z-10 hidden w-[17.5rem] space-y-2.5 2xl:block" aria-label="Example of leads arriving (illustration)">
-            {leads.map((l) => (
-              <li key={l.title} className="lead-card">
-                <span className={`grid h-10 w-10 shrink-0 place-items-center rounded ${l.tone}`}><l.icon className="h-5 w-5 text-white" aria-hidden /></span>
-                <span className="min-w-0">
-                  <span className="lead-t">{l.title} <span className="font-semibold text-slate normal-case">(SAMPLE)</span></span>
-                  <span className="block truncate text-t3">{l.body}</span>
-                  <span className="lead-m"><MapPin className="h-3 w-3" aria-hidden />{l.meta}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div data-hero-copy className="hero-copy relative z-10">

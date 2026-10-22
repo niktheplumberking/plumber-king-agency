@@ -118,18 +118,19 @@ export function TrailRun({ children }: { children: ReactNode }) {
     const paint = () => {
       const g = geo.current;
       if (!g) return;
-      let p = 1;
+      const [la, gap, lb] = g.lens;
+      let s = la + lb;
       if (!reduce.matches) {
-        // Steady drawing, as in the original: the drawn share grows in a straight line with the scroll, from card 05's
-        // corner at 80% down the screen to the dot at half way.
+        // Steady drawing, as in the original: the line grows at one even speed with the scroll, the speed it had when it
+        // ran from card 05's corner (80% down the screen) to the dot (half way) with a pause between its two parts.
         const vh = window.innerHeight;
         const from = g.sDoc - vh * 0.8, to = g.eDoc - vh * 0.5;
-        p = Math.min(1, Math.max(0, (window.scrollY - from) / (to - from)));
+        s = Math.min(la + lb, Math.max(0, ((window.scrollY - from) * (la + gap + lb)) / (to - from)));
       }
-      // Two strokes drawn one after the other: the pink-section part (it leaves past the right edge), a pause while the
-      // line is "off screen", then the title part (it comes in from the left edge).
-      const [la, gap, lb] = g.lens, s = p * (la + gap + lb);
-      const parts = [Math.min(1, s / la), Math.min(1, Math.max(0, (s - la - gap) / lb))];
+      /* Two strokes drawn one after the other: the pink-section part (it leaves past the right edge), then the title part
+         (it comes in from the left edge). Nick 2026-10-22: no scrolling without the line moving, so the title part starts
+         the moment the first part is off screen; the pause is cut, so the line reaches the dot that much sooner. */
+      const parts = [Math.min(1, s / la), Math.min(1, Math.max(0, (s - la) / lb))];
       // The copy above the letters shows only on its stretches, and only as far as the line has been drawn.
       const segs = g.over.map(([a, b]) => [a, Math.min(b, parts[1])]).filter(([a, b]) => b > a);
       let dash = "0 " + segs.map(([a, b], k) => `${a - (k ? segs[k - 1][1] : 0)} ${b - a}`).join(" ") + " 2";

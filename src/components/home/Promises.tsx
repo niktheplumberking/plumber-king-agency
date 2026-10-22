@@ -36,10 +36,10 @@ export function Promises() {
           .from(row.querySelector("[data-promise]"), { xPercent: 12, autoAlpha: 0, rotate: 3, duration: 0.55, ease: "back.out(1.6)" }, "<0.1");
       });
     }
-    // Bobo stands up as the panel comes in and ducks back behind it at the same point on the way back up, every time
-    // (Nick 2026-10-19: not one-time only).
+    // Bobo stands up as the panel comes in, once per load (Nick 2026-10-22: every entrance plays once and never again
+    // on the way back up; this replaces his 2026-10-19 "every time").
     const at = mobile ? "m" : "d";
-    gsap.from(`[data-panel-bobo="${at}"]`, { y: 60, rotate: -12, ease: "back.out(1.4)", duration: 0.9, scrollTrigger: { trigger: `[data-panel="${at}"]`, start: mobile ? "top 80%" : "top 75%", toggleActions: "play none none reverse" } });
+    gsap.from(`[data-panel-bobo="${at}"]`, { y: 60, rotate: -12, ease: "back.out(1.4)", duration: 0.9, scrollTrigger: { trigger: `[data-panel="${at}"]`, start: mobile ? "top 80%" : "top 75%", once: true } });
   });
 
   return (

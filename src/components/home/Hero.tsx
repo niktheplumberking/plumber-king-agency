@@ -6,11 +6,13 @@ import { VslPlayer } from "./VslPlayer";
 
 /** Where plumbers get found. These are the places we optimise for, not partners or endorsements. */
 const foundOn = ["Google Search", "Google Maps", "ChatGPT", "Perplexity", "Bing"];
+const intro = (s: number) => ({ "--id": `${s}s` }) as React.CSSProperties;
 
 /**
  * Home hero, built around the eye path Nick set (2026-10-16): 1) the video, 2) the headline, 3) the subline,
- * 4) the buttons, 5) logos, 6) the menu. Nick 2026-10-19: no load-in animation anywhere in the hero (or its header);
- * everything is there from the first paint. His photo is the video's cover until play is pressed.
+ * 4) the buttons, 5) logos, 6) the menu. Load-in (Nick 2026-10-22, replacing his 2026-10-19 "no load-in"): on every fresh
+ * load the header slides down, then the title lines, subline, buttons and search chips rise in one at a time (about
+ * 1.2 s, CSS in layout.tsx). The video and its sticker stay still and visible from the first paint.
  */
 export function Hero() {
   const lines = ["Websites that", "keep plumbers"];
@@ -37,22 +39,22 @@ export function Hero() {
         <div data-hero-copy className="hero-copy relative z-10">
           {/* 2) The headline. */}
           <h1 className="display hero-title text-ink">
-            {lines.map((l) => (
-              <span key={l} className="block">{l}</span>
+            {lines.map((l, i) => (
+              <span key={l} data-intro="" style={intro(0.1 + i * 0.08)} className="block">{l}</span>
             ))}
-            <span className="accent">booked solid.</span>
+            <span data-intro="" style={intro(0.26)} className="accent">booked solid.</span>
           </h1>
           {/* 3) The subline. */}
-          <p className="mt-7 max-w-[36rem] text-t3 text-slate md:text-t2">
+          <p data-intro="" style={intro(0.38)} className="mt-7 max-w-[36rem] text-t3 text-slate md:text-t2">
             When a pipe bursts, homeowners call the first plumber they trust. I make sure that&apos;s you: a fast site built to convert, top spots on Google and AI search, and a call button under every thumb.
           </p>
           {/* 4) The buttons. */}
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+          <div data-intro="" style={intro(0.48)} className="mt-9 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
             <CtaButton />
             <Link href="/free-website-audit/" className="btn btn-ghost-dark">{site.secondaryCta}</Link>
           </div>
           {/* 5) Logos: where your customers search. */}
-          <div className="mt-10">
+          <div data-intro="" style={intro(0.58)} className="mt-10">
             <p className="text-t3 font-semibold text-slate">Get found where homeowners search:</p>
             <ul className="mt-3 flex flex-wrap gap-2" aria-label="Search platforms we optimise for">
               {foundOn.map((f) => <li key={f} className="rounded-md border-2 border-ink/10 bg-white px-3 py-1.5 text-t3 font-bold text-ink">{f}</li>)}

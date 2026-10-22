@@ -20,6 +20,13 @@ export function FolderSlot({ folder, delay }: { folder: Folder; delay: number })
   }, []);
   return (
     <div ref={ref} className="flex w-full justify-center" style={{ minHeight: w ? undefined : "22rem" }}>
+      {/* Without JavaScript the glass folder can't be drawn, so show its photo and name instead of a blank space. */}
+      <noscript>
+        <div className="w-full max-w-[380px] overflow-hidden rounded-xl border-2 border-ink/15 bg-white">
+          {folder.image && <img src={folder.image} alt="" className="aspect-[4/3] w-full object-cover" />}
+          <p className="p-4 text-t3 font-bold text-ink">{folder.label}</p>
+        </div>
+      </noscript>
       {w > 0 && (
         <GlassFolder
           label={folder.label}

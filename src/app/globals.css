@@ -214,11 +214,26 @@ html { scroll-padding-top: 88px; }
 .outline-text { color: transparent; -webkit-text-stroke: 2px #fff; }
 .marquee:hover .marquee-track.pause-on-hover, .marquee:focus-within .marquee-track { animation-play-state: paused; }
 
-/* Scroll reveal (see Reveal.tsx): transform and opacity only, done within 1.1 s. */
+/* Scroll reveal (see Reveal.tsx), one style sitewide (Nick 2026-10-22): each block fades in and rises 14 px over
+   0.62 s as it enters view, once per load. Blocks that enter together go in reading order (--rs, set by
+   RevealObserver); a title's pink second line follows its first 0.08 s later. Transform and opacity only. */
 @media (prefers-reduced-motion: no-preference) {
-  .js [data-reveal] { opacity: 0; transform: translateY(var(--ry, 28px)); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--rd, 0s), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--rd, 0s); }
-  .js [data-reveal].is-in { opacity: 1; transform: none; }
+  .js [data-reveal] { --rt: calc(var(--rd, 0s) + var(--rs, 0s)); opacity: 0; transform: translateY(var(--ry, 14px)); transition: opacity 0.62s cubic-bezier(0.23, 1, 0.32, 1) var(--rt), transform 0.62s cubic-bezier(0.23, 1, 0.32, 1) var(--rt); }
+  .js [data-reveal] .display:not(.ps-title) > .accent { opacity: 0; transform: translateY(14px); transition: opacity 0.62s cubic-bezier(0.23, 1, 0.32, 1) calc(var(--rt) + 0.08s), transform 0.62s cubic-bezier(0.23, 1, 0.32, 1) calc(var(--rt) + 0.08s); }
+  .js [data-reveal].is-in, .js [data-reveal].is-in .display > .accent { opacity: 1; transform: none; }
   .js .timeline-line { transform: scaleY(0); }
+  /* Five steps: the text waits hidden until its lines are split and parked below their masks (timeline.tsx), so it
+     never flashes on screen first. */
+  .js .tl-t, .js .tl-d { opacity: 0; }
+}
+/* Phones: the same reveal, a little quicker. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 767px) {
+  .js [data-reveal], .js [data-reveal] .display:not(.ps-title) > .accent { transition-duration: 0.5s; }
+}
+/* Reduced motion: no movement, a short fade only. */
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { opacity: 0; transition: opacity 0.25s ease-out var(--rs, 0s); transition-duration: 0.25s !important; }
+  .js [data-reveal].is-in { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

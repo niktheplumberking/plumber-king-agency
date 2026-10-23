@@ -10,15 +10,19 @@ import { CtaButton } from "../CtaButton";
  * answers it. These are general frustrations, never a named competitor, and every promise is something the site
  * already commits to (FAQ, services). Pattern from 21st.dev "Comparison Section" (hirael), ported to GSAP.
  * Eye path: title, subline, then down the panel row by row, ending on the button.
+ * Rows rewritten 2026-10-23 (Nick: benefits that answer real agency problems; researched and checked against faq.ts
+ * and services.ts).
  */
 const rows = [
-  { pain: "An agency that learns your trade on your dime", promise: "Plumbers only" },
-  { pain: "Your website held hostage if you ever leave", promise: "You own your website" },
-  { pain: "A sales pitch before a straight answer", promise: "Free 30-minute strategy call" },
-  { pain: "Reports full of jargon nobody reads", promise: "Reports in plain English" },
-  { pain: "No idea which calls came from the website", promise: "Calls, forms and leads tracked" },
-  { pain: "They vanish the day the site goes live", promise: "Support after launch" },
-  { pain: "Projects that drag on with no end date", promise: "A timeline before we start" },
+  { pain: "A template site that looks fine but never rings", promise: "Custom site, call button on every screen" },
+  { pain: "So slow on phones homeowners give up and leave", promise: "Fast on the phones homeowners use" },
+  { pain: "Only a homepage, invisible for every other job", promise: "A page for each service and town" },
+  { pain: "Your Google profile half done, nowhere on the map", promise: "Google profile and SEO done properly" },
+  { pain: "Locked into a contract you can't get out of", promise: "Written contract, no long-term lock-in" },
+  { pain: "Months of waiting, and still no launch date", promise: "Usually live in 1 to 2 weeks" },
+  { pain: "Passed between reps, then ghosted after launch", promise: "Nick directly, plus 3 months of support" },
+  { pain: "Reports full of charts, but no calls in them", promise: "Plain-English reports that show your calls" },
+  { pain: "They hold your site hostage if you leave", promise: "You own your site once it's paid" },
 ];
 
 export function Promises() {

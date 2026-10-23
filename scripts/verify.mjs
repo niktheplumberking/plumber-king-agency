@@ -13,11 +13,10 @@ const htmlFiles = [];
 const walk = (d) => readdirSync(d).forEach((n) => { const p = path.join(d, n); statSync(p).isDirectory() ? walk(p) : p.endsWith(".html") && htmlFiles.push(p); });
 walk(out);
 const rel = (p) => "/" + path.relative(out, p).split(path.sep).join("/").replace(/index\.html$/, "");
-// google*.html is Search Console's ownership file (one plain line, not a page); it must stay in every build.
-const pages = htmlFiles.filter((p) => !/\/(404|_not-found)(\/|\.html)/.test(p) && !p.endsWith("404.html") && !/\/google[0-9a-f]+\.html$/.test(p));
+const pages = htmlFiles.filter((p) => !/\/(404|_not-found)(\/|\.html)/.test(p) && !p.endsWith("404.html"));
 
 // Launch files
-for (const f of ["robots.txt", "sitemap.xml", "llms.txt", "404.html", "og-image.png", "manifest.webmanifest", ".htaccess", "icon.png", "apple-icon.png", "lead.php", "brand/logo-160.webp", "nick/shelves-1920.webp", "google4a5aea023b7ee55b.html"]) check(existsSync(path.join(out, f)), `${f} present`, `${f} missing`);
+for (const f of ["robots.txt", "sitemap.xml", "llms.txt", "404.html", "og-image.png", "manifest.webmanifest", ".htaccess", "icon.png", "apple-icon.png", "lead.php", "brand/logo-160.webp", "nick/shelves-1920.webp"]) check(existsSync(path.join(out, f)), `${f} present`, `${f} missing`);
 const robots = readFileSync(path.join(out, "robots.txt"), "utf-8");
 const sitemap = readFileSync(path.join(out, "sitemap.xml"), "utf-8");
 const siteUrl = (sitemap.match(/<loc>(https:\/\/[^/<]+)\//) ?? [])[1];

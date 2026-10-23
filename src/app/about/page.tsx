@@ -7,7 +7,7 @@ import { site } from "@/content/site";
 import { pageMeta, personLd } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "About Nick, Founder of Plumber King Agency",
+  title: "About Nick: Plumber Website Designer",
   description: "Why Nick started Plumber King Agency: helping hardworking plumbers win the jobs they deserve with websites and marketing that actually bring in calls.",
   path: "/about/",
 });

@@ -167,6 +167,16 @@ export default function PolaroidLineCarousel({
   const [dragging, setDragging] = React.useState(false)
   const [size, setSize] = React.useState({ w: 1200, h: 800, cw: cardWidth, y: 0, side: false })
   const rootRef = React.useRef(null as HTMLDivElement | null)
+  // The prints load lazily, but all of them at once when the carousel is a screen away, so a print swiped into view
+  // later is never blank while it loads (SEO fix 2).
+  const [near, setNear] = React.useState(false)
+  React.useEffect(() => {
+    const root = rootRef.current
+    if (!root || near) return
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setNear(true) }, { rootMargin: "100% 0px" })
+    io.observe(root)
+    return () => io.disconnect()
+  }, [near])
   const pathRef = React.useRef(null as SVGPathElement | null)
   const cards = React.useRef([] as (HTMLDivElement | null)[])
   // Side layout: highest the caption bar has reached (px from the stage top) since the last resize; the row of
@@ -448,7 +458,7 @@ export default function PolaroidLineCarousel({
       {slides.map((sl, i) => (
         <div key={i} className="pl-card" data-i={i} data-on={i === active ? "1" : "0"} ref={(el) => void (cards.current[i] = el)} aria-hidden={i === active ? undefined : true}>
           <div className="pl-print">
-            <div className="pl-shot">{srcs[i] ? <img src={srcs[i]} alt={sl.alt || sl.title || ""} draggable={false} /> : null}</div>
+            <div className="pl-shot">{srcs[i] ? <img src={srcs[i]} srcSet={srcs[i].endsWith("-720.webp") ? `${srcs[i].replace("-720.webp", "-400.webp")} 400w, ${srcs[i]} 720w` : undefined} sizes="(min-width: 1024px) 500px, (min-width: 768px) 340px, 50vw" alt={sl.alt || sl.title || ""} loading={near ? "eager" : "lazy"} decoding="async" draggable={false} /> : null}</div>
             <div className="pl-note">{sl.title || ""}</div>
           </div>
           <div className="pl-peg" />

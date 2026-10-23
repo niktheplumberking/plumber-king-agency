@@ -19,7 +19,7 @@ export default function ContactPage() {
         <div className="container-x grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
           <div className="rounded-md border-2 border-ink bg-white p-6 md:p-10"><LeadForm tone="light" /></div>
           <div className="space-y-6">
-            <div><h2 className="text-t2 font-bold">Prefer email?</h2><a href={`mailto:${site.email}`} className="tap mt-3 inline-flex items-center gap-2 text-t3 font-semibold text-royal hover:underline"><Mail className="h-5 w-5" aria-hidden />{site.email}</a></div>
+            <div><h2 className="text-t2 font-bold">Prefer email?</h2><a href={`mailto:${site.email}`} className="tap txt-link mt-3 inline-flex items-center gap-2 text-t3 font-semibold"><Mail className="h-5 w-5" aria-hidden />{site.email}</a></div>
             <div><h2 className="text-t2 font-bold">Where we work</h2><p className="mt-3 flex items-center gap-2 text-t3 text-slate"><MapPin className="h-5 w-5" aria-hidden />Serving USA &amp; Canada</p></div>
           </div>
         </div>

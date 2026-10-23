@@ -9,7 +9,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { pageMeta, serviceLd } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Marketing Services for Plumbing Companies",
+  title: "Marketing Services for Plumbers",
   description: "Plumber website design, local SEO and AI-search visibility, and lead capture that sends every inquiry to your phone. Built for plumbing companies only.",
   path: "/services/",
 });

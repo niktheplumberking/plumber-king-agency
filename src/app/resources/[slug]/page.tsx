@@ -32,7 +32,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
         <div className="container-x grid gap-12 lg:grid-cols-[1fr_18rem]">
           <div className="prose-pk">
             <aside aria-label="Short answer" className="mb-10 rounded-2xl border-l-4 border-gold bg-ivory p-6">
-              <p className="mb-2! text-t3 font-bold text-gold-700">The short answer</p>
+              <p className="mb-2! text-t3 font-bold text-ink">The short answer</p>
               <p className="mb-0! text-t3 text-ink!">{g.answer}</p>
             </aside>
             {g.sections.map((s) => (
@@ -52,7 +52,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
             <nav aria-label="More guides" className="mt-6">
               <p className="text-t3 font-semibold text-slate">More guides</p>
               <ul className="mt-3 space-y-3">
-                {guides.filter((o) => o.slug !== g.slug).map((o) => (<li key={o.slug}><Link href={`/resources/${o.slug}/`} className="inline-block py-1 font-semibold text-royal hover:underline">{o.title.split(":")[0]}</Link></li>))}
+                {guides.filter((o) => o.slug !== g.slug).map((o) => (<li key={o.slug}><Link href={`/resources/${o.slug}/`} className="txt-link inline-block py-1 font-semibold">{o.title.split(":")[0]}</Link></li>))}
               </ul>
             </nav>
           </aside>

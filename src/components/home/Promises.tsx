@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { Check, X } from "lucide-react";
-import { gsap, useGsap } from "@/lib/gsap";
+import { gsap, useGsap, warm } from "@/lib/gsap";
 import { CtaButton } from "../CtaButton";
 
 /*
@@ -24,6 +24,8 @@ const rows = [
 export function Promises() {
   const ref = useRef<HTMLElement>(null);
   useGsap(ref, ({ mobile }) => {
+    warm(mobile ? "[data-mrow]" : "[data-pain],[data-promise]");
+    warm("[data-panel-bobo]");
     if (mobile) {
       // Phones: two boxes (Nick 2026-10-22), each line slides in as it comes up.
       gsap.utils.toArray<HTMLElement>("[data-mrow]").forEach((row) => {

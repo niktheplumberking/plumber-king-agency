@@ -101,7 +101,7 @@ export function PauseMotion() {
     setPaused(p);
   };
   return on ? (
-    <button type="button" onClick={toggle} aria-pressed={paused} aria-label={paused ? "Play the moving strips and Bobo" : "Pause the moving strips and Bobo"} className="pause-pill">
+    <button type="button" onClick={toggle} aria-pressed={paused} aria-label={`${paused ? "Play" : "Pause"} motion: the moving strips and Bobo`} className="pause-pill">
       {paused ? <Play className="h-4 w-4 fill-current" aria-hidden /> : <Pause className="h-4 w-4 fill-current" aria-hidden />}<span aria-hidden>{paused ? "Play" : "Pause"} motion</span>
     </button>
   ) : null;

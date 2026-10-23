@@ -84,6 +84,8 @@ export type GlassFolderProps = {
   seed?: number
   /** Your own picture for the back panel, instead of generated art. */
   image?: string
+  /** Optional srcset for `image` (smaller files for phones). */
+  imageSet?: string
   /** The folder's contents. Read once; after that the folder owns the list. */
   files?: FolderFile[]
   /** `add` drops new files in, `more` opens a menu, `none` hides the key. */
@@ -539,6 +541,7 @@ export default function GlassFolder({
   art = "aurora",
   seed = 3,
   image,
+  imageSet,
   files: initialFiles = SAMPLE_FILES,
   action = "add",
   onAdd,
@@ -732,7 +735,7 @@ export default function GlassFolder({
           {/* back panel and its artwork */}
           <div className="gf-back" style={{ clipPath: "path('" + BACK_PATH + "')" }} aria-hidden="true">
             {image ? (
-              <img className="gf-art" src={image} alt="" width={W + 24} height={H + 24} draggable={false} />
+              <img className="gf-art" src={image} srcSet={imageSet} sizes="(min-width: 1024px) 415px, (min-width: 768px) 245px, 100vw" alt="" width={W + 24} height={H + 24} loading="lazy" decoding="async" draggable={false} />
             ) : art !== "none" ? (
               <ArtCanvas className="gf-art" art={art} seed={seed} w={W + 24} h={H + 24} density={density} priority={0} />
             ) : null}
@@ -790,7 +793,7 @@ export default function GlassFolder({
                 <>
                   {picture ? (
                     file.image ? (
-                      <img className="gf-sheet-art" src={file.image} alt="" width={SHEET_W} height={SHEET_H} draggable={false} />
+                      <img className="gf-sheet-art" src={file.image} alt="" loading="lazy" decoding="async" width={SHEET_W} height={SHEET_H} draggable={false} />
                     ) : (
                       <ArtCanvas
                         className="gf-sheet-art"

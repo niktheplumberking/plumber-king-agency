@@ -135,7 +135,10 @@ html { scroll-padding-top: 88px; }
   .prose-pk p { margin: 0 0 1rem; color: #24304a; }
   .prose-pk ul { margin: 0 0 1.25rem; padding-left: 1.25rem; list-style: disc; color: #24304a; }
   .prose-pk li { margin: 0.35rem 0; }
-  .prose-pk a { color: var(--color-royal); text-decoration: underline; text-underline-offset: 3px; }
+  /* Text links (SEO fix 3, 2026-10-23): small pink text on white is 3.3:1 and fails, and the pink is not darkened (Nick's
+     rule), so the words are charcoal with a thick pink underline, turning pink on hover. */
+  .prose-pk a, .txt-link { color: var(--color-ink); text-decoration: underline; text-decoration-color: var(--color-ribbon); text-decoration-thickness: 2px; text-underline-offset: 4px; transition: color 0.2s; }
+  .prose-pk a:hover, .txt-link:hover { color: var(--color-ribbon); }
 
   .placeholder-badge {
     display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.55rem; border-radius: 4px;
@@ -479,7 +482,7 @@ html.pk-still .ring-card, html.pk-still .nudge { animation: none; }
 .fq-ask:hover .fq-bobo { rotate: -10deg; }
 
 /* ---------- About Nick Bennett pages (2026-10-18) ---------- */
-.ab-tab { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1.1rem; border: 2px solid var(--color-ink); border-radius: 0.75rem 0.75rem 0.25rem 0.25rem; background: #fff; font-weight: 700; transition: background-color 0.2s, color 0.2s, translate 0.2s; }
+.ab-tab { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1.1rem; border: 2px solid var(--color-ink); border-radius: 0.75rem 0.75rem 0.25rem 0.25rem; background: #fff; font-size: 19px; font-weight: 700; transition: background-color 0.2s, color 0.2s, translate 0.2s; }
 .ab-tab:hover { translate: 0 -3px; background: var(--color-sky); }
 .ab-tab.on { background: var(--color-ribbon-deep); border-color: var(--color-ribbon-deep); color: #fff; }
 .pf { position: relative; display: grid; gap: 2rem; border: 2px solid var(--color-ink); border-radius: 1.5rem; background: #fff; padding: 1.5rem; box-shadow: 6px 6px 0 var(--color-ink); }

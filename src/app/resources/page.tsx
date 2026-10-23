@@ -7,7 +7,7 @@ import { FinalCta } from "@/components/FinalCta";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Guides for Plumbers: Websites, SEO & AI Search",
+  title: "Plumber Website & SEO Guides",
   description: "Free, practical guides for plumbers: the website checklist that gets calls, how to show up in AI search, and how to set up your Google Business Profile.",
   path: "/resources/",
 });

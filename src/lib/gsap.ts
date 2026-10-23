@@ -12,6 +12,15 @@ if (typeof window !== "undefined") {
 
 export { gsap, ScrollTrigger };
 
+/**
+ * Reads the current transform of every target in one go, before any tween writes to them. GSAP caches what it reads,
+ * so a run of separate tweens afterwards no longer makes the browser re-measure the page between each one
+ * (forced reflow; SEO fix 8, 2026-10-23).
+ */
+export function warm(targets: gsap.TweenTarget) {
+  gsap.utils.toArray<Element>(targets).forEach((el) => gsap.getProperty(el, "x"));
+}
+
 const useIso = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**

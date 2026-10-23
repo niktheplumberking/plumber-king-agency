@@ -34,6 +34,7 @@ export function FolderSlot({ folder, delay }: { folder: Folder; delay: number })
           tone="light"
           art={folder.image ? "none" : PINK}
           image={folder.image}
+          imageSet={folder.image ? `${folder.image.replace(".webp", "-455.webp")} 455w, ${folder.image} 728w` : undefined}
           seed={7}
           action="none"
           width={w}

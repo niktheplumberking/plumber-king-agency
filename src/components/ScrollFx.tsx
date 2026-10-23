@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger, useGsap, warm } from "@/lib/gsap";
 
 /**
  * One small client wrapper that lets server-rendered sections move on scroll without shipping their markup as JavaScript.
@@ -12,7 +12,9 @@ export function ScrollFx({ as: Tag = "div", className, children, ...rest }: { as
   const ref = useRef<HTMLElement>(null);
   useGsap(ref, () => {
     const st = { trigger: ref.current, start: "top bottom", end: "bottom top", scrub: 0.6 };
-    ref.current!.querySelectorAll<HTMLElement>("[data-fx-y],[data-fx-x],[data-fx-rotate]").forEach((el) => {
+    const fx = ref.current!.querySelectorAll<HTMLElement>("[data-fx-y],[data-fx-x],[data-fx-rotate]");
+    warm(fx);
+    fx.forEach((el) => {
       const from: gsap.TweenVars = {}, to: gsap.TweenVars = { ease: "none", scrollTrigger: st };
       const y = el.dataset.fxY, x = el.dataset.fxX, r = el.dataset.fxRotate;
       const span = (v: string, axis: "x" | "y") => {

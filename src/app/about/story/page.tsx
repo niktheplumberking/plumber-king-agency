@@ -7,7 +7,7 @@ import { site } from "@/content/site";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Nick Bennett's Story: Web Design for Plumbers",
+  title: "Nick Bennett's Story: Plumber Websites",
   description: "How Nick Bennett got into web design, why he builds websites and local SEO only for plumbers, and his five-year plan for plumbers in the USA and Canada.",
   path: "/about/story/",
   type: "article",

@@ -48,7 +48,7 @@ export function VslPlayer() {
         <video ref={video} src={src} poster={COVER.src} controls playsInline preload="auto" onPlaying={() => setPlaying(true)}
           aria-label="Nick Bennett: how I get plumbers booked" className="absolute inset-0 h-full w-full bg-ink object-cover" />
       ) : (
-        <button type="button" onClick={start} aria-label="Play video: how I get plumbers booked" className="vsl-start absolute inset-0 cursor-pointer">
+        <button type="button" onClick={start} aria-label="WARNING: Watch ONLY if you want INCREASED REVENUE. Play video: how I get plumbers booked" className="vsl-start absolute inset-0 cursor-pointer">
           <span className="vsl-play" aria-hidden><Play className="h-9 w-9 translate-x-0.5 fill-current" /></span>
           <span className="vsl-label">WARNING: Watch <span className="text-ribbon">ONLY</span> if you want <span className="text-ribbon">INCREASED REVENUE</span></span>
         </button>

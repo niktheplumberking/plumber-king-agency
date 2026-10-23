@@ -18,7 +18,7 @@ import { CtaButton } from "@/components/CtaButton";
 import { SittingBobo } from "@/components/SittingBobo";
 
 export const metadata = pageMeta({
-  title: "Plumber King Agency | Websites & SEO That Keep Plumbers Booked",
+  title: "Plumber Websites & SEO That Get Calls | Plumber King Agency",
   description: "Websites, local SEO and AI-search visibility for plumbing companies in the USA and Canada. Get found, get trusted, get the call. Book a free strategy call.",
   path: "/",
   noTitleSuffix: true,

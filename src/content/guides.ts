@@ -18,7 +18,7 @@ export const guides: Guide[] = [
   {
     slug: "plumber-website-checklist",
     title: "The Plumber Website Checklist: 15 Things That Decide Whether Homeowners Call",
-    metaTitle: "Plumber Website Checklist: 15 Must-Haves",
+    metaTitle: "15-Point Plumber Website Checklist",
     description: "A practical checklist for plumbing company websites: what has to be on the page for a homeowner to trust you and call, and what to fix first.",
     published: "2026-10-14",
     readMinutes: 6,
@@ -107,7 +107,7 @@ export const guides: Guide[] = [
   {
     slug: "google-business-profile-for-plumbers",
     title: "Google Business Profile for Plumbers: The Setup That Gets You Into the Map Pack",
-    metaTitle: "Google Business Profile Setup for Plumbers",
+    metaTitle: "Google Business Profile for Plumbers",
     description: "How a plumbing company should set up and maintain its Google Business Profile: categories, service area, services, photos, reviews and posts.",
     published: "2026-10-14",
     readMinutes: 5,

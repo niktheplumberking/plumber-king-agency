@@ -7,8 +7,15 @@ export const dynamic = "force-static";
 
 /** Every indexable page, absolute https URLs, for Google Search Console and Bing Webmaster Tools. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date("2026-10-14");
-  const page = (path: string, priority: number, changeFrequency: "weekly" | "monthly" | "yearly" = "monthly", lastModified = now) => ({ url: abs(path), lastModified, changeFrequency, priority });
+  // Real last-change date of each page's words or layout (from git history). Update a page's date when you change it;
+  // pages not listed fall back to the launch build (2026-10-14).
+  const changed: Record<string, string> = {
+    "/": "2026-10-23", "/services/": "2026-10-23", "/services/plumber-website-design/": "2026-10-17", "/services/plumber-seo/": "2026-10-17",
+    "/services/plumber-lead-generation/": "2026-10-23", "/free-website-audit/": "2026-10-20", "/process/": "2026-10-23", "/about/": "2026-10-23",
+    "/about/nick-bennett/": "2026-10-20", "/about/portfolio/": "2026-10-22", "/about/story/": "2026-10-23", "/faq/": "2026-10-23",
+    "/resources/": "2026-10-23", "/contact/": "2026-10-20", "/privacy-policy/": "2026-10-17", "/terms-of-service/": "2026-10-17",
+  };
+  const page = (path: string, priority: number, changeFrequency: "weekly" | "monthly" | "yearly" = "monthly", lastModified = new Date(changed[path] ?? "2026-10-14")) => ({ url: abs(path), lastModified, changeFrequency, priority });
   return [
     page("/", 1, "weekly"),
     page("/services/", 0.9),

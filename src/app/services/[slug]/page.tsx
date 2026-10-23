@@ -59,7 +59,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <h2 id="sfaq-h" className="display text-t1">Questions about {s.name.toLowerCase()}</h2>
-            <p className="mt-5 text-t3 text-slate">Also see: {others.map((o, i) => (<span key={o.slug}>{i > 0 && " and "}<Link href={`/services/${o.slug}/`} className="inline-block py-1.5 font-semibold text-royal underline underline-offset-4">{o.name}</Link></span>))}.</p>
+            <p className="mt-5 text-t3 text-slate">Also see: {others.map((o, i) => (<span key={o.slug}>{i > 0 && " and "}<Link href={`/services/${o.slug}/`} className="txt-link inline-block py-1.5 font-semibold">{o.name}</Link></span>))}.</p>
           </div>
           <FaqList items={s.faqs} />
         </div>

@@ -30,10 +30,11 @@ export function Hero() {
         <div data-hero-media className="relative order-first lg:order-last">
           {/* Nick's VSL (filmed 2026-10-21). Loads only when someone presses play. */}
           <VslPlayer />
-          {/* Nick 2026-10-22: the "Plumbers only" sticker is gone; the founder sticker sits in its spot, pink with white
+          {/* 19 px bold (SEO fix 3, 2026-10-23): white on the brand pink is 3.3:1, which passes only as "large text" (bold 18.7 px+).
+              Nick 2026-10-22: the "Plumbers only" sticker is gone; the founder sticker sits in its spot, pink with white
               type (1.3x from tablets up; phones keep 1x, Nick 13:31), level with the video (the frame's own 1.2° tilt to the right) and centred on the frame's top border. The
               margin lifts it by how much that tilted border rises between the frame's middle and the sticker's middle. */}
-          <span data-hero-sticker className="sticker absolute top-0 left-[6%] z-10 -translate-y-1/2 bg-ribbon text-white md:scale-130" style={{ "--tilt": "1.2deg", marginTop: "calc(-0.921% + 3.5px)" } as React.CSSProperties}>Nick · Founder</span>
+          <span data-hero-sticker className="sticker absolute top-0 left-[6%] z-10 -translate-y-1/2 bg-ribbon text-[19px] text-white md:scale-130" style={{ "--tilt": "1.2deg", marginTop: "calc(-0.921% + 3.5px)" } as React.CSSProperties}>Nick · Founder</span>
         </div>
 
         <div data-hero-copy className="hero-copy relative z-10">

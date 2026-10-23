@@ -72,7 +72,7 @@ export const services: Service[] = [
     name: "Lead Capture & Follow-up",
     short: "Never miss a job: every call, form and text captured and sent to your phone.",
     outcome: "Every lead lands on your phone in seconds, so you call back before the homeowner calls the next plumber.",
-    metaTitle: "Lead Capture for Plumbers: Never Miss a Job",
+    metaTitle: "Plumber Lead Capture: Never Miss a Job",
     metaDescription:
       "Lead capture and follow-up for plumbing companies: quote forms, instant lead alerts to your phone, and conversion testing so more visitors become booked jobs.",
     intro:

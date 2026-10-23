@@ -8,7 +8,7 @@ import { services } from "@/content/services";
 import { faqLd, pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
-  title: "Plumber Marketing FAQ: Websites, SEO & AI Search",
+  title: "Plumber Marketing FAQ: Websites & SEO",
   description: "Straight answers for plumbers: what a website costs, how long SEO takes, whether you own your site, and how to show up in ChatGPT and Google AI Overviews.",
   path: "/faq/",
 });

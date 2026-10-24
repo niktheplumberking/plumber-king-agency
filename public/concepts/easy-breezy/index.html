@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>24/7 Plumber in Brighton, CO | Easy BreeZy Plumbing (homepage concept)</title>
+<meta name="description" content="Homepage concept for Easy BreeZy Plumbing, made by Plumber King Agency. Not the official website.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#062a44; --navy-2:#0b3a5e; --blue:#1498cc; --blue-l:#3aace0; --sky:#e8f6fd;
+  --pink:#ff57c1; --pink-d:#b0127a; --ink:#14232f; --muted:#4a5b68; --line:#d9e6ee; --white:#fff;
+  --star:#f5a623;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Open Sans",system-ui,sans-serif;color:var(--ink);background:var(--white);line-height:1.6;font-size:17px}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{width:min(1200px,100% - 32px);margin-inline:auto}
+h1,h2,h3{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;letter-spacing:.5px;line-height:1}
+h2{font-size:clamp(38px,5vw,56px);color:var(--navy)}
+.eyebrow{font-weight:800;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--pink-d)}
+:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+
+/* concept notice */
+.concept{background:var(--ink);color:#fff;font-size:13px;text-align:center;padding:8px 16px}
+.concept b{color:var(--pink)}
+
+/* header */
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:78px}
+.hdr img{height:48px;width:auto}
+nav ul{display:flex;gap:28px;list-style:none;font-weight:600;font-size:15px}
+nav a{text-decoration:none;color:var(--navy)}
+nav a:hover{color:var(--blue)}
+.hdr-call{display:flex;align-items:center;gap:12px}
+.hdr-call small{display:block;font-size:12px;color:var(--muted);font-weight:600;line-height:1.2;text-align:right}
+.hdr-call strong{display:block;font-size:20px;color:var(--navy);line-height:1.2}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 28px;border-radius:999px;font-weight:800;font-size:17px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn-call{background:var(--blue);color:var(--navy);box-shadow:0 10px 24px rgba(20,152,204,.35)}
+.btn-call:hover{background:var(--blue-l)}
+.btn-ghost{border:2px solid #fff;color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.12)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn svg{width:20px;height:20px;flex:none}
+
+/* hero */
+.hero{position:relative;color:#fff;overflow:hidden;background:var(--navy)}
+.hero-bg{position:absolute;inset:0;background:url(img/van-mountains.webp) right center/cover no-repeat}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,42,68,.97) 0%,rgba(6,42,68,.9) 42%,rgba(6,42,68,.35) 75%,rgba(6,42,68,.15) 100%)}
+.hero .wrap{position:relative;padding:72px 0 84px}
+.hero-copy{max-width:640px}
+.badge-247{display:inline-flex;align-items:center;gap:8px;background:rgba(255,87,193,.16);border:1px solid rgba(255,87,193,.55);color:#ffd2ee;font-weight:700;font-size:14px;padding:6px 14px;border-radius:999px;margin-bottom:20px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 0 rgba(255,87,193,.7);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(255,87,193,0)}100%{box-shadow:0 0 0 0 rgba(255,87,193,0)}}
+.hero h1{font-size:clamp(52px,7.4vw,92px);margin-bottom:18px}
+.hero h1 span{color:var(--blue-l)}
+.hero p.sub{font-size:clamp(17px,2vw,20px);max-width:540px;color:#e3eef5;margin-bottom:28px}
+.ctas{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:30px}
+.google{display:inline-flex;align-items:center;gap:14px;background:#fff;color:var(--ink);border-radius:14px;padding:12px 18px;text-decoration:none;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.google .g{width:30px;height:30px;flex:none}
+.google .score{font-size:26px;font-weight:800;line-height:1}
+.google .stars{color:var(--star);letter-spacing:2px;font-size:18px;line-height:1}
+.google small{display:block;font-size:13px;color:var(--muted);font-weight:600}
+.trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px;font-size:14px;font-weight:600;color:#cfe3ef;list-style:none}
+.trust li{display:flex;align-items:center;gap:8px}
+.trust svg{width:18px;height:18px;color:var(--blue-l)}
+
+/* reviews */
+.reviews{background:var(--sky);padding:80px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:36px}
+.sec-head p{color:var(--muted);max-width:520px}
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.rcard{background:#fff;border-radius:18px;padding:26px;box-shadow:0 6px 24px rgba(6,42,68,.08);display:flex;flex-direction:column;gap:14px}
+.rcard .top{display:flex;justify-content:space-between;align-items:center}
+.rcard .stars{color:var(--star);letter-spacing:2px}
+.rcard .g{width:22px;height:22px}
+.rcard blockquote{font-size:16px;color:var(--ink)}
+.rcard .who{margin-top:auto;font-weight:700;font-size:15px}
+.rcard .who span{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.allrev{margin-top:30px;text-align:center}
+.allrev a{font-weight:700;color:var(--navy)}
+
+/* services */
+.services{padding:90px 0}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.scard{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;display:flex;flex-direction:column;transition:box-shadow .2s,transform .2s}
+.scard:hover{box-shadow:0 14px 34px rgba(6,42,68,.12);transform:translateY(-3px)}
+.scard img{aspect-ratio:16/10;object-fit:cover;width:100%;height:auto}
+.scard .body{padding:22px;display:flex;flex-direction:column;gap:8px;flex:1}
+.scard h3{font-size:30px;color:var(--navy)}
+.scard p{color:var(--muted);font-size:15px}
+.scard a{margin-top:auto;font-weight:700;color:var(--blue);text-decoration:none;font-size:15px}
+.scard .icon{height:140px;display:grid;place-items:center;background:linear-gradient(135deg,var(--navy),var(--navy-2))}
+.scard .icon svg{width:64px;height:64px;color:var(--blue-l)}
+
+/* offer / pricing */
+.offer{background:var(--navy);color:#fff;padding:80px 0}
+.ogrid{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+.offer h2{color:#fff}
+.price-list{list-style:none;display:grid;gap:14px;margin-top:22px}
+.price-list li{display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 18px}
+.price-list strong{font-family:"Bebas Neue",sans-serif;font-size:34px;line-height:1;color:var(--blue-l);min-width:86px}
+.price-list span{color:#d6e5ee;font-size:15px}
+.coupon{background:#fff;color:var(--ink);border-radius:20px;padding:34px;border:3px dashed var(--pink);text-align:center}
+.coupon .eyebrow{color:var(--pink-d)}
+.coupon .big{font-family:"Bebas Neue",sans-serif;font-size:clamp(64px,8vw,96px);line-height:.9;color:var(--navy);margin:8px 0}
+.coupon p{color:var(--muted);margin-bottom:22px}
+
+/* about */
+.about{padding:90px 0}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.photo-stack{position:relative}
+.photo-stack img{border-radius:22px;box-shadow:0 20px 50px rgba(6,42,68,.18)}
+.photo-stack .p2{position:absolute;width:46%;right:-18px;bottom:-30px;border:6px solid #fff}
+.about p{color:var(--muted);margin:16px 0}
+.checks{list-style:none;display:grid;gap:10px;margin:20px 0 28px}
+.checks li{display:flex;gap:10px;font-weight:600}
+.checks svg{width:22px;height:22px;color:var(--blue);flex:none;margin-top:2px}
+
+/* area */
+.area{background:var(--sky);padding:80px 0}
+.towns{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.towns span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:600;font-size:15px;color:var(--navy)}
+
+/* final cta */
+.final{background:linear-gradient(120deg,var(--navy),var(--navy-2));color:#fff;padding:80px 0;text-align:center}
+.final h2{color:#fff;font-size:clamp(44px,6vw,72px)}
+.final p{color:#d6e5ee;margin:12px auto 28px;max-width:560px}
+.final .ctas{justify-content:center}
+
+footer{background:#041d30;color:#a9bfcd;padding:44px 0 110px;font-size:14px}
+.fgrid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:center}
+footer img{height:40px;width:auto}
+footer a{color:#fff}
+
+/* mobile call bar */
+.callbar{display:none}
+
+@media (max-width:980px){
+  nav{display:none}
+  .rgrid,.sgrid{grid-template-columns:1fr 1fr}
+  .ogrid,.agrid{grid-template-columns:1fr}
+  .photo-stack{max-width:560px}
+}
+@media (max-width:640px){
+  .concept .long{display:none}
+  body{font-size:16px}
+  .hdr{min-height:64px}
+  .hdr img{height:36px}
+  .hdr-call small{display:none}
+  .hdr-call strong{font-size:16px}
+  .hero-bg{background-position:72% center}
+  .hero-bg::after{background:linear-gradient(180deg,rgba(6,42,68,.88),rgba(6,42,68,.95))}
+  .hero .wrap{padding:48px 0 56px}
+  .ctas .btn{width:100%}
+  .rgrid,.sgrid{grid-template-columns:1fr}
+  .reviews,.services,.offer,.about,.area,.final{padding:60px 0}
+  .photo-stack .p2{right:8px;bottom:-24px}
+  .callbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;box-shadow:0 -6px 20px rgba(0,0,0,.12)}
+  .callbar .btn{flex:1;min-height:52px;padding:0 12px;font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="concept" role="note">Homepage concept by <b>Plumber King Agency</b> for Easy BreeZy Plumbing. Not the official website.<span class="long"> Photos, reviews and prices are taken from their public website and Google profile.</span></div>
+
+<header>
+  <div class="wrap hdr">
+    <a href="#top" aria-label="Easy BreeZy Plumbing home"><img src="img/logo.png" alt="Easy BreeZy Plumbing" width="600" height="125"></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#area">Service area</a></li>
+      </ul>
+    </nav>
+    <div class="hdr-call">
+      <div><small>24/7 emergency line</small><strong><a href="tel:+13035626464" style="text-decoration:none">303-562-6464</a></strong></div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" aria-labelledby="h1">
+  <div class="hero-bg" role="img" aria-label="Easy BreeZy Plumbing van in front of the Colorado Flatirons"></div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="badge-247"><span class="dot" aria-hidden="true"></span>24-hour service + emergency hours</div>
+      <h1 id="h1">24/7 Plumber in <span>Brighton</span> &amp; Northern Colorado</h1>
+      <p class="sub">Leaks, water heaters, drains and gas lines, fixed by a women-owned local team. You dial, we go the extra mile.</p>
+      <div class="ctas">
+        <a class="btn btn-call" href="tel:+13035626464">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+          Call 303-562-6464</a>
+        <a class="btn btn-ghost" href="https://book.housecallpro.com/book/Easy-BreeZy-Plumbing-LLC/6c8382e61d594277aa726e790581c99d" target="_blank" rel="noopener">Book online</a>
+      </div>
+      <a class="google" href="https://share.google/HEx9PQYJuMQ9OjnHE" target="_blank" rel="noopener" aria-label="Rated 4.9 out of 5 from 154 Google reviews">
+        <svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A11.9 11.9 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>
+        <div><div class="score">4.9 <span class="stars" aria-hidden="true">★★★★★</span></div><small>154 Google reviews</small></div>
+      </a>
+      <ul class="trust">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Women-owned &amp; family-run</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>BBB A+ accredited</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>$47 service call in our area</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews" aria-labelledby="rev-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">What neighbors say</div><h2 id="rev-h">154 five-star reasons to call</h2></div>
+      <p>Real reviews from real homeowners, straight from Google.</p>
+    </div>
+    <div class="rgrid">
+      <article class="rcard">
+        <div class="top"><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><svg class="g" viewBox="0 0 48 48" aria-label="Google review"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A11.9 11.9 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg></div>
+        <blockquote>"We have now worked with Easy BreeZy twice. Ken knows his stuff! Service is fast, fairly priced and Ken is friendly to boot. His speedy expertise has us up and water running again. Thank you Ken and Easy BreeZy Plumbing for living up to your name!"</blockquote>
+        <div class="who">Meredith Weaver<span>Google review</span></div>
+      </article>
+      <article class="rcard">
+        <div class="top"><span class="stars" aria-label="5 out of 5 stars">★★★★★</span><svg class="g" viewBox="0 0 48 48" aria-label="Google review"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A11.9 11.9 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg></div>
+        <blockquote>"Wonderful coordinator, and a knowledgeable professional plumber! Thank you for servicing my tankless water heater and registering it after learning the installers never did. Wonderful family friends company I will definitely use again."</blockquote>
+        <div class="who">A O<span>Google review</span></div>
+      </article>
+      <article class="rcard">
+        <blockquote>"We had Ken come back and install a Halo whole home water treatment system and new sump pump. All went well as expected, but boy… does Halo do a fantastic job with taking care of the water! We are over the moon with how the water tastes and the difference in our skin."</blockquote>
+        <div class="who">Kathleen Weckwerth<span>Homeowner review</span></div>
+      </article>
+    </div>
+    <div class="allrev"><a href="https://share.google/HEx9PQYJuMQ9OjnHE" target="_blank" rel="noopener">Read all 154 reviews on Google →</a></div>
+  </div>
+</section>
+
+<section class="services" id="services" aria-labelledby="svc-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">What we fix</div><h2 id="svc-h">Residential plumbing, done right</h2></div>
+      <p>From a dripping faucet to a full repipe. One call and a clear price.</p>
+    </div>
+    <div class="sgrid">
+      <article class="scard"><img src="img/water-heater.webp" alt="Plumber connecting a gas water heater" loading="lazy" width="794" height="550"><div class="body"><h3>Water heaters</h3><p>Tank, tankless and hybrid. Installs, repairs, flushing and replacements.</p><a href="https://www.easybreezyplumbing.com/water-heater">Water heater services →</a></div></article>
+      <article class="scard"><img src="img/tech.webp" alt="Easy BreeZy plumber at work" loading="lazy" width="800" height="500"><div class="body"><h3>Plumbing repairs</h3><p>Leaks, fixtures, hose bibs and pressure valves.</p><a href="https://www.easybreezyplumbing.com/plumbing-contractor/plumbing-repair">Plumbing repair →</a></div></article>
+      <article class="scard"><img src="img/sewer.webp" alt="Sewage ejector pump replacement" loading="lazy" width="225" height="225"><div class="body"><h3>Drains &amp; sewer lines</h3><p>Drain line repair, sewer line repair and replacement, ejector pumps.</p><a href="https://www.easybreezyplumbing.com/plumbing-contractor/sewer-line-repairs">Drain &amp; sewer →</a></div></article>
+      <article class="scard"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h7a3 3 0 0 1 3 3v2a3 3 0 0 0 3 3h7"/><path d="M2 5v6M22 13v6"/><path d="M6 6.5v3M18 14.5v3"/></svg></div><div class="body"><h3>Repiping</h3><p>Whole-home and basement repipes, frozen-pipe replacement.</p><a href="https://www.easybreezyplumbing.com/plumbing-contractor/repiping">Repiping →</a></div></article>
+      <article class="scard"><img src="img/gas-line.webp" alt="Outdoor gas fire pit installed by Easy BreeZy" loading="lazy" width="800" height="500"><div class="body"><h3>Gas lines</h3><p>Gas line repair, replacement and extensions for fire pits and kitchens.</p><a href="https://www.easybreezyplumbing.com/plumbing-contractor">Gas line services →</a></div></article>
+      <article class="scard"><img src="img/water-treatment.webp" alt="HALO 5 whole-home water treatment system" loading="lazy" width="750" height="1000" style="object-position:center 30%"><div class="body"><h3>Water treatment</h3><p>HALO 5 whole-home filtration and conditioning. No salt, every tap.</p><a href="https://www.easybreezyplumbing.com/plumbing-contractor/water-treatment">Water treatment →</a></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="offer" id="pricing" aria-labelledby="price-h">
+  <div class="wrap ogrid">
+    <div>
+      <div class="eyebrow" style="color:#ff9bdc">Straight pricing</div>
+      <h2 id="price-h">No surprise bills</h2>
+      <ul class="price-list">
+        <li><strong>$47</strong><span>Service fee within our service area.</span></li>
+        <li><strong>$57</strong><span>Diagnostic fee, waived if you choose us to do the work.</span></li>
+        <li><strong>Match</strong><span>Price matching depending on the job, within reason.</span></li>
+      </ul>
+    </div>
+    <div class="coupon">
+      <div class="eyebrow">Limited-time coupon</div>
+      <div class="big">$500 off</div>
+      <p>Water heater services. Fill out the quick form to claim it.</p>
+      <a class="btn btn-navy" href="https://www.easybreezyplumbing.com/specials">Claim the coupon</a>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about" aria-labelledby="about-h">
+  <div class="wrap agrid">
+    <div class="photo-stack">
+      <img src="img/family.webp" alt="The Easy BreeZy Plumbing family in matching tie-dye shirts" loading="lazy" width="600" height="492">
+      <img class="p2" src="img/owners-van.webp" alt="Easy BreeZy team on hay bales in front of their van" loading="lazy" width="600" height="406">
+    </div>
+    <div>
+      <div class="eyebrow">Who you're letting in</div>
+      <h2 id="about-h">A local family, not a call center</h2>
+      <p>Easy BreeZy is a proud women-owned business based in Fort Lupton. When you call, you get a real local team that treats your home like a neighbor's.</p>
+      <ul class="checks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Women-owned and family-run</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>BBB accredited, A+ rating</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>24-hour service and emergency hours</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Locally owned and operated</li>
+      </ul>
+      <a class="btn btn-navy" href="tel:+13035626464">Call 303-562-6464</a>
+    </div>
+  </div>
+</section>
+
+<section class="area" id="area" aria-labelledby="area-h">
+  <div class="wrap">
+    <div class="eyebrow">Where we work</div>
+    <h2 id="area-h">Serving Brighton and Northern Colorado</h2>
+    <div class="towns">
+      <span>Brighton</span><span>Fort Lupton</span><span>Thornton</span><span>Westminster</span><span>Henderson</span><span>Lochbuie</span><span>Broomfield</span><span>Dacono</span><span>Firestone</span><span>Frederick</span><span>Hudson</span><span>Federal Heights</span><span>Welby</span><span>Denver</span><span>Lafayette</span><span>Keenesburg</span><span>Todd Creek</span><span>Reunion</span><span>Sherrelwood</span><span>Derby</span><span>Cherry Creek</span><span>Puritan</span><span>Ione</span><span>Wattenberg</span>
+    </div>
+  </div>
+</section>
+
+<section class="final" aria-labelledby="final-h">
+  <div class="wrap">
+    <h2 id="final-h">Water where it shouldn't be?</h2>
+    <p>24-hour service and emergency hours. One call gets it moving.</p>
+    <div class="ctas">
+      <a class="btn btn-call" href="tel:+13035626464">Call 303-562-6464</a>
+      <a class="btn btn-ghost" href="https://book.housecallpro.com/book/Easy-BreeZy-Plumbing-LLC/6c8382e61d594277aa726e790581c99d" target="_blank" rel="noopener">Book online</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap fgrid">
+    <img src="img/logo-light.png" alt="Easy BreeZy Plumbing" width="600" height="125">
+    <div>Easy BreeZy Plumbing · Fort Lupton, CO 80621 · <a href="tel:+13035626464">303-562-6464</a></div>
+    <div>Concept by <a href="https://www.plumberkingagency.com" target="_blank" rel="noopener">Plumber King Agency</a></div>
+  </div>
+</footer>
+
+<div class="callbar">
+  <a class="btn btn-call" href="tel:+13035626464">Call now</a>
+  <a class="btn btn-navy" href="https://book.housecallpro.com/book/Easy-BreeZy-Plumbing-LLC/6c8382e61d594277aa726e790581c99d" target="_blank" rel="noopener">Book online</a>
+</div>
+</body>
+</html>

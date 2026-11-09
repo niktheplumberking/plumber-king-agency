@@ -162,6 +162,16 @@ const FROM: Record<string, gsap.TweenVars> = {
 };
 const EASE: Record<string, string> = { pop: 'back.out(2.2)', up: 'power3.out', left: 'power3.out', right: 'power3.out', clip: 'power3.inOut', clipx: 'power3.inOut' };
 
+function toState(from: gsap.TweenVars): gsap.TweenVars {
+  const end: gsap.TweenVars = {};
+  for (const k of Object.keys(from)) {
+    if (k === 'x' || k === 'y') end[k] = 0;
+    else if (k === 'scale' || k === 'opacity') end[k] = 1;
+    else if (k === 'clipPath') end.clipPath = 'inset(0% 0% 0% 0%)';
+  }
+  return end;
+}
+
 function splitLines(el: HTMLElement) {
   const split = SplitText.create(el, { type: 'lines', linesClass: 'split-line', mask: 'lines' });
   el.style.visibility = 'visible';
@@ -169,28 +179,34 @@ function splitLines(el: HTMLElement) {
 }
 
 /* ---------- hero entrance, ordered (runs after the intro, or at once on in-site navigation) ---------- */
+let heroDone = false;
 function heroTimeline(fast: boolean) {
+  if (heroDone) return;
+  heroDone = true;
   const els = Array.from(document.querySelectorAll<HTMLElement>('[data-hero]'));
   els.sort((a, b) => Number(a.dataset.hero) - Number(b.dataset.hero));
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   const hdrBits = document.querySelectorAll('[data-intro="brand"], [data-intro="nav"]');
-  tl.from('[data-intro="topbar"]', { yPercent: -100, duration: 0.5 }, 0);
-  tl.from(hdrBits, { y: -24, opacity: 0, duration: 0.6, stagger: 0.05 }, 0.08);
+  tl.fromTo('[data-intro="topbar"]', { yPercent: -100 }, { yPercent: 0, duration: 0.5, immediateRender: true }, 0);
+  tl.fromTo(hdrBits, { y: -24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.05, immediateRender: true }, 0.08);
   let t = 0.25;
   els.forEach((el) => {
     const fx = el.dataset.heroFx || 'up';
     const at = el.dataset.heroAt !== undefined ? Number(el.dataset.heroAt) : t;
     if (fx === 'lines') {
       const lines = splitLines(el);
-      tl.from(lines, { yPercent: 110, rotate: 2, duration: 0.85, stagger: 0.12, ease: 'back.out(1.4)' }, at);
+      tl.fromTo(lines, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: 0.85, stagger: 0.12, ease: 'back.out(1.4)', immediateRender: true }, at);
       t = at + 0.12 * lines.length + 0.2;
     } else {
       gsap.set(el, { opacity: 1 });
       const dur = fx === 'clip' || fx === 'clipx' ? 1.1 : fx === 'pop' ? 0.6 : 0.9;
+      // fromTo with explicit end values. A plain from() reads its end state from the element; on elements with a CSS
+      // transform transition (hover lifts) that read can land mid-transition and leave the element stuck off-place.
+      const to = toState(FROM[fx]);
       if (el.hasAttribute('data-hero-children')) {
-        tl.from(el.children, { ...FROM[fx], duration: dur, stagger: 0.07, ease: EASE[fx] || 'power3.out' }, at);
+        tl.fromTo(el.children, { ...FROM[fx] }, { ...to, duration: dur, stagger: 0.07, ease: EASE[fx] || 'power3.out', immediateRender: true }, at);
       } else {
-        tl.from(el, { ...FROM[fx], duration: dur, ease: EASE[fx] || 'power3.out' }, at);
+        tl.fromTo(el, { ...FROM[fx] }, { ...to, duration: dur, ease: EASE[fx] || 'power3.out', immediateRender: true }, at);
       }
       t = at + 0.12;
     }
@@ -230,18 +246,18 @@ function initReveals() {
     if (el.closest('[data-stagger]') && el.parentElement?.hasAttribute('data-stagger')) return;
     const fx = el.dataset.reveal || 'up';
     gsap.set(el, { opacity: 1 });
-    gsap.from(el, { ...FROM[fx], duration: fx.startsWith('clip') ? 1.2 : 1, delay: Number(el.dataset.delay || 0), ease: EASE[fx] || 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+    gsap.fromTo(el, { ...FROM[fx] }, { ...toState(FROM[fx]), duration: fx.startsWith('clip') ? 1.2 : 1, delay: Number(el.dataset.delay || 0), ease: EASE[fx] || 'power3.out',
+      immediateRender: true, scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
   });
   gsap.utils.toArray<HTMLElement>('[data-stagger]').forEach((wrap) => {
     const kids = Array.from(wrap.children) as HTMLElement[];
     const fx = wrap.dataset.stagger || 'up';
     kids.forEach((k) => gsap.set(k, { opacity: 1 }));
-    gsap.from(kids, { ...FROM[fx], duration: 0.9, stagger: 0.09, ease: EASE[fx] || 'power3.out', scrollTrigger: { trigger: wrap, start: 'top 85%', once: true } });
+    gsap.fromTo(kids, { ...FROM[fx] }, { ...toState(FROM[fx]), duration: 0.9, stagger: 0.09, ease: EASE[fx] || 'power3.out', immediateRender: true, scrollTrigger: { trigger: wrap, start: 'top 85%', once: true } });
   });
   gsap.utils.toArray<HTMLElement>('[data-split]').forEach((el) => {
     const lines = splitLines(el);
-    gsap.from(lines, { yPercent: 110, rotate: 2, duration: 0.9, stagger: 0.1, ease: 'back.out(1.4)', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+    gsap.fromTo(lines, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: 0.9, stagger: 0.1, ease: 'back.out(1.4)', immediateRender: true, scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
   });
   gsap.utils.toArray<SVGPathElement>('[data-draw]').forEach((p) => {
     gsap.from(p, { drawSVG: '0%', duration: 1.6, ease: 'power2.inOut', scrollTrigger: { trigger: p.closest('svg') || p, start: 'top 92%', once: true } });

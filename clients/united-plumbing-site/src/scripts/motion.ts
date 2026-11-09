@@ -262,7 +262,7 @@ function playIntro(onDone: () => void) {
   const yellow = root.querySelector('.intro-yellow')!;
   const drop = root.querySelector('.intro-drop')!;
   const tl = gsap.timeline();
-  tl.fromTo(root.querySelectorAll('.intro-pipe-line, .intro-pipe-line2'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 0.1)
+  tl.fromTo(root.querySelectorAll('.intro-pipe-line, .intro-pipe-line2'), { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 0.1)
     .fromTo('.intro-joint', { scale: 0, opacity: 1, svgOrigin: '300 40' }, { scale: 1, opacity: 1, svgOrigin: '300 40', duration: 0.4, ease: 'back.out(3)' }, 0.65)
     .fromTo(drop, { y: -16, opacity: 0, scaleY: 0.6 }, { y: 70, opacity: 1, scaleY: 1.1, duration: 0.45, ease: 'power2.in' }, 0.75)
     .to(drop, { scale: 0, opacity: 0, duration: 0.15 }, 1.18)

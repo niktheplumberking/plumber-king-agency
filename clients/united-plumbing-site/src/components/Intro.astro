@@ -12,8 +12,8 @@ import logo from '../assets/img/logo-united.png';
     <svg class="intro-edge" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,0 H1440 V40 C1200,120 960,110 720,70 C480,30 240,30 0,90 Z" fill="#0B0F1A"/><path class="intro-edge-line" d="M0,90 C240,30 480,30 720,70 C960,110 1200,120 1440,40" fill="none" stroke="#33D6FF" stroke-width="3" vector-effect="non-scaling-stroke"/></svg>
     <div class="intro-core">
       <svg class="intro-pipe" viewBox="0 0 600 120" fill="none">
-        <path class="intro-pipe-line" pathLength="1" d="M0 40 H250 Q300 40 300 90 V96" stroke="#33D6FF" stroke-width="6" stroke-linecap="round"/>
-        <path class="intro-pipe-line2" pathLength="1" d="M600 40 H350 Q300 40 300 90 V96" stroke="#1F4FD8" stroke-width="6" stroke-linecap="round"/>
+        <path class="intro-pipe-line" pathLength="1000" d="M0 40 H250 Q300 40 300 90 V96" stroke="#33D6FF" stroke-width="6" stroke-linecap="round"/>
+        <path class="intro-pipe-line2" pathLength="1000" d="M600 40 H350 Q300 40 300 90 V96" stroke="#1F4FD8" stroke-width="6" stroke-linecap="round"/>
         <circle class="intro-joint" cx="300" cy="40" r="10" fill="#FFD21F"/>
       </svg>
       <svg class="intro-drop" viewBox="0 0 24 32" width="22" height="30"><path d="M12 31a10 10 0 0 0 10-10c0-3-1.4-5.6-4.3-8C14.9 10.7 13 7 12 1c-1 6-2.9 9.7-5.7 12C3.4 15.4 2 18 2 21a10 10 0 0 0 10 10z" fill="#33D6FF"/></svg>
@@ -37,6 +37,6 @@ import logo from '../assets/img/logo-united.png';
   .intro-led { margin-top: 26px; color: var(--yellow); font-size: clamp(20px, 3vw, 30px); letter-spacing: .08em; text-shadow: 0 0 14px rgba(255,210,31,.55); }
   .intro-led span { display: inline-block; opacity: 0; transform: translateY(20px); }
   /* Start states match the first frame of the animation, so nothing shows 'finished' before the script runs. */
-  .intro-pipe-line, .intro-pipe-line2 { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .intro-pipe-line, .intro-pipe-line2 { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
   .intro-joint { opacity: 0; }
 </style>

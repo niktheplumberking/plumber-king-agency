@@ -1,0 +1,77 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logo from '../assets/img/logo-united.jpg';
+import { SITE } from '../data/site';
+import { SERVICES } from '../data/services';
+import { TOWNS } from '../data/towns';
+const year = 2026;
+---
+<footer class="ftr dark" data-footer>
+  <div class="wrap ftr-grid">
+    <div class="ftr-brand" data-reveal="up">
+      <a href="/" class="ftr-logo" aria-label="United Plumbing home"><Image src={logo} alt="United Plumbing logo" width={180} height={127} /></a>
+      <p class="h-display ftr-name">United Plumbing</p>
+      <p class="ftr-blurb">24/7 plumbing for Pomona and the Inland Empire. Family run by the Galvez brothers.</p>
+      <div class="ftr-soc">
+        <a href={SITE.instagram} target="_blank" rel="noopener" aria-label="Instagram @plumblord1"><Icon name="instagram" size={18} /></a>
+        <a href={SITE.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" size={18} /></a>
+      </div>
+    </div>
+    <nav class="ftr-col" aria-label="Footer menu" data-reveal="up">
+      <p class="ftr-h">Menu</p>
+      <ul><li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li><a href="/about/">About</a></li><li><a href="/areas/">Areas</a></li><li><a href="/reviews/">Reviews</a></li><li><a href="/our-work/">Our work</a></li><li><a href="/contact/">Contact</a></li></ul>
+    </nav>
+    <nav class="ftr-col" aria-label="Footer services" data-reveal="up">
+      <p class="ftr-h">Services</p>
+      <ul>{SERVICES.slice(0, 6).map((s) => <li><a href={`/${s.slug}/`}>{s.nav}</a></li>)}<li><a href="/services/" class="ftr-more">All 13 services</a></li></ul>
+    </nav>
+    <nav class="ftr-col" aria-label="Footer areas" data-reveal="up">
+      <p class="ftr-h">Areas</p>
+      <ul>{TOWNS.filter((t) => t.phase === 1).slice(0, 6).map((t) => <li><a href={`/${t.slug}/`}>{t.name}</a></li>)}<li><a href="/areas/" class="ftr-more">All 28 towns</a></li></ul>
+    </nav>
+    <div class="ftr-col ftr-contact" data-reveal="up">
+      <p class="ftr-h">Contact</p>
+      <ul>
+        <li><a href={SITE.phoneHref}><span class="fi"><Icon name="phone" size={15} /></span>{SITE.phone} (24/7)</a></li>
+        <li><a href={SITE.backupHref}><span class="fi"><Icon name="phone" size={15} /></span>Backup: {SITE.backupPhone}</a></li>
+        <li><a href={`mailto:${SITE.email}`}><span class="fi"><Icon name="mail" size={15} /></span>{SITE.email}</a></li>
+        <li><span class="fi"><Icon name="clock" size={15} /></span>Open 24 hours, 7 days</li>
+        <li><span class="fi"><Icon name="pin" size={15} /></span>Pomona, CA {SITE.zip} · Inland Empire</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap ftr-lic"><span class="licline" title="Placeholder: to be filled before launch">[CSLB line: Jim's state contractor status goes here. Jim to confirm before launch]</span></div>
+  <div class="ftr-bottom">
+    <div class="wrap ftr-bottom-in">
+      <span>© {year} United Plumbing · Pomona, CA {SITE.zip}</span>
+      <span>Website by <a href="https://plumberkingagency.com" target="_blank" rel="noopener">Plumber King Agency</a> · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span>
+    </div>
+  </div>
+</footer>
+<style>
+  .ftr { padding-top: 80px; }
+  .ftr-grid { display: grid; grid-template-columns: 1.5fr .8fr 1fr 1fr 1.4fr; gap: 40px; }
+  .ftr-logo { display: inline-block; background: #fff; border-radius: 10px; padding: 6px; }
+  .ftr-logo img { width: 104px; }
+  .ftr-name { font-size: 30px; color: #fff; margin-top: 20px; }
+  .ftr-blurb { color: var(--on-dark-2); margin-top: 8px; font-size: 15px; max-width: 320px; }
+  .ftr-soc { display: flex; gap: 10px; margin-top: 20px; }
+  .ftr-soc a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 8px; background: var(--cobalt); color: #fff; transition: transform .3s var(--ease-out), background .3s; }
+  .ftr-soc a:hover { transform: translateY(-3px); background: #3a68ee; }
+  .ftr-h { font-weight: 700; color: #fff; font-size: 17px; margin-bottom: 14px; }
+  .ftr-col li { margin-bottom: 4px; }
+  .ftr-col a, .ftr-col li { color: var(--on-dark-2); font-size: 15px; }
+  .ftr-col a { display: inline-flex; align-items: center; gap: 10px; min-height: 32px; transition: color .2s; }
+  .ftr-col a:hover { color: var(--cyan); }
+  .ftr-more { color: var(--yellow) !important; font-weight: 600; }
+  .ftr-contact li { display: flex; align-items: center; gap: 12px; min-height: 40px; color: #fff; }
+  .ftr-contact a { color: #fff; gap: 12px; }
+  .fi { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--cobalt); color: #fff; flex: none; }
+  .ftr-lic { padding: 34px 0 26px; }
+  .ftr-bottom { background: var(--cobalt); color: #fff; font-size: 14px; }
+  .ftr-bottom-in { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 22px; padding: 14px 0; text-align: center; }
+  .ftr-bottom a { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 1100px) { .ftr-grid { grid-template-columns: 1fr 1fr 1fr; } .ftr-brand { grid-column: 1 / -1; } }
+  @media (max-width: 640px) { .ftr-grid { grid-template-columns: 1fr 1fr; gap: 30px 20px; } .ftr-contact { grid-column: 1 / -1; } .ftr { padding-bottom: 84px; } }
+</style>

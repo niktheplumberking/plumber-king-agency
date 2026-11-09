@@ -1,0 +1,266 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Btn from '../components/Btn.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Wave from '../components/Wave.astro';
+import Ticker from '../components/Ticker.astro';
+import VideoTile from '../components/company/VideoTile.astro';
+import { SITE } from '../data/site';
+import dusk from '../assets/img/dusk-street.jpg';
+import jim from '../assets/img/jim-cutout.png';
+
+const sent = [
+  { k: 'name', l: 'Name', i: 'user' }, { k: 'phone', l: 'Phone', i: 'phone' },
+  { k: 'zip', l: 'ZIP code', i: 'pin' }, { k: 'problem', l: "What's wrong?", i: 'wrench' },
+];
+const steps = [
+  { tag: 'Now', t: 'We got your request', d: "Your name, number and problem just landed with Jim's team. Nothing else to fill in." },
+  { tag: 'Next', t: 'We call you back', d: `The call comes from ${SITE.phone}. Answer it, tell us what you see, or text a photo.` },
+  { tag: 'On site', t: 'Clear price, then the fix', d: 'You hear the price before any work starts. You say yes, we fix it. No hidden fees.' },
+];
+const tips = [
+  { i: 'drop', t: 'Shut off the water.', d: 'Main valve, or the small valve under the sink or toilet.' },
+  { i: 'wrench', t: 'Stop using the drain', d: 'if it is backing up. No flushing, no running water into it.' },
+  { i: 'flame', t: 'Smell gas? Leave.', d: 'Leave the house. Call SoCalGas from outside.' },
+];
+---
+<Base title="Thanks, We Got Your Message | United Plumbing" description="Thanks for reaching out to United Plumbing. We will call you back from (909) 587-0711." noindex={true}>
+
+  <section class="ty dark">
+    <div class="ty-bg" aria-hidden="true"><Image src={dusk} alt="" widths={[768, 1344]} sizes="100vw" loading="eager" /></div>
+    <div class="wrap ty-grid">
+      <div>
+        <div class="ty-ok" data-hero="1" data-hero-fx="pop"><span class="ty-check"><Icon name="checkCircle" size={30} /></span><span>Message sent · Thank you</span></div>
+        <h1 class="h-display ty-h" data-hero="2" data-hero-fx="lines">Got it.<br />We'll call<br /><span class="c-yellow">you soon.</span></h1>
+        <p class="ty-p" data-hero="3" data-hero-fx="up">Thanks<span data-fname></span>. Your message is with the family now. We'll call you back from {SITE.phoneDisplay}, so keep your phone close.</p>
+        <p class="ty-small" data-hero="4" data-hero-fx="up">Calls usually go back within <em class="ph">[callback time: Jim to confirm]</em>.</p>
+        <a href={SITE.phoneHref} class="ty-led" data-hero="5" data-hero-fx="up" aria-label={`Status: call queued. Tap to call ${SITE.phone}`}>
+          <span class="led ty-led-top">Status · 24/7 · English / Español</span><i aria-hidden="true"></i>
+          <span class="led ty-led-big">CALL QUEUED</span>
+        </a>
+      </div>
+      <div class="ty-jim" data-hero="2" data-hero-fx="right">
+        <span class="ty-ring" aria-hidden="true"></span>
+        <Image src={jim} alt="Jim Galvez, owner of United Plumbing" widths={[400, 640]} sizes="(max-width: 900px) 70vw, 440px" loading="eager" format="webp" class="ty-img" />
+        <span class="ty-tag h-display">Jim Galvez · Owner &amp; plumber</span>
+        <div class="ty-card" data-sent-card>
+          <p class="h-display ty-card-h">What you sent us</p>
+          <dl>
+            {sent.map((r) => <div><dt><Icon name={r.i} size={16} />{r.l}</dt><dd data-sent={r.k}>Not sent</dd></div>)}
+          </dl>
+          <p class="ty-card-f">Wrong number? Call <a href={SITE.phoneHref}>{SITE.phone}</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Wave from="#0B0F1A" to="#F3F6FB" flip />
+
+  <section class="st3 light">
+    <div class="wrap head-center">
+      <Eyebrow>What happens next</Eyebrow>
+      <h2 class="h-display h2" data-split>Three steps.<br /><span class="c-cobalt">Then it gets fixed.</span></h2>
+    </div>
+    <div class="wrap st3-rail">
+      <div class="st3-pipe" aria-hidden="true"><span data-progress></span></div>
+      <ol class="st3-list" data-stagger="up">
+        {steps.map((s, i) => (
+          <li class:list={{ last: i === 2 }}>
+            <span class="st3-tag led">{s.tag}</span>
+            <span class="st3-node" aria-hidden="true"><Icon name="minus" size={16} stroke={3} /></span>
+            <div class="st3-card" data-tilt>
+              <span class="led st3-n">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="h-display">{s.t}</h3>
+              <p>{s.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#131B2E" />
+
+  <section class="cw dark2">
+    <div class="wrap cw-grid">
+      <div class="cw-y" data-reveal="up">
+        <p class="cw-eb">Can't wait?</p>
+        <h2 class="h-display cw-h">Water still running?</h2>
+        <p class="cw-p">Don't wait for us to call. Call us now.</p>
+        <a href={SITE.phoneHref} class="cw-led"><span class="led cw-led-top">Tap to call · 24/7</span><span class="led cw-led-big">{SITE.phone}</span></a>
+        <div class="cw-row">
+          <Btn href={SITE.phoneHref} variant="ink" icon="phone" size="lg">Call {SITE.phoneDisplay}</Btn>
+          <a href={SITE.backupHref} class="cw-backup">Backup line {SITE.backupPhone.replace(/^(\d{3})-/, '($1) ')}</a>
+        </div>
+      </div>
+      <div class="cw-v" data-reveal="up">
+        <h2 class="h-display cw-v-h">See what our<br />customers say</h2>
+        <VideoTile variant="phone" caption="Video 2 · 18s" progress={40} class="cw-tile" />
+        <p class="cw-stats"><span class="led c-yellow">{SITE.instagramFollowers}</span><small>Instagram followers<br />{SITE.facebookFollowers} on Facebook</small></p>
+        <Btn href={SITE.instagram} target="_blank" variant="outline-cyan" icon="instagram" size="md" full>Follow @plumblord1</Btn>
+      </div>
+    </div>
+  </section>
+
+  <Wave from="#131B2E" to="#F3F6FB" flip />
+
+  <section class="tips light">
+    <div class="wrap head-center">
+      <Eyebrow>While you wait</Eyebrow>
+      <h2 class="h-display h2" data-split>3 things to do<br /><span class="c-cobalt">right now.</span></h2>
+    </div>
+    <ul class="wrap tips-grid" data-stagger="up">
+      {tips.map((t, i) => (
+        <li class:list={{ dark: i === 2 }} data-tilt>
+          <div class="tip-top"><span class="tip-ico"><Icon name={t.i} size={22} /></span><span class="led tip-n">Tip {String(i + 1).padStart(2, '0')}</span></div>
+          <h3 class="h-display">{t.t}</h3>
+          <p>{t.d}</p>
+        </li>
+      ))}
+    </ul>
+    <div class="wrap tips-back" data-reveal="up"><a href="/" class="h-display"><Icon name="chevronLeft" size={18} />Back to home</a></div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#0B0F1A" />
+  <Ticker items={['CALL 909-587-0711', '24/7', 'HABLAMOS ESPAÑOL', 'POMONA', 'CLAREMONT', 'CHINO', 'ONTARIO', 'UPLAND']} cyan reverse />
+</Base>
+
+<script>
+  // When the form back-end sends people here with their details in the query string, show them back.
+  const q = new URLSearchParams(location.search);
+  const name = (q.get('name') || '').trim();
+  const fn = document.querySelector('[data-fname]');
+  if (fn && name) fn.textContent = `, ${name.split(/\s+/)[0]}`;
+  let any = false;
+  document.querySelectorAll<HTMLElement>('[data-sent]').forEach((dd) => {
+    const v = (q.get(dd.dataset.sent!) || '').trim();
+    if (v) { dd.textContent = v; any = true; }
+  });
+  if (!any) document.querySelector('[data-sent-card]')?.classList.add('is-empty');
+</script>
+
+<style>
+  .ty { position: relative; overflow: hidden; padding: 60px 0 0; }
+  .ty-bg { position: absolute; inset: 0; }
+  .ty-bg img { width: 100%; height: 100%; object-fit: cover; opacity: .25; }
+  .ty-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 80% at 80% 40%, rgba(31,79,216,.45), transparent), linear-gradient(90deg, rgba(11,15,26,.97), rgba(11,15,26,.75)); }
+  .ty-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; }
+  .ty-grid > div:first-child { padding-bottom: 70px; }
+  .ty-ok { display: flex; align-items: center; gap: 18px; color: var(--cyan); font: 700 12px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+  .ty-check { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 50%; border: 2px solid var(--cyan); box-shadow: 0 0 24px rgba(51,214,255,.5), inset 0 0 14px rgba(51,214,255,.3); }
+  .ty-h { margin-top: 26px; font-size: clamp(56px, 6.8vw, 96px); line-height: .86; color: #fff; }
+  .ty-p { margin-top: 26px; max-width: 520px; font-size: 17px; color: var(--on-dark-2); }
+  .ty-small { margin-top: 12px; color: var(--cyan); font-size: 13px; font-weight: 700; }
+  .ty-small .ph { font-style: normal; }
+  .ty-led { position: relative; display: block; max-width: 640px; margin-top: 26px; padding: 14px 20px; border-radius: 10px; background: #070a12; border: 2px solid var(--cobalt); box-shadow: 0 0 40px -10px rgba(31,79,216,.8); }
+  .ty-led i { position: absolute; right: 20px; top: 18px; width: 12px; height: 12px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 10px #ff3b3b; animation: tyb 1.4s steps(2) infinite; }
+  @keyframes tyb { 50% { opacity: .25; } }
+  .ty-led-top { display: block; color: var(--cyan); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+  .ty-led-big { display: block; margin-top: 4px; color: var(--yellow); font-size: 44px; line-height: 1; text-shadow: 0 0 14px rgba(255,210,31,.5); }
+  .ty-jim { position: relative; display: flex; justify-content: center; min-height: 560px; }
+  .ty-ring { position: absolute; left: 50%; top: 40px; width: 82%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%; border: 2px dashed rgba(51,214,255,.4); }
+  .ty-img { position: relative; align-self: end; width: min(400px, 80%); }
+  .ty-tag { position: absolute; right: 0; top: 60px; writing-mode: vertical-rl; transform: rotate(180deg); padding: 18px 10px; border-radius: 4px; background: var(--cobalt); color: #fff; font-size: 16px; }
+  .ty-card { position: absolute; right: 0; bottom: 40px; z-index: 2; width: 360px; padding: 18px 20px 14px; border-radius: 12px; background: #fff; color: var(--ink); border-top: 5px solid var(--yellow); box-shadow: 0 30px 60px -20px rgba(0,0,0,.6); }
+  .ty-card-h { font-size: 24px; }
+  .ty-card dl { margin: 10px 0 0; }
+  .ty-card dl > div { display: grid; grid-template-columns: 140px 1fr; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .ty-card dt { display: flex; align-items: center; gap: 10px; color: var(--ink-2); font-weight: 600; }
+  .ty-card dt :global(.icon) { color: var(--cobalt); }
+  .ty-card dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .ty-card.is-empty dd { color: var(--ink-3); font-weight: 500; }
+  .ty-card-f { margin-top: 8px; font-size: 11.5px; color: var(--ink-3); }
+  .ty-card-f a { color: var(--cobalt); text-decoration: underline; }
+
+  .st3 { padding: clamp(60px, 7vw, 90px) 0 clamp(70px, 8vw, 100px); }
+  .st3-rail { position: relative; margin-top: 50px; }
+  .st3-pipe { position: absolute; left: 0; right: 0; top: 38px; height: 8px; border-radius: 99px; background: var(--ink); }
+  .st3-pipe span { position: absolute; left: 0; right: 0; top: 2px; height: 4px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+  .st3-list { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+  .st3-tag { display: block; margin-left: 66px; color: var(--ink-3); font-size: 14px; text-transform: uppercase; height: 24px; }
+  .last .st3-tag { color: var(--cobalt); }
+  .st3-node { display: grid; place-items: center; width: 34px; height: 34px; margin: 8px 0 0 20px; border-radius: 8px; background: var(--cobalt); color: #fff; }
+  .last .st3-node { background: var(--yellow); color: var(--ink); }
+  .st3-card { margin-top: 30px; padding: 26px 26px 30px; border-radius: 14px; background: #fff; border: 1px solid var(--line); min-height: 250px; }
+  .last .st3-card { background: radial-gradient(70% 90% at 100% 100%, #1f4fd8, #10173a 55%, var(--night)); border: 0; color: #fff; }
+  .st3-n { display: inline-grid; place-items: center; width: 98px; height: 74px; border-radius: 8px; background: var(--night); border: 2px solid var(--cobalt); color: var(--cyan); font-size: 40px; }
+  .last .st3-n { border-color: var(--yellow); color: var(--yellow); background: transparent; }
+  .st3-card h3 { margin-top: 26px; font-size: 32px; color: var(--ink); }
+  .last .st3-card h3 { color: #fff; }
+  .st3-card p { margin-top: 10px; font-size: 15px; color: var(--ink-2); }
+  .last .st3-card p { color: var(--on-dark-2); }
+
+  .cw { padding: 70px 0 90px; }
+  .cw-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 40px; align-items: stretch; }
+  .cw-y { padding: 50px 46px 50px; border-radius: 18px; background: var(--yellow); color: var(--ink); }
+  .cw-eb { font: 700 12px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+  .cw-h { margin-top: 12px; font-size: clamp(48px, 5.4vw, 76px); }
+  .cw-p { margin-top: 8px; font-size: 18px; font-weight: 500; }
+  .cw-led { display: block; max-width: 540px; margin-top: 24px; padding: 14px 20px; border-radius: 10px; background: var(--night); }
+  .cw-led-top { display: block; color: var(--cyan); font-size: 12px; text-transform: uppercase; }
+  .cw-led-big { display: block; margin-top: 4px; color: var(--yellow); font-size: 46px; line-height: 1; text-shadow: 0 0 14px rgba(255,210,31,.4); }
+  .cw-row { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; margin-top: 24px; }
+  .cw-backup { min-height: 44px; display: inline-flex; align-items: center; font-weight: 700; font-size: 17px; text-decoration: underline; text-underline-offset: 4px; }
+  .cw-v { display: flex; flex-direction: column; gap: 20px; padding: 30px 24px; border-radius: 18px; background: radial-gradient(90% 60% at 100% 0%, rgba(168,38,95,.45), transparent), radial-gradient(90% 60% at 0% 100%, rgba(31,79,216,.35), transparent), var(--night); border: 1px solid var(--line-dark); }
+  .cw-v-h { color: #fff; font-size: 36px; line-height: .95; }
+  .cw-v :global(.cw-tile) { aspect-ratio: auto; min-height: 210px; }
+  .cw-stats { display: flex; align-items: center; gap: 16px; }
+  .cw-stats .led { font-size: 38px; line-height: 1; }
+  .cw-stats small { color: var(--cyan); font: 700 10px/1.4 var(--body); letter-spacing: .14em; text-transform: uppercase; }
+
+  .tips { padding: clamp(60px, 7vw, 90px) 0 80px; }
+  .tips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 50px; }
+  .tips-grid li { padding: 30px 26px 30px; border-radius: 14px; background: #fff; border: 1px solid var(--line); border-top: 10px solid var(--yellow); }
+  .tips-grid li.dark { background: var(--night); color: #fff; border-color: var(--night); border-top-color: var(--yellow); }
+  .tip-top { display: flex; align-items: center; gap: 20px; }
+  .tip-ico { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 10px; background: var(--night); color: var(--cyan); }
+  .dark .tip-ico { background: var(--yellow); color: var(--ink); }
+  .tip-n { color: var(--cobalt); font-size: 16px; text-transform: uppercase; }
+  .dark .tip-n { color: var(--yellow); }
+  .tips-grid h3 { margin-top: 26px; font-size: 32px; color: var(--ink); }
+  .tips-grid .dark h3 { color: #fff; }
+  .tips-grid p { margin-top: 8px; font-size: 15px; color: var(--ink-2); }
+  .tips-grid .dark p { color: var(--on-dark-2); }
+  .tips-back { display: flex; justify-content: center; margin-top: 40px; }
+  .tips-back a { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; color: var(--cobalt); font-size: 24px; }
+  .tips-back a :global(.icon) { transition: transform .3s var(--ease-out); }
+  .tips-back a:hover :global(.icon) { transform: translateX(-4px); }
+
+  @media (max-width: 960px) {
+    .ty { padding-top: 40px; }
+    .ty-grid { grid-template-columns: 1fr; gap: 0; }
+    .ty-grid > div:first-child { padding-bottom: 30px; }
+    .ty-jim { min-height: 0; padding-top: 20px; flex-direction: column; align-items: center; }
+    .ty-img { width: 62%; max-width: 300px; margin-bottom: 0; }
+    .ty-card { position: relative; left: auto; right: auto; bottom: auto; width: 100%; margin: -40px 0 30px; padding: 14px 16px 10px; }
+    .ty-card dl > div { grid-template-columns: 90px 1fr; }
+    .ty-tag { top: 30px; font-size: 13px; padding: 14px 8px; }
+    .st3-pipe { left: 14px; right: auto; top: 0; bottom: 0; width: 8px; height: auto; }
+    .st3-pipe span { left: 2px; right: 2px; top: 0; bottom: 0; width: 4px; height: auto; }
+    .st3-list { grid-template-columns: 1fr; gap: 20px; padding-left: 50px; }
+    .st3-list li { position: relative; }
+    .st3-tag { position: absolute; left: 150px; top: 50px; margin: 0; z-index: 1; }
+    .st3-node { position: absolute; left: -48px; top: 40px; margin: 0; }
+    .st3-card { margin-top: 0; min-height: 0; }
+    .cw-grid { grid-template-columns: 1fr; }
+    .tips-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+  @media (max-width: 640px) {
+    .ty-h { font-size: clamp(50px, 14vw, 64px); }
+    .ty-p { font-size: 15px; }
+    .ty-led-big { font-size: 34px; }
+    .ty-check { width: 52px; height: 52px; }
+    .ty-card-h { font-size: 20px; }
+    .ty-card dl > div { font-size: 12px; padding: 6px 0; }
+    .st3-card { padding: 20px; } .st3-n { width: 76px; height: 56px; font-size: 32px; }
+    .st3-tag { left: 120px; top: 40px; }
+    .st3-card h3 { font-size: 26px; margin-top: 18px; }
+    .cw-y { padding: 26px 22px; }
+    .cw-led-big { font-size: 34px; }
+    .cw-row :global(.btn) { width: 100%; font-size: 26px; }
+    .cw-row { justify-content: center; gap: 10px; }
+    .tips-grid h3 { font-size: 28px; }
+  }
+</style>

@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import Intro from '../components/Intro.astro';
+import { SITE, NOINDEX } from '../data/site';
+import { TOWNS } from '../data/towns';
+import { SERVICES } from '../data/services';
+import ogDefault from '../assets/img/jim-van.jpg';
+import { getImage } from 'astro:assets';
+
+interface Crumb { name: string; href: string }
+interface Props {
+  title: string; description: string; noindex?: boolean; crumbs?: Crumb[];
+  schema?: Record<string, unknown>[]; ogImage?: ImageMetadata; bodyClass?: string;
+}
+const { title, description, noindex = false, crumbs = [], schema = [], ogImage = ogDefault, bodyClass = '' } = Astro.props;
+const site = Astro.site!.toString().replace(/\/$/, '');
+const canonical = site + Astro.url.pathname;
+const og = await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const ogUrl = new URL(og.src, site).toString();
+const robots = NOINDEX ? 'noindex, nofollow' : noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large';
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'Plumber',
+  '@id': site + '/#business',
+  name: SITE.name,
+  url: site + '/',
+  telephone: '+1-909-587-0711',
+  email: SITE.email,
+  image: ogUrl,
+  logo: site + '/icon-512.png',
+  founder: { '@type': 'Person', name: 'Jaime Galvez' },
+  foundingDate: SITE.since,
+  address: { '@type': 'PostalAddress', addressLocality: 'Pomona', addressRegion: 'CA', postalCode: SITE.zip, addressCountry: 'US' },
+  geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.lat, longitude: SITE.geo.lng },
+  openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' }],
+  areaServed: [{ '@type': 'City', name: 'Pomona, CA' }, ...TOWNS.map((t) => ({ '@type': 'City', name: `${t.name}, CA` }))],
+  knowsLanguage: ['en', 'es'],
+  sameAs: [SITE.instagram],
+  hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Plumbing services', itemListElement: SERVICES.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.name, url: `${site}/${s.slug}/` } })) },
+};
+const breadcrumb = crumbs.length ? {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [{ name: 'Home', href: '/' }, ...crumbs].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: site + c.href })),
+} : null;
+const ld = [business, ...(breadcrumb ? [breadcrumb] : []), ...schema];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content={robots} />
+  <meta name="theme-color" content="#0B0F1A" />
+  <meta name="format-detection" content="telephone=yes" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="United Plumbing" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Jim Galvez, owner of United Plumbing, next to his work van in Pomona" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogUrl} />
+  <meta name="geo.region" content="US-CA" />
+  <meta name="geo.placename" content="Pomona" />
+  <link rel="preload" href="/fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <script is:inline>
+    // Decide before first paint: motion on? intro this visit?
+    (function () {
+      var d = document.documentElement;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { d.classList.add('no-motion'); return; }
+      d.classList.add('motion');
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      var reload = nav && nav.type === 'reload';
+      var internal = false;
+      try { internal = sessionStorage.getItem('up-nav') === '1'; sessionStorage.removeItem('up-nav'); } catch (e) {}
+      if (!internal || reload) d.classList.add('intro');
+      // Safety: never leave the page hidden if scripts fail to load.
+      setTimeout(function () { if (!window.__upMotion) { d.classList.remove('motion', 'intro'); } }, 3500);
+    })();
+  </script>
+  {ld.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+</head>
+<body class={bodyClass}>
+  <a href="#main" class="skip">Skip to content</a>
+  <Intro />
+  <Header />
+  <main id="main"><slot /></main>
+  <Footer />
+  <MobileBar />
+  <script>import '../scripts/motion.ts';</script>
+</body>
+</html>

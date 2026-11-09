@@ -1,0 +1,12 @@
+---
+interface Props { items: string[]; cyan?: boolean; reverse?: boolean }
+const { items, cyan = false, reverse = false } = Astro.props;
+const row = [...items, ...items];
+---
+<div class={`ticker ${cyan ? 'is-cyan' : ''}`} data-ticker data-dir={reverse ? '1' : '-1'} aria-hidden="true">
+  <div class="ticker-track">
+    {[0, 1].map(() => (
+      <div class="ticker-item">{row.map((t) => (<><span>{t}</span><span class="plus">+</span></>))}</div>
+    ))}
+  </div>
+</div>

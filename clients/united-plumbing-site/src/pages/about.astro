@@ -1,0 +1,408 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Btn from '../components/Btn.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Wave from '../components/Wave.astro';
+import Ticker from '../components/Ticker.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import PageHero from '../components/company/PageHero.astro';
+import HeroChips from '../components/company/HeroChips.astro';
+import VideoTile from '../components/company/VideoTile.astro';
+import { SITE } from '../data/site';
+import jim from '../assets/img/jim-cutout.png';
+import roof from '../assets/img/job-roof.jpg';
+import crawl from '../assets/img/job-crawlspace.jpg';
+
+const base = String(Astro.site).replace(/\/$/, '');
+const timeline = [
+  { y: null, t: 'Jim learns the trade', d: 'Jaime "Jim" Galvez learned plumbing on the job, one call at a time.' },
+  { y: null, t: 'The brothers join', d: 'Brothers join and work side by side. Jim trains every new hire himself.' },
+  { y: '2018', t: 'United Plumbing starts', d: 'Family owned since 2018. Brothers side by side, taking any job and doing it right.', hl: true },
+  { y: null, t: 'More trucks on the road', d: 'today', more: true },
+  { y: 'Today', t: 'Still a family business', d: 'LA County, the Inland Empire and Orange County. When you call, you talk to us.' },
+];
+const rules = [
+  { n: '01', t: 'Pick up the phone.', d: 'Day or night. A real person answers.', i: 'phone', c: 'cyan' },
+  { n: '02', t: 'Say the price first.', d: 'You know the cost before we start, explained in plain words.', i: 'tag', c: 'yellow' },
+  { n: '03', t: 'Fix it right.', d: 'Not a patch that brings us back next week.', i: 'wrench', c: 'cyan' },
+  { n: '04', t: 'Leave it clean.', d: "It's your home. We clean up before we leave.", i: 'home', c: 'cyan' },
+];
+const stats = [
+  { v: '2018', l: 'Family owned since', c: 'yellow' },
+  { v: '24/7', l: 'Phone answered', c: 'cyan' },
+  { v: '13', l: 'Plumbing services', c: 'white', count: 13 },
+  { v: '28', l: 'Towns we cover', c: 'white', count: 28 },
+];
+const crewExamples = ['Manager', 'Lead tech', 'Plumber', 'Apprentice', 'Office'];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'AboutPage', name: 'About United Plumbing', url: `${base}/about/`,
+  about: { '@id': `${base}/#business` },
+  description: 'Meet Jim Galvez and the brothers behind United Plumbing in Pomona, CA. Family owned since 2018.',
+}];
+---
+<Base title="About United Plumbing | Family Owned Since 2018 | Pomona" description="Meet Jim Galvez and the brothers behind United Plumbing in Pomona, CA. Family owned since 2018. Call or text (909) 587-0711." crumbs={[{ name: 'About', href: '/about/' }]} schema={schema}>
+
+  <PageHero crumbs={[{ name: 'About', href: '/about/' }]} class="ab-hero">
+    <div class="abh-grid">
+      <div class="abh-copy">
+        <p class="hpill-red" data-hero="1" data-hero-fx="pop"><Icon name="users" size={14} />About us · Built by brothers</p>
+        <h1 class="h-display abh-h" data-hero="2" data-hero-fx="lines"><span class="c-yellow">Family.</span><br />Pomona's plumbing brothers.</h1>
+        <p class="abh-p" data-hero="3" data-hero-fx="up">United Plumbing is a family business. Brothers built it. Jim runs it. Since 2018.</p>
+        <div class="btn-row abh-btns" data-hero="4" data-hero-fx="up" data-hero-children>
+          <Btn href={SITE.phoneHref} icon="phone" size="lg">Call {SITE.phone}</Btn>
+          <Btn href="#contact" variant="outline-cyan" icon="message" size="lg">Get a call back</Btn>
+        </div>
+        <HeroChips order="5" />
+      </div>
+      <div class="abh-jim" data-hero="1" data-hero-fx="right" data-hero-at="0.15">
+        <span class="abh-ring" aria-hidden="true"></span>
+        <Image src={jim} alt="Jaime “Jim” Galvez, owner of United Plumbing" widths={[400, 640, 900]} sizes="(max-width: 900px) 80vw, 520px" loading="eager" format="webp" quality={82} class="abh-img" />
+        <p class="abh-est" data-hero="6" data-hero-fx="pop"><small>Family owned</small><span class="led">EST. 2018</span></p>
+        <p class="abh-tag" data-hero="7" data-hero-fx="pop"><strong class="h-display">Jim</strong><small>Galvez · Owner</small></p>
+      </div>
+    </div>
+  </PageHero>
+
+  <!-- OUR STORY -->
+  <section class="section light st">
+    <div class="wrap st-grid">
+      <div class="st-left">
+        <Eyebrow>Our story</Eyebrow>
+        <h2 class="h-display h2 st-h" data-split>It started with<br /><span class="c-cobalt">brothers and a truck.</span></h2>
+        <div class="st-body" data-reveal="up">
+          <p>United Plumbing started in 2018 with family. Brothers working side by side, taking any job they could get, and doing it right so people would call again.</p>
+          <p>Today we run <em class="ph">[number]</em> trucks out of Pomona and cover LA County, the Inland Empire and Orange County.</p>
+          <p>We're still a family business. When you call, you talk to us.</p>
+        </div>
+        <div class="st-sig" data-reveal="up">
+          <span class="st-sig-box">Jim's signature goes here</span>
+          <p class="h-display">Jim Galvez, Owner</p>
+        </div>
+        <div class="st-photos">
+          <span class="st-block" data-reveal="clipx" aria-hidden="true"></span>
+          <figure class="st-main" data-reveal="clip"><Image src={roof} alt="The United Plumbing crew carrying equipment up a ladder to a roof" widths={[400, 700]} sizes="(max-width: 900px) 70vw, 300px" data-parallax="0.08" /></figure>
+          <figure class="st-small" data-reveal="pop"><Image src={crawl} alt="A Galvez brother working on drain pipes in a crawl space" widths={[300, 500]} sizes="190px" /></figure>
+        </div>
+      </div>
+      <ol class="tl">
+        <span class="tl-pipe" aria-hidden="true"><span class="tl-fill" data-progress-y></span></span>
+        {timeline.map((s) => (
+          <li class:list={['tl-item', { hl: s.hl }]} data-reveal="left">
+            <span class="tl-node" aria-hidden="true"><Icon name={s.hl ? 'home' : 'drop'} size={16} /></span>
+            <div class="tl-card" data-tilt>
+              <span class="led tl-y">{s.y ?? <em class="ph">[year]</em>}</span>
+              <div>
+                <h3 class="h-display tl-t">{s.t}</h3>
+                <p class="tl-d">{s.more ? <>Today <em class="ph">[number]</em> trucks run out of Pomona.</> : s.d}</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#0B0F1A" />
+
+  <!-- STATS -->
+  <section class="stats dark">
+    <div class="stats-glow" aria-hidden="true"></div>
+    <ul class="wrap stats-grid" data-stagger="up">
+      {stats.map((s) => (
+        <li class={`stat stat-${s.c}`} data-tilt>
+          <span class="led stat-v">{s.count ? <span data-count={s.count}>{s.v}</span> : s.v}</span>
+          <span class="stat-l">{s.l}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <Wave from="#0B0F1A" to="#F3F6FB" flip />
+
+  <!-- CREW -->
+  <section class="section light crew">
+    <div class="wrap head-center">
+      <Eyebrow>The crew</Eyebrow>
+      <h2 class="h-display h2" data-split>The people<br /><span class="c-cobalt">at your door.</span></h2>
+      <p class="lead" data-reveal="up">Family first. Every person on the crew is someone Jim knows and trusts.</p>
+    </div>
+    <ul class="wrap crew-grid" data-stagger="up">
+      <li class="crew-card crew-jim" data-tilt>
+        <div class="crew-ph crew-ph-jim"><span class="crew-badge">Owner</span><Image src={jim} alt="Jim Galvez, owner of United Plumbing" widths={[300, 500]} sizes="(max-width: 700px) 45vw, 280px" format="webp" /></div>
+        <h3 class="h-display crew-n">Jim Galvez</h3>
+        <p class="crew-r c-cobalt">Owner</p>
+      </li>
+      {crewExamples.map((r) => (
+        <li class="crew-card">
+          <div class="crew-ph slot"><Icon name="camera" size={24} /><span>Crew photo + name<br />goes here</span></div>
+          <h3 class="h-display crew-n"><em class="ph">[Name]</em></h3>
+          <p class="crew-r">Role to confirm · e.g. {r}</p>
+        </li>
+      ))}
+      <li class="crew-train"><Icon name="wrench" size={22} /><span class="h-display">Jim trains every new plumber himself.</span></li>
+    </ul>
+    <div class="wrap"><p class="crew-bar h-display" data-reveal="up"><Icon name="wrench" size={20} />Jim trains every new plumber himself.</p></div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#0B0F1A" />
+
+  <!-- RULES -->
+  <section class="section dark rules">
+    <div class="rules-glow" aria-hidden="true"></div>
+    <div class="wrap rules-head">
+      <div>
+        <Eyebrow>How we work</Eyebrow>
+        <h2 class="h-display h2" data-split><span class="c-white">Four rules</span><br /><span class="c-cyan">on every job.</span></h2>
+      </div>
+      <p class="lead" data-reveal="up">The way Jim runs every truck. Simple, and the same on every job.</p>
+    </div>
+    <div class="wrap rules-grid">
+      <figure class="rules-photo" data-reveal="clip">
+        <Image src={roof} alt="Two plumbers carrying equipment up a ladder onto a roof" widths={[500, 900]} sizes="(max-width: 900px) 100vw, 440px" data-parallax="0.1" />
+        <figcaption class="h-display">On the roof, on the job.</figcaption>
+      </figure>
+      <div>
+        <ul class="rules-cards" data-stagger="up">
+          {rules.map((r) => (
+            <li class="rule" data-tilt>
+              <div class="rule-top"><span class={`led rule-n c-${r.c}`}>{r.n}</span><span class="rule-ico"><Icon name={r.i} size={18} /></span></div>
+              <h3 class="h-display rule-t">{r.t}</h3>
+              <p class="rule-d">{r.d}</p>
+            </li>
+          ))}
+        </ul>
+        <p class="rules-es" data-reveal="up"><Icon name="message" size={16} />Hablamos español</p>
+      </div>
+    </div>
+  </section>
+
+  <Wave from="#0B0F1A" to="#F3F6FB" flip />
+
+  <!-- PROOF ON CAMERA -->
+  <section class="proof light">
+    <div class="wrap head-center">
+      <Eyebrow>Real customers</Eyebrow>
+      <h2 class="h-display h2" data-split>Our customers<br /><span class="c-cobalt">say it on camera.</span></h2>
+      <p class="lead" data-reveal="up">Anyone can type a review. Our customers look into the camera and say it. Watch them on Instagram.</p>
+    </div>
+    <div class="film" data-reveal="up">
+      <div class="film-track">
+        <div class="film-lead">
+          <span class="led film-rec"><i></i>REC</span>
+          <p class="h-display">Video reviews<br />on Instagram</p>
+          <small>Filmed on the job</small>
+        </div>
+        <VideoTile town="Pomona" />
+        <VideoTile town="Chino" job="Leak repair" />
+        <VideoTile town="West Covina" />
+        <a href={SITE.instagram} target="_blank" rel="noopener" class="film-more">
+          <Icon name="instagram" size={30} />
+          <span class="h-display">More on<br />@plumblord1</span>
+          <small>{SITE.instagramFollowers} followers</small>
+          <Icon name="arrow" size={20} class="film-arr" />
+        </a>
+      </div>
+    </div>
+    <p class="film-swipe" aria-hidden="true">Swipe for more <Icon name="arrow" size={14} /></p>
+    <div class="wrap">
+      <figure class="pq" data-reveal="up">
+        <Icon name="quote" size={30} class="pq-ico" />
+        <div>
+          <blockquote class="h-display">“Very honest, very helpful, and they’re <span class="c-cobalt">not out to beat you.</span>”</blockquote>
+          <figcaption>Customer, video review · Instagram, 10 Jan 2026</figcaption>
+        </div>
+      </figure>
+      <div class="pq-cta" data-reveal="up"><Btn href={SITE.instagram} target="_blank" icon="instagram" size="md">Follow @plumblord1</Btn></div>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#0B0F1A" />
+  <ContactSection line1="Want the family" line2="on your job?" />
+  <Ticker items={['CALL 909-587-0711', '24/7', 'HABLAMOS ESPAÑOL', 'POMONA', 'CLAREMONT', 'CHINO', 'ONTARIO', 'UPLAND']} cyan reverse />
+</Base>
+
+<style>
+  /* Shared ContactSection has no positioning context, so its photo leaks to the page top: contain it here. */
+  :global(section.ct) { position: relative; isolation: isolate; }
+  /* HERO */
+  .abh-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 30px; align-items: center; margin-top: 18px; }
+  .hpill-red { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; background: rgba(51,214,255,.12); color: var(--cyan); font: 700 11px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; }
+  .abh-h { margin-top: 16px; font-size: clamp(56px, 7.4vw, 104px); line-height: .86; color: #fff; }
+  .abh-p { margin-top: 24px; max-width: 470px; font-size: 17px; color: var(--on-dark); }
+  .abh-btns { margin-top: 30px; }
+  .abh-btns :global(.btn) { --bh: 68px; font-size: 26px; }
+  .abh-btns :global(.btn-outline-cyan) { background: rgba(11,15,26,.5); }
+  .abh-jim { position: relative; display: flex; justify-content: center; align-self: end; margin-bottom: -64px; }
+  .abh-ring { position: absolute; left: 50%; top: 14%; width: 82%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%; border: 3px solid var(--cyan); box-shadow: 0 0 60px -10px rgba(51,214,255,.6), inset 0 0 80px rgba(31,79,216,.5); background: radial-gradient(closest-side, rgba(31,79,216,.6), transparent); }
+  .abh-img { position: relative; width: min(470px, 92%); filter: drop-shadow(0 30px 40px rgba(0,0,0,.5)); }
+  .abh-est { position: absolute; right: 0; top: 12%; z-index: 2; display: grid; gap: 4px; padding: 12px 16px; border-radius: 8px; background: #070a12; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 20px 40px -14px rgba(0,0,0,.7); }
+  .abh-est small { color: var(--cyan); font: 700 9px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; }
+  .abh-est .led { color: var(--yellow); font-size: 26px; line-height: 1; text-shadow: 0 0 12px rgba(255,210,31,.5); }
+  .abh-tag { position: absolute; left: 4%; bottom: 22%; z-index: 2; display: grid; justify-items: center; padding: 16px 44px 14px; border-radius: 999px; background: #fff; color: var(--cobalt); transform: rotate(-8deg); box-shadow: 0 0 0 6px var(--cobalt), 0 24px 50px -10px rgba(0,0,0,.6); outline: 2px dashed rgba(31,79,216,.5); outline-offset: -10px; }
+  .abh-tag strong { font-size: 64px; line-height: .85; }
+  .abh-tag small { color: var(--ink); font: 700 12px/1 var(--body); letter-spacing: .2em; text-transform: uppercase; margin-top: 4px; }
+
+  /* STORY */
+  .st { overflow: hidden; }
+  .st-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 50px; }
+  .st-h { margin-top: 14px; font-size: clamp(42px, 4.4vw, 60px); }
+  .st-body { margin-top: 24px; max-width: 420px; color: var(--ink-2); font-size: 15px; }
+  .st-body p + p { margin-top: 18px; }
+  .st-sig { margin-top: 40px; max-width: 290px; padding: 14px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+  .st-sig-box { display: block; padding: 10px; border: 1.5px dashed rgba(31,79,216,.35); border-radius: 6px; font-size: 12px; color: var(--ink-3); }
+  .st-sig p { margin-top: 12px; font-size: 20px; text-transform: none; }
+  .st-photos { position: relative; height: 360px; margin-top: 30px; max-width: 400px; }
+  .st-block { position: absolute; left: -100vw; right: 45%; top: 24px; bottom: 30px; background: var(--cobalt); }
+  .st-main { position: absolute; left: 0; top: 0; width: 70%; height: 92%; overflow: hidden; border-radius: 8px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); }
+  .st-main img { width: 100%; height: 115%; object-fit: cover; }
+  .st-small { position: absolute; right: 0; bottom: 0; width: 48%; padding: 7px; background: #fff; border-radius: 6px; transform: rotate(-5deg); box-shadow: 0 24px 50px -16px rgba(0,0,0,.55); transition: transform .5s var(--ease-out); }
+  .st-small:hover { transform: rotate(0) scale(1.04); }
+  .st-small img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 3px; }
+  .tl { position: relative; display: grid; gap: 24px; padding-left: 104px; }
+  .tl-pipe { position: absolute; left: 30px; top: 30px; bottom: 30px; width: 10px; border-radius: 99px; background: var(--ink); }
+  .tl-fill { position: absolute; left: 3px; right: 3px; top: 0; bottom: 0; border-radius: inherit; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+  .tl-item { position: relative; }
+  .tl-node { position: absolute; left: -94px; top: 26px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--cyan); border: 3px solid var(--cyan); }
+  .tl-node::after { content: ''; position: absolute; left: 100%; top: 50%; width: 52px; height: 3px; margin-top: -1.5px; background: var(--cyan); }
+  .hl .tl-node { background: var(--yellow); color: var(--ink); border-color: var(--yellow); }
+  .hl .tl-node::after { background: var(--yellow); }
+  .tl-card { display: grid; grid-template-columns: 130px 1fr; gap: 20px; min-height: 124px; padding: 24px; border-radius: 12px; background: #fff; border: 1px solid var(--line); transition: box-shadow .4s; }
+  .tl-card:hover { box-shadow: 0 20px 40px -24px rgba(31,79,216,.45); }
+  .tl-y { color: var(--cobalt); font-size: 26px; line-height: 1; }
+  .tl-y .ph { font-family: var(--led); }
+  .tl-t { font-size: 24px; color: var(--ink); }
+  .tl-d { margin-top: 6px; font-size: 13.5px; color: var(--ink-2); }
+  .hl .tl-card { background: radial-gradient(120% 140% at 100% 100%, #1f4fd8 0%, #10173a 50%, #0b0f1a 80%); border-color: transparent; }
+  .hl .tl-y { color: var(--yellow); font-size: 40px; text-shadow: 0 0 12px rgba(255,210,31,.5); }
+  .hl .tl-t { color: #fff; } .hl .tl-d { color: var(--on-dark-2); }
+
+  /* STATS */
+  .stats { position: relative; padding: 70px 0 80px; overflow: hidden; }
+  .stats-glow { position: absolute; left: 50%; top: -40%; width: 700px; height: 380px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(31,79,216,.5), transparent); }
+  .stats-grid { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+  .stat { display: grid; justify-items: center; gap: 20px; padding: 36px 16px 32px; border-radius: 10px; background: var(--night2); border: 1px solid var(--line-dark); border-top: 3px solid var(--cobalt); }
+  .stat-yellow { border-top-color: var(--yellow); } .stat-cyan { border-top-color: var(--cyan); }
+  .stat-v { font-size: clamp(54px, 5vw, 72px); line-height: 1; color: #fff; }
+  .stat-yellow .stat-v { color: var(--yellow); text-shadow: 0 0 16px rgba(255,210,31,.45); }
+  .stat-cyan .stat-v { color: var(--cyan); text-shadow: 0 0 16px rgba(51,214,255,.45); }
+  .stat-l { color: var(--on-dark-2); font: 700 11px/1 var(--body); letter-spacing: .2em; text-transform: uppercase; text-align: center; }
+
+  /* CREW */
+  .crew .lead { margin-top: 18px; }
+  .crew-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 50px; }
+  .crew-card { padding: 12px 12px 22px; border-radius: 14px; background: #fff; box-shadow: 0 18px 40px -28px rgba(11,15,26,.35); transition: transform .4s var(--ease-out), box-shadow .4s; }
+  .crew-card:hover { transform: translateY(-4px); box-shadow: 0 26px 50px -26px rgba(31,79,216,.45); }
+  .crew-ph { height: 166px; border-radius: 8px; }
+  .crew-ph.slot { font-size: 12.5px; }
+  .crew-jim { padding-top: 0; overflow: hidden; }
+  .crew-ph-jim { position: relative; height: 190px; margin: 0 -12px; border-radius: 0; background: radial-gradient(80% 90% at 50% 60%, #3a68ee, #1f4fd8 60%, #183fb0); display: flex; justify-content: center; align-items: flex-end; overflow: hidden; }
+  .crew-ph-jim img { height: 92%; width: auto; transition: transform .6s var(--ease-out); }
+  .crew-jim:hover .crew-ph-jim img { transform: scale(1.06); }
+  .crew-badge { position: absolute; left: 14px; top: 14px; z-index: 1; padding: 5px 10px; border-radius: 4px; background: var(--yellow); color: var(--ink); font: 800 13px/1 var(--display); text-transform: uppercase; letter-spacing: .06em; }
+  .crew-n { margin: 22px 4px 0; font-size: 26px; color: var(--ink); }
+  .crew-n .ph { font-family: var(--display); }
+  .crew-r { margin: 6px 4px 0; font-size: 12px; color: var(--ink-3); font-weight: 600; }
+  .crew-bar { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 30px; padding: 12px 20px; border-radius: 10px; background: var(--night); color: #fff; font-size: 22px; text-transform: none; }
+  .crew-bar :global(.icon) { color: var(--yellow); }
+  .crew-train { display: none; }
+
+  /* RULES */
+  .rules { overflow: hidden; }
+  .rules-glow { position: absolute; right: -10%; top: 0; width: 60%; height: 80%; background: radial-gradient(closest-side, rgba(31,79,216,.4), transparent); }
+  .rules-head { position: relative; display: flex; justify-content: space-between; align-items: start; gap: 40px; }
+  .rules-head .h2 { margin-top: 14px; }
+  .rules-head .lead { max-width: 400px; margin-top: 40px; }
+  .rules-grid { position: relative; display: grid; grid-template-columns: 440px 1fr; gap: 36px; margin-top: 46px; }
+  .rules-photo { position: relative; overflow: hidden; border-radius: 12px; min-height: 444px; }
+  .rules-photo img { position: absolute; inset: 0; width: 100%; height: 115%; object-fit: cover; }
+  .rules-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,15,26,.75), transparent 40%); }
+  .rules-photo figcaption { position: absolute; z-index: 1; left: 20px; bottom: 18px; color: #fff; font-size: 26px; }
+  .rules-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .rule { min-height: 186px; padding: 18px 18px 20px; border-radius: 12px; background: var(--night2); border: 1px solid var(--line-dark); transition: border-color .3s; }
+  .rule:hover { border-color: rgba(51,214,255,.5); }
+  .rule-top { display: flex; justify-content: space-between; }
+  .rule-n { font-size: 38px; line-height: 1; }
+  .rule-ico { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--cobalt); color: #fff; }
+  .rule-t { margin-top: 22px; font-size: 26px; color: #fff; }
+  .rule-d { margin-top: 10px; color: var(--on-dark-2); font-size: 13.5px; }
+  .rules-es { display: inline-flex; align-items: center; gap: 10px; margin-top: 24px; padding: 8px 16px; border-radius: 99px; border: 1.5px solid var(--cyan); color: #fff; font-weight: 600; font-size: 14px; }
+  .rules-es :global(.icon) { color: var(--cyan); }
+
+  /* PROOF */
+  .proof { padding: clamp(60px, 7vw, 90px) 0 clamp(60px, 7vw, 90px); overflow: hidden; }
+  .proof .lead { margin-top: 18px; }
+  .film { position: relative; margin-top: 44px; padding: 40px 0; background: var(--night); }
+  .film::before, .film::after { content: ''; position: absolute; left: 0; right: 0; height: 10px; background: radial-gradient(circle at 50% 50%, #d6dbe6 0 0, transparent 0), repeating-linear-gradient(90deg, transparent 0 8px, #d6dbe6 8px 22px, transparent 22px 25px); opacity: .9; }
+  .film::before { top: 10px; } .film::after { bottom: 10px; }
+  .film-track { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr; gap: 14px; width: min(1200px, 100% - var(--gutter) * 2); margin-inline: auto; }
+  .film-track :global(.vt) { aspect-ratio: auto; min-height: 264px; }
+  .film-lead { display: grid; place-content: center; justify-items: center; gap: 8px; text-align: center; padding: 20px; border-radius: 10px; background: var(--cobalt); color: #fff; }
+  .film-rec { display: inline-flex; align-items: center; gap: 10px; color: var(--yellow); font-size: 48px; line-height: 1; text-shadow: 0 0 14px rgba(255,210,31,.5); }
+  .film-rec i { width: 14px; height: 14px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 12px #ff3b3b; animation: rec 1.4s steps(2) infinite; }
+  @keyframes rec { 50% { opacity: .25; } }
+  .film-lead p { font-size: 26px; line-height: .95; }
+  .film-lead small { font-size: 12px; opacity: .9; }
+  .film-more { display: grid; place-content: center; justify-items: center; gap: 10px; text-align: center; border-radius: 10px; background: var(--night2); border: 1px solid var(--line-dark); color: #fff; transition: border-color .3s, transform .4s var(--ease-out); }
+  .film-more > :global(.icon:first-child) { color: var(--yellow); }
+  .film-more span { font-size: 24px; line-height: .95; }
+  .film-more small { color: var(--on-dark-2); font-size: 12px; }
+  .film-more :global(.film-arr) { color: var(--cyan); transition: transform .3s var(--ease-out); }
+  .film-more:hover { border-color: var(--cyan); transform: translateY(-6px); }
+  .film-more:hover :global(.film-arr) { transform: translateX(5px); }
+  .film-swipe { display: none; }
+  .pq { display: flex; gap: 26px; align-items: start; margin-top: 40px; padding: 26px 30px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
+  .pq :global(.pq-ico) { flex: none; color: var(--cobalt); margin-top: 8px; }
+  .pq blockquote { margin: 0; font-size: clamp(28px, 2.6vw, 34px); line-height: 1; text-transform: none; color: var(--ink); }
+  .pq figcaption { margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+  .pq-cta { display: flex; justify-content: center; margin-top: 28px; }
+
+  @media (max-width: 1100px) {
+    .film-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-inline: var(--gutter); width: 100%; }
+    .film-track::-webkit-scrollbar { display: none; }
+    .film-track > :global(*) { flex: none; width: 200px; scroll-snap-align: start; }
+    .film-swipe { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 14px; font-size: 13px; color: var(--ink-2); font-weight: 600; }
+  }
+  @media (max-width: 960px) {
+    .abh-grid { grid-template-columns: 1fr; }
+    .abh-jim { order: 2; margin: 10px 0 0; }
+    .abh-copy { display: contents; }
+    .abh-btns { order: 3; } .abh-copy :global(.hchips) { order: 4; }
+    .abh-btns :global(.btn) { width: 100%; }
+    .st-grid { grid-template-columns: 1fr; }
+    .st-left { display: contents; }
+    .tl { order: 4; } .st-photos { order: 5; }
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .crew-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .crew-jim { grid-column: 1 / -1; }
+    .rules-head { flex-direction: column; gap: 0; }
+    .rules-head .lead { margin-top: 16px; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .rules-photo { min-height: 300px; }
+  }
+  @media (max-width: 640px) {
+    .abh-h { font-size: clamp(50px, 14vw, 64px); }
+    .abh-p { font-size: 15px; margin-top: 16px; }
+    .abh-jim { margin-inline: calc(var(--gutter) * -1); }
+    .abh-img { width: 78%; }
+    .abh-est { right: 6px; top: 6%; padding: 8px 10px; } .abh-est .led { font-size: 18px; }
+    .abh-tag { left: 8px; bottom: 18%; padding: 12px 28px 10px; } .abh-tag strong { font-size: 44px; } .abh-tag small { font-size: 10px; }
+    .tl { padding-left: 40px; gap: 16px; }
+    .tl-pipe { left: 6px; } .tl-node { left: -42px; width: 30px; height: 30px; } .tl-node::after { width: 12px; }
+    .tl-node :global(.icon) { width: 13px; height: 13px; }
+    .tl-card { grid-template-columns: 1fr; gap: 8px; padding: 16px; min-height: 0; }
+    .tl-t { font-size: 21px; }
+    .stat { padding: 24px 10px; gap: 12px; } .stat-v { font-size: 48px; } .stat-l { font-size: 9.5px; letter-spacing: .14em; }
+    .crew-ph { height: 120px; } .crew-ph.slot { padding: 10px; font-size: 11px; }
+    .crew-n { font-size: 20px; margin-top: 14px; } .crew-r { font-size: 11px; }
+    .crew-bar { display: none; }
+    .crew-train { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 16px; border-radius: 14px; background: var(--night); color: #fff; }
+    .crew-train :global(.icon) { color: var(--yellow); }
+    .crew-train span { font-size: 26px; line-height: .95; text-transform: none; }
+    .rules-cards { grid-template-columns: 1fr; }
+    .rule { min-height: 0; }
+    .pq { flex-direction: column; gap: 10px; padding: 22px 20px; }
+    .pq-cta :global(.btn) { width: 100%; }
+  }
+</style>

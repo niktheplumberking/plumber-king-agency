@@ -1,0 +1,39 @@
+---
+// First-visit-per-session intro (two26-style loader, our own design):
+// a cyan pipe draws in, a water drop falls, the logo pops, an LED line types,
+// then two wave-edged panels drain upward to reveal the page. Skipped on
+// in-site navigation, for reduced motion, and if scripts fail (3.5 s safety).
+import { Image } from 'astro:assets';
+import logo from '../assets/img/logo-united.jpg';
+---
+<div class="intro" data-intro-root aria-hidden="true">
+  <div class="intro-panel intro-yellow"><svg class="intro-edge" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,0 H1440 V40 C1200,120 960,110 720,70 C480,30 240,30 0,90 Z" fill="#FFD21F"/></svg></div>
+  <div class="intro-panel intro-night dots-bg">
+    <svg class="intro-edge" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,0 H1440 V40 C1200,120 960,110 720,70 C480,30 240,30 0,90 Z" fill="#0B0F1A"/><path class="intro-edge-line" d="M0,90 C240,30 480,30 720,70 C960,110 1200,120 1440,40" fill="none" stroke="#33D6FF" stroke-width="3" vector-effect="non-scaling-stroke"/></svg>
+    <div class="intro-core">
+      <svg class="intro-pipe" viewBox="0 0 600 120" fill="none">
+        <path class="intro-pipe-line" d="M0 40 H250 Q300 40 300 90 V96" stroke="#33D6FF" stroke-width="6" stroke-linecap="round"/>
+        <path class="intro-pipe-line2" d="M600 40 H350 Q300 40 300 90 V96" stroke="#1F4FD8" stroke-width="6" stroke-linecap="round"/>
+        <circle class="intro-joint" cx="300" cy="40" r="10" fill="#FFD21F"/>
+      </svg>
+      <svg class="intro-drop" viewBox="0 0 24 32" width="22" height="30"><path d="M12 31a10 10 0 0 0 10-10c0-3-1.4-5.6-4.3-8C14.9 10.7 13 7 12 1c-1 6-2.9 9.7-5.7 12C3.4 15.4 2 18 2 21a10 10 0 0 0 10 10z" fill="#33D6FF"/></svg>
+      <div class="intro-logo"><Image src={logo} alt="" width={220} height={155} loading="eager" /></div>
+      <p class="intro-led led"><span>POMONA</span> <span>·</span> <span>OPEN 24/7</span></p>
+    </div>
+  </div>
+</div>
+<style>
+  .intro { display: none; }
+  :global(html.intro) .intro { display: block; position: fixed; inset: 0; z-index: 200; pointer-events: none; }
+  .intro-panel { position: absolute; inset: 0 0 auto 0; height: 100%; }
+  .intro-night { background-color: var(--night); }
+  .intro-yellow { background: var(--yellow); }
+  .intro-edge { position: absolute; left: 0; top: calc(100% - 1px); width: 100%; height: 120px; }
+  .intro-core { position: absolute; inset: 0; display: grid; place-items: center; place-content: center; gap: 0; }
+  .intro-pipe { width: min(600px, 86vw); height: auto; }
+  .intro-drop { position: absolute; left: 50%; top: 50%; margin-left: -11px; opacity: 0; }
+  .intro-logo { margin-top: -6px; width: 170px; padding: 8px; background: #fff; border-radius: 16px; box-shadow: 0 0 0 6px rgba(51,214,255,.15), 0 30px 80px -20px rgba(51,214,255,.45); transform: scale(0); }
+  .intro-logo img { border-radius: 10px; }
+  .intro-led { margin-top: 26px; color: var(--yellow); font-size: clamp(20px, 3vw, 30px); letter-spacing: .08em; text-shadow: 0 0 14px rgba(255,210,31,.55); }
+  .intro-led span { display: inline-block; }
+</style>

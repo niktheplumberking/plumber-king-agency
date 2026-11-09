@@ -1,0 +1,46 @@
+---
+// Instagram video review placeholder: the clip files are not on the site yet, so each tile links to @plumblord1.
+import Icon from '../Icon.astro';
+import { SITE } from '../../data/site';
+interface Props { town?: string; job?: string; tag?: string; caption?: string; variant?: 'tile' | 'phone'; active?: boolean; progress?: number; class?: string }
+const { town, job, tag, caption, variant = 'tile', active = false, progress = 30, class: cls = '' } = Astro.props;
+const label = `Watch ${town ? `a video review from ${town}` : 'a video review'} on Instagram`;
+---
+<a href={SITE.instagram} target="_blank" rel="noopener" class:list={['vt', `vt-${variant}`, { 'is-active': active }, cls]} aria-label={label}>
+  {variant === 'phone'
+    ? <span class="vt-top"><Icon name="instagram" size={14} />Video review · Instagram</span>
+    : <span class="vt-ig" aria-hidden="true"><Icon name="instagram" size={14} /></span>}
+  <span class="vt-play" aria-hidden="true"><Icon name="play" size={variant === 'phone' ? 24 : 18} /></span>
+  <span class="vt-bot">
+    {tag && <span class="vt-tag vt-tag-y">{tag}</span>}
+    {town && <span class="vt-tag"><Icon name="pin" size={11} stroke={2.5} />{town}</span>}
+    {job && <strong class="vt-job">{job}</strong>}
+    {variant === 'tile' && <small>Video review · Instagram</small>}
+    <span class="vt-bar" aria-hidden="true"><i style={`width:${progress}%`}></i></span>
+    {caption && <span class="vt-cap led"><span>{caption}</span><Icon name="video" size={16} /></span>}
+  </span>
+</a>
+<style>
+  .vt { position: relative; display: flex; flex-direction: column; overflow: hidden; border-radius: 12px; color: #fff; isolation: isolate;
+    background: radial-gradient(90% 60% at 50% 45%, #1f3fa8 0%, #12204f 45%, #0b0f1a 100%); border: 1px solid rgba(255,255,255,.08);
+    transition: transform .45s var(--ease-out), box-shadow .45s var(--ease-out), border-color .3s; }
+  .vt:hover { transform: translateY(-6px); box-shadow: 0 26px 50px -20px rgba(31,79,216,.7); border-color: rgba(51,214,255,.5); }
+  .vt-tile { aspect-ratio: 9 / 15; padding: 12px; }
+  .vt-phone { aspect-ratio: 9 / 16; padding: 16px; border-radius: 18px; border: 1.5px solid rgba(255,255,255,.14); }
+  .vt-phone.is-active { border: 2px solid var(--cyan); box-shadow: 0 0 40px -10px rgba(51,214,255,.6); }
+  .vt-ig { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(255,255,255,.12); }
+  .vt-top { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; padding: 5px 8px; border-radius: 6px; background: rgba(0,0,0,.35); font-size: 11px; font-weight: 700; }
+  .vt-play { position: absolute; left: 50%; top: 48%; display: grid; place-items: center; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: var(--yellow); color: var(--ink); box-shadow: 0 0 0 0 rgba(255,210,31,.5); transition: transform .45s var(--ease-out), box-shadow .45s; }
+  .vt-play :global(.icon) { fill: currentColor; margin-left: 2px; }
+  .vt-phone .vt-play { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
+  .vt:hover .vt-play { transform: scale(1.12); box-shadow: 0 0 0 10px rgba(255,210,31,.18); }
+  .vt-bot { margin-top: auto; display: grid; justify-items: start; gap: 6px; }
+  .vt-tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 7px; border-radius: 4px; background: var(--yellow); color: var(--ink); font: 800 11px/1 var(--display); text-transform: uppercase; letter-spacing: .03em; }
+  .vt-job { font-size: 12px; }
+  .vt small { font-size: 11px; color: var(--on-dark-2); }
+  .vt-bar { display: block; width: 100%; height: 3px; border-radius: 3px; background: rgba(255,255,255,.18); }
+  .vt-bar i { display: block; height: 100%; border-radius: inherit; background: var(--cyan); }
+  .vt-tile .vt-bar i { background: #3b4a6e; width: 100% !important; }
+  .vt-cap { display: flex; width: 100%; justify-content: space-between; align-items: center; color: var(--cyan); font-size: 14px; margin-top: 8px; }
+  .vt-cap :global(.icon) { color: #fff; }
+</style>

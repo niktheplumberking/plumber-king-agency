@@ -1,0 +1,65 @@
+---
+import Icon from '../Icon.astro';
+import Btn from '../Btn.astro';
+import { SERVICES } from '../../data/services';
+interface Props { variant?: 'bar' | 'card'; title?: string; sub?: string; id?: string; problemLabel?: string; badge?: boolean; footer?: boolean; zipLabel?: string; zipPlaceholder?: string }
+const { variant = 'card', title = 'Request a call back', sub = "Leave your number. Jim's team calls you back.", id = 'cb', problemLabel = "What's wrong?", badge = true, footer = false, zipLabel = 'ZIP code', zipPlaceholder = '91767' } = Astro.props;
+const problems = [...SERVICES.map((s) => s.name), 'Not sure / something else'];
+---
+{variant === 'bar' ? (
+  <form class="cbf-bar card" data-callback novalidate aria-labelledby={`${id}-t`}>
+    <h2 id={`${id}-t`} class="h-display cbf-bar-title">{title}</h2>
+    <div class="cbf-bar-row">
+      <label class="field"><span class="sr-only">Your name</span><input class="input" name="name" autocomplete="name" placeholder="Your name" required /><Icon name="user" size={18} /></label>
+      <label class="field"><span class="sr-only">Phone number</span><input class="input" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Phone number" required /><Icon name="phone" size={18} /></label>
+      <label class="field f-zip"><span class="sr-only">ZIP code</span><input class="input" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="ZIP code" /><Icon name="pin" size={18} /></label>
+      <label class="field f-prob"><span class="sr-only">{problemLabel}</span><select class="input" name="problem"><option value="">{problemLabel}</option>{problems.map((p) => <option>{p}</option>)}</select><Icon name="chevronDown" size={18} /></label>
+      <Btn type="submit" variant="ink" icon="phone" size="md" class="cbf-submit">Call me back</Btn>
+    </div>
+    <p class="form-note center">No spam. Your number only goes to United Plumbing. Jim's team calls you back.</p>
+    <p class="form-error center" data-form-msg role="status" hidden></p>
+  </form>
+) : (
+  <form class="cbf-card card" data-callback novalidate aria-labelledby={`${id}-t`}>
+    {badge && <span class="cbf-badge"><i></i>Answered 24/7</span>}
+    <h2 id={`${id}-t`} class="h-display cbf-card-title">{title}</h2>
+    <p class="cbf-sub">{sub}</p>
+    <div class="cbf-grid">
+      <label class="field span2"><span class="field-label">Name</span><input class="input" name="name" autocomplete="name" placeholder="Your name" required /><Icon name="user" size={18} /></label>
+      <label class="field span2"><span class="field-label">Phone</span><input class="input" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(909) 000-0000" required /><Icon name="phone" size={18} /></label>
+      <label class="field"><span class="field-label">{zipLabel}</span><input class="input" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder={zipPlaceholder} /><Icon name="pin" size={18} /></label>
+      <label class="field"><span class="field-label">{problemLabel}</span><select class="input" name="problem"><option value="">Pick a problem</option>{problems.map((p) => <option>{p}</option>)}</select><Icon name="chevronDown" size={18} /></label>
+    </div>
+    <Btn type="submit" variant="ink" icon="phone" size="md" full class="cbf-submit2">Call me back</Btn>
+    <p class="form-note center">No spam. Your number only goes to United Plumbing.</p>
+    <p class="form-error center" data-form-msg role="status" hidden></p>
+    {footer && <p class="cbf-foot">Rather talk now? Call <a href="tel:+19095870711">909-587-0711</a></p>}
+  </form>
+)}
+<style>
+  .cbf-bar { position: relative; padding: 34px 32px 26px; border-top: 6px solid var(--yellow); }
+  .cbf-bar-title { font-size: 40px; text-align: center; color: var(--ink); margin-bottom: 22px; }
+  .cbf-bar-row { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr 1.6fr auto; gap: 12px; align-items: end; }
+  .cbf-bar .form-note { margin-top: 16px; }
+  .cbf-bar :global(.cbf-submit) { --bh: 56px; }
+  .cbf-card { position: relative; padding: 32px 30px 26px; border-top: 8px solid var(--yellow); color: var(--ink); }
+  .cbf-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; background: #eef2f8; font-size: 13px; font-weight: 700; }
+  .cbf-badge i { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.2); animation: ping 1.8s infinite; }
+  @keyframes ping { 50% { box-shadow: 0 0 0 7px rgba(34,197,94,0); } }
+  .cbf-card-title { font-size: 46px; margin-top: 14px; color: var(--ink); }
+  .cbf-sub { color: var(--ink-2); font-size: 15px; margin-top: 8px; }
+  .cbf-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 16px; margin: 22px 0; }
+  .span2 { grid-column: 1 / -1; }
+  .cbf-card .form-note { margin-top: 12px; }
+  .cbf-foot { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); text-align: center; font-weight: 600; font-size: 14px; }
+  .cbf-foot a { color: var(--cobalt); }
+  .form-error { margin-top: 10px; }
+  .form-error :global(a) { color: var(--cobalt); }
+  @media (max-width: 1060px) { .cbf-bar-row { grid-template-columns: 1fr 1fr; } .cbf-bar-row :global(.cbf-submit) { grid-column: 1 / -1; } }
+  @media (max-width: 640px) {
+    .cbf-bar { padding: 26px 20px 22px; } .cbf-bar-title { font-size: 34px; }
+    .cbf-bar-row { grid-template-columns: 1fr; }
+    .cbf-card { padding: 26px 20px 22px; } .cbf-card-title { font-size: 38px; }
+    .cbf-grid { grid-template-columns: 1fr; }
+  }
+</style>

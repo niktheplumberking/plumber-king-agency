@@ -1,0 +1,42 @@
+---
+// "Why Pomona calls United" (white, Jim + van). Same block as the homepage, reused on the drain-family service pages.
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import van from '../../assets/img/jim-van.jpg';
+---
+<section class="wy white section">
+  <div class="wrap wy-grid">
+    <div>
+      <Eyebrow>Why choose United</Eyebrow>
+      <h2 class="h-display h2 wy-h" data-split>Why Pomona<br /><span class="c-cobalt">calls United</span></h2>
+      <p class="lead wy-p" data-reveal="up">When a pipe bursts at 2 AM, you want someone who picks up, speaks your language and tells you the price before touching anything. That is how the Galvez brothers work.</p>
+      <ul class="wy-list" data-stagger="left">
+        <li><span><Icon name="clock" size={18} /></span>A real person answers, 24/7</li>
+        <li><span><Icon name="globe" size={18} /></span>Hablamos Español</li>
+        <li><span><Icon name="tag" size={18} /></span>Clear price before any work starts</li>
+        <li><span><Icon name="users" size={18} /></span>Family crew, all trained by Jim</li>
+        <li><span><Icon name="camera" size={18} /></span>Text a photo, get a price range</li>
+      </ul>
+    </div>
+    <figure class="wy-photo" data-reveal="clip">
+      <Image src={van} alt="Jaime “Jim” Galvez standing next to the United Plumbing work truck" widths={[500, 900]} sizes="(max-width: 900px) 100vw, 640px" data-parallax="0.1" />
+      <figcaption class="wy-name"><strong class="h-display">Jaime "Jim" Galvez</strong><small>Owner · United Plumbing</small></figcaption>
+    </figure>
+  </div>
+</section>
+<style>
+  .wy-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: center; }
+  .wy-h { margin-top: 14px; }
+  .wy-p { margin-top: 22px; font-size: 16px; max-width: 470px; }
+  .wy-list { display: grid; gap: 10px; margin-top: 28px; max-width: 470px; }
+  .wy-list li { display: flex; align-items: center; gap: 14px; min-height: 48px; padding: 6px; border-radius: 6px; background: var(--night); color: #fff; font-weight: 600; font-size: 15px; transition: transform .35s var(--ease-out), background .3s; }
+  .wy-list li:hover { transform: translateX(8px); background: var(--night3); }
+  .wy-list li span { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 4px; background: var(--yellow); color: var(--ink); }
+  .wy-photo { position: relative; overflow: hidden; border-radius: 8px; height: 560px; }
+  .wy-photo img { width: 100%; height: 118%; object-fit: cover; object-position: 30% 50%; }
+  .wy-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,15,26,.8), transparent 40%); }
+  .wy-name { position: absolute; z-index: 2; left: 24px; bottom: 24px; width: min(360px, calc(100% - 48px)); padding: 14px 18px; border-radius: 4px; background: var(--cobalt); color: #fff; }
+  .wy-name strong { display: block; font-size: 28px; } .wy-name small { font-size: 12px; opacity: .9; }
+  @media (max-width: 900px) { .wy-grid { grid-template-columns: 1fr; gap: 40px; } .wy-photo { height: 420px; } .wy-photo img { object-position: 78% 40%; } }
+</style>

@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Btn from '../components/Btn.astro';
+import Ticker from '../components/Ticker.astro';
+import { SITE } from '../data/site';
+import pipes from '../assets/img/night-pipes.jpg';
+---
+<Base title="Page Not Found | United Plumbing" description="That page ran down the drain. Call (909) 587-0711 or go back home." noindex={true}>
+  <section class="nf dark">
+    <div class="nf-bg" aria-hidden="true"><Image src={pipes} alt="" widths={[768, 1344]} sizes="100vw" loading="eager" /></div>
+    <div class="wrap nf-in">
+      <p class="led nf-code" data-hero="1" data-hero-fx="pop" aria-hidden="true"><i></i>ERROR 404</p>
+      <h1 class="h-display nf-h" data-hero="2" data-hero-fx="lines">That page ran<br /><span class="c-cyan">down the drain.</span></h1>
+      <p class="nf-p" data-hero="3" data-hero-fx="up">Call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a> or go back home.</p>
+      <div class="btn-row nf-btns" data-hero="4" data-hero-fx="up" data-hero-children>
+        <Btn href={SITE.phoneHref} icon="phone" size="lg">Call {SITE.phone}</Btn>
+        <Btn href="/" variant="outline-cyan" icon="home" size="lg">Back home</Btn>
+      </div>
+      <ul class="nf-links" data-hero="5" data-hero-fx="up" data-hero-children>
+        <li><a href="/services/">All services <Icon name="arrow" size={14} /></a></li>
+        <li><a href="/areas/">Areas we cover <Icon name="arrow" size={14} /></a></li>
+        <li><a href="/contact/">Contact <Icon name="arrow" size={14} /></a></li>
+      </ul>
+    </div>
+  </section>
+  <Ticker items={['CALL 909-587-0711', '24/7', 'HABLAMOS ESPAÑOL', 'POMONA', 'CLAREMONT', 'CHINO', 'ONTARIO', 'UPLAND']} cyan reverse />
+</Base>
+
+<style>
+  .nf { position: relative; overflow: hidden; min-height: min(78vh, 760px); display: flex; align-items: center; padding: 80px 0 100px; }
+  .nf-bg { position: absolute; inset: 0; }
+  .nf-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; opacity: .6; }
+  .nf-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,15,26,.98) 0%, rgba(11,15,26,.85) 50%, rgba(11,15,26,.4) 100%); }
+  .nf-in { position: relative; }
+  .nf-code { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 8px; background: #070a12; border: 2px solid var(--cobalt); color: var(--yellow); font-size: 22px; text-shadow: 0 0 12px rgba(255,210,31,.5); }
+  .nf-code i { width: 10px; height: 10px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 10px #ff3b3b; animation: nfb 1.4s steps(2) infinite; }
+  @keyframes nfb { 50% { opacity: .25; } }
+  .nf-h { margin-top: 24px; font-size: clamp(54px, 8vw, 112px); line-height: .86; color: #fff; }
+  .nf-p { margin-top: 24px; font-size: 19px; color: var(--on-dark); }
+  .nf-p a { color: var(--yellow); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+  .nf-btns { margin-top: 32px; }
+  .nf-btns :global(.btn-outline-cyan) { background: rgba(11,15,26,.5); }
+  .nf-links { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 30px; }
+  .nf-links a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--cyan); font-weight: 700; }
+  .nf-links a :global(.icon) { transition: transform .3s var(--ease-out); }
+  .nf-links a:hover :global(.icon) { transform: translateX(4px); }
+  @media (max-width: 640px) {
+    .nf { padding: 50px 0 70px; }
+    .nf-h { font-size: clamp(48px, 13.5vw, 64px); }
+    .nf-p { font-size: 16px; }
+    .nf-btns :global(.btn) { width: 100%; font-size: 26px; }
+  }
+</style>

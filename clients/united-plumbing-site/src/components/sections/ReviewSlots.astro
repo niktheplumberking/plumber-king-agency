@@ -1,0 +1,35 @@
+---
+// Google review placeholders: shown until Jim's Google Business Profile has real reviews. No stars, no numbers.
+import Icon from '../Icon.astro';
+interface Props { count?: number }
+const { count = 5 } = Astro.props;
+---
+<div class="rs" data-carousel>
+  <div class="car-track rs-track" data-track tabindex="0" role="region" aria-label="Review cards, scroll sideways">
+    {Array.from({ length: count }).map(() => (
+      <article class="rs-card card" data-tilt>
+        <div class="rs-top"><span class="rs-stars" aria-hidden="true">{[0,1,2,3,4].map(() => <i></i>)}</span><span class="rs-g">G</span></div>
+        <div class="rs-lines"><span class="rs-tag">Google review goes here</span><i></i><i></i><i class="s"></i></div>
+        <div class="rs-who"><span class="rs-av"></span><span><strong>Customer name</strong><small>Google review</small></span><Icon name="quote" size={22} class="rs-q" /></div>
+      </article>
+    ))}
+  </div>
+  <div class="car-ctrl">
+    <button class="car-btn" data-prev aria-label="Previous reviews"><Icon name="chevronLeft" size={20} /></button>
+    <div class="car-dots" aria-hidden="true">{[0,1,2,3,4].map((k) => <span data-dot class:list={{ on: k === 0 }}></span>)}</div>
+    <button class="car-btn" data-next aria-label="Next reviews"><Icon name="chevronRight" size={20} /></button>
+  </div>
+</div>
+<style>
+  .rs-card { width: min(300px, 78vw); padding: 24px 22px; border: 1px solid var(--line); box-shadow: 0 14px 40px -26px rgba(11,15,26,.35); }
+  .rs-top { display: flex; justify-content: space-between; align-items: center; }
+  .rs-stars { display: flex; gap: 4px; } .rs-stars i { width: 16px; height: 16px; border-radius: 3px; background: #dfe5ef; }
+  .rs-g { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #eef2f8; color: var(--cobalt); font-weight: 800; font-size: 16px; }
+  .rs-lines { position: relative; display: grid; gap: 10px; margin-top: 26px; }
+  .rs-lines i { height: 8px; border-radius: 4px; background: #e8edf5; } .rs-lines i.s { width: 60%; }
+  .rs-tag { position: absolute; left: 18px; top: -12px; transform: rotate(-2deg); background: var(--yellow); color: var(--ink); font: 800 12px/1 var(--body); text-transform: uppercase; letter-spacing: .02em; padding: 7px 12px; border-radius: 4px; box-shadow: 0 6px 14px -6px rgba(0,0,0,.3); }
+  .rs-who { display: flex; align-items: center; gap: 12px; margin-top: 46px; }
+  .rs-who strong { display: block; font-size: 14px; } .rs-who small { color: var(--ink-3); font-size: 12px; }
+  .rs-av { width: 36px; height: 36px; border-radius: 50%; background: #e3e8f1; }
+  .rs-who :global(.rs-q) { margin-left: auto; color: var(--yellow); }
+</style>

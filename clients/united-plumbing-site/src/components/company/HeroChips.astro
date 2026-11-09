@@ -1,0 +1,15 @@
+---
+import Icon from '../Icon.astro';
+interface Props { order?: string }
+const { order = '5' } = Astro.props;
+---
+<ul class="hchips" data-hero={order} data-hero-fx="pop" data-hero-children>
+  <li><span><Icon name="clock" size={14} /></span>Answered 24/7</li>
+  <li><span><Icon name="globe" size={14} /></span>Hablamos Español</li>
+  <li><span><Icon name="tag" size={14} /></span>Clear price first</li>
+</ul>
+<style>
+  .hchips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .hchips li { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 99px; border: 1px solid rgba(255,255,255,.14); background: rgba(19,27,46,.75); color: #fff; font-size: 13px; font-weight: 600; }
+  .hchips span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(51,214,255,.14); color: var(--cyan); }
+</style>

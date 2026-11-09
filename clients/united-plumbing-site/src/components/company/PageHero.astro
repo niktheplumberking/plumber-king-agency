@@ -1,0 +1,31 @@
+---
+// Dark page hero shell: dusk street photo, gradient, breadcrumb and a two-column grid (slot = content).
+import { Image } from 'astro:assets';
+import Crumbs from './Crumbs.astro';
+import dusk from '../../assets/img/dusk-street.jpg';
+interface Props { crumbs: { name: string; href: string }[]; class?: string; glow?: boolean }
+const { crumbs, class: cls = '', glow = true } = Astro.props;
+---
+<section class={`phero dark ${cls}`}>
+  <div class="phero-bg" aria-hidden="true">
+    <Image src={dusk} alt="" widths={[768, 1344]} sizes="100vw" loading="eager" fetchpriority="high" data-parallax="0.15" />
+  </div>
+  {glow && <div class="phero-glow" aria-hidden="true"></div>}
+  <div class="wrap phero-in">
+    <div data-hero="0" data-hero-fx="fade"><Crumbs items={crumbs} /></div>
+    <slot />
+  </div>
+  <slot name="after" />
+</section>
+<style>
+  .phero { position: relative; overflow: hidden; padding: 40px 0 64px; }
+  .phero-bg { position: absolute; inset: -10% 0 0; z-index: 0; }
+  .phero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; }
+  .phero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,15,26,.97) 0%, rgba(11,15,26,.86) 42%, rgba(11,15,26,.45) 75%, rgba(11,15,26,.6) 100%), linear-gradient(0deg, rgba(11,15,26,.75), transparent 45%); }
+  .phero-glow { position: absolute; right: -10%; top: -20%; width: 60%; height: 120%; background: radial-gradient(closest-side, rgba(31,79,216,.45), transparent); pointer-events: none; }
+  .phero-in { position: relative; z-index: 2; }
+  @media (max-width: 900px) {
+    .phero { padding: 22px 0 44px; }
+    .phero-bg::after { background: linear-gradient(0deg, rgba(11,15,26,.98) 30%, rgba(11,15,26,.7) 100%); }
+  }
+</style>

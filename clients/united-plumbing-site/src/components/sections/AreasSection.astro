@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import map from '../../assets/img/map-service-area.jpg';
+import { TOWNS } from '../../data/towns';
+import { SITE } from '../../data/site';
+interface Props { line1?: string; line2?: string }
+const { line1 = 'Areas we cover', line2 = 'across the Inland Empire' } = Astro.props;
+const names = ['Claremont', 'La Verne', 'Chino', 'Chino Hills', 'Ontario', 'Upland', 'Montclair', 'Rancho Cucamonga', 'San Dimas', 'Diamond Bar', 'Walnut'];
+const chips = [{ name: 'Pomona', href: '/' }, ...names.map((n) => { const t = TOWNS.find((x) => x.name === n)!; return { name: n, href: `/${t.slug}/` }; })];
+---
+<section class="ar dark section">
+  <div class="wrap ar-grid">
+    <figure class="ar-map" data-reveal="clip">
+      <Image src={map} alt="Map of the area United Plumbing covers around Pomona: LA County, the Inland Empire and Orange County" widths={[480, 1000]} sizes="(max-width: 900px) 100vw, 560px" />
+    </figure>
+    <div>
+      <Eyebrow>Where we work</Eyebrow>
+      <h2 class="h-display h2 ar-h" data-split><span class="c-white">{line1}</span><br /><span class="c-cyan">{line2}</span></h2>
+      <ul class="ar-chips" data-stagger="up">
+        {chips.map((c) => <li><a href={c.href}><Icon name="pin" size={16} />{c.name}</a></li>)}
+      </ul>
+      <div class="btn-row ar-cta" data-reveal="up">
+        <Btn href={SITE.phoneHref} icon="phone" size="md">Call a local plumber</Btn>
+        <a href="/areas/" class="textlink">All 28 towns <Icon name="arrow" size={16} /></a>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .ar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .ar-map { border: 2px solid var(--cyan); border-radius: 10px; overflow: hidden; box-shadow: 0 0 60px -20px rgba(51,214,255,.5); }
+  .ar-map img { width: 100%; aspect-ratio: 600/520; object-fit: cover; }
+  .ar-h { margin-top: 16px; font-size: clamp(42px, 4.4vw, 62px); }
+  .ar-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 30px; }
+  .ar-chips a { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line-dark); border-radius: 6px; background: var(--night2); color: #fff; font-weight: 600; font-size: 14px; transition: border-color .3s, background .3s, transform .3s var(--ease-out); }
+  .ar-chips a .icon { color: var(--cyan); }
+  .ar-chips a:hover { border-color: var(--cyan); background: #182343; transform: translateY(-2px); }
+  .ar-cta { margin-top: 30px; align-items: center; gap: 24px; }
+  @media (max-width: 900px) { .ar-grid { grid-template-columns: 1fr; gap: 40px; } .ar-grid > div { order: -1; } .ar-chips { grid-template-columns: 1fr 1fr; } }
+</style>

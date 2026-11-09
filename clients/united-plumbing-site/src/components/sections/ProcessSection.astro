@@ -1,0 +1,80 @@
+---
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import { SITE } from '../../data/site';
+const steps = [
+  { t: 'Call or text', d: 'Call 909-587-0711 or text a photo of the problem, any hour.', i: 'phone' },
+  { t: 'Clear price', d: 'You hear what it costs before any work starts.', i: 'tag' },
+  { t: 'We show up', d: 'A Galvez brother comes out with the tools for the job.', i: 'truck' },
+  { t: 'Fix it', d: 'We fix it and walk you through what we did, in plain words.', i: 'wrench' },
+  { t: 'Check, then pay', d: 'Look over the finished job, then pay.', i: 'checkCircle' },
+];
+---
+<section class="pr dark">
+  <div class="pr-glow" aria-hidden="true"></div>
+  <div class="wrap pr-head head-center">
+    <Eyebrow>How it works</Eyebrow>
+    <h2 class="h-display h2 pr-h" data-split><span class="c-white">From first call to </span><span class="c-cyan">final fix</span></h2>
+    <p class="lead" data-reveal="up">Five steps. No guessing, no surprise bill at the end.</p>
+  </div>
+  <div class="pr-band">
+    <div class="wrap pr-rail">
+      <div class="pr-pipe" aria-hidden="true"><span class="pr-pipe-fill" data-progress></span></div>
+      <ol class="pr-steps" data-stagger="up">
+        {steps.map((s, i) => (
+          <li class:list={['pr-step', { last: i === 4 }]} data-tilt>
+            <span class="pr-node" aria-hidden="true"><i></i></span>
+            <div class="pr-top"><span class="led pr-num">{String(i + 1).padStart(2, '0')}</span><span class="pr-ico"><Icon name={s.i} size={18} /></span></div>
+            <h3 class="h-display pr-t">{s.t}</h3>
+            <p class="pr-d">{s.d}</p>
+            <p class="pr-lbl">Step {String(i + 1).padStart(2, '0')}{i === 4 ? ' · Done' : ''}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+  <div class="wrap pr-cta" data-reveal="up">
+    <span class="pr-cta-l">Step 01 starts here:</span>
+    <Btn href={SITE.phoneHref} icon="phone" size="md">Call {SITE.phone}</Btn>
+    <Btn href={SITE.smsHref} variant="outline-cyan" icon="message" size="md">Text a photo</Btn>
+  </div>
+</section>
+<style>
+  .pr { position: relative; overflow: hidden; padding-top: clamp(70px, 8vw, 100px); padding-bottom: 70px; }
+  .pr-glow { position: absolute; left: 50%; top: -120px; width: 1100px; height: 520px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(31,79,216,.45), transparent); pointer-events: none; }
+  .pr-head { position: relative; }
+  .pr-h { margin-top: 14px; }
+  .pr-band { position: relative; margin-top: 70px; }
+  .pr-band::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 58%; background: var(--yellow); z-index: 0; }
+  .pr-rail { position: relative; z-index: 1; padding-bottom: 40px; }
+  .pr-pipe { position: absolute; left: 0; right: 0; top: 12px; height: 12px; border-radius: 99px; background: #13204a; box-shadow: inset 0 0 0 1px rgba(51,214,255,.25); }
+  .pr-pipe-fill { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(90deg, #1f4fd8, #33d6ff); box-shadow: 0 0 18px rgba(51,214,255,.6); }
+  .pr-steps { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 26px; padding-top: 80px; }
+  .pr-step { position: relative; padding: 24px 18px 20px; min-height: 236px; border-radius: 12px; background: var(--night2); border: 1px solid var(--line-dark); display: flex; flex-direction: column; }
+  .pr-step.last { background: var(--cobalt); border-color: var(--cyan); }
+  .pr-node { position: absolute; left: 50%; top: -80px; width: 36px; height: 36px; margin-left: -18px; display: grid; place-items: center; border: 2px solid var(--cyan); border-radius: 8px; background: var(--night); }
+  .pr-node::after { content: ''; position: absolute; left: 50%; top: 100%; width: 2px; height: 44px; background: var(--cyan); }
+  .pr-node i { width: 14px; height: 14px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+  .pr-top { display: flex; justify-content: space-between; align-items: start; }
+  .pr-num { font-size: 48px; line-height: 1; color: var(--yellow); text-shadow: 0 0 14px rgba(255,210,31,.45); }
+  .pr-ico { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; background: var(--cobalt); color: #fff; }
+  .last .pr-ico { background: var(--yellow); color: var(--ink); }
+  .pr-t { font-size: 30px; color: #fff; margin-top: 26px; }
+  .pr-d { color: var(--on-dark-2); font-size: 14px; margin-top: 8px; }
+  .last .pr-d { color: #dfe6ff; }
+  .pr-lbl { margin-top: auto; padding-top: 18px; color: var(--cyan); font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+  .last .pr-lbl { color: var(--yellow); }
+  .pr-cta { position: relative; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 50px; }
+  .pr-cta-l { color: #fff; font-weight: 700; margin-right: 6px; }
+  @media (max-width: 1060px) {
+    .pr-pipe { left: 16px; right: auto; top: 0; bottom: 40px; width: 12px; height: auto; }
+    .pr-pipe-fill { transform-origin: top !important; }
+    .pr-steps { grid-template-columns: 1fr; padding-top: 0; padding-left: 64px; gap: 18px; }
+    .pr-node { left: -48px; top: 20px; margin-left: 0; }
+    .pr-node::after { left: 100%; top: 50%; width: 14px; height: 2px; }
+    .pr-band::after { left: auto; width: 50%; height: auto; top: 30%; }
+    .pr-step { min-height: 0; }
+    .pr-cta { flex-direction: column; align-items: stretch; } .pr-cta-l { text-align: center; }
+  }
+</style>

@@ -1,0 +1,428 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Btn from '../components/Btn.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Wave from '../components/Wave.astro';
+import Ticker from '../components/Ticker.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import PageHero from '../components/company/PageHero.astro';
+import HeroChips from '../components/company/HeroChips.astro';
+import VideoTile from '../components/company/VideoTile.astro';
+import { SITE } from '../data/site';
+import crawl from '../assets/img/job-crawlspace.jpg';
+
+// Town tags come from Jim's own Instagram captions (scan of 6 Nov 2026). Clips stay on Instagram until Jim sends the files.
+const byTown = [
+  { town: 'Pomona' }, { town: 'Chino', job: 'Leak repair' }, { town: 'Ontario' }, { town: 'Santa Ana' }, { town: 'West Covina' }, { town: 'Riverside' },
+  { town: 'La Verne' }, { town: 'San Bernardino' }, { town: 'Yorba Linda', job: 'John' }, { town: 'Orange County' }, { town: 'East LA', job: 'Drain service' },
+];
+const steps = [
+  { t: 'Tap the button', d: 'It opens our Google page on your phone.' },
+  { t: 'Say how it went', d: 'A line or two in your own words.' },
+  { t: 'Say what we fixed', d: 'And your town. That is what helps neighbors most.' },
+];
+---
+<Base title="United Plumbing Reviews | Video Reviews | Pomona" description="Watch real customers talk about United Plumbing on camera. Pomona and nearby towns. Call (909) 587-0711." crumbs={[{ name: 'Reviews', href: '/reviews/' }]}>
+
+  <PageHero crumbs={[{ name: 'Reviews', href: '/reviews/' }]}>
+    <div class="rh-grid">
+      <div>
+        <p class="rh-pill" data-hero="1" data-hero-fx="pop"><i></i>Reviews · Recorded on the job</p>
+        <h1 class="h-display rh-h" data-hero="2" data-hero-fx="lines">Real customers.<br /><span class="c-yellow">On camera.</span></h1>
+        <p class="rh-p" data-hero="3" data-hero-fx="up">Anyone can type a review. Our customers say it to the camera, in their own homes, right after the job.</p>
+        <div class="btn-row rh-btns" data-hero="4" data-hero-fx="up" data-hero-children>
+          <Btn href={SITE.phoneHref} icon="phone" size="lg">Call {SITE.phone}</Btn>
+          <Btn href="#contact" variant="outline-cyan" icon="message" size="lg">Get a call back</Btn>
+        </div>
+        <HeroChips order="5" />
+      </div>
+      <a href={SITE.instagram} target="_blank" rel="noopener" class="vf" data-hero="2" data-hero-fx="right" aria-label="Watch our customers on Instagram, @plumblord1">
+        <span class="vf-shadow" aria-hidden="true"></span>
+        <span class="vf-in">
+          <Image src={crawl} alt="" widths={[500, 900]} sizes="(max-width: 900px) 92vw, 560px" loading="eager" class="vf-img" />
+          <span class="vf-grid" aria-hidden="true"></span>
+          <span class="vf-c vf-tl" aria-hidden="true"></span><span class="vf-c vf-tr" aria-hidden="true"></span><span class="vf-c vf-bl" aria-hidden="true"></span><span class="vf-c vf-br" aria-hidden="true"></span>
+          <span class="vf-rec led" aria-hidden="true"><i></i>REC 00:38</span>
+          <span class="vf-hd led" aria-hidden="true">1080P</span>
+          <span class="vf-play" aria-hidden="true"><Icon name="play" size={30} /></span>
+          <span class="vf-cap"><Icon name="instagram" size={20} /><span><strong class="h-display">On the job with @plumblord1</strong><small>Customers talk, Jim films. No scripts.</small></span></span>
+        </span>
+      </a>
+    </div>
+  </PageHero>
+
+  <!-- WATCH THEM -->
+  <section class="wt light">
+    <div class="wrap head-center">
+      <Eyebrow>Video reviews</Eyebrow>
+      <h2 class="h-display h2" data-split>Don't take our word.<br /><span class="c-cobalt">Watch them say it.</span></h2>
+      <p class="lead" data-reveal="up">Real customers on camera, filmed on the job by Jim and posted on Instagram.</p>
+    </div>
+    <div class="wrap">
+      <div class="wt-band" data-reveal="up">
+        <span class="led wt-rec"><i></i>REC</span>
+        <div class="wt-band-t"><p class="h-display">Video reviews on Instagram</p><small>Customers from Pomona to Santa Ana, on camera. @plumblord1 · {SITE.instagramFollowers} followers</small></div>
+        <Btn href={SITE.instagram} target="_blank" icon="instagram" size="md">Watch on Instagram</Btn>
+      </div>
+      <div class="ft">
+        <div data-reveal="up"><VideoTile tag="Featured clip" job="10 Jan 2026" class="ft-vid" /></div>
+        <figure class="ft-q" data-reveal="up">
+          <p class="ft-eb"><Icon name="quote" size={30} /><span>In their own words</span></p>
+          <blockquote class="h-display">“Very honest, very helpful, and they’re <span class="c-yellow">not out to beat you.</span>”</blockquote>
+          <figcaption><span class="ft-rule" aria-hidden="true"></span><strong>Customer, video review · Instagram, 10 Jan 2026</strong><small>Watch her say it in the clip on the left.</small></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#0B0F1A" />
+
+  <!-- QUOTE WALL -->
+  <section class="qw dark">
+    <div class="qw-glow" aria-hidden="true"></div>
+    <div class="wrap head-center">
+      <Eyebrow>In their own words</Eyebrow>
+      <h2 class="h-display h2" data-split><span class="c-white">What customers</span><br /><span class="c-cyan">say on camera.</span></h2>
+      <p class="lead" data-reveal="up">Lines taken from Jim's Instagram video reviews.</p>
+    </div>
+    <div class="wrap qw-grid" data-stagger="up">
+      <figure class="q q-yellow">
+        <Icon name="quote" size={22} class="q-ico" />
+        <blockquote class="h-display">“unbelievable service... they were so fast, they were so efficient... <span class="c-cobalt">I’m so happy</span>”</blockquote>
+        <figcaption><span><small>Video review · Instagram</small></span><a href={SITE.instagram} target="_blank" rel="noopener" aria-label="See this video review on Instagram"><Icon name="instagram" size={16} /></a></figcaption>
+      </figure>
+      <figure class="q q-blue">
+        <Icon name="quote" size={20} class="q-ico" />
+        <blockquote class="h-display">“He came out very quickly... walked me through everything”</blockquote>
+        <figcaption><span><strong>San Bernardino</strong><small>Video review · Instagram</small></span><a href={SITE.instagram} target="_blank" rel="noopener" aria-label="See this video review on Instagram"><Icon name="instagram" size={16} /></a></figcaption>
+      </figure>
+      <figure class="q q-dark q-john">
+        <Icon name="quote" size={20} class="q-ico" />
+        <blockquote class="h-display">“on a Sunday... <span class="c-yellow">He came as fast as he could</span>”</blockquote>
+        <figcaption><span><strong>John · Yorba Linda</strong><small>Video review · Instagram</small></span><a href={SITE.instagram} target="_blank" rel="noopener" aria-label="See this video review on Instagram"><Icon name="instagram" size={16} /></a></figcaption>
+      </figure>
+      <figure class="q q-dark q-sew">
+        <Icon name="quote" size={20} class="q-ico" />
+        <blockquote class="h-display">“The sewage was bad... <span class="c-yellow">There’s no smell anymore</span>”</blockquote>
+        <figcaption><span><small>Video review · Instagram</small></span><a href={SITE.instagram} target="_blank" rel="noopener" aria-label="See this video review on Instagram"><Icon name="instagram" size={16} /></a></figcaption>
+      </figure>
+      <figure class="q q-white">
+        <Icon name="quote" size={20} class="q-ico" />
+        <blockquote class="h-display">“I would recommend it to everybody... Good prices, good service”</blockquote>
+        <figcaption><span><strong>Ontario</strong><small>Video review · Instagram</small></span><a href={SITE.instagram} target="_blank" rel="noopener" aria-label="See this video review on Instagram"><Icon name="instagram" size={16} /></a></figcaption>
+      </figure>
+      <figure class="q q-es">
+        <Icon name="quote" size={18} class="q-ico" />
+        <blockquote class="h-display"><em class="ph">[SPANISH LINE, word for word from clip #5]</em></blockquote>
+        <p class="q-tr"><strong>Translated from Spanish:</strong> my sink was clogged and they came and helped me on the first call... very honest, very pleasant, highly recommended.</p>
+        <figcaption><span><small>Video review · Instagram</small></span><a href={SITE.instagram} target="_blank" rel="noopener" aria-label="See this video review on Instagram"><Icon name="instagram" size={16} /></a></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <Wave from="#0B0F1A" to="#F3F6FB" flip />
+
+  <!-- BY TOWN -->
+  <section class="bt light">
+    <div class="wrap">
+      <p class="bt-h" data-reveal="up"><span>More video reviews, by town</span></p>
+      <ul class="bt-grid" data-stagger="up">
+        {byTown.map((v, i) => <li class:list={{ 'bt-extra': i >= 6 }}><VideoTile town={v.town} job={v.job} /></li>)}
+        <li class="bt-extra"><a href={SITE.instagram} target="_blank" rel="noopener" class="bt-more"><Icon name="instagram" size={40} class="bt-ig" /><span class="h-display">More on<br />Instagram</span><Icon name="arrow" size={22} /></a></li>
+      </ul>
+      <p class="bt-also">Also on camera: La Verne · San Bernardino · Yorba Linda · Orange County · East LA and more</p>
+      <div class="bt-cta" data-reveal="up"><Btn href={SITE.instagram} target="_blank" variant="ink" icon="instagram" size="md">Watch them all on Instagram</Btn></div>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#0B0F1A" />
+
+  <!-- GOOGLE (placeholders until the profile is live) -->
+  <section class="gg dark">
+    <div class="gg-glow" aria-hidden="true"></div>
+    <div class="wrap gg-grid">
+      <div>
+        <Eyebrow>Google</Eyebrow>
+        <h2 class="h-display h2 gg-h" data-split><span class="c-white">Google reviews,</span><br /><span class="c-cyan">coming soon.</span></h2>
+        <p class="lead gg-p" data-reveal="up">Our Google profile is new. If we've worked for you, we'd love your review. They will show up right here.</p>
+        <div data-reveal="up">
+          <span class="btn btn-yellow btn-md gg-btn" aria-disabled="true"><Icon name="arrow" size={20} />Leave us a Google review</span>
+          <p class="gg-note"><em class="ph">Google review link goes here once the profile is live</em></p>
+        </div>
+      </div>
+      <div class="gg-cards" data-stagger="up">
+        {[0, 1, 2].map((k) => (
+          <div class:list={['gc', `gc-${k}`]} data-tilt>
+            <div class="gc-top"><span class="gc-tag">Google review goes here</span><span class="gc-g">G</span></div>
+            <div class="gc-lines"><i></i><i></i><i class="s"></i></div>
+            <div class="gc-who"><span class="gc-av"></span><span><strong>{k === 2 ? 'Your review could be next' : 'Customer name'}</strong><small>{k === 2 ? 'Had us out? Tell people.' : 'Town · Google review'}</small></span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Wave from="#0B0F1A" to="#F3F6FB" flip />
+
+  <!-- HAD US OUT -->
+  <section class="ho light" id="review-steps">
+    <div class="wrap ho-head">
+      <div>
+        <Eyebrow>Had us out?</Eyebrow>
+        <h2 class="h-display h2" data-split>Had us out?<br /><span class="c-cobalt">Tell people.</span></h2>
+      </div>
+      <p class="lead" data-reveal="up">A short Google review that says what we fixed and what town you're in helps your neighbors find a plumber they can trust.</p>
+    </div>
+    <div class="wrap ho-grid">
+      <ol class="ho-steps" data-stagger="up">
+        {steps.map((s, i) => (
+          <li class:list={{ last: i === 2 }}>
+            <span class="led ho-n">{i + 1}</span>
+            <div><h3 class="h-display">{s.t}</h3><p>{s.d}</p></div>
+          </li>
+        ))}
+      </ol>
+      <div class="ho-qr" data-reveal="up">
+        <p class="ho-qr-eb">Scan to review</p>
+        <div class="ho-qr-box"><div><p class="h-display">QR code<br />goes here</p><small>After the profile is live</small></div></div>
+        <span class="btn btn-yellow btn-md ho-qr-btn" aria-disabled="true"><Icon name="arrow" size={20} />Review us on Google</span>
+        <p class="ho-qr-note">Link added after the profile is live</p>
+      </div>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#1F4FD8" />
+
+  <!-- SEND A VIDEO -->
+  <section class="sv2">
+    <div class="wrap sv2-grid">
+      <span class="sv2-ico" data-reveal="pop"><Icon name="video" size={40} /></span>
+      <div>
+        <h2 class="h-display h2 sv2-h" data-split><span class="c-white">Had a job done?</span><br /><span class="c-yellow">Send us a video.</span></h2>
+        <p class="sv2-p" data-reveal="up">Film 10 seconds on your phone: what we fixed and your town. Text it to {SITE.phone} or tag @plumblord1 on Instagram.</p>
+      </div>
+      <div class="sv2-btns" data-reveal="up">
+        <Btn href={SITE.smsHref} icon="phone" size="md" full>Text us a video</Btn>
+        <Btn href={SITE.instagram} target="_blank" variant="outline-white" icon="instagram" size="md" full>Tag @plumblord1</Btn>
+      </div>
+    </div>
+  </section>
+
+  <ContactSection line1="Ready to be" line2="our next video?" />
+  <Ticker items={['CALL 909-587-0711', '24/7', 'HABLAMOS ESPAÑOL', 'POMONA', 'CLAREMONT', 'CHINO', 'ONTARIO', 'UPLAND']} cyan reverse />
+</Base>
+
+<style>
+  :global(section.ct) { position: relative; isolation: isolate; }
+  /* HERO */
+  .rh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 18px; }
+  .rh-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; background: rgba(255,59,59,.14); color: #ff8a8a; font: 700 11px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; }
+  .rh-pill i { width: 7px; height: 7px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 8px #ff3b3b; }
+  .rh-h { margin-top: 16px; font-size: clamp(56px, 7.4vw, 104px); line-height: .86; color: #fff; }
+  .rh-p { margin-top: 24px; max-width: 540px; font-size: 17px; color: var(--on-dark); }
+  .rh-btns { margin-top: 30px; }
+  .rh-btns :global(.btn) { --bh: 68px; font-size: 26px; }
+  .rh-btns :global(.btn-outline-cyan) { background: rgba(11,15,26,.5); }
+  .vf { position: relative; display: block; }
+  .vf-shadow { position: absolute; inset: 14px -14px -14px 14px; border-radius: 16px; background: var(--cobalt); }
+  .vf-in { position: relative; display: block; overflow: hidden; border-radius: 16px; aspect-ratio: 590 / 600; background: var(--night); }
+  .vf-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 30%; transition: transform 1s var(--ease-out); filter: saturate(.9) brightness(.85); }
+  .vf:hover .vf-img { transform: scale(1.05); }
+  .vf-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px); background-size: 33.33% 33.33%; }
+  .vf-c { position: absolute; width: 44px; height: 44px; border: 3px solid var(--cyan); }
+  .vf-tl { left: 24px; top: 24px; border-right: 0; border-bottom: 0; } .vf-tr { right: 24px; top: 24px; border-left: 0; border-bottom: 0; }
+  .vf-bl { left: 24px; bottom: 24px; border-right: 0; border-top: 0; } .vf-br { right: 24px; bottom: 24px; border-left: 0; border-top: 0; }
+  .vf-rec { position: absolute; left: 44px; top: 42px; display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; background: rgba(0,0,0,.6); color: #fff; font-size: 16px; }
+  .vf-rec i { width: 10px; height: 10px; border-radius: 50%; background: #ff3b3b; animation: vfblink 1.4s steps(2) infinite; }
+  @keyframes vfblink { 50% { opacity: .2; } }
+  .vf-hd { position: absolute; right: 44px; top: 42px; padding: 6px 10px; border-radius: 6px; background: rgba(0,0,0,.6); color: var(--cyan); font-size: 15px; }
+  .vf-play { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 108px; height: 108px; margin: -54px 0 0 -54px; border-radius: 50%; background: var(--yellow); color: var(--ink); transition: transform .5s var(--ease-out), box-shadow .5s; }
+  .vf-play :global(.icon) { fill: currentColor; margin-left: 4px; }
+  .vf:hover .vf-play { transform: scale(1.1); box-shadow: 0 0 0 16px rgba(255,210,31,.2); }
+  .vf-cap { position: absolute; left: 44px; right: 44px; bottom: 44px; display: flex; align-items: center; gap: 14px; padding: 12px 18px; border-radius: 8px; background: rgba(7,10,18,.88); color: #fff; }
+  .vf-cap :global(.icon) { color: var(--cyan); flex: none; }
+  .vf-cap strong { display: block; font-size: 24px; line-height: 1; }
+  .vf-cap small { font-size: 12px; color: var(--on-dark-2); }
+
+  /* WATCH */
+  .wt { padding: clamp(60px, 7vw, 90px) 0 clamp(60px, 7vw, 90px); }
+  .wt .lead { margin-top: 18px; }
+  .wt-band { display: grid; grid-template-columns: auto 1fr auto; gap: 40px; align-items: center; margin-top: 40px; padding: 26px 40px; border-radius: 14px; background: radial-gradient(60% 160% at 10% 50%, #1f3fa8 0%, #0b0f1a 70%); color: #fff; }
+  .wt-rec { display: inline-flex; align-items: center; gap: 12px; color: var(--yellow); font-size: 64px; line-height: 1; text-shadow: 0 0 16px rgba(255,210,31,.5); }
+  .wt-rec i { width: 16px; height: 16px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 12px #ff3b3b; animation: vfblink 1.4s steps(2) infinite; }
+  .wt-band-t p { font-size: 40px; line-height: 1; }
+  .wt-band-t small { font-size: 13px; color: var(--on-dark-2); }
+  .ft { display: grid; grid-template-columns: 360px 1fr; gap: 34px; margin-top: 50px; }
+  .ft > div { display: flex; }
+  .ft :global(.ft-vid) { width: 100%; aspect-ratio: auto; min-height: 560px; }
+  .ft-q { position: relative; display: flex; flex-direction: column; padding: 56px 56px 40px; border-radius: 16px; background: radial-gradient(70% 60% at 100% 0%, rgba(31,79,216,.6), transparent), var(--night); color: #fff; border-left: 8px solid var(--yellow); }
+  .ft-eb { display: flex; align-items: center; gap: 22px; color: var(--yellow); }
+  .ft-eb span { color: var(--cyan); font: 700 12px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+  .ft-q blockquote { margin: 60px 0 0; font-size: clamp(48px, 5.2vw, 76px); line-height: .92; text-transform: none; }
+  .ft-q figcaption { margin-top: auto; padding-top: 50px; display: grid; gap: 6px; }
+  .ft-rule { display: block; width: 64px; height: 3px; margin-bottom: 18px; background: var(--cyan); }
+  .ft-q strong { font-size: 17px; } .ft-q small { color: var(--on-dark-2); font-size: 13px; }
+
+  /* QUOTE WALL */
+  .qw { position: relative; overflow: hidden; padding: 80px 0 100px; }
+  .qw-glow { position: absolute; left: -10%; top: 20%; width: 60%; height: 80%; background: radial-gradient(closest-side, rgba(31,79,216,.4), transparent); }
+  .qw .lead { margin-top: 14px; }
+  .qw-grid { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: auto auto auto; gap: 20px; margin-top: 50px; }
+  .q { display: flex; flex-direction: column; padding: 26px 26px 22px; border-radius: 14px; transition: transform .45s var(--ease-out), box-shadow .45s; }
+  .q:hover { transform: translateY(-6px); box-shadow: 0 30px 60px -30px rgba(0,0,0,.8); }
+  .q blockquote { margin: 14px 0 26px; text-transform: none; line-height: 1; }
+  .q figcaption { margin-top: auto; display: flex; justify-content: space-between; align-items: end; gap: 10px; }
+  .q figcaption strong { display: block; font-size: 14px; }
+  .q figcaption small { font-size: 12px; opacity: .9; }
+  .q figcaption a { display: grid; place-items: center; width: 32px; height: 32px; margin: -8px -8px -8px 0; border-radius: 6px; transition: background .3s; }
+  .q figcaption a:hover { background: rgba(255,255,255,.12); }
+  .q-yellow { grid-column: 1 / 3; grid-row: 1 / 3; background: var(--yellow); color: var(--ink); }
+  .q-yellow blockquote { font-size: clamp(38px, 3.5vw, 50px); }
+  .q-yellow :global(.q-ico) { color: var(--ink); }
+  .q-blue { grid-column: 3 / 5; grid-row: 1; background: var(--cobalt); color: #fff; }
+  .q-blue blockquote { font-size: 32px; }
+  .q-blue :global(.q-ico) { color: var(--yellow); }
+  .q-dark { background: var(--night2); border: 1px solid var(--line-dark); color: #fff; }
+  .q-dark blockquote { font-size: 38px; }
+  .q-dark :global(.q-ico) { color: var(--yellow); }
+  .q-john { grid-column: 3; grid-row: 2 / 4; } .q-sew { grid-column: 4; grid-row: 2 / 4; }
+  .q-white { grid-column: 1; grid-row: 3; background: #fff; color: var(--ink); }
+  .q-white blockquote { font-size: 28px; }
+  .q-white :global(.q-ico) { color: var(--cyan); }
+  .q-white figcaption small { color: var(--ink-3); opacity: 1; }
+  .q-es { grid-column: 2; grid-row: 3; background: var(--night2); border: 1.5px solid var(--cyan); color: #fff; }
+  .q-es :global(.q-ico) { color: var(--cyan); }
+  .q-es blockquote { font-size: 18px; margin-bottom: 10px; }
+  .q-es .ph { font-family: var(--display); }
+  .q-tr { font-size: 13px; color: var(--on-dark-2); margin-bottom: 18px; }
+  .q-tr strong { display: block; color: var(--cyan); font-size: 11px; letter-spacing: .06em; margin-bottom: 4px; }
+
+  /* BY TOWN */
+  .bt { padding: 60px 0 80px; }
+  .bt-h { display: flex; align-items: center; gap: 24px; color: var(--cobalt); font: 700 12px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+  .bt-h::after { content: ''; flex: 1; height: 1px; background: #d3dbe8; }
+  .bt-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-top: 24px; }
+  .bt-grid > li { display: flex; }
+  .bt-grid :global(.vt) { width: 100%; aspect-ratio: auto; min-height: 330px; }
+  .bt-more { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 14px; width: 100%; border-radius: 12px; background: var(--cobalt); color: #fff; text-align: center; transition: transform .45s var(--ease-out), background .3s; }
+  .bt-more:hover { transform: translateY(-6px); background: #2a5cec; }
+  .bt-more :global(.bt-ig) { color: var(--yellow); }
+  .bt-more .h-display { font-size: 28px; line-height: .95; }
+  .bt-more :global(.icon) { transition: transform .3s var(--ease-out); }
+  .bt-more:hover :global(.icon) { transform: translateX(5px); }
+  .bt-also { display: none; }
+  .bt-cta { display: flex; justify-content: center; margin-top: 34px; }
+
+  /* GOOGLE */
+  .gg { position: relative; overflow: hidden; padding: 80px 0 110px; }
+  .gg-glow { position: absolute; right: 0; top: 10%; width: 60%; height: 90%; background: radial-gradient(closest-side, rgba(31,79,216,.4), transparent); }
+  .gg-grid { position: relative; display: grid; grid-template-columns: 460px 1fr; gap: 50px; align-items: center; }
+  .gg-h { margin-top: 14px; font-size: clamp(42px, 4.8vw, 66px); }
+  .gg-p { margin-top: 22px; max-width: 420px; }
+  .gg-btn { margin-top: 36px; width: min(400px, 100%); cursor: default; }
+  .gg-note { margin-top: 12px; font-size: 12px; color: var(--on-dark-2); }
+  .gg-cards { position: relative; height: 560px; }
+  .gc { position: absolute; width: 52%; padding: 22px; border-radius: 12px; background: #fff; color: var(--ink); box-shadow: 0 30px 60px -20px rgba(0,0,0,.6); }
+  .gc-0 { left: 0; top: 20px; } .gc-1 { right: 0; top: 80px; } .gc-2 { left: 26%; top: 330px; background: rgba(19,27,46,.7); color: #fff; border: 1.5px dashed rgba(51,214,255,.4); box-shadow: none; }
+  .gc-top { display: flex; justify-content: space-between; align-items: center; }
+  .gc-tag { padding: 6px 10px; border-radius: 4px; background: var(--yellow); color: var(--ink); font: 800 11px/1 var(--body); letter-spacing: .04em; text-transform: uppercase; }
+  .gc-g { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #eef2f8; color: var(--ink); font-weight: 800; }
+  .gc-2 .gc-g { background: rgba(255,255,255,.08); color: var(--cyan); }
+  .gc-lines { display: grid; gap: 10px; margin-top: 26px; }
+  .gc-lines i { height: 7px; border-radius: 4px; background: #e8edf5; } .gc-lines i.s { width: 60%; }
+  .gc-2 .gc-lines i { background: rgba(255,255,255,.1); }
+  .gc-who { display: flex; align-items: center; gap: 12px; margin-top: 30px; }
+  .gc-who strong { display: block; font-size: 14px; } .gc-who small { font-size: 12px; color: var(--ink-3); }
+  .gc-2 .gc-who small { color: var(--on-dark-2); }
+  .gc-av { width: 36px; height: 36px; border-radius: 50%; background: #e3e8f1; }
+  .gc-2 .gc-av { background: rgba(255,255,255,.1); }
+
+  /* HAD US OUT */
+  .ho { padding: 80px 0 100px; }
+  .ho-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; }
+  .ho-head .h2 { margin-top: 14px; }
+  .ho-head .lead { max-width: 470px; }
+  .ho-grid { display: grid; grid-template-columns: 1.45fr 1fr; gap: 24px; margin-top: 44px; }
+  .ho-steps { position: relative; display: grid; gap: 44px; padding: 40px; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
+  .ho-steps li { position: relative; display: flex; align-items: center; gap: 28px; }
+  .ho-steps li:not(:last-child)::after { content: ''; position: absolute; left: 47px; top: 100%; height: 44px; width: 3px; background: var(--cyan); }
+  .ho-n { display: grid; place-items: center; flex: none; width: 96px; height: 96px; border-radius: 12px; background: var(--night); color: var(--yellow); font-size: 64px; line-height: 1; text-shadow: 0 0 12px rgba(255,210,31,.4); }
+  .last .ho-n { background: var(--yellow); color: var(--ink); text-shadow: none; }
+  .ho-steps h3 { font-size: 34px; color: var(--ink); }
+  .ho-steps p { color: var(--ink-2); font-size: 15px; }
+  .ho-qr { display: flex; flex-direction: column; align-items: center; padding: 34px 40px; border-radius: 16px; background: radial-gradient(70% 50% at 50% 0%, rgba(31,79,216,.6), transparent), var(--night); color: #fff; }
+  .ho-qr-eb { align-self: flex-start; color: var(--cyan); font: 700 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+  .ho-qr-box { margin-top: 24px; width: 220px; padding: 12px; border-radius: 12px; background: #fff; }
+  .ho-qr-box > div { display: grid; place-items: center; gap: 8px; aspect-ratio: 1; border: 2px dashed rgba(31,79,216,.35); border-radius: 6px; text-align: center; color: var(--ink); }
+  .ho-qr-box p { font-size: 30px; line-height: .9; }
+  .ho-qr-box small { font-size: 10px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+  .ho-qr-btn { margin-top: 28px; width: 100%; cursor: default; }
+  .ho-qr-note { margin-top: 14px; font-size: 11px; font-weight: 700; color: var(--on-dark-2); text-transform: uppercase; letter-spacing: .06em; }
+
+  /* SEND A VIDEO */
+  .sv2 { background: radial-gradient(60% 120% at 0% 0%, #3a68ee, var(--cobalt) 60%); color: #fff; padding: 70px 0 90px; }
+  .sv2-grid { display: grid; grid-template-columns: auto 1fr 340px; gap: 40px; align-items: start; }
+  .sv2-ico { display: grid; place-items: center; width: 116px; height: 116px; border-radius: 24px; background: var(--yellow); color: var(--ink); }
+  .sv2-h { font-size: clamp(42px, 4.4vw, 60px); }
+  .sv2-p { margin-top: 18px; max-width: 560px; color: #dfe6ff; font-size: 16px; }
+  .sv2-btns { display: grid; gap: 14px; }
+
+  @media (max-width: 1100px) {
+    .bt-grid { grid-template-columns: repeat(4, 1fr); }
+    .qw-grid { grid-template-columns: 1fr 1fr; }
+    .q-yellow { grid-column: 1 / -1; grid-row: auto; } .q-blue { grid-column: 1 / -1; grid-row: auto; }
+    .q-john, .q-sew, .q-white, .q-es { grid-column: auto; grid-row: auto; }
+    .q-white, .q-es { grid-column: 1 / -1; }
+    .gg-grid { grid-template-columns: 1fr; }
+    .sv2-grid { grid-template-columns: auto 1fr; } .sv2-btns { grid-column: 1 / -1; max-width: 400px; }
+  }
+  @media (max-width: 900px) {
+    .rh-grid { grid-template-columns: 1fr; gap: 40px; }
+    .rh-btns :global(.btn) { width: 100%; }
+    .wt-band { grid-template-columns: auto 1fr; gap: 16px 24px; padding: 22px; }
+    .wt-band :global(.btn) { grid-column: 1 / -1; }
+    .ft { grid-template-columns: 1fr; }
+    .ft :global(.ft-vid) { min-height: 0; aspect-ratio: 9 / 13; }
+    .ho-head { flex-direction: column; align-items: start; gap: 16px; }
+    .ho-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .rh-h { font-size: clamp(50px, 14vw, 64px); }
+    .rh-p { font-size: 15px; }
+    .rh-btns :global(.btn) { font-size: 24px; --bh: 60px; }
+    .vf-c { width: 28px; height: 28px; } .vf-tl, .vf-bl { left: 12px; } .vf-tr, .vf-br { right: 12px; } .vf-tl, .vf-tr { top: 12px; } .vf-bl, .vf-br { bottom: 12px; }
+    .vf-rec { left: 22px; top: 22px; font-size: 12px; } .vf-hd { right: 22px; top: 22px; font-size: 12px; }
+    .vf-play { width: 76px; height: 76px; margin: -38px 0 0 -38px; }
+    .vf-cap { left: 20px; right: 20px; bottom: 22px; padding: 10px 12px; } .vf-cap strong { font-size: 18px; } .vf-cap small { font-size: 11px; }
+    .wt-band { grid-template-columns: 1fr; }
+    .wt-rec { font-size: 40px; } .wt-band-t p { font-size: 30px; }
+    .q figcaption small { font-size: 11px; }
+    .ft-q { padding: 30px 24px 26px; border-left-width: 6px; }
+    .ft-q blockquote { margin-top: 30px; font-size: 44px; }
+    .ft-q figcaption { padding-top: 30px; }
+    .ft-q strong { font-size: 15px; }
+    .qw-grid { gap: 12px; }
+    .q { padding: 20px 18px 16px; }
+    .q-yellow blockquote { font-size: 38px; } .q-blue blockquote { font-size: 28px; }
+    .q-dark blockquote { font-size: 26px; }
+    .bt-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .bt-grid :global(.vt) { min-height: 0; aspect-ratio: 9 / 15; }
+    .bt-extra { display: none !important; }
+    .bt-also { display: block; margin-top: 18px; text-align: center; font-size: 13px; color: var(--ink-2); }
+    .bt-cta :global(.btn) { width: 100%; font-size: 19px; }
+    .gg-cards { height: auto; display: grid; gap: 14px; }
+    .gc { position: static; width: 100%; }
+    .gg-btn { font-size: 20px; }
+    .ho-steps { padding: 20px; gap: 30px; }
+    .ho-steps li { gap: 16px; }
+    .ho-steps li:not(:last-child)::after { left: 27px; height: 30px; }
+    .ho-n { width: 56px; height: 56px; font-size: 36px; }
+    .ho-steps h3 { font-size: 26px; } .ho-steps p { font-size: 13px; }
+    .ho-qr { padding: 26px 20px; }
+    .sv2-grid { grid-template-columns: 1fr; gap: 24px; }
+    .sv2-ico { width: 72px; height: 72px; border-radius: 16px; }
+    .sv2-ico :global(.icon) { width: 30px; height: 30px; }
+  }
+</style>

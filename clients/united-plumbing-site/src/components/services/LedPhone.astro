@@ -1,0 +1,26 @@
+---
+// LED "tap to call" box used on the services pages (hub, hazard band, service CTA band, sticky aside).
+import { SITE } from '../../data/site';
+interface Props { top?: string[]; tone?: 'yellow' | 'cyan'; size?: 'sm' | 'md' | 'lg'; dot?: boolean; class?: string; reveal?: boolean }
+const { top = ['Tap to call', '24/7'], tone = 'yellow', size = 'md', dot = true, class: cls = '', reveal = false } = Astro.props;
+---
+<a href={SITE.phoneHref} class={`lp lp-${tone} lp-${size} ${cls}`} data-reveal={reveal ? 'up' : undefined}>
+  <span class="lp-top">{top.map((t, i) => <>{i > 0 && <span aria-hidden="true">·</span>}<span>{t}</span></>)}</span>
+  {dot && <span class="lp-dot" aria-hidden="true"></span>}
+  <span class="lp-num led">{SITE.phone}</span>
+</a>
+<style>
+  .lp { position: relative; display: block; padding: 16px 20px 18px; border: 2px solid var(--cobalt); border-radius: 12px; background: #070a12; box-shadow: 0 0 40px -14px rgba(31,79,216,.7), inset 0 0 30px rgba(31,79,216,.14); transition: transform .35s var(--ease-out), box-shadow .35s; }
+  .lp:hover { transform: translateY(-3px); box-shadow: 0 0 60px -8px rgba(31,79,216,.85), inset 0 0 30px rgba(31,79,216,.2); }
+  .lp-top { display: flex; flex-wrap: wrap; gap: 8px; font: 700 11px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); }
+  .lp-dot { position: absolute; right: 18px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 12px #ff3b3b; animation: lpblink 1.4s steps(2) infinite; }
+  @keyframes lpblink { 50% { opacity: .25; } }
+  .lp-num { display: block; margin-top: 10px; font-size: 40px; line-height: 1; white-space: nowrap; }
+  .lp-yellow .lp-num { color: var(--yellow); text-shadow: 0 0 16px rgba(255,210,31,.55); }
+  .lp-cyan .lp-num { color: var(--cyan); text-shadow: 0 0 16px rgba(51,214,255,.55); }
+  .lp-cyan { border-color: rgba(255,255,255,.12); }
+  .lp-lg .lp-num { font-size: clamp(36px, 4.6vw, 56px); }
+  .lp-lg { padding: 20px 24px 22px; }
+  .lp-sm .lp-num { font-size: clamp(30px, 3vw, 36px); }
+  @media (max-width: 420px) { .lp-num, .lp-lg .lp-num { font-size: 34px; } .lp-sm .lp-num { font-size: 30px; } }
+</style>

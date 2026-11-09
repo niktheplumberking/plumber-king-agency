@@ -1,0 +1,99 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import LegalLayout from '../components/company/LegalLayout.astro';
+import { SITE } from '../data/site';
+---
+<Base title="Privacy Policy | United Plumbing" description="How United Plumbing uses the details you send through this website." crumbs={[{ name: 'Privacy policy', href: '/privacy/' }]}>
+  <LegalLayout doc="privacy" line1="Privacy policy" line2="in plain words.">
+    <div class="short">
+      <p class="h-display short-h">The short version</p>
+      <ul>
+        <li><Icon name="phone" size={18} /><span>We use what you send us to call you back, quote and do the work.</span></li>
+        <li><Icon name="shield" size={18} /><span>We do not sell your personal information.</span></li>
+        <li><Icon name="mail" size={18} /><span>Want it fixed or deleted? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a>.</span></li>
+      </ul>
+    </div>
+
+    <h2 class="h-display lg-doc">Privacy policy</h2>
+    <p class="lg-meta">/privacy/ · Last updated: <em class="ph">[effective date]</em></p>
+    <p class="lg-intro">United Plumbing ("we", "us") runs this website. This page explains what we collect and what we do with it.</p>
+
+    <section class="lg-s" id="collect">
+      <h3 class="h-display lg-h"><span class="led">01</span>What we collect</h3>
+      <ul>
+        <li><strong>What you send us:</strong> your name, phone number, email, town or address, details about your plumbing problem, and any photo you upload.</li>
+        <li><strong>Basic site data:</strong> like most websites, we may collect your browser type, pages you visit and the time of your visit, using cookies or analytics tools. <em class="ph">[Analytics tools: list them once installed]</em></li>
+        <li><strong>Calls:</strong> if you call us, we may keep a record of the call time and number. <em class="ph">[Call tracking: confirm if used]</em></li>
+      </ul>
+    </section>
+
+    <section class="lg-s" id="use">
+      <h3 class="h-display lg-h"><span class="led">02</span>How we use it</h3>
+      <ul>
+        <li>To call, text or email you back about your request.</li>
+        <li>To schedule and do the work, and to send you a quote or invoice.</li>
+        <li>To ask for a review after the job.</li>
+        <li>To see how people use the website so we can make it better.</li>
+      </ul>
+    </section>
+
+    <section class="lg-s lg-dark" id="dont">
+      <p class="led dk-eb">03 · What we don't do</p>
+      <h3 class="h-display dk-h">We do not sell your personal information.</h3>
+      <p>We do not share it, except with people who help us run the business (for example, our phone, email, website or scheduling providers), or if the law requires it.</p>
+    </section>
+
+    <section class="lg-s" id="texts">
+      <h3 class="h-display lg-h"><span class="led">04</span>Texts and calls</h3>
+      <p>If you send a form, you agree we can call or text you about that request. Reply STOP to any text to stop texts.</p>
+    </section>
+
+    <section class="lg-s" id="keep">
+      <h3 class="h-display lg-h"><span class="led">05</span>How long we keep it</h3>
+      <p>We keep your details as long as we need them for your job, our records, and the law.</p>
+    </section>
+
+    <section class="lg-s" id="choices">
+      <h3 class="h-display lg-h"><span class="led">06</span>Your choices (California residents)</h3>
+      <p>You can ask us what personal information we have about you, ask us to fix it, or ask us to delete it.</p>
+      <ul class="rights">
+        <li><span><Icon name="search" size={18} /></span><strong class="h-display">Ask what we have</strong><small>What personal information we hold about you.</small></li>
+        <li><span><Icon name="wrench" size={18} /></span><strong class="h-display">Ask us to fix it</strong><small>Correct anything we got wrong.</small></li>
+        <li><span><Icon name="minus" size={18} /></span><strong class="h-display">Ask us to delete it</strong><small>We remove it and tell you when it is done.</small></li>
+      </ul>
+      <p>Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a>. We will not treat you differently for asking.</p>
+    </section>
+
+    <section class="lg-s" id="kids">
+      <h3 class="h-display lg-h"><span class="led">07</span>Kids and changes</h3>
+      <p>This website is not for children under 13, and we do not knowingly collect their information. If we change this policy, we will update the date at the top.</p>
+    </section>
+
+    <section class="lg-s" id="contact">
+      <h3 class="h-display lg-h"><span class="led">08</span>Contact</h3>
+      <p>United Plumbing · Pomona, CA 91767 · <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a> · <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+      <p>See also our <a href="/terms/">Terms of use</a>, or <a href="/contact/">contact us</a>.</p>
+    </section>
+  </LegalLayout>
+</Base>
+
+<style>
+  .short { padding: 24px 26px; border-radius: 12px; background: var(--paper); border-left: 5px solid var(--yellow); }
+  .short-h { font-size: 26px; color: var(--ink); }
+  .short ul { display: grid; gap: 10px; margin-top: 14px; }
+  .short li { display: flex; gap: 12px; align-items: start; font-size: 15px; font-weight: 500; color: var(--ink); }
+  .short li :global(.icon) { flex: none; margin-top: 2px; color: var(--cobalt); }
+  .short a { color: var(--cobalt); text-decoration: underline; overflow-wrap: anywhere; }
+  .lg-dark { margin-top: 20px; padding: 26px 26px !important; border-radius: 14px; background: radial-gradient(70% 90% at 100% 100%, #1f4fd8, #10173a 55%, var(--night)); border-bottom: 0 !important; }
+  .lg-dark p { color: var(--on-dark-2) !important; font-size: 14px !important; }
+  .dk-eb { color: var(--cyan) !important; font-size: 13px !important; text-transform: uppercase; margin-top: 0 !important; }
+  .dk-h { margin-top: 8px; font-size: 36px; line-height: .95; color: var(--yellow); }
+  .rights { grid-template-columns: repeat(3, 1fr); gap: 14px !important; }
+  .rights li { display: grid; gap: 6px; align-content: start; padding: 16px !important; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); }
+  .rights li::before { display: none; }
+  .rights span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; background: var(--cobalt); color: #fff; margin-bottom: 6px; }
+  .rights strong { font-size: 20px; color: var(--ink); font-weight: 800 !important; }
+  .rights small { font-size: 12.5px; color: var(--ink-2); }
+  @media (max-width: 640px) { .rights { grid-template-columns: 1fr; } .dk-h { font-size: 30px; } }
+</style>

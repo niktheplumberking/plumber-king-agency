@@ -1,0 +1,6 @@
+---
+import Icon from './Icon.astro';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<p class={`eyebrow ${cls}`} data-reveal="up"><Icon name="drop" size={14} stroke={2.5} /><span><slot /></span></p>

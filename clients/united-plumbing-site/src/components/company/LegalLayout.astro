@@ -1,0 +1,207 @@
+---
+// Shared shell for /privacy/ and /terms/: hero, sticky contents list, article slot, "ask a real person" band.
+import Icon from '../Icon.astro';
+import Btn from '../Btn.astro';
+import Wave from '../Wave.astro';
+import Ticker from '../Ticker.astro';
+import PageHero from './PageHero.astro';
+import { SITE } from '../../data/site';
+interface Props { doc: 'privacy' | 'terms'; line1: string; line2: string }
+const { doc, line1, line2 } = Astro.props;
+const PRIVACY_TOC = [
+  ['collect', 'What we collect'], ['use', 'How we use it'], ['dont', "What we don't do"], ['texts', 'Texts and calls'],
+  ['keep', 'How long we keep it'], ['choices', 'Your choices (California)'], ['kids', 'Kids and changes'], ['contact', 'Contact'],
+];
+const TERMS_TOC = [
+  ['about', 'About this website'], ['quotes', 'Quotes and work'], ['safety', 'Safety'], ['content', 'Photos, content, links'], ['accuracy', 'Accuracy, California law'],
+];
+const groups = [
+  { title: 'Privacy policy', path: '/privacy/', key: 'privacy', items: PRIVACY_TOC },
+  { title: 'Terms of use', path: '/terms/', key: 'terms', items: TERMS_TOC },
+];
+const crumbs = [{ name: doc === 'privacy' ? 'Privacy policy' : 'Terms of use', href: doc === 'privacy' ? '/privacy/' : '/terms/' }];
+---
+<PageHero crumbs={crumbs} class="lg-hero">
+  <div class="lgh-grid">
+    <div>
+      <h1 class="h-display lgh-h" data-hero="1" data-hero-fx="lines">{line1}<br /><span class="c-cyan">{line2}</span></h1>
+      <p class="lgh-p" data-hero="2" data-hero-fx="up">{doc === 'privacy'
+        ? 'Plain words on what we collect when you call, text or fill a form, and what we do with it. Short version: we use it to fix your plumbing. We never sell it.'
+        : 'Plain words on what this website is and what it is not. Short version: it is general information. Prices and work are agreed with you directly.'}</p>
+      <ul class="lgh-chips" data-hero="3" data-hero-fx="pop" data-hero-children>
+        <li><Icon name="clock" size={14} />Last updated: <em class="ph">[effective date]</em></li>
+        <li><Icon name="shield" size={14} />We never sell your data</li>
+      </ul>
+    </div>
+    <div class="lgh-led" data-hero="2" data-hero-fx="right">
+      {doc === 'privacy' ? <>
+        <p class="led lgh-led-top">Your data · Status</p>
+        <p class="led lgh-led-big">NOT FOR<br />SALE</p>
+        <p class="lgh-led-sub">Used only to call you back and do the job.</p>
+      </> : <>
+        <p class="led lgh-led-top">This website · Status</p>
+        <p class="led lgh-led-big">INFO<br />ONLY</p>
+        <p class="lgh-led-sub">Not a quote or a contract. Call for real answers.</p>
+      </>}
+    </div>
+  </div>
+</PageHero>
+<Wave from="#0B0F1A" to="#FFFFFF" flip />
+
+<section class="lg white">
+  <div class="wrap lg-grid">
+    <aside class="lg-side">
+      <details class="lg-toc" open data-toc>
+        <summary><Icon name="menu" size={18} /><span><small>On this page</small><strong>Contents</strong></span><Icon name="chevronDown" size={18} class="lg-chev" /></summary>
+        <nav aria-label="Contents">
+          {groups.map((g) => (
+            <div class="lg-g">
+              <p class="lg-gt">{g.title}</p>
+              <ol>
+                {g.items.map(([id, label], i) => (
+                  <li><a href={g.key === doc ? `#${id}` : `${g.path}#${id}`} data-toc-link={g.key === doc ? id : undefined}><span class="led">{String(i + 1).padStart(2, '0')}</span>{label}</a></li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </nav>
+      </details>
+      <div class="lg-cta">
+        <p class="h-display">Need a plumber,<br />not a policy?</p>
+        <Btn href={SITE.phoneHref} icon="phone" size="md" full>Call {SITE.phoneDisplay}</Btn>
+      </div>
+    </aside>
+    <article class="lg-body">
+      <p class="lg-draft">[Draft: to be reviewed before launch]</p>
+      <slot />
+    </article>
+  </div>
+</section>
+
+<Wave from="#FFFFFF" to="#0B0F1A" />
+<section class="ask dark">
+  <div class="ask-glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="ask-box">
+      <div>
+        <span class="ask-ico"><Icon name="help" size={26} /></span>
+        <p class="ask-eb">Questions about this {doc === 'privacy' ? 'policy' : 'page'}?</p>
+        <h2 class="h-display ask-h"><span class="c-white">Ask a real person.</span><br /><span class="c-yellow">Not a lawyer bot.</span></h2>
+        <p class="ask-p">Call, text or email Jim's team. Data requests answered by email.</p>
+      </div>
+      <div class="ask-links">
+        <a href={SITE.phoneHref}><span class="ask-li y"><Icon name="phone" size={20} /></span><span><small class="led">Call or text</small><strong class="led c-yellow">{SITE.phone}</strong></span></a>
+        <a href={`mailto:${SITE.email}`}><span class="ask-li"><Icon name="mail" size={20} /></span><span><small class="led">Email</small><strong class="h-display">{SITE.email}</strong></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+<Ticker items={['CALL 909-587-0711', '24/7', 'HABLAMOS ESPAÑOL', 'POMONA', 'CLAREMONT', 'CHINO', 'ONTARIO', 'UPLAND']} cyan reverse />
+
+<script>
+  // Highlight the current section in the contents list; collapse the list after a tap on phones.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+  const toc = document.querySelector<HTMLDetailsElement>('[data-toc]');
+  const mq = window.matchMedia('(max-width: 960px)');
+  if (toc && mq.matches) toc.open = false;
+  links.forEach((a) => a.addEventListener('click', () => { if (toc && mq.matches) toc.open = false; }));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      links.forEach((a) => a.classList.toggle('on', a.dataset.tocLink === e.target.id));
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  links.forEach((a) => { const t = document.getElementById(a.dataset.tocLink!); if (t) io.observe(t); });
+</script>
+
+<style>
+  .lg-hero { padding-bottom: 50px; }
+  .lgh-grid { display: grid; grid-template-columns: 1fr 460px; gap: 60px; align-items: center; margin-top: 18px; }
+  .lgh-h { font-size: clamp(52px, 6.4vw, 92px); line-height: .88; color: #fff; }
+  .lgh-p { margin-top: 22px; max-width: 620px; color: var(--on-dark-2); font-size: 17px; }
+  .lgh-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .lgh-chips li { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 99px; border: 1px solid rgba(255,255,255,.16); background: rgba(19,27,46,.75); color: #fff; font-size: 13px; font-weight: 600; }
+  .lgh-chips :global(.icon) { color: var(--cyan); }
+  .lgh-chips .ph { font-style: normal; }
+  .lgh-led { padding: 22px 24px; border-radius: 12px; background: #070a12; border: 2px solid var(--cobalt); box-shadow: 0 0 40px -10px rgba(31,79,216,.7); }
+  .lgh-led-top { color: var(--cyan); font-size: 13px; text-transform: uppercase; letter-spacing: .1em; }
+  .lgh-led-big { margin-top: 12px; color: var(--yellow); font-size: 52px; line-height: 1; text-shadow: 0 0 16px rgba(255,210,31,.5); }
+  .lgh-led-sub { margin-top: 16px; color: var(--on-dark-2); font-size: 13px; }
+
+  .lg { padding: 60px 0 100px; }
+  .lg-grid { display: grid; grid-template-columns: 300px minmax(0, 720px); gap: 80px; align-items: start; }
+  .lg-side { position: sticky; top: 110px; display: grid; gap: 20px; }
+  .lg-toc { border-radius: 14px; background: var(--paper); border: 1px solid var(--line); overflow: hidden; }
+  .lg-toc summary { display: none; }
+  .lg-toc nav { padding: 18px 0; }
+  .lg-g + .lg-g { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); margin-inline: 20px; }
+  .lg-g + .lg-g .lg-gt, .lg-g + .lg-g ol { margin-inline: -20px; }
+  .lg-gt { padding: 4px 20px 8px; color: var(--cobalt); font: 700 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+  .lg-toc a { display: flex; align-items: center; gap: 16px; min-height: 36px; padding: 4px 20px; color: var(--ink-2); font-size: 13.5px; font-weight: 500; border-left: 3px solid transparent; transition: background .25s, color .25s, border-color .25s; }
+  .lg-toc a .led { color: var(--ink-3); font-size: 12px; width: 18px; }
+  .lg-toc a:hover { color: var(--ink); background: #fff; }
+  .lg-toc a.on { color: var(--ink); font-weight: 700; background: #fff; border-left-color: var(--cobalt); }
+  .lg-toc a.on .led { color: var(--cobalt); }
+  .lg-cta { padding: 24px 20px 20px; border-radius: 14px; background: radial-gradient(90% 90% at 100% 100%, #1f4fd8, #10173a 55%, var(--night)); color: #fff; }
+  .lg-cta p { font-size: 28px; line-height: .95; margin-bottom: 18px; }
+  .lg-cta :global(.btn) { font-size: 20px; padding: 0 10px; }
+  .lg-draft { display: inline-block; margin-bottom: 18px; padding: 6px 10px; border-radius: 6px; background: rgba(255,210,31,.2); border: 1px dashed #b38a00; color: #5c4600; font-size: 12px; font-weight: 700; }
+  .lg-body :global(h2.lg-doc) { margin-top: 44px; font-size: clamp(44px, 4.4vw, 56px); color: var(--ink); }
+  .lg-body :global(.lg-meta) { margin-top: 6px; color: var(--cobalt); font: 700 12px/1.4 var(--body); letter-spacing: .1em; text-transform: uppercase; }
+  .lg-body :global(.lg-meta .ph) { font-style: normal; }
+  .lg-body :global(.lg-intro) { margin-top: 24px; color: var(--ink-2); font-size: 16px; }
+  .lg-body :global(section.lg-s) { padding: 34px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 110px; }
+  .lg-body :global(section.lg-s:last-of-type) { border-bottom: 0; }
+  .lg-body :global(h3.lg-h) { display: flex; align-items: baseline; gap: 18px; font-size: 32px; color: var(--ink); }
+  .lg-body :global(h3.lg-h .led) { color: var(--cobalt); font-size: 18px; flex: none; }
+  .lg-body :global(.lg-s p), .lg-body :global(.lg-s li) { color: var(--ink-2); font-size: 15.5px; }
+  .lg-body :global(.lg-s p) { margin-top: 14px; }
+  .lg-body :global(.lg-s ul) { display: grid; gap: 10px; margin-top: 16px; }
+  .lg-body :global(.lg-s ul li) { position: relative; padding-left: 22px; }
+  .lg-body :global(.lg-s ul li::before) { content: ''; position: absolute; left: 2px; top: .62em; width: 7px; height: 7px; border-radius: 2px; background: var(--cobalt); }
+  .lg-body :global(.lg-s strong) { color: var(--ink); font-weight: 600; }
+  .lg-body :global(.lg-s a) { color: var(--cobalt); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+  .ask { position: relative; overflow: hidden; padding: 70px 0 90px; }
+  .ask-glow { position: absolute; left: 50%; bottom: -40%; width: 1000px; height: 500px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(31,79,216,.45), transparent); }
+  .ask-box { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; padding: 50px 50px; border-radius: 16px; background: var(--night2); border: 1.5px solid var(--cobalt); }
+  .ask-ico { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 10px; background: var(--yellow); color: var(--ink); }
+  .ask-eb { margin-top: 26px; color: var(--cyan); font: 700 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+  .ask-h { margin-top: 10px; font-size: clamp(40px, 3.6vw, 52px); }
+  .ask-p { margin-top: 12px; color: var(--on-dark-2); font-size: 15px; }
+  .ask-links { display: grid; gap: 20px; }
+  .ask-links a { display: flex; align-items: center; gap: 18px; padding: 20px; border-radius: 10px; background: #070a12; border: 1px solid var(--line-dark); transition: border-color .3s, transform .35s var(--ease-out); }
+  .ask-links a:hover { border-color: var(--cyan); transform: translateY(-3px); }
+  .ask-li { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 8px; background: var(--cobalt); color: #fff; }
+  .ask-li.y { background: var(--yellow); color: var(--ink); }
+  .ask-links small { display: block; color: var(--cyan); font-size: 12px; text-transform: uppercase; }
+  .ask-links strong.led { font-size: 34px; line-height: 1; text-shadow: 0 0 12px rgba(255,210,31,.45); }
+  .ask-links strong.h-display { font-size: 28px; color: #fff; text-transform: none; word-break: break-all; }
+
+  @media (max-width: 960px) {
+    .lgh-grid { grid-template-columns: 1fr; gap: 30px; }
+    .lg { padding-top: 30px; }
+    .lg-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .lg-side { position: static; display: block; }
+    .lg-cta { display: none; }
+    .lg-toc { background: #fff; box-shadow: 0 10px 30px -20px rgba(11,15,26,.4); }
+    .lg-toc summary { display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 8px 18px; list-style: none; cursor: pointer; }
+    .lg-toc summary::-webkit-details-marker { display: none; }
+    .lg-toc summary :global(.icon) { color: var(--cobalt); }
+    .lg-toc summary small { display: block; color: var(--cobalt); font: 700 10px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; }
+    .lg-toc summary strong { font-size: 14px; }
+    .lg-toc summary :global(.lg-chev) { margin-left: auto; transition: transform .3s; }
+    .lg-toc[open] summary :global(.lg-chev) { transform: rotate(180deg); }
+    .lg-toc nav { max-height: 60vh; overflow-y: auto; padding-top: 0; }
+    .ask-box { grid-template-columns: 1fr; padding: 30px 22px; gap: 30px; }
+  }
+  @media (max-width: 640px) {
+    .lgh-h { font-size: clamp(46px, 13vw, 60px); }
+    .lgh-p { font-size: 15px; }
+    .lgh-led-big { font-size: 40px; }
+    .lg-body :global(h3.lg-h) { font-size: 26px; gap: 12px; }
+    .ask-links strong.led { font-size: 28px; }
+    .ask-links strong.h-display { font-size: 22px; }
+    .ask-links a { padding: 14px; gap: 12px; }
+  }
+</style>

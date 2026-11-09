@@ -1,0 +1,420 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Btn from '../components/Btn.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Wave from '../components/Wave.astro';
+import Ticker from '../components/Ticker.astro';
+import PageHero from '../components/company/PageHero.astro';
+import HeroChips from '../components/company/HeroChips.astro';
+import { SITE } from '../data/site';
+import { SERVICES } from '../data/services';
+import van from '../assets/img/jim-van.jpg';
+import map from '../assets/img/map-service-area.jpg';
+
+const base = String(Astro.site).replace(/\/$/, '');
+const problems = [...SERVICES.map((s) => s.name), 'Not sure / something else'];
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const next = [
+  { t: 'We pick up', d: 'A real person answers, day or night.' },
+  { t: 'Quick questions', d: 'What is wrong, where and how bad. A photo helps.' },
+  { t: 'Clear price', d: 'You hear the price before any work starts.' },
+  { t: 'Fix + clean up', d: 'We fix it, explain it in plain words and clean up.' },
+];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contact United Plumbing', url: `${base}/contact/`,
+  description: 'Call (909) 587-0711, text, or send the form. United Plumbing, Pomona CA 91767. Open 24/7.',
+  about: { '@id': `${base}/#business` },
+  mainEntity: { '@id': `${base}/#business` },
+}];
+---
+<Base title="Contact United Plumbing | Pomona Plumber | Open 24/7" description="Call (909) 587-0711, text, or send the form. United Plumbing, Pomona CA 91767. Open 24/7." crumbs={[{ name: 'Contact', href: '/contact/' }]} schema={schema}>
+
+  <PageHero crumbs={[{ name: 'Contact', href: '/contact/' }]}>
+    <div class="ch-grid">
+      <div>
+        <p class="ch-pill" data-hero="1" data-hero-fx="pop"><i></i>Line open now · 24/7</p>
+        <h1 class="h-display ch-h" data-hero="2" data-hero-fx="lines">Call.<br /><span class="c-yellow">We pick up 24/7.</span></h1>
+        <p class="ch-p" data-hero="3" data-hero-fx="up">Fastest way is the phone. A real person answers, day or night. Tell us what is wrong and get a clear price before any work starts.</p>
+        <div class="btn-row ch-btns" data-hero="4" data-hero-fx="up" data-hero-children>
+          <Btn href={SITE.phoneHref} icon="phone" size="lg">Call {SITE.phone}</Btn>
+          <Btn href={SITE.smsHref} variant="outline-cyan" icon="camera" size="lg">Text a photo</Btn>
+        </div>
+        <HeroChips order="5" />
+      </div>
+      <div class="board-wrap" data-hero="2" data-hero-fx="right">
+        <a href={SITE.phoneHref} class="board" aria-label={`Tap to call Jim at ${SITE.phone}`}>
+          <span class="board-top led"><span><i></i>Now answering</span><span class="c-cyan">24/7</span></span>
+          <span class="board-row"><small>Area</small><span class="led">909</span></span>
+          <span class="board-row"><small>Prefix</small><span class="led">587</span></span>
+          <span class="board-row"><small>Line</small><span class="led">0711</span></span>
+          <span class="board-btn h-display"><Icon name="phone" size={24} />Tap to call Jim<Icon name="arrow" size={22} class="board-arr" /></span>
+        </a>
+        <a href={SITE.backupHref} class="board-backup led">Busy? Backup line {SITE.backupPhone}</a>
+      </div>
+    </div>
+  </PageHero>
+
+  <!-- 3 WAYS -->
+  <section class="ways light">
+    <div class="wrap head-center">
+      <Eyebrow>3 ways to reach us</Eyebrow>
+      <h2 class="h-display h2" data-split>Pick the fastest<br /><span class="c-cobalt">way to reach Jim</span></h2>
+      <p class="lead" data-reveal="up">Every message lands with the Galvez family, not a call center.</p>
+    </div>
+    <ul class="wrap ways-grid" data-stagger="up">
+      <li class="way way-call" data-tilt>
+        <div class="way-top"><span class="led way-n">01</span><span class="way-ico y"><Icon name="phone" size={24} /></span></div>
+        <h3 class="h-display way-t">Call 24/7</h3>
+        <p class="way-d">Best for leaks, floods, gas smell or no hot water. Days, nights and weekends.</p>
+        <a href={SITE.phoneHref} class="way-led led" aria-label={`Call ${SITE.phone}`}>{SITE.phone}<i aria-hidden="true"></i></a>
+        <Btn href={SITE.phoneHref} icon="phone" size="md" full>Call now</Btn>
+      </li>
+      <li class="way" data-tilt>
+        <div class="way-top"><span class="led way-n">02</span><span class="way-ico"><Icon name="camera" size={22} /></span></div>
+        <h3 class="h-display way-t">Text a photo</h3>
+        <div class="way-chat" aria-hidden="true"><span class="way-pic"><Icon name="image" size={22} /></span><span class="way-b"><i>Leak under my sink</i><i class="me">Jim calls you now</i></span></div>
+        <p class="way-d">Text it to {SITE.phone}.</p>
+        <Btn href={SITE.smsHref} variant="outline-cobalt" icon="camera" size="md" full>Text a photo</Btn>
+      </li>
+      <li class="way" data-tilt>
+        <div class="way-top"><span class="led way-n">03</span><span class="way-ico"><Icon name="message" size={22} /></span></div>
+        <h3 class="h-display way-t">WhatsApp</h3>
+        <p class="way-d">Message us in English or Spanish. Send photos or a short video of the problem.</p>
+        <p class="way-ph"><em class="ph">WhatsApp number to confirm</em></p>
+        <Btn href="https://wa.me/19095870711" target="_blank" variant="outline-cobalt" icon="message" size="md" full>Open WhatsApp</Btn>
+      </li>
+    </ul>
+    <div class="wrap">
+      <ul class="strip" data-reveal="up">
+        <li><a href={SITE.backupHref}><span class="strip-ico"><Icon name="phone" size={18} /></span><span><small>Backup line</small><strong>{SITE.backupPhone}</strong></span><em>If the main line is busy</em></a></li>
+        <li><a href={`mailto:${SITE.email}`}><span class="strip-ico"><Icon name="mail" size={18} /></span><span><small>Email</small><strong>{SITE.email}</strong></span><em>Photos, quotes. Not for emergencies.</em></a></li>
+        <li><a href={SITE.instagram} target="_blank" rel="noopener"><span class="strip-ico"><Icon name="instagram" size={18} /></span><span><small>Instagram</small><strong>{SITE.instagramHandle}</strong></span><em>Message us or watch our jobs</em></a></li>
+      </ul>
+      <p class="ways-es" lang="es" data-reveal="up">Hablamos español.</p>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#0B0F1A" />
+
+  <!-- FORM -->
+  <section class="fm dark" id="form">
+    <div class="fm-glow" aria-hidden="true"></div>
+    <div class="wrap fm-grid">
+      <div class="fm-left">
+        <Eyebrow>Send us the details</Eyebrow>
+        <h2 class="h-display h2 fm-h" data-split><span class="c-white">Tell us</span><br /><span class="c-cyan">what is wrong.</span></h2>
+        <p class="lead fm-p" data-reveal="up">Fill this in and the Galvez family calls you back. Add a photo and we can usually give you a price range on the first call.</p>
+        <ol class="fm-steps" data-stagger="up">
+          <li><span class="led">01</span><span><strong>Tell us the problem</strong><small>A few words is enough.</small></span></li>
+          <li><span class="led">02</span><span><strong>Add a photo if you can</strong><small>Leaks, drains, the water heater label.</small></span></li>
+          <li><span class="led">03</span><span><strong>We call you back</strong><small>With a clear price before any work.</small></span></li>
+        </ol>
+        <a href={SITE.phoneHref} class="fm-led" data-reveal="up"><small>Prefer to talk? Tap to call</small><span class="led">{SITE.phone}</span></a>
+        <figure class="fm-van" data-reveal="clip">
+          <Image src={van} alt="Jim Galvez next to the United Plumbing work truck in Pomona" widths={[500, 900]} sizes="(max-width: 900px) 100vw, 400px" />
+          <figcaption>Our truck · Pomona</figcaption>
+        </figure>
+      </div>
+      <form class="cf card" data-callback novalidate aria-labelledby="cf-t" data-reveal="right">
+        <span class="cf-badge"><i></i>Answered 24/7</span>
+        <h2 id="cf-t" class="h-display cf-title">Rather we call you?</h2>
+        <p class="cf-sub">Leave your number. Jim's team calls you back.</p>
+        <div class="cf-grid">
+          <label class="field"><span class="field-label">Name <span aria-hidden="true">*</span></span><input class="input" name="name" autocomplete="name" placeholder="Your name" required /><Icon name="user" size={18} /></label>
+          <label class="field"><span class="field-label">Phone <span aria-hidden="true">*</span></span><input class="input" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(909) 000-0000" required /><Icon name="phone" size={18} /></label>
+          <label class="field"><span class="field-label">Email (optional)</span><input class="input" name="email" type="email" autocomplete="email" placeholder="you@email.com" /><Icon name="mail" size={18} /></label>
+          <label class="field"><span class="field-label">Town or ZIP <span aria-hidden="true">*</span></span><input class="input" name="zip" autocomplete="postal-code" placeholder="91767" required /><Icon name="pin" size={18} /></label>
+          <label class="field span2"><span class="field-label">What do you need?</span><select class="input" name="problem"><option value="">Pick one of 13 services, or "Not sure"</option>{problems.map((p) => <option>{p}</option>)}</select><Icon name="chevronDown" size={18} /></label>
+          <label class="field span2"><span class="field-label">Tell us more</span><textarea class="input" name="message" rows="4" placeholder="What is going on? Where is the problem? How long has it been happening?"></textarea></label>
+          <div class="span2">
+            <span class="field-label" id="cf-photo-l">Photo (optional)</span>
+            <label class="cf-drop">
+              <span class="cf-cam"><Icon name="camera" size={22} /></span>
+              <span class="cf-drop-t"><strong>Add a photo of the problem</strong><small data-file-name>Tap to upload or drag it here. JPG or PNG.</small></span>
+              <span class="cf-browse h-display" aria-hidden="true">Browse</span>
+              <input type="file" name="photo" accept="image/jpeg,image/png" class="cf-file" aria-labelledby="cf-photo-l" />
+            </label>
+          </div>
+          <label class="cf-check span2"><input type="checkbox" name="emergency" value="yes" /><span class="cf-box" aria-hidden="true"><Icon name="check" size={14} stroke={3} /></span><strong>It's an emergency</strong><small>We call you first.</small></label>
+        </div>
+        <Btn type="submit" icon="phone" size="md" full class="cf-submit">Call me back</Btn>
+        <p class="form-error center" data-form-msg role="status" hidden></p>
+        <p class="form-note center cf-note">We call you back. No spam. Emergency? Call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a> instead.</p>
+        <p class="cf-consent center">By sending this form you agree we can call or text you about your request. See our <a href="/privacy/">Privacy Policy</a>.</p>
+      </form>
+    </div>
+  </section>
+
+  <Wave from="#0B0F1A" to="#F3F6FB" flip />
+
+  <!-- WHERE AND WHEN -->
+  <section class="ww light">
+    <div class="wrap ww-head">
+      <div>
+        <Eyebrow>Where and when</Eyebrow>
+        <h2 class="h-display h2" data-split>Based in Pomona.<br /><span class="c-cobalt">Out across LA, OC &amp; the IE.</span></h2>
+      </div>
+      <p class="lead" data-reveal="up">Based in Pomona, CA 91767. We come to you: Los Angeles, Orange County and the Inland Empire, at any hour.</p>
+    </div>
+    <div class="wrap ww-grid">
+      <figure class="ww-map" data-reveal="clip">
+        <Image src={map} alt="Map of the area United Plumbing covers from Pomona: Los Angeles County, Orange County and the Inland Empire" widths={[600, 1000]} sizes="(max-width: 900px) 100vw, 780px" />
+        <figcaption><span class="ww-pin"><Icon name="pin" size={22} /></span><span><small>Our base</small><strong class="h-display">Pomona, CA 91767</strong></span></figcaption>
+      </figure>
+      <div class="hours" data-reveal="up">
+        <span class="hours-ico"><Icon name="clock" size={20} /></span>
+        <h3 class="h-display hours-h"><span class="c-white">Open 24 hours,</span><br /><span class="c-yellow">7 days a week.</span></h3>
+        <ul class="hours-list" aria-label="Opening hours">
+          {days.map((d) => <li><span class="led hd">{d.toUpperCase()}</span><span class="hbar" aria-hidden="true"></span><span class="led hh">24H</span><span class="sr-only">{d}: open 24 hours</span></li>)}
+        </ul>
+        <Btn href={SITE.phoneHref} icon="phone" size="md" full>Call {SITE.phone}</Btn>
+      </div>
+    </div>
+    <div class="wrap ww-chips" data-reveal="up">
+      <ul>
+        {['Los Angeles County', 'Orange County', 'Inland Empire', 'San Bernardino County'].map((c) => <li><Icon name="pin" size={16} />{c}</li>)}
+      </ul>
+      <a href="/areas/" class="textlink">See every town we serve <Icon name="arrow" size={16} /></a>
+    </div>
+  </section>
+
+  <Wave from="#F3F6FB" to="#FFD21F" />
+
+  <!-- WHAT HAPPENS NEXT -->
+  <section class="nx yellowbg">
+    <div class="wrap nx-grid">
+      <div>
+        <p class="eyebrow nx-eb" data-reveal="up"><Icon name="drop" size={14} stroke={2.5} />After you call</p>
+        <h2 class="h-display h2 nx-h" data-split>What<br /><span class="c-cobalt">happens next.</span></h2>
+        <p class="nx-p" data-reveal="up">No call center and no runaround. Here is what a call to United Plumbing looks like.</p>
+      </div>
+      <ol class="nx-steps" data-stagger="up">
+        {next.map((s, i) => (
+          <li class:list={{ last: i === 3 }}>
+            <span class="nx-node led">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="h-display">{s.t}</h3>
+            <p>{s.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="wrap nx-cta" data-reveal="up">
+      <span>Step 01 starts here:</span>
+      <Btn href={SITE.phoneHref} variant="ink" icon="phone" size="md">Call {SITE.phone}</Btn>
+      <a href={SITE.smsHref} class="btn btn-md nx-out" data-btn><span class="btn-fill" aria-hidden="true"></span><Icon name="camera" size={22} /><span>Text a photo</span></a>
+    </div>
+  </section>
+
+  <Ticker items={['CALL 909-587-0711', '24/7', 'HABLAMOS ESPAÑOL', 'POMONA', 'CLAREMONT', 'CHINO', 'ONTARIO', 'UPLAND']} cyan reverse />
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLInputElement>('.cf-file').forEach((inp) => {
+    inp.addEventListener('change', () => {
+      const out = inp.closest('.cf-drop')?.querySelector('[data-file-name]');
+      if (out && inp.files?.[0]) out.textContent = `Added: ${inp.files[0].name}`;
+    });
+  });
+</script>
+
+<style>
+  /* HERO */
+  .ch-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 60px; align-items: center; margin-top: 18px; }
+  .ch-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; background: rgba(51,214,255,.12); color: var(--cyan); font: 700 11px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; }
+  .ch-pill i { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.25); }
+  .ch-h { margin-top: 16px; font-size: clamp(56px, 7.4vw, 104px); line-height: .86; color: #fff; }
+  .ch-p { margin-top: 24px; max-width: 580px; font-size: 17px; color: var(--on-dark); }
+  .ch-btns { margin-top: 30px; }
+  .ch-btns :global(.btn) { --bh: 68px; font-size: 26px; }
+  .ch-btns :global(.btn-outline-cyan) { background: rgba(11,15,26,.5); }
+  .board-wrap { display: grid; gap: 22px; }
+  .board { position: relative; display: grid; padding: 22px 22px 22px; border-radius: 16px; background: #070a12; border: 1.5px solid rgba(255,255,255,.18); box-shadow: 14px 14px 0 var(--cobalt), 0 40px 80px -30px rgba(0,0,0,.8); transition: transform .45s var(--ease-out), box-shadow .45s; }
+  .board:hover { transform: translate(-4px, -4px); box-shadow: 18px 18px 0 var(--cobalt), 0 40px 80px -30px rgba(0,0,0,.8); }
+  .board-top { display: flex; justify-content: space-between; align-items: center; padding: 0 0 16px; border-bottom: 1px solid rgba(51,214,255,.3); color: var(--cyan); font-size: 20px; text-transform: uppercase; }
+  .board-top span:first-child { display: inline-flex; align-items: center; gap: 10px; }
+  .board-top i { width: 12px; height: 12px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 10px #ff3b3b; animation: bblink 1.4s steps(2) infinite; }
+  @keyframes bblink { 50% { opacity: .25; } }
+  .board-row { display: flex; justify-content: space-between; align-items: start; padding: 14px 0 8px; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .board-row small { color: var(--on-dark-2); font: 700 10px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; margin-top: 8px; }
+  .board-row .led { color: var(--yellow); font-size: clamp(64px, 6.6vw, 96px); line-height: .85; text-shadow: 0 0 18px rgba(255,210,31,.55); }
+  .board-btn { display: flex; align-items: center; gap: 14px; margin-top: 22px; padding: 0 22px; height: 64px; border-radius: 10px; background: var(--yellow); color: var(--ink); font-size: 30px; }
+  .board-btn :global(.board-arr) { margin-left: auto; transition: transform .3s var(--ease-out); }
+  .board:hover .board-btn :global(.board-arr) { transform: translateX(5px); }
+  .board-backup { justify-self: end; color: var(--cyan); font-size: 17px; text-transform: uppercase; padding: 8px 0; }
+  .board-backup:hover { text-shadow: 0 0 10px var(--cyan); }
+
+  /* WAYS */
+  .ways { padding: clamp(60px, 7vw, 90px) 0 clamp(60px, 7vw, 90px); }
+  .ways .lead { margin-top: 16px; }
+  .ways-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 24px; margin-top: 40px; }
+  .way { display: flex; flex-direction: column; padding: 30px 30px 30px; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
+  .way-call { background: radial-gradient(80% 70% at 100% 0%, rgba(31,79,216,.7), transparent), var(--night); color: #fff; border: 0; }
+  .way-top { display: flex; justify-content: space-between; align-items: start; }
+  .way-n { font-size: 36px; line-height: 1; color: var(--cobalt); }
+  .way-call .way-n { color: var(--cyan); }
+  .way-ico { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 10px; background: #e6edfb; color: var(--cobalt); }
+  .way-ico.y { width: 62px; height: 62px; background: var(--yellow); color: var(--ink); }
+  .way-t { margin-top: 26px; font-size: clamp(40px, 3.6vw, 48px); color: var(--ink); }
+  .way-call .way-t { color: #fff; }
+  .way-d { margin-top: 10px; font-size: 15px; color: var(--ink-2); }
+  .way-call .way-d { color: var(--on-dark-2); }
+  .way :global(.btn) { margin-top: auto; }
+  .way-led { display: flex; justify-content: space-between; align-items: center; margin: 18px 0 14px; padding: 10px 14px; border-radius: 8px; background: #070a12; border: 1px solid rgba(255,255,255,.12); color: var(--yellow); font-size: 26px; }
+  .way-led i { width: 10px; height: 10px; border-radius: 50%; background: #ff3b3b; }
+  .way-chat { display: flex; gap: 10px; margin-top: 14px; }
+  .way-pic { display: grid; place-items: center; flex: none; width: 84px; height: 66px; border-radius: 6px; background: var(--night); color: var(--cyan); }
+  .way-b { display: grid; gap: 6px; flex: 1; }
+  .way-b i { font-style: normal; padding: 6px 10px; border-radius: 6px; background: #e9eef6; font-size: 11px; font-weight: 600; }
+  .way-b i.me { background: var(--cobalt); color: #fff; }
+  .way-ph { margin: 14px 0 22px; font-size: 12px; font-weight: 700; }
+  .way:not(.way-call) .way-d { margin-bottom: 22px; }
+  .strip { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 20px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+  .strip li + li { border-left: 1px solid var(--line); }
+  .strip a { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 16px; border-radius: 12px; transition: background .3s; }
+  .strip a:hover { background: var(--paper); }
+  .strip-ico { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 8px; background: #e6edfb; color: var(--cobalt); }
+  .strip small { display: block; font-size: 11px; font-weight: 700; color: var(--ink-2); }
+  .strip strong { display: block; font-size: 15px; color: var(--ink); }
+  .strip em { font-style: normal; font-size: 11px; color: var(--ink-3); }
+  .ways-es { margin-top: 14px; font-weight: 700; font-size: 14px; color: var(--cobalt); }
+
+  /* FORM */
+  .fm { position: relative; overflow: hidden; padding: clamp(70px, 8vw, 110px) 0; }
+  .fm-glow { position: absolute; left: -10%; bottom: -10%; width: 50%; height: 60%; background: radial-gradient(closest-side, rgba(31,79,216,.4), transparent); }
+  .fm-grid { position: relative; display: grid; grid-template-columns: 400px 1fr; gap: 80px; align-items: start; }
+  .fm-h { margin-top: 14px; font-size: clamp(42px, 4.6vw, 64px); }
+  .fm-p { margin-top: 22px; font-size: 16px; }
+  .fm-steps { display: grid; margin-top: 24px; }
+  .fm-steps li { display: flex; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--line-dark); }
+  .fm-steps li:last-child { border-bottom: 0; }
+  .fm-steps .led { color: var(--cyan); font-size: 28px; line-height: 1; }
+  .fm-steps strong { display: block; color: #fff; font-size: 16px; }
+  .fm-steps small { color: var(--on-dark-2); font-size: 13px; }
+  .fm-led { display: grid; gap: 6px; margin-top: 22px; padding: 18px 18px; border-radius: 12px; background: #070a12; border: 2px solid var(--cobalt); transition: box-shadow .3s; }
+  .fm-led:hover { box-shadow: 0 0 40px -10px rgba(31,79,216,.8); }
+  .fm-led small { color: var(--cyan); font: 700 11px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; }
+  .fm-led .led { color: var(--yellow); font-size: 38px; line-height: 1; text-shadow: 0 0 14px rgba(255,210,31,.5); }
+  .fm-van { position: relative; overflow: hidden; margin-top: 22px; border-radius: 12px; }
+  .fm-van img { width: 100%; aspect-ratio: 400/210; object-fit: cover; object-position: 60% 30%; transition: transform .8s var(--ease-out); }
+  .fm-van:hover img { transform: scale(1.05); }
+  .fm-van figcaption { position: absolute; left: 12px; top: 12px; padding: 6px 10px; border-radius: 4px; background: var(--night); color: var(--yellow); font: 700 10px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; }
+  .cf { position: relative; padding: 32px 34px 28px; color: var(--ink); }
+  .cf-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; background: #eaf7ee; font-size: 13px; font-weight: 700; }
+  .cf-badge i { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
+  .cf-title { margin-top: 14px; font-size: 46px; }
+  .cf-sub { color: var(--ink-2); font-size: 15px; }
+  .cf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 20px; margin: 24px 0 22px; }
+  .span2 { grid-column: 1 / -1; }
+  .field-label span { color: #c2261b; }
+  .cf-drop { position: relative; display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 10px; border: 1.5px dashed rgba(31,79,216,.45); background: #f5f8fc; cursor: pointer; transition: border-color .3s, background .3s; }
+  .cf-drop:hover { border-color: var(--cobalt); background: #eef3fd; }
+  .cf-drop:focus-within { outline: 3px solid var(--cyan); outline-offset: 2px; }
+  .cf-cam { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 8px; background: #dfe8fb; color: var(--cobalt); }
+  .cf-drop-t { flex: 1; display: grid; }
+  .cf-drop-t strong { font-size: 15px; } .cf-drop-t small { font-size: 12px; color: var(--ink-3); }
+  .cf-browse { padding: 8px 18px; border-radius: 6px; border: 2px solid var(--cobalt); color: var(--cobalt); font-size: 18px; }
+  .cf-file { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .cf-check { position: relative; display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+  .cf-check input { position: absolute; opacity: 0; width: 22px; height: 22px; }
+  .cf-box { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 5px; border: 2px solid var(--cobalt); color: transparent; transition: background .2s, color .2s; }
+  .cf-check input:checked + .cf-box { background: var(--cobalt); color: #fff; }
+  .cf-check input:focus-visible + .cf-box { outline: 3px solid var(--cyan); outline-offset: 2px; }
+  .cf-check strong { font-size: 15px; } .cf-check small { font-size: 13px; color: var(--ink-3); }
+  .cf :global(.cf-submit) { --bh: 60px; font-size: 26px; }
+  .cf-note { margin-top: 14px; } .cf-note a, .cf-consent a { color: var(--cobalt); text-decoration: underline; }
+  .cf-consent { margin-top: 8px; font-size: 11px; color: var(--ink-3); }
+  .cf .form-error { margin-top: 12px; }
+  .cf .form-error :global(a) { color: var(--cobalt); }
+
+  /* WHERE */
+  .ww { padding: clamp(60px, 7vw, 90px) 0 50px; }
+  .ww-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; }
+  .ww-head .h2 { margin-top: 14px; }
+  .ww-head .lead { max-width: 440px; }
+  .ww-grid { display: grid; grid-template-columns: 1.65fr 1fr; gap: 24px; margin-top: 40px; }
+  .ww-map { position: relative; overflow: hidden; border-radius: 14px; border: 1px solid var(--line); min-height: 540px; }
+  .ww-map img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ww-map figcaption { position: absolute; left: 22px; bottom: 22px; display: flex; align-items: center; gap: 14px; padding: 14px 22px 14px 14px; border-radius: 8px; background: var(--night); color: #fff; }
+  .ww-pin { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yellow); color: var(--ink); }
+  .ww-map small { display: block; color: var(--cyan); font: 700 10px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; }
+  .ww-map strong { font-size: 30px; }
+  .hours { padding: 26px 26px 26px; border-radius: 14px; background: radial-gradient(80% 50% at 100% 0%, rgba(31,79,216,.6), transparent), var(--night); color: #fff; }
+  .hours-ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 8px; background: var(--cobalt); }
+  .hours-h { margin-top: 16px; font-size: 44px; }
+  .hours-list { display: grid; gap: 10px; margin: 18px 0 22px; }
+  .hours-list li { display: grid; grid-template-columns: 52px 1fr 44px; gap: 10px; align-items: center; }
+  .hd { color: var(--cyan); font-size: 16px; }
+  .hh { color: var(--yellow); font-size: 16px; text-align: right; }
+  .hbar { height: 14px; background: repeating-linear-gradient(90deg, var(--cyan) 0 7px, transparent 7px 10px); opacity: .9; box-shadow: 0 0 8px rgba(51,214,255,.3); }
+  .ww-chips { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 24px; }
+  .ww-chips ul { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ww-chips li { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 8px; background: #fff; border: 1px solid var(--line); font-weight: 600; font-size: 14px; }
+  .ww-chips li :global(.icon) { color: var(--cobalt); }
+
+  /* NEXT */
+  .nx { padding: 60px 0 70px; }
+  .nx-grid { display: grid; grid-template-columns: 340px 1fr; gap: 40px; align-items: start; }
+  .nx-eb { color: var(--cobalt); }
+  .nx-h { margin-top: 14px; color: var(--ink); font-size: clamp(42px, 4.4vw, 62px); }
+  .nx-p { margin-top: 16px; font-size: 15px; color: var(--ink); }
+  .nx-steps { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 28px; }
+  .nx-steps li { position: relative; }
+  .nx-steps li::before { content: ''; position: absolute; left: 60px; right: -20px; top: 28px; height: 8px; background: linear-gradient(var(--ink), var(--ink)) top/100% 2px no-repeat, linear-gradient(var(--ink), var(--ink)) bottom/100% 2px no-repeat, var(--cyan); }
+  .nx-node { position: relative; display: grid; place-items: center; width: 62px; height: 62px; border-radius: 50%; background: var(--ink); color: var(--yellow); font-size: 24px; }
+  .nx-steps li.last::before { right: 0; }
+  .last .nx-node { background: var(--cobalt); color: #fff; }
+  .nx-steps h3 { margin-top: 22px; font-size: 32px; color: var(--ink); }
+  .nx-steps p { margin-top: 6px; font-size: 14px; color: var(--ink-2); }
+  .nx-cta { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(11,15,26,.2); }
+  .nx-cta > span { font-weight: 700; font-size: 17px; }
+  .nx-out { color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .nx-out .btn-fill { background: rgba(11,15,26,.1); }
+
+  @media (max-width: 1100px) {
+    .ways-grid { grid-template-columns: 1fr 1fr; } .way-call { grid-column: 1 / -1; }
+    .strip { grid-template-columns: 1fr; } .strip li + li { border-left: 0; border-top: 1px solid var(--line); }
+    .fm-grid { grid-template-columns: 1fr; gap: 50px; }
+    .fm-left { display: contents; }
+    .nx-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .ch-grid { grid-template-columns: 1fr; gap: 40px; }
+    .ch-btns :global(.btn) { width: 100%; }
+    .board-wrap { margin-right: 14px; }
+    .ww-head { flex-direction: column; align-items: start; gap: 16px; }
+    .ww-grid { grid-template-columns: 1fr; }
+    .ww-map { min-height: 360px; }
+    .ww-chips { flex-direction: column; align-items: start; }
+    .fm .fm-van { order: 9; } .fm .cf { order: 5; } .fm .fm-led { order: 8; }
+  }
+  @media (max-width: 640px) {
+    .ch-h { font-size: clamp(50px, 14vw, 64px); }
+    .ch-p { font-size: 15px; }
+    .ch-btns :global(.btn) { font-size: 24px; --bh: 60px; }
+    .board { padding: 16px; box-shadow: 10px 10px 0 var(--cobalt); }
+    .board-top { font-size: 15px; }
+    .board-row .led { font-size: 64px; }
+    .board-btn { font-size: 24px; height: 56px; padding: 0 16px; }
+    .board-backup { justify-self: center; font-size: 14px; }
+    .ways-grid { grid-template-columns: 1fr; }
+    .way { padding: 22px; }
+    .cf { padding: 24px 18px 22px; }
+    .cf-title { font-size: 34px; }
+    .cf-grid { grid-template-columns: 1fr; }
+    .cf-browse { display: none; }
+    .fm-steps li { padding: 10px 0; border: 0; }
+    .ww-map { min-height: 300px; }
+    .ww-map strong { font-size: 24px; }
+    .hours-h { font-size: 36px; }
+    .nx-steps { grid-template-columns: 1fr; gap: 26px; }
+    .nx-steps li { display: grid; grid-template-columns: 50px 1fr; gap: 0 18px; }
+    .nx-steps li::before { left: 22px; right: auto; top: 50px; bottom: -26px; width: 6px; height: auto; background: linear-gradient(var(--ink), var(--ink)) left/2px 100% no-repeat, linear-gradient(var(--ink), var(--ink)) right/2px 100% no-repeat, var(--cyan); }
+    .nx-steps li:last-child::before { display: none; }
+    .nx-node { width: 50px; height: 50px; font-size: 20px; grid-row: 1 / 3; }
+    .nx-steps h3 { margin-top: 2px; font-size: 26px; }
+    .nx-cta { flex-direction: column; align-items: stretch; }
+    .nx-cta :global(.btn) { width: 100%; }
+  }
+</style>

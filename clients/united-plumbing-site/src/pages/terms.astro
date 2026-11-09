@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import LegalLayout from '../components/company/LegalLayout.astro';
+import { SITE } from '../data/site';
+---
+<Base title="Terms of Use | United Plumbing" description="The terms for using the United Plumbing website." crumbs={[{ name: 'Terms of use', href: '/terms/' }]}>
+  <LegalLayout doc="terms" line1="Terms of use" line2="in plain words.">
+    <div class="band">
+      <span class="band-ico"><Icon name="shield" size={24} /></span>
+      <div>
+        <h2 class="h-display band-h">Terms of use</h2>
+        <p class="band-m">/terms/ · Last updated: <em class="ph">[effective date]</em> · By using this website, you agree to these terms.</p>
+      </div>
+    </div>
+
+    <section class="lg-s" id="about">
+      <h3 class="h-display lg-h"><span class="led">01</span>About this website</h3>
+      <p>This website gives general information about United Plumbing and our services. It is not professional advice for your specific home. Every home is different. Call us to talk about your situation.</p>
+    </section>
+
+    <section class="lg-s" id="quotes">
+      <h3 class="h-display lg-h"><span class="led">02</span>Quotes and work</h3>
+      <p>Nothing on this website is a quote or a contract. Prices, timing and scope are agreed with you directly before any work starts. Arrival times are estimates and can change with traffic, weather and other calls.</p>
+    </section>
+
+    <section class="lg-s" id="safety">
+      <h3 class="h-display lg-h"><span class="led">03</span>Safety</h3>
+      <ul class="safe">
+        <li><span><Icon name="flame" size={16} /></span><p><strong>Smell gas?</strong> Leave the building and call SoCalGas or 911 from outside.</p></li>
+        <li><span><Icon name="zap" size={16} /></span><p><strong>Water near outlets or a panel?</strong> Stay away and call for help.</p></li>
+        <li><span><Icon name="phone" size={16} /></span><p><strong>Emergency?</strong> Don't wait for a website form. Call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a>.</p></li>
+      </ul>
+    </section>
+
+    <section class="lg-s" id="content">
+      <h3 class="h-display lg-h"><span class="led">04</span>Photos, content and links</h3>
+      <ul>
+        <li><strong>Photos and content:</strong> the photos, text and logo on this site belong to United Plumbing or are used with permission. Please don't copy them without asking.</li>
+        <li><strong>Links:</strong> we may link to other sites, like Instagram or Google. We don't control those sites and aren't responsible for them.</li>
+      </ul>
+    </section>
+
+    <section class="lg-s" id="accuracy">
+      <h3 class="h-display lg-h"><span class="led">05</span>Website accuracy, California law</h3>
+      <p>We work to keep this website accurate, but we don't promise it is always complete, current or free of errors. We are not liable for losses from using this website. These terms follow California law.</p>
+      <p>United Plumbing · Pomona, CA 91767 · <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a> · <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+      <p>See also our <a href="/privacy/">Privacy policy</a>, or <a href="/contact/">contact us</a>.</p>
+    </section>
+  </LegalLayout>
+</Base>
+
+<style>
+  .band { display: flex; gap: 20px; align-items: center; padding: 22px 24px; border-radius: 14px; background: var(--night); color: #fff; }
+  .band-ico { display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 10px; background: var(--yellow); color: var(--ink); }
+  .band-h { font-size: 44px; }
+  .band-m { margin-top: 4px; color: var(--cyan); font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+  .band-m .ph { font-style: normal; }
+  .safe { margin-top: 18px !important; padding: 18px 20px; border-radius: 12px; background: #fff8dc; border: 2px solid var(--yellow); }
+  .safe li { display: flex; gap: 14px; align-items: center; padding-left: 0 !important; }
+  .safe li::before { display: none; }
+  .safe span { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 8px; background: var(--ink); color: var(--yellow); }
+  .safe p { margin: 0 !important; color: var(--ink) !important; font-size: 15px; }
+  .safe a { color: var(--cobalt); text-decoration: underline; }
+  @media (max-width: 640px) { .band { align-items: start; } .band-h { font-size: 34px; } }
+</style>

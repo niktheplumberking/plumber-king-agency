@@ -1,0 +1,61 @@
+---
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import { SITE } from '../../data/site';
+export interface Faq { q: string; a: string }
+interface Props { faqs: Faq[]; line1?: string; line2?: string; line3?: string; intro?: string; bg?: 'white' | 'light' }
+const { faqs, line1 = 'Questions?', line2 = 'Straight', line3 = 'answers.', intro = 'The things Pomona homeowners ask us most, answered in plain words. Anything else, just call.', bg = 'white' } = Astro.props;
+---
+<section class={`section faq ${bg}`}>
+  <div class="wrap faq-grid">
+    <div class="faq-left">
+      <Eyebrow>Common questions</Eyebrow>
+      <h2 class="h-display h2 faq-h" data-split>{line1}<br /><span class="c-cobalt">{line2}{line3 && <><br />{line3}</>}</span></h2>
+      <p class="lead faq-intro" data-reveal="up">{intro}</p>
+      <div class="still" data-reveal="up" data-tilt>
+        <span class="still-ico"><Icon name="help" size={22} /></span>
+        <p class="h-display still-h">Still got a question?</p>
+        <p class="still-p">Call or text. A real person answers, day or night, in English or Spanish.</p>
+        <div class="still-btns">
+          <Btn href={SITE.phoneHref} icon="phone" size="md">Call now</Btn>
+          <Btn href={SITE.smsHref} variant="outline-cyan" icon="message" size="md">Text us</Btn>
+        </div>
+      </div>
+    </div>
+    <div class="faq-list" data-acc-group data-stagger="up">
+      {faqs.map((f, i) => (
+        <details data-acc open={i === 0} class="faq-item">
+          <summary><span class="led faq-n">{String(i + 1).padStart(2, '0')}</span><span class="faq-q">{f.q}</span><span class="faq-pm" aria-hidden="true"><Icon name="plus" size={16} class="p" /><Icon name="minus" size={16} class="m" /></span></summary>
+          <div class="acc-body"><div class="faq-a"><p set:html={f.a} /><a href={SITE.phoneHref} class="textlink">Call {SITE.phone} <Icon name="arrow" size={14} /></a></div></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .faq-grid { display: grid; grid-template-columns: 350px 1fr; gap: 64px; align-items: start; }
+  .faq-h { margin-top: 16px; }
+  .faq-intro { margin-top: 20px; font-size: 16px; }
+  .still { position: relative; overflow: hidden; margin-top: 34px; padding: 28px 24px 24px; border-radius: 16px; background: radial-gradient(120% 120% at 100% 0%, #1f4fd8 0%, #10173a 45%, #0b0f1a 75%); color: #fff; }
+  .still-ico { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--yellow); color: var(--ink); }
+  .still-h { font-size: 32px; margin-top: 18px; }
+  .still-p { color: var(--on-dark-2); font-size: 14px; margin-top: 6px; }
+  .still-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .still-btns :global(.btn) { padding: 0 12px; font-size: 20px; }
+  .faq-item { border-bottom: 1px solid var(--line); border-radius: 12px; transition: background .3s; }
+  .faq-item[open] { background: var(--paper); border-bottom-color: transparent; box-shadow: inset 4px 0 0 var(--cobalt); }
+  .faq-item summary { display: flex; align-items: center; gap: 22px; min-height: 66px; padding: 14px 18px 14px 24px; }
+  .faq-n { color: var(--ink-3); font-size: 22px; width: 32px; transition: color .3s; }
+  .faq-item[open] .faq-n, .faq-item summary:hover .faq-n { color: var(--cobalt); }
+  .faq-q { flex: 1; font-weight: 700; font-size: 17px; color: var(--ink); }
+  .faq-pm { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px #c9d2e2; color: var(--ink); transition: background .3s, color .3s, transform .4s var(--ease-out); }
+  .faq-item summary:hover .faq-pm { transform: rotate(90deg); }
+  .faq-pm :global(.m) { display: none; }
+  .faq-item[open] .faq-pm { background: var(--cobalt); color: #fff; box-shadow: none; }
+  .faq-item[open] .faq-pm :global(.p) { display: none; } .faq-item[open] .faq-pm :global(.m) { display: block; }
+  .faq-a { padding: 0 24px 22px 78px; color: var(--ink-2); font-size: 15px; }
+  .faq-a p { margin-bottom: 12px; }
+  @media (max-width: 960px) { .faq-grid { grid-template-columns: 1fr; gap: 40px; } .faq-left { display: contents; } .still { order: 3; } }
+  @media (max-width: 560px) { .faq-item summary { gap: 12px; padding: 14px 12px; } .faq-a { padding: 0 14px 18px 56px; } .faq-q { font-size: 16px; } }
+</style>

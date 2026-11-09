@@ -1,0 +1,99 @@
+---
+// "Hear it from them": 3 Instagram video-review slots + 2 review placeholders. No names, stars or counts until Jim supplies them.
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import { SITE } from '../../data/site';
+interface Props { theme?: 'light' | 'dark' | 'white'; layout?: 'center' | 'split' }
+const { theme = 'white', layout = 'center' } = Astro.props;
+const vids = [1, 2, 3];
+---
+<section class={`vr section ${theme}`}>
+  <div class={`wrap vr-head ${layout === 'split' ? 'is-split' : 'head-center'}`}>
+    <div>
+      <Eyebrow>Real customers</Eyebrow>
+      <h2 class="h-display h2 vr-h" data-split><span class="vr-a">Hear it</span><br /><span class="vr-b">from them</span></h2>
+    </div>
+    {layout === 'split' && <p class="vr-intro" data-reveal="up">Real customers on camera, from Jim's Instagram. Written reviews go here once Jim's review profile is live.</p>}
+  </div>
+  <div class="wrap vr-grid">
+    <div class="vr-vids" data-carousel>
+      <div class="vr-track" data-track data-stagger="up">
+        {vids.map((n) => (
+          <a href={SITE.instagram} target="_blank" rel="noopener" class="vr-vid" data-tilt aria-label={`Video review ${n} on Instagram (opens Instagram)`}>
+            <span class="vr-tag"><Icon name="instagram" size={16} />Video review · Instagram</span>
+            <span class="vr-play" aria-hidden="true"><Icon name="play" size={26} /></span>
+            <span class="vr-slot">Video from @plumblord1 goes here</span>
+            <span class="vr-cap"><span class="vr-n">Video {n}</span><em class="ph">Customer first name, town: Jim to confirm</em></span>
+          </a>
+        ))}
+      </div>
+      <div class="vr-dots" aria-hidden="true">{vids.map((_, k) => <span data-dot class:list={{ on: k === 0 }}></span>)}</div>
+    </div>
+    <div class="vr-g" data-stagger="up">
+      {[0, 1].map(() => (
+        <article class="vr-gc">
+          <div class="vr-gtop"><Icon name="quote" size={22} class="vr-q" /><span class="vr-gtag">Review goes here</span></div>
+          <div class="vr-lines" aria-hidden="true"><i></i><i></i><i class="s"></i></div>
+          <div class="vr-who"><span class="vr-av" aria-hidden="true"></span><span><strong>Customer name</strong><small>After the profile is live</small></span></div>
+        </article>
+      ))}
+    </div>
+  </div>
+  <div class="wrap vr-more" data-reveal="up"><a href="/reviews/" class="vr-link h-display">Watch all reviews <Icon name="arrow" size={18} /></a></div>
+</section>
+<style>
+  .vr { overflow: hidden; }
+  .vr-h { margin-top: 14px; font-size: clamp(44px, 5.2vw, 64px); }
+  .vr-a { color: var(--ink); } .vr-b { color: var(--cobalt); }
+  .dark .vr-a, .dark2 .vr-a { color: #fff; } .dark .vr-b, .dark2 .vr-b { color: var(--cyan); }
+  .vr-head.is-split { display: grid; grid-template-columns: auto 1fr; gap: 40px 80px; align-items: end; }
+  .vr-intro { color: var(--ink-2); font-size: 15px; max-width: 440px; }
+  .vr-grid { display: grid; grid-template-columns: 3fr 1fr; gap: 18px; margin-top: 40px; }
+  .vr-track { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .vr-vid { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; padding: 16px; border-radius: 14px; overflow: hidden; color: #fff;
+    background: radial-gradient(70% 55% at 50% 48%, rgba(31,79,216,.85), rgba(19,27,46,.4) 70%), #0b0f1a; border: 1px solid var(--line-dark); box-shadow: 0 24px 50px -28px rgba(11,15,26,.6); transition: transform .4s var(--ease-out), box-shadow .4s; }
+  .vr-vid:hover { box-shadow: 0 30px 60px -24px rgba(31,79,216,.6); }
+  .vr-tag { display: inline-flex; align-items: center; gap: 8px; font: 700 10.5px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; }
+  .vr-play { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); color: var(--ink); box-shadow: 0 0 0 0 rgba(255,210,31,.5); transition: transform .4s var(--ease-out), box-shadow .4s; }
+  .vr-play :global(.icon) { margin-left: 3px; }
+  .vr-vid:hover .vr-play { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 0 12px rgba(255,210,31,.18); }
+  .vr-slot { position: absolute; left: 12px; right: 12px; top: calc(46% + 46px); text-align: center; font-size: 11px; color: var(--on-dark-2); }
+  .vr-cap { display: grid; gap: 6px; font-size: 11.5px; }
+  .vr-n { justify-self: start; background: rgba(0,0,0,.75); padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; }
+  .vr-cap .ph { color: var(--cyan); font-size: 11.5px; justify-self: start; }
+  .vr-dots { display: none; }
+  .vr-g { display: grid; gap: 14px; align-content: start; }
+  .vr-gc { padding: 20px 18px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
+  .light .vr-gc { background: #fff; } .white .vr-gc { background: var(--paper); }
+  .dark .vr-gc, .dark2 .vr-gc { background: var(--night2); border-color: var(--line-dark); }
+  .vr-gtop { display: flex; align-items: center; gap: 12px; }
+  .vr-gtop :global(.vr-q) { color: var(--cobalt); }
+  .dark .vr-gtop :global(.vr-q) { color: var(--cyan); }
+  .vr-gtag { transform: rotate(-2deg); background: var(--yellow); color: var(--ink); font: 800 11px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; padding: 6px 10px; border-radius: 3px; }
+  .vr-lines { display: grid; gap: 9px; margin-top: 18px; }
+  .vr-lines i { height: 7px; border-radius: 4px; background: #e3e8f1; } .vr-lines i.s { width: 62%; }
+  .dark .vr-lines i { background: #26304a; }
+  .vr-who { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
+  .vr-who strong { display: block; font-size: 13px; } .vr-who small { display: block; color: var(--ink-3); font-size: 11.5px; }
+  .dark .vr-who strong { color: #fff; } .dark .vr-who small { color: var(--on-dark-2); }
+  .vr-av { width: 30px; height: 30px; border-radius: 50%; background: #e3e8f1; flex: none; }
+  .dark .vr-av { background: #26304a; }
+  .vr-more { display: flex; justify-content: center; margin-top: 34px; }
+  .vr-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 24px; color: var(--cobalt); }
+  .dark .vr-link { color: var(--cyan); }
+  .vr-link :global(.icon) { transition: transform .3s var(--ease-out); }
+  .vr-link:hover :global(.icon) { transform: translateX(5px); }
+  @media (max-width: 1000px) { .vr-grid { grid-template-columns: minmax(0, 1fr); } .vr-vids { min-width: 0; } .vr-g { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) {
+    .vr-head.is-split { grid-template-columns: 1fr; gap: 16px; }
+    .vr-vids { margin-inline: calc(var(--gutter) * -1); }
+    .vr-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 var(--gutter) 6px; gap: 14px; }
+    .vr-track::-webkit-scrollbar { display: none; }
+    .vr-vid { flex: none; width: 64vw; min-height: 340px; scroll-snap-align: start; }
+    .vr-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+    .vr-dots span { width: 6px; height: 6px; border-radius: 9px; background: #c7d0e0; transition: width .3s, background .3s; }
+    .vr-dots span.on { width: 24px; background: var(--cobalt); }
+    .vr-g { grid-template-columns: 1fr; }
+    .vr-g > :nth-child(2) { display: none; }
+  }
+</style>

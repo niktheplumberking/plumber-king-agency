@@ -83,6 +83,12 @@ const ld = [business, ...(breadcrumb ? [breadcrumb] : []), ...schema];
   <link rel="preload" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <script is:inline>
     // Decide before first paint: motion on? intro this visit?
+    // Wide screens: scale the whole 1440 px design up so it keeps the Figma proportions (content ~89% of the width).
+    (function () {
+      var d = document.documentElement;
+      function fit() { var w = window.innerWidth; d.style.zoom = w > 1440 ? String(Math.round(w / 1440 * 1000) / 1000) : ''; }
+      fit(); window.addEventListener('resize', fit);
+    })();
     (function () {
       var d = document.documentElement;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -92,9 +98,10 @@ const ld = [business, ...(breadcrumb ? [breadcrumb] : []), ...schema];
       var reload = nav && nav.type === 'reload';
       var internal = false;
       try { internal = sessionStorage.getItem('up-nav') === '1'; sessionStorage.removeItem('up-nav'); } catch (e) {}
-      if (!internal || reload) d.classList.add('intro');
+      var hist = nav && nav.type === 'back_forward';
+      if (hist) { /* back/forward: no intro, no curtain */ } else if (!internal || reload) d.classList.add('intro'); else d.classList.add('pt-in');
       // Safety: never leave the page hidden if scripts fail to load.
-      setTimeout(function () { if (!window.__upMotion) { d.classList.remove('motion', 'intro'); } }, 3500);
+      setTimeout(function () { if (!window.__upMotion) { d.classList.remove('motion', 'intro', 'pt-in'); } }, 3500);
     })();
   </script>
   {ld.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
@@ -102,6 +109,7 @@ const ld = [business, ...(breadcrumb ? [breadcrumb] : []), ...schema];
 <body class={bodyClass}>
   <a href="#main" class="skip">Skip to content</a>
   <Intro />
+  <div class="pt" data-pt aria-hidden="true"><div class="pt-panel"><span class="pt-mark led">UNITED PLUMBING · 24/7</span></div></div>
   <Header />
   <main id="main"><slot /></main>
   <Footer />

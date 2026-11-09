@@ -3,8 +3,8 @@
 // Same field names as the shared CallbackForm, so motion.ts initForms() handles it.
 import Icon from '../Icon.astro';
 import Btn from '../Btn.astro';
-interface Props { id: string; title: string; sub: string; label: string; options: string[]; chips?: boolean; badge?: boolean; footer?: boolean; zipLabel?: string; zipPlaceholder?: string; class?: string }
-const { id, title, sub, label, options, chips = false, badge = true, footer = true, zipLabel = 'Town or ZIP', zipPlaceholder = '91767', class: cls = '' } = Astro.props;
+interface Props { id: string; title: string; sub: string; label: string; options: string[]; chips?: boolean; badge?: boolean; footer?: boolean; zipLabel?: string; zipPlaceholder?: string; selectPlaceholder?: string; selectPlaceholderShort?: string; zipLabelShort?: string; class?: string }
+const { id, title, sub, label, options, chips = false, badge = true, footer = true, zipLabel = 'Town or ZIP', zipPlaceholder = '91767', selectPlaceholder = 'Pick one', selectPlaceholderShort, zipLabelShort, class: cls = '' } = Astro.props;
 ---
 <form class={`sf card ${cls}`} data-callback novalidate aria-labelledby={`${id}-t`}>
   {badge && <span class="sf-badge"><i></i>Answered 24/7</span>}
@@ -13,7 +13,7 @@ const { id, title, sub, label, options, chips = false, badge = true, footer = tr
   <div class={`sf-grid ${chips ? 'is-chips' : ''}`}>
     <label class="field sf-span"><span class="field-label">Name</span><input class="input" name="name" autocomplete="name" placeholder="Your name" required /><Icon name="user" size={18} /></label>
     <label class="field sf-span"><span class="field-label">Phone</span><input class="input" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(909) 000-0000" required /><Icon name="phone" size={18} /></label>
-    <label class={`field ${chips ? 'sf-span' : ''}`}><span class="field-label">{zipLabel}</span><input class="input" name="zip" autocomplete="postal-code" placeholder={zipPlaceholder} /><Icon name="pin" size={18} /></label>
+    <label class={`field ${chips ? 'sf-span' : ''}`}><span class="field-label">{zipLabelShort ? <><span class="sf-lg">{zipLabel}</span><span class="sf-sm">{zipLabelShort}</span></> : zipLabel}</span><input class="input" name="zip" autocomplete="postal-code" placeholder={zipPlaceholder} /><Icon name="pin" size={18} /></label>
     {chips ? (
       <fieldset class="sf-chips sf-span">
         <legend class="field-label">{label}</legend>
@@ -22,7 +22,7 @@ const { id, title, sub, label, options, chips = false, badge = true, footer = tr
         </div>
       </fieldset>
     ) : (
-      <label class="field"><span class="field-label">{label}</span><select class="input" name="problem"><option value="">Pick one</option>{options.map((o) => <option>{o}</option>)}</select><Icon name="chevronDown" size={18} /></label>
+      <label class="field"><span class="field-label">{label}</span><select class="input" name="problem"><option value="" data-short={selectPlaceholderShort}>{selectPlaceholder}</option>{options.map((o) => <option>{o}</option>)}</select><Icon name="chevronDown" size={18} /></label>
     )}
   </div>
   <Btn type="submit" variant="ink" icon="phone" size="md" full>Call me back</Btn>
@@ -30,6 +30,16 @@ const { id, title, sub, label, options, chips = false, badge = true, footer = tr
   <p class="form-error center" data-form-msg role="status" hidden></p>
   {footer && <p class="sf-foot">Rather talk now? Call <a href="tel:+19095870711">909-587-0711</a></p>}
 </form>
+<script>
+  // Phones get the shorter placeholder from the design (the long one would be cut off in the narrow select).
+  const mq = window.matchMedia('(max-width: 640px)');
+  const swap = () => document.querySelectorAll<HTMLOptionElement>('.sf option[data-short]').forEach((o) => {
+    o.dataset.long ??= o.textContent ?? '';
+    o.textContent = mq.matches ? o.dataset.short! : o.dataset.long;
+  });
+  swap();
+  mq.addEventListener('change', swap);
+</script>
 <style>
   .sf { position: relative; padding: 28px 28px 22px; border-top: 7px solid var(--yellow); color: var(--ink); }
   .sf-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 11px; border-radius: 99px; background: #eef7ef; color: #14532d; font-size: 12px; font-weight: 700; }
@@ -54,7 +64,9 @@ const { id, title, sub, label, options, chips = false, badge = true, footer = tr
   .sf-foot a { color: var(--cobalt); text-decoration: underline; text-underline-offset: 3px; }
   .form-error { margin-top: 8px; }
   .form-error :global(a) { color: var(--cobalt); }
+  .sf-sm { display: none; }
   @media (max-width: 640px) {
+    .sf-lg { display: none; } .sf-sm { display: inline; }
     .sf { padding: 24px 20px 20px; } .sf-title { font-size: 34px; }
     .sf-grid { grid-template-columns: 1fr 1.25fr; }
   }

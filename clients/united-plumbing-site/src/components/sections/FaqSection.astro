@@ -3,7 +3,7 @@ import Icon from '../Icon.astro';
 import Eyebrow from '../Eyebrow.astro';
 import Btn from '../Btn.astro';
 import { SITE } from '../../data/site';
-export interface Faq { q: string; a: string }
+export interface Faq { q: string; a: string; qm?: string }
 interface Props { faqs: Faq[]; line1?: string; line2?: string; line3?: string; intro?: string; bg?: 'white' | 'light' }
 const { faqs, line1 = 'Questions?', line2 = 'Straight', line3 = 'answers.', intro = 'The things Pomona homeowners ask us most, answered in plain words. Anything else, just call.', bg = 'white' } = Astro.props;
 ---
@@ -14,7 +14,7 @@ const { faqs, line1 = 'Questions?', line2 = 'Straight', line3 = 'answers.', intr
       <h2 class="h-display h2 faq-h" data-split>{line1}<br /><span class="c-cobalt">{line2}{line3 && <><br />{line3}</>}</span></h2>
       <p class="lead faq-intro" data-reveal="up">{intro}</p>
       <div class="still" data-reveal="up" data-tilt>
-        <span class="still-ico"><Icon name="help" size={22} /></span>
+        <span class="still-glow" aria-hidden="true"></span><span class="still-ico"><Icon name="help" size={28} /></span>
         <p class="h-display still-h">Still got a question?</p>
         <p class="still-p">Call or text. A real person answers, day or night, in English or Spanish.</p>
         <div class="still-btns">
@@ -26,36 +26,71 @@ const { faqs, line1 = 'Questions?', line2 = 'Straight', line3 = 'answers.', intr
     <div class="faq-list" data-acc-group data-stagger="up">
       {faqs.map((f, i) => (
         <details data-acc open={i === 0} class="faq-item">
-          <summary><span class="led faq-n">{String(i + 1).padStart(2, '0')}</span><span class="faq-q">{f.q}</span><span class="faq-pm" aria-hidden="true"><Icon name="plus" size={16} class="p" /><Icon name="minus" size={16} class="m" /></span></summary>
-          <div class="acc-body"><div class="faq-a"><p set:html={f.a} /><a href={SITE.phoneHref} class="textlink">Call {SITE.phone} <Icon name="arrow" size={14} /></a></div></div>
+          <summary><span class="led faq-n">{String(i + 1).padStart(2, '0')}</span><span class="faq-q">{f.qm ? <><span class="faq-qd">{f.q}</span><span class="faq-qmo">{f.qm}</span></> : f.q}</span><span class="faq-pm" aria-hidden="true"><Icon name="plus" size={18} class="p" /><Icon name="minus" size={18} class="m" /></span></summary>
+          <div class="acc-body"><div class="faq-a"><p set:html={f.a} /><a href={SITE.phoneHref} class="textlink">Call {SITE.phone} <Icon name="arrow" size={16} /></a></div></div>
         </details>
       ))}
     </div>
   </div>
 </section>
 <style>
-  .faq-grid { display: grid; grid-template-columns: 350px 1fr; gap: 64px; align-items: start; }
-  .faq-h { margin-top: 16px; }
-  .faq-intro { margin-top: 20px; font-size: 16px; }
-  .still { position: relative; overflow: hidden; margin-top: 34px; padding: 28px 24px 24px; border-radius: 16px; background: radial-gradient(120% 120% at 100% 0%, #1f4fd8 0%, #10173a 45%, #0b0f1a 75%); color: #fff; }
-  .still-ico { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--yellow); color: var(--ink); }
-  .still-h { font-size: 32px; margin-top: 18px; }
-  .still-p { color: var(--on-dark-2); font-size: 14px; margin-top: 6px; }
-  .still-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-  .still-btns :global(.btn) { padding: 0 12px; font-size: 20px; }
-  .faq-item { border-bottom: 1px solid var(--line); border-radius: 12px; transition: background .3s; }
-  .faq-item[open] { background: var(--paper); border-bottom-color: transparent; box-shadow: inset 4px 0 0 var(--cobalt); }
-  .faq-item summary { display: flex; align-items: center; gap: 22px; min-height: 66px; padding: 14px 18px 14px 24px; }
-  .faq-n { color: var(--ink-3); font-size: 22px; width: 32px; transition: color .3s; }
+  /* Figma 231:536 (homepage): 791 px + wave; 440 px left column, 80 px gap, 760 px list */
+  .faq.section { padding-block: 100px 60px; }
+  .faq-grid { display: grid; grid-template-columns: 440px 1fr; gap: 80px; align-items: start; }
+  .faq-h { margin-top: 13px; font-size: clamp(44px, 5vw, 72px); line-height: .9; letter-spacing: 0; white-space: nowrap; }
+  .faq-intro { margin-top: 19px; font-size: 17px; line-height: 1.55; color: #475569; max-width: 420px; }
+  .still { position: relative; overflow: hidden; margin-top: 35px; height: 300px; padding: 28px; border-radius: 18px; background: var(--night); color: #fff; }
+  .still-glow { position: absolute; left: 260px; top: -90px; width: 260px; height: 260px; border-radius: 50%; background: rgba(31,79,216,.55); filter: blur(50px); pointer-events: none; }
+  .still-ico { position: relative; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--yellow); color: var(--ink); }
+  .still-ico :global(.icon) { width: 28px; height: 28px; }
+  .still-h { position: relative; font-size: 34px; line-height: 41px; letter-spacing: 0; margin-top: 20px; }
+  .still-p { position: relative; color: #a3aec6; font-size: 15px; line-height: 1.55; margin-top: 1px; max-width: 370px; }
+  .still-btns { position: relative; display: grid; grid-template-columns: 186px 186px; gap: 12px; margin-top: 23px; }
+  .still-btns :global(.btn) { --bh: 52px; padding: 0 12px; gap: 10px; font-size: 20px; letter-spacing: .02em; }
+  .still-btns :global(.btn .icon) { width: 20px; height: 20px; }
+  .faq-item { border-bottom: 1px solid #dce3ee; transition: background .3s; }
+  .faq-item[open] { margin-bottom: 14px; background: var(--paper); border-bottom-color: transparent; border-radius: 14px; box-shadow: inset 6px 0 0 var(--cobalt); }
+  .faq-item summary { display: flex; align-items: center; gap: 24px; min-height: 83px; padding: 21px 8px; }
+  .faq-item[open] summary { padding: 21px 20px 11px 32px; min-height: 0; }
+  .faq-n { flex: none; color: #7d8ba3; font-size: 28px; line-height: 34px; width: 40px; transition: color .3s; }
   .faq-item[open] .faq-n, .faq-item summary:hover .faq-n { color: var(--cobalt); }
-  .faq-q { flex: 1; font-weight: 700; font-size: 17px; color: var(--ink); }
-  .faq-pm { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px #c9d2e2; color: var(--ink); transition: background .3s, color .3s, transform .4s var(--ease-out); }
+  .faq-q { flex: 1; font-weight: 700; font-size: 20px; line-height: 26px; color: var(--ink); }
+  .faq-pm { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 1.5px #dce3ee; color: var(--ink); transition: background .3s, color .3s, transform .4s var(--ease-out); }
+  .faq-pm :global(.icon) { width: 18px; height: 18px; }
   .faq-item summary:hover .faq-pm { transform: rotate(90deg); }
   .faq-pm :global(.m) { display: none; }
   .faq-item[open] .faq-pm { background: var(--cobalt); color: #fff; box-shadow: none; }
   .faq-item[open] .faq-pm :global(.p) { display: none; } .faq-item[open] .faq-pm :global(.m) { display: block; }
-  .faq-a { padding: 0 24px 22px 78px; color: var(--ink-2); font-size: 15px; }
-  .faq-a p { margin-bottom: 12px; }
+  .faq-a { padding: 0 64px 28px 96px; color: #475569; font-size: 16px; line-height: 1.6; }
+  .faq-a p { max-width: 600px; margin-bottom: 17px; }
+  .faq-a .textlink { display: flex; width: fit-content; font-size: 15px; line-height: 20px; gap: 8px; }
   @media (max-width: 960px) { .faq-grid { grid-template-columns: 1fr; gap: 40px; } .faq-left { display: contents; } .still { order: 3; } }
-  @media (max-width: 560px) { .faq-item summary { gap: 12px; padding: 14px 12px; } .faq-a { padding: 0 14px 18px 56px; } .faq-q { font-size: 16px; } }
+  .faq-qmo { display: none; }
+  /* Figma 236:535 (phone): 1131 + 50 wave; open item 206 tall, closed rows 70, help card 350 x 270 */
+  @media (max-width: 640px) {
+    .faq.section { padding-block: 50px 40px; }
+    .faq-grid { gap: 0; }
+    .faq-h { margin-top: 10px; font-size: 48px; }
+    .faq-intro { margin-top: 14px; font-size: 15px; }
+    .faq-list { margin-top: 24px; }
+    .faq-item[open] { margin-bottom: 10px; border-radius: 12px; box-shadow: inset 5px 0 0 var(--cobalt); }
+    .faq-item summary, .faq-item[open] summary { gap: 17px; min-height: 0; padding: 19px 12px 18px 4px; }
+    .faq-item[open] summary { padding: 19px 12px 15px 20px; }
+    .faq-n { width: 27px; font-size: 22px; line-height: 26px; }
+    .faq-q { font-size: 16px; line-height: 21px; }
+    .faq-pm { width: 32px; height: 32px; margin-left: -5px; }
+    .faq-qd { display: none; } .faq-qmo { display: inline; }
+    .faq-pm :global(.icon) { width: 16px; height: 16px; }
+    .faq-a { padding: 0 20px 22px; font-size: 15px; line-height: 22px; }
+    .faq-a p { margin-bottom: 34px; }
+    .faq-a .textlink { font-size: 14px; line-height: 18px; }
+    .still { margin-top: 28px; height: 270px; padding: 22px; border-radius: 16px; }
+    .still-glow { left: 200px; top: -70px; width: 200px; height: 200px; }
+    .still-ico { width: 48px; height: 48px; }
+    .still-ico :global(.icon) { width: 24px; height: 24px; }
+    .still-h { margin-top: 14px; font-size: 28px; line-height: 34px; }
+    .still-p { margin-top: 2px; font-size: 14px; line-height: 21px; }
+    .still-btns { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 34px; }
+    .still-btns :global(.btn) { --bh: 50px; font-size: 18px; }
+  }
 </style>

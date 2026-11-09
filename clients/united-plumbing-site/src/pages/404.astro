@@ -29,18 +29,18 @@ import pipes from '../assets/img/night-pipes.jpg';
 </Base>
 
 <style>
-  .nf { position: relative; overflow: hidden; min-height: min(78vh, 760px); display: flex; align-items: center; padding: 80px 0 100px; }
+  .nf { position: relative; overflow: hidden; min-height: min(78vh, 762px); display: flex; align-items: center; padding: 80px 0 100px; }
   .nf-bg { position: absolute; inset: 0; }
   .nf-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; opacity: .6; }
   .nf-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,15,26,.98) 0%, rgba(11,15,26,.85) 50%, rgba(11,15,26,.4) 100%); }
   .nf-in { position: relative; }
-  .nf-code { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 8px; background: #070a12; border: 2px solid var(--cobalt); color: var(--yellow); font-size: 22px; text-shadow: 0 0 12px rgba(255,210,31,.5); }
+  .nf-code { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 12px; background: #070a12; border: 2px solid var(--cobalt); color: var(--yellow); font-size: 22px; text-shadow: 0 0 12px rgba(255,210,31,.5); }
   .nf-code i { width: 10px; height: 10px; border-radius: 50%; background: #ff3b3b; box-shadow: 0 0 10px #ff3b3b; animation: nfb 1.4s steps(2) infinite; }
   @keyframes nfb { 50% { opacity: .25; } }
-  .nf-h { margin-top: 24px; font-size: clamp(54px, 8vw, 112px); line-height: .86; color: #fff; }
-  .nf-p { margin-top: 24px; font-size: 19px; color: var(--on-dark); }
+  .nf-h { margin-top: 32px; font-size: clamp(54px, 7vw, 100px); line-height: .88; letter-spacing: 0; color: #fff; }
+  .nf-p { margin-top: 28px; font-size: 19px; line-height: 1.5; color: #a3aec6; }
   .nf-p a { color: var(--yellow); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
-  .nf-btns { margin-top: 32px; }
+  .nf-btns { margin-top: 28px; }
   .nf-btns :global(.btn-outline-cyan) { background: rgba(11,15,26,.5); }
   .nf-links { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 30px; }
   .nf-links a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--cyan); font-weight: 700; }
@@ -48,8 +48,9 @@ import pipes from '../assets/img/night-pipes.jpg';
   .nf-links a:hover :global(.icon) { transform: translateX(4px); }
   @media (max-width: 640px) {
     .nf { padding: 50px 0 70px; }
-    .nf-h { font-size: clamp(48px, 13.5vw, 64px); }
+    .nf-h { margin-top: 28px; font-size: clamp(44px, 13.4vw, 60px); }
     .nf-p { font-size: 16px; }
-    .nf-btns :global(.btn) { width: 100%; font-size: 26px; }
+    .nf-btns :global(.btn) { width: 100%; --bh: 64px; font-size: 26px; }
+    .nf-code { font-size: 20px; }
   }
 </style>

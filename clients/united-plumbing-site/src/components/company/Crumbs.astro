@@ -12,9 +12,10 @@ const { items } = Astro.props;
   </ol>
 </nav>
 <style>
-  .crumbs ol { display: flex; flex-wrap: wrap; gap: 6px; font-size: 13px; font-weight: 500; color: var(--on-dark-2); }
-  .crumbs li + li::before { content: '/'; margin-right: 6px; opacity: .6; }
-  .crumbs a { display: inline-block; padding: 4px 0; transition: color .2s; }
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: .04em; color: #a3aec6; }
+  .crumbs li + li::before { content: '/'; margin-right: 12px; }
+  .crumbs a { display: inline-block; padding: 9px 0; transition: color .2s; }
   .crumbs a:hover { color: #fff; }
-  .crumbs [aria-current] { color: var(--cyan); }
+  .crumbs [aria-current] { display: inline-block; padding: 9px 0; color: var(--cyan); }
+  @media (max-width: 640px) { .crumbs ol { gap: 8px; font-size: 12px; line-height: 16px; letter-spacing: .04em; } .crumbs li + li::before { margin-right: 8px; } .crumbs a, .crumbs [aria-current] { padding: 10px 0; } }
 </style>

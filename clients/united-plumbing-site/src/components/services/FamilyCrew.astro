@@ -17,12 +17,12 @@ const HUB: Card[] = [
 const SVC: Card[] = [
   { led: 'BROS', icon: 'users', t: 'Built by brothers', d: 'Jim trained each brother himself, job by job.' },
   { led: '24/7', icon: 'clock', t: 'Open 24/7', d: 'Nights, weekends and holidays.' },
-  { led: '1ST', icon: 'tag', t: 'Price before we start', d: 'You say yes before any work starts.' },
+  { led: '$ 1ST', icon: 'tag', t: 'Price before we start', d: 'You say yes before any work starts.' },
   { led: 'ES·EN', icon: 'globe', t: 'Hablamos español', d: 'Ask for Jim.' },
 ];
 const { jimPhoto = false, line = 'You talk to the Galvez family, not a call center. Ask anything. You get a straight answer.', eyebrow = 'Why United Plumbing', cards = jimPhoto ? HUB : SVC } = Astro.props;
 ---
-<section class={`fc yellowbg ${jimPhoto ? 'has-jim' : ''}`}>
+<section class={`fc yellowbg ${jimPhoto ? 'has-jim' : 'is-svc'}`}>
   <div class="wrap fc-grid">
     <div class="fc-copy">
       <p class="eyebrow fc-eb" data-reveal="up"><Icon name="drop" size={14} stroke={2.5} /><span>{eyebrow}</span></p>
@@ -32,7 +32,7 @@ const { jimPhoto = false, line = 'You talk to the Galvez family, not a call cent
     </div>
     {jimPhoto && (
       <figure class="fc-jim" data-reveal="up">
-        <Image src={jim} alt="Jaime “Jim” Galvez, owner of United Plumbing" widths={[360, 560]} sizes="(max-width: 900px) 80vw, 300px" format="webp" quality={80} />
+        <Image src={jim} alt="Jaime “Jim” Galvez, owner of United Plumbing" widths={[360, 720]} sizes="(max-width: 900px) 80vw, 360px" format="webp" quality={80} />
         <figcaption class="fc-name"><strong class="h-display">Jaime "Jim" Galvez</strong><small>Owner · United Plumbing</small></figcaption>
       </figure>
     )}
@@ -40,8 +40,8 @@ const { jimPhoto = false, line = 'You talk to the Galvez family, not a call cent
       {cards.map((c) => (
         <li class="fc-card" data-tilt>
           <div class="fc-top">
-            {jimPhoto ? <span class="led fc-led">{c.led}</span> : <span class="fc-ico"><Icon name={c.icon} size={20} /></span>}
-            {jimPhoto ? <Icon name={c.icon} size={20} class="fc-ic2" /> : <span class="led fc-led fc-led-c">{c.led}</span>}
+            {jimPhoto ? <span class="led fc-led">{c.led}</span> : <span class="fc-ico"><Icon name={c.icon} size={24} /></span>}
+            {jimPhoto ? <Icon name={c.icon} size={24} class="fc-ic2" /> : <span class="led fc-led fc-led-c">{c.led}</span>}
           </div>
           <h3 class="h-display fc-t">{c.t}</h3>
           <p class="fc-d">{c.d}</p>
@@ -75,20 +75,102 @@ const { jimPhoto = false, line = 'You talk to the Galvez family, not a call cent
   .fc-ico { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; background: var(--cobalt); color: #fff; }
   .fc-t { margin-top: 18px; font-size: 26px; line-height: .95; }
   .fc-d { margin-top: 8px; color: var(--on-dark-2); font-size: 13.5px; }
-  @media (max-width: 1100px) { .has-jim .fc-grid { grid-template-columns: 1fr 1fr; } .has-jim .fc-cards { grid-column: 1 / -1; } .fc-jim { margin-bottom: 0; } }
+  /* Hub version (Figma 310:646: 640 tall, copy 420 / Jim 360 at x 470 / tiles 2x 250x210) */
+  .has-jim { padding-block: 100px; }
+  .has-jim .fc-grid { position: relative; grid-template-columns: 420px 520px; justify-content: space-between; gap: 0; align-items: start; }
+  .has-jim .fc-copy { align-self: start; }
+  .has-jim .fc-eb { font-size: 13px; letter-spacing: .14em; }
+  .has-jim .fc-eb :global(.icon) { width: 16px; height: 16px; }
+  .has-jim .fc-h { margin-top: 4px; font-size: 68px; line-height: .92; letter-spacing: 0; }
+  .has-jim .fc-p { margin-top: 23px; max-width: 400px; font-size: 18px; line-height: 1.5; }
+  .has-jim .fc-btn { margin-top: 32px; }
+  .has-jim .fc-btn :global(.btn) { --bh: 68px; padding: 0 28px; font-size: 26px; letter-spacing: .02em; }
+  .has-jim .fc-jim { position: absolute; left: 390px; top: -4px; width: 360px; height: 544px; margin: 0; }
+  .has-jim .fc-jim::before { inset: 84px -40px 0; background: radial-gradient(closest-side, rgba(255,255,255,.6), rgba(255,255,255,0)); }
+  .has-jim .fc-jim img { width: 100%; height: 100%; max-width: none; object-fit: contain; object-position: 50% 100%; }
+  .has-jim .fc-name { left: 50px; right: auto; bottom: 28px; width: 260px; height: 52px; padding: 6px 18px 0; border-radius: 10px; }
+  .has-jim .fc-name strong { font-size: 22px; line-height: 25px; letter-spacing: 0; }
+  .has-jim .fc-name small { display: block; color: #cfe0ff; font-size: 11px; line-height: 14px; opacity: 1; }
+  .has-jim .fc-cards { gap: 20px; }
+  .has-jim .fc-card { height: 210px; padding: 20px 22px; border-radius: 16px; }
+  .has-jim .fc-top { min-height: 40px; align-items: flex-start; }
+  .has-jim .fc-led { font-size: 40px; line-height: 1; text-shadow: none; }
+  .has-jim .fc-top :global(.fc-ic2) { width: 24px; height: 24px; margin: 4px 2px 0 0; }
+  .has-jim .fc-t { margin-top: 18px; font-size: 24px; font-weight: 800; line-height: .95; letter-spacing: 0; max-width: 206px; }
+  .has-jim .fc-d { margin-top: 8px; color: #a3aec6; font-size: 14px; line-height: 1.45; max-width: 206px; }
+  /* Service pages (Figma 313:947): 700 tall, copy 400 at x80, 4 tiles 390x230 at x560 */
+  .is-svc { padding-block: 110px; }
+  .is-svc .fc-grid { grid-template-columns: 400px 800px; justify-content: space-between; gap: 0; align-items: start; }
+  .is-svc .fc-eb { font-size: 13px; letter-spacing: .14em; }
+  .is-svc .fc-eb :global(.icon) { width: 16px; height: 16px; }
+  .is-svc .fc-h { margin-top: 5px; font-size: 84px; line-height: .88; letter-spacing: 0; }
+  .is-svc .fc-h { white-space: nowrap; }
+  .is-svc .fc-blue { display: inline-block; width: min-content; white-space: normal; color: var(--ink); }
+  .is-svc .fc-p { margin-top: 74px; max-width: 400px; font-size: 18px; font-weight: 500; line-height: 1.5; color: var(--ink); }
+  .is-svc .fc-btn { margin-top: 16px; }
+  .is-svc .fc-btn :global(.btn) { --bh: 64px; width: 320px; font-size: 24px; color: var(--yellow); border-radius: 10px; }
+  .is-svc .fc-cards { grid-template-columns: 390px 390px; gap: 20px; }
+  .is-svc .fc-card { height: 230px; padding: 28px; border-radius: 18px; background: radial-gradient(260px 200px at 90% -10%, rgba(31,79,216,.85), rgba(31,79,216,0)), var(--ink); }
+  .is-svc .fc-top { align-items: flex-start; min-height: 52px; }
+  .is-svc .fc-ico { width: 52px; height: 52px; border-radius: 12px; }
+  .is-svc .fc-led-c { font-size: 44px; line-height: 1.2; margin-top: -4px; }
+  .is-svc .fc-t { margin-top: 40px; font-size: 30px; font-weight: 900; line-height: 36px; text-transform: none; }
+  .is-svc .fc-d { margin-top: 4px; color: #c9d2e3; font-size: 15px; line-height: 1.45; }
+  @media (max-width: 1360px) and (min-width: 901px) {
+    .is-svc .fc-grid { grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: 40px; }
+    .is-svc .fc-cards { grid-template-columns: 1fr 1fr; }
+    .is-svc .fc-h { font-size: clamp(56px, 5.8vw, 84px); }
+  }
+  @media (max-width: 1360px) and (min-width: 1101px) {
+    .has-jim .fc-grid { grid-template-columns: minmax(0, 1fr) 520px; }
+    .has-jim .fc-jim { left: auto; right: 520px; width: 300px; }
+  }
+  @media (max-width: 1100px) {
+    .has-jim .fc-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+    .has-jim .fc-cards { grid-column: 1 / -1; }
+    .has-jim .fc-jim { position: relative; left: auto; top: auto; width: auto; height: auto; }
+    .has-jim .fc-jim img { height: auto; max-width: 340px; margin-inline: auto; }
+    .has-jim .fc-card { height: auto; }
+  }
   @media (max-width: 900px) { .fc-grid { grid-template-columns: 1fr; } }
   @media (max-width: 700px) {
-    .has-jim .fc-grid { grid-template-columns: 1fr; }
-    .fc-jim { max-width: 300px; margin-inline: auto; }
-    .has-jim .fc-cards { grid-template-columns: 1fr; }
-    .has-jim .fc-card { display: grid; grid-template-columns: 52px 1fr; column-gap: 12px; padding: 16px 16px; }
-    .has-jim .fc-top { grid-row: 1 / 3; align-items: start; }
-    .has-jim .fc-top :global(.fc-ic2) { display: none; }
-    .has-jim .fc-t { margin-top: 2px; font-size: 22px; }
-    .has-jim .fc-d { margin-top: 4px; }
-    .has-jim .fc-btn { order: 9; }
     .fc-cards { grid-template-columns: 1fr 1fr; gap: 12px; }
     .fc-card { padding: 18px 14px; }
     .fc-led-c { font-size: 24px; } .fc-t { font-size: 22px; }
+    /* Hub version on phones (Figma 313:1351: copy, Jim, 4 row tiles, button) */
+    .has-jim { padding-block: 56px; }
+    .has-jim .fc-grid { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+    .has-jim .fc-copy { display: contents; }
+    .has-jim .fc-eb { font-size: 11px; }
+    .has-jim .fc-eb :global(.icon) { width: 14px; height: 14px; }
+    .has-jim .fc-h { margin-top: 10px; font-size: 46px; }
+    .has-jim .fc-p { margin-top: 12px; max-width: none; font-size: 15px; }
+    .has-jim .fc-jim { order: 1; align-self: center; width: 300px; height: 400px; margin-top: 10px; }
+    .has-jim .fc-jim img { width: 100%; height: 100%; max-width: none; }
+    .has-jim .fc-name { left: 30px; bottom: 0; width: 240px; height: 48px; padding: 5px 16px 0; }
+    .has-jim .fc-name strong { font-size: 20px; line-height: 23px; }
+    .has-jim .fc-cards { order: 2; grid-template-columns: 1fr; gap: 10px; margin-top: 24px; }
+    .has-jim .fc-card { display: grid; grid-template-columns: 66px 1fr; height: auto; min-height: 99px; padding: 16px 16px 16px 18px; border-radius: 14px; }
+    .has-jim .fc-top { grid-row: 1 / 3; align-items: start; min-height: 0; }
+    .has-jim .fc-led { font-size: 30px; margin-top: 2px; }
+    .has-jim .fc-top :global(.fc-ic2) { display: none; }
+    .has-jim .fc-t { margin-top: 0; max-width: none; font-size: 20px; line-height: 25px; }
+    .has-jim .fc-d { margin-top: 4px; max-width: none; font-size: 13px; }
+    .has-jim .fc-btn { order: 3; margin-top: 18px; }
+    .has-jim .fc-btn :global(.btn) { --bh: 56px; width: 100%; font-size: 24px; }
+    /* service-page version on phones */
+    .is-svc { padding-block: 56px; }
+    .is-svc .fc-grid { grid-template-columns: 1fr; gap: 28px; }
+    .is-svc .fc-eb { font-size: 11px; }
+    .is-svc .fc-h { margin-top: 10px; font-size: 52px; }
+    .is-svc .fc-p { margin-top: 14px; font-size: 15px; }
+    .is-svc .fc-btn :global(.btn) { width: 100%; --bh: 56px; }
+    .is-svc .fc-cards { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .is-svc .fc-card { height: auto; min-height: 170px; padding: 16px 14px; border-radius: 14px; }
+    .is-svc .fc-top { min-height: 40px; }
+    .is-svc .fc-ico { width: 40px; height: 40px; border-radius: 10px; }
+    .is-svc .fc-led-c { font-size: 24px; margin-top: 4px; }
+    .is-svc .fc-t { margin-top: 18px; font-size: 22px; line-height: 24px; }
+    .is-svc .fc-d { font-size: 13px; }
   }
 </style>

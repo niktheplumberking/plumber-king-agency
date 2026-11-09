@@ -14,9 +14,9 @@ const chips = [{ name: 'Pomona', href: '/' }, ...names.map((n) => { const t = TO
 <section class="ar dark section">
   <div class="wrap ar-grid">
     <figure class="ar-map" data-reveal="clip">
-      <Image src={map} alt="Map of the area United Plumbing covers around Pomona: LA County, the Inland Empire and Orange County" widths={[480, 1000]} sizes="(max-width: 900px) 100vw, 560px" />
+      <Image src={map} alt="Map of the area United Plumbing covers around Pomona: LA County, the Inland Empire and Orange County" widths={[480, 1000]} sizes="(max-width: 900px) 100vw, 600px" />
     </figure>
-    <div>
+    <div class="ar-copy">
       <Eyebrow>Where we work</Eyebrow>
       <h2 class="h-display h2 ar-h" data-split><span class="c-white">{line1}</span><br /><span class="c-cyan">{line2}</span></h2>
       <ul class="ar-chips" data-stagger="up">
@@ -24,20 +24,39 @@ const chips = [{ name: 'Pomona', href: '/' }, ...names.map((n) => { const t = TO
       </ul>
       <div class="btn-row ar-cta" data-reveal="up">
         <Btn href={SITE.phoneHref} icon="phone" size="md">Call a local plumber</Btn>
-        <a href="/areas/" class="textlink">All 28 towns <Icon name="arrow" size={16} /></a>
       </div>
     </div>
   </div>
 </section>
 <style>
-  .ar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-  .ar-map { border: 2px solid var(--cyan); border-radius: 10px; overflow: hidden; box-shadow: 0 0 60px -20px rgba(51,214,255,.5); }
-  .ar-map img { width: 100%; aspect-ratio: 600/520; object-fit: cover; }
-  .ar-h { margin-top: 16px; font-size: clamp(42px, 4.4vw, 62px); }
-  .ar-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 30px; }
-  .ar-chips a { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line-dark); border-radius: 6px; background: var(--night2); color: #fff; font-weight: 600; font-size: 14px; transition: border-color .3s, background .3s, transform .3s var(--ease-out); }
-  .ar-chips a .icon { color: var(--cyan); }
+  /* Figma 232:486 (homepage): 740 tall; 600 x 520 map, copy from x 740, 194 x 42 town chips */
+  .ar.section { padding-block: 110px; }
+  .ar-grid { display: grid; grid-template-columns: 600fr 620fr; gap: 60px; align-items: start; }
+  .ar-map { border: 2px solid var(--cyan); border-radius: 10px; overflow: hidden; }
+  .ar-map img { width: 100%; aspect-ratio: 596/516; object-fit: cover; }
+  .ar-copy { padding-top: 20px; }
+  .ar-h { margin-top: 13px; font-size: clamp(40px, 3.889vw, 56px); line-height: .92; letter-spacing: 0; }
+  .ar-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 194px)); gap: 10px 12px; margin-top: 31px; }
+  .ar-chips a { display: flex; align-items: center; gap: 8px; height: 42px; padding: 0 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 6px; background: var(--night2); color: #fff; font-weight: 600; font-size: 14px; line-height: 18px; white-space: nowrap; transition: border-color .3s, background .3s, transform .3s var(--ease-out); }
+  .ar-chips a :global(.icon) { color: var(--cyan); }
   .ar-chips a:hover { border-color: var(--cyan); background: #182343; transform: translateY(-2px); }
   .ar-cta { margin-top: 30px; align-items: center; gap: 24px; }
+  .ar-cta :global(.btn) { --bh: 54px; padding: 0 28px; gap: 12px; font-size: 20px; letter-spacing: .02em; }
+  .ar-cta :global(.btn .icon) { width: 22px; height: 22px; }
   @media (max-width: 900px) { .ar-grid { grid-template-columns: 1fr; gap: 40px; } .ar-grid > div { order: -1; } .ar-chips { grid-template-columns: 1fr 1fr; } }
+  /* Figma 236:630 (phone): 951 tall; heading, then 350 x 300 map, 171 x 40 town chips, 54 px button */
+  @media (max-width: 640px) {
+    .ar.section { padding-block: 50px; }
+    .ar-grid { gap: 0; }
+    .ar-copy { display: contents; }
+    .ar-copy > :global(.eyebrow) { order: 1; }
+    .ar-h { order: 2; margin-top: 10px; font-size: 40px; }
+    .ar-map { order: 3; margin-top: 24px; height: 300px; }
+    .ar-map img { width: 470px; max-width: none; height: 330px; aspect-ratio: auto; margin: -40px 0 0 -60px; }
+    .ar-chips { order: 4; margin-top: 24px; gap: 10px 8px; }
+    .ar-chips a { height: 40px; gap: 7px; font-size: 14px; line-height: 17px; }
+    .ar-chips a :global(.icon) { width: 15px; height: 15px; }
+    .ar-cta { order: 5; margin-top: 24px; }
+    .ar-cta :global(.btn) { width: 100%; justify-content: center; }
+  }
 </style>

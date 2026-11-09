@@ -10,3 +10,15 @@ const row = [...items, ...items];
     ))}
   </div>
 </div>
+<style>
+  /* Figma 227:555 / 244:508: 64 px band, Doto 26 px, 0.06em tracking; yellow band has no glow, cyan band has 2 px cobalt lines + glow */
+  .ticker { background: var(--night); border: 0; }
+  .ticker .ticker-item { gap: 34px; padding: 16px 17px; font-size: clamp(20px, 1.806vw, 26px); line-height: 32px; letter-spacing: .06em; text-shadow: none; }
+  .ticker.is-cyan { background: #05070d; border-block: 2px solid var(--cobalt); }
+  .ticker.is-cyan .ticker-item { padding-block: 14px; text-shadow: 0 0 10px rgba(51, 214, 255, .4); }
+  /* Figma 234:579: 48 px band, 20 px, 24 px line */
+  @media (max-width: 640px) {
+    .ticker .ticker-item { gap: 26px; padding: 12px 13px; font-size: 20px; line-height: 24px; }
+    .ticker.is-cyan .ticker-item { padding-block: 10px; }
+  }
+</style>

@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import Btn from './Btn.astro';
-import logo from '../assets/img/logo-united.jpg';
+import logo from '../assets/img/logo-united.png';
 import { SITE } from '../data/site';
 import { SERVICES, FAMILIES } from '../data/services';
 const path = Astro.url.pathname;
@@ -16,12 +16,12 @@ const nav = [
 ---
 <div class="topbar" data-intro="topbar">
   <div class="wrap topbar-in">
-    <p class="tb-alert"><Icon name="alert" size={16} /><span class="tb-long">Burst pipe or no hot water? Call now. A real person answers 24/7.</span><span class="tb-short">Burst pipe? A real person answers 24/7</span>
-      <a href={SITE.phoneHref} class="tb-phone"><Icon name="phone" size={14} />{SITE.phone}</a></p>
+    <p class="tb-alert"><Icon name="alert" size={18} class="tb-ic-d" /><Icon name="clock" size={14} class="tb-ic-m" /><span class="tb-long">Burst pipe or no hot water? Call now. A real person answers 24/7.</span><span class="tb-short">Burst pipe? A real person answers 24/7</span>
+      <a href={SITE.phoneHref} class="tb-phone"><Icon name="phone" size={16} />{SITE.phone}</a></p>
     <div class="tb-right">
-      <span class="tb-lang"><Icon name="globe" size={15} /><span class="tb-long">Hablamos Español</span><span class="tb-short">ES</span></span>
-      <a href={SITE.instagram} aria-label="Instagram @plumblord1" target="_blank" rel="noopener" class="tb-soc"><Icon name="instagram" size={17} /></a>
-      <a href={SITE.facebook} aria-label="Facebook: Jim United Plumbing Official" target="_blank" rel="noopener" class="tb-soc"><Icon name="facebook" size={16} /></a>
+      <span class="tb-lang"><Icon name="globe" size={16} class="tb-ic-d" /><span class="tb-long">Hablamos Español</span><span class="tb-short">ES</span></span>
+      <a href={SITE.instagram} aria-label="Instagram @plumblord1" target="_blank" rel="noopener" class="tb-soc"><Icon name="instagram" size={18} /></a>
+      <a href={SITE.facebook} aria-label="Facebook: Jim United Plumbing Official" target="_blank" rel="noopener" class="tb-soc"><Icon name="facebook" size={18} /></a>
     </div>
   </div>
 </div>
@@ -30,13 +30,13 @@ const nav = [
     <div class="wrap hdr-in">
       <a href="/" class="brand" aria-label="United Plumbing home" data-intro="brand">
         <span class="brand-panel" aria-hidden="true"></span>
-        <Image src={logo} alt="United Plumbing logo" width={160} height={113} class="brand-logo" loading="eager" />
-        <span class="brand-txt"><strong>United Plumbing</strong><small>Pomona, CA · Inland Empire</small></span>
+        <Image src={logo} alt="United Plumbing logo" width={180} height={137} class="brand-logo" loading="eager" />
+        <span class="brand-txt"><strong>United Plumbing</strong><small>Pomona, CA  ·  Inland Empire</small></span>
       </a>
       <nav class="nav" aria-label="Main">
         <ul class="nav-list">
           <li class="has-mega" data-intro="nav">
-            <a href="/services/" class:list={["nav-a", { on: path.startsWith('/services') || SERVICES.some((s) => path.includes(s.slug)) }]} aria-haspopup="true">Services <Icon name="chevronDown" size={14} /></a>
+            <a href="/services/" class:list={["nav-a", { on: path.startsWith('/services') || SERVICES.some((s) => path.includes(s.slug)) }]} aria-haspopup="true">Services <Icon name="chevronDown" size={14} class="nav-chev" /></a>
             <div class="mega" role="menu">
               <div class="mega-grid">
                 {fams.map((f) => (
@@ -89,33 +89,37 @@ const nav = [
 </div>
 
 <style>
-  .topbar { background: var(--yellow); color: var(--ink); font-size: 13px; font-weight: 600; position: relative; z-index: 61; }
+  .topbar { background: var(--yellow); color: var(--ink); font-size: 14px; line-height: 18px; font-weight: 600; position: relative; z-index: 61; }
   .topbar-in { display: flex; align-items: center; justify-content: space-between; min-height: 44px; gap: 16px; }
   .tb-alert { display: flex; align-items: center; gap: 8px; }
-  .tb-phone { display: inline-flex; align-items: center; gap: 6px; margin-left: 14px; font-weight: 700; }
+  .tb-phone { display: inline-flex; align-items: center; gap: 6px; margin-left: 12px; font-weight: 700; }
   .tb-phone:hover, .tb-soc:hover { text-decoration: underline; opacity: .75; }
-  .tb-right { display: flex; align-items: center; gap: 14px; }
+  .tb-right { display: flex; align-items: center; gap: 8px; }
+  .tb-lang { margin-right: 9px; }
+  .tb-right > .tb-soc:last-child { margin-right: -3px; }
   .tb-lang { display: inline-flex; align-items: center; gap: 6px; }
   .tb-short { display: none; }
+  .tb-alert :global(.tb-ic-m) { display: none; }
   .tb-soc { display: grid; place-items: center; min-width: 24px; min-height: 24px; transition: opacity .2s; }
 
   .hdr { position: sticky; top: 0; z-index: 60; transition: transform .45s var(--ease-out); }
   .hdr.is-hidden { transform: translateY(-100%); }
   .hdr-bar { background: var(--night); position: relative; transition: box-shadow .3s; }
   .hdr.is-scrolled .hdr-bar { box-shadow: 0 12px 40px -18px rgba(0,0,0,.6); }
-  .hdr-in { display: flex; align-items: center; gap: 28px; min-height: 96px; transition: min-height .35s var(--ease-out); }
+  .hdr-in { display: flex; align-items: center; gap: 0; min-height: 96px; transition: min-height .35s var(--ease-out); }
   .hdr.is-scrolled .hdr-in { min-height: 80px; }
-  .brand { position: relative; display: flex; align-items: center; gap: 14px; align-self: stretch; padding-right: 64px; isolation: isolate; }
-  .brand-panel { position: absolute; z-index: -1; top: 0; bottom: 0; right: 0; left: -100vw; background: #fff; clip-path: polygon(0 0, 100% 0, calc(100% - 46px) 100%, 0 100%); }
+  .brand { position: relative; flex: none; display: flex; align-items: center; gap: 12px; align-self: stretch; width: 390px; isolation: isolate; }
+  .brand-panel { position: absolute; z-index: -2; top: 0; bottom: 0; right: 0; left: -100vw; background: #fff; clip-path: polygon(0 0, 100% 0, calc(100% - 50px) 100%, 0 100%); }
   .brand-panel::after { content: ''; }
-  .brand::after { content: ''; position: absolute; z-index: -2; top: 0; bottom: 0; right: -14px; width: 60px; background: var(--cyan); clip-path: polygon(46px 0, 60px 0, 14px 100%, 0 100%); }
-  .brand-logo { width: 76px; height: auto; border-radius: 6px; }
+  .brand::after { content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; right: 0; width: 30px; background: var(--cyan); clip-path: polygon(10px 0, 30px 0, -20px 100%, -40px 100%); }
+  .brand-logo { width: 96px; height: 76px; object-fit: contain; }
   .brand-txt { display: grid; line-height: 1.1; color: var(--ink); }
-  .brand-txt strong { font-family: var(--display); font-weight: 900; font-size: 26px; text-transform: uppercase; letter-spacing: .01em; }
-  .brand-txt small { font-size: 12px; color: var(--ink-2); margin-top: 3px; }
-  .nav { margin-left: auto; }
-  .nav-list { display: flex; gap: 6px; }
-  .nav-a { position: relative; display: inline-flex; align-items: center; gap: 4px; padding: 12px 12px; color: #fff; font-weight: 500; font-size: 15px; }
+  .brand-txt strong { font-family: var(--display); font-weight: 900; font-size: 24px; line-height: 29px; text-transform: uppercase; letter-spacing: .02em; }
+  .brand-txt small { font-size: 13px; line-height: 17px; font-weight: 500; color: #475569; margin-top: 1px; white-space: pre; }
+  .nav { margin-left: 38px; margin-right: auto; }
+  .nav-list { display: flex; gap: 10px; }
+  .nav-a { position: relative; display: inline-flex; align-items: center; gap: 4px; padding: 12px 12px; color: #fff; font-weight: 500; font-size: 16px; line-height: 21px; }
+  .nav-a :global(.nav-chev) { display: none; }
   .nav-a::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 6px; height: 2px; background: var(--cyan); transform: scaleX(0); transform-origin: right; transition: transform .35s var(--ease-out); }
   .nav-a:hover::after, .nav-a.on::after, .has-mega:focus-within > .nav-a::after { transform: scaleX(1); transform-origin: left; }
   .has-mega { position: relative; }
@@ -132,10 +136,15 @@ const nav = [
   .mega-col a:hover { color: #fff; padding-left: 4px; }
   .mega-col a:hover .icon { opacity: 1; transform: none; }
   .mega-all { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; color: var(--yellow); font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 18px; }
-  .hdr-cta { display: flex; align-items: center; gap: 14px; }
-  .hdr-cta :global(.btn) { --bh: 60px; }
+  .hdr-cta { display: flex; align-items: center; gap: 16px; }
+  .hdr-cta :global(.btn) { --bh: 60px; letter-spacing: .02em; }
+  .hdr-cta :global(.btn .icon) { width: 22px; height: 22px; }
+  .hdr-cta :global(.hdr-text) { font-size: 20px; padding: 0 22px; }
+  .hdr-cta :global(.hdr-call) { font-size: 24px; padding: 0 24px; }
+  .hdr-cta :global(.hdr-call .btn-two small) { font-size: 12px; margin-top: 3px; opacity: .8; }
   .m-call, .m-menu { display: none; }
-  @media (max-width: 1240px) { .hdr-text { display: none !important; } }
+  @media (max-width: 1359px) { .hdr-cta :global(.hdr-text) { display: none; } .brand { width: auto; padding-right: 64px; } .nav { margin-left: auto; margin-right: 0; } .hdr-cta { margin-left: 20px; } }
+  @media (max-width: 1180px) { .nav-list { gap: 0; } .nav-a { padding-inline: 10px; } .nav-a::after { left: 10px; right: 10px; } .brand { padding-right: 48px; } }
   @media (max-width: 1060px) {
     .nav, .hdr-cta > span { display: none; }
     .hdr-cta { margin-left: auto; gap: 10px; }
@@ -145,11 +154,20 @@ const nav = [
   }
   @media (max-width: 720px) {
     .tb-long { display: none; } .tb-short { display: inline; } .tb-phone, .tb-soc { display: none; }
-    .topbar { font-size: 12px; } .topbar-in { min-height: 36px; }
+    .topbar { font-size: 12px; line-height: 16px; } .topbar-in { min-height: 36px; }
+    .tb-alert { gap: 6px; }
+    .tb-alert :global(.tb-ic-d), .tb-lang :global(.tb-ic-d) { display: none; }
+    .tb-alert :global(.tb-ic-m) { display: block; }
+    .tb-lang { font-weight: 700; margin-right: 0; }
     .hdr-in, .hdr.is-scrolled .hdr-in { min-height: 72px; }
-    .brand { padding-right: 46px; gap: 10px; }
-    .brand-logo { width: 60px; }
-    .brand-txt strong { font-size: 20px; line-height: .95; max-width: 90px; }
+    .brand { width: 230px; padding-right: 0; gap: 8px; }
+    .brand-panel { clip-path: polygon(0 0, 100% 0, calc(100% - 34px) 100%, 0 100%); }
+    .brand::after { display: none; }
+    .brand-logo { width: 62px; height: 52px; }
+    .brand-txt strong { font-size: 19px; line-height: .95; letter-spacing: .01em; max-width: 90px; }
+    .hdr-cta { gap: 12px; }
+    .m-call, .m-menu { width: 44px; height: 44px; }
+    .m-menu { box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
     .brand-txt small { display: none; }
   }
   .mnav { position: fixed; inset: 0; z-index: 90; background: var(--night); color: #fff; overflow-y: auto; }

@@ -3,15 +3,17 @@
 // until Jim sends the clips and the customers' OK. Labelled "Video review · Instagram" (never Google).
 import Icon from '../Icon.astro';
 import { SITE } from '../../data/site';
-interface Props { layout?: 'mosaic' | 'row'; towns?: string[] }
-const { layout = 'mosaic', towns = [] } = Astro.props;
+interface Props { layout?: 'mosaic' | 'row'; towns?: string[]; town?: string }
+const { layout = 'mosaic', towns = [], town = 'Town' } = Astro.props;
 const vids = [0, 1, 2].map((i) => ({ n: i + 1, town: towns[i] }));
 ---
 <div class={`vr vr-${layout}`}>
-  <div class="vr-track" data-stagger="up">
+  <div class="vr-track">
+    <div class="vr-cards" data-stagger="up" data-swipe>
     {vids.map((v) => (
       <a href={SITE.instagram} target="_blank" rel="noopener" class={`vr-card vr-c${v.n}`} data-tilt aria-label={`Video review ${v.n} on Instagram (opens Instagram)`}>
-        <span class="vr-badge"><Icon name="instagram" size={14} />Video review · Instagram</span>
+        <span class="vr-badge"><Icon name="instagram" size={14} /><span><span class="vr-bl">Video review · </span>Instagram</span></span>
+        <span class="vr-glow" aria-hidden="true"></span>
         <span class="vr-play" aria-hidden="true"><Icon name="play" size={26} /></span>
         <span class="vr-thumb">Thumbnail from @plumblord1</span>
         <span class="vr-foot">
@@ -21,19 +23,23 @@ const vids = [0, 1, 2].map((i) => ({ n: i + 1, town: towns[i] }));
         </span>
       </a>
     ))}
-    <div class="vr-g">
+    </div>
+    <span class="vr-dots" aria-hidden="true" data-dots>{vids.map((_, i) => <i class:list={{ on: i === 0 }}></i>)}</span>
+    <div class="vr-g" data-reveal="up">
       {[0, 1].map(() => (
         <article class="vr-gcard">
           <span class="vr-q" aria-hidden="true"><Icon name="quote" size={22} /></span>
-          <span class="vr-gtag">Google review: after profile is live</span>
+          <span class="vr-gtag">Google review goes here</span>
           <span class="vr-lines" aria-hidden="true"><i></i><i></i><i class="s"></i></span>
-          <span class="vr-who"><span class="vr-av" aria-hidden="true"></span><span><strong>Customer name</strong><small>Town</small></span></span>
+          <span class="vr-who"><span class="vr-av" aria-hidden="true"></span><span><strong>Customer name</strong><small>{town}</small></span></span>
         </article>
       ))}
     </div>
   </div>
 </div>
 <style>
+  .vr-cards { display: contents; }
+  .vr-dots { display: none; }
   .vr-track { display: grid; grid-template-columns: repeat(3, 1fr) 1.1fr; gap: 18px; align-items: stretch; }
   .vr-card { position: relative; display: flex; flex-direction: column; min-height: 360px; border-radius: 16px; overflow: hidden; color: #fff;
     background: radial-gradient(90% 70% at 50% 45%, #1f3fa8 0%, #10173a 55%, #0b0f1a 100%); box-shadow: 0 30px 60px -30px rgba(11,15,26,.7); transition: transform .4s var(--ease-out), box-shadow .4s; }
@@ -54,17 +60,90 @@ const vids = [0, 1, 2].map((i) => ({ n: i + 1, town: towns[i] }));
   .vr-who { display: flex; align-items: center; gap: 10px; }
   .vr-av { width: 32px; height: 32px; border-radius: 50%; background: #dfe5ef; }
   .vr-who strong { display: block; font-size: 13px; } .vr-who small { font-size: 11px; color: var(--ink-3); }
-  .vr-mosaic .vr-track { grid-template-columns: 1.15fr 1fr; grid-template-rows: auto auto; }
-  .vr-mosaic .vr-c1 { grid-row: 1 / 3; min-height: 520px; }
-  .vr-mosaic .vr-c2 { min-height: 250px; }
-  .vr-mosaic .vr-c3 { display: none; }
-  .vr-mosaic .vr-g { grid-template-columns: 1fr; }
-  .vr-mosaic .vr-g .vr-gcard + .vr-gcard { display: none; }
+  /* Mosaic = Figma 324:688: one tall video, one wide, one small + a review slot (380 / 190 / 190, rows 300 + 300, gap 20). */
+  .vr-mosaic .vr-track { grid-template-columns: 380fr 190fr 190fr; grid-template-rows: 300px 300px; gap: 20px; }
+  :is(.vr-mosaic, .vr-row) .vr-card { min-height: 0; border-radius: 18px; background: var(--night); box-shadow: 0 18px 44px rgba(0,0,0,.3); }
+  .vr-mosaic .vr-c1 { grid-row: 1 / 3; }
+  .vr-mosaic .vr-c2 { grid-column: 2 / 4; }
+  .vr-mosaic .vr-c3 { display: flex; }
+  .vr-mosaic .vr-c3 .vr-bl { display: none; }
+  :is(.vr-mosaic, .vr-row) .vr-glow { position: absolute; left: 50%; top: 38%; width: 80%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(31,79,216,.55); filter: blur(60px); pointer-events: none; }
+  .vr-mosaic .vr-c2 .vr-glow, .vr-mosaic .vr-c3 .vr-glow { top: 34%; }
+  :is(.vr-mosaic, .vr-row) .vr-badge { left: 16px; top: 16px; z-index: 1; gap: 8px; padding: 6px 10px; border-radius: 6px; background: #000; font-size: 12px; font-weight: 700; line-height: 1.3; }
+  :is(.vr-mosaic, .vr-row) .vr-play { position: absolute; left: 50%; top: 68px; margin: 0 0 0 -32px; }
+  .vr-mosaic .vr-c1 .vr-play { width: 96px; height: 96px; top: 212px; margin-left: -48px; }
+  .vr-mosaic .vr-c1 .vr-play :global(.icon) { width: 38px; height: 38px; }
+  :is(.vr-mosaic, .vr-row) .vr-thumb { display: none; }
+  :is(.vr-mosaic, .vr-row) .vr-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 96px; align-content: start; gap: 8px; padding: 16px 20px; border-top: 0; }
+  :is(.vr-mosaic, .vr-row) .vr-n { font-size: 18px; line-height: 22px; }
+  .vr-mosaic .vr-c1 .vr-n { font-size: 24px; line-height: 29px; }
+  :is(.vr-mosaic, .vr-row) .vr-ph { font-size: 13px; font-weight: 600; }
+  :is(.vr-mosaic, .vr-row) .vr-g { display: block; }
+  :is(.vr-mosaic, .vr-row) .vr-g .vr-gcard + .vr-gcard { display: none; }
+  :is(.vr-mosaic, .vr-row) .vr-gcard { position: relative; height: 300px; display: block; padding: 0; border-radius: 18px; border-color: #dce3ee; }
+  :is(.vr-mosaic, .vr-row) .vr-q { position: absolute; left: 19px; top: 19px; }
+  :is(.vr-mosaic, .vr-row) .vr-q :global(.icon) { width: 30px; height: 30px; }
+  :is(.vr-mosaic, .vr-row) .vr-gtag { position: absolute; left: 19px; top: 72px; max-width: 150px; transform: rotate(3deg); font: 700 12px/1.25 var(--body); padding: 6px 10px; }
+  :is(.vr-mosaic, .vr-row) .vr-lines { position: absolute; left: 19px; top: 139px; width: 150px; gap: 9px; }
+  :is(.vr-mosaic, .vr-row) .vr-lines i { height: 9px; border-radius: 5px; background: #dce3ee; }
+  :is(.vr-mosaic, .vr-row) .vr-lines i:nth-child(2) { width: 87%; } :is(.vr-mosaic, .vr-row) .vr-lines i.s { width: 67%; }
+  :is(.vr-mosaic, .vr-row) .vr-who { position: absolute; left: 19px; top: 235px; gap: 8px; }
+  :is(.vr-mosaic, .vr-row) .vr-av { width: 36px; height: 36px; }
+  :is(.vr-mosaic, .vr-row) .vr-who strong { line-height: 1.3; } :is(.vr-mosaic, .vr-row) .vr-who small { display: block; font-size: 12px; color: #475569; }
+  /* Row = Figma areas 338:548: three 300x440 videos + two stacked 320x210 review slots, gap 20. */
+  @media (min-width: 1001px) {
+    .vr-row .vr-track { grid-template-columns: 300fr 300fr 300fr 320fr; gap: 20px; }
+    .vr-row .vr-card { height: 440px; min-height: 0; border-radius: 18px; background: var(--night); box-shadow: 0 18px 44px rgba(0,0,0,.3); }
+    .vr-row .vr-glow { position: absolute; left: 10%; top: 60px; width: 80%; transform: none; aspect-ratio: 1; border-radius: 50%; background: rgba(31,79,216,.5); filter: blur(60px); pointer-events: none; }
+    .vr-row .vr-badge { left: 16px; top: 16px; z-index: 1; gap: 8px; padding: 6px 10px; border-radius: 6px; background: #000; font-size: 12px; font-weight: 700; line-height: 1.3; }
+    .vr-row .vr-play { position: absolute; left: 50%; top: 140px; width: 72px; height: 72px; margin: 0 0 0 -36px; }
+    .vr-row .vr-play :global(.icon) { width: 28px; height: 28px; }
+    .vr-row .vr-thumb { display: block; top: 226px; font-size: 12px; line-height: 16px; color: #a3aec6; opacity: 1; }
+    .vr-row .vr-foot { position: absolute; left: 0; right: 0; bottom: 0; height: 110px; align-content: start; gap: 0; padding: 16px 20px 0; background: #131b2e; border-top: 0; }
+    .vr-row .vr-n { font-size: 20px; line-height: 25px; }
+    .vr-row .vr-town { margin-top: 7px; gap: 8px; padding: 4px 8px; border-radius: 6px; font-size: 12px; line-height: 16px; }
+    .vr-row .vr-ph { margin-top: 8px; font-size: 12px; font-weight: 600; }
+    .vr-row .vr-g { display: grid; gap: 20px; grid-template-rows: 210px 210px; }
+    .vr-row .vr-g .vr-gcard + .vr-gcard { display: block; }
+    .vr-row .vr-gcard { position: relative; display: block; height: 210px; padding: 0; border-radius: 18px; background: #f3f6fb; border-color: #dce3ee; }
+    .vr-row .vr-q { position: absolute; left: 19px; top: 19px; }
+    .vr-row .vr-q :global(.icon) { width: 30px; height: 30px; }
+    .vr-row .vr-gtag { position: absolute; left: 66px; top: 26px; max-width: none; transform: rotate(2deg); font: 700 11px/1.25 var(--body); padding: 5px 10px; white-space: nowrap; }
+    .vr-row .vr-lines { position: absolute; left: 19px; top: 79px; width: 280px; gap: 9px; }
+    .vr-row .vr-lines i { height: 9px; border-radius: 5px; background: #dce3ee; }
+    .vr-row .vr-lines i:nth-child(2) { width: 250px; } .vr-row .vr-lines i.s { width: 180px; }
+    .vr-row .vr-who { position: absolute; left: 19px; top: 149px; align-items: flex-start; gap: 10px; }
+    .vr-row .vr-av { width: 36px; height: 36px; }
+    .vr-row .vr-who strong { font-size: 14px; line-height: 18px; } .vr-row .vr-who small { display: block; margin-top: 2px; font-size: 12px; color: #475569; }
+  }
   @media (max-width: 1000px) {
-    .vr-track, .vr-mosaic .vr-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); gap: 14px; padding: 4px var(--gutter) 20px; margin-inline: calc(var(--gutter) * -1); scrollbar-width: none; }
-    .vr-track::-webkit-scrollbar { display: none; }
-    .vr-card, .vr-mosaic .vr-c1, .vr-mosaic .vr-c2 { flex: none; width: 76vw; max-width: 300px; min-height: 340px; scroll-snap-align: start; }
-    .vr-mosaic .vr-c3 { display: flex; }
-    .vr-g { flex: none; width: 76vw; max-width: 300px; scroll-snap-align: start; }
+    .vr-track::-webkit-scrollbar, .vr-cards::-webkit-scrollbar { display: none; }
+    /* Mosaic on phones = Figma 335:599: a swipe row of three 220x340 videos, dots, then the review slot full width. */
+    :is(.vr-mosaic, .vr-row) .vr-track { display: block; }
+    :is(.vr-mosaic, .vr-row) .vr-cards { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); padding: 0 var(--gutter); margin-inline: calc(var(--gutter) * -1); scrollbar-width: none; }
+    :is(.vr-mosaic, .vr-row) .vr-card, :is(.vr-mosaic, .vr-row) .vr-c1, :is(.vr-mosaic, .vr-row) .vr-c2, :is(.vr-mosaic, .vr-row) .vr-c3 { flex: none; width: 220px; height: 340px; scroll-snap-align: start; }
+    :is(.vr-mosaic, .vr-row) .vr-c3 .vr-bl { display: inline; }
+    :is(.vr-mosaic, .vr-row) .vr-badge { left: 12px; top: 12px; gap: 8px; padding: 5px 8px; font-size: 11px; }
+    :is(.vr-mosaic, .vr-row) .vr-glow, :is(.vr-mosaic, .vr-row) .vr-c2 .vr-glow, :is(.vr-mosaic, .vr-row) .vr-c3 .vr-glow { top: 170px; width: 180px; }
+    :is(.vr-mosaic, .vr-row) .vr-play, :is(.vr-mosaic, .vr-row) .vr-c1 .vr-play { top: 130px; width: 60px; height: 60px; margin-left: -30px; }
+    :is(.vr-mosaic, .vr-row) .vr-c1 .vr-play :global(.icon) { width: 26px; height: 26px; }
+    :is(.vr-mosaic, .vr-row) .vr-foot { height: 84px; padding: 12px 14px; gap: 6px; }
+    :is(.vr-mosaic, .vr-row) .vr-n, :is(.vr-mosaic, .vr-row) .vr-c1 .vr-n { font-size: 16px; line-height: 19px; }
+    :is(.vr-mosaic, .vr-row) .vr-ph { font-size: 11px; }
+    :is(.vr-mosaic, .vr-row) .vr-thumb { display: block; top: 204px; font-size: 11px; opacity: 1; color: #c3cbe0; }
+    /* Areas phone (Figma 340:482): caption bar carries a town chip, so it is taller. */
+    .vr-row .vr-foot { height: 104px; }
+    .vr-row .vr-thumb { top: 194px; }
+    :is(.vr-mosaic, .vr-row) .vr-dots { display: flex; justify-content: center; gap: 12px; margin-top: 14px; }
+    .vr-dots i { width: 10px; height: 6px; border-radius: 3px; background: #c9d2e3; transition: width .3s, background .3s; }
+    .vr-dots i.on { width: 28px; background: var(--cobalt); }
+    :is(.vr-mosaic, .vr-row) .vr-g { margin-top: 20px; }
+    :is(.vr-mosaic, .vr-row) .vr-gcard { height: 200px; }
+    :is(.vr-mosaic, .vr-row) .vr-q { left: 20px; top: 20px; }
+    :is(.vr-mosaic, .vr-row) .vr-q :global(.icon) { width: 28px; height: 28px; }
+    :is(.vr-mosaic, .vr-row) .vr-gtag { left: 66px; top: 22px; max-width: none; white-space: nowrap; }
+    :is(.vr-mosaic, .vr-row) .vr-lines { left: 20px; top: 72px; width: 310px; }
+    :is(.vr-mosaic, .vr-row) .vr-lines i:nth-child(2) { width: 90%; } :is(.vr-mosaic, .vr-row) .vr-lines i.s { width: 65%; }
+    :is(.vr-mosaic, .vr-row) .vr-who { left: 20px; top: 140px; gap: 10px; }
   }
 </style>

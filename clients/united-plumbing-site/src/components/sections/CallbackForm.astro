@@ -2,11 +2,31 @@
 import Icon from '../Icon.astro';
 import Btn from '../Btn.astro';
 import { SERVICES } from '../../data/services';
-interface Props { variant?: 'bar' | 'card'; title?: string; sub?: string; id?: string; problemLabel?: string; badge?: boolean; footer?: boolean; zipLabel?: string; zipPlaceholder?: string }
+interface Props { variant?: 'bar' | 'card' | 'town'; title?: string; sub?: string; id?: string; problemLabel?: string; badge?: boolean; footer?: boolean; zipLabel?: string; zipPlaceholder?: string }
 const { variant = 'card', title = 'Request a call back', sub = "Leave your number. Jim's team calls you back.", id = 'cb', problemLabel = "What's wrong?", badge = true, footer = false, zipLabel = 'ZIP code', zipPlaceholder = '91767' } = Astro.props;
 const problems = [...SERVICES.map((s) => s.name), 'Not sure / something else'];
+// 'town' variant (Figma 321:437 / 337:533 town + areas hero card): problem picked with pill chips (a radio group named "problem").
+const townChips = ['Clogged drain', 'Sewer backup', 'Leak', 'Water heater', 'Something else'];
 ---
-{variant === 'bar' ? (
+{variant === 'town' ? (
+  <form class="cbt card" data-callback novalidate aria-labelledby={`${id}-t`}>
+    {badge && <span class="cbt-badge"><i></i>Answered 24/7</span>}
+    <h2 id={`${id}-t`} class="h-display cbt-title">{title.replace(/^(get a call back) /i, '$1\n')}</h2>
+    <p class="cbt-sub">{sub}</p>
+    <label class="cbt-field"><span class="cbt-label">Name</span><input class="cbt-input" name="name" autocomplete="name" placeholder="Your name" required /><Icon name="user" size={18} /></label>
+    <label class="cbt-field"><span class="cbt-label">Phone</span><input class="cbt-input" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(909) 000-0000" required /><Icon name="phone" size={18} /></label>
+    <label class="cbt-field"><span class="cbt-label">{zipLabel}</span><input class="cbt-input" name="zip" autocomplete="address-level2" placeholder={zipPlaceholder} /><Icon name="pin" size={18} /></label>
+    <fieldset class="cbt-chips">
+      <legend class="cbt-label">{problemLabel}</legend>
+      <div class="cbt-row">
+        {townChips.map((c) => <label class="cbt-chip"><input type="radio" name="problem" value={c} /><span>{c}</span></label>)}
+      </div>
+    </fieldset>
+    <Btn type="submit" variant="ink" icon="phone" full class="cbt-submit">Call me back</Btn>
+    <p class="cbt-note">We call you back. No spam.</p>
+    <p class="form-error center" data-form-msg role="status" hidden></p>
+  </form>
+) : variant === 'bar' ? (
   <form class="cbf-bar card" data-callback novalidate aria-labelledby={`${id}-t`}>
     <h2 id={`${id}-t`} class="h-display cbf-bar-title">{title}</h2>
     <div class="cbf-bar-row">
@@ -37,29 +57,80 @@ const problems = [...SERVICES.map((s) => s.name), 'Not sure / something else'];
   </form>
 )}
 <style>
-  .cbf-bar { position: relative; padding: 34px 32px 26px; border-top: 6px solid var(--yellow); }
-  .cbf-bar-title { font-size: 40px; text-align: center; color: var(--ink); margin-bottom: 22px; }
-  .cbf-bar-row { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr 1.6fr auto; gap: 12px; align-items: end; }
-  .cbf-bar .form-note { margin-top: 16px; }
-  .cbf-bar :global(.cbf-submit) { --bh: 56px; }
-  .cbf-card { position: relative; padding: 32px 30px 26px; border-top: 8px solid var(--yellow); color: var(--ink); }
-  .cbf-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 99px; background: #eef2f8; font-size: 13px; font-weight: 700; }
+  /* Figma 225:523: 1280 x 200, radius 16, 6 px yellow top, title 34 px, fields 240/240/170/306 + button, 12 px gaps */
+  .cbf-bar { position: relative; padding: 24px 40px 21px; border-top: 6px solid var(--yellow); border-radius: 16px; box-shadow: 0 18px 22px rgba(10,15,26,.22); }
+  .cbf-bar-title { font-size: 34px; line-height: 41px; letter-spacing: .02em; text-align: center; color: var(--ink); margin-bottom: 21px; }
+  .cbf-bar-row { display: grid; grid-template-columns: 240fr 240fr 170fr 306fr auto; gap: 12px; align-items: end; }
+  .cbf-bar .input { background: var(--paper); border-color: #dce3ee; }
+  .cbf-bar .input::placeholder { color: #475569; }
+  .cbf-bar .form-note { margin-top: 14px; font-size: 13px; line-height: 17px; color: #475569; }
+  .cbf-bar :global(.cbf-submit) { --bh: 56px; padding: 0 24px; letter-spacing: .02em; }
+  .cbf-bar :global(.cbf-submit .icon) { width: 22px; height: 22px; }
+  /* Figma 244:474 (homepage contact form): 500 x 586, radius 18, 8 px yellow top, 36 px padding, 52 px fields */
+  .cbf-card { position: relative; padding: 28px 36px 17px; border-top: 8px solid var(--yellow); border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,.45); color: var(--ink); }
+  .cbf-badge { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 14px 0 12px; border-radius: 14px; background: var(--paper); font-size: 13px; line-height: 17px; font-weight: 700; }
   .cbf-badge i { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.2); animation: ping 1.8s infinite; }
   @keyframes ping { 50% { box-shadow: 0 0 0 7px rgba(34,197,94,0); } }
-  .cbf-card-title { font-size: 46px; margin-top: 14px; color: var(--ink); }
-  .cbf-sub { color: var(--ink-2); font-size: 15px; margin-top: 8px; }
-  .cbf-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 16px; margin: 22px 0; }
+  .cbf-card-title { font-size: 48px; line-height: .88; letter-spacing: 0; margin-top: 16px; color: var(--ink); }
+  .cbf-sub { color: #475569; font-size: 15px; line-height: 20px; margin-top: 7px; }
+  .cbf-grid { display: grid; grid-template-columns: 150px 1fr; gap: 10px 12px; margin: 22px 0 20px; }
+  .cbf-card .field-label { font-size: 13px; line-height: 17px; font-weight: 600; margin-bottom: 5px; }
+  .cbf-card .input { height: 52px; background: var(--paper); border-color: #dce3ee; }
+  .cbf-card .input::placeholder { color: #475569; }
+  .cbf-card .field :global(.icon) { bottom: 17px; }
   .span2 { grid-column: 1 / -1; }
-  .cbf-card .form-note { margin-top: 12px; }
+  .cbf-card :global(.cbf-submit2) { --bh: 60px; gap: 10px; font-size: 24px; letter-spacing: .02em; }
+  .cbf-card :global(.cbf-submit2 .icon) { width: 20px; height: 20px; }
+  .cbf-card .form-note { margin-top: 16px; font-size: 13px; line-height: 17px; color: #475569; }
   .cbf-foot { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); text-align: center; font-weight: 600; font-size: 14px; }
   .cbf-foot a { color: var(--cobalt); }
+  /* 'town' variant: Figma 337:533 (370 x 657 desktop, 350 x 677 phone), 8 px yellow top, 22 px sides, 50 px fields, pill chips. */
+  .cbt { position: relative; padding: 21px 22px 18px; border-top: 8px solid var(--yellow); border-radius: 16px; box-shadow: 0 18px 44px rgba(0,0,0,.3); color: var(--ink); }
+  .cbt-badge { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding: 0 10px; border-radius: 999px; background: #e8f7fd; font-size: 12px; line-height: 16px; font-weight: 700; }
+  .cbt-badge i { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.2); animation: ping 1.8s infinite; }
+  .cbt-title { white-space: pre-line; max-width: 326px; margin-top: 12px; font-size: 34px; line-height: .95; letter-spacing: 0; color: var(--ink); }
+  .cbt-sub { margin-top: 5px; font-size: 15px; line-height: 20px; color: #475569; }
+  .cbt-field { position: relative; display: block; margin-top: 14px; }
+  .cbt-sub + .cbt-field { margin-top: 20px; }
+  .cbt-label { display: block; padding: 0; font-size: 13px; line-height: 17px; font-weight: 600; color: var(--ink); }
+  .cbt-input { display: block; width: 100%; height: 50px; margin-top: 5px; padding: 0 44px 0 15px; border-radius: 8px; background: #f3f6fb; border: 1px solid #dce3ee; font: 400 15px/1 var(--body); color: var(--ink); transition: border-color .2s, box-shadow .2s; }
+  .cbt-input::placeholder { color: #7a869e; }
+  .cbt-input:focus { outline: none; border-color: var(--cobalt); box-shadow: 0 0 0 3px rgba(31,79,216,.18); }
+  .cbt-field :global(.icon) { position: absolute; right: 15px; bottom: 16px; color: #7a869e; pointer-events: none; }
+  .cbt-chips { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
+  .cbt-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 7px; }
+  .cbt-chip { position: relative; display: inline-flex; cursor: pointer; }
+  .cbt-chip::after { content: ''; position: absolute; inset: -6px -3px; }
+  .cbt-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+  .cbt-chip span { display: inline-flex; align-items: center; height: 33px; padding: 0 12px; border-radius: 999px; background: #f3f6fb; border: 1px solid #dce3ee; font-size: 13px; font-weight: 500; line-height: 1; color: var(--ink); transition: background .2s, border-color .2s, color .2s; }
+  .cbt-chip:hover span { border-color: var(--cobalt); }
+  .cbt-chip input:checked + span { background: var(--cobalt); border-color: var(--cobalt); color: #fff; }
+  .cbt-chip input:focus-visible + span { outline: 3px solid var(--cyan); outline-offset: 2px; }
+  .cbt :global(.cbt-submit) { --bh: 56px; margin-top: 20px; gap: 12px; border-radius: 10px; font-size: 24px; letter-spacing: .02em; }
+  .cbt :global(.cbt-submit .icon) { width: 22px; height: 22px; }
+  .cbt-note { margin-top: 12px; text-align: center; font-size: 13px; line-height: 17px; color: #475569; }
   .form-error { margin-top: 10px; }
   .form-error :global(a) { color: var(--cobalt); }
   @media (max-width: 1060px) { .cbf-bar-row { grid-template-columns: 1fr 1fr; } .cbf-bar-row :global(.cbf-submit) { grid-column: 1 / -1; } }
   @media (max-width: 640px) {
-    .cbf-bar { padding: 26px 20px 22px; } .cbf-bar-title { font-size: 34px; }
-    .cbf-bar-row { grid-template-columns: 1fr; }
-    .cbf-card { padding: 26px 20px 22px; } .cbf-card-title { font-size: 38px; }
-    .cbf-grid { grid-template-columns: 1fr; }
+    /* Figma 234:498 (mobile hero form): 350 x 376, 48 px fields, 8 px gaps, no note */
+    .cbf-bar { padding: 18px 20px 22px; border-radius: 14px; box-shadow: 0 14px 30px rgba(10,15,26,.22); }
+    .cbf-bar-title { font-size: 28px; line-height: 34px; margin-bottom: 14px; }
+    .cbf-bar-row { grid-template-columns: 1fr; gap: 8px; }
+    .cbf-bar .input { height: 48px; padding-left: 13px; }
+    .cbf-bar .field :global(.icon) { bottom: 15px; }
+    .cbf-bar :global(.cbf-submit) { --bh: 54px; margin-top: 4px; padding: 0 20px; }
+    .cbf-bar .form-note { display: none; }
+    /* Figma 246:627 (phone contact form): 350 x 534, 7 px yellow top, 48 px fields, 56 px button */
+    .cbf-card { padding: 19px 22px 14px; border-top-width: 7px; border-radius: 16px; }
+    .cbf-badge { height: 26px; font-size: 12px; line-height: 16px; }
+    .cbf-card-title { margin-top: 12px; font-size: 30px; line-height: 36px; }
+    .cbf-sub { display: none; }
+    .cbf-grid { grid-template-columns: 1fr; gap: 12px; margin: 10px 0 18px; }
+    .cbf-card .field-label { font-size: 12px; line-height: 16px; margin-bottom: 4px; }
+    .cbf-card .input { height: 48px; }
+    .cbf-card .field :global(.icon) { bottom: 15px; }
+    .cbf-card :global(.cbf-submit2) { --bh: 56px; font-size: 22px; }
+    .cbf-card .form-note { margin-top: 12px; font-size: 12px; line-height: 16px; }
   }
 </style>

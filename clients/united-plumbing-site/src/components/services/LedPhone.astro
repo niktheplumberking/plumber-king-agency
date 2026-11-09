@@ -1,10 +1,12 @@
 ---
 // LED "tap to call" box used on the services pages (hub, hazard band, service CTA band, sticky aside).
 import { SITE } from '../../data/site';
-interface Props { top?: string[]; tone?: 'yellow' | 'cyan'; size?: 'sm' | 'md' | 'lg'; dot?: boolean; class?: string; reveal?: boolean }
-const { top = ['Tap to call', '24/7'], tone = 'yellow', size = 'md', dot = true, class: cls = '', reveal = false } = Astro.props;
+import Icon from '../Icon.astro';
+interface Props { top?: string[]; tone?: 'yellow' | 'cyan'; size?: 'sm' | 'md' | 'lg'; dot?: boolean; icon?: boolean; class?: string; reveal?: boolean }
+const { top = ['Tap to call', '24/7'], tone = 'yellow', size = 'md', dot = true, icon = false, class: cls = '', reveal = false } = Astro.props;
 ---
-<a href={SITE.phoneHref} class={`lp lp-${tone} lp-${size} ${cls}`} data-reveal={reveal ? 'up' : undefined}>
+<a href={SITE.phoneHref} class={`lp lp-${tone} lp-${size} ${icon ? 'lp-icon' : ''} ${cls}`} data-reveal={reveal ? 'up' : undefined}>
+  {icon && <Icon name="phone" size={30} class="lp-ic" />}
   <span class="lp-top">{top.map((t, i) => <>{i > 0 && <span aria-hidden="true">·</span>}<span>{t}</span></>)}</span>
   {dot && <span class="lp-dot" aria-hidden="true"></span>}
   <span class="lp-num led">{SITE.phone}</span>
@@ -22,5 +24,7 @@ const { top = ['Tap to call', '24/7'], tone = 'yellow', size = 'md', dot = true,
   .lp-lg .lp-num { font-size: clamp(36px, 4.6vw, 56px); }
   .lp-lg { padding: 20px 24px 22px; }
   .lp-sm .lp-num { font-size: clamp(30px, 3vw, 36px); }
+  .lp-icon { padding-left: 76px; }
+  .lp :global(.lp-ic) { position: absolute; left: 28px; top: calc(50% - 15px); color: var(--yellow); }
   @media (max-width: 420px) { .lp-num, .lp-lg .lp-num { font-size: 34px; } .lp-sm .lp-num { font-size: 30px; } }
 </style>

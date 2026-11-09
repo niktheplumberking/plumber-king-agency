@@ -31,7 +31,7 @@ const RAW: Record<string, Raw> = {
   'plumber-claremont': {
     zip: '91711',
     route: 'Up Towne Ave or across Foothill.',
-    close: 'Claremont is the next town over from our Pomona base. Most calls are a short drive up Towne Ave or across Foothill. That is why we can get to you fast.',
+    close: "Claremont is the next town over from our Pomona base. Most calls are a short drive up Towne Ave or across Foothill. That's why we can get to you fast.",
     guideIntro: 'United Plumbing is a family-owned plumbing company based in Pomona, right next to Claremont. A plumbing call in Claremont is a short drive for us, and we pick up the phone 24/7.',
     problems: ['roots', 'oldpipes', 'hardwater', 'slab'],
     guide: ['roots', 'oldpipes', 'slab', 'hardwater', 'adu'],
@@ -353,7 +353,7 @@ function faqs(t: Town, r: Raw): Faq[] {
   ];
   if (n === 'Claremont') {
     list[1] = { q: 'Do you cover North Claremont and up near the hills?', a: 'Yes. All of Claremont, 91711.' };
-    list.splice(3, 0, { q: 'I live in an older home near the Village. Should I repipe?', a: "Not always. If you have low pressure, rusty water or more than one leak, it's worth a look." });
+    list.splice(3, 0, { q: 'I live near the Village. Should I repipe?', a: "Not always. If you have low pressure, rusty water or more than one leak, it's worth a look." });
   }
   return list;
 }
@@ -422,14 +422,20 @@ export const COUNTY_GROUPS = [
 /** Zoom the regional map (map-service-area.jpg) onto Pomona + one town. Positions are percent of the full 1000x700 image. */
 export function mapView(tp?: [number, number]) {
   const BASE: [number, number] = [33, 33.5];
-  const W = tp ? Math.min(100, Math.max(44, 2 * Math.max(Math.abs(tp[0] - BASE[0]), Math.abs(tp[1] - BASE[1])) + 26)) : 50;
+  const W = tp ? Math.min(100, Math.max(50, 2 * Math.max(Math.abs(tp[0] - BASE[0]), Math.abs(tp[1] - BASE[1])) + 26)) : 50;
   const cx = tp ? (tp[0] + BASE[0]) / 2 : BASE[0];
   const cy = tp ? (tp[1] + BASE[1]) / 2 : BASE[1];
   const x0 = Math.min(Math.max(cx - W / 2, 0), 100 - W);
   const y0 = Math.min(Math.max(cy - W / 2, 0), 100 - W);
+  // Phone crop (Figma 331:675): a 350x300 window zoomed twice as far, same centre. Hm = share of the image height it shows.
+  const Wm = W / 2;
+  const Hm = (Wm * 300) / (350 * 0.7);
+  const x0m = Math.min(Math.max(cx - Wm / 2, 0), 100 - Wm);
+  const y0m = Math.min(Math.max(cy - Hm / 2, 0), 100 - Hm);
   const pct = (v: number) => ((v / W) * 100).toFixed(2) + '%';
-  const at = (pt: [number, number]) => `left:${pct(pt[0] - x0)};top:${pct(pt[1] - y0)}`;
-  const mapStyle = `width:${pct(100)};left:${pct(-x0)};top:${pct(-y0)}`;
+  const f = (v: number) => v.toFixed(2) + '%';
+  const at = (pt: [number, number]) => `left:${pct(pt[0] - x0)};top:${pct(pt[1] - y0)};--mx:${f(((pt[0] - x0m) / Wm) * 100)};--my:${f(((pt[1] - y0m) / Hm) * 100)}`;
+  const mapStyle = `width:${pct(100)};left:${pct(-x0)};top:${pct(-y0)};--mw:${f((100 / Wm) * 100)};--ml:${f((-x0m / Wm) * 100)};--mt:${f((-y0m / Hm) * 100)}`;
   // Which side each label sits on, so it never runs off the map edge.
   const baseLabel = (BASE[0] - x0) / W < 0.42 ? 'r' : 'l';
   const townLabel = tp && (tp[0] - x0) / W > 0.6 ? 'l' : 'r';

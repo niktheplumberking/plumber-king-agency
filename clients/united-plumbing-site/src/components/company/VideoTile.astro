@@ -9,11 +9,11 @@ const label = `Watch ${town ? `a video review from ${town}` : 'a video review'} 
 <a href={SITE.instagram} target="_blank" rel="noopener" class:list={['vt', `vt-${variant}`, { 'is-active': active }, cls]} aria-label={label}>
   {variant === 'phone'
     ? <span class="vt-top"><Icon name="instagram" size={14} />Video review · Instagram</span>
-    : <span class="vt-ig" aria-hidden="true"><Icon name="instagram" size={14} /></span>}
-  <span class="vt-play" aria-hidden="true"><Icon name="play" size={variant === 'phone' ? 24 : 18} /></span>
+    : <span class="vt-ig" aria-hidden="true"><Icon name="instagram" size={18} /></span>}
+  <span class="vt-play" aria-hidden="true"><Icon name="play" size={variant === 'phone' ? 24 : 21} /></span>
   <span class="vt-bot">
     {tag && <span class="vt-tag vt-tag-y">{tag}</span>}
-    {town && <span class="vt-tag"><Icon name="pin" size={11} stroke={2.5} />{town}</span>}
+    {town && <span class="vt-tag"><Icon name="pin" size={variant === 'tile' ? 13 : 11} stroke={2.5} />{town}</span>}
     {job && <strong class="vt-job">{job}</strong>}
     {variant === 'tile' && <small>Video review · Instagram</small>}
     <span class="vt-bar" aria-hidden="true"><i style={`width:${progress}%`}></i></span>
@@ -43,4 +43,39 @@ const label = `Watch ${town ? `a video review from ${town}` : 'a video review'} 
   .vt-tile .vt-bar i { background: #3b4a6e; width: 100% !important; }
   .vt-cap { display: flex; width: 100%; justify-content: space-between; align-items: center; color: var(--cyan); font-size: 14px; margin-top: 8px; }
   .vt-cap :global(.icon) { color: #fff; }
+  /* Tile variant, Figma 329:585 (220 x 380). */
+  .vt-tile { aspect-ratio: 220 / 380; padding: 12px 12px 11px; border: 0; border-radius: 14px; background: radial-gradient(75% 40% at 40% 40%, rgba(31,79,216,.55), transparent 100%), linear-gradient(180deg, #18264a, #070a12); }
+  .vt-tile .vt-ig { width: 30px; height: 30px; border-radius: 8px; background: rgba(255,255,255,.14); }
+  .vt-tile .vt-play { top: 42%; width: 56px; height: 56px; margin: -28px 0 0 -28px; }
+  .vt-tile .vt-bot { gap: 0; }
+  .vt-tile .vt-tag { gap: 5px; padding: 5px 10px 5px 8px; border-radius: 6px; font: 800 15px/18px var(--display); letter-spacing: .04em; }
+  .vt-tile .vt-job { margin-top: 4px; font: 600 13px/17px var(--body); }
+  .vt-tile small { margin-top: 6px; font: 500 12px/16px var(--body); color: #a3aec6; }
+  .vt-tile .vt-job + small { margin-top: 7px; }
+  .vt-tile .vt-bar { margin-top: 10px; border-radius: 2px; }
+  .vt-tile .vt-bar i { background: #2a3858; }
+  /* Phone variant, Figma 316:706 (250 x 444). */
+  .vt-phone { aspect-ratio: 250 / 444; padding: 0; border-radius: 22px; border: 1px solid #24304a; background: radial-gradient(62% 36% at 50% 48%, rgba(31,79,216,.72), rgba(31,79,216,.18) 70%, transparent 100%), #070a12; }
+  .vt-phone.is-active { border: 2px solid var(--cyan); }
+  .vt-phone .vt-top { position: absolute; left: 12px; top: 12px; gap: 6px; padding: 6px 10px; border-radius: 999px; background: rgba(11,15,26,.8); font: 700 11px/14px var(--body); }
+  .vt-phone .vt-play { top: 47.75%; width: 64px; height: 64px; margin: -32px 0 0 -32px; filter: drop-shadow(0 0 12px rgba(255,209,31,.5)); }
+  .vt-phone .vt-play :global(.icon) { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+  .vt-phone .vt-bot { position: absolute; left: 14px; right: 14px; top: 87.2%; gap: 0; }
+  .vt-phone .vt-bar { height: 4px; border-radius: 2px; background: #24304a; }
+  .vt-phone .vt-cap { margin-top: 10px; font-size: 16px; line-height: 19px; }
+  .vt-phone .vt-cap :global(.icon) { width: 18px; height: 18px; }
+  /* Tile variant on phones, Figma 334:530 (170 x 320). */
+  @media (max-width: 960px) {
+    .vt-tile { padding: 10px 10px 9px; }
+    .vt-tile .vt-ig { width: 28px; height: 28px; }
+    .vt-tile .vt-ig :global(.icon) { width: 16px; height: 16px; }
+    .vt-tile .vt-play { top: 40%; width: 48px; height: 48px; margin: -24px 0 0 -24px; }
+    .vt-tile .vt-play :global(.icon) { width: 18px; height: 18px; }
+    .vt-tile .vt-tag { padding: 5px 10px 5px 8px; font-size: 14px; line-height: 17px; }
+    .vt-tile .vt-tag :global(.icon) { width: 12px; height: 12px; }
+    .vt-tile .vt-job { margin-top: 3px; font-size: 12px; line-height: 16px; }
+    .vt-tile small { margin-top: 5px; font-size: 11px; line-height: 14px; }
+    .vt-tile .vt-job + small { margin-top: 6px; }
+    .vt-tile .vt-bar { margin-top: 12px; }
+  }
 </style>

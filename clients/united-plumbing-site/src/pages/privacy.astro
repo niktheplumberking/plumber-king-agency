@@ -9,9 +9,9 @@ import { SITE } from '../data/site';
     <div class="short">
       <p class="h-display short-h">The short version</p>
       <ul>
-        <li><Icon name="phone" size={18} /><span>We use what you send us to call you back, quote and do the work.</span></li>
-        <li><Icon name="shield" size={18} /><span>We do not sell your personal information.</span></li>
-        <li><Icon name="mail" size={18} /><span>Want it fixed or deleted? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a>.</span></li>
+        <li><Icon name="phone" size={20} /><span>We use what you send us to call you back, quote and do the work.</span></li>
+        <li><Icon name="shield" size={20} /><span>We do not sell your personal information.</span></li>
+        <li><Icon name="mail" size={20} /><span>Want it fixed or deleted? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a><span class="m-hide"> or call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a></span>.</span></li>
       </ul>
     </div>
 
@@ -55,12 +55,12 @@ import { SITE } from '../data/site';
     </section>
 
     <section class="lg-s" id="choices">
-      <h3 class="h-display lg-h"><span class="led">06</span>Your choices (California residents)</h3>
+      <h3 class="h-display lg-h"><span class="led">06</span><span>Your choices (California<span class="m-hide"> residents</span>)</span></h3>
       <p>You can ask us what personal information we have about you, ask us to fix it, or ask us to delete it.</p>
       <ul class="rights">
-        <li><span><Icon name="search" size={18} /></span><strong class="h-display">Ask what we have</strong><small>What personal information we hold about you.</small></li>
-        <li><span><Icon name="wrench" size={18} /></span><strong class="h-display">Ask us to fix it</strong><small>Correct anything we got wrong.</small></li>
-        <li><span><Icon name="minus" size={18} /></span><strong class="h-display">Ask us to delete it</strong><small>We remove it and tell you when it is done.</small></li>
+        <li><span><Icon name="search" size={20} /></span><strong class="h-display">Ask what we have</strong><small><span class="m-hide">What personal information we hold about you.</span><span class="m-show">What we hold about you, and why.</span></small></li>
+        <li><span><Icon name="wrench" size={20} /></span><strong class="h-display">Ask us to fix it</strong><small>Correct anything we got wrong.</small></li>
+        <li><span><Icon name="minus" size={20} /></span><strong class="h-display">Ask us to delete it</strong><small>We remove it and tell you when it is done.</small></li>
       </ul>
       <p>Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a>. We will not treat you differently for asking.</p>
     </section>
@@ -79,21 +79,47 @@ import { SITE } from '../data/site';
 </Base>
 
 <style>
-  .short { padding: 24px 26px; border-radius: 12px; background: var(--paper); border-left: 5px solid var(--yellow); }
-  .short-h { font-size: 26px; color: var(--ink); }
-  .short ul { display: grid; gap: 10px; margin-top: 14px; }
-  .short li { display: flex; gap: 12px; align-items: start; font-size: 15px; font-weight: 500; color: var(--ink); }
+  .short { position: relative; overflow: hidden; padding: 24px 32px 28px; border-radius: 14px; background: #f3f6fb; }
+  .short::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 6px; background: var(--yellow); }
+  .short-h { font-size: 24px; line-height: 29px; letter-spacing: 0; color: var(--ink); }
+  .short ul { display: grid; gap: 12px; margin-top: 11px; }
+  .short li { display: flex; gap: 12px; align-items: start; font-size: 16px; line-height: 1.5; font-weight: 500; color: var(--ink); }
   .short li :global(.icon) { flex: none; margin-top: 2px; color: var(--cobalt); }
   .short a { color: var(--cobalt); text-decoration: underline; overflow-wrap: anywhere; }
-  .lg-dark { margin-top: 20px; padding: 26px 26px !important; border-radius: 14px; background: radial-gradient(70% 90% at 100% 100%, #1f4fd8, #10173a 55%, var(--night)); border-bottom: 0 !important; }
-  .lg-dark p { color: var(--on-dark-2) !important; font-size: 14px !important; }
-  .dk-eb { color: var(--cyan) !important; font-size: 13px !important; text-transform: uppercase; margin-top: 0 !important; }
-  .dk-h { margin-top: 8px; font-size: 36px; line-height: .95; color: var(--yellow); }
-  .rights { grid-template-columns: repeat(3, 1fr); gap: 14px !important; }
-  .rights li { display: grid; gap: 6px; align-content: start; padding: 16px !important; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); }
+  .lg-dark { position: relative; overflow: hidden; height: 210px; margin-bottom: 48px; padding: 26px 32px 0 !important; border-radius: 16px; border-top: 0 !important; background: radial-gradient(220px 150px at 600px 130px, rgba(31,79,216,.7), transparent 100%), radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.3px) 0 0/12px 12px, var(--night); }
+  .lg-dark + :global(section.lg-s) { margin-top: 0; }
+  .lg-dark p { max-width: 640px; color: #a3aec6 !important; font-size: 15px !important; line-height: 1.5 !important; }
+  .dk-eb { color: var(--cyan) !important; font-size: 14px !important; line-height: 17px !important; letter-spacing: .06em; word-spacing: .2em; text-transform: uppercase; margin-top: 0 !important; }
+  .dk-h { max-width: 640px; margin-top: 6px; font-size: 38px; line-height: .95; letter-spacing: 0; color: var(--yellow); }
+  .lg-dark .dk-h + p { margin-top: 10px !important; }
+  .rights { grid-template-columns: repeat(3, 1fr); gap: 24px !important; margin-top: 16px; }
+  .rights li { display: block; height: 150px; padding: 19px !important; border-radius: 12px; background: #f3f6fb; border: 1px solid #dce3ee; }
   .rights li::before { display: none; }
-  .rights span { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; background: var(--cobalt); color: #fff; margin-bottom: 6px; }
-  .rights strong { font-size: 20px; color: var(--ink); font-weight: 800 !important; }
-  .rights small { font-size: 12.5px; color: var(--ink-2); }
-  @media (max-width: 640px) { .rights { grid-template-columns: 1fr; } .dk-h { font-size: 30px; } }
+  .rights span { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--cobalt); color: #fff; }
+  .rights strong { display: block; margin-top: 14px; font-size: 22px; line-height: 26px; letter-spacing: 0; color: var(--ink) !important; font-weight: 900 !important; }
+  .rights small { display: block; margin-top: 2px; font-size: 13px; line-height: 1.45; color: #475569; }
+  .rights + p { margin-top: 20px !important; }
+  .m-show { display: none; }
+  @media (max-width: 640px) {
+    .m-hide { display: none; }
+    .m-show { display: inline; }
+    .lg-dark { background: radial-gradient(130px 110px at 290px 120px, rgba(31,79,216,.7), transparent 100%), radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.3px) 0 0/12px 12px, var(--night); }
+    .short { padding: 18px 20px 20px 22px; border-radius: 12px; }
+    .short::before { width: 5px; }
+    .short-h { font-size: 22px; line-height: 26px; }
+    .short ul { gap: 12px; margin-top: 10px; }
+    .short li { gap: 10px; font-size: 15px; line-height: 22px; }
+    .short li :global(.icon) { width: 18px; height: 18px; }
+    .lg-dark { height: auto; margin: 0 0 24px; padding: 20px 22px 24px !important; border-radius: 14px; }
+    .dk-eb { font-size: 11px !important; line-height: 13px !important; }
+    .dk-h { margin-top: 9px; font-size: 30px; line-height: 28px; }
+    .lg-dark p { font-size: 14px !important; }
+    .lg-dark .dk-h + p { margin-top: 12px !important; }
+    .rights { grid-template-columns: 1fr; gap: 10px !important; margin-top: 14px; }
+    .rights li { display: grid; grid-template-columns: 40px 1fr; gap: 0 14px; height: 76px; align-content: center; padding: 0 16px !important; }
+    .rights span { grid-row: 1 / 3; }
+    .rights strong { margin-top: 0; font-size: 20px; line-height: 24px; }
+    .rights small { margin-top: 3px; font-size: 13px; line-height: 17px; }
+    .rights + p { margin-top: 16px !important; }
+  }
 </style>

@@ -1,12 +1,17 @@
 ---
 // Brand motif: wave edge with the cyan "water line". `from` = colour above, `to` = colour below.
+// Paths are the two Figma water lines (homepage 230:560 = default, 227:587 = flip), 1440 x 90, 5 px cyan stroke.
 interface Props { from: string; to: string; flip?: boolean }
 const { from, to, flip = false } = Astro.props;
 const d = flip
-  ? 'M0,50 C240,10 480,10 720,32 C960,54 1200,62 1440,22'
-  : 'M0,22 C240,62 480,54 720,32 C960,10 1200,10 1440,50';
+  ? 'M0,49.5 C380,-22.5 980,108 1440,18'
+  : 'M0,40.5 C460,112.5 1060,-18 1440,72';
 ---
-<svg class="wave" viewBox="0 0 1440 72" preserveAspectRatio="none" aria-hidden="true" style={`background:${from}`}>
-  <path d={`${d} L1440,72 L0,72 Z`} fill={to} />
+<svg class="wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" style={`background:${from}`}>
+  <path d={`${d} L1440,90 L0,90 Z`} fill={to} />
   <path class="wave-line" d={d} data-draw vector-effect="non-scaling-stroke" />
 </svg>
+<style>
+  .wave { height: clamp(50px, 6.25vw, 90px); }
+  .wave path.wave-line { stroke-width: 5; }
+</style>

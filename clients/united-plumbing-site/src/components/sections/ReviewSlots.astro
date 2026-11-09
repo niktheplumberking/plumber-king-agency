@@ -9,8 +9,8 @@ const { count = 5 } = Astro.props;
     {Array.from({ length: count }).map(() => (
       <article class="rs-card card" data-tilt>
         <div class="rs-top"><span class="rs-stars" aria-hidden="true">{[0,1,2,3,4].map(() => <i></i>)}</span><span class="rs-g">G</span></div>
-        <div class="rs-lines"><span class="rs-tag">Google review goes here</span><i></i><i></i><i class="s"></i></div>
-        <div class="rs-who"><span class="rs-av"></span><span><strong>Customer name</strong><small>Google review</small></span><Icon name="quote" size={22} class="rs-q" /></div>
+        <div class="rs-lines"><span class="rs-tag">Google review goes here</span><i></i><i class="m"></i><i></i><i class="s"></i></div>
+        <div class="rs-who"><span class="rs-av"></span><span><strong>Customer name</strong><small>Google review</small></span><svg class="rs-q" width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 13.75h-5a1.25 1.25 0 0 1-1.25-1.25V8.75A1.25 1.25 0 0 1 7.5 7.5h3.75a1.25 1.25 0 0 1 1.25 1.25v5Zm0 0v2.5c0 3.125-1.875 5-5 6.25"/><path d="M23.75 13.75h-5a1.25 1.25 0 0 1-1.25-1.25V8.75a1.25 1.25 0 0 1 1.25-1.25h3.75a1.25 1.25 0 0 1 1.25 1.25v5Zm0 0v2.5c0 3.125-1.875 5-5 6.25"/></svg></div>
       </article>
     ))}
   </div>
@@ -21,15 +21,23 @@ const { count = 5 } = Astro.props;
   </div>
 </div>
 <style>
-  .rs-card { width: min(300px, 78vw); padding: 24px 22px; border: 1px solid var(--line); box-shadow: 0 14px 40px -26px rgba(11,15,26,.35); }
-  .rs-top { display: flex; justify-content: space-between; align-items: center; }
-  .rs-stars { display: flex; gap: 4px; } .rs-stars i { width: 16px; height: 16px; border-radius: 3px; background: #dfe5ef; }
-  .rs-g { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #eef2f8; color: var(--cobalt); font-weight: 800; font-size: 16px; }
-  .rs-lines { position: relative; display: grid; gap: 10px; margin-top: 26px; }
-  .rs-lines i { height: 8px; border-radius: 4px; background: #e8edf5; } .rs-lines i.s { width: 60%; }
-  .rs-tag { position: absolute; left: 18px; top: -12px; transform: rotate(-2deg); background: var(--yellow); color: var(--ink); font: 800 12px/1 var(--body); text-transform: uppercase; letter-spacing: .02em; padding: 7px 12px; border-radius: 4px; box-shadow: 0 6px 14px -6px rgba(0,0,0,.3); }
-  .rs-who { display: flex; align-items: center; gap: 12px; margin-top: 46px; }
-  .rs-who strong { display: block; font-size: 14px; } .rs-who small { color: var(--ink-3); font-size: 12px; }
-  .rs-av { width: 36px; height: 36px; border-radius: 50%; background: #e3e8f1; }
-  .rs-who :global(.rs-q) { margin-left: auto; color: var(--yellow); }
+  /* Figma 227:444: 300 x 250 card, radius 14, 1 px #dce3ee border, no shadow */
+  .rs-card { width: min(300px, 78vw); height: 250px; padding: 20px 22px 0; border: 1px solid #dce3ee; border-radius: 14px; box-shadow: none; }
+  .rs-top { display: flex; justify-content: space-between; align-items: center; padding-right: 2px; }
+  .rs-stars { display: flex; gap: 4px; } .rs-stars i { width: 18px; height: 18px; border-radius: 4px; background: #e4e9f2; }
+  .rs-g { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--paper); color: var(--cobalt); font-weight: 700; font-size: 20px; line-height: 1; }
+  .rs-lines { position: relative; display: grid; gap: 10px; margin-top: 22px; }
+  .rs-lines i { width: 252px; max-width: 100%; height: 10px; border-radius: 5px; background: #e9eef5; } .rs-lines i.m { width: 236px; } .rs-lines i.s { width: 170px; }
+  .rs-tag { position: absolute; left: 50%; top: -13px; width: 200px; margin-left: -100px; height: 28px; display: grid; place-items: center; transform: rotate(4deg); background: var(--yellow); color: var(--ink); font: 700 12px/1 var(--body); text-transform: uppercase; border-radius: 6px; }
+  .rs-who { display: flex; align-items: flex-start; gap: 10px; margin-top: 36px; }
+  .rs-who strong { display: block; font-size: 14px; line-height: 18px; font-weight: 600; } .rs-who small { display: block; color: #475569; font-size: 12px; line-height: 16px; }
+  .rs-av { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #e3e8f1; }
+  .rs-q { flex: none; margin: 2px 0 0 auto; color: var(--yellow); }
+  /* controls: 40 px arrows, 8 px dots (26 px active), Figma 227:544-554 */
+  .rs .car-ctrl { gap: 24px; }
+  .rs .car-btn { position: relative; width: 40px; height: 40px; }
+  .rs .car-btn::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; }
+  .rs .car-dots { gap: 10px; margin-left: 14px; }
+  .rs .car-dots span { background: #c5cedd; }
+  .rs .car-dots span.on { width: 26px; background: var(--cobalt); }
 </style>

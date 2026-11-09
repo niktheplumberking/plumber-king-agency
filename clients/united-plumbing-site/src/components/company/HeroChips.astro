@@ -1,15 +1,26 @@
 ---
+// Hero trust chips. look="badge" (About, Figma 323:518): icon in a 26 px circle, 44 px tall.
+// look="plain" (Our work, Figma 315:701): bare 16 px icon on a night pill, 37 px tall.
 import Icon from '../Icon.astro';
-interface Props { order?: string }
-const { order = '5' } = Astro.props;
+interface Props { order?: string; look?: 'badge' | 'plain' }
+const { order = '5', look = 'badge' } = Astro.props;
+const iconSize = look === 'plain' ? 16 : 14;
 ---
-<ul class="hchips" data-hero={order} data-hero-fx="pop" data-hero-children>
-  <li><span><Icon name="clock" size={14} /></span>Answered 24/7</li>
-  <li><span><Icon name="globe" size={14} /></span>Hablamos Español</li>
-  <li><span><Icon name="tag" size={14} /></span>Clear price first</li>
+<ul class:list={['hchips', `hchips-${look}`]} data-hero={order} data-hero-fx="pop" data-hero-children>
+  <li><span><Icon name="clock" size={iconSize} /></span>Answered 24/7</li>
+  <li><span><Icon name="globe" size={iconSize} /></span>Hablamos Español</li>
+  <li><span><Icon name="tag" size={iconSize} /></span>Clear price first</li>
 </ul>
 <style>
-  .hchips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
-  .hchips li { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 99px; border: 1px solid rgba(255,255,255,.14); background: rgba(19,27,46,.75); color: #fff; font-size: 13px; font-weight: 600; }
-  .hchips span { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(51,214,255,.14); color: var(--cyan); }
+  .hchips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .hchips li { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px 0 10px; border-radius: 99px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.08); color: #fff; font-size: 14px; line-height: 18px; font-weight: 600; }
+  .hchips span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #1a2c55; color: var(--cyan); }
+  .hchips-plain li { gap: 8px; height: 37px; padding: 0 14px; border-color: #24304a; background: #131b2e; font-size: 13px; line-height: 17px; }
+  .hchips-plain span { width: 16px; height: 16px; border-radius: 0; background: none; }
+  /* Our work phone, Figma 318:656: 32 px pills, 12 px text, 14 px icon. */
+  @media (max-width: 960px) {
+    .hchips-plain { gap: 6px 8px; }
+    .hchips-plain li { gap: 6px; height: 32px; padding: 0 10px; font-size: 12px; line-height: 16px; }
+    .hchips-plain span, .hchips-plain span :global(.icon) { width: 14px; height: 14px; }
+  }
 </style>

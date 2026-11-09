@@ -38,7 +38,7 @@ export interface ServiceContent {
   slug: string;
   name: string;            // breadcrumb name
   eyebrow: string;
-  h1: [string, string];    // white line(s), yellow line
+  h1: [string, string];    // white line(s) ('|' forces a line break), yellow line
   sub: string;
   problemsLabel: string;
   problems: string[];
@@ -47,10 +47,10 @@ export interface ServiceContent {
   form: { title: string; sub: string; label: string; options: string[]; chips?: boolean };
   doNow?: { title: string; steps: string[] };
   clear: { eyebrow: string; h: [string, string]; lead?: string; cards: ClearCard[]; foot: string };
-  status?: { title: string; rows: { t: string; v: 'new' | 'check' | 'repair' }[]; legend: string; foot: string };
+  status?: { label?: string; title: string; rows: { t: string; v: 'new' | 'check' | 'repair' }[]; legend: string; foot: string };
   why: { h: [string, string]; tag?: string; body: string; bullets: { b: string; t: string }[]; stat: { big: string; small: string }; photo: Photo };
   guide: { eyebrow: string; h: [string, string]; intro: string; sections: GuideSection[] };
-  aside: { title: string; sub: string; tip: { title: string; text: string; href: string; label: string; icon: string } };
+  aside: { title: string; sub: string; slotHint?: string; tip: { title: string; text: string; href: string; label: string; icon: string } };
   compare?: { eyebrow: string; h: [string, string]; labels: string[]; left: CompareSide; right: CompareSide; note: string };
   crew: 'why' | 'family';
   crewLine?: string;
@@ -102,9 +102,9 @@ export const CONTENT: Record<string, ServiceContent> = {
     clear: {
       eyebrow: 'What we clear', h: ['Drain cleaning in Pomona for', 'sinks, tubs and toilets'],
       cards: [
-        { title: 'Greasy kitchen sink', icon: 'drop', notice: ['Water sits in the sink after dinner', 'It drains slower every week', 'Rice and food scraps come back up'], fix: `We run a drain machine down the line, cut through the grease and test it with hot water. If it keeps clogging, hydro jetting washes the pipe walls clean. ${ph('Jetter on the truck: Jim to confirm')}` },
-        { title: 'Slow shower or tub', icon: 'drop', notice: ['You stand in water while you shower', 'Hair and soap scum at the drain', 'A crusty ring from hard water'], fix: "We clear the hair and soap out of the trap and the line, not just the stopper. Then we run water to prove it's clear." },
-        { title: 'Backed-up toilet or floor drain', icon: 'alert', notice: ['Water comes up in the shower when you flush', 'Gurgling from the toilet or drains', 'Water at a floor drain or yard cleanout'], fix: 'That often means the main sewer line. We find where the clog is, clear it, and suggest a camera look if it keeps coming back.' },
+        { title: 'Greasy|kitchen sink', icon: 'drop', notice: ['Water sits in the sink after dinner', 'It drains slower every week', 'Rice and food scraps come back up'], fix: `We run a drain machine down the line, cut through the grease and test it with hot water. If it keeps clogging, hydro jetting washes the pipe walls clean. ${ph('Jetter on the truck: Jim to confirm')}` },
+        { title: 'Slow shower|or tub', icon: 'drop', notice: ['You stand in water while you shower', 'Hair and soap scum at the drain', 'A crusty ring from hard water'], fix: "We clear the hair and soap out of the trap and the line, not just the stopper. Then we run water to prove it's clear." },
+        { title: 'Backed-up toilet|or floor drain', icon: 'alert', notice: ['Water comes up in the shower when you flush', 'Gurgling from the toilet or drains', 'Water at a floor drain or yard cleanout'], fix: 'That often means the main sewer line. We find where the clog is, clear it, and suggest a camera look if it keeps coming back.' },
       ],
       foot: `More than one drain slow? That's a main line sign. <a href="tel:+19095870711">Call 909-587-0711.</a>`,
     },
@@ -141,7 +141,7 @@ export const CONTENT: Record<string, ServiceContent> = {
             { b: 'We tell you what we found', t: 'and what you can do to keep it from coming back.' },
           ] },
         ] },
-        { id: 'signs', toc: 'Signs you need a plumber', title: 'Signs you need a plumber', blocks: [
+        { id: 'signs', toc: 'Signs you need a plumber', title: '', blocks: [
           { type: 'alert', title: 'Signs you need a plumber, not a plunger', items: ['Water backs up in the shower when you flush the toilet', 'More than one drain is slow at the same time', 'Gurgling sounds from drains or the toilet', 'A sewer smell inside or in the yard', 'Water coming up from a floor drain or the cleanout in the yard'], note: 'Any of these can mean the main sewer line is blocked. Stop running water and call (909) 587-0711.' },
         ] },
         { id: 'keep-clear', toc: 'How to keep drains clear', title: 'How to keep drains clear', blocks: [
@@ -155,7 +155,7 @@ export const CONTENT: Record<string, ServiceContent> = {
         ] },
       ],
     },
-    aside: { title: 'Clogged right now?', sub: 'A real person picks up, day or night.', tip: { title: 'Drain keeps coming back?', text: "A sewer camera inspection shows you what's in the pipe before you spend money on a bigger fix.", href: '/sewer-camera-inspection-pomona/', label: 'See sewer camera inspection', icon: 'video' } },
+    aside: { title: 'Clogged right now?', sub: 'A real person picks up, day or night.', slotHint: 'Best: a cleared drain line or the drain machine on a real Pomona job', tip: { title: 'Drain keeps coming back?', text: "A sewer camera inspection shows you what's in the pipe before you spend money on a bigger fix.", href: '/sewer-camera-inspection-pomona/', label: 'See sewer camera inspection', icon: 'video' } },
     crew: 'why',
     cta: { eyebrow: 'Need a drain cleared?', h: ['Need a drain', 'cleared in Pomona?'], sub: 'Call now. A real person picks up, day or night.' },
     faqIntro: 'What Pomona homeowners ask us most about clogged drains. Anything else, just call.',
@@ -175,14 +175,14 @@ export const CONTENT: Record<string, ServiceContent> = {
   /* ------------------------------------------------------------------ WATER HEATERS (Figma variant) */
   'water-heater-pomona': {
     slug: 'water-heater-pomona', name: 'Water heaters', eyebrow: 'Water heaters · Pomona, CA',
-    h1: ['Water heater repair & replacement', 'in Pomona'],
+    h1: ['Water heater|repair & replacement', 'in Pomona'],
     sub: 'Hot water back, fast. Tank or tankless, all brands.',
     problemsLabel: 'Sounds like yours?',
     problems: ['No hot water, or it runs out fast', 'Leaking from the bottom', 'Popping or rumbling noise'],
     hero: { bg: P.dusk, photo: P.wh },
     form: { title: 'Get your hot water back', sub: "Leave your number. Jim's team calls you back.", label: "What's going on?", options: ['No hot water', 'Leaking', 'Noisy', 'Want a new one', 'Tankless', 'Not sure'], chips: true },
     clear: {
-      eyebrow: 'Water heater service', h: ['Water heater repair in Pomona for cold', 'showers, leaks & noise'],
+      eyebrow: 'Water heater service', h: ['Water heater repair|in Pomona for cold', 'showers, leaks & noise'],
       lead: 'Nobody notices a water heater until the shower turns cold. We repair and replace tank and tankless water heaters in homes across Pomona and the towns around it.',
       cards: [
         { title: 'No hot water, or it runs out fast', icon: 'drop', notice: [], fix: 'Often a pilot, thermostat, element or valve. We check the cheap fixes first.' },
@@ -192,6 +192,7 @@ export const CONTENT: Record<string, ServiceContent> = {
       foot: '',
     },
     status: {
+      label: 'Water heater',
       title: 'Signs your water heater is failing',
       rows: [
         { t: 'Water leaking from the tank itself', v: 'new' }, { t: 'Rusty water from the hot side', v: 'new' },
@@ -202,7 +203,7 @@ export const CONTENT: Record<string, ServiceContent> = {
       foot: "Not sure which side you're on? We'll tell you straight.",
     },
     why: {
-      h: ['Repair first.', 'Replace only if it makes sense.'],
+      h: ['Repair first.', 'Replace only if|it makes sense.'],
       body: "A lot of water heaters just need a part. We check that first. If yours is done, we tell you straight and help you pick the right new one.",
       bullets: [
         { b: 'All brands.', t: 'Tank and tankless.' },
@@ -233,7 +234,7 @@ export const CONTENT: Record<string, ServiceContent> = {
           ] },
         ] },
         { id: 'replace', toc: "When it's time to replace", title: "When it's time to replace", blocks: [
-          { type: 'p', html: "If the tank is leaking from the body, if the hot water is rusty, or if it's past 10 to 12 years old and acting up, a new heater is usually the smarter money. We talk through size (how many people, how many bathrooms), gas or electric (usually we match what you have), tank or tankless, and code items: California requires water heaters to be strapped for earthquakes, and many older installs also need a new expansion tank, venting or drain pan." },
+          { type: 'p', html: "If the tank is leaking from the body, if the hot water is rusty, or if it's past 10 to 12 years old and acting up, a new heater is usually the smarter money. We talk through size, gas or electric, tank or tankless, and code items: California requires water heaters to be strapped for earthquakes, and many older installs also need a new expansion tank, venting or drain pan." },
           { type: 'wait', title: 'While you wait for us', items: [
             { k: 'Leaking?', t: 'Shut the cold water valve on top of the tank. Turn gas to "pilot" or "off," or turn off the breaker for electric.' },
             { k: 'Smell gas?', t: "Leave the house and call SoCalGas from outside. Don't flip switches." },
@@ -249,8 +250,8 @@ export const CONTENT: Record<string, ServiceContent> = {
     compare: {
       eyebrow: 'Tank or tankless?', h: ['Which one fits', 'your home?'],
       labels: ['Up-front cost', 'Hot water', 'Space', 'How long it lasts', 'Gas line & venting'],
-      left: { title: 'Tank', sub: 'The classic. Usually we match what you have.', icon: 'flame', rows: ['Lower', 'Can run out', 'Takes floor space', 'About 8 to 12 years', 'Usually fine as is'] },
-      right: { title: 'Tankless', sub: 'Endless hot water, more up front.', icon: 'zap', rows: ['Higher', "Doesn't run out", 'Saves space', 'Usually longer, with yearly care', 'May need a bigger gas line and new venting'] },
+      left: { title: 'Tank', sub: 'The classic. Usually we match what you have', icon: 'flame', rows: ['Lower', 'Can run out', 'Takes floor space', 'About 8 to 12 years', 'Usually fine as is'] },
+      right: { title: 'Tankless', sub: 'Endless hot water, more up front', icon: 'zap', rows: ['Higher', "Doesn't run out", 'Saves space', 'Usually longer, with yearly care', 'May need a bigger gas line and new venting'] },
       note: "Not sure? We'll tell you if your home is a good fit for tankless.",
     },
     crew: 'family', crewLine: 'Same family, same way of working, on every water heater job.',
@@ -264,7 +265,7 @@ export const CONTENT: Record<string, ServiceContent> = {
       { q: 'How much is a new water heater?', a: `It depends on size, gas or electric, and tank or tankless. ${ph('Starting price: Jim to confirm')} You get the price before we start.` },
       { q: 'Do I need a permit?', a: `In most cities, replacing a water heater needs a permit and a seismic strap check. ${ph('Permits: Jim to confirm who pulls them')}` },
     ],
-    related: ['leak-detection-pomona', 'gas-line-repair-pomona', 'repiping-pomona'], relatedEyebrow: 'More ways we help', relatedLine: 'Hot water problems often sit next to these.',
+    related: ['leak-detection-pomona', 'gas-line-repair-pomona', 'repiping-pomona', 'plumbing-repair-pomona'], relatedEyebrow: 'More ways we help', relatedLine: 'Hot water problems often sit next to these.',
     contact: { line1: 'Get your hot', line2: 'water back.', text: "Cold shower? Call (909) 587-0711, day or night. Backup line (909) 667-6555. Or leave your number and Jim's team calls you back." },
     hubLine: 'Tank or tankless. Repair or replace.',
   },

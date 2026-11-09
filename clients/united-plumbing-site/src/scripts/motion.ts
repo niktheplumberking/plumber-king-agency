@@ -37,7 +37,39 @@ document.addEventListener('click', (e) => {
   if (!a) return;
   const href = a.getAttribute('href') || '';
   if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('sms:') || href.startsWith('mailto:') || a.target === '_blank') return;
-  if (a.origin === location.origin) { try { sessionStorage.setItem('up-nav', '1'); } catch (_) {} }
+  if (a.origin !== location.origin) return;
+  try { sessionStorage.setItem('up-nav', '1'); } catch (_) {}
+  // Page transition: a night curtain rises, then we navigate; the next page lowers it away.
+  const me = e as MouseEvent;
+  if (!motion || me.defaultPrevented || me.button !== 0 || me.metaKey || me.ctrlKey || me.shiftKey || me.altKey || a.hasAttribute('download')) return;
+  if (a.pathname === location.pathname && a.search === location.search) return;
+  const pt = document.querySelector<HTMLElement>('[data-pt]');
+  if (!pt) return;
+  e.preventDefault();
+  lenis?.stop();
+  pt.classList.add('is-on');
+  gsap.fromTo(pt.querySelector('.pt-panel'), { yPercent: 100 }, { yPercent: 0, duration: 0.55, ease: 'power3.inOut', onComplete: () => { location.href = a.href; } });
+  gsap.fromTo(pt.querySelector('.pt-mark'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.35, delay: 0.3, ease: 'power2.out' });
+});
+
+/* Page arrives from an in-site link: lift the curtain, then play the hero. */
+function liftCurtain(onDone: () => void) {
+  const pt = document.querySelector<HTMLElement>('[data-pt]');
+  if (!pt || !html.classList.contains('pt-in')) { onDone(); return; }
+  const panel = pt.querySelector('.pt-panel');
+  gsap.set(panel, { yPercent: 0 });
+  gsap.set(pt.querySelector('.pt-mark'), { opacity: 1 });
+  const tl = gsap.timeline({ onComplete: () => { html.classList.remove('pt-in'); pt.classList.remove('is-on'); } });
+  tl.to(pt.querySelector('.pt-mark'), { opacity: 0, y: -16, duration: 0.25, ease: 'power2.in' }, 0.05)
+    .to(panel, { yPercent: -100, duration: 0.75, ease: 'power3.inOut' }, 0.1)
+    .add(() => onDone(), 0.35);
+}
+// Back/forward cache: a page restored from history must not keep a raised curtain.
+window.addEventListener('pageshow', (ev) => {
+  if (!(ev as PageTransitionEvent).persisted) return;
+  const pt = document.querySelector<HTMLElement>('[data-pt]');
+  if (pt) { pt.classList.remove('is-on'); gsap.set(pt.querySelector('.pt-panel'), { yPercent: 100 }); }
+  html.classList.remove('pt-in'); lenis?.start();
 });
 
 /* ---------- smooth scroll ---------- */
@@ -64,12 +96,18 @@ function initHeader() {
   const hdr = document.querySelector<HTMLElement>('[data-header]');
   const bar = document.querySelector<HTMLElement>('[data-mbar]');
   if (!hdr) return;
-  let last = 0;
+  // Hide on scroll down, show on scroll up, but only after a deliberate 48 px move in one direction.
+  // Tiny jitters (slow finger drags, the phone's address bar resizing, rubber-band bounce) no longer flip it.
+  let last = 0, dir = 0, anchor = 0;
   const onScroll = () => {
-    const y = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const y = Math.min(Math.max(window.scrollY, 0), Math.max(max, 0));
+    if (y > last && dir !== 1) { dir = 1; anchor = last; }
+    else if (y < last && dir !== -1) { dir = -1; anchor = last; }
     hdr.classList.toggle('is-scrolled', y > 60);
-    hdr.classList.toggle('is-hidden', y > 400 && y > last + 2 && !document.querySelector('.has-mega:hover'));
-    if (y < last - 2) hdr.classList.remove('is-hidden');
+    if (y < 200) hdr.classList.remove('is-hidden');
+    else if (dir === 1 && y - anchor > 48 && !document.querySelector('.has-mega:hover')) hdr.classList.add('is-hidden');
+    else if (dir === -1 && anchor - y > 48) hdr.classList.remove('is-hidden');
     bar?.classList.toggle('is-on', y > 520);
     last = y;
   };
@@ -224,12 +262,12 @@ function playIntro(onDone: () => void) {
   const yellow = root.querySelector('.intro-yellow')!;
   const drop = root.querySelector('.intro-drop')!;
   const tl = gsap.timeline();
-  tl.from(root.querySelectorAll('.intro-pipe-line, .intro-pipe-line2'), { drawSVG: '0%', duration: 0.7, ease: 'power2.inOut' }, 0.1)
-    .from('.intro-joint', { scale: 0, transformOrigin: '50% 50%', duration: 0.4, ease: 'back.out(3)' }, 0.65)
+  tl.fromTo(root.querySelectorAll('.intro-pipe-line, .intro-pipe-line2'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 0.1)
+    .fromTo('.intro-joint', { scale: 0, opacity: 1, svgOrigin: '300 40' }, { scale: 1, opacity: 1, svgOrigin: '300 40', duration: 0.4, ease: 'back.out(3)' }, 0.65)
     .fromTo(drop, { y: -16, opacity: 0, scaleY: 0.6 }, { y: 70, opacity: 1, scaleY: 1.1, duration: 0.45, ease: 'power2.in' }, 0.75)
     .to(drop, { scale: 0, opacity: 0, duration: 0.15 }, 1.18)
-    .to('.intro-logo', { scale: 1, duration: 0.6, ease: 'back.out(2)' }, 1.12)
-    .from('.intro-led span', { y: 20, opacity: 0, stagger: 0.08, duration: 0.4, ease: 'back.out(2)' }, 1.3)
+    .fromTo('.intro-logo', { scale: 0 }, { scale: 1, duration: 0.6, ease: 'back.out(2)' }, 1.12)
+    .fromTo('.intro-led span', { y: 20, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.08, duration: 0.4, ease: 'back.out(2)' }, 1.3)
     .add('exit', 1.95)
     .to(root.querySelector('.intro-core'), { y: -60, opacity: 0, duration: 0.5, ease: 'power2.in' }, 'exit')
     .to(night, { yPercent: -125, duration: 1.0, ease: 'power3.inOut' }, 'exit')
@@ -238,6 +276,34 @@ function playIntro(onDone: () => void) {
     .add(() => { html.classList.remove('intro'); lenis?.start(); ScrollTrigger.refresh(); }, 'exit+=1.2');
   // Hard safety: never hold the visitor longer than 4.5 s.
   setTimeout(() => { if (html.classList.contains('intro')) { tl.progress(1); } }, 4500);
+}
+
+function initAutoParallax() {
+  // Auto parallax: every cover-fit photo inside a clipped frame drifts slightly slower than the page.
+  // The image is scaled up a little first so its edges never show. Skips hero, header, footer, carousels, cut-outs.
+  gsap.utils.toArray<HTMLImageElement>('main img').forEach((img) => {
+    if (img.closest('[data-parallax], [data-no-parallax], .hero, [data-hero], [data-track], [data-carousel], dialog, .slot')) return;
+    const cs = getComputedStyle(img);
+    const frame = img.parentElement;
+    if (!frame || cs.objectFit !== 'cover') return;
+    const fs = getComputedStyle(frame);
+    if (fs.overflow !== 'hidden' && fs.overflow !== 'clip' && !frame.closest('[style*="overflow"]')) {
+      // also accept frames clipped by an ancestor within two levels
+      const up = frame.parentElement; if (!up || !/hidden|clip/.test(getComputedStyle(up).overflow)) return;
+    }
+    const r = img.getBoundingClientRect();
+    if (r.height < 120 || r.width < 120) return;
+    // Uses the separate CSS 'scale' and 'translate' properties, so hover zooms done with 'transform' still work on top.
+    img.style.scale = '1.14';
+    const drift = { v: -5 };
+    gsap.to(drift, { v: 5, ease: 'none', onUpdate: () => { img.style.translate = `0 ${drift.v.toFixed(2)}%`; },
+      scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+  });
+  // Depth on big section headings: they settle a touch slower than the content around them.
+  gsap.utils.toArray<HTMLElement>('main .h2[data-split]').forEach((h) => {
+    if (h.closest('.hero')) return;
+    gsap.fromTo(h, { y: 40 }, { y: -20, ease: 'none', scrollTrigger: { trigger: h, start: 'top bottom', end: 'bottom top', scrub: 0.8 } });
+  });
 }
 
 /* ---------- scroll reveals ---------- */
@@ -266,6 +332,9 @@ function initReveals() {
     const amt = Number(el.dataset.parallax || 0.12) * 100;
     gsap.fromTo(el, { yPercent: -amt / 2 }, { yPercent: amt / 2, ease: 'none', scrollTrigger: { trigger: el.parentElement || el, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
+  // Extra parallax is set up when the browser is idle, so it never delays the first paint or the hero.
+  const idle = (window as any).requestIdleCallback || ((f: () => void) => setTimeout(f, 400));
+  idle(() => { initAutoParallax(); ScrollTrigger.refresh(); }, { timeout: 2000 });
   gsap.utils.toArray<HTMLElement>('[data-count]').forEach((el) => {
     const end = Number(el.dataset.count);
     const obj = { v: 0 };
@@ -382,9 +451,10 @@ function boot() {
     return;
   }
   const firstVisit = html.classList.contains('intro');
-  const start = () => { heroTimeline(!firstVisit); initReveals(); ScrollTrigger.refresh(); };
-  const ready = (document as any).fonts?.ready ?? Promise.resolve();
-  Promise.race([ready, new Promise((r) => setTimeout(r, 1200))]).then(() => playIntro(start));
+  // The intro starts at once (it needs no web fonts); the hero waits for fonts so its line split measures right.
+  const fontsReady = Promise.race([(document as any).fonts?.ready ?? Promise.resolve(), new Promise((r) => setTimeout(r, 1200))]);
+  const start = () => { fontsReady.then(() => { heroTimeline(!firstVisit); initReveals(); ScrollTrigger.refresh(); }); };
+  if (html.classList.contains('pt-in')) liftCurtain(start); else playIntro(start);
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

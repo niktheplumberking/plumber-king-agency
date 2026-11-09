@@ -8,4 +8,5 @@ export default defineConfig({
   integrations: [sitemap({ filter: (p) => !/\/thank-you\/|\/404/.test(p) && !(/\/plumber-[a-z-]+\/$/.test(p) && !/\/plumber-claremont\/$/.test(p)) })],
   image: { responsiveStyles: false },
   compressHTML: true,
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
 });

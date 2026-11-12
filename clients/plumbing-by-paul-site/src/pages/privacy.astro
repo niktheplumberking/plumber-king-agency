@@ -1,0 +1,71 @@
+---
+// Privacy policy. DRAFT for Paul to review with his lawyer (noindex). Written to match what the code does today:
+// no cookies, no analytics, fonts and images self-hosted, one sessionStorage flag ('pbp-nav') that skips the intro,
+// and an estimate form that sends nothing while FORM_LIVE is false (site.ts). Re-check this page when any of that changes.
+import LegalPage from '../components/legal/LegalPage.astro';
+import { SITE } from '../data/site';
+const ph = (t: string) => `<em class="ph">[${t}]</em>`;
+const mail = `<a href="mailto:${SITE.email}">${SITE.email}</a>`;
+const tel = `<a href="${SITE.phoneHref}">${SITE.phone}</a>`;
+const sections = [
+  { id: 'who', title: 'Who we are', html: `
+    <p>This website belongs to ${SITE.legalName}, ${SITE.street}, ${SITE.city}, ${SITE.region} ${SITE.zip}. Phone ${tel}, email ${mail}.</p>
+    <p>In this policy, "we" and "us" mean ${SITE.legalName}. "You" means anyone using the site.</p>` },
+  { id: 'today', title: 'What this preview collects today', html: `
+    <p>This version of the site is a preview. The estimate form checks that you filled in a name and a phone number, then shows a thank-you page.</p>
+    <p><strong>It does not send your details to us or to anyone else, and the site does not store them.</strong> To reach us now, please call.</p>` },
+  { id: 'form', title: 'What the estimate form will collect', html: `
+    <p>Once the form is switched on, it will send these details to ${SITE.legalName}:</p>
+    <ul>
+      <li>your name and phone number</li>
+      <li>your ZIP code, if you add it</li>
+      <li>the service you pick, if you pick one</li>
+      <li>your message, if you write one</li>
+      <li>on a town page, the name of that town</li>
+    </ul>
+    <p>We ask for nothing else. There is no account to create and no payment taken on this site.</p>` },
+  { id: 'use', title: 'How we use your details', html: `
+    <p>To call you back about your request, give you an estimate and do the work you ask for. That is all.</p>
+    <p>We do not sell your details and we do not use them for advertising. ${ph('Paul to confirm: whether you ever send follow-up texts or emails, such as appointment reminders')}</p>` },
+  { id: 'share', title: 'Who else sees them', html: `
+    <ul>
+      <li>The service that delivers the form to us ${ph('name of form service: Paul to confirm at launch')}. It handles your details only to pass them on.</li>
+      <li>Our web host ${ph('host: Paul to confirm at launch')}, which runs the computers that serve this site.</li>
+      <li>Anyone the law requires us to share them with.</li>
+    </ul>
+    <p>Nobody else.</p>` },
+  { id: 'keep', title: 'How long we keep them', html: `
+    <p>Only as long as we need them for your job and for our business records. ${ph('exact period: Paul to confirm with his lawyer')}</p>` },
+  { id: 'cookies', title: 'Cookies and tracking', html: `
+    <p><strong>This site sets no cookies.</strong> There is no analytics, no advertising and no tracking pixel on it. The fonts and pictures are served from the site itself, so opening a page does not contact Google, Facebook or any other company.</p>
+    <p>One small thing: when you click from one page to the next, the site leaves a note in your browser's session storage so it can skip the opening animation. The note says nothing about you, never leaves your device and is gone when you close the tab.</p>
+    <p>If we ever add analytics or cookies, we will update this page first.</p>` },
+  { id: 'logs', title: 'Server logs', html: `
+    <p>Like every website, the computers that serve this site can record basic details of each visit, such as your IP address, your browser and the page you asked for. The host uses them to run the site and keep it safe. ${ph('how long the host keeps logs: Paul to confirm at launch')}</p>` },
+  { id: 'links', title: 'Calls, emails and other websites', html: `
+    <p>When you call or email us, we see your phone number or email address and use it to help you.</p>
+    <p>Some links on this site go to Google (reviews and maps), Facebook and Instagram. Those sites have their own privacy rules, which apply once you are there.</p>` },
+  { id: 'choices', title: 'Your choices', html: `
+    <p>You can ask us what details we hold about you, ask us to correct them, or ask us to delete them. Call ${tel} or email ${mail}.</p>
+    <p>This site is for adults booking plumbing work. We do not knowingly collect details from children under 13.</p>` },
+  { id: 'changes', title: 'Changes to this policy', html: `
+    <p>If we change how we handle your details, we update this page and the date at the top.</p>` },
+];
+---
+<LegalPage
+  title="Privacy Policy | Plumbing By Paul"
+  description="How Plumbing By Paul LLC in St. Petersburg, FL handles your details: what the estimate form collects and why, who sees it, and no cookies or tracking."
+  crumb={{ name: 'Privacy', href: '/privacy/' }}
+  eyebrow="Plumbing By Paul LLC"
+  line1="Privacy policy,"
+  line2="kept simple."
+  lead="What this website collects, what we do with it and what we never do, in plain English."
+  short={[
+    'No cookies, no analytics, no tracking.',
+    'The preview form sends nothing yet.',
+    'When it does, your details go only to Plumbing By Paul LLC.',
+    'We never sell your details or use them for ads.',
+  ]}
+  sections={sections}
+  other={{ name: 'terms of use', href: '/terms/' }}
+/>

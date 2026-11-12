@@ -1,0 +1,357 @@
+---
+// About: Paul's story, the crew, why us, values. Facts only from FACTS.md, site.ts and source-site-text (about, team, home).
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Btn from '../components/Btn.astro';
+import Sunline from '../components/Sunline.astro';
+import Marquee from '../components/Marquee.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import { SITE, REVIEWS } from '../data/site';
+import paulPhoto from '../assets/img/source-site/paul-alves.jpg';
+import mascot from '../assets/img/mascot-badge.png';
+import families from '../assets/img/source-site/team-trucks-2-families.jpg';
+import alycia from '../assets/img/source-site/alycia-hernandez.jpg';
+import event from '../assets/img/source-site/team-community-event.jpg';
+import crew from '../assets/img/source-site/team-trucks-1.jpg';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = site + '/about/';
+const title = 'About Plumbing By Paul | St. Petersburg Plumber';
+const description = 'Meet Plumbing By Paul, a family-owned plumber in St. Petersburg, FL. Paul Alves, the crew in light blue shirts, and why Pinellas County keeps calling them.';
+const crumbs = [{ name: 'About', href: '/about/' }];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'AboutPage', '@id': url + '#webpage', url, name: title, description,
+  inLanguage: 'en-US', isPartOf: { '@id': site + '/#website' }, about: { '@id': site + '/#business' }, mainEntity: { '@id': site + '/#business' },
+}];
+
+const stats = [
+  { n: SITE.claims.years, suffix: '+', label: 'years of plumbing in Pinellas' },
+  { n: SITE.claims.customers, suffix: '+', label: 'happy customers' },
+  { n: SITE.reviewCount, suffix: '', label: `Google reviews, rated ${SITE.rating}` },
+];
+
+// Each line a customer wrote that names a technician: exact substrings of the real reviews in site.ts.
+const named = [
+  { names: 'Phil', r: REVIEWS[0], line: 'Phil was here within the hour and fixed it in under an hour.' },
+  { names: 'Chris & Alex', r: REVIEWS[1], line: 'Chris & Alex did absolutely incredible job, look at the welding!' },
+  { names: 'Chris & Steven', r: REVIEWS[2], line: 'Chris and Steven did an excellent job!' },
+];
+for (const n of named) if (!n.r.text.includes(n.line)) throw new Error(`about.astro: "${n.line}" is not in the review by ${n.r.name}`);
+
+const dread = [
+  'A phone tree before you reach a person.',
+  'A price you only see on the bill.',
+  'A second trip, because the part is back at the shop.',
+  'Nobody picks up after hours.',
+];
+const paulWay = [
+  'A direct line to the owner. No middlemen, no phone trees.',
+  'A free estimate before any work starts. No hidden fees.',
+  'A truck prepared for the job. No second trips, no excuses.',
+  'Open 7 days, with an emergency line answered 24/7.',
+  'A 1-year workmanship warranty on the work we do.',
+];
+
+const values = [
+  { icon: 'heart', title: 'Genuine care', text: 'Every customer deserves honest, expert service delivered with real care.' },
+  { icon: 'truck', title: 'Prepared', text: 'Full preparation for every job, no matter how rushed.' },
+  { icon: 'tag', title: 'Honest pricing', text: 'A free estimate first. Transparent pricing, no hidden fees.' },
+  { icon: 'clock', title: 'On call', text: 'Scheduled or emergency, day and night. The emergency line is answered 24/7.' },
+  { icon: 'shield', title: 'Licensed and insured', text: 'Fully licensed, bonded and insured, every team member.' },
+  { icon: 'pin', title: 'Pinellas local', text: 'We know Pinellas hard water and what it does to pipes and heaters.' },
+];
+// Fan the six values around a rising sun (desktop). Angles are spread wider in the middle so cards never touch.
+const ang = [0.03, 0.2, 0.38, 0.62, 0.8, 0.97];
+const arc = ang.map((a) => ({ x: 50 - Math.cos(Math.PI * a) * 38, b: 12 + Math.sin(Math.PI * a) * 62 }));
+---
+<Base title={title} description={description} crumbs={crumbs} schema={schema} ogImage={families}
+      ogAlt="The Plumbing By Paul crew and their families in front of two company trucks">
+
+  <!-- 1. HERO -->
+  <PageHero crumbs={crumbs} eyebrow="About Plumbing By Paul" line1="A family plumber from" line2="St. Petersburg."
+    lead="Plumbing By Paul is family owned and run by Paul Alves, from a shop on 64th Way N. We plumb Pinellas with heart: exterior to interior, top to bottom."
+    image={paulPhoto} alt="Paul Alves, owner of Plumbing By Paul, smiling in a black polo shirt and a cap" imgPos="center 22%"
+    chips={['Family owned', 'Licensed, bonded & insured', 'Open 7 days']} tagTitle="Paul Alves" tagText="Owner" />
+
+  <!-- 2. STORY -->
+  <Sunline from="var(--deep)" to="var(--shell)" at="right" />
+  <section class="st section shell">
+    <div class="wrap st-grid">
+      <div class="st-copy">
+        <Eyebrow>Our story</Eyebrow>
+        <h2 class="h-display h2" data-split>We know plumbing. <span class="c-coral-deep">Top to bottom.</span></h2>
+        <p class="lead st-lead" data-reveal="up">At Plumbing By Paul LLC we know plumbing, exterior to interior, top to bottom. Paul built this company on the belief that every customer deserves honest, expert service delivered with genuine care.</p>
+        <blockquote class="st-q" data-reveal="up">
+          <p class="h-display">Ever called a plumber who did not show up fully prepared?</p>
+        </blockquote>
+        <p class="st-p" data-reveal="up">With our crew you can expect full preparation for every job, no matter how rushed. The truck comes ready, the job gets done, and you are not left waiting for a second visit.</p>
+        <p class="st-stamp h-display" data-reveal="pop">No second trips. <span>No excuses.</span></p>
+      </div>
+      <div class="st-art" aria-hidden="true">
+        <span class="st-sun" data-reveal="scale"></span>
+        <div class="st-badge"><div class="st-badge-in" data-reveal="pop" data-delay="0.15"><Image src={mascot} alt="" width={360} height={360} /></div></div>
+        <p class="st-bubble" data-reveal="up" data-delay="0.3"><strong class="h-display">Yes, that is Paul.</strong><span>The cartoon on every truck is the owner.</span></p>
+        <span class="st-sticker-pos" data-reveal="pop" data-delay="0.4"><span class="st-sticker h-display">Family owned</span></span>
+      </div>
+    </div>
+    <div class="wrap">
+      <dl class="st-nums" data-stagger="up">
+        {stats.map((s) => (
+          <div><dt class="h-display"><span data-count={s.n} data-suffix={s.suffix}>{s.n.toLocaleString('en-US')}{s.suffix}</span></dt><dd>{s.label}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <Marquee tone="tide" dir={1} items={['Plumbing Pinellas with heart', 'Prepared every time', 'Honest pricing', 'Family owned', 'Open 7 days']} />
+
+  <!-- 3. THE CREW -->
+  <section class="cw section dark" id="team">
+    <div class="wrap">
+      <div class="cw-head">
+        <div>
+          <Eyebrow>The people behind the work</Eyebrow>
+          <h2 class="h-display h2" data-split>Meet the Plumbing By Paul <span class="c-coral">family.</span></h2>
+          <p class="lead cw-lead" data-reveal="up">Skilled, dedicated and local. The people who show up for Pinellas County every day bring genuine care and the commitment to do the job right, every single time.</p>
+        </div>
+        <div class="cw-paul" data-reveal="up">
+          <span class="cw-paul-ic"><Icon name="heart" size={26} /></span>
+          <div>
+            <p class="cw-paul-n h-display">Paul Alves</p>
+            <p class="cw-paul-r">Owner</p>
+            <p class="cw-paul-t">His face is the cartoon on every truck, and his name is on every job.</p>
+            <a class="textlink" href={SITE.phoneHref}>Call {SITE.phone} <Icon name="arrow" size={17} /></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="cw-grid">
+        <figure class="cw-big frame" data-reveal="clip">
+          <Image src={families} alt="The whole Plumbing By Paul crew in light blue shirts, with family members and a child, in front of two company trucks" widths={[640, 960, 1400]} sizes="(max-width: 980px) 92vw, 800px" />
+          <figcaption>The whole crew, families included</figcaption>
+        </figure>
+        <figure class="cw-al" data-reveal="up" data-delay="0.1">
+          <div class="arch cw-al-img"><Image src={alycia} alt="Alycia Hernandez of Plumbing By Paul" widths={[360, 600]} sizes="(max-width: 980px) 60vw, 320px" /></div>
+          <figcaption><strong class="h-display">Alycia Hernandez</strong><em class="ph">[Role: Paul to confirm]</em></figcaption>
+        </figure>
+      </div>
+
+      <div class="cw-low">
+        <div class="cw-named">
+          <h3 class="h-display h3 cw-named-h" data-reveal="up">The names customers write down</h3>
+          <p class="cw-named-p" data-reveal="up">Our technicians, by first name, as they appear in real Google reviews.</p>
+          <ol class="cw-ledger" data-stagger="up">
+            {named.map((n) => (
+              <li>
+                <p class="cw-name h-display">{n.names}</p>
+                <figure>
+                  <blockquote><p>&ldquo;{n.line}&rdquo;</p></blockquote>
+                  <figcaption>{n.r.name}, Google review</figcaption>
+                </figure>
+              </li>
+            ))}
+          </ol>
+          <a class="textlink cw-more" href="/reviews/" data-reveal="up">Read the full reviews <Icon name="arrow" size={17} /></a>
+        </div>
+        <figure class="cw-event" data-reveal="up">
+          <div class="arch cw-event-img"><Image src={event} alt="Plumbing By Paul team members at an outdoor community event in front of a company trailer" widths={[360, 640]} sizes="(max-width: 980px) 70vw, 340px" /></div>
+          <figcaption><Icon name="users" size={18} />Out in the community</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. WHY US -->
+  <Sunline from="var(--deep)" to="var(--shell)" at="left" />
+  <section class="wy section shell">
+    <div class="wrap">
+      <div class="wy-head">
+        <Eyebrow>Why Pinellas calls Paul</Eyebrow>
+        <h2 class="h-display h2" data-split>Same leak. <span class="c-coral-deep">A better call.</span></h2>
+      </div>
+      <div class="wy-cmp">
+        <div class="wy-dread-pos" data-reveal="left"><div class="wy-card wy-dread">
+          <p class="wy-tag">The call everyone dreads</p>
+          <ul>{dread.map((d) => <li><Icon name="close" size={18} stroke={2.6} />{d}</li>)}</ul>
+        </div></div>
+        <span class="wy-vs" aria-hidden="true"><span class="h-display" data-reveal="pop">vs</span></span>
+        <div class="wy-card wy-paul" data-reveal="right">
+          <p class="wy-tag">The call to Plumbing By Paul</p>
+          <ul>{paulWay.map((d) => <li><span class="wy-ok"><Icon name="check" size={16} stroke={3} /></span>{d}</li>)}</ul>
+          <div class="btn-row wy-cta">
+            <Btn href={SITE.phoneHref} icon="phone">Call {SITE.phone}</Btn>
+          </div>
+        </div>
+      </div>
+      <figure class="wy-photo frame" data-reveal="up">
+        <Image src={crew} alt="Fourteen Plumbing By Paul crew members in light blue work shirts in front of two company trucks with the Paul mascot on the side" widths={[640, 1000, 1400]} sizes="(max-width: 1280px) 92vw, 1240px" />
+        <figcaption><Icon name="truck" size={18} />Look for the light blue shirts and Paul's face on the truck.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 5. VALUES: six things around a rising sun -->
+  <Sunline from="var(--shell)" to="var(--deep)" at="center" />
+  <section class="vl section dark">
+    <div class="wrap">
+      <div class="vl-head head-center">
+        <Eyebrow>What we stand for</Eyebrow>
+        <h2 class="h-display h2" data-split>Six things <span class="c-coral">we never skip.</span></h2>
+      </div>
+      <div class="vl-arc">
+        <svg class="vl-rays" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          {arc.map((p) => <line x1="50" y1="100" x2={p.x.toFixed(2)} y2={(100 - p.b).toFixed(2)} data-draw />)}
+        </svg>
+        <div class="vl-sun" aria-hidden="true" data-reveal="scale"><span><Icon name="heart" size={30} /><strong class="h-display">With heart</strong></span></div>
+        <ul class="vl-list" data-stagger="pop">
+          {values.map((v, i) => (
+            <li class="vl-item" style={`--x:${arc[i].x.toFixed(2)}%;--b:${arc[i].b.toFixed(2)}%`}>
+              <span class="vl-ic"><Icon name={v.icon} size={22} /></span>
+              <div><h3 class="h-display h4">{v.title}</h3><p>{v.text}</p></div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CONTACT -->
+  <Sunline from="var(--deep)" to="var(--coral)" sun="var(--coral)" rays="var(--tide)" at="right" />
+  <ContactSection eyebrow="Work with us" line1="Want Paul's crew on the job?" line2="Call us."
+    lead="Call and talk to a person, not a phone tree. The line is answered 24/7 for emergencies. Not urgent? Send the form and we call you back." />
+</Base>
+
+<style>
+  /* 2. Story */
+  .st-grid { display: grid; grid-template-columns: 640fr 520fr; gap: clamp(40px, 6vw, 90px); align-items: center; }
+  .st-lead { margin-top: 20px; max-width: 600px; }
+  .st-q { margin-top: 34px; padding-left: 24px; border-left: 5px solid var(--coral); }
+  .st-q p { font-size: clamp(25px, 2.5vw, 34px); line-height: 1.12; color: var(--ink); }
+  .st-p { margin-top: 18px; max-width: 560px; color: var(--ink-2); }
+  .st-stamp { display: inline-block; margin-top: 28px; padding: 14px 24px; border-radius: 14px; border: 3px solid var(--coral-deep); color: var(--coral-deep); font-size: clamp(22px, 2.2vw, 30px); transform: rotate(-2.5deg); line-height: 1.1; }
+  .st-stamp span { color: var(--ink); }
+  .st-art { position: relative; width: min(100%, 500px); aspect-ratio: 1; justify-self: center; }
+  .st-sun { position: absolute; inset: 6%; border-radius: 50%; background: var(--coral); }
+  .st-sun::before { content: ''; position: absolute; inset: -9%; border-radius: 50%; border: 3px dashed var(--teal); opacity: .5; }
+  .st-badge { position: absolute; left: 19%; top: 19%; width: 62%; aspect-ratio: 1; }
+  .st-badge-in { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; border: 8px solid var(--shell); box-shadow: 10px 10px 0 0 var(--ink); background: #fff; }
+  .st-badge-in :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .st-bubble { position: absolute; left: -6%; bottom: 2%; display: grid; gap: 2px; padding: 14px 20px; border-radius: 20px 20px 20px 4px; background: var(--deep); color: var(--on-dark-2); font-size: 14.5px; max-width: 250px; box-shadow: 0 18px 40px -18px rgba(4,42,48,.6); }
+  .st-bubble strong { color: var(--shell); font-size: 21px; font-weight: 400; }
+  .st-sticker-pos { position: absolute; right: -2%; top: 8%; }
+  .st-sticker { display: block; padding: 10px 20px; border-radius: 999px; background: var(--sun); color: var(--ink); font-size: 20px; transform: rotate(9deg); box-shadow: 0 14px 30px -12px rgba(0,0,0,.4); }
+  .st-nums { display: grid; grid-template-columns: repeat(3, 1fr); margin: clamp(56px, 7vw, 96px) 0 0; border-top: 2px solid var(--ink); }
+  .st-nums > div { padding: 22px 28px 0; border-left: 2px solid var(--line); }
+  .st-nums > div:first-child { border-left: 0; padding-left: 0; }
+  .st-nums dt { font-size: clamp(44px, 5vw, 72px); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .st-nums > div:nth-child(2) dt { color: var(--coral-deep); }
+  .st-nums > div:nth-child(3) dt { color: var(--teal); }
+  .st-nums dd { margin: 8px 0 0; font-size: 15.5px; font-weight: 500; color: var(--ink-2); }
+
+  /* 3. Crew */
+  .cw-head { display: grid; grid-template-columns: 1.35fr 1fr; gap: 30px 60px; align-items: end; }
+  .cw-lead { margin-top: 18px; max-width: 620px; }
+  .cw-paul { display: flex; gap: 18px; padding: 26px 28px; border-radius: var(--radius); background: var(--deep-2); box-shadow: inset 0 0 0 1.5px var(--line-dark), 8px 8px 0 0 var(--coral); }
+  .cw-paul-ic { display: grid; place-items: center; flex: none; width: 56px; height: 56px; border-radius: 50%; background: var(--coral); color: var(--ink); }
+  .cw-paul-n { font-size: 30px; color: var(--shell); line-height: 1; }
+  .cw-paul-r { margin-top: 4px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--tide); }
+  .cw-paul-t { margin-top: 10px; color: var(--on-dark-2); font-size: 16px; }
+  .cw-paul .textlink { margin-top: 4px; }
+  .cw-grid { display: grid; grid-template-columns: 820fr 340fr; gap: 28px 40px; margin-top: clamp(40px, 5vw, 64px); align-items: stretch; }
+  .cw-big { aspect-ratio: 820 / 540; }
+  .cw-big figcaption { position: absolute; left: 18px; bottom: 18px; padding: 9px 16px; border-radius: 999px; background: var(--shell); color: var(--ink); font-size: 14px; font-weight: 700; }
+  .cw-al { display: flex; flex-direction: column; }
+  .cw-al-img { flex: 1; min-height: 380px; border: 6px solid var(--shell); }
+  .cw-al-img img { object-position: center 20%; }
+  .cw-al figcaption { display: grid; gap: 8px; justify-items: start; margin-top: 16px; }
+  .cw-al figcaption strong { font-size: 25px; font-weight: 400; color: var(--shell); }
+  .cw-al .ph { font-size: 14px; color: var(--shell); }
+  .cw-low { display: grid; grid-template-columns: 820fr 340fr; gap: 40px; margin-top: clamp(48px, 6vw, 80px); align-items: start; }
+  .cw-named-h { color: var(--shell); }
+  .cw-named-p { margin-top: 8px; color: var(--on-dark-2); }
+  .cw-ledger { margin-top: 22px; border-top: 1px solid var(--line-dark); }
+  .cw-ledger li { display: grid; grid-template-columns: 250px 1fr; gap: 10px 36px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--line-dark); }
+  .cw-name { font-size: clamp(30px, 3.2vw, 44px); color: var(--coral); line-height: 1; }
+  .cw-ledger blockquote { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.45; color: var(--shell); }
+  .cw-ledger figcaption { margin-top: 6px; font-size: 14px; color: var(--on-dark-2); }
+  .cw-more { margin-top: 14px; }
+  .cw-event-img { aspect-ratio: 340 / 420; border: 6px solid var(--deep-2); }
+  .cw-event-img img { object-position: center 40%; }
+  .cw-event figcaption { display: flex; align-items: center; gap: 9px; margin-top: 14px; font-weight: 600; color: var(--on-dark-2); }
+  .cw-event figcaption :global(.icon) { color: var(--tide); }
+
+  /* 4. Why us */
+  .wy-head { max-width: 760px; }
+  .wy-cmp { position: relative; display: grid; grid-template-columns: 1fr 1.25fr; gap: 56px; margin-top: clamp(36px, 4.5vw, 56px); align-items: center; }
+  .wy-card { border-radius: var(--radius); padding: clamp(26px, 3vw, 40px); }
+  .wy-tag { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+  .wy-card ul { display: grid; gap: 14px; margin-top: 20px; }
+  .wy-card li { display: flex; gap: 12px; align-items: flex-start; font-size: 17px; }
+  .wy-card li :global(.icon) { flex: none; margin-top: 3px; }
+  .wy-dread { background: var(--sand); color: var(--ink-2); transform: rotate(-1.5deg); box-shadow: inset 0 0 0 1.5px var(--line); }
+  .wy-dread .wy-tag { color: var(--ink-3); }
+  .wy-dread li { text-decoration: line-through; text-decoration-color: rgba(180,48,28,.55); text-decoration-thickness: 2px; }
+  .wy-dread li :global(.icon) { color: var(--coral-deep); }
+  .wy-paul { background: var(--deep); color: var(--on-dark); box-shadow: 10px 10px 0 0 var(--coral); }
+  .wy-paul .wy-tag { color: var(--tide); }
+  .wy-paul li { font-size: 18px; font-weight: 500; }
+  .wy-ok { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--coral); color: var(--ink); }
+  .wy-ok :global(.icon) { margin-top: 0 !important; }
+  .wy-cta { margin-top: 28px; }
+  .wy-vs { position: absolute; left: calc((100% - 56px) * (1 / 2.25) + 28px); top: 50%; transform: translate(-50%, -50%); z-index: 2; }
+  .wy-vs > span { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--sun); color: var(--ink); font-size: 24px; box-shadow: 0 10px 24px -10px rgba(0,0,0,.4); }
+  .wy-photo { margin-top: clamp(48px, 6vw, 80px); aspect-ratio: 1240 / 520; }
+  .wy-photo img { object-position: center 45%; }
+  .wy-photo figcaption { position: absolute; left: 18px; bottom: 18px; display: flex; align-items: center; gap: 9px; padding: 9px 16px; border-radius: 999px; background: var(--shell); color: var(--ink); font-size: 14px; font-weight: 700; max-width: calc(100% - 36px); }
+  .wy-photo figcaption :global(.icon) { color: var(--teal); flex: none; }
+
+  /* 5. Values arc */
+  .vl { overflow: hidden; padding-bottom: 0; }
+  .vl-arc { position: relative; height: 700px; margin-top: 20px; }
+  .vl-rays { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .vl-rays line { stroke: var(--tide); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .7; }
+  .vl-sun { position: absolute; left: 50%; bottom: 0; width: 420px; aspect-ratio: 2 / 1; transform: translateX(-50%); border-radius: 999px 999px 0 0; background: var(--coral); color: var(--ink); display: grid; place-items: end center; padding-bottom: 46px; }
+  .vl-sun span { display: grid; justify-items: center; gap: 6px; }
+  .vl-sun strong { font-size: 34px; line-height: 1; }
+  .vl-item { position: absolute; left: var(--x); bottom: var(--b); width: 270px; transform: translate(-50%, 50%); display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: 18px 20px; border-radius: 18px; background: var(--deep-2); box-shadow: inset 0 0 0 1.5px var(--line-dark); }
+  .vl-ic { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--deep-3); color: var(--tide); box-shadow: inset 0 0 0 1.5px var(--tide); }
+  .vl-item h3 { color: var(--shell); }
+  .vl-item p { margin-top: 6px; font-size: 15px; line-height: 1.5; color: var(--on-dark-2); }
+
+  @media (max-width: 1180px) {
+    .vl-arc { height: auto; margin-top: clamp(36px, 5vw, 56px); padding-bottom: 0; }
+    .vl-rays { display: none; }
+    .vl-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .vl-item { position: static; transform: none; width: auto; }
+    .vl-sun { position: relative; left: auto; transform: none; margin: clamp(40px, 6vw, 64px) auto 0; width: min(340px, 80%); padding-bottom: 30px; }
+    .vl-sun strong { font-size: 28px; }
+  }
+  @media (max-width: 980px) {
+    .st-grid, .cw-head, .cw-grid, .cw-low { grid-template-columns: 1fr; }
+    .st-art { width: min(86%, 420px); }
+    .cw-al { max-width: 340px; }
+    .cw-al-img { aspect-ratio: 340 / 420; flex: none; min-height: 0; }
+    .cw-event { max-width: 340px; }
+    .wy-cmp { grid-template-columns: 1fr; gap: 28px; }
+    .wy-vs { position: relative; left: auto; top: auto; transform: none; display: flex; justify-content: center; margin: -6px 0; }
+  }
+  @media (max-width: 640px) {
+    .st-nums { grid-template-columns: 1fr; }
+    .st-nums > div { border-left: 0; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .st-bubble { left: -2%; max-width: 210px; padding: 12px 16px; }
+    .st-bubble strong { font-size: 18px; }
+    .st-sticker { font-size: 17px; }
+    .st-sticker-pos { right: 0; }
+    .cw-paul { padding: 22px; box-shadow: inset 0 0 0 1.5px var(--line-dark), 6px 6px 0 0 var(--coral); }
+    .cw-ledger li { grid-template-columns: 1fr; padding: 18px 0; }
+    .cw-big { aspect-ratio: 4 / 3.3; }
+    .wy-dread { transform: none; }
+    .wy-paul { box-shadow: 6px 6px 0 0 var(--coral); }
+    .wy-cta :global(.btn) { width: 100%; }
+    .wy-photo { aspect-ratio: 4 / 3.4; }
+    .vl-list { grid-template-columns: 1fr; }
+  }
+</style>

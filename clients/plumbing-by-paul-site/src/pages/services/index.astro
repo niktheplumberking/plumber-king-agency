@@ -1,0 +1,390 @@
+---
+// /services/: the hub for all 13 service pages. Section order: hero (dark) > "start with what you see" finder (shell) >
+// four family chapters, each with its own layout (drains: deep, pipes: shell, hot water: sand, emergency + commercial: deep) >
+// towns band > reviews (sand) > FAQ (shell) > contact (coral). Facts: services.ts, service-content.ts, site.ts only.
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import Btn from '../../components/Btn.astro';
+import PageHero from '../../components/PageHero.astro';
+import Sunline from '../../components/Sunline.astro';
+import Marquee from '../../components/Marquee.astro';
+import RingBadge from '../../components/RingBadge.astro';
+import ReviewsSection from '../../components/sections/ReviewsSection.astro';
+import FaqSection from '../../components/sections/FaqSection.astro';
+import ContactSection from '../../components/sections/ContactSection.astro';
+import { SITE } from '../../data/site';
+import { SERVICES, FAMILIES, serviceBySlug, servicesByFamily, type Service } from '../../data/services';
+import { contentFor } from '../../data/service-content';
+import { BASE, TOWNS } from '../../data/towns';
+// Stock photos (from Paul's current site): they illustrate a type of job, never captioned as Paul's work.
+// None of these is a service page hero, so the hub does not repeat the photos of the pages it links to.
+import heroImg from '../../assets/img/source-site/stock-tool-bag.jpg';
+import drainsImg from '../../assets/img/source-site/stock-ptrap-repair.jpg';
+import pipesImg from '../../assets/img/source-site/stock-red-valves.jpg';
+import waterImg from '../../assets/img/source-site/stock-faucet-hands.jpg';
+import urgentImg from '../../assets/img/source-site/stock-pipe-teal.jpg';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const title = 'Plumbing Services St. Petersburg FL | Plumbing By Paul';
+const description = 'All 13 plumbing services from Plumbing By Paul in St. Petersburg, FL: drains, sewer, leaks, repiping, gas, water heaters and a 24/7 emergency line.';
+const crumbs = [{ name: 'Services', href: '/services/' }];
+const href = (s: Service) => `/${s.slug}/`;
+const ticks = (s: Service, n = 3) => contentFor(s).includes.slice(0, n);
+const S = (slug: string) => serviceBySlug(slug)!;
+
+const drains = servicesByFamily('drains');
+const pipes = servicesByFamily('pipes');
+const water = servicesByFamily('water');
+const emergency = S('emergency-plumber-st-petersburg-fl');
+const commercial = S('commercial-plumbing-st-petersburg-fl');
+
+// "Start with what you see": a symptom in the customer's words, pointing to the pages that cover it.
+const symptoms = [
+  { key: 'drain', label: 'Water will not drain', icon: 'drain', text: 'A slow sink, a tub that will not empty or a toilet that backs up. If several drains act up at once, the main line is the usual suspect.', go: ['clogged-drain-repair-st-petersburg-fl', 'drain-cleaning-st-petersburg-fl', 'sewer-line-service-st-petersburg-fl'] },
+  { key: 'leak', label: 'Leak or a high bill', icon: 'drop', text: 'A damp patch, a stain on the ceiling, water running when every tap is off, or a bill that jumped. Leak after leak usually means the pipes are wearing out.', go: ['leak-detection-st-petersburg-fl', 'repiping-st-petersburg-fl'] },
+  { key: 'hot', label: 'No hot water', icon: 'heater', text: 'Cold showers, rusty hot water, popping noises or a puddle under the tank. A failed water heater is a 24/7 call.', go: ['water-heater-repair-st-petersburg-fl', 'emergency-plumber-st-petersburg-fl'] },
+  { key: 'toilet', label: 'Toilet trouble', icon: 'toilet', text: 'Running nonstop, leaking at the base, clogging easily or overflowing. A toilet that gurgles when other drains run can point to the sewer line.', go: ['toilet-repair-st-petersburg-fl', 'clogged-drain-repair-st-petersburg-fl'] },
+  { key: 'kitchen', label: 'Disposal jammed', icon: 'disposal', text: 'A disposal that hums but will not spin, leaks under the sink or has given up. Turn it off at the switch and do not reach inside.', go: ['garbage-disposal-repair-st-petersburg-fl', 'drain-cleaning-st-petersburg-fl'] },
+  { key: 'gas', label: 'I smell gas', icon: 'flame', text: 'Get everyone outside first and call your gas company or 911 from there. Once it is safe, we find the leak and repair the line. New gas appliances and lines too.', go: ['gas-line-services-st-petersburg-fl'] },
+  { key: 'hard', label: 'Scale and weak pressure', icon: 'filter', text: 'White crust on faucets, spots on glasses and pressure that slowly drops. Pinellas water is hard, and the scale it leaves builds up in pipes and heaters.', go: ['water-softeners-filtration-st-petersburg-fl', 'repiping-st-petersburg-fl', 'leak-detection-st-petersburg-fl'] },
+  { key: 'business', label: 'It is for a business', icon: 'building', text: 'Shops, offices, restaurants and job sites. Grease lines, restrooms, repairs and new construction, with downtime kept short.', go: ['commercial-plumbing-st-petersburg-fl', 'emergency-plumber-st-petersburg-fl'] },
+];
+
+const faqs = [
+  { q: 'Do you work on homes and businesses?', a: 'Yes. Every service on this page is available for homes and for businesses across Pinellas County, from a single dripping faucet to commercial repiping and new construction.' },
+  { q: 'I am not sure which service I need. What should I do?', a: 'Call and tell us what you see, in your own words. We work out the cause with you and, if it is not urgent, give you a free estimate before any work starts.' },
+  { q: 'What if my job is not on this list?', a: 'We handle general plumbing too, such as faucet installs, fixture repairs, bathtub installs and main line water service. If it carries water or gas, just ask.' },
+  { q: 'Do all your services start with a free estimate?', a: 'Yes. For non-emergency work we assess the job in full and give you the price before we start. For an emergency we can often estimate over the phone.' },
+  { q: 'Which areas do you cover?', a: 'All of Pinellas County. Our shop is in St. Petersburg, and we work in Clearwater, Seminole, Largo, Pinellas Park, Dunedin, the beach towns and everywhere in between.' },
+  { q: 'Are you licensed and insured, and is the work guaranteed?', a: 'Yes. Plumbing By Paul LLC is fully licensed, bonded and insured, and our work carries a 1-year workmanship warranty.' },
+];
+
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': `${site}/services/#page`,
+  url: `${site}/services/`, name: 'Plumbing services in St. Petersburg, FL', description,
+  isPartOf: { '@id': `${site}/#website` }, about: { '@id': `${site}/#business` }, inLanguage: 'en-US',
+  mainEntity: {
+    '@type': 'ItemList', name: 'Plumbing By Paul services', numberOfItems: SERVICES.length,
+    itemListElement: SERVICES.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: `${site}/${s.slug}/` })),
+  },
+}];
+---
+<Base title={title} description={description} crumbs={crumbs} schema={schema} ogImage={heroImg} ogAlt="Plumber carrying a tool bag full of hoses and hand tools">
+  <PageHero crumbs={crumbs} eyebrow={`All ${SERVICES.length} services`} line1="Plumbing services in" line2="St. Petersburg & Pinellas"
+    lead="Drains and sewer lines, leaks and repipes, gas, water heaters, toilets and soft water. One local crew for homes and businesses across Pinellas County, open 7 days with a 24/7 emergency line."
+    image={heroImg} alt="Plumber carrying a tool bag full of hoses and hand tools"
+    chips={['Homes and businesses', 'Free estimates', '24/7 emergency line']} tagTitle={`${SERVICES.length} services`} tagText="One local crew" />
+
+  <!-- 1. FINDER: start with the symptom, not the trade name -->
+  <section class="fd section shell" aria-labelledby="fd-h">
+    <div class="wrap">
+      <div class="fd-head">
+        <div>
+          <Eyebrow>Not sure what to call it?</Eyebrow>
+          <h2 class="h-display h2" id="fd-h" data-split>Start with <span class="c-coral-deep">what you see.</span></h2>
+        </div>
+        <p class="lead" data-reveal="up">Pick the problem in front of you. We point you to the right page, or just call and describe it. That works too.</p>
+      </div>
+      <div class="fd-grid" data-tabs data-reveal="up">
+        <div class="fd-tabs" role="tablist" aria-label="Pick your problem">
+          {symptoms.map((t, i) => (
+            <button role="tab" id={`fdt-${t.key}`} aria-controls={`fdp-${t.key}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={t.key}>
+              <Icon name={t.icon} size={20} /><span>{t.label}</span>
+            </button>
+          ))}
+        </div>
+        <div class="fd-panes">
+          {symptoms.map((t, i) => (
+            <div class="fd-pane" role="tabpanel" id={`fdp-${t.key}`} aria-labelledby={`fdt-${t.key}`} data-tab-pane={t.key} hidden={i !== 0} tabindex="0">
+              <span class="fd-sun" aria-hidden="true"></span>
+              <div class="fd-copy">
+                <h3 class="h-display h3">{t.label}</h3>
+                <p class="fd-text">{t.text}</p>
+              </div>
+              <ul class="fd-links">
+                {t.go.map((slug) => { const s = S(slug); return (
+                  <li><a href={href(s)}><span class="fd-ic"><Icon name={s.icon} size={20} /></span><span>{s.name}</span><Icon name="arrow" size={18} class="fd-go" /></a></li>
+                ); })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. DRAINS & SEWER (deep): sticky arch photo + numbered rows -->
+  <Sunline from="var(--shell)" to="var(--deep)" at="left" />
+  <section class="ch-drains section dark" id="drains" aria-labelledby="h-drains">
+    <div class="wrap dr-grid">
+      <div class="dr-side">
+        <p class="ch-num h-display" aria-hidden="true">01</p>
+        <Eyebrow>{FAMILIES.drains.line}</Eyebrow>
+        <h2 class="h-display h2" id="h-drains" data-split>Drains <span class="c-coral">&amp; sewer.</span></h2>
+        <p class="lead dr-lead" data-reveal="up">Every drain in the building runs to one main line under the property. When one sink is slow, it is a clog. When they all are, it is the sewer.</p>
+        <figure class="dr-photo" data-reveal="up">
+          <div class="arch dr-arch"><Image src={drainsImg} alt="Hands loosening a chrome sink trap with an adjustable wrench" widths={[420, 640, 900]} sizes="(max-width: 980px) 88vw, 420px" /></div>
+        </figure>
+      </div>
+      <ol class="dr-list">
+        {drains.map((s, i) => (
+          <li data-reveal="up" data-delay={i * 0.06}>
+            <a href={href(s)} class="dr-row">
+              <span class="dr-n h-display" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="dr-body">
+                <span class="dr-title"><Icon name={s.icon} size={24} /><strong class="h-display">{s.name}</strong></span>
+                <span class="dr-blurb">{s.blurb}</span>
+                <span class="dr-ticks">{ticks(s).map((x) => <span><Icon name="check" size={14} stroke={3} />{x}</span>)}</span>
+              </span>
+              <span class="dr-go"><Icon name="arrow" size={22} /></span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3. PIPES, LEAKS & GAS (shell): three sticker panels under a header with the photo -->
+  <section class="ch-pipes section shell" id="pipes" aria-labelledby="h-pipes">
+    <div class="wrap">
+      <div class="pp-head">
+        <div>
+          <p class="ch-num ch-num-light h-display" aria-hidden="true">02</p>
+          <Eyebrow>{FAMILIES.pipes.line}</Eyebrow>
+          <h2 class="h-display h2" id="h-pipes" data-split>Pipes, leaks <span class="c-coral-deep">&amp; gas.</span></h2>
+          <p class="lead pp-lead" data-reveal="up">Hard Pinellas water, salt air near the Gulf and older galvanized pipe all wear plumbing out. We find the weak spot first, then fix the part that needs it.</p>
+        </div>
+        <figure class="pp-photo frame" data-reveal="clip">
+          <Image src={pipesImg} alt="Two red shutoff valves on brass fittings along a wall" widths={[480, 720, 1000]} sizes="(max-width: 980px) 92vw, 520px" />
+        </figure>
+      </div>
+      <ul class="pp-cards" data-stagger="up">
+        {pipes.map((s, i) => (
+          <li class:list={['pp-card', `pp-card-${i}`]}>
+            <span class="pp-ic"><Icon name={s.icon} size={30} /></span>
+            <h3 class="h-display h3"><a href={href(s)} class="pp-link">{s.name}</a></h3>
+            <p>{s.blurb}</p>
+            <ul class="pp-ticks">{ticks(s).map((x) => <li><Icon name="check" size={15} stroke={3} />{x}</li>)}</ul>
+            <span class="pp-more" aria-hidden="true">See {s.nav.toLowerCase()} <Icon name="arrow" size={17} /></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. HOT WATER & FIXTURES (sand): photo on a sun, four services as a split list -->
+  <section class="ch-water section sand" id="water" aria-labelledby="h-water">
+    <div class="wrap wt-grid">
+      <div class="wt-art" data-reveal="up">
+        <span class="wt-sun" aria-hidden="true"></span>
+        <div class="arch wt-arch"><Image src={waterImg} alt="Hands holding a small faucet part over a running bathroom sink" widths={[400, 620, 880]} sizes="(max-width: 980px) 70vw, 400px" /></div>
+        <RingBadge size={128} tone="deep" text="Hot water · Toilets · Soft water · " class="wt-ring" />
+      </div>
+      <div>
+        <p class="ch-num ch-num-light h-display" aria-hidden="true">03</p>
+        <Eyebrow>{FAMILIES.water.line}</Eyebrow>
+        <h2 class="h-display h2" id="h-water" data-split>Hot water <span class="c-coral-deep">&amp; fixtures.</span></h2>
+        <p class="lead wt-lead" data-reveal="up">The things you use every day. Most of them are a repair, not a replacement, and we always try the repair first.</p>
+        <div class="wt-list" data-stagger="up">
+          {water.map((s) => (
+            <a href={href(s)} class="wt-item">
+              <span class="wt-ic"><Icon name={s.icon} size={26} /></span>
+              <span class="wt-txt"><strong class="h-display">{s.name}</strong><span>{s.blurb}</span></span>
+              <Icon name="arrow" size={20} class="wt-go" />
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. EMERGENCY & COMMERCIAL (deep): a loud 24/7 panel beside a quieter business panel -->
+  <Sunline from="var(--sand)" to="var(--deep)" at="right" />
+  <section class="ch-urgent section dark" id="urgent" aria-labelledby="h-urgent">
+    <div class="wrap">
+      <div class="ug-head">
+        <div>
+          <p class="ch-num h-display" aria-hidden="true">04</p>
+          <Eyebrow>{FAMILIES.urgent.line}</Eyebrow>
+          <h2 class="h-display h2" id="h-urgent" data-split>Any hour, <span class="c-coral">any building.</span></h2>
+        </div>
+        <p class="lead" data-reveal="up">Burst pipes and sewer backups do not wait for opening time, and neither does a business with a closed restroom. Two services built around that.</p>
+      </div>
+      <div class="ug-grid">
+        <article class="ug-sos" data-reveal="up">
+          <span class="ug-burst" aria-hidden="true"></span>
+          <span class="ug-badge"><Icon name={emergency.icon} size={18} />Answered 24/7</span>
+          <h3 class="h-display ug-h"><a href={href(emergency)}>{emergency.name}</a></h3>
+          <p class="ug-p">{emergency.blurb}</p>
+          <ul class="ug-ticks">{ticks(emergency, 4).map((x) => <li><Icon name="check" size={15} stroke={3} />{x}</li>)}</ul>
+          <p class="ug-first"><strong>First, right now:</strong> shut off the main water valve. It is outside near the water meter, and turns clockwise.</p>
+          <div class="btn-row ug-cta">
+            <Btn href={SITE.phoneHref} icon="phone" variant="ink" size="lg">Call {SITE.phone}</Btn>
+            <a class="textlink ug-link" href={href(emergency)}>What to do in an emergency <Icon name="arrow" size={17} /></a>
+          </div>
+        </article>
+        <article class="ug-biz" data-reveal="up" data-delay="0.1">
+          <figure class="frame ug-photo"><Image src={urgentImg} alt="Black drain pipe sections with a gap between them, on a teal background" widths={[420, 640, 900]} sizes="(max-width: 980px) 92vw, 460px" /></figure>
+          <div class="ug-biz-in">
+            <span class="ug-biz-ic"><Icon name={commercial.icon} size={24} /></span>
+            <h3 class="h-display h3"><a href={href(commercial)}>{commercial.name}</a></h3>
+            <p>{commercial.blurb}</p>
+            <ul class="ug-ticks ug-ticks-q">{ticks(commercial, 4).map((x) => <li><Icon name="check" size={15} stroke={3} />{x}</li>)}</ul>
+            <a class="textlink" href={href(commercial)}>Plumbing for businesses <Icon name="arrow" size={17} /></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+  <Marquee items={[BASE.name, ...TOWNS.slice(0, 9).map((t) => t.name)]} />
+
+  <ReviewsSection bg="sand" eyebrow="Real Google reviews" line1="Straight from" line2="our customers." />
+  <FaqSection bg="shell" eyebrow="Services FAQ" line1="Before you" line2="pick up the phone." lead="Quick answers about what we cover and how a job starts. Anything else, just call." faqs={faqs} />
+  <Sunline from="var(--shell)" to="var(--coral)" sun="var(--deep)" at="center" />
+  <ContactSection line1="Know what you need?" line2="Call Paul." formTitle="Get a free estimate" />
+</Base>
+
+<style>
+  /* shared chapter number */
+  .ch-num { font-size: clamp(64px, 8vw, 120px); line-height: .8; color: var(--coral); opacity: .9; margin-bottom: 18px; }
+  .ch-num-light { color: var(--coral-deep); opacity: 1; }
+
+  /* 1. finder */
+  .fd-head { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px 60px; align-items: end; }
+  .fd-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 22px; margin-top: clamp(32px, 4vw, 52px); }
+  .fd-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: start; }
+  .fd-tabs button { display: flex; align-items: center; gap: 10px; min-height: 60px; padding: 10px 14px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 1.5px var(--line); text-align: left; font-family: var(--display); font-size: 17.5px; line-height: 1.1; color: var(--ink); transition: background .25s, color .25s, transform .3s var(--ease-out), box-shadow .25s; }
+  .fd-tabs button :global(.icon) { color: var(--teal); flex: none; }
+  .fd-tabs button:hover { transform: translateY(-2px); }
+  .fd-tabs button[aria-selected="true"] { background: var(--deep); color: var(--shell); box-shadow: none; }
+  .fd-tabs button[aria-selected="true"] :global(.icon) { color: var(--coral); }
+  .fd-pane { position: relative; overflow: hidden; height: 100%; display: grid; align-content: space-between; gap: 26px; padding: clamp(26px, 3.4vw, 44px); border-radius: var(--radius); background: var(--deep); color: var(--on-dark); box-shadow: 10px 10px 0 0 var(--coral); }
+  .fd-pane[hidden] { display: none; }
+  .fd-sun { position: absolute; right: -80px; top: -80px; width: 210px; height: 210px; border-radius: 50%; background: var(--coral); opacity: .9; }
+  .fd-copy { position: relative; max-width: 460px; }
+  .fd-copy .h3 { padding-right: 90px; }
+  .fd-text { margin-top: 14px; font-size: 18px; color: var(--on-dark-2); }
+  .fd-links { position: relative; display: grid; gap: 8px; }
+  .fd-links a { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; min-height: 60px; padding: 8px 16px 8px 8px; border-radius: 999px; background: var(--deep-2); font-weight: 600; font-size: 16.5px; transition: background .25s, color .25s; }
+  .fd-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--deep-3); color: var(--tide); transition: background .25s, color .25s; }
+  .fd-links :global(.fd-go) { color: var(--coral); transition: transform .3s var(--ease-out); }
+  .fd-links a:hover { background: var(--shell); color: var(--ink); }
+  .fd-links a:hover .fd-ic { background: var(--coral); color: var(--ink); }
+  .fd-links a:hover :global(.fd-go) { transform: translateX(4px); color: var(--coral-deep); }
+
+  /* 2. drains */
+  .dr-grid { display: grid; grid-template-columns: 440fr 720fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
+  .dr-side { position: sticky; top: 118px; }
+  .dr-lead { margin-top: 18px; max-width: 430px; }
+  .dr-photo { margin-top: 30px; width: min(100%, 400px); }
+  .dr-arch { aspect-ratio: 400 / 440; border: 6px solid var(--shell); box-shadow: 0 30px 60px -30px rgba(0,0,0,.7); }
+  .dr-list { display: grid; border-top: 1px solid var(--line-dark); }
+  .dr-row { display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: start; padding: 28px 12px 28px 4px; border-bottom: 1px solid var(--line-dark); transition: background .3s, padding .4s var(--ease-out); }
+  .dr-n { font-size: 30px; line-height: 1; color: var(--tide); padding-top: 4px; min-width: 44px; }
+  .dr-body { display: grid; gap: 10px; }
+  .dr-title { display: flex; align-items: center; gap: 12px; }
+  .dr-title :global(.icon) { color: var(--coral); flex: none; }
+  .dr-title strong { font-size: clamp(24px, 2.4vw, 32px); font-weight: 400; line-height: 1.05; color: var(--shell); }
+  .dr-blurb { color: var(--on-dark-2); font-size: 17px; }
+  .dr-ticks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .dr-ticks > span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line-dark); font-size: 14px; font-weight: 500; }
+  .dr-ticks :global(.icon) { color: var(--tide); }
+  .dr-go { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--deep-2); color: var(--coral); align-self: center; transition: background .3s, color .3s, transform .4s var(--ease-out); }
+  .dr-row:hover { background: var(--deep-2); padding-inline: 18px 16px; }
+  .dr-row:hover .dr-go { background: var(--coral); color: var(--ink); transform: translateX(4px); }
+
+  /* 3. pipes */
+  .pp-head { display: grid; grid-template-columns: 600fr 520fr; gap: clamp(30px, 5vw, 80px); align-items: end; }
+  .pp-head > div { max-width: 600px; }
+  .pp-lead { margin-top: 18px; }
+  .pp-photo { aspect-ratio: 520 / 340; border-radius: 999px 999px var(--radius) var(--radius); }
+  .pp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: clamp(36px, 4.4vw, 60px); }
+  .pp-card { position: relative; display: flex; flex-direction: column; padding: 30px 28px 26px; border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px var(--ink), 8px 8px 0 0 var(--ink); transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+  .pp-card-1 { box-shadow: 0 0 0 2px var(--ink), 8px 8px 0 0 var(--coral); transform: translateY(18px); }
+  .pp-card:hover { transform: translate(-3px, -3px); box-shadow: 0 0 0 2px var(--ink), 11px 11px 0 0 var(--coral); }
+  .pp-card-1:hover { transform: translate(-3px, 15px); }
+  .pp-ic { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--coral-soft); color: var(--coral-deep); margin-bottom: 20px; }
+  .pp-link::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
+  .pp-card p { margin-top: 10px; color: var(--ink-2); }
+  .pp-ticks { display: grid; gap: 8px; margin: 18px 0 20px; padding-top: 18px; border-top: 1.5px solid var(--line); font-size: 15.5px; font-weight: 500; }
+  .pp-ticks li { display: flex; gap: 8px; align-items: center; }
+  .pp-ticks :global(.icon) { color: var(--teal); flex: none; }
+  .pp-more { margin-top: auto; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; font-weight: 700; color: var(--coral-deep); }
+  .pp-card:hover .pp-more { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* 4. water */
+  .wt-grid { display: grid; grid-template-columns: 460fr 700fr; gap: clamp(40px, 6vw, 90px); align-items: center; }
+  .wt-art { position: relative; width: min(100%, 460px); aspect-ratio: 460 / 540; }
+  .wt-sun { position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 1; border-radius: 50%; background: var(--coral); }
+  .wt-arch { position: absolute; left: 13%; right: 13%; top: 12%; bottom: 0; border: 6px solid var(--shell); box-shadow: var(--shadow); }
+  .wt-art :global(.wt-ring) { position: absolute; right: -10px; bottom: 30px; }
+  .wt-lead { margin-top: 18px; max-width: 560px; }
+  .wt-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px; }
+  .wt-item { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; padding: 20px 20px 22px; border-radius: 18px; background: var(--shell); box-shadow: 0 0 0 1.5px var(--line); transition: background .3s, box-shadow .3s, transform .35s var(--ease-out); }
+  .wt-ic { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: var(--deep); color: var(--tide); }
+  .wt-txt { display: grid; gap: 4px; align-content: center; }
+  .wt-txt strong { font-size: 21px; font-weight: 400; line-height: 1.1; padding-right: 22px; }
+  .wt-txt span { font-size: 15px; color: var(--ink-2); }
+  .wt-item :global(.wt-go) { position: absolute; right: 16px; top: 18px; color: var(--coral-deep); transition: transform .3s var(--ease-out); }
+  .wt-item:hover { background: #fff; box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--coral); transform: translate(-2px, -2px); }
+  .wt-item:hover :global(.wt-go) { transform: translateX(4px); }
+
+  /* 5. urgent */
+  .ug-head { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px 60px; align-items: end; }
+  .ug-grid { display: grid; grid-template-columns: 660fr 500fr; gap: 24px; margin-top: clamp(34px, 4vw, 56px); align-items: stretch; }
+  .ug-sos { position: relative; overflow: hidden; padding: clamp(28px, 3.6vw, 48px); border-radius: var(--radius); background: var(--coral); color: var(--ink); }
+  .ug-burst { position: absolute; right: -120px; bottom: -160px; width: 380px; height: 380px; border-radius: 50%; background: var(--sun); opacity: .5; }
+  .ug-sos > *:not(.ug-burst) { position: relative; }
+  .ug-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--ink); color: var(--shell); font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .ug-badge :global(.icon) { color: var(--coral); }
+  .ug-h { margin-top: 20px; font-size: clamp(32px, 3.6vw, 48px); line-height: 1; }
+  .ug-h a { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: rgba(11,43,48,.35); }
+  .ug-h a:hover { text-decoration-color: var(--ink); }
+  .ug-p { margin-top: 12px; font-size: 18px; max-width: 500px; }
+  .ug-ticks { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; margin-top: 22px; font-weight: 600; font-size: 16px; }
+  .ug-ticks li { display: flex; align-items: center; gap: 8px; }
+  .ug-first { margin-top: 24px; padding: 14px 18px; border-radius: 14px; background: rgba(251,245,233,.55); font-size: 15.5px; max-width: 520px; }
+  .ug-cta { margin-top: 24px; align-items: center; }
+  .ug-link { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  .ug-biz { display: flex; flex-direction: column; border-radius: var(--radius); background: var(--deep-2); overflow: hidden; box-shadow: inset 0 0 0 1.5px var(--line-dark); }
+  .ug-photo { aspect-ratio: 500 / 250; border-radius: 0; }
+  .ug-biz-in { display: flex; flex-direction: column; gap: 10px; padding: 26px clamp(22px, 2.6vw, 34px) 24px; flex: 1; }
+  .ug-biz-ic { position: relative; z-index: 1; display: grid; place-items: center; width: 54px; height: 54px; margin-top: -54px; border-radius: 50%; background: var(--tide); color: var(--ink); box-shadow: 0 0 0 6px var(--deep-2); }
+  .ug-biz-in .h3 a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .ug-biz-in > p { color: var(--on-dark-2); }
+  .ug-ticks-q { grid-template-columns: 1fr; margin: 6px 0 4px; font-weight: 500; font-size: 15.5px; }
+  .ug-ticks-q :global(.icon) { color: var(--tide); }
+  .ug-biz .textlink { margin-top: auto; }
+
+  @media (max-width: 980px) {
+    .fd-head, .fd-grid, .dr-grid, .pp-head, .wt-grid, .ug-head, .ug-grid { grid-template-columns: 1fr; }
+    .dr-side { position: static; }
+    .dr-photo { display: none; }
+    .pp-cards { grid-template-columns: 1fr; gap: 18px; }
+    .pp-card-1 { transform: none; }
+    .pp-card-1:hover { transform: translate(-3px, -3px); }
+    .pp-head > div { max-width: none; }
+    .wt-art { justify-self: center; width: min(82%, 400px); }
+  }
+  @media (max-width: 560px) {
+    .fd-tabs button { min-height: 56px; font-size: 15.5px; padding: 8px 10px; gap: 8px; }
+    .fd-pane { box-shadow: 6px 6px 0 0 var(--coral); }
+    .fd-sun { width: 120px; height: 120px; right: -62px; top: -62px; }
+    .fd-copy { padding-right: 0; }
+    .fd-copy .h3 { padding-right: 60px; }
+    .fd-text { font-size: 17px; }
+    .fd-links a { font-size: 15.5px; gap: 10px; }
+    .dr-row { grid-template-columns: 1fr auto; gap: 14px; padding: 22px 0; }
+    .dr-n { display: none; }
+    .dr-go { width: 44px; height: 44px; }
+    .dr-ticks > span { font-size: 13px; }
+    .pp-card { box-shadow: 0 0 0 2px var(--ink), 5px 5px 0 0 var(--ink); }
+    .pp-card-1 { box-shadow: 0 0 0 2px var(--ink), 5px 5px 0 0 var(--coral); }
+    .wt-list { grid-template-columns: 1fr; }
+    .wt-art :global(.wt-ring) { width: 100px; height: 100px; right: -6px; }
+    .ug-ticks { grid-template-columns: 1fr; }
+    .ug-cta :global(.btn) { width: 100%; }
+  }
+</style>

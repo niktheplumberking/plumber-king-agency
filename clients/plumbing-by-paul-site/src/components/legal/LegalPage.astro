@@ -1,0 +1,134 @@
+---
+// Shared layout for /privacy/ and /terms/: compact dark hero with the draft notice, a "short version" sticker,
+// a sticky contents list and numbered sections, then a small contact band. noindex while they are drafts.
+// Section bodies are HTML strings written in the page files (our own copy, never user input).
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import Crumbs from '../Crumbs.astro';
+import { SITE } from '../../data/site';
+interface Section { id: string; title: string; html: string }
+interface Props {
+  title: string; description: string; crumb: { name: string; href: string };
+  eyebrow: string; line1: string; line2: string; lead: string;
+  short: string[]; sections: Section[]; other: { name: string; href: string };
+}
+const { title, description, crumb, eyebrow, line1, line2, lead, short, sections, other } = Astro.props;
+const crumbs = [crumb];
+---
+<Base title={title} description={description} crumbs={crumbs} noindex estimateHref="/#estimate">
+  <section class="lg-hero dark hero">
+    <span class="lg-sun" aria-hidden="true" data-hero="1" data-hero-fx="pop"></span>
+    <div class="wrap lg-in">
+      <div data-hero="1" data-hero-fx="up"><Crumbs items={crumbs} /></div>
+      <p class="eyebrow lg-eb" data-hero="2" data-hero-fx="up"><Icon name="heart" size={14} /><span>{eyebrow}</span></p>
+      <h1 class="h-display lg-h1" data-hero="3" data-hero-fx="lines">{line1} <span class="c-coral">{line2}</span></h1>
+      <p class="lead lg-lead" data-hero="4" data-hero-fx="up">{lead}</p>
+      <p class="lg-draft" data-hero="5" data-hero-fx="pop" role="note">
+        <Icon name="alert" size={20} />
+        <span><strong>Draft for Paul to review with his lawyer.</strong> Not yet in force. Items marked like <em class="ph">[this]</em> still need an answer. Last updated: <em class="ph">[date set at launch]</em></span>
+      </p>
+    </div>
+  </section>
+
+  <section class="lg-body section shell">
+    <div class="wrap lg-grid">
+      <aside class="lg-side">
+        <nav class="lg-toc" aria-label="On this page">
+          <p class="lg-toc-h">On this page</p>
+          <ol>{sections.map((s, i) => <li><a href={`#${s.id}`}><span>{String(i + 1).padStart(2, '0')}</span>{s.title}</a></li>)}</ol>
+        </nav>
+      </aside>
+      <div class="lg-short" data-reveal="up">
+        <p class="h-display lg-short-h"><Icon name="sun" size={26} />The short version</p>
+        <ul>{short.map((s) => <li><Icon name="check" size={18} stroke={3} /><span>{s}</span></li>)}</ul>
+      </div>
+      <div class="lg-main">
+        {sections.map((s, i) => (
+          <article class="lg-sec" id={s.id} aria-labelledby={`${s.id}-h`}>
+            <span class="lg-n h-display" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div class="lg-copy">
+              <h2 class="h-display h3" id={`${s.id}-h`}>{s.title}</h2>
+              <Fragment set:html={s.html} />
+            </div>
+          </article>
+        ))}
+        <p class="lg-other"><a class="textlink" href={other.href}>Read our {other.name}<Icon name="arrow" size={18} /></a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lg-ask dark">
+    <div class="wrap lg-ask-in">
+      <p class="h-display lg-ask-h">Questions about this page? <span class="c-coral">Ask Paul.</span></p>
+      <ul class="lg-ask-list">
+        <li><a href={SITE.phoneHref}><Icon name="phone" size={20} />{SITE.phone}</a></li>
+        <li><a href={`mailto:${SITE.email}`}><Icon name="mail" size={20} />{SITE.email}</a></li>
+        <li><span><Icon name="pin" size={20} />{SITE.legalName}, {SITE.street}, {SITE.city}, {SITE.region} {SITE.zip}</span></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lg-hero { position: relative; overflow: hidden; padding-block: clamp(28px, 3.4vw, 44px) clamp(56px, 6vw, 84px); }
+  .lg-sun { position: absolute; right: -90px; bottom: -190px; width: clamp(280px, 34vw, 480px); aspect-ratio: 1; border-radius: 50%; background: var(--coral); opacity: .9; }
+  .lg-in { position: relative; }
+  .lg-eb { margin-top: clamp(20px, 2.6vw, 34px); }
+  .lg-h1 { font-size: clamp(40px, 5vw, 70px); max-width: 15ch; }
+  .lg-lead { margin-top: 20px; max-width: 620px; }
+  .lg-draft { display: flex; gap: 12px; align-items: flex-start; margin-top: 28px; max-width: 660px; padding: 14px 18px; border-radius: var(--radius-sm); border: 1.5px dashed rgba(255,194,71,.7); background: rgba(255,194,71,.1); font-size: 15px; line-height: 1.5; color: var(--shell); }
+  .lg-draft :global(.icon) { flex: none; color: var(--sun); margin-top: 2px; }
+  .lg-draft strong { color: var(--sun); }
+  .lg-draft .ph, .lg-ask .ph { background: rgba(255,194,71,.16); color: var(--sun); }
+
+  .lg-grid { display: grid; grid-template-columns: 300fr 860fr; grid-template-areas: 'side short' 'side main'; gap: 0 clamp(36px, 5vw, 80px); align-items: start; }
+  .lg-side { grid-area: side; position: sticky; top: 120px; }
+  .lg-short { grid-area: short; }
+  .lg-main { grid-area: main; }
+  .lg-toc-h { font-size: 12.5px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+  .lg-toc ol { display: grid; border-top: 1.5px solid var(--line); }
+  .lg-toc a { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 6px 4px; border-bottom: 1.5px solid var(--line); font-size: 15px; font-weight: 500; color: var(--ink-2); transition: color .2s, padding .3s var(--ease-out); }
+  .lg-toc a span { font-family: var(--display); font-size: 15px; color: var(--coral-deep); }
+  .lg-toc a:hover { color: var(--ink); padding-left: 10px; }
+
+  .lg-short { padding: clamp(22px, 3vw, 34px); border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 0 var(--coral); }
+  .lg-short-h { display: flex; align-items: center; gap: 10px; font-size: clamp(24px, 2.4vw, 30px); }
+  .lg-short-h :global(.icon) { color: var(--coral-deep); }
+  .lg-short ul { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 28px; margin-top: 18px; }
+  .lg-short li { display: flex; gap: 10px; font-size: 16px; font-weight: 500; line-height: 1.45; }
+  .lg-short li :global(.icon) { flex: none; margin-top: 3px; color: var(--teal); }
+
+  .lg-sec { display: grid; grid-template-columns: 76px 1fr; gap: 10px; padding: clamp(28px, 3.4vw, 40px) 0; border-bottom: 1.5px dashed var(--line); scroll-margin-top: 110px; }
+  .lg-main { margin-top: clamp(18px, 3vw, 30px); }
+  .lg-n { font-size: 40px; line-height: 1; color: var(--coral-deep); }
+  .lg-copy { max-width: 680px; }
+  .lg-copy :global(p) { margin-top: 12px; color: var(--ink-2); font-size: 17px; }
+  .lg-copy :global(ul) { display: grid; gap: 8px; margin-top: 14px; }
+  .lg-copy :global(li) { position: relative; padding-left: 26px; color: var(--ink-2); }
+  .lg-copy :global(li)::before { content: ''; position: absolute; left: 4px; top: .62em; width: 10px; height: 10px; border-radius: 50%; background: var(--coral); }
+  .lg-copy :global(strong) { color: var(--ink); }
+  .lg-copy :global(a) { color: var(--teal); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .lg-copy :global(.ph) { font-size: .95em; }
+  .lg-other { margin-top: 34px; }
+
+  .lg-ask { padding-block: clamp(44px, 5vw, 64px); }
+  .lg-ask-in { display: grid; grid-template-columns: 1fr auto; gap: 24px 48px; align-items: center; }
+  .lg-ask-h { font-size: clamp(28px, 3vw, 40px); }
+  .lg-ask-list { display: grid; gap: 4px; }
+  .lg-ask-list a, .lg-ask-list span { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 16px; color: var(--on-dark-2); overflow-wrap: anywhere; }
+  .lg-ask-list a { font-weight: 600; color: var(--shell); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--tide); }
+  .lg-ask-list :global(.icon) { flex: none; color: var(--tide); }
+
+  @media (max-width: 980px) {
+    .lg-grid, .lg-ask-in { grid-template-columns: 1fr; }
+    .lg-grid { grid-template-areas: 'short' 'side' 'main'; }
+    .lg-side { position: static; margin-top: 40px; }
+  }
+  @media (max-width: 640px) {
+    .lg-short ul { grid-template-columns: 1fr; }
+    .lg-short { box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--coral); }
+    .lg-sec { grid-template-columns: 1fr; gap: 4px; }
+    .lg-n { font-size: 30px; }
+    .lg-sun { right: -140px; bottom: -220px; opacity: .55; }
+  }
+</style>

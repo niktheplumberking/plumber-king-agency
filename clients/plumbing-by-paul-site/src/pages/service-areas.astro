@@ -1,0 +1,324 @@
+---
+// Service areas hub. Section order: map hero (dark) > the county north to south as one route line (shell) >
+// towns with their own page, each on a locator map (dark) > marquee > reviews (shell) > FAQ (sand) > contact (coral).
+// Town lines are public geography only. Miles are straight-line from the shop pin (milesFromShop), never drive times.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Btn from '../components/Btn.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Sunline from '../components/Sunline.astro';
+import Marquee from '../components/Marquee.astro';
+import RingBadge from '../components/RingBadge.astro';
+import AreaMap from '../components/sections/AreaMap.astro';
+import ReviewsSection from '../components/sections/ReviewsSection.astro';
+import FaqSection from '../components/sections/FaqSection.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import { SITE } from '../data/site';
+import { BASE, TOWNS, BUILT_TOWNS, townByName, townHref, milesFromShop, type Town } from '../data/towns';
+import { TOWN_CONTENT } from '../data/town-content';
+import { LAND, project } from '../data/map';
+import trucksImg from '../assets/img/source-site/team-truck-event.jpg';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const title = 'Service Areas in Pinellas County | Plumbing By Paul';
+const description = 'Plumbing By Paul serves all of Pinellas County from St. Petersburg: Clearwater, Largo, Seminole, the Gulf beaches and more. Open 7 days, 24/7 emergency line.';
+const crumbs = [{ name: 'Service areas', href: '/service-areas/' }];
+
+// North to south, grouped the way locals talk about the county. One honest, public-geography line per town.
+const REGIONS: { name: string; towns: [string, string][] }[] = [
+  { name: 'North county', towns: [
+    ['Tarpon Springs', 'The top of the county, on the Anclote River. The longest run on this list, and still on it.'],
+    ['Palm Harbor', 'Between Dunedin and Tarpon Springs, along US 19 and Alternate 19.'],
+    ['Oldsmar', 'At the top of Old Tampa Bay, where Pinellas meets Hillsborough County.'],
+    ['Dunedin', 'On St. Joseph Sound, just north of Clearwater.'],
+    ['Safety Harbor', 'On the west shore of Old Tampa Bay, east of Clearwater.'],
+  ] },
+  { name: 'Mid county', towns: [
+    ['Clearwater', 'The county seat, from Countryside out to Clearwater Beach and Sand Key.'],
+    ['Belleair', 'A small town on Clearwater Harbor, between Clearwater and Largo.'],
+    ['Largo', 'The middle of the county, between Clearwater, Seminole and Pinellas Park.'],
+    ['Seminole', 'West of our shop, around Lake Seminole and Seminole Boulevard.'],
+    ['Pinellas Park', 'Right next to our shop, along US 19 and Park Boulevard.'],
+    ['Kenneth City', 'A small town about a mile from our shop. The closest place on this list.'],
+  ] },
+  { name: 'Gulf beaches', towns: [
+    ['Madeira Beach', 'A Gulf beach town on John\'s Pass.'],
+    ['Treasure Island', 'The barrier island between Madeira Beach and St. Pete Beach.'],
+    ['St. Pete Beach', 'The south end of the Gulf beaches, down to Pass-a-Grille.'],
+  ] },
+  { name: 'South county', towns: [
+    ['St. Petersburg', 'The Sunshine City and our home base, from downtown to the Skyway.'],
+    ['Gulfport', 'On Boca Ciega Bay, at the west edge of St. Petersburg.'],
+  ] },
+];
+const regions = REGIONS.map((r) => ({ ...r, stops: r.towns.map(([name, line]) => {
+  const t = townByName(name)!;
+  return { t, line, miles: milesFromShop(t), href: townHref(t), page: BUILT_TOWNS.includes(t.slug) };
+}) }));
+const all = [BASE, ...TOWNS];
+const miles = all.map(milesFromShop);
+const far = Math.max(...miles);
+const near = Math.max(1, Math.min(...miles));
+
+// Towns with a finished page, each on its own locator map (the real county outline from data/map.ts).
+const built = TOWNS.filter((t) => BUILT_TOWNS.includes(t.slug) && t.slug in TOWN_CONTENT).map((t) => ({
+  t, c: TOWN_CONTENT[t.slug], miles: milesFromShop(t), pt: project(t.lat, t.lng),
+}));
+const shop = project(SITE.geo.lat, SITE.geo.lng);
+// Crop the locator to Pinellas itself (the land path spans x 52.6 to 343.6, y 20.8 to 719.6 in the 440 x 759 map box).
+const box = '44 12 308 716';
+
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': `${site}/service-areas/#webpage`,
+  url: `${site}/service-areas/`, name: title, description, inLanguage: 'en-US',
+  about: { '@id': site + '/#business' },
+  hasPart: built.map((b) => ({ '@type': 'WebPage', name: `Plumber in ${b.t.name}, FL`, url: `${site}/${b.t.slug}/` })),
+}];
+
+const faqs = [
+  { q: 'Which areas do you serve?', a: `All of Pinellas County. Our shop is at ${SITE.street}, ${SITE.city}, and we cover every town on this page, from Tarpon Springs in the north down to St. Pete Beach.` },
+  { q: 'My town has no page of its own. Do you still come?', a: 'Yes. A town page only adds local detail. Every town in Pinellas County is covered, page or no page.' },
+  { q: 'Do you serve the Gulf beaches?', a: 'Yes. Madeira Beach, Treasure Island and St. Pete Beach are all in Pinellas County, and we cover them like any other town.' },
+  { q: 'Is the emergency line the same everywhere?', a: `Yes. One number for the whole county: ${SITE.phone}, answered 24/7 for burst pipes, sewer backups and water heater failures.` },
+  { q: 'Are estimates free in every town?', a: 'Yes. Our services start with a free estimate wherever you are in Pinellas County. For non-emergency work we assess the job in full before starting.' },
+  { q: 'How far is your shop from my town?', a: 'The miles on this page are straight-line distances from our shop, worked out from map coordinates. Driving takes longer, so call and we tell you when a truck can get to you.' },
+];
+---
+<Base title={title} description={description} crumbs={crumbs} schema={schema}>
+
+  <!-- 1. HERO: the real county map is the picture -->
+  <section class="sa-hero dark hero">
+    <div class="wrap sa-grid">
+      <div class="sa-copy">
+        <div data-hero="1" data-hero-fx="up"><Crumbs items={crumbs} /></div>
+        <p class="eyebrow sa-eb" data-hero="2" data-hero-fx="up"><Icon name="heart" size={14} /><span>Service areas · Pinellas County</span></p>
+        <h1 class="h-display h1 sa-h1" data-hero="3" data-hero-fx="lines">Plumber for all of <span class="c-coral">Pinellas County.</span></h1>
+        <p class="lead sa-lead" data-hero="4" data-hero-fx="up">One family-owned crew, one shop on 64th Way N, and every town in the county on the list. From Tarpon Springs down to St. Pete Beach, the trucks with Paul's face on the side come to you.</p>
+        <div class="btn-row sa-cta" data-hero="5" data-hero-fx="up" data-hero-children>
+          <Btn href={SITE.phoneHref} icon="phone" size="lg" sub={`${SITE.hoursShort} line`}>Call {SITE.phone}</Btn>
+          <Btn href="#towns" variant="outline-light" size="lg" arrow>Find your town</Btn>
+        </div>
+        <dl class="sa-facts" data-hero="6" data-hero-fx="up" data-hero-children>
+          <div><dt class="h-display"><span data-count={all.length}>{all.length}</span></dt><dd>towns and cities on our list</dd></div>
+          <div><dt class="h-display">1</dt><dd>shop, in the middle of the county</dd></div>
+          <div><dt class="h-display">{near} to <span data-count={far}>{far}</span></dt><dd>miles from the shop, in a straight line</dd></div>
+        </dl>
+      </div>
+      <div class="sa-art">
+        <span class="sa-sun" aria-hidden="true" data-hero="1" data-hero-fx="pop"></span>
+        <div class="sa-map" data-hero="2" data-hero-fx="up"><AreaMap /></div>
+        <div class="sa-ring" data-hero="7" data-hero-fx="pop"><RingBadge size={136} text="Every town in Pinellas · Plumbing by Paul · " /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE COUNTY AS ONE ROUTE LINE, north to south -->
+  <Sunline from="var(--deep)" to="var(--shell)" at="right" />
+  <section class="rt section shell" id="towns">
+    <div class="wrap rt-grid">
+      <div class="rt-side">
+        <Eyebrow>Every town, north to south</Eyebrow>
+        <h2 class="h-display h2" data-split>Find your town <span class="c-coral-deep">on the line.</span></h2>
+        <p class="lead rt-lead" data-reveal="up">{all.length} towns and cities, one shop in the middle. The miles are straight-line distances from our shop, worked out from map coordinates, not drive times.</p>
+        <figure class="rt-photo frame" data-reveal="up">
+          <Image src={trucksImg} alt="Ten Plumbing By Paul crew members holding small gift boxes in front of two company trucks" widths={[420, 680]} sizes="(max-width: 980px) 92vw, 420px" />
+          <figcaption><Icon name="truck" size={16} />Look for these trucks in your street</figcaption>
+        </figure>
+        <p class="rt-note" data-reveal="up"><Icon name="pin" size={18} /><span><strong>Not on the line?</strong> If it is in Pinellas County, we cover it. Just call.</span></p>
+      </div>
+      <ol class="rt-line">
+        {regions.map((r) => (
+          <li class="rt-region">
+            <p class="rt-rname h-display" data-reveal="left"><span>{r.name}</span></p>
+            <ol class="rt-stops" data-stagger="up">
+              {r.stops.map((s) => (
+                <li class:list={['rt-stop', { 'is-page': s.page, 'is-base': s.t.slug === '' }]}>
+                  <span class="rt-dot" aria-hidden="true"></span>
+                  <div class="rt-txt">
+                    <h3 class="h-display">{s.t.name}</h3>
+                    <p>{s.line}</p>
+                    {s.page && s.href && <a class="rt-link" href={s.href}>Plumber in {s.t.name}<Icon name="arrow" size={16} /></a>}
+                    {s.t.slug === '' && <a class="rt-link" href="/">Plumber in St. Petersburg<Icon name="arrow" size={16} /></a>}
+                  </div>
+                  <p class="rt-mi"><strong class="h-display">{s.miles}</strong><span>mi</span></p>
+                </li>
+              ))}
+              {r.name === 'Mid county' && (
+                <li class="rt-stop rt-shop">
+                  <span class="rt-dot rt-sun" aria-hidden="true"><Icon name="sun" size={22} /></span>
+                  <div class="rt-txt">
+                    <h3 class="h-display">Our shop</h3>
+                    <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.zip}. Every truck starts the day here.</p>
+                  </div>
+                  <p class="rt-mi"><strong class="h-display">0</strong><span>mi</span></p>
+                </li>
+              )}
+            </ol>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3. TOWNS WITH THEIR OWN PAGE, each on a locator map -->
+  <Sunline from="var(--shell)" to="var(--deep)" at="left" />
+  <section class="tp section dark">
+    <div class="wrap">
+      <div class="tp-head">
+        <div>
+          <Eyebrow>Town pages</Eyebrow>
+          <h2 class="h-display h2" data-split>Local detail, <span class="c-coral">town by town.</span></h2>
+        </div>
+        <p class="lead" data-reveal="up">Some towns have their own page with the neighborhoods, ZIP codes and plumbing problems we see there. More are on the way.</p>
+      </div>
+      <ul class="tp-list">
+        {built.map((b, i) => (
+          <li class="tp-item" data-reveal="up" data-delay={i * 0.08}>
+            <svg class="tp-loc" viewBox={box} aria-hidden="true">
+              <path class="tp-land" d={LAND.pinellas} data-draw />
+              <g transform={`translate(${shop.x} ${shop.y})`} class="tp-shop"><circle r="9" /></g>
+              <line class="tp-route" x1={shop.x} y1={shop.y} x2={b.pt.x} y2={b.pt.y} data-draw />
+              <g transform={`translate(${b.pt.x} ${b.pt.y})`}><circle class="tp-pulse" r="18" /><circle class="tp-dot" r="11" /></g>
+            </svg>
+            <div class="tp-body">
+              <p class="tp-mi"><Icon name="pin" size={16} />About {b.miles} miles away</p>
+              <h3 class="h-display tp-name">{b.t.name}</h3>
+              <ul class="tp-hoods">{b.c.neighborhoods.map((n) => <li>{n}</li>)}</ul>
+              <p class="tp-zip"><strong>ZIP codes</strong>{b.c.zips.join(' · ')}</p>
+              <a class="tp-go" href={`/${b.t.slug}/`}>Plumber in {b.t.name}<span class="tp-go-ic"><Icon name="arrow" size={20} /></span></a>
+            </div>
+          </li>
+        ))}
+        <li class="tp-item tp-next" data-reveal="up" data-delay="0.16">
+          <span class="tp-next-sun" aria-hidden="true"><Icon name="sun" size={34} /></span>
+          <div><p class="h-display tp-next-h">Your town next?</p>
+          <p class="tp-next-p">Every town on the line above is covered today, page or no page. Same crew, same free estimate, same 24/7 emergency line.</p></div>
+          <a class="tp-call" href={SITE.phoneHref}><Icon name="phone" size={18} />Call {SITE.phone}</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <Marquee tone="tide" items={all.map((t) => t.name)} />
+  <ReviewsSection eyebrow="Real Google reviews" line1="Pinellas has spoken." line2="941 times." />
+  <FaqSection eyebrow="Service area questions" line1="Do you come" line2="to my town?" lead="The short answer is yes, if you are in Pinellas County. The rest of what people ask is here." faqs={faqs} />
+  <Sunline from="var(--sand)" to="var(--coral)" sun="var(--deep)" at="center" />
+  <ContactSection line1="Anywhere in Pinellas?" line2="Call Paul." />
+</Base>
+
+<style>
+  /* Hero */
+  .sa-hero { position: relative; overflow: hidden; padding-block: clamp(28px, 3.4vw, 44px) clamp(40px, 5vw, 72px); }
+  .sa-grid { display: grid; grid-template-columns: 640fr 500fr; gap: clamp(30px, 5vw, 80px); align-items: center; }
+  .sa-eb { margin-top: clamp(22px, 3vw, 40px); }
+  .sa-h1 { margin-top: 4px; font-size: clamp(42px, 5.6vw, 80px); }
+  .sa-lead { margin-top: 22px; max-width: 580px; }
+  .sa-cta { margin-top: 32px; }
+  .sa-facts { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 18px 36px; margin-top: 38px; padding-top: 26px; border-top: 1px solid var(--line-dark); }
+  .sa-facts dt { font-size: clamp(34px, 3.6vw, 48px); color: var(--tide); line-height: 1; }
+  .sa-facts dd { margin: 8px 0 0; max-width: 170px; font-size: 14.5px; line-height: 1.35; color: var(--on-dark-2); }
+  .sa-art { position: relative; width: min(100%, 480px); justify-self: end; padding-top: 40px; }
+  .sa-sun { position: absolute; left: 50%; top: 0; width: 84%; aspect-ratio: 1; margin-left: -42%; border-radius: 50%; background: var(--coral); }
+  .sa-map { position: relative; }
+  .sa-map :global(.amap) { box-shadow: inset 0 0 0 1.5px var(--line-dark), 12px 12px 0 0 var(--tide); }
+  .sa-ring { position: absolute; left: -12%; bottom: 10%; }
+
+  /* Route line */
+  .rt-grid { display: grid; grid-template-columns: 420fr 740fr; gap: clamp(36px, 5vw, 90px); align-items: start; }
+  .rt-side { position: sticky; top: 130px; }
+  .rt-lead { margin-top: 18px; max-width: 460px; }
+  .rt-photo { margin-top: 30px; aspect-ratio: 680 / 400; transform: rotate(-2deg); border: 6px solid #fff; box-shadow: var(--shadow); max-width: 440px; }
+  .rt-photo img { object-position: center 40%; }
+  .rt-photo figcaption { position: absolute; left: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; background: var(--deep); color: var(--shell); font-size: 12.5px; font-weight: 600; }
+  .rt-photo figcaption :global(.icon) { color: var(--tide); }
+  .rt-note { display: flex; gap: 10px; margin-top: 28px; max-width: 440px; font-size: 16px; color: var(--ink-2); }
+  .rt-note :global(.icon) { color: var(--coral-deep); flex: none; margin-top: 3px; }
+  .rt-note strong { color: var(--ink); }
+
+  .rt-line { --x: 22px; position: relative; display: grid; gap: 10px; }
+  .rt-line::before { content: ''; position: absolute; left: calc(var(--x) - 2px); top: 18px; bottom: 30px; width: 4px; border-radius: 4px; background: repeating-linear-gradient(var(--teal) 0 14px, transparent 14px 22px); }
+  .rt-rname { position: relative; z-index: 1; display: flex; }
+  .rt-rname span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: var(--deep); color: var(--shell); font-size: 20px; }
+  .rt-stops { display: grid; margin-top: 6px; margin-bottom: 18px; }
+  .rt-stop { position: relative; display: grid; grid-template-columns: calc(var(--x) * 2) 1fr auto; gap: 14px 18px; align-items: start; padding: 18px 0; }
+  .rt-stop + .rt-stop { border-top: 1.5px dashed var(--line); }
+  .rt-dot { position: relative; z-index: 1; justify-self: center; width: 22px; height: 22px; margin-top: 4px; border-radius: 50%; background: var(--shell); box-shadow: inset 0 0 0 4px var(--teal); transition: transform .3s var(--ease-out); }
+  .rt-stop:hover .rt-dot { transform: scale(1.2); }
+  .rt-stop.is-page .rt-dot, .rt-stop.is-base .rt-dot { background: var(--coral); box-shadow: inset 0 0 0 4px var(--ink); }
+  .rt-txt h3 { font-size: clamp(23px, 2.2vw, 28px); line-height: 1.05; }
+  .rt-txt p { margin-top: 6px; font-size: 16px; color: var(--ink-2); max-width: 470px; }
+  .rt-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 4px; font-weight: 700; color: var(--coral-deep); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
+  .rt-link :global(.icon) { transition: transform .3s var(--ease-out); }
+  .rt-link:hover :global(.icon) { transform: translateX(5px); }
+  .rt-mi { display: grid; justify-items: end; min-width: 64px; line-height: 1; }
+  .rt-mi strong { font-size: clamp(34px, 3.4vw, 44px); color: var(--teal); }
+  .rt-mi span { margin-top: 4px; font-size: 12.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+  .rt-stop.is-page .rt-mi strong, .rt-stop.is-base .rt-mi strong { color: var(--coral-deep); }
+  .rt-shop { margin: 8px 0; padding: 18px 18px 18px 0; border-radius: var(--radius); background: var(--coral-soft); box-shadow: 0 0 0 2px var(--ink), 8px 8px 0 0 var(--coral); border-top: 0 !important; }
+  .rt-shop + .rt-stop { border-top: 0; }
+  .rt-sun { display: grid; place-items: center; width: 40px; height: 40px; margin-top: -4px; background: var(--coral); color: var(--ink); box-shadow: 0 0 0 3px var(--ink); }
+  .rt-shop .rt-mi strong { color: var(--coral-deep); }
+
+  /* Town pages */
+  .tp-head { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px 60px; align-items: end; }
+  .tp-list { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: clamp(34px, 4.5vw, 56px); }
+  .tp-item { position: relative; display: grid; grid-template-columns: 150px 1fr; gap: 28px; padding: clamp(24px, 2.6vw, 34px); border-radius: var(--radius); background: var(--deep-2); box-shadow: inset 0 0 0 1.5px var(--line-dark); }
+  .tp-loc { width: 100%; height: auto; overflow: visible; }
+  .tp-land { fill: #12606a; stroke: var(--tide); stroke-width: 3; stroke-linejoin: round; }
+  .tp-shop circle { fill: var(--sun); stroke: var(--deep-3); stroke-width: 3; }
+  .tp-route { stroke: var(--sun); stroke-width: 4; stroke-dasharray: 2 9; stroke-linecap: round; }
+  .tp-dot { fill: var(--coral); stroke: var(--deep-3); stroke-width: 4; }
+  .tp-pulse { fill: none; stroke: var(--coral); stroke-width: 3; transform-box: fill-box; transform-origin: center; animation: tp-pulse 2.4s ease-out infinite; }
+  @keyframes tp-pulse { from { transform: scale(.5); opacity: 1; } to { transform: scale(2); opacity: 0; } }
+  html.no-motion .tp-pulse { animation: none; opacity: 0; }
+  .tp-mi { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--tide); }
+  .tp-name { margin-top: 8px; font-size: clamp(34px, 3.4vw, 46px); color: var(--shell); }
+  .tp-hoods { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .tp-hoods li { padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line-dark); font-size: 13.5px; color: var(--on-dark-2); }
+  .tp-zip { display: grid; gap: 2px; margin-top: 16px; font-size: 14.5px; color: var(--on-dark-2); }
+  .tp-zip strong { font-size: 12px; letter-spacing: .13em; text-transform: uppercase; color: var(--tide); }
+  .tp-go { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; margin-top: 18px; font-family: var(--display); font-size: 20px; color: var(--shell); }
+  .tp-go::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
+  .tp-go-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--coral); color: var(--ink); transition: transform .35s var(--ease-out); }
+  .tp-item:hover { box-shadow: inset 0 0 0 1.5px var(--tide); }
+  .tp-item:hover .tp-go-ic { transform: translateX(6px) rotate(-8deg); }
+  .tp-item:has(.tp-go:focus-visible) { outline: 3px solid var(--sun); outline-offset: 3px; }
+  .tp-go:focus-visible { outline: none; }
+  .tp-item.tp-next { grid-column: 1 / -1; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px 28px; background: transparent; box-shadow: none; border: 2px dashed rgba(122,219,208,.45); }
+  .tp-next:hover { box-shadow: none; }
+  .tp-next-sun { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--sun); color: var(--ink); }
+  .tp-next-h { font-size: 30px; color: var(--sun); }
+  .tp-next-p { margin-top: 6px; max-width: 620px; color: var(--on-dark-2); font-size: 16px; }
+  .tp-call { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; font-weight: 700; color: var(--shell); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--tide); }
+  .tp-call :global(.icon) { color: var(--tide); }
+
+  @media (max-width: 980px) {
+    .sa-grid, .rt-grid, .tp-head { grid-template-columns: 1fr; }
+    .sa-art { justify-self: center; width: min(100%, 440px); }
+    .rt-side { position: static; }
+  }
+  @media (max-width: 860px) {
+    .tp-list { grid-template-columns: 1fr; }
+    .tp-item.tp-next { grid-template-columns: auto 1fr; }
+    .tp-call { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .sa-cta :global(.btn) { width: 100%; }
+    .sa-facts { grid-template-columns: 1fr 1fr; gap: 18px 20px; }
+    .sa-facts > div:last-child { grid-column: 1 / -1; }
+    .sa-facts dd { max-width: none; }
+    .sa-ring { left: auto; right: -6px; bottom: auto; top: 0; transform: scale(.72); transform-origin: top right; }
+    .rt-line { --x: 14px; }
+    .rt-stop { gap: 10px 12px; }
+    .rt-mi { min-width: 46px; }
+    .rt-rname span { font-size: 18px; padding: 0 18px; }
+    .rt-shop { padding-right: 12px; box-shadow: 0 0 0 2px var(--ink), 5px 5px 0 0 var(--coral); }
+    .tp-item { grid-template-columns: 84px 1fr; padding: 22px 18px; gap: 16px; }
+    .tp-item.tp-next { grid-template-columns: 1fr; }
+    .rt-sun { width: 32px; height: 32px; margin-top: 0; }
+    .rt-sun :global(.icon) { width: 18px; height: 18px; }
+    .sa-map :global(.amap svg) { overflow: visible; }
+  }
+</style>

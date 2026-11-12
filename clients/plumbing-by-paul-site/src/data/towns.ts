@@ -28,7 +28,7 @@ export const TOWNS: Town[] = [
 export const townBySlug = (slug: string) => TOWNS.find((t) => t.slug === slug);
 export const townByName = (name: string) => (name === BASE.name ? BASE : TOWNS.find((t) => t.name === name));
 // Town pages that exist today (others are still to be built: see AGENT-BRIEF.md). Links only point at built pages.
-export const BUILT_TOWNS = ['plumber-clearwater-fl'];
+export const BUILT_TOWNS = ['plumber-clearwater-fl', 'plumber-largo-fl'];
 export const townHref = (t: Town) => (t.slug === '' ? '/' : BUILT_TOWNS.includes(t.slug) ? `/${t.slug}/` : null);
 
 // Straight-line miles from the shop (measured from coordinates, not a drive time).

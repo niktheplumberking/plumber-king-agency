@@ -1,0 +1,256 @@
+---
+// Contact: phone first, NAP (exactly as SITE in site.ts), hours with the "Paul to confirm" flag, a real map of the shop,
+// the service area and the estimate form (ContactSection, id="estimate"). Emergency steps come from FAQS in site.ts.
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Btn from '../components/Btn.astro';
+import Sunline from '../components/Sunline.astro';
+import RingBadge from '../components/RingBadge.astro';
+import AreasSection from '../components/sections/AreasSection.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import { SITE } from '../data/site';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = site + '/contact/';
+const title = 'Contact Plumbing By Paul | St. Petersburg FL';
+const description = 'Call Plumbing By Paul at (727) 709-2552 or send the free estimate form. Shop at 5565 64th Way N, St. Petersburg, FL. Open 7 days, 24/7 emergency line.';
+const crumbs = [{ name: 'Contact', href: '/contact/' }];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'ContactPage', '@id': url + '#webpage', url, name: title, description,
+  inLanguage: 'en-US', isPartOf: { '@id': site + '/#website' }, about: { '@id': site + '/#business' }, mainEntity: { '@id': site + '/#business' },
+}];
+
+const fullAddress = `${SITE.street}, ${SITE.city}, ${SITE.region} ${SITE.zip}`;
+const q = encodeURIComponent(fullAddress);
+const mapSrc = `https://www.google.com/maps?q=${q}&z=15&output=embed`;
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const urgent = ['Burst pipes', 'Sewer backups', 'Water heater failures'];
+const wait = [
+  { t: 'Shut off the main water valve.', d: 'It is outside, near your water meter, and turns clockwise.' },
+  { t: 'Stay clear of the water.', d: 'Keep away from any water near outlets or the electrical panel.' },
+  { t: `Call ${SITE.phone}.`, d: 'We talk you through the first steps while the team is on the way.' },
+];
+const N = 13;
+const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (-0.08 + (1.16 * i) / (N - 1)); return { x1: 300 - Math.cos(a) * 262, y1: 300 - Math.sin(a) * 262, x2: 300 - Math.cos(a) * (i % 2 ? 282 : 296), y2: 300 - Math.sin(a) * (i % 2 ? 282 : 296) }; });
+---
+<Base title={title} description={description} crumbs={crumbs} schema={schema}>
+
+  <!-- 1. HERO: phone first -->
+  <section class="ch hero dark">
+    <div class="wrap ch-grid">
+      <div class="ch-copy">
+        <div data-hero="1" data-hero-fx="up"><Crumbs items={crumbs} /></div>
+        <p class="eyebrow ch-eb" data-hero="2" data-hero-fx="up"><Icon name="heart" size={14} /><span>Contact Plumbing By Paul</span></p>
+        <h1 class="h-display ch-h1" data-hero="3" data-hero-fx="lines">Contact your <span class="c-coral">St. Petersburg plumber.</span></h1>
+        <p class="lead ch-lead" data-hero="4" data-hero-fx="up">Anything urgent: call. The emergency line is answered 24/7. For everything else, call, email or send the form and we call you back.</p>
+        <a class="ch-phone" href={SITE.phoneHref} data-hero="5" data-hero-fx="up">
+          <span class="ch-phone-ic"><Icon name="phone" size={30} /></span>
+          <span><small>Call or tap · {SITE.hoursShort} line</small><strong class="h-display">{SITE.phone}</strong></span>
+        </a>
+        <div class="btn-row ch-alt" data-hero="6" data-hero-fx="up" data-hero-children>
+          <Btn href={`mailto:${SITE.email}`} variant="outline-light" icon="mail">Email us</Btn>
+          <Btn href="#estimate" variant="outline-light" arrow>Send the estimate form</Btn>
+        </div>
+      </div>
+      <div class="ch-art">
+        <svg class="ch-rays" viewBox="0 0 600 320" aria-hidden="true" data-hero="2" data-hero-fx="draw">{rays.map((l) => <line x1={l.x1.toFixed(1)} y1={l.y1.toFixed(1)} x2={l.x2.toFixed(1)} y2={l.y2.toFixed(1)} />)}</svg>
+        <span class="ch-sun" aria-hidden="true" data-hero="1" data-hero-fx="pop"></span>
+        <div class="ch-card-pos">
+          <address class="ch-card" data-hero="3" data-hero-fx="up">
+            <p class="ch-card-h h-display">{SITE.legalName}</p>
+            <ul>
+              <li><span class="ch-ic"><Icon name="phone" size={20} /></span><span><small>Phone</small><a href={SITE.phoneHref}>{SITE.phone}</a></span></li>
+              <li><span class="ch-ic"><Icon name="mail" size={20} /></span><span><small>Email</small><a href={`mailto:${SITE.email}`}>{SITE.email}</a></span></li>
+              <li><span class="ch-ic"><Icon name="pin" size={20} /></span><span><small>Shop</small><a href={directions} target="_blank" rel="noopener">{SITE.street}<br />{SITE.city}, {SITE.region} {SITE.zip}</a></span></li>
+              <li><span class="ch-ic"><Icon name="clock" size={20} /></span><span><small>Hours</small><span class="ch-hours">{SITE.hoursShort}</span><em class="ph">[{SITE.hoursNote}]</em></span></li>
+            </ul>
+          </address>
+        </div>
+        <div class="ch-ring" data-hero="7" data-hero-fx="pop"><RingBadge size={128} text="Call Paul · Pinellas with heart · " /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. HOURS + EMERGENCY -->
+  <Sunline from="var(--deep)" to="var(--shell)" at="left" />
+  <section class="hr section shell">
+    <div class="wrap">
+      <div class="hr-head">
+        <div>
+          <Eyebrow>When to call</Eyebrow>
+          <h2 class="h-display h2" data-split>Open 7 days. <span class="c-coral-deep">Emergencies 24/7.</span></h2>
+        </div>
+        <p class="lead" data-reveal="up">Weekday or weekend, call the same number. If water is coming through the ceiling at 2 AM, call anyway: the emergency line is answered around the clock.</p>
+      </div>
+      <div class="hr-week" data-reveal="up">
+        <ol class="hr-days" data-stagger="pop">
+          {days.map((d) => <li><Icon name="sun" size={26} /><strong class="h-display">{d}</strong><span>Open</span></li>)}
+        </ol>
+        <p class="hr-band"><Icon name="clock" size={20} />Emergency line answered 24 hours, all 7 days</p>
+        <p class="hr-ph"><em class="ph">[Exact opening hours: Paul to confirm]</em></p>
+      </div>
+      <div class="hr-cards">
+        <div class="hr-urgent" data-reveal="up">
+          <span class="hr-alert"><Icon name="alert" size={26} /></span>
+          <h3 class="h-display h3">Call now for</h3>
+          <ul>{urgent.map((u) => <li><Icon name="check" size={18} stroke={3} />{u}</li>)}</ul>
+          <p>Not sure if it is urgent? Call and ask. We would rather hear about it early.</p>
+        </div>
+        <div class="hr-wait" data-reveal="up" data-delay="0.1">
+          <h3 class="h-display h3">While you wait for the truck</h3>
+          <ol>
+            {wait.map((w, i) => <li><span class="hr-n h-display">{i + 1}</span><div><strong>{w.t}</strong><p>{w.d}</p></div></li>)}
+          </ol>
+          <Btn href={SITE.phoneHref} icon="phone" variant="ink">Call {SITE.phone}</Btn>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. SERVICE AREA -->
+  <Sunline from="var(--shell)" to="var(--deep)" at="right" />
+  <AreasSection eyebrow="Service area" line1="All of" line2="Pinellas County."
+    lead="Our shop is on 64th Way N in St. Petersburg, in the middle of the county. The trucks cover every town in Pinellas, from Tarpon Springs down to St. Pete Beach. Not sure if we come to you? Call and ask." />
+
+  <!-- 4. VISIT: the map -->
+  <Sunline from="var(--deep)" to="var(--sand)" at="center" />
+  <section class="vs section sand">
+    <div class="wrap vs-grid">
+      <div class="vs-map" data-reveal="up">
+        <span class="vs-sun" aria-hidden="true"></span>
+        <div class="vs-frame">
+          <iframe src={mapSrc} title={`Google map showing the Plumbing By Paul shop at ${fullAddress}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+        <span class="vs-pin h-display" aria-hidden="true"><Icon name="pin" size={20} />The shop</span>
+      </div>
+      <div class="vs-copy">
+        <Eyebrow>Find us</Eyebrow>
+        <h2 class="h-display h2" data-split>The shop on <span class="c-coral-deep">64th Way N.</span></h2>
+        <p class="vs-addr h-display" data-reveal="up">{SITE.street}<br />{SITE.city}, {SITE.region} {SITE.zip}</p>
+        <p class="vs-note" data-reveal="up">This is our shop and office. For a job, the truck comes to you, anywhere in Pinellas County.</p>
+        <div class="btn-row vs-cta" data-reveal="up">
+          <Btn href={directions} target="_blank" variant="ink" icon="pin">Get directions</Btn>
+          <a class="textlink" href={SITE.googleMapsUrl} target="_blank" rel="noopener">Open in Google Maps <Icon name="arrow" size={17} /></a>
+        </div>
+        <div class="vs-social" data-reveal="up">
+          <p>Follow along</p>
+          <a href={SITE.facebook} target="_blank" rel="noopener" aria-label="Plumbing By Paul on Facebook"><Icon name="facebook" size={20} /></a>
+          <a href={SITE.instagram} target="_blank" rel="noopener" aria-label="Plumbing By Paul on Instagram"><Icon name="instagram" size={20} /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. FORM -->
+  <Sunline from="var(--sand)" to="var(--coral)" sun="var(--deep)" at="left" />
+  <ContactSection eyebrow="Free estimate" line1="Tell us what" line2="is going on."
+    lead="Send the form and we call you back to talk it through. Free, no obligation. Burst pipe or no water? Skip the form and call: the line is answered 24/7." />
+</Base>
+
+<style>
+  /* 1. Hero */
+  .ch { position: relative; overflow: hidden; padding-block: clamp(28px, 3.4vw, 44px) clamp(64px, 7vw, 100px); }
+  .ch-grid { display: grid; grid-template-columns: 640fr 520fr; gap: clamp(30px, 5vw, 80px); align-items: center; }
+  .ch-eb { margin-top: clamp(22px, 3vw, 40px); }
+  .ch-h1 { font-size: clamp(42px, 5.5vw, 78px); }
+  .ch-lead { margin-top: 22px; max-width: 560px; }
+  .ch-phone { display: inline-flex; align-items: center; gap: 18px; margin-top: 30px; padding: 14px 36px 14px 14px; border-radius: 999px; background: var(--coral); color: var(--ink); box-shadow: 8px 8px 0 0 var(--deep-3), 0 0 0 2px var(--coral); transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+  .ch-phone:hover { transform: translate(-3px, -3px); box-shadow: 12px 12px 0 0 var(--deep-3), 0 0 0 2px var(--coral); }
+  .ch-phone-ic { display: grid; place-items: center; flex: none; width: 70px; height: 70px; border-radius: 50%; background: var(--deep); color: var(--coral); }
+  .ch-phone small { display: block; font-size: 13px; font-weight: 700; letter-spacing: .03em; }
+  .ch-phone strong { display: block; font-size: clamp(32px, 4vw, 54px); line-height: 1.02; font-weight: 400; white-space: nowrap; }
+  .ch-alt { margin-top: 22px; }
+  .ch-art { position: relative; width: min(100%, 500px); aspect-ratio: 500 / 560; justify-self: end; margin-top: 44px; }
+  .ch-sun { position: absolute; left: 50%; top: 4%; width: 92%; aspect-ratio: 1; margin-left: -46%; border-radius: 50%; background: var(--coral); }
+  .ch-rays { max-width: none; position: absolute; left: 50%; top: -8.9%; width: 120%; margin-left: -60%; overflow: visible; }
+  .ch-rays line { stroke: var(--tide); stroke-width: 3; stroke-linecap: round; }
+  .ch-card-pos { position: absolute; left: 7%; right: 7%; bottom: 0; transform: rotate(-2deg); }
+  .ch-card { font-style: normal; padding: 26px 26px 22px; border-radius: var(--radius); background: var(--shell); color: var(--ink); box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 0 var(--ink); }
+  .ch-card-h { font-size: 23px; padding-bottom: 12px; border-bottom: 2px dashed var(--line); }
+  .ch-card ul { display: grid; gap: 4px; margin-top: 10px; }
+  .ch-card li { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; }
+  .ch-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--deep); color: var(--tide); }
+  .ch-card small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  .ch-card a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; font-size: 16.5px; line-height: 1.3; text-decoration: underline; text-decoration-color: rgba(10,104,102,.35); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .ch-card a:hover { color: var(--teal); text-decoration-color: currentColor; }
+  .ch-card li:first-child a { font-family: var(--display); font-weight: 400; font-size: 24px; text-decoration: none; }
+  .ch-hours { display: block; font-weight: 600; padding-top: 6px; }
+  .ch-card .ph { display: inline-block; margin: 4px 0 6px; font-size: 13.5px; }
+  .ch-ring { position: absolute; right: -6%; top: 6%; }
+
+  /* 2. Hours */
+  .hr-head { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px 60px; align-items: end; }
+  .hr-week { margin-top: clamp(36px, 4.5vw, 56px); }
+  .hr-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
+  .hr-days li { display: grid; justify-items: center; gap: 6px; padding: 22px 8px 18px; border-radius: 999px 999px 18px 18px; background: #fff; box-shadow: 0 0 0 1.5px var(--line); }
+  .hr-days li :global(.icon) { color: #c47400; }
+  .hr-days strong { font-size: clamp(22px, 2.2vw, 30px); line-height: 1; }
+  .hr-days span { font-size: 14px; font-weight: 700; color: var(--teal); }
+  .hr-days li:nth-child(n+6) { background: var(--coral-soft); box-shadow: 0 0 0 1.5px #f6c3b6; }
+  .hr-band { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; padding: 16px 20px; border-radius: 18px; background: var(--deep); color: var(--shell); font-weight: 600; text-align: center; }
+  .hr-band :global(.icon) { color: var(--tide); flex: none; }
+  .hr-ph { margin-top: 14px; font-size: 14.5px; text-align: center; }
+  .hr-cards { display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; margin-top: clamp(36px, 4.5vw, 56px); align-items: stretch; }
+  .hr-urgent { position: relative; padding: clamp(26px, 3vw, 40px); border-radius: var(--radius); background: var(--coral-soft); color: var(--ink); }
+  .hr-alert { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--coral); color: var(--ink); margin-bottom: 18px; }
+  .hr-urgent ul { display: grid; gap: 10px; margin-top: 16px; }
+  .hr-urgent li { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 600; }
+  .hr-urgent li :global(.icon) { color: var(--coral-deep); flex: none; }
+  .hr-urgent > p { margin-top: 18px; color: var(--ink-2); font-size: 15.5px; }
+  .hr-wait { padding: clamp(26px, 3vw, 40px); border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px var(--ink), 8px 8px 0 0 var(--coral); }
+  .hr-wait ol { display: grid; gap: 16px; margin: 20px 0 26px; }
+  .hr-wait li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+  .hr-n { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--deep); color: var(--tide); font-size: 20px; }
+  .hr-wait strong { display: block; font-size: 17.5px; }
+  .hr-wait li p { color: var(--ink-2); font-size: 15.5px; margin-top: 2px; }
+
+  /* 4. Visit / map */
+  .vs-grid { display: grid; grid-template-columns: 680fr 480fr; gap: clamp(40px, 6vw, 80px); align-items: center; }
+  .vs-map { position: relative; isolation: isolate; }
+  .vs-sun { position: absolute; z-index: -1; right: 8%; top: -70px; width: 220px; aspect-ratio: 1; border-radius: 50%; background: var(--coral); }
+  .vs-frame { position: relative; overflow: hidden; aspect-ratio: 680 / 520; border-radius: var(--radius); border: 6px solid #fff; box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 0 var(--ink); background: #e8e2d4; }
+  .vs-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .vs-pin { position: absolute; right: -14px; top: -20px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px 10px 12px; border-radius: 999px; background: var(--coral); color: var(--ink); font-size: 19px; transform: rotate(5deg); box-shadow: 0 14px 30px -12px rgba(0,0,0,.45); pointer-events: none; }
+  .vs-addr { margin-top: 22px; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.15; color: var(--ink); }
+  .vs-note { margin-top: 14px; color: var(--ink-2); max-width: 440px; }
+  .vs-cta { align-items: center; gap: 14px 24px; margin-top: 26px; }
+  .vs-social { display: flex; align-items: center; gap: 10px; margin-top: 26px; padding-top: 22px; border-top: 1.5px solid var(--line); }
+  .vs-social p { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin-right: 6px; }
+  .vs-social a { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #fff; color: var(--teal); box-shadow: 0 0 0 1.5px var(--line); transition: background .3s, color .3s; }
+  .vs-social a:hover { background: var(--deep); color: var(--tide); }
+
+  @media (max-width: 1180px) { .ch-ring { right: -2%; } }
+  @media (max-width: 980px) {
+    .ch-grid, .hr-head, .hr-cards, .vs-grid { grid-template-columns: 1fr; }
+    .ch-art { justify-self: center; width: min(92%, 440px); margin-top: 20px; }
+    .hr-days { gap: 8px; }
+  }
+  @media (max-width: 640px) {
+    .ch-phone { display: flex; width: 100%; padding-right: 18px; gap: 14px; box-shadow: 6px 6px 0 0 var(--deep-3), 0 0 0 2px var(--coral); }
+    .ch-phone-ic { width: 56px; height: 56px; }
+    .ch-phone small { font-size: 11.5px; }
+    .ch-alt :global(.btn) { width: 100%; }
+    .ch-art { width: 100%; aspect-ratio: auto; padding-top: 70px; }
+    .ch-sun { top: 0; width: 84%; margin-left: -42%; }
+    .ch-rays { top: -12%; width: 112%; margin-left: -56%; }
+    .ch-card-pos { position: relative; left: auto; right: auto; transform: rotate(-1.5deg); margin-inline: 4px 8px; }
+    .ch-card { padding: 20px 18px 16px; box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--ink); }
+    .ch-card a { font-size: 15.5px; }
+    .ch-ring { right: -2%; top: -8px; }
+    .ch-ring :global(.ring) { --s: 100px !important; }
+    .hr-days { gap: 4px; }
+    .hr-days li { padding: 12px 0 10px; gap: 4px; }
+    .hr-days li :global(.icon) { width: 18px; height: 18px; }
+    .hr-days strong { font-size: 16px; }
+    .hr-days span { font-size: 11px; }
+    .hr-wait { box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--coral); }
+    .hr-wait :global(.btn) { width: 100%; }
+    .vs-frame { aspect-ratio: 4 / 4.2; box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--ink); }
+    .vs-pin { right: -4px; font-size: 17px; }
+    .vs-sun { width: 150px; top: -50px; }
+    .vs-cta :global(.btn) { width: 100%; }
+  }
+</style>

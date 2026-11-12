@@ -1,0 +1,358 @@
+---
+// Reviews: the real Google score and the three real Google quotes, word for word (site.ts). No invented reviews,
+// no aggregateRating or Review markup. Themes are drawn only from exact phrases in those three quotes.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import Icon from '../components/Icon.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Btn from '../components/Btn.astro';
+import Stars from '../components/Stars.astro';
+import GoogleG from '../components/GoogleG.astro';
+import Sunline from '../components/Sunline.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import { SITE, REVIEWS } from '../data/site';
+import families from '../assets/img/source-site/team-trucks-2-families.jpg';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const url = site + '/reviews/';
+const title = 'Plumbing By Paul Reviews | St. Petersburg FL';
+const description = 'Plumbing By Paul is rated 4.9 from 941 Google reviews. Read three real reviews from Pinellas customers word for word, then read them all on Google.';
+const crumbs = [{ name: 'Reviews', href: '/reviews/' }];
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'WebPage', '@id': url + '#webpage', url, name: title, description,
+  inLanguage: 'en-US', isPartOf: { '@id': site + '/#website' }, about: { '@id': site + '/#business' },
+}];
+
+type ThemeKey = 'speed' | 'cleanup' | 'price' | 'craft';
+const THEMES: Record<ThemeKey, { label: string; icon: string; back: string }> = {
+  speed: { label: 'Speed', icon: 'clock', back: 'Open 7 days. The emergency line is answered 24/7.' },
+  cleanup: { label: 'Clean-up', icon: 'check', back: 'We clean up, then walk you through what we did.' },
+  price: { label: 'Fair price', icon: 'tag', back: 'A free estimate before any work starts. No hidden fees.' },
+  craft: { label: 'Workmanship', icon: 'wrench', back: 'Our work carries a 1-year workmanship warranty.' },
+};
+const order: ThemeKey[] = ['speed', 'cleanup', 'price', 'craft'];
+
+// Exact phrases from each review, tagged by theme. The build fails if a phrase is not word for word in the quote.
+const MARKS: { key: ThemeKey; text: string }[][] = [
+  [{ key: 'speed', text: 'they answered on the first ring' }, { key: 'speed', text: 'Phil was here within the hour and fixed it in under an hour' }, { key: 'price', text: 'Repair was way cheaper than I thought it was going to be' }],
+  [{ key: 'craft', text: 'look at the welding!' }, { key: 'cleanup', text: 'them cleaning up' }],
+  [{ key: 'craft', text: 'did a fantastic job replacing my two toilets and garbage disposal today' }, { key: 'cleanup', text: 'Not only did they haul away the old ones, they cleaned up behind themselves!' }],
+];
+const CREW = [['Phil'], ['Chris', 'Alex'], ['Chris', 'Steven']];
+const reviews = REVIEWS.map((r, i) => {
+  const marks = MARKS[i].map((m) => { const at = r.text.indexOf(m.text); if (at < 0) throw new Error(`reviews.astro: "${m.text}" is not in the review by ${r.name}`); return { ...m, at }; }).sort((a, b) => a.at - b.at);
+  const parts: { t: string; key?: ThemeKey }[] = [];
+  let pos = 0;
+  for (const m of marks) { if (m.at > pos) parts.push({ t: r.text.slice(pos, m.at) }); parts.push({ t: m.text, key: m.key }); pos = m.at + m.text.length; }
+  if (pos < r.text.length) parts.push({ t: r.text.slice(pos) });
+  if (parts.map((p) => p.t).join('') !== r.text) throw new Error('reviews.astro: quote changed while marking');
+  return { ...r, parts, marks, crew: CREW[i] };
+});
+const themes = order.map((k) => ({
+  k, ...THEMES[k],
+  quotes: reviews.flatMap((r) => r.marks.filter((m) => m.key === k).map((m) => ({ text: m.text, name: r.name }))),
+  by: [...new Set(reviews.filter((r) => r.marks.some((m) => m.key === k)).map((r) => r.name))],
+}));
+const crewCount = ['Phil', 'Chris', 'Alex', 'Steven'].map((n) => ({ n, c: CREW.filter((c) => c.includes(n)).length }));
+
+const N = 15;
+const rays = Array.from({ length: N }, (_, i) => { const a = (Math.PI * 2 * i) / N - Math.PI / 2; return { x1: 300 + Math.cos(a) * 236, y1: 300 + Math.sin(a) * 236, x2: 300 + Math.cos(a) * (i % 2 ? 262 : 284), y2: 300 + Math.sin(a) * (i % 2 ? 262 : 284) }; });
+---
+<Base title={title} description={description} crumbs={crumbs} schema={schema}>
+
+  <!-- 1. HERO: the score is the sun -->
+  <section class="rh hero dark">
+    <div class="wrap rh-grid">
+      <div class="rh-copy">
+        <div data-hero="1" data-hero-fx="up"><Crumbs items={crumbs} /></div>
+        <p class="eyebrow rh-eb" data-hero="2" data-hero-fx="up"><Icon name="heart" size={14} /><span>Google reviews</span></p>
+        <h1 class="h-display rh-h1" data-hero="3" data-hero-fx="lines">St. Petersburg plumber reviews, <span class="c-coral">in their words.</span></h1>
+        <p class="lead rh-lead" data-hero="4" data-hero-fx="up">Plumbing By Paul is rated {SITE.rating} out of 5 from {SITE.reviewCount} Google reviews (read 26 Oct 2026). Here are three of them in full, and what they say about the crew.</p>
+        <div class="btn-row rh-cta" data-hero="5" data-hero-fx="up" data-hero-children>
+          <Btn href={SITE.googleMapsUrl} target="_blank" size="lg" arrow>Read all {SITE.reviewCount} on Google</Btn>
+          <Btn href={SITE.googleReviewUrl} target="_blank" variant="outline-light" size="lg" icon="star">Leave a review</Btn>
+        </div>
+        <p class="rh-note" data-hero="6" data-hero-fx="up"><Icon name="shield" size={17} />Reviews live on Google. We quote them, we do not write them.</p>
+      </div>
+      <div class="rh-art" aria-hidden="true">
+        <svg class="rh-rays" viewBox="0 0 600 600" data-hero="2" data-hero-fx="draw">{rays.map((l) => <line x1={l.x1.toFixed(1)} y1={l.y1.toFixed(1)} x2={l.x2.toFixed(1)} y2={l.y2.toFixed(1)} />)}</svg>
+        <div class="rh-sun" data-hero="1" data-hero-fx="pop">
+          <span class="rh-num h-display">{SITE.rating}</span>
+          <span class="rh-of">out of 5 on Google</span>
+        </div>
+        <div class="rh-pill-pos"><div class="rh-pill" data-hero="4" data-hero-fx="pop"><GoogleG size={22} /><Stars size={17} /><strong>{SITE.reviewCount} reviews</strong></div></div>
+        {reviews.map((r, i) => <span class={`rh-av rh-av-${i}`} data-hero={String(5 + i)} data-hero-fx="pop">{r.initial}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE THREE REVIEWS, IN FULL -->
+  <Sunline from="var(--deep)" to="var(--shell)" at="left" />
+  <section class="rf section shell">
+    <div class="wrap">
+      <div class="rf-head">
+        <div>
+          <Eyebrow>Three reviews, word for word</Eyebrow>
+          <h2 class="h-display h2" data-split>Read them <span class="c-coral-deep">as written.</span></h2>
+        </div>
+        <div>
+          <p class="lead" data-reveal="up">Copied from Google exactly as each customer wrote it, shortened only where you see "…". The highlights show what each one brings up.</p>
+          <ul class="rf-legend" data-stagger="up" aria-label="Highlight colours">
+            {order.map((k) => <li><span class={`rf-sw t-${k}`} aria-hidden="true"></span>{THEMES[k].label}</li>)}
+          </ul>
+        </div>
+      </div>
+      <div class="rf-grid">
+        {reviews.map((r, i) => (
+          <figure class={`rf-card rf-${i}`} data-reveal="up" data-delay={i * 0.08}>
+            <div class="rf-top">
+              <span class="rf-n h-display" aria-hidden="true">0{i + 1}</span>
+              <span class="rf-g"><GoogleG size={18} />Google review</span>
+            </div>
+            <blockquote><p>{r.parts.map((p) => p.key ? <mark class={`t-${p.key}`}>{p.t}</mark> : p.t)}</p></blockquote>
+            <figcaption>
+              <span class="rf-av" aria-hidden="true">{r.initial}</span>
+              <span><strong>{r.name}</strong><small>{r.topic}</small></span>
+              <span class="rf-crew">Crew named: {r.crew.join(' & ')}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. WHAT CUSTOMERS MENTION (tabs) -->
+  <Sunline from="var(--shell)" to="var(--deep)" at="right" />
+  <section class="th section dark">
+    <div class="wrap">
+      <div class="th-head">
+        <Eyebrow>What customers mention</Eyebrow>
+        <h2 class="h-display h2" data-split>Four things <span class="c-coral">they bring up.</span></h2>
+        <p class="lead th-lead" data-reveal="up">Pulled only from the three reviews above, in the customers' own words. Next to each one: how we back it up.</p>
+      </div>
+      <div class="th-grid" data-tabs data-reveal="up">
+        <div class="th-tabs" role="tablist" aria-label="What customers mention">
+          {themes.map((t, i) => (
+            <button role="tab" id={`th-tab-${t.k}`} aria-controls={`th-pane-${t.k}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={t.k} class={`th-tab t-${t.k}`}>
+              <span class="th-ic"><Icon name={t.icon} size={22} /></span>
+              <span class="th-tx"><strong class="h-display">{t.label}</strong><small>Mentioned by {t.by.join(' and ')}</small></span>
+              <Icon name="arrow" size={20} class="th-go" />
+            </button>
+          ))}
+        </div>
+        {themes.map((t, i) => (
+          <div class="th-pane" role="tabpanel" id={`th-pane-${t.k}`} aria-labelledby={`th-tab-${t.k}`} data-tab-pane={t.k} hidden={i !== 0} tabindex="0">
+            <ul class="th-quotes">
+              {t.quotes.map((q) => (
+                <li><blockquote class="h-display"><p><mark class={`t-${t.k}`}>&ldquo;{q.text}&rdquo;</mark></p></blockquote><span>{q.name}, Google review</span></li>
+              ))}
+            </ul>
+            <p class="th-back"><span class="th-back-ic"><Icon name="heart" size={18} /></span><span><strong>How we back it up</strong>{t.back}</span></p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. THE CREW THEY NAME -->
+  <Sunline from="var(--deep)" to="var(--sand)" at="center" />
+  <section class="cn section sand">
+    <div class="wrap cn-grid">
+      <figure class="cn-photo" data-reveal="up">
+        <div class="frame cn-frame"><Image src={families} alt="The Plumbing By Paul crew in light blue shirts with family members, in front of two company trucks" widths={[560, 860, 1200]} sizes="(max-width: 980px) 92vw, 620px" /></div>
+        <figcaption>The crew, families included</figcaption>
+      </figure>
+      <div class="cn-copy">
+        <Eyebrow>The people behind the stars</Eyebrow>
+        <h2 class="h-display h2" data-split>They remember <span class="c-coral-deep">the names.</span></h2>
+        <p class="lead cn-lead" data-reveal="up">Customers often name the technician who came out. In these three reviews, four names come up.</p>
+        <ul class="cn-names" data-stagger="up">
+          {crewCount.map((c) => <li><span class="h-display">{c.n}</span><small>named in {c.c} {c.c === 1 ? 'review' : 'reviews'}</small></li>)}
+        </ul>
+        <a class="textlink" href="/about/" data-reveal="up">Meet the whole crew <Icon name="arrow" size={17} /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. YOUR TURN -->
+  <section class="yt deep3">
+    <div class="yt-stars" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={64} />)}</div>
+    <div class="wrap yt-in">
+      <div>
+        <Eyebrow>Had the crew out?</Eyebrow>
+        <h2 class="h-display h2" data-split>Tell Pinellas <span class="c-coral">how it went.</span></h2>
+        <p class="lead yt-lead" data-reveal="up">Your review goes straight to Google. It takes a minute, and it helps your neighbors pick a plumber.</p>
+      </div>
+      <div class="yt-cards" data-stagger="up">
+        <a class="yt-card yt-write" href={SITE.googleReviewUrl} target="_blank" rel="noopener">
+          <span class="yt-ic"><Icon name="star" size={26} /></span>
+          <span><strong class="h-display">Leave a Google review</strong><small>Opens Google in a new tab</small></span>
+          <Icon name="arrow" size={22} class="yt-go" />
+        </a>
+        <a class="yt-card yt-read" href={SITE.googleMapsUrl} target="_blank" rel="noopener">
+          <span class="yt-ic"><GoogleG size={26} /></span>
+          <span><strong class="h-display">Read all {SITE.reviewCount} reviews</strong><small>On our Google profile</small></span>
+          <Icon name="arrow" size={22} class="yt-go" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CONTACT -->
+  <Sunline from="var(--deep-3)" to="var(--coral)" at="left" rays="var(--tide)" />
+  <ContactSection eyebrow="Your turn"
+    lead="Burst pipe, slow drain or no hot water: call now, the line is answered 24/7 for emergencies. Not urgent? Send the form and we call you back." />
+</Base>
+
+<style>
+  /* Theme colours: light fills so ink text keeps full contrast on any card */
+  .t-speed { --t: var(--tide); }
+  .t-cleanup { --t: var(--sun); }
+  .t-price { --t: #ffc9bc; }
+  .t-craft { --t: var(--truck); }
+  mark { background: var(--t); color: var(--ink); padding: .04em .2em; border-radius: .25em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+  /* 1. Hero */
+  .rh { position: relative; overflow: hidden; padding-block: clamp(28px, 3.4vw, 44px) clamp(64px, 7vw, 100px); }
+  .rh-grid { display: grid; grid-template-columns: 660fr 520fr; gap: clamp(30px, 5vw, 80px); align-items: center; }
+  .rh-eb { margin-top: clamp(22px, 3vw, 40px); }
+  .rh-h1 { font-size: clamp(42px, 5.5vw, 78px); }
+  .rh-lead { margin-top: 22px; max-width: 580px; }
+  .rh-cta { margin-top: 32px; }
+  .rh-note { display: flex; align-items: center; gap: 9px; margin-top: 24px; font-size: 15px; font-weight: 600; color: var(--on-dark-2); }
+  .rh-note :global(.icon) { color: var(--tide); flex: none; }
+  .rh-art { position: relative; width: min(100%, 500px); aspect-ratio: 1; justify-self: end; }
+  .rh-rays { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .rh-rays line { stroke: var(--tide); stroke-width: 3; stroke-linecap: round; }
+  .rh-sun { position: absolute; inset: 17%; border-radius: 50%; background: var(--coral); color: var(--ink); display: grid; place-content: center; justify-items: center; box-shadow: inset 0 -18px 0 0 rgba(180,48,28,.18); }
+  .rh-num { font-size: clamp(96px, 11vw, 158px); line-height: .85; letter-spacing: -0.03em; }
+  .rh-of { margin-top: 10px; font-weight: 700; font-size: 15px; letter-spacing: .02em; }
+  .rh-pill-pos { position: absolute; left: 0; right: 0; bottom: 5%; display: flex; justify-content: center; }
+  .rh-pill { display: flex; align-items: center; gap: 10px; padding: 12px 22px 12px 16px; border-radius: 999px; background: var(--shell); color: var(--ink); white-space: nowrap; box-shadow: 0 18px 40px -18px rgba(0,0,0,.6); }
+  .rh-pill :global(.stars) { color: #c47400; }
+  .rh-pill strong { font-size: 16px; }
+  .rh-av { position: absolute; display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; font-family: var(--display); font-size: 25px; box-shadow: 0 0 0 4px var(--deep), 0 14px 30px -12px rgba(0,0,0,.6); }
+  .rh-av-0 { left: 4%; top: 22%; background: var(--tide); color: var(--ink); }
+  .rh-av-1 { right: 2%; top: 12%; background: var(--sun); color: var(--ink); }
+  .rh-av-2 { right: 6%; bottom: 26%; background: var(--shell); color: var(--ink); }
+
+  /* 2. In full */
+  .rf-head { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 60px; align-items: end; }
+  .rf-legend { display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 18px; font-size: 15px; font-weight: 600; }
+  .rf-legend li { display: inline-flex; align-items: center; gap: 8px; }
+  .rf-sw { width: 26px; height: 14px; border-radius: 5px; background: var(--t); box-shadow: inset 0 0 0 1px rgba(11,43,48,.25); }
+  .rf-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 28px; margin-top: clamp(40px, 5vw, 64px); align-items: start; }
+  .rf-card { display: flex; flex-direction: column; gap: 22px; padding: clamp(26px, 3vw, 44px); border-radius: var(--radius); }
+  .rf-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .rf-n { font-size: 54px; line-height: .8; color: transparent; -webkit-text-stroke: 2px currentColor; }
+  .rf-g { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; padding: 7px 14px 7px 9px; border-radius: 999px; background: rgba(255,255,255,.9); color: var(--ink); }
+  .rf-card blockquote { font-size: 18px; line-height: 1.75; }
+  .rf-card figcaption { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 4px 14px; margin-top: auto; }
+  .rf-card figcaption strong { display: block; font-weight: 700; }
+  .rf-card figcaption small { display: block; font-size: 13.5px; }
+  .rf-crew { grid-column: 1 / -1; margin-top: 10px; padding-top: 12px; border-top: 1.5px dashed currentColor; font-size: 14px; font-weight: 700; }
+  .rf-av { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; font-family: var(--display); font-size: 22px; }
+  .rf-0 { grid-column: 1 / 8; background: var(--deep); color: var(--on-dark); box-shadow: 10px 10px 0 0 var(--coral); }
+  .rf-0 blockquote { font-family: var(--display); font-size: clamp(22px, 2.1vw, 29px); line-height: 1.38; }
+  .rf-0 .rf-n { color: var(--tide); }
+  .rf-0 small, .rf-0 .rf-crew { color: var(--on-dark-2); }
+  .rf-0 .rf-av { background: var(--coral); color: var(--ink); }
+  .rf-1 { grid-column: 8 / 13; margin-top: 70px; background: var(--coral-soft); color: var(--ink); transform: rotate(1.4deg); }
+  .rf-1 .rf-n { color: var(--coral-deep); }
+  .rf-1 .rf-av { background: var(--deep); color: var(--shell); }
+  .rf-2 { grid-column: 3 / 11; background: #fff; color: var(--ink); box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 0 var(--ink); transform: rotate(-.8deg); }
+  .rf-2 .rf-n { color: var(--teal); }
+  .rf-2 .rf-av { background: var(--tide); color: var(--ink); }
+  .rf-1 small, .rf-2 small, .rf-1 .rf-crew, .rf-2 .rf-crew { color: var(--ink-2); }
+
+  /* 3. Themes */
+  .th-head { max-width: 760px; }
+  .th-lead { margin-top: 18px; }
+  .th-grid { display: grid; grid-template-columns: 420fr 760fr; gap: clamp(28px, 4vw, 60px); margin-top: clamp(36px, 4.5vw, 56px); align-items: start; }
+  .th-tabs { display: grid; gap: 10px; }
+  .th-tab { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; min-height: 76px; padding: 12px 18px 12px 12px; border-radius: 18px; text-align: left; color: var(--shell); background: var(--deep-2); box-shadow: inset 0 0 0 1.5px var(--line-dark); transition: background .3s, box-shadow .3s, transform .35s var(--ease-out); }
+  .th-ic { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--deep-3); color: var(--t); box-shadow: inset 0 0 0 1.5px var(--t); transition: background .3s, color .3s; }
+  .th-tx { display: grid; gap: 3px; }
+  .th-tx strong { font-size: 24px; font-weight: 400; line-height: 1.05; }
+  .th-tx small { font-size: 14px; color: var(--on-dark-2); }
+  .th-tab :global(.th-go) { color: var(--t); opacity: .5; transition: transform .35s var(--ease-out), opacity .3s; }
+  .th-tab:hover { transform: translateX(4px); }
+  .th-tab[aria-selected='true'] { background: var(--shell); color: var(--ink); box-shadow: 6px 6px 0 0 var(--t); }
+  .th-tab[aria-selected='true'] .th-ic { background: var(--t); color: var(--ink); box-shadow: none; }
+  .th-tab[aria-selected='true'] small { color: var(--ink-2); }
+  .th-tab[aria-selected='true'] :global(.th-go) { opacity: 1; color: var(--ink); transform: translateX(4px); }
+  .th-pane { padding: clamp(26px, 3vw, 44px); border-radius: var(--radius); background: var(--deep-3); box-shadow: inset 0 0 0 1.5px var(--line-dark); }
+  .th-quotes { display: grid; gap: 26px; }
+  .th-quotes blockquote { font-size: clamp(26px, 2.7vw, 38px); line-height: 1.28; }
+  .th-quotes mark { padding: .02em .22em; }
+  .th-quotes li > span { display: block; margin-top: 10px; font-size: 14.5px; color: var(--on-dark-2); }
+  .th-back { display: flex; gap: 14px; align-items: flex-start; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line-dark); color: var(--on-dark-2); }
+  .th-back strong { display: block; color: var(--tide); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 4px; }
+  .th-back-ic { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--coral); color: var(--ink); }
+
+  /* 4. Crew names */
+  .cn-grid { display: grid; grid-template-columns: 620fr 540fr; gap: clamp(40px, 6vw, 90px); align-items: center; }
+  .cn-photo { position: relative; }
+  .cn-frame { aspect-ratio: 620 / 560; border-radius: 300px 300px var(--radius) var(--radius); border: 6px solid #fff; box-shadow: var(--shadow); }
+  .cn-frame img { object-position: center 60%; }
+  .cn-photo figcaption { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); padding: 9px 16px; border-radius: 999px; background: var(--shell); color: var(--ink); font-size: 14px; font-weight: 700; white-space: nowrap; }
+  .cn-lead { margin-top: 18px; max-width: 500px; }
+  .cn-names { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0 18px; }
+  .cn-names li { display: grid; gap: 2px; padding: 16px 20px; border-radius: 18px; background: var(--shell); box-shadow: 0 0 0 1.5px var(--line); }
+  .cn-names li:nth-child(2) { background: var(--deep); box-shadow: 6px 6px 0 0 var(--coral); }
+  .cn-names li:nth-child(2) span { color: var(--shell); }
+  .cn-names li:nth-child(2) small { color: var(--on-dark-2); }
+  .cn-names span { font-size: clamp(30px, 3vw, 42px); line-height: 1; color: var(--ink); }
+  .cn-names small { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+
+  /* 5. Your turn */
+  .yt { position: relative; overflow: hidden; padding-block: clamp(64px, 8vw, 110px); }
+  .yt-stars { position: absolute; right: -20px; top: 50%; transform: translateY(-50%) rotate(-8deg); display: flex; gap: 6px; color: var(--sun); opacity: .08; }
+  .yt-stars :global(.icon) { width: 150px; height: 150px; }
+  .yt-in { position: relative; display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px 60px; align-items: center; }
+  .yt-lead { margin-top: 18px; max-width: 520px; }
+  .yt-cards { display: grid; gap: 14px; }
+  .yt-card { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; min-height: 92px; padding: 16px 24px 16px 16px; border-radius: 22px; transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+  .yt-card strong { display: block; font-size: clamp(21px, 2vw, 26px); font-weight: 400; line-height: 1.1; }
+  .yt-card small { display: block; margin-top: 4px; font-size: 14px; font-weight: 600; }
+  .yt-ic { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; }
+  .yt-write { background: var(--coral); color: var(--ink); box-shadow: 8px 8px 0 0 var(--sun); }
+  .yt-write .yt-ic { background: var(--deep-3); color: var(--sun); }
+  .yt-read { background: var(--shell); color: var(--ink); box-shadow: 8px 8px 0 0 var(--tide); }
+  .yt-read .yt-ic { background: #fff; box-shadow: inset 0 0 0 1.5px var(--line); }
+  .yt-read small { color: var(--ink-2); }
+  .yt-card:hover { transform: translate(-3px, -3px); }
+  .yt-card :global(.yt-go) { transition: transform .35s var(--ease-out); }
+  .yt-card:hover :global(.yt-go) { transform: translateX(4px); }
+
+  @media (max-width: 980px) {
+    .rh-grid, .rf-head, .th-grid, .cn-grid, .yt-in { grid-template-columns: 1fr; }
+    .rh-art { justify-self: center; width: min(88%, 420px); }
+    .rf-0, .rf-1, .rf-2 { grid-column: 1 / -1; margin-top: 0; }
+    .cn-photo { max-width: 560px; }
+  }
+  @media (max-width: 640px) {
+    .rh-cta :global(.btn) { width: 100%; }
+    .rh-note { align-items: flex-start; }
+    .rh-note :global(.icon) { margin-top: 3px; }
+    .rh-art { width: 94%; }
+    .rh-av { width: 46px; height: 46px; font-size: 20px; }
+    .rh-pill { padding: 10px 16px 10px 12px; gap: 8px; }
+    .rh-pill strong { font-size: 14.5px; }
+    .rf-grid { gap: 22px; }
+    .rf-card { padding: 24px 22px; }
+    .rf-0 { box-shadow: 6px 6px 0 0 var(--coral); }
+    .rf-1, .rf-2 { transform: none; }
+    .rf-2 { box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--ink); }
+    .rf-n { font-size: 42px; }
+    .th-tab { min-height: 68px; gap: 12px; }
+    .th-ic { width: 44px; height: 44px; }
+    .th-tx strong { font-size: 21px; }
+    .th-pane { padding: 22px; }
+    .cn-names { grid-template-columns: 1fr 1fr; }
+    .cn-names li { padding: 14px 16px; }
+    .yt-card { padding: 14px 16px 14px 12px; gap: 14px; }
+    .yt-ic { width: 50px; height: 50px; }
+  }
+</style>

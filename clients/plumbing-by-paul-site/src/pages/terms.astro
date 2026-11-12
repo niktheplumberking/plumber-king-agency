@@ -1,0 +1,59 @@
+---
+// Terms of use. DRAFT for Paul to review with his lawyer (noindex). Business claims here (warranty, licensed, bonded
+// and insured) are Paul's own and stay on the "Paul to confirm" list in AGENT-BRIEF.md.
+import LegalPage from '../components/legal/LegalPage.astro';
+import { SITE } from '../data/site';
+const ph = (t: string) => `<em class="ph">[${t}]</em>`;
+const tel = `<a href="${SITE.phoneHref}">${SITE.phone}</a>`;
+const mail = `<a href="mailto:${SITE.email}">${SITE.email}</a>`;
+const sections = [
+  { id: 'about', title: 'About these terms', html: `
+    <p>These terms cover your use of this website, which is run by ${SITE.legalName}, ${SITE.street}, ${SITE.city}, ${SITE.region} ${SITE.zip}. By using the site, you accept them.</p>
+    <p>They do not cover the plumbing work itself. The work is agreed with you separately, when you accept an estimate.</p>` },
+  { id: 'info', title: 'Information on this site', html: `
+    <p>We try to keep everything here correct and up to date. It is general information, not advice for your home: every plumbing problem is different, and we look at the job before we give you a price.</p>
+    <p>Hours, services and the towns we cover can change. If something matters to you, call and check.</p>` },
+  { id: 'estimates', title: 'Estimates and prices', html: `
+    <p>Nothing on this site is a quote or an offer you can accept online. A price is set only after a free estimate.</p>
+    <p>${ph('Paul to confirm with his lawyer: written estimates, payment terms and cancellations')}</p>` },
+  { id: 'warranty', title: 'Our workmanship warranty', html: `
+    <p>Our work carries a 1-year workmanship warranty, as this site says.</p>
+    <p>${ph('Paul to confirm with his lawyer: what it covers, what it does not (for example parts that carry their own manufacturer warranty) and how to make a claim')}</p>` },
+  { id: 'emergency', title: 'Emergencies', html: `
+    <p>The online form is not for emergencies. For a burst pipe, a sewer backup or a water heater failure, call ${tel}. The line is answered 24/7.</p>
+    <p>If anyone is in danger, call 911 first.</p>` },
+  { id: 'licence', title: 'Licence and insurance', html: `
+    <p>${SITE.legalName} states that it is licensed, bonded and insured. Licence number: ${ph('Paul to confirm')}</p>` },
+  { id: 'reviews', title: 'Reviews and photos', html: `
+    <p>The reviews quoted on this site are real Google reviews, copied word for word. "…" marks where a review was shortened.</p>
+    <p>Photos of Paul, the crew and the trucks are our own. Some pictures that show a type of job are stock photos, not photos of our work.</p>` },
+  { id: 'content', title: 'Our name, mascot and content', html: `
+    <p>The Plumbing By Paul name, the mascot, and the words and photos on this site belong to ${SITE.legalName} or are used with permission. Please do not copy them without asking. ${ph('Paul to confirm: ownership of the mascot artwork and the licence for the stock photos')}</p>` },
+  { id: 'links', title: 'Links to other websites', html: `
+    <p>Some links go to Google, Facebook and Instagram. We do not run those sites and are not responsible for what is on them.</p>` },
+  { id: 'liability', title: 'Using this site', html: `
+    <p>We provide this website as it is. As far as the law allows, we are not responsible for loss caused by relying on the general information here, or by the site being unavailable for a while. Nothing in these terms takes away rights you have by law.</p>
+    <p>${ph('exact wording: lawyer to draft')}</p>` },
+  { id: 'law', title: 'Florida law', html: `
+    <p>These terms are governed by the laws of the State of Florida. ${ph('lawyer to confirm')}</p>` },
+  { id: 'changes', title: 'Changes and questions', html: `
+    <p>We may update these terms. The date at the top shows the latest version. Questions? Call ${tel} or email ${mail}.</p>` },
+];
+---
+<LegalPage
+  title="Terms of Use | Plumbing By Paul"
+  description="The terms for using the Plumbing By Paul LLC website in plain English: general information only, prices after a free estimate, warranty, reviews and photos."
+  crumb={{ name: 'Terms', href: '/terms/' }}
+  eyebrow="Plumbing By Paul LLC"
+  line1="Terms of use,"
+  line2="in plain English."
+  lead="The rules for using this website. Short, because a plumbing website should not need a long contract."
+  short={[
+    'The site is general information, not a quote.',
+    'Prices come only after a free estimate.',
+    'Emergencies: call, do not use the form.',
+    'Reviews are real Google quotes. Some job photos are stock.',
+  ]}
+  sections={sections}
+  other={{ name: 'privacy policy', href: '/privacy/' }}
+/>

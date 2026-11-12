@@ -1,0 +1,173 @@
+---
+import Icon from './Icon.astro';
+import Btn from './Btn.astro';
+import Logo from './Logo.astro';
+import Stars from './Stars.astro';
+import GoogleG from './GoogleG.astro';
+import { SITE, NAV } from '../data/site';
+import { SERVICES, FAMILIES, type FamilyKey } from '../data/services';
+interface Props { estimateHref?: string }
+const { estimateHref = '#estimate' } = Astro.props;
+const path = Astro.url.pathname;
+const fams = (Object.keys(FAMILIES) as FamilyKey[]).map((k) => ({ k, ...FAMILIES[k], items: SERVICES.filter((s) => s.family === k) }));
+const rest = NAV.filter((n) => n.href !== '/services/');
+const onService = path.startsWith('/services') || SERVICES.some((s) => path.includes(s.slug));
+---
+<div class="topbar" data-intro="topbar">
+  <div class="wrap topbar-in">
+    <a class="tb-rate" href={SITE.googleMapsUrl} target="_blank" rel="noopener" aria-label={`${SITE.rating} stars from ${SITE.reviewCount} Google reviews. Opens Google Maps.`}>
+      <GoogleG size={15} /><Stars size={13} /><span><strong>{SITE.rating}</strong> · {SITE.reviewCount} Google reviews</span>
+    </a>
+    <p class="tb-mid"><Icon name="pin" size={15} />Serving all of Pinellas County from St. Petersburg</p>
+    <div class="tb-right">
+      <span class="tb-hours"><Icon name="clock" size={15} /><span class="tb-long">{SITE.hoursShort} line</span><span class="tb-short">Open 7 days · 24/7</span></span>
+      <a href={SITE.facebook} aria-label="Plumbing By Paul on Facebook" target="_blank" rel="noopener" class="tb-soc"><Icon name="facebook" size={17} /></a>
+      <a href={SITE.instagram} aria-label="Plumbing By Paul on Instagram" target="_blank" rel="noopener" class="tb-soc"><Icon name="instagram" size={17} /></a>
+    </div>
+  </div>
+</div>
+<header class="hdr" data-header>
+  <div class="hdr-bar">
+    <div class="wrap hdr-in">
+      <a href="/" class="brand" aria-label="Plumbing By Paul home" data-intro="brand"><Logo eager /></a>
+      <nav class="nav" aria-label="Main">
+        <ul class="nav-list">
+          <li class="has-mega" data-intro="nav">
+            <a href="/services/" class:list={['nav-a', { on: onService }]} aria-haspopup="true">Services <Icon name="chevronDown" size={15} class="nav-chev" /></a>
+            <div class="mega">
+              <div class="mega-grid">
+                {fams.map((f) => (
+                  <div class="mega-col">
+                    <p class="mega-h">{f.name}</p>
+                    <ul>{f.items.map((s) => <li><a href={`/${s.slug}/`}><Icon name={s.icon} size={17} />{s.nav}</a></li>)}</ul>
+                  </div>
+                ))}
+              </div>
+              <div class="mega-foot">
+                <p><Icon name="heart" size={14} />Not sure what you need? Call and tell us what you see.</p>
+                <a href="/services/" class="textlink">All {SERVICES.length} services <Icon name="arrow" size={16} /></a>
+              </div>
+            </div>
+          </li>
+          {rest.map((n) => <li data-intro="nav"><a href={n.href} class:list={['nav-a', { on: path.startsWith(n.href) }]}>{n.label}</a></li>)}
+        </ul>
+      </nav>
+      <div class="hdr-cta">
+        <span data-intro="nav" class="hdr-est"><Btn href={estimateHref} variant="outline-dark" size="sm">Free estimate</Btn></span>
+        <span data-intro="nav" class="hdr-call"><Btn href={SITE.phoneHref} icon="phone" sub="Tap to call · open 7 days">{SITE.phone}</Btn></span>
+        <a href={SITE.phoneHref} class="m-call" aria-label={`Call ${SITE.phone}`}><Icon name="phone" size={21} /></a>
+        <button class="m-menu" aria-label="Open menu" aria-expanded="false" aria-controls="mnav" data-menu-open><Icon name="menu" size={22} /></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="mnav" id="mnav" data-mnav hidden role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="mnav-in">
+    <div class="mnav-top">
+      <Logo tone="light" size="sm" sub={false} />
+      <button class="m-menu m-close" aria-label="Close menu" data-menu-close><Icon name="close" size={22} /></button>
+    </div>
+    <ul class="mnav-list">
+      <li><a href="/">Home</a></li>
+      {NAV.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+    </ul>
+    <div class="mnav-svc">
+      <p class="eyebrow on-dark"><Icon name="heart" size={13} />Popular services</p>
+      <div class="mnav-chips">{SERVICES.slice(0, 8).map((s) => <a href={`/${s.slug}/`}>{s.nav}</a>)}</div>
+    </div>
+    <div class="mnav-cta">
+      <Btn href={SITE.phoneHref} icon="phone" full>Call {SITE.phone}</Btn>
+      <p class="mnav-note"><Icon name="clock" size={15} />{SITE.hoursShort} line</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .topbar { background: var(--deep-3); color: var(--on-dark); font-size: 13.5px; font-weight: 500; position: relative; z-index: 61; }
+  .topbar-in { display: flex; align-items: center; justify-content: space-between; min-height: 44px; gap: 18px; }
+  .tb-rate { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+  .tb-rate:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  .tb-rate strong { font-weight: 700; }
+  .tb-mid { display: inline-flex; align-items: center; gap: 7px; color: var(--on-dark-2); }
+  .tb-mid :global(.icon), .tb-hours :global(.icon) { color: var(--tide); }
+  .tb-right { display: flex; align-items: center; gap: 0; }
+  .tb-hours { display: inline-flex; align-items: center; gap: 7px; margin-right: 10px; }
+  .tb-short { display: none; }
+  .tb-soc { display: grid; place-items: center; width: 44px; height: 44px; color: var(--on-dark-2); transition: color .2s, transform .3s var(--ease-out); }
+  .tb-soc:hover { color: var(--coral); transform: translateY(-2px); }
+  .tb-right > .tb-soc:last-child { margin-right: -13px; }
+
+  .hdr { position: sticky; top: 0; z-index: 60; transition: transform .45s var(--ease-out); }
+  .hdr.is-hidden { transform: translateY(-100%); }
+  .hdr-bar { background: var(--shell); position: relative; border-bottom: 1px solid var(--line); transition: box-shadow .3s; }
+  .hdr.is-scrolled .hdr-bar { box-shadow: 0 14px 40px -22px rgba(6,54,61,.5); }
+  .hdr-in { display: flex; align-items: center; min-height: 88px; transition: min-height .35s var(--ease-out); }
+  .hdr.is-scrolled .hdr-in { min-height: 74px; }
+  .brand { flex: none; display: inline-flex; min-height: 48px; align-items: center; }
+  .nav { margin-left: clamp(18px, 3vw, 48px); margin-right: auto; }
+  .nav-list { display: flex; gap: 2px; }
+  .nav-a { position: relative; display: inline-flex; align-items: center; gap: 5px; min-height: 48px; padding: 0 14px; font-size: 16px; font-weight: 600; color: var(--ink); border-radius: 999px; transition: background .25s, color .25s; }
+  .nav-a:hover, .has-mega:hover > .nav-a, .has-mega:focus-within > .nav-a { background: var(--sand); }
+  .nav-a.on { color: var(--coral-deep); }
+  .nav-a.on::after { content: ''; position: absolute; left: 50%; bottom: 5px; width: 14px; height: 7px; margin-left: -7px; border-radius: 999px 999px 0 0; background: var(--coral); }
+  .nav-a :global(.nav-chev) { transition: transform .3s var(--ease-out); }
+  .has-mega:hover :global(.nav-chev), .has-mega:focus-within :global(.nav-chev) { transform: rotate(180deg); }
+  .has-mega { position: static; }
+  .mega { position: absolute; left: 0; right: 0; top: 100%; padding-top: 10px; opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity .25s, transform .35s var(--ease-out), visibility .25s; }
+  .has-mega:hover .mega, .has-mega:focus-within .mega { opacity: 1; visibility: visible; transform: none; }
+  .mega-grid { width: min(var(--wrap), 100% - var(--gutter) * 2); margin-inline: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 28px; padding: 30px 34px 22px; background: #fff; border-radius: var(--radius) var(--radius) 0 0; box-shadow: var(--shadow); }
+  .mega-h { font-family: var(--display); font-size: 18px; color: var(--ink); padding-bottom: 10px; margin-bottom: 8px; border-bottom: 2px solid var(--coral); }
+  .mega-col a { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 10px; margin-inline: -10px; border-radius: 12px; font-size: 15.5px; font-weight: 500; color: var(--ink-2); transition: background .2s, color .2s, padding .3s var(--ease-out); }
+  .mega-col a :global(.icon) { color: var(--teal); flex: none; }
+  .mega-col a:hover { background: var(--shell); color: var(--ink); padding-left: 16px; }
+  .mega-foot { width: min(var(--wrap), 100% - var(--gutter) * 2); margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 6px 34px; background: var(--sand); border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); font-size: 14.5px; font-weight: 500; }
+  .mega-foot p { display: inline-flex; align-items: center; gap: 8px; }
+  .mega-foot p :global(.icon) { color: var(--coral); }
+  .hdr-cta { display: flex; align-items: center; gap: 12px; }
+  .hdr-cta :global(.btn) { --bh: 56px; }
+  .hdr-est :global(.btn) { --bh: 48px; }
+  .hdr-call :global(.btn) { padding: 0 24px 0 20px; font-size: 20px; }
+  .m-call, .m-menu { display: none; place-items: center; width: 48px; height: 48px; border-radius: 50%; }
+  .m-call { background: var(--coral); color: var(--ink); }
+  .m-menu { background: var(--deep); color: var(--shell); }
+
+  .mnav { position: fixed; inset: 0; z-index: 120; background: var(--deep); color: var(--on-dark); overflow-y: auto; overscroll-behavior: contain; }
+  .mnav-in { min-height: 100%; display: flex; flex-direction: column; padding: 16px var(--gutter) max(24px, env(safe-area-inset-bottom)); }
+  .mnav-top { display: flex; align-items: center; justify-content: space-between; min-height: 56px; }
+  .mnav .m-close { display: grid; background: var(--coral); color: var(--ink); }
+  .mnav-list { margin-top: 18px; }
+  .mnav-list a { display: flex; align-items: center; min-height: 58px; font-family: var(--display); font-size: 34px; line-height: 1; border-bottom: 1px solid var(--line-dark); }
+  .mnav-list a:active { color: var(--coral); }
+  .mnav-svc { margin-top: 26px; }
+  .mnav-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mnav-chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-dark); font-size: 14.5px; font-weight: 500; background: rgba(251,245,233,.05); }
+  .mnav-cta { margin-top: auto; padding-top: 28px; display: grid; gap: 12px; }
+  .mnav-note { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 14px; color: var(--on-dark-2); }
+
+  @media (max-width: 1180px) {
+    .hdr-est { display: none; }
+    .nav-a { padding: 0 11px; font-size: 15.5px; }
+    .tb-mid { display: none; }
+  }
+  @media (max-width: 980px) {
+    .nav, .hdr-call { display: none; }
+    .hdr-cta { margin-left: auto; gap: 10px; }
+    .m-call, .m-menu { display: grid; }
+    .hdr-in { min-height: 72px; }
+    .hdr.is-scrolled .hdr-in { min-height: 64px; }
+  }
+  @media (max-width: 560px) {
+    .topbar { font-size: 12.5px; }
+    .topbar-in { gap: 8px; }
+    .tb-rate { gap: 6px; }
+    .tb-soc { display: none; }
+    .tb-long { display: none; } .tb-short { display: inline; }
+    .tb-hours { margin-right: 0; gap: 5px; }
+    .tb-rate :global(.stars) { display: none; }
+    .brand :global(.logo-badge) { width: 46px; height: 46px; }
+    .brand :global(.logo-word) { font-size: 21px; }
+    .brand :global(.logo-sub) { font-size: 9.5px; letter-spacing: .1em; }
+    .brand :global(.logo) { gap: 9px; }
+  }
+</style>

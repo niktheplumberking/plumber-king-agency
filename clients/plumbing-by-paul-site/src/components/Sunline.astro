@@ -1,0 +1,33 @@
+---
+// Brand divider: a horizon between two sections with a half-sun rising on it and rays that draw in.
+// `from` = colour above, `to` = colour of the section below, `at` = where the sun sits, `sun` = disc colour.
+interface Props { from: string; to: string; at?: 'left' | 'center' | 'right'; sun?: string; rays?: string }
+const { from, to, at = 'center', sun = 'var(--coral)', rays } = Astro.props;
+const x = at === 'left' ? 16 : at === 'right' ? 84 : 50;
+const N = 9;
+const lines = Array.from({ length: N }, (_, i) => {
+  const a = Math.PI * (0.08 + (0.84 * i) / (N - 1));
+  const r1 = 78, r2 = i % 2 ? 100 : 112;
+  return { x1: 120 - Math.cos(a) * r1, y1: 120 - Math.sin(a) * r1, x2: 120 - Math.cos(a) * r2, y2: 120 - Math.sin(a) * r2 };
+});
+---
+<div class="sunline" aria-hidden="true" style={`background:${from};--to:${to};--x:${x}%;--sun:${sun};--rays:${rays ?? sun}`}>
+  <div class="sunline-pos">
+    <div class="sunline-rise" data-sunrise>
+      <svg viewBox="0 0 240 120" class="sunline-rays" data-draw>
+        {lines.map((l) => <line x1={l.x1.toFixed(1)} y1={l.y1.toFixed(1)} x2={l.x2.toFixed(1)} y2={l.y2.toFixed(1)} />)}
+      </svg>
+      <span class="sunline-disc"></span>
+    </div>
+  </div>
+  <span class="sunline-ground"></span>
+</div>
+<style>
+  .sunline { --h: clamp(64px, 9vw, 120px); position: relative; height: var(--h); overflow: hidden; margin-bottom: -1px; }
+  .sunline-pos { position: absolute; left: var(--x); bottom: 0; width: calc(var(--h) * 2); height: var(--h); transform: translateX(-50%); }
+  .sunline-rise { position: absolute; inset: 0; }
+  .sunline-rays { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .sunline-rays line { stroke: var(--rays); stroke-width: 3.5; stroke-linecap: round; }
+  .sunline-disc { position: absolute; left: 50%; bottom: 0; width: 56%; aspect-ratio: 2 / 1; transform: translateX(-50%); border-radius: 999px 999px 0 0; background: var(--sun); }
+  .sunline-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--to); }
+</style>

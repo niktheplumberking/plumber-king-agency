@@ -1,0 +1,30 @@
+---
+// Mid-page call band (dark, with a sun on its right edge). Use between content sections on service and town pages.
+import Btn from '../Btn.astro';
+import Icon from '../Icon.astro';
+import { SITE } from '../../data/site';
+interface Props { title: string; text?: string }
+const { title, text = 'Open 7 days. The emergency line is answered 24/7.' } = Astro.props;
+---
+<section class="cb deep2">
+  <span class="cb-sun" aria-hidden="true" data-sunrise></span>
+  <div class="wrap cb-in">
+    <div>
+      <h2 class="h-display h3 cb-h" data-split>{title}</h2>
+      <p class="cb-p" data-reveal="up"><Icon name="clock" size={17} />{text}</p>
+    </div>
+    <div class="btn-row" data-reveal="up">
+      <Btn href={SITE.phoneHref} icon="phone" size="lg">{SITE.phone}</Btn>
+      <Btn href="#estimate" variant="outline-light" size="lg" arrow>Free estimate</Btn>
+    </div>
+  </div>
+</section>
+<style>
+  .cb { position: relative; overflow: hidden; padding-block: clamp(40px, 5vw, 64px); }
+  .cb-sun { position: absolute; right: -60px; bottom: 0; width: 300px; aspect-ratio: 2 / 1; border-radius: 999px 999px 0 0; background: var(--coral); opacity: .16; }
+  .cb-in { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 40px; }
+  .cb-h { font-size: clamp(26px, 3vw, 40px); max-width: 620px; }
+  .cb-p { display: flex; align-items: center; gap: 8px; margin-top: 10px; color: var(--on-dark-2); }
+  .cb-p :global(.icon) { color: var(--tide); flex: none; }
+  @media (max-width: 560px) { .cb .btn-row, .cb .btn-row :global(.btn) { width: 100%; } }
+</style>

@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Btn from '../components/Btn.astro';
+import RingBadge from '../components/RingBadge.astro';
+import { SITE, FORM_LIVE, PROCESS } from '../data/site';
+const N = 15;
+const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (i / (N - 1)); return { x1: 500 - Math.cos(a) * 250, y1: 400 - Math.sin(a) * 250, x2: 500 - Math.cos(a) * (i % 2 ? 310 : 350), y2: 400 - Math.sin(a) * (i % 2 ? 310 : 350) }; });
+---
+<Base title="Thank You | Plumbing By Paul" description="Thanks for contacting Plumbing By Paul in St. Petersburg, FL. We will call you back about your free estimate. For an emergency call (727) 709-2552." noindex estimateHref="/#estimate">
+  <section class="ty dark hero">
+    <svg class="ty-rays" viewBox="0 0 1000 400" aria-hidden="true" data-hero="1" data-hero-fx="draw">{rays.map((l) => <line x1={l.x1.toFixed(0)} y1={l.y1.toFixed(0)} x2={l.x2.toFixed(0)} y2={l.y2.toFixed(0)} />)}</svg>
+    <span class="ty-sun" aria-hidden="true" data-hero="1" data-hero-fx="pop"></span>
+    <div class="wrap ty-in">
+      <div class="ty-ring" data-hero="2" data-hero-fx="pop"><RingBadge size={150} text="Thank you · Plumbing by Paul · " /></div>
+      <h1 class="h-display h1" data-hero="3" data-hero-fx="lines">Thanks. <span class="c-coral">We are on it.</span></h1>
+      <p class="lead ty-lead" data-hero="4" data-hero-fx="up">Your request for a free estimate is with the team. We call you back to talk it through, 7 days a week.</p>
+      {!FORM_LIVE && <p class="ty-note" data-hero="5" data-hero-fx="up"><em class="ph">Preview note: the online form is not connected yet, so nothing was sent. Please call {SITE.phone} for now.</em></p>}
+      <div class="btn-row ty-cta" data-hero="6" data-hero-fx="up" data-hero-children>
+        <Btn href={SITE.phoneHref} icon="phone" size="lg" sub="Emergency? Do not wait. Call now.">Call {SITE.phone}</Btn>
+        <Btn href="/" variant="outline-light" size="lg" arrow>Back to the homepage</Btn>
+      </div>
+    </div>
+  </section>
+  <section class="ty-next section shell">
+    <div class="wrap">
+      <h2 class="h-display h2 center" data-split>What happens <span class="c-coral-deep">next.</span></h2>
+      <ol class="ty-steps" data-stagger="up">
+        {PROCESS.slice(1).map((s, i) => <li><span class="h-display">{i + 1}</span><h3 class="h-display h4">{s.title}</h3><p>{s.text}</p></li>)}
+      </ol>
+      <p class="center ty-foot"><Icon name="clock" size={17} />{SITE.hoursShort} line · <a class="textlink" href={SITE.phoneHref}>{SITE.phone}</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .ty { position: relative; overflow: hidden; padding-block: clamp(60px, 8vw, 110px) clamp(70px, 9vw, 130px); text-align: center; }
+  .ty-sun { position: absolute; left: 50%; bottom: 0; width: min(560px, 80vw); aspect-ratio: 2 / 1; margin-left: calc(min(560px, 80vw) / -2); border-radius: 999px 999px 0 0; background: var(--coral); opacity: .2; }
+  .ty-rays { max-width: none; position: absolute; left: 50%; bottom: 0; width: min(1120px, 160vw); transform: translateX(-50%); }
+  .ty-rays line { stroke: var(--tide); stroke-opacity: .35; stroke-width: 3; stroke-linecap: round; }
+  .ty-in { position: relative; display: grid; justify-items: center; }
+  .ty-ring { margin-bottom: 26px; }
+  .ty-lead { margin-top: 20px; max-width: 560px; }
+  .ty-note { margin-top: 16px; max-width: 560px; font-size: 15px; }
+  .ty-note .ph { background: rgba(255,194,71,.16); color: var(--sun); padding: 4px 8px; }
+  .ty-cta { margin-top: 32px; justify-content: center; }
+  .ty-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(30px, 4vw, 50px); }
+  .ty-steps li { padding: 8px 30px 8px; border-left: 2px solid var(--ink); }
+  .ty-steps li > span { display: block; font-size: 54px; line-height: 1; color: var(--coral-deep); }
+  .ty-steps h3 { margin-top: 14px; }
+  .ty-steps p { margin-top: 8px; color: var(--ink-2); }
+  .ty-foot { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin-top: 40px; font-weight: 600; }
+  @media (max-width: 760px) { .ty-steps { grid-template-columns: 1fr; gap: 26px; } .ty-cta :global(.btn) { width: 100%; } }
+</style>

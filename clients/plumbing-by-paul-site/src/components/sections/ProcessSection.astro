@@ -1,0 +1,73 @@
+---
+// "From first call to fixed": a sun travels an arc across the section while you scroll, lighting each step it passes.
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import { SITE, PROCESS } from '../../data/site';
+interface Step { title: string; text: string }
+interface Props { eyebrow?: string; line1?: string; line2?: string; lead?: string; steps?: readonly Step[] }
+const { eyebrow = 'How it works', line1 = 'From first call', line2 = 'to fixed.', lead = 'Four steps. You know the price before we start, and the work is covered after we leave.', steps = PROCESS } = Astro.props;
+---
+<section class="pr section deep3">
+  <div class="wrap">
+    <div class="head-center">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="h-display h2" data-split>{line1} <span class="c-coral">{line2}</span></h2>
+      <p class="lead" data-reveal="up">{lead}</p>
+    </div>
+    <div class="pr-arc" data-arc aria-hidden="true">
+      <svg viewBox="0 0 1000 300" preserveAspectRatio="none"><path d="M0,300 A500,300 0 0 1 1000,300" vector-effect="non-scaling-stroke" /></svg>
+      <span class="arc-sun"><span></span></span>
+      <span class="pr-ground"></span>
+    </div>
+    <ol class="pr-steps" style={`--n:${steps.length}`}>
+      {steps.map((s, i) => (
+        <li data-arc-step data-reveal="up" data-delay={i * 0.08}>
+          <span class="pr-n h-display">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="h-display h4">{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+    <div class="pr-cta" data-reveal="up">
+      <p>Step 01 starts here:</p>
+      <Btn href={SITE.phoneHref} icon="phone">Call {SITE.phone}</Btn>
+      <Btn href="#estimate" variant="outline-light" arrow>Get a free estimate</Btn>
+    </div>
+  </div>
+</section>
+<style>
+  .pr { overflow: hidden; }
+  .pr-arc { --ax: 1; --ay: 0; position: relative; height: clamp(120px, 17vw, 230px); margin: clamp(30px, 4vw, 56px) clamp(0px, 4vw, 70px) 0; }
+  .pr-arc svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .pr-arc path { fill: none; stroke: var(--tide); stroke-opacity: .5; stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; }
+  .arc-sun { position: absolute; left: calc(var(--ax) * 100%); bottom: calc(var(--ay) * 100%); width: clamp(44px, 5.4vw, 72px); aspect-ratio: 1; transform: translate(-50%, 50%); }
+  .arc-sun span { position: absolute; inset: 0; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 10px rgba(255,107,82,.18), 0 0 0 24px rgba(255,107,82,.08), 0 0 70px 10px rgba(255,107,82,.45); }
+  .pr-ground { position: absolute; left: -100vw; right: -100vw; bottom: 0; height: 2px; background: var(--line-dark); }
+  .pr-steps { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 0; counter-reset: s; }
+  .pr-steps li { position: relative; padding: 30px 26px 8px; border-left: 1px solid var(--line-dark); }
+  .pr-steps li:last-child { border-right: 1px solid var(--line-dark); }
+  .pr-steps li::before { content: ''; position: absolute; left: -1px; top: 0; width: 3px; height: 0; background: var(--coral); transition: height .6s var(--ease-out); }
+  .pr-steps li.is-on::before { height: 100%; }
+  .pr-n { display: block; font-size: clamp(44px, 5vw, 68px); line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--tide); transition: color .5s, -webkit-text-stroke-color .5s; }
+  .pr-steps li.is-on .pr-n { color: var(--coral); -webkit-text-stroke-color: var(--coral); }
+  .pr-steps h3 { margin-top: 18px; color: var(--shell); }
+  .pr-steps p { margin-top: 10px; font-size: 16px; color: var(--on-dark-2); }
+  .pr-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 16px; margin-top: clamp(40px, 5vw, 64px); }
+  .pr-cta p { font-weight: 600; margin-right: 6px; }
+  @media (max-width: 900px) {
+    .pr-steps { grid-template-columns: 1fr 1fr; }
+    .pr-steps li { padding-bottom: 28px; }
+    .pr-steps li:nth-child(2n) { border-right: 1px solid var(--line-dark); }
+    .pr-steps li:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
+  }
+  @media (max-width: 560px) {
+    .pr-steps { grid-template-columns: 1fr; }
+    .pr-steps li { border-right: 1px solid var(--line-dark); display: grid; grid-template-columns: 64px 1fr; column-gap: 14px; padding: 22px 18px; }
+    .pr-steps li + li { border-top: 1px solid var(--line-dark); }
+    .pr-n { grid-row: 1 / 3; font-size: 44px; }
+    .pr-steps h3 { margin-top: 2px; }
+    .pr-steps p { grid-column: 2; margin-top: 6px; }
+    .pr-cta { flex-direction: column; align-items: stretch; }
+    .pr-cta p { text-align: center; margin: 0; }
+  }
+</style>

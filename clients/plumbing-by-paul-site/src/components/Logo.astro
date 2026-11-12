@@ -1,0 +1,36 @@
+---
+// Brand lockup: the mascot from the trucks as a round badge + the new wordmark (live text in Tilt Warp).
+// See BRAND.md "Logo decision". `tone` = colour of the wordmark for the background it sits on.
+import { Image } from 'astro:assets';
+import mascot from '../assets/img/mascot-badge.png';
+interface Props { tone?: 'ink' | 'light'; size?: 'sm' | 'md' | 'lg'; sub?: boolean; eager?: boolean }
+const { tone = 'ink', size = 'md', sub = true, eager = false } = Astro.props;
+const px = size === 'lg' ? 84 : size === 'sm' ? 44 : 56;
+---
+<span class={`logo logo-${tone} logo-${size}`}>
+  <span class="logo-badge"><Image src={mascot} alt="" width={px * 2} height={px * 2} loading={eager ? 'eager' : 'lazy'} /></span>
+  <span class="logo-txt">
+    <span class="logo-word">Plumbing <em>by Paul</em></span>
+    {sub && <span class="logo-sub">St. Pete · Pinellas County</span>}
+  </span>
+</span>
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 12px; }
+  .logo-badge { flex: none; width: 56px; height: 56px; border-radius: 50%; padding: 3px; background: var(--coral); box-shadow: 0 0 0 2px var(--shell); transition: transform .5s var(--ease-out); }
+  .logo-badge img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+  :global(a:hover) > .logo .logo-badge { transform: rotate(-8deg) scale(1.06); }
+  .logo-txt { display: grid; line-height: 1; }
+  .logo-word { font-family: var(--display); font-size: 25px; letter-spacing: -0.01em; color: var(--ink); white-space: nowrap; }
+  .logo-word em { font-style: normal; color: var(--coral-deep); }
+  .logo-sub { margin-top: 5px; font-size: 11.5px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+  .logo-light .logo-word { color: var(--shell); }
+  .logo-light .logo-word em { color: var(--coral); }
+  .logo-light .logo-sub { color: var(--on-dark-2); }
+  .logo-light .logo-badge { box-shadow: 0 0 0 2px var(--deep-3); }
+  .logo-sm .logo-badge { width: 44px; height: 44px; padding: 2px; }
+  .logo-sm .logo-word { font-size: 20px; }
+  .logo-sm .logo-sub { font-size: 10px; letter-spacing: .1em; margin-top: 4px; }
+  .logo-lg .logo-badge { width: 84px; height: 84px; padding: 4px; }
+  .logo-lg .logo-word { font-size: 36px; }
+  .logo-lg .logo-sub { font-size: 12.5px; margin-top: 7px; }
+</style>

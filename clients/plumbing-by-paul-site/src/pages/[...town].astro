@@ -1,0 +1,12 @@
+---
+// One page per town that has local content (town-content.ts) and is listed in BUILT_TOWNS (towns.ts).
+// Towns without real local content get no page on purpose: thin "swap the town name" pages are doorway pages.
+import TownPage from '../components/towns/TownPage.astro';
+import { TOWNS, BUILT_TOWNS } from '../data/towns';
+import { TOWN_CONTENT } from '../data/town-content';
+export function getStaticPaths() {
+  return TOWNS.filter((t) => BUILT_TOWNS.includes(t.slug) && t.slug in TOWN_CONTENT).map((t) => ({ params: { town: t.slug }, props: { town: t } }));
+}
+const { town } = Astro.props;
+---
+<TownPage town={town} />

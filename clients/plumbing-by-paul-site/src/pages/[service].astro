@@ -1,0 +1,8 @@
+---
+// One page per service in services.ts. Full content lives in service-content.ts (starter content is used until it exists).
+import ServicePage from '../components/services/ServicePage.astro';
+import { SERVICES } from '../data/services';
+export function getStaticPaths() { return SERVICES.map((s) => ({ params: { service: s.slug }, props: { service: s } })); }
+const { service } = Astro.props;
+---
+<ServicePage service={service} />

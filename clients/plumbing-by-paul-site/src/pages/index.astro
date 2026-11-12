@@ -1,0 +1,372 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Btn from '../components/Btn.astro';
+import Stars from '../components/Stars.astro';
+import GoogleG from '../components/GoogleG.astro';
+import Sunline from '../components/Sunline.astro';
+import Marquee from '../components/Marquee.astro';
+import RingBadge from '../components/RingBadge.astro';
+import EstimateForm from '../components/sections/EstimateForm.astro';
+import ReviewsSection from '../components/sections/ReviewsSection.astro';
+import ProcessSection from '../components/sections/ProcessSection.astro';
+import AreasSection from '../components/sections/AreasSection.astro';
+import FaqSection from '../components/sections/FaqSection.astro';
+import ContactSection from '../components/sections/ContactSection.astro';
+import { SITE } from '../data/site';
+import { SERVICES, FAMILIES, type FamilyKey } from '../data/services';
+import { SERVICE_IMG } from '../data/images';
+import { BASE, TOWNS } from '../data/towns';
+import paul from '../assets/img/paul-cutout.png';
+import mascot from '../assets/img/mascot-badge.png';
+import crew from '../assets/img/source-site/team-trucks-1.jpg';
+import families from '../assets/img/source-site/team-trucks-2-families.jpg';
+import alycia from '../assets/img/source-site/alycia-hernandez.jpg';
+import event from '../assets/img/source-site/team-community-event.jpg';
+
+const site = Astro.site!.toString().replace(/\/$/, '');
+const title = 'Plumber St. Petersburg FL | Plumbing By Paul';
+const description = 'Family-owned plumber in St. Petersburg, FL serving all of Pinellas County. Drains, leaks, water heaters and sewer lines. Open 7 days, 24/7 emergency line.';
+const schema = [{ '@context': 'https://schema.org', '@type': 'WebSite', '@id': site + '/#website', url: site + '/', name: SITE.name, publisher: { '@id': site + '/#business' }, inLanguage: 'en-US' }];
+const fams = (Object.keys(FAMILIES) as FamilyKey[]).map((k) => ({ k, ...FAMILIES[k], items: SERVICES.filter((s) => s.family === k) }));
+const first = SERVICES[0].slug;
+const N = 17;
+const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (-0.1 + (1.2 * i) / (N - 1)); return { x1: 320 - Math.cos(a) * 286, y1: 320 - Math.sin(a) * 286, x2: 320 - Math.cos(a) * (i % 2 ? 304 : 318), y2: 320 - Math.sin(a) * (i % 2 ? 304 : 318) }; });
+const why = [
+  { title: 'Direct line to the owner', text: 'No middlemen and no phone trees. You get Paul\'s personal commitment to the job, start to finish.' },
+  { title: 'Prepared for every job', text: 'We show up with the truck loaded, every single time. No second trips, no excuses.' },
+  { title: 'A price you see first', text: 'Our services start with a free estimate, and the pricing is transparent. No hidden fees.' },
+  { title: 'Backed for a year', text: 'Our work carries a 1-year workmanship warranty. If something goes wrong after we leave, we come back and fix it.' },
+];
+const stats = [
+  { n: SITE.claims.years, suffix: '+', label: 'years of plumbing in Pinellas' },
+  { n: SITE.claims.customers, suffix: '+', label: 'happy customers' },
+  { n: SITE.reviewCount, suffix: '', label: 'Google reviews, rated 4.9' },
+  { n: 7, suffix: '', label: 'days a week, 24/7 emergencies' },
+];
+---
+<Base title={title} description={description} schema={schema}>
+
+  <!-- 1. HERO -->
+  <section class="hero dark">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <a class="gbadge hero-g" href={SITE.googleMapsUrl} target="_blank" rel="noopener" data-hero="1" data-hero-fx="pop" aria-label={`${SITE.rating} stars from ${SITE.reviewCount} Google reviews. Opens Google Maps.`}>
+          <GoogleG size={20} /><strong>{SITE.rating}</strong><Stars size={15} /><span>{SITE.reviewCount} Google reviews</span>
+        </a>
+        <h1 class="h-display h1 hero-h1" data-hero="2" data-hero-fx="lines">St. Petersburg plumber <span class="c-coral">with heart.</span></h1>
+        <p class="hero-serve" data-hero="3" data-hero-fx="up"><Icon name="pin" size={18} />Serving St. Petersburg, Clearwater, Seminole and all of Pinellas County</p>
+        <p class="lead hero-lead" data-hero="4" data-hero-fx="up">Family-owned and run by Paul Alves. Drains, leaks, water heaters and sewer lines, fixed by a licensed, bonded and insured crew. Free estimate first, 1-year warranty after.</p>
+        <div class="btn-row hero-cta" data-hero="5" data-hero-fx="up" data-hero-children>
+          <Btn href={SITE.phoneHref} icon="phone" size="lg" sub={`${SITE.hoursShort} line`}>Call {SITE.phone}</Btn>
+          <Btn href="#estimate" variant="outline-light" size="lg" arrow>Get a free estimate</Btn>
+        </div>
+        <ul class="hero-chips" data-hero="6" data-hero-fx="up" data-hero-children>
+          <li><Icon name="check" size={16} stroke={3} />Free estimates</li>
+          <li><Icon name="check" size={16} stroke={3} />Licensed, bonded & insured</li>
+          <li><Icon name="check" size={16} stroke={3} />1-year workmanship warranty</li>
+        </ul>
+      </div>
+      <div class="hero-art">
+        <svg class="hero-rays" viewBox="0 0 640 340" aria-hidden="true" data-hero="2" data-hero-fx="draw">{rays.map((l) => <line x1={l.x1.toFixed(1)} y1={l.y1.toFixed(1)} x2={l.x2.toFixed(1)} y2={l.y2.toFixed(1)} />)}</svg>
+        <span class="hero-sun" aria-hidden="true" data-hero="1" data-hero-fx="pop"></span>
+        <div class="hero-paul" data-hero="3" data-hero-fx="clip">
+          <Image src={paul} alt="Paul Alves, owner of Plumbing By Paul" widths={[380, 560, 760]} sizes="(max-width: 980px) 70vw, 470px" loading="eager" fetchpriority="high" />
+        </div>
+        <p class="hero-tag" data-hero="6" data-hero-fx="pop"><span class="hero-tag-ic"><Icon name="heart" size={18} /></span><span><strong class="h-display">Paul Alves</strong><small>Owner, Plumbing By Paul</small></span></p>
+        <div class="hero-ring" data-hero="7" data-hero-fx="pop"><RingBadge size={150} text="The face on our trucks · Plumbing by Paul · " /></div>
+      </div>
+    </div>
+    <div class="wrap hero-form" data-hero="8" data-hero-fx="up"><EstimateForm variant="bar" /></div>
+  </section>
+
+  <!-- 2. NUMBERS (Paul's own claims + the real Google count) -->
+  <section class="nums shell" aria-label="Plumbing By Paul in numbers">
+    <div class="wrap">
+      <dl class="nums-row" data-stagger="up">
+        {stats.map((s) => (
+          <div><dt class="h-display"><span data-count={s.n} data-suffix={s.suffix}>{s.n.toLocaleString('en-US')}{s.suffix}</span></dt><dd>{s.label}</dd></div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- 3. REVIEWS -->
+  <ReviewsSection />
+
+  <!-- 4. ABOUT / WHY -->
+  <Sunline from="var(--shell)" to="var(--deep)" at="left" />
+  <section class="why section dark" id="about">
+    <div class="wrap why-grid">
+      <figure class="why-photo" data-reveal="up">
+        <div class="frame why-frame"><Image src={crew} alt="Fourteen Plumbing By Paul crew members in light blue work shirts in front of two company trucks with the Paul mascot on the side" widths={[520, 820, 1200]} sizes="(max-width: 980px) 92vw, 560px" /></div>
+        <figcaption><Icon name="truck" size={18} />Look for the light blue shirts and the trucks with Paul's face on the side.</figcaption>
+        <span class="why-sticker h-display" aria-hidden="true">Family owned</span>
+      </figure>
+      <div class="why-copy">
+        <Eyebrow>About Plumbing By Paul</Eyebrow>
+        <h2 class="h-display h2" data-split>Plumbing Pinellas <span class="c-coral">with heart.</span></h2>
+        <p class="lead why-lead" data-reveal="up">We are more than plumbers. We are your neighbors. Paul built this company on the belief that every customer deserves honest, expert service delivered with real care.</p>
+        <ol class="why-list">
+          {why.map((w, i) => (
+            <li data-reveal="up" data-delay={i * 0.06}>
+              <span class="why-n h-display">{i + 1}</span>
+              <div><h3 class="h-display h4">{w.title}</h3><p>{w.text}</p></div>
+            </li>
+          ))}
+        </ol>
+        <div class="btn-row why-cta" data-reveal="up">
+          <Btn href={SITE.phoneHref} icon="phone">Call {SITE.phone}</Btn>
+          <Btn href="#team" variant="outline-light" arrow>Meet the crew</Btn>
+        </div>
+      </div>
+    </div>
+  </section>
+  <Marquee items={[BASE.name, ...TOWNS.slice(0, 9).map((t) => t.name)]} />
+
+  <!-- 5. SERVICES: hover a row, the photo follows -->
+  <section class="svc section sand" id="services">
+    <div class="wrap svc-grid" data-swap>
+      <div class="svc-side">
+        <Eyebrow>What we fix</Eyebrow>
+        <h2 class="h-display h2" data-split>Plumbing services in <span class="c-coral-deep">St. Petersburg.</span></h2>
+        <p class="lead svc-lead" data-reveal="up">From a dripping tap to a full repipe, for homes and businesses. Pick a job to see more, or call and tell us what you see.</p>
+        <div class="svc-win arch" data-reveal="up" aria-hidden="true">
+          {SERVICES.map((s) => (
+            <div class:list={['svc-pane', { 'is-on': s.slug === first }]} data-swap-pane={s.slug}>
+              <Image src={SERVICE_IMG[s.slug].src} alt="" widths={[420, 720]} sizes="400px" loading="lazy" />
+              <span class="svc-pane-tag"><Icon name={s.icon} size={18} />{s.nav}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="svc-list">
+        {fams.map((f) => (
+          <div class="svc-fam" data-reveal="up">
+            <p class="svc-fam-h"><span>{f.name}</span><small>{f.line}</small></p>
+            <ul>
+              {f.items.map((s) => (
+                <li><a href={`/${s.slug}/`} class:list={['svc-row', { 'is-on': s.slug === first }]} data-swap-item={s.slug}>
+                  <span class="svc-ic"><Icon name={s.icon} size={22} /></span>
+                  <span class="svc-txt"><strong class="h-display">{s.name}</strong><span>{s.blurb}</span></span>
+                  <span class="svc-go"><Icon name="arrow" size={20} /></span>
+                </a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <div class="svc-foot" data-reveal="up">
+          <p><strong class="h-display">Not on the list?</strong> We handle general plumbing too. Just ask.</p>
+          <Btn href={SITE.phoneHref} icon="phone" variant="ink">Call {SITE.phone}</Btn>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PROCESS -->
+  <Sunline from="var(--sand)" to="var(--deep-3)" at="right" />
+  <ProcessSection />
+
+  <!-- 7. TEAM -->
+  <section class="team section shell" id="team">
+    <div class="wrap">
+      <div class="team-head">
+        <div>
+          <Eyebrow>The people behind the work</Eyebrow>
+          <h2 class="h-display h2" data-split>A big crew. <span class="c-coral-deep">One family.</span></h2>
+        </div>
+        <p class="lead" data-reveal="up">Skilled, dedicated and local. The people who show up for Pinellas County every single day, and the families behind them.</p>
+      </div>
+      <div class="team-grid">
+        <figure class="team-big frame" data-reveal="up">
+          <Image src={families} alt="The whole Plumbing By Paul crew with family members and a child, standing in front of two company trucks" widths={[640, 960, 1400]} sizes="(max-width: 980px) 92vw, 780px" />
+          <figcaption>The whole crew, families included</figcaption>
+        </figure>
+        <figure class="team-al" data-reveal="up" data-delay="0.1">
+          <div class="arch team-al-img"><Image src={alycia} alt="Alycia Hernandez of Plumbing By Paul" widths={[360, 600]} sizes="(max-width: 980px) 60vw, 300px" /></div>
+          <figcaption><strong class="h-display">Alycia Hernandez</strong><em class="ph">[Role: Paul to confirm]</em></figcaption>
+        </figure>
+        <ul class="team-people" data-stagger="up">
+          <li class="tp tp-paul">
+            <Image src={mascot} alt="" width={128} height={128} class="tp-face" />
+            <div><strong class="h-display">Paul Alves</strong><span>Owner. That is his face on every truck.</span></div>
+          </li>
+          <li class="tp tp-techs">
+            <p class="tp-names h-display">Phil <i>·</i> Chris <i>·</i> Alex <i>·</i> Steven</p>
+            <span>Technicians our customers name in their Google reviews.</span>
+          </li>
+          <li class="tp tp-event frame">
+            <Image src={event} alt="Plumbing By Paul team members at a community event in front of a company trailer" widths={[360, 600]} sizes="(max-width: 980px) 92vw, 300px" />
+            <span>Out in the community</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. AREAS -->
+  <Sunline from="var(--shell)" to="var(--deep)" at="center" />
+  <AreasSection />
+
+  <!-- 9. FAQ -->
+  <FaqSection />
+
+  <!-- 10. CONTACT + ESTIMATE FORM -->
+  <Sunline from="var(--sand)" to="var(--coral)" sun="var(--deep)" at="left" />
+  <ContactSection />
+</Base>
+
+<style>
+  /* 1. Hero */
+  .hero { position: relative; padding-top: clamp(34px, 4.4vw, 64px); }
+  .hero-grid { display: grid; grid-template-columns: 680fr 520fr; gap: clamp(20px, 3vw, 40px); align-items: end; }
+  .hero-copy { padding-bottom: clamp(96px, 9vw, 132px); }
+  .hero-g:hover { border-color: var(--tide); }
+  .hero-h1 { margin-top: 22px; }
+  .hero-serve { display: flex; align-items: center; gap: 9px; margin-top: 22px; font-weight: 600; font-size: 17px; color: var(--tide); }
+  .hero-serve :global(.icon) { flex: none; }
+  .hero-lead { margin-top: 14px; max-width: 570px; }
+  .hero-cta { margin-top: 30px; }
+  .hero-chips { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 26px; font-size: 15px; font-weight: 600; }
+  .hero-chips li { display: inline-flex; align-items: center; gap: 8px; }
+  .hero-chips :global(.icon) { color: var(--tide); }
+  .hero-art { position: relative; align-self: end; width: min(100%, 540px); aspect-ratio: 540 / 640; justify-self: end; }
+  .hero-sun { position: absolute; left: 50%; bottom: 7%; width: 96%; aspect-ratio: 1; margin-left: -48%; border-radius: 50%; background: var(--coral); }
+  .hero-rays { max-width: none; position: absolute; left: 50%; bottom: 44.4%; width: 118.5%; margin-left: -59.25%; overflow: visible; }
+  .hero-rays line { stroke: var(--tide); stroke-width: 3; stroke-linecap: round; }
+  .hero-paul { position: absolute; left: 50%; bottom: 0; width: 74%; transform: translateX(-50%); }
+  .hero-paul img { width: 100%; height: auto; filter: drop-shadow(0 20px 30px rgba(4,42,48,.35)); }
+  .hero-tag { position: absolute; right: -2%; bottom: 17%; display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 10px; border-radius: 999px; background: var(--shell); color: var(--ink); box-shadow: 0 18px 40px -16px rgba(0,0,0,.6); }
+  .hero-tag-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--coral); color: var(--ink); }
+  .hero-tag strong { display: block; font-size: 20px; font-weight: 400; line-height: 1.1; }
+  .hero-tag small { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+  .hero-ring { position: absolute; left: -7%; top: 20%; }
+  .hero-form { position: relative; z-index: 3; margin-bottom: -44px; transform: translateY(-44px); margin-top: 0; }
+  .hero-form :global(.ef-bar) { box-shadow: 0 30px 70px -30px rgba(4,42,48,.7), 0 0 0 1.5px var(--line); }
+
+  /* 2. Numbers */
+  .nums { padding-block: clamp(40px, 5vw, 64px) 0; }
+  .nums-row { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; }
+  .nums-row > div { padding: 6px 28px; border-left: 2px solid var(--ink); }
+  .nums-row dt { font-size: clamp(44px, 5.4vw, 76px); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .nums-row > div:nth-child(2) dt { color: var(--coral-deep); }
+  .nums-row > div:nth-child(3) dt { color: var(--teal); }
+  .nums-row dd { margin: 8px 0 0; font-size: 15.5px; font-weight: 500; color: var(--ink-2); max-width: 200px; }
+
+  /* 4. About / why */
+  .why-grid { display: grid; grid-template-columns: 560fr 600fr; gap: clamp(40px, 6vw, 90px); align-items: center; }
+  .why-photo { position: relative; }
+  .why-frame { aspect-ratio: 560 / 640; border-radius: 280px 280px var(--radius) var(--radius); }
+  .why-frame img { object-position: 46% center; }
+  .why-photo figcaption { display: flex; gap: 10px; margin-top: 14px; font-size: 14.5px; color: var(--on-dark-2); max-width: 440px; }
+  .why-photo figcaption :global(.icon) { color: var(--tide); flex: none; margin-top: 2px; }
+  .why-sticker { position: absolute; right: -18px; top: 16%; padding: 12px 22px; border-radius: 999px; background: var(--sun); color: var(--ink); font-size: 22px; transform: rotate(8deg); box-shadow: 0 14px 30px -12px rgba(0,0,0,.5); }
+  .why-lead { margin-top: 18px; }
+  .why-list { margin-top: 26px; display: grid; }
+  .why-list li { display: grid; grid-template-columns: 54px 1fr; gap: 18px; padding: 20px 0; border-top: 1px solid var(--line-dark); }
+  .why-list li:last-child { border-bottom: 1px solid var(--line-dark); }
+  .why-n { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; background: var(--deep-2); color: var(--tide); font-size: 24px; box-shadow: inset 0 0 0 1.5px var(--tide); }
+  .why-list h3 { color: var(--shell); }
+  .why-list p { margin-top: 6px; color: var(--on-dark-2); font-size: 16.5px; }
+  .why-cta { margin-top: 30px; }
+
+  /* 5. Services */
+  .svc-grid { display: grid; grid-template-columns: 440fr 720fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
+  .svc-side { position: sticky; top: 118px; }
+  .svc-lead { margin-top: 18px; max-width: 420px; }
+  .svc-win { position: relative; margin-top: 30px; width: min(100%, 400px); aspect-ratio: 400 / 440; background: var(--deep); border: 6px solid #fff; box-shadow: var(--shadow); }
+  .svc-pane { position: absolute; inset: 0; opacity: 0; transform: scale(1.08); transition: opacity .5s var(--ease-out), transform .9s var(--ease-out); }
+  .svc-pane.is-on { opacity: 1; transform: none; }
+  .svc-pane :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .svc-pane-tag { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: var(--shell); color: var(--ink); font-size: 14px; font-weight: 700; white-space: nowrap; }
+  .svc-pane-tag :global(.icon) { color: var(--coral-deep); }
+  .svc-fam + .svc-fam { margin-top: 34px; }
+  .svc-fam-h { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+  .svc-fam-h span { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+  .svc-fam-h small { font-size: 14px; color: var(--ink-3); text-align: right; }
+  .svc-row { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; padding: 16px 14px 16px 10px; border-bottom: 1.5px solid var(--line); border-radius: 0; transition: background .3s, padding .4s var(--ease-out), border-radius .3s; }
+  .svc-ic { display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: #fff; color: var(--teal); box-shadow: inset 0 0 0 1.5px var(--line); transition: background .3s, color .3s, box-shadow .3s, transform .4s var(--ease-out); }
+  .svc-txt { display: grid; gap: 3px; min-width: 0; }
+  .svc-txt strong { font-size: clamp(21px, 2vw, 27px); font-weight: 400; line-height: 1.1; color: var(--ink); }
+  .svc-txt span { font-size: 15.5px; color: var(--ink-2); }
+  .svc-go { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--ink); transition: background .3s, transform .4s var(--ease-out); }
+  .svc-row:hover, .svc-row:focus-visible { background: #fff; padding-left: 20px; border-radius: 16px; }
+  .svc-row:hover .svc-ic, .svc-row:focus-visible .svc-ic { background: var(--deep); color: var(--tide); box-shadow: none; transform: rotate(-8deg); }
+  .svc-row:hover .svc-go, .svc-row:focus-visible .svc-go { background: var(--coral); transform: translateX(4px); }
+  .svc-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 30px; padding: 22px 26px; border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--coral); }
+  .svc-foot strong { font-size: 21px; font-weight: 400; margin-right: 6px; }
+
+  /* 7. Team */
+  .team-head { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px 60px; align-items: end; }
+  .team-grid { display: grid; grid-template-columns: 780fr 300fr; grid-template-rows: auto auto; gap: 24px 40px; margin-top: clamp(34px, 4vw, 56px); }
+  .team-big { aspect-ratio: 780 / 500; }
+  .team-big figcaption, .tp-event span { position: absolute; left: 16px; bottom: 16px; padding: 8px 15px; border-radius: 999px; background: var(--shell); color: var(--ink); font-size: 13.5px; font-weight: 700; }
+  .team-al { grid-row: 1 / 3; grid-column: 2; display: flex; flex-direction: column; }
+  .team-al-img { flex: 1; min-height: 400px; border: 6px solid #fff; box-shadow: var(--shadow); }
+  .team-al-img img { object-position: center 22%; }
+  .team-al figcaption { display: grid; gap: 6px; justify-items: start; margin-top: 16px; }
+  .team-al figcaption strong { font-size: 24px; font-weight: 400; }
+  .team-al .ph { font-size: 14px; }
+  .team-people { display: grid; grid-template-columns: 1fr 1.25fr .8fr; gap: 16px; }
+  .tp { position: relative; border-radius: var(--radius); padding: 22px 24px; }
+  .tp > span, .tp div span { display: block; font-size: 15px; }
+  .tp-paul { display: flex; align-items: center; gap: 16px; background: var(--deep); color: var(--on-dark); }
+  .tp-paul :global(.tp-face) { width: 64px; height: 64px; border-radius: 50%; flex: none; box-shadow: 0 0 0 3px var(--coral); }
+  .tp-paul strong { display: block; font-size: 24px; font-weight: 400; }
+  .tp-paul span { color: var(--on-dark-2); margin-top: 3px; }
+  .tp-techs { background: var(--coral-soft); color: var(--ink); display: grid; align-content: center; gap: 6px; }
+  .tp-names { font-size: clamp(22px, 2.2vw, 28px); line-height: 1.1; }
+  .tp-names i { font-style: normal; color: var(--coral-deep); }
+  .tp-event { padding: 0; min-height: 130px; }
+  .tp-event span { left: 10px; bottom: 10px; font-size: 12.5px; padding: 6px 12px; }
+
+  @media (max-width: 1180px) {
+    .hero-tag { right: 0; }
+    .hero-ring { left: -2%; }
+    .why-sticker { right: -6px; }
+  }
+  @media (max-width: 980px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-copy { padding-bottom: 0; }
+    .hero-art { justify-self: center; width: min(88%, 440px); margin-top: 26px; }
+    .hero-form { transform: translateY(-30px); margin-bottom: -30px; }
+    .nums-row { grid-template-columns: 1fr 1fr; gap: 28px 0; }
+    .why-grid, .svc-grid, .team-head { grid-template-columns: 1fr; }
+    .why-photo { max-width: 540px; margin-inline: auto; width: 100%; }
+    .svc-side { position: static; }
+    .svc-win { display: none; }
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .team-big { grid-column: 1 / -1; }
+    .team-al { grid-row: auto; grid-column: 1; }
+    .team-al-img { aspect-ratio: 300 / 400; flex: none; }
+    .team-people { grid-template-columns: 1fr; grid-column: 2; align-content: start; }
+  }
+  @media (max-width: 640px) {
+    .hero-cta :global(.btn) { width: 100%; }
+    .hero-serve { align-items: flex-start; font-size: 16px; }
+    .hero-serve :global(.icon) { margin-top: 3px; }
+    .hero-chips { gap: 8px 18px; font-size: 14px; }
+    .hero-art { width: 96%; }
+    .hero-ring :global(.ring) { --s: 112px !important; }
+    .hero-ring { left: -3%; top: 12%; }
+    .hero-tag { right: -2%; bottom: 12%; padding: 8px 16px 8px 8px; }
+    .hero-tag strong { font-size: 18px; }
+    .nums-row > div { padding: 4px 16px; }
+    .why-sticker { font-size: 18px; padding: 9px 16px; right: -4px; }
+    .why-list li { grid-template-columns: 44px 1fr; gap: 14px; }
+    .why-n { width: 44px; height: 44px; font-size: 20px; }
+    .why-cta :global(.btn) { width: 100%; }
+    .svc-row { gap: 12px; padding: 14px 4px; }
+    .svc-ic { width: 44px; height: 44px; }
+    .svc-go { width: 32px; height: 44px; }
+    .svc-txt span { font-size: 14.5px; }
+    .svc-fam-h small { display: none; }
+    .svc-foot :global(.btn) { width: 100%; }
+    .team-grid { grid-template-columns: 1fr; }
+    .team-big { aspect-ratio: 4 / 3.2; }
+    .team-al, .team-people { grid-column: 1; }
+    .team-al { max-width: 300px; }
+  }
+</style>

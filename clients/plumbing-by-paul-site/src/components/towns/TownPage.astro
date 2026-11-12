@@ -1,0 +1,189 @@
+---
+// Town page template. Give it a town from towns.ts; local content comes from town-content.ts.
+// Section order: hero (dark) > intro + neighborhoods (shell) > local problems (sand) > services in town (dark) >
+// process (deep) > reviews (shell) > map + nearby towns (dark) > FAQ (sand) > contact (coral).
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import PageHero from '../PageHero.astro';
+import Sunline from '../Sunline.astro';
+import Marquee from '../Marquee.astro';
+import ProcessSection from '../sections/ProcessSection.astro';
+import ReviewsSection from '../sections/ReviewsSection.astro';
+import FaqSection from '../sections/FaqSection.astro';
+import ContactSection from '../sections/ContactSection.astro';
+import AreasSection from '../sections/AreasSection.astro';
+import { SITE } from '../../data/site';
+import { SERVICES } from '../../data/services';
+import { TOWN_CONTENT } from '../../data/town-content';
+import { townByName, townHref, milesFromShop, type Town } from '../../data/towns';
+import heroImg from '../../assets/img/source-site/team-trucks-1.jpg';
+import eventImg from '../../assets/img/source-site/team-community-event.jpg';
+
+interface Props { town: Town }
+const { town: t } = Astro.props;
+const c = TOWN_CONTENT[t.slug];
+const site = Astro.site!.toString().replace(/\/$/, '');
+const miles = milesFromShop(t);
+const top = c.topServices.map((slug) => SERVICES.find((s) => s.slug === slug)!).filter(Boolean);
+const rest = SERVICES.filter((s) => !c.topServices.includes(s.slug));
+const near = t.neighbours.map((n) => townByName(n)!).filter(Boolean);
+const title = `Plumber in ${t.name}, FL | Plumbing By Paul`;
+const description = `Plumber in ${t.name}, FL. Family-owned Plumbing By Paul fixes drains, leaks, water heaters and sewer lines. Open 7 days, 24/7 emergency line.`;
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Service', '@id': `${site}/${t.slug}/#service`,
+  name: `Plumber in ${t.name}, FL`, serviceType: 'Plumbing', description, url: `${site}/${t.slug}/`,
+  provider: { '@id': site + '/#business' },
+  areaServed: { '@type': 'City', name: `${t.name}, FL`, geo: { '@type': 'GeoCoordinates', latitude: t.lat, longitude: t.lng } },
+}];
+const crumbs = [{ name: 'Service areas', href: '/service-areas/' }, { name: t.name, href: `/${t.slug}/` }];
+---
+<Base title={title} description={description} crumbs={crumbs} schema={schema}>
+  <PageHero crumbs={crumbs} eyebrow={`Serving ${t.name} · Pinellas County`} line1="Plumber in" line2={`${t.name}, FL`} lead={c.lead}
+    image={heroImg} alt="The Plumbing By Paul crew in light blue shirts in front of two company trucks" imgPos="38% center"
+    tagTitle={`About ${miles} miles`} tagText="from our shop, in a straight line" />
+
+  <section class="ti section shell">
+    <div class="wrap ti-grid">
+      <div>
+        <Eyebrow>{t.name} plumbing</Eyebrow>
+        <h2 class="h-display h2" data-split>{c.introTitle[0]} <span class="c-coral-deep">{c.introTitle[1]}</span></h2>
+        {c.intro.map((p) => <p class="ti-p" data-reveal="up">{p}</p>)}
+        <div class="btn-row ti-cta" data-reveal="up">
+          <Btn href={SITE.phoneHref} icon="phone">Call {SITE.phone}</Btn>
+          <Btn href="#estimate" variant="outline-dark" arrow>Free estimate</Btn>
+        </div>
+      </div>
+      <aside class="ti-card" data-reveal="up" aria-label={`Where we work in ${t.name}`}>
+        <p class="h-display h3"><Icon name="pin" size={24} />Where we work in {t.name}</p>
+        <ul class="ti-hoods" data-stagger="pop">{c.neighborhoods.map((n) => <li>{n}</li>)}</ul>
+        <p class="ti-zip"><strong>ZIP codes</strong>{c.zips.join(' · ')}</p>
+        <p class="ti-any">Not on the list? We cover every street in {t.name}.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="tl section sand">
+    <div class="wrap tl-grid">
+      <div class="tl-side">
+        <Eyebrow>Local know-how</Eyebrow>
+        <h2 class="h-display h2" data-split>{c.localTitle[0]} <span class="c-coral-deep">{c.localTitle[1]}</span></h2>
+        <figure class="tl-photo frame" data-reveal="up">
+          <Image src={eventImg} alt="Plumbing By Paul team members at a community event next to a company trailer" widths={[420, 720]} sizes="(max-width: 980px) 92vw, 420px" />
+          <figcaption>Out in the community</figcaption>
+        </figure>
+      </div>
+      <ol class="tl-list">
+        {c.local.map((l, i) => (
+          <li data-reveal="up">
+            <span class="tl-n h-display">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="h-display h3"><Icon name={l.icon} size={26} />{l.title}</h3>
+              <p>{l.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Sunline from="var(--sand)" to="var(--deep)" at="right" />
+  <section class="ts section dark">
+    <div class="wrap">
+      <div class="ts-head">
+        <div>
+          <Eyebrow>What we fix in {t.name}</Eyebrow>
+          <h2 class="h-display h2" data-split>Every plumbing job, <span class="c-coral">one crew.</span></h2>
+        </div>
+        <p class="lead" data-reveal="up">The calls we get most from {t.name}, plus everything else on the truck.</p>
+      </div>
+      <ul class="ts-grid" data-stagger="up">
+        {top.map((s) => (
+          <li><a href={`/${s.slug}/`}>
+            <span class="ts-ic"><Icon name={s.icon} size={26} /></span>
+            <span class="ts-txt"><strong class="h-display">{s.name}</strong><span>{s.blurb}</span></span>
+            <Icon name="arrow" size={20} class="ts-go" />
+          </a></li>
+        ))}
+      </ul>
+      <div class="ts-more" data-reveal="up">
+        <p class="h-display">Also on the truck</p>
+        <ul>{rest.map((s) => <li><a href={`/${s.slug}/`}>{s.nav}<Icon name="arrow" size={14} /></a></li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <Marquee tone="tide" items={[`Plumber in ${t.name}`, 'Open 7 days', '24/7 emergency line', 'Free estimates', 'Family owned']} />
+  <ProcessSection eyebrow={`How it works in ${t.name}`} />
+  <ReviewsSection eyebrow="Real Google reviews" line1="Pinellas has spoken." line2="941 times." />
+
+  <AreasSection focus={t.name} eyebrow={`${t.name} and nearby`} line1={`${t.name},`} line2="and the towns around it."
+    lead={`${t.name} is about ${miles} miles from our St. Petersburg shop in a straight line. We also work next door in ${near.map((n) => n.name).join(', ').replace(/, ([^,]*)$/, ' and $1')}.`} />
+
+  <FaqSection eyebrow={`${t.name} plumbing FAQ`} line1={`${t.name} questions,`} line2="straight answers." lead={`What ${t.name} homeowners ask before they book. Anything else, just call.`} faqs={c.faqs} />
+  <Sunline from="var(--sand)" to="var(--coral)" sun="var(--deep)" at="center" />
+  <ContactSection line1={`Need a plumber in ${t.name}?`} line2="Call Paul." town={t.name} />
+</Base>
+
+<style>
+  .ti-grid { display: grid; grid-template-columns: 660fr 500fr; gap: clamp(36px, 5vw, 80px); align-items: center; }
+  .ti-p { margin-top: 20px; font-size: 18px; color: var(--ink-2); max-width: 640px; }
+  .ti-cta { margin-top: 32px; }
+  .ti-card { padding: clamp(26px, 3.2vw, 40px); border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 0 var(--tide); }
+  .ti-card .h3 { display: flex; align-items: center; gap: 10px; }
+  .ti-card .h3 :global(.icon) { color: var(--coral); flex: none; }
+  .ti-hoods { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .ti-hoods li { padding: 8px 15px; border-radius: 999px; background: var(--shell); box-shadow: inset 0 0 0 1.5px var(--line); font-size: 15px; font-weight: 600; }
+  .ti-zip { display: grid; gap: 4px; margin-top: 22px; padding-top: 18px; border-top: 1.5px solid var(--line); font-size: 15.5px; color: var(--ink-2); }
+  .ti-zip strong { font-size: 12.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--teal); }
+  .ti-any { margin-top: 14px; font-size: 15px; font-weight: 600; }
+
+  .tl-grid { display: grid; grid-template-columns: 440fr 720fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
+  .tl-side { position: sticky; top: 130px; }
+  .tl-photo { margin-top: 30px; aspect-ratio: 420 / 300; transform: rotate(-2deg); border: 6px solid #fff; box-shadow: var(--shadow); }
+  .tl-photo img { object-position: center 62%; }
+  .tl-photo figcaption { position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px; background: var(--deep); color: var(--shell); font-size: 12.5px; font-weight: 600; }
+  .tl-list { display: grid; gap: 0; }
+  .tl-list li { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 34px 0; border-top: 2px solid var(--ink); }
+  .tl-list li:last-child { border-bottom: 2px solid var(--ink); }
+  .tl-n { font-size: 56px; line-height: .9; color: var(--coral-deep); }
+  .tl-list h3 { display: flex; align-items: center; gap: 12px; }
+  .tl-list h3 :global(.icon) { color: var(--teal); flex: none; }
+  .tl-list p { margin-top: 12px; font-size: 17.5px; color: var(--ink-2); }
+
+  .ts-head { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px 60px; align-items: end; }
+  .ts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; margin-top: clamp(30px, 4vw, 50px); border-top: 1px solid var(--line-dark); }
+  .ts-grid a { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; padding: 20px 8px; border-bottom: 1px solid var(--line-dark); transition: background .3s, padding .35s var(--ease-out); }
+  .ts-grid a:hover { background: var(--deep-2); padding-inline: 18px 14px; }
+  .ts-ic { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; background: var(--deep-2); color: var(--tide); transition: background .3s, color .3s; }
+  .ts-grid a:hover .ts-ic { background: var(--coral); color: var(--ink); }
+  .ts-txt { display: grid; gap: 4px; }
+  .ts-txt strong { font-size: 22px; font-weight: 400; line-height: 1.1; }
+  .ts-txt span { font-size: 15px; color: var(--on-dark-2); }
+  .ts-grid :global(.ts-go) { color: var(--coral); transition: transform .35s var(--ease-out); }
+  .ts-grid a:hover :global(.ts-go) { transform: translateX(6px); }
+  .ts-more { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 30px; padding: 22px 26px; border-radius: var(--radius); background: var(--deep-3); }
+  .ts-more > p { font-size: 20px; color: var(--sun); }
+  .ts-more ul { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ts-more a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-dark); font-size: 14.5px; font-weight: 500; transition: background .25s, color .25s, border-color .25s; }
+  .ts-more a :global(.icon) { color: var(--tide); }
+  .ts-more a:hover { background: var(--tide); border-color: var(--tide); color: var(--ink); }
+  .ts-more a:hover :global(.icon) { color: var(--ink); }
+
+  @media (max-width: 980px) {
+    .ti-grid, .tl-grid, .ts-head, .ts-grid { grid-template-columns: 1fr; }
+    .tl-side { position: static; }
+    .tl-photo { max-width: 420px; }
+  }
+  @media (max-width: 560px) {
+    .ti-cta :global(.btn) { width: 100%; }
+    .ti-card { box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--tide); }
+    .tl-list li { grid-template-columns: 1fr; gap: 10px; padding: 26px 0; }
+    .tl-n { font-size: 40px; }
+    .ts-grid a { grid-template-columns: auto 1fr; gap: 14px; }
+    .ts-grid :global(.ts-go) { display: none; }
+    .ts-txt strong { font-size: 20px; }
+  }
+</style>

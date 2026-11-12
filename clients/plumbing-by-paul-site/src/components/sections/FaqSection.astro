@@ -1,0 +1,69 @@
+---
+// FAQ accordion + FAQPage JSON-LD (kept for machines that read it; Google no longer shows FAQ rich results).
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import RingBadge from '../RingBadge.astro';
+import { SITE, FAQS } from '../../data/site';
+interface Faq { q: string; a: string }
+interface Props { eyebrow?: string; line1?: string; line2?: string; lead?: string; faqs?: readonly Faq[]; bg?: 'sand' | 'shell'; schema?: boolean }
+const { eyebrow = 'Common questions', line1 = 'Straight answers,', line2 = 'no runaround.', lead = 'The things Pinellas homeowners ask us most. Anything else, just call.', faqs = FAQS, bg = 'sand', schema = true } = Astro.props;
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+---
+<section class={`fq section ${bg}`}>
+  <div class="wrap fq-grid">
+    <div class="fq-side">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="h-display h2" data-split>{line1} <span class="c-coral-deep">{line2}</span></h2>
+      <p class="lead fq-lead" data-reveal="up">{lead}</p>
+      <div class="fq-card" data-reveal="up">
+        <RingBadge size={112} tone="coral" text="Ask Paul's team · Open 7 days · " class="fq-ring" />
+        <p class="h-display h4">Still have a question?</p>
+        <p class="fq-card-p">Call and ask. It is quicker than typing, and the estimate is free.</p>
+        <Btn href={SITE.phoneHref} icon="phone" size="sm">{SITE.phone}</Btn>
+      </div>
+    </div>
+    <div class="fq-list" data-acc-group data-stagger="up">
+      {faqs.map((f, i) => (
+        <details data-acc open={i === 0}>
+          <summary><span class="fq-n h-display">{String(i + 1).padStart(2, '0')}</span><h3>{f.q}</h3><span class="fq-ic"><Icon name="plus" size={20} /></span></summary>
+          <div class="acc-body"><p>{f.a}</p></div>
+        </details>
+      ))}
+    </div>
+  </div>
+  {schema && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+</section>
+<style>
+  .fq-grid { display: grid; grid-template-columns: 430fr 730fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
+  .fq-side { position: sticky; top: 130px; }
+  .fq-lead { margin-top: 18px; max-width: 400px; }
+  .fq-card { position: relative; margin-top: 34px; padding: 28px 28px 30px; border-radius: var(--radius); background: var(--deep); color: var(--on-dark); max-width: 400px; }
+  .fq-card :global(.fq-ring) { position: absolute; right: -22px; top: -40px; transform: rotate(8deg); }
+  .fq-card .h4 { max-width: 220px; }
+  .fq-card-p { margin: 10px 0 20px; color: var(--on-dark-2); font-size: 16px; max-width: 290px; }
+  .fq-list { display: grid; gap: 12px; }
+  .fq-list details { background: #fff; border-radius: 18px; box-shadow: 0 0 0 1.5px var(--line); transition: box-shadow .3s, background .3s; }
+  .fq-list details[open] { box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 0 var(--coral); }
+  .fq-list summary { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; min-height: 72px; padding: 14px 18px 14px 24px; }
+  .fq-list summary h3 { font-size: 18px; font-weight: 600; line-height: 1.3; }
+  .fq-n { font-size: 20px; color: var(--teal); }
+  .fq-ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--shell); transition: transform .4s var(--ease-out), background .3s, color .3s; }
+  .fq-list details[open] .fq-ic { transform: rotate(45deg); background: var(--coral); }
+  .fq-list summary:hover .fq-ic { background: var(--coral-soft); }
+  .fq-list details[open] summary:hover .fq-ic { background: var(--coral); }
+  .acc-body p { padding: 0 76px 26px 62px; color: var(--ink-2); }
+  @media (max-width: 980px) {
+    .fq-grid { grid-template-columns: 1fr; }
+    .fq-side { position: static; }
+    .fq-card { max-width: none; }
+    .fq-card :global(.fq-ring) { right: 10px; top: -52px; width: 96px; height: 96px; }
+  }
+  @media (max-width: 560px) {
+    .fq-list summary { padding-left: 18px; gap: 12px; }
+    .fq-list summary h3 { font-size: 17px; }
+    .acc-body p { padding: 0 20px 22px 18px; }
+    .fq-n { display: none; }
+    .fq-list summary { grid-template-columns: 1fr auto; }
+  }
+</style>

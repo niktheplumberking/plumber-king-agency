@@ -1,0 +1,81 @@
+---
+// Hero for service and town pages: breadcrumbs, H1, lead, call + estimate buttons, and an arch photo over the brand sun.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+import Btn from './Btn.astro';
+import Crumbs from './Crumbs.astro';
+import Stars from './Stars.astro';
+import GoogleG from './GoogleG.astro';
+import { SITE } from '../data/site';
+interface Props {
+  crumbs: { name: string; href: string }[]; eyebrow: string; line1: string; line2: string; lead: string;
+  image: ImageMetadata; alt: string; chips?: string[]; tagTitle?: string; tagText?: string; imgPos?: string;
+}
+const { crumbs, eyebrow, line1, line2, lead, image, alt, chips = ['Free estimates', 'Licensed, bonded & insured', '1-year workmanship warranty'], tagTitle, tagText, imgPos = 'center' } = Astro.props;
+const N = 13;
+const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (-0.08 + (1.16 * i) / (N - 1)); return { x1: 300 - Math.cos(a) * 262, y1: 300 - Math.sin(a) * 262, x2: 300 - Math.cos(a) * (i % 2 ? 282 : 296), y2: 300 - Math.sin(a) * (i % 2 ? 282 : 296) }; });
+---
+<section class="ph-hero dark hero">
+  <div class="wrap ph-grid">
+    <div class="ph-copy">
+      <div data-hero="1" data-hero-fx="up"><Crumbs items={crumbs} /></div>
+      <p class="eyebrow ph-eb" data-hero="2" data-hero-fx="up"><Icon name="heart" size={14} /><span>{eyebrow}</span></p>
+      <h1 class="h-display ph-h1" data-hero="3" data-hero-fx="lines">{line1} <span class="c-coral">{line2}</span></h1>
+      <p class="lead ph-lead" data-hero="4" data-hero-fx="up">{lead}</p>
+      <div class="btn-row ph-cta" data-hero="5" data-hero-fx="up" data-hero-children>
+        <Btn href={SITE.phoneHref} icon="phone" size="lg" sub={`${SITE.hoursShort} line`}>Call {SITE.phone}</Btn>
+        <Btn href="#estimate" variant="outline-light" size="lg" arrow>Free estimate</Btn>
+      </div>
+      <ul class="ph-chips" data-hero="6" data-hero-fx="up" data-hero-children>
+        {chips.map((c) => <li><Icon name="check" size={16} stroke={3} />{c}</li>)}
+      </ul>
+    </div>
+    <div class="ph-art">
+      <svg class="ph-rays" viewBox="0 0 600 320" aria-hidden="true" data-hero="2" data-hero-fx="draw">{rays.map((l) => <line x1={l.x1.toFixed(1)} y1={l.y1.toFixed(1)} x2={l.x2.toFixed(1)} y2={l.y2.toFixed(1)} />)}</svg>
+      <span class="ph-sun" aria-hidden="true" data-hero="1" data-hero-fx="pop"></span>
+      <figure class="arch ph-photo" data-hero="3" data-hero-fx="clip">
+        <Image src={image} alt={alt} widths={[420, 640, 900]} sizes="(max-width: 980px) 72vw, 440px" loading="eager" fetchpriority="high" style={`object-position:${imgPos}`} />
+      </figure>
+      <a class="ph-rate" href={SITE.googleMapsUrl} target="_blank" rel="noopener" data-hero="6" data-hero-fx="pop">
+        <GoogleG size={22} /><span><strong class="h-display">{SITE.rating}</strong><Stars size={14} /><small>{SITE.reviewCount} Google reviews</small></span>
+      </a>
+      {tagTitle && <p class="ph-tag" data-hero="7" data-hero-fx="pop"><strong>{tagTitle}</strong>{tagText && <span>{tagText}</span>}</p>}
+    </div>
+  </div>
+</section>
+<style>
+  .ph-hero { position: relative; overflow: hidden; padding-block: clamp(28px, 3.4vw, 44px) clamp(56px, 7vw, 96px); }
+  .ph-grid { display: grid; grid-template-columns: 660fr 500fr; gap: clamp(30px, 5vw, 80px); align-items: center; }
+  .ph-eb { margin-top: clamp(22px, 3vw, 40px); }
+  .ph-h1 { font-size: clamp(42px, 5.5vw, 78px); }
+  .ph-lead { margin-top: 22px; max-width: 580px; }
+  .ph-cta { margin-top: 32px; }
+  .ph-chips { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 28px; font-size: 15px; font-weight: 600; }
+  .ph-chips li { display: inline-flex; align-items: center; gap: 8px; }
+  .ph-chips :global(.icon) { color: var(--tide); }
+  .ph-art { position: relative; width: min(100%, 500px); aspect-ratio: 500 / 560; justify-self: end; margin-top: 44px; }
+  .ph-sun { position: absolute; left: 50%; top: 4%; width: 92%; aspect-ratio: 1; margin-left: -46%; border-radius: 50%; background: var(--coral); }
+  .ph-rays { max-width: none; position: absolute; left: 50%; top: -8.9%; width: 120%; margin-left: -60%; overflow: visible; }
+  .ph-rays line { stroke: var(--tide); stroke-width: 3; stroke-linecap: round; }
+  .ph-photo { position: absolute; left: 12%; right: 12%; bottom: 0; top: 14%; border: 6px solid var(--shell); box-shadow: 0 30px 60px -30px rgba(0,0,0,.7); }
+  .ph-rate { position: absolute; left: -4%; bottom: 9%; display: flex; align-items: center; gap: 12px; padding: 12px 20px 12px 14px; border-radius: 18px; background: var(--shell); color: var(--ink); box-shadow: 0 18px 40px -18px rgba(0,0,0,.6); transition: transform .35s var(--ease-out); }
+  .ph-rate:hover { transform: translateY(-4px) rotate(-2deg); }
+  .ph-rate > span { display: grid; grid-template-columns: auto auto; align-items: center; gap: 0 8px; }
+  .ph-rate strong { font-size: 26px; line-height: 1; font-weight: 400; }
+  .ph-rate :global(.stars) { color: #c47400; }
+  .ph-rate small { grid-column: 1 / -1; font-size: 12.5px; font-weight: 600; color: var(--ink-2); margin-top: 3px; }
+  .ph-tag { position: absolute; right: -3%; top: 24%; display: grid; padding: 10px 16px; border-radius: 14px; background: var(--deep-3); color: var(--shell); box-shadow: inset 0 0 0 1.5px var(--tide); font-size: 13px; transform: rotate(4deg); }
+  .ph-tag strong { font-family: var(--display); font-weight: 400; font-size: 17px; }
+  .ph-tag span { color: var(--on-dark-2); }
+  @media (max-width: 980px) {
+    .ph-grid { grid-template-columns: 1fr; }
+    .ph-art { justify-self: center; width: min(86%, 420px); margin-top: 8px; }
+  }
+  @media (max-width: 560px) {
+    .ph-cta :global(.btn) { width: 100%; }
+    .ph-chips { gap: 8px 18px; font-size: 14px; }
+    .ph-rate { left: -8%; padding: 10px 14px 10px 12px; }
+    .ph-tag { right: -7%; }
+  }
+</style>

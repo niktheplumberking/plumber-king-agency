@@ -1,0 +1,92 @@
+---
+// Real Google reviews. The rating and count are the real Google numbers (site.ts); the three quotes are word for word.
+// Layout: a big score on the left, three quote cards of different size and colour on the right (not a row of clones).
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Stars from '../Stars.astro';
+import GoogleG from '../GoogleG.astro';
+import { SITE, REVIEWS } from '../../data/site';
+interface Props { eyebrow?: string; line1?: string; line2?: string; bg?: 'shell' | 'sand' }
+const { eyebrow = 'What neighbors say', line1 = 'Pinellas has spoken.', line2 = '941 times.', bg = 'shell' } = Astro.props;
+const [a, b, c] = REVIEWS;
+---
+<section class={`rv section ${bg}`}>
+  <div class="wrap rv-grid">
+    <div class="rv-side">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="h-display h2" data-split>{line1} <span class="c-coral-deep">{line2}</span></h2>
+      <div class="rv-score" data-reveal="up">
+        <p class="rv-num h-display" aria-hidden="true">{SITE.rating}</p>
+        <div class="rv-meta">
+          <Stars size={22} />
+          <p><GoogleG size={18} /><span><strong>{SITE.reviewCount} Google reviews</strong>, read 26 Oct 2026</span></p>
+        </div>
+      </div>
+      <p class="lead rv-lead" data-reveal="up">These are real reviews from Google, copied as written. The crew names in them are the people who show up at your door.</p>
+      <div class="rv-links" data-reveal="up">
+        <a class="textlink" href={SITE.googleMapsUrl} target="_blank" rel="noopener">Read them all on Google <Icon name="arrow" size={17} /></a>
+        <a class="textlink" href={SITE.googleReviewUrl} target="_blank" rel="noopener">Leave a review <Icon name="arrow" size={17} /></a>
+      </div>
+    </div>
+    <div class="rv-cards">
+      <figure class="rv-card rv-a" data-reveal="up" data-tilt>
+        <div class="rv-top"><Icon name="heart" size={30} class="rv-mark" /><span class="rv-g"><Stars size={17} label="5 stars" /><GoogleG size={18} /><span>Google review</span></span></div>
+        <blockquote><p>{a.text}</p></blockquote>
+        <figcaption><span class="rv-av" aria-hidden="true">{a.initial}</span><span><strong>{a.name}</strong><small>{a.topic}</small></span></figcaption>
+      </figure>
+      <figure class="rv-card rv-b" data-reveal="up" data-delay="0.1" data-tilt>
+        <div class="rv-top"><span class="rv-g"><Stars size={16} label="5 stars" /><GoogleG size={16} /><span>Google review</span></span></div>
+        <blockquote><p>{b.text}</p></blockquote>
+        <figcaption><span class="rv-av" aria-hidden="true">{b.initial}</span><span><strong>{b.name}</strong><small>{b.topic}</small></span></figcaption>
+      </figure>
+      <figure class="rv-card rv-c" data-reveal="up" data-delay="0.2" data-tilt>
+        <div class="rv-top"><span class="rv-g"><Stars size={16} label="5 stars" /><GoogleG size={16} /><span>Google review</span></span></div>
+        <blockquote><p>{c.text}</p></blockquote>
+        <figcaption><span class="rv-av" aria-hidden="true">{c.initial}</span><span><strong>{c.name}</strong><small>{c.topic}</small></span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+<style>
+  .rv-grid { display: grid; grid-template-columns: 440fr 720fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
+  .rv-side { position: sticky; top: 130px; }
+  .rv-score { display: flex; align-items: center; gap: 22px; margin-top: 30px; }
+  .rv-num { font-size: clamp(96px, 11vw, 150px); line-height: .8; color: var(--ink); letter-spacing: -0.03em; }
+  .rv-meta { display: grid; gap: 10px; }
+  .rv-meta p { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--ink-2); }
+  .rv-meta strong { color: var(--ink); }
+  .rv-lead { margin-top: 26px; max-width: 420px; }
+  .rv-links { display: flex; flex-wrap: wrap; gap: 4px 28px; margin-top: 18px; }
+  .rv-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .rv-card { position: relative; display: flex; flex-direction: column; gap: 20px; padding: clamp(24px, 2.6vw, 36px); border-radius: var(--radius); }
+  .rv-card blockquote { font-size: 17px; line-height: 1.6; }
+  .rv-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .rv-g { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+  .rv-card figcaption { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 12px; margin-top: auto; }
+  .rv-card figcaption strong { display: block; font-weight: 700; }
+  .rv-card figcaption small { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .rv-av { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; font-family: var(--display); font-size: 21px; }
+  .rv-a { grid-column: 1 / -1; background: var(--deep); color: var(--on-dark); padding-right: clamp(24px, 9vw, 130px); box-shadow: var(--shadow); }
+  .rv-a blockquote { font-family: var(--display); font-size: clamp(21px, 2.15vw, 30px); line-height: 1.22; letter-spacing: -0.005em; }
+  .rv-a :global(.rv-mark) { color: var(--coral); }
+  .rv-a small { color: var(--on-dark-2); }
+  .rv-a .rv-av { background: var(--coral); color: var(--ink); }
+  .rv-b { background: var(--coral-soft); color: var(--ink); transform: rotate(-1.2deg); }
+  .rv-b .rv-av { background: var(--deep); color: var(--shell); }
+  .rv-b small, .rv-c small { color: var(--ink-2); }
+  .rv-a :global(.stars) { color: var(--sun); }
+  .rv-b :global(.stars), .rv-c :global(.stars) { color: #b26a00; }
+  .rv-c { background: #fff; color: var(--ink); box-shadow: 0 0 0 1.5px var(--line); transform: rotate(1deg) translateY(26px); }
+  .rv-c .rv-av { background: var(--tide); color: var(--ink); }
+  @media (max-width: 980px) {
+    .rv-grid { grid-template-columns: 1fr; }
+    .rv-side { position: static; }
+    .rv-c { transform: rotate(1deg); }
+  }
+  @media (max-width: 640px) {
+    .rv-cards { grid-template-columns: 1fr; gap: 16px; }
+    .rv-a { padding-right: 24px; }
+    .rv-b, .rv-c { transform: none; }
+    .rv-score { gap: 16px; }
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+// Estimate request form. No back-end yet: motion.ts validates and shows /thank-you/ (FORM_LIVE=false in site.ts).
+// variant "card" = full form in a white card; "bar" = one-line quick form (used under a hero).
+import Btn from '../Btn.astro';
+import Icon from '../Icon.astro';
+import { SITE, FORM_LIVE } from '../../data/site';
+import { SERVICES } from '../../data/services';
+interface Props { variant?: 'card' | 'bar'; id?: string; title?: string; preselect?: string; town?: string }
+const { variant = 'card', id = 'est', title = 'Get a free estimate', preselect = '', town = '' } = Astro.props;
+---
+{variant === 'bar' ? (
+  <form class="ef ef-bar card" action="/thank-you/" method="post" data-estimate data-live={String(FORM_LIVE)} novalidate aria-label="Quick estimate request">
+    <p class="ef-bar-h h-display"><Icon name="heart" size={18} />Free estimate</p>
+    <label class="field"><span class="sr-only">Your name</span><input class="input" name="name" autocomplete="name" placeholder="Your name" required /></label>
+    <label class="field"><span class="sr-only">Phone number</span><input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone number" required /></label>
+    <label class="field"><span class="sr-only">What do you need?</span>
+      <select class="input" name="service"><option value="">What do you need?</option>{SERVICES.map((s) => <option value={s.name}>{s.nav}</option>)}<option value="Other">Something else</option></select>
+    </label>
+    <Btn type="submit" variant="ink" arrow>Send request</Btn>
+    <p class="form-error ef-msg" data-form-msg hidden role="alert"></p>
+  </form>
+) : (
+  <form class="ef ef-card card" action="/thank-you/" method="post" data-estimate data-live={String(FORM_LIVE)} novalidate aria-labelledby={`${id}-h`}>
+    <div class="ef-head">
+      <h3 class="h-display h3" id={`${id}-h`}>{title}</h3>
+      <p class="form-note">Free, no obligation. We call you back to talk it through.</p>
+    </div>
+    {town && <input type="hidden" name="town" value={town} />}
+    <div class="ef-row">
+      <label class="field"><span class="field-label">Name</span><input class="input" name="name" autocomplete="name" placeholder="Your name" required /></label>
+      <label class="field"><span class="field-label">Phone</span><input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(727) 000-0000" required /></label>
+    </div>
+    <div class="ef-row">
+      <label class="field"><span class="field-label">ZIP code <span class="muted">(optional)</span></span><input class="input" name="zip" inputmode="numeric" autocomplete="postal-code" placeholder="33709" maxlength="5" /></label>
+      <label class="field"><span class="field-label">What do you need?</span>
+        <select class="input" name="service"><option value="">Pick a service</option>{SERVICES.map((s) => <option value={s.name} selected={s.slug === preselect}>{s.nav}</option>)}<option value="Other">Something else</option></select>
+      </label>
+    </div>
+    <label class="field"><span class="field-label">What is going on? <span class="muted">(optional)</span></span><textarea class="input" name="message" placeholder="Kitchen sink is backing up, water heater is leaking..."></textarea></label>
+    <p class="form-error" data-form-msg hidden role="alert"></p>
+    <Btn type="submit" full arrow>Send my request</Btn>
+    <p class="form-note ef-foot">Emergency? Do not wait for a form. Call <a href={SITE.phoneHref}>{SITE.phone}</a>, the line is answered 24/7.</p>
+  </form>
+)}
+<style>
+  .ef-card { display: grid; gap: 16px; padding: clamp(22px, 3vw, 36px); color: var(--ink); border-top: 6px solid var(--deep); }
+  .ef-head { display: grid; gap: 6px; margin-bottom: 4px; }
+  .ef-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ef-foot a { font-weight: 700; color: var(--coral-deep); text-decoration: underline; text-underline-offset: 3px; }
+  .ef-bar { display: grid; grid-template-columns: auto 1fr 1fr 1.1fr auto; align-items: center; gap: 12px; padding: 16px 16px 16px 26px; border-radius: 999px; color: var(--ink); }
+  .ef-bar-h { display: inline-flex; align-items: center; gap: 9px; font-size: 22px; white-space: nowrap; padding-right: 8px; }
+  .ef-bar-h :global(.icon) { color: var(--coral); }
+  .ef-bar .input { border-radius: 999px; height: 56px; background: var(--shell); border-color: var(--line); }
+  .ef-bar :global(.btn) { --bh: 56px; }
+  .ef-msg { grid-column: 1 / -1; text-align: center; }
+  @media (max-width: 1080px) {
+    .ef-bar { grid-template-columns: 1fr 1fr; border-radius: var(--radius); padding: 22px; }
+    .ef-bar-h, .ef-bar :global(.btn) { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .ef-row, .ef-bar { grid-template-columns: 1fr; }
+    .ef-bar > * { grid-column: 1; }
+  }
+</style>

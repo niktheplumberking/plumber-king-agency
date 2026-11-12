@@ -1,0 +1,126 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import Intro from '../components/Intro.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, NOINDEX } from '../data/site';
+import { BASE, TOWNS } from '../data/towns';
+import { SERVICES } from '../data/services';
+import { SERVICE_CONTENT } from '../data/service-content';
+import ogDefault from '../assets/img/source-site/team-trucks-1.jpg';
+import { getImage } from 'astro:assets';
+
+interface Crumb { name: string; href: string }
+interface Props {
+  title: string; description: string; noindex?: boolean; crumbs?: Crumb[];
+  schema?: Record<string, unknown>[]; ogImage?: ImageMetadata; ogAlt?: string; bodyClass?: string;
+  /** Where "Free estimate" buttons in the header and mobile bar go. Pages with an estimate form keep the default. */
+  estimateHref?: string;
+}
+const { title, description, noindex = false, crumbs = [], schema = [], ogImage = ogDefault,
+  ogAlt = 'The Plumbing By Paul crew in light blue shirts in front of their service trucks in St. Petersburg', bodyClass = '', estimateHref = '#estimate' } = Astro.props;
+const site = Astro.site!.toString().replace(/\/$/, '');
+const canonical = site + Astro.url.pathname;
+const og = await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const ogUrl = new URL(og.src, site).toString();
+const robots = NOINDEX ? 'noindex, nofollow' : noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large';
+
+// One Plumber entity for the whole site (@id is reused by Service and page schema).
+// No aggregateRating on purpose: Google does not allow self-serving review markup for a local business's own site.
+// No openingHoursSpecification yet: Paul's current site shows two different sets of hours (see FACTS.md). Add once confirmed.
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'Plumber',
+  '@id': site + '/#business',
+  name: SITE.name,
+  legalName: SITE.legalName,
+  url: site + '/',
+  telephone: SITE.phoneE164,
+  email: SITE.email,
+  image: ogUrl,
+  logo: site + '/icon-512.png',
+  slogan: SITE.tagline,
+  founder: { '@type': 'Person', name: SITE.owner, jobTitle: 'Owner' },
+  address: { '@type': 'PostalAddress', streetAddress: SITE.street, addressLocality: SITE.city, addressRegion: SITE.region, postalCode: SITE.zip, addressCountry: 'US' },
+  geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.lat, longitude: SITE.geo.lng },
+  hasMap: SITE.googleMapsUrl,
+  areaServed: [
+    { '@type': 'AdministrativeArea', name: 'Pinellas County, FL' },
+    ...[BASE, ...TOWNS].map((t) => ({ '@type': 'City', name: `${t.name}, FL` })),
+  ],
+  sameAs: [SITE.facebook, SITE.instagram],
+  hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Plumbing services', itemListElement: SERVICES.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.name, ...(s.slug in SERVICE_CONTENT ? { url: `${site}/${s.slug}/` } : {}) } })) },
+};
+const breadcrumb = crumbs.length ? {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [{ name: 'Home', href: '/' }, ...crumbs].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: site + c.href })),
+} : null;
+const ld = [business, ...(breadcrumb ? [breadcrumb] : []), ...schema];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content={robots} />
+  <meta name="theme-color" content="#042A30" />
+  <meta name="format-detection" content="telephone=yes" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={SITE.name} />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={ogAlt} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogUrl} />
+  <meta name="geo.region" content="US-FL" />
+  <meta name="geo.placename" content="St. Petersburg" />
+  <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
+  <meta name="ICBM" content={`${SITE.geo.lat}, ${SITE.geo.lng}`} />
+  <link rel="preload" href="/fonts/tilt-warp-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/rubik-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <script is:inline>
+    // Decide before first paint: motion on? intro this visit?
+    (function () {
+      var d = document.documentElement;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { d.classList.add('no-motion'); return; }
+      d.classList.add('motion');
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      var reload = nav && nav.type === 'reload';
+      var internal = false;
+      try { internal = sessionStorage.getItem('pbp-nav') === '1'; sessionStorage.removeItem('pbp-nav'); } catch (e) {}
+      var hist = nav && nav.type === 'back_forward';
+      if (hist) { /* back/forward: no intro, no curtain */ } else if (!internal || reload) d.classList.add('intro'); else d.classList.add('pt-in');
+      // Safety: never leave the page hidden if scripts fail to load.
+      setTimeout(function () { if (!window.__pbpMotion) { d.classList.remove('motion', 'intro', 'pt-in'); } }, 3500);
+    })();
+  </script>
+  {ld.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+</head>
+<body class={bodyClass}>
+  <a href="#main" class="skip">Skip to content</a>
+  <Intro />
+  <div class="pt" data-pt aria-hidden="true"><div class="pt-panel"><span class="pt-mark"><Icon name="heart" size={22} />Plumbing by Paul</span></div></div>
+  <Header estimateHref={estimateHref} />
+  <main id="main"><slot /></main>
+  <Footer />
+  <MobileBar estimateHref={estimateHref} />
+  <script>import '../scripts/motion.ts';</script>
+</body>
+</html>

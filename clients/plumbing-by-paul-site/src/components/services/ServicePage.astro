@@ -1,0 +1,239 @@
+---
+// Service page template. Give it a service from services.ts; content comes from service-content.ts.
+// Section order: hero (dark) > intro (shell) > guide tabs (sand, optional) > process (dark) > why us (shell) >
+// call band > reviews (sand) > related + areas (dark) > FAQ (shell) > contact (coral).
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import PageHero from '../PageHero.astro';
+import Sunline from '../Sunline.astro';
+import RingBadge from '../RingBadge.astro';
+import ProcessSection from '../sections/ProcessSection.astro';
+import ReviewsSection from '../sections/ReviewsSection.astro';
+import FaqSection from '../sections/FaqSection.astro';
+import ContactSection from '../sections/ContactSection.astro';
+import CtaBand from '../sections/CtaBand.astro';
+import { SITE } from '../../data/site';
+import { SERVICES, FAMILIES, type Service } from '../../data/services';
+import { contentFor } from '../../data/service-content';
+import { SERVICE_IMG } from '../../data/images';
+import { BASE, TOWNS, townHref } from '../../data/towns';
+import crew from '../../assets/img/source-site/team-trucks-2-families.jpg';
+
+interface Props { service: Service }
+const { service: s } = Astro.props;
+const c = contentFor(s);
+const img = SERVICE_IMG[s.slug];
+const site = Astro.site!.toString().replace(/\/$/, '');
+const related = c.related.map((slug) => SERVICES.find((x) => x.slug === slug)!).filter(Boolean);
+const places = [BASE, ...TOWNS];
+const short = s.nav.toLowerCase();
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Service', '@id': `${site}/${s.slug}/#service`,
+  name: `${s.name} in St. Petersburg, FL`, serviceType: s.name, description: s.description, url: `${site}/${s.slug}/`,
+  provider: { '@id': site + '/#business' },
+  areaServed: [{ '@type': 'AdministrativeArea', name: 'Pinellas County, FL' }, ...places.map((t) => ({ '@type': 'City', name: `${t.name}, FL` }))],
+}];
+---
+<Base title={s.title} description={s.description} crumbs={[{ name: 'Services', href: '/services/' }, { name: s.name, href: `/${s.slug}/` }]} schema={schema} ogImage={img.src} ogAlt={img.alt} noindex={c.basic}>
+  <PageHero crumbs={[{ name: 'Services', href: '/services/' }, { name: s.name, href: `/${s.slug}/` }]} eyebrow={c.eyebrow} line1={c.h1a} line2={c.h1b} lead={c.lead} image={img.src} alt={img.alt} />
+
+  <section class="si section shell">
+    <div class="wrap si-grid">
+      <div>
+        <Eyebrow>{s.name}</Eyebrow>
+        <h2 class="h-display h2" data-split>{c.introTitle[0]} <span class="c-coral-deep">{c.introTitle[1]}</span></h2>
+        {c.intro.map((p) => <p class="si-p" data-reveal="up">{p}</p>)}
+        <div class="btn-row si-cta" data-reveal="up">
+          <Btn href={SITE.phoneHref} icon="phone">Call {SITE.phone}</Btn>
+          <Btn href="#estimate" variant="outline-dark" arrow>Free estimate</Btn>
+        </div>
+      </div>
+      <aside class="si-card" data-reveal="up" aria-label={`What you get with ${short}`}>
+        <span class="si-sun" aria-hidden="true"></span>
+        <p class="h-display h3">What you get</p>
+        <ul data-stagger="up">
+          {c.includes.map((x) => <li><span class="si-tick"><Icon name="check" size={17} stroke={3} /></span>{x}</li>)}
+        </ul>
+        <p class="si-note"><Icon name="clock" size={16} />{SITE.hoursShort} line</p>
+      </aside>
+    </div>
+  </section>
+
+  {c.guide && (
+    <section class="sg section sand">
+      <div class="wrap">
+        <div class="sg-head">
+          <div>
+            <Eyebrow>Find your problem</Eyebrow>
+            <h2 class="h-display h2" data-split>{c.guide.title[0]} <span class="c-coral-deep">{c.guide.title[1]}</span></h2>
+          </div>
+          <p class="lead" data-reveal="up">{c.guide.lead}</p>
+        </div>
+        <div class="sg-grid" data-tabs data-reveal="up">
+          <div class="sg-tabs" role="tablist" aria-label={`${s.name} guide`} aria-orientation="vertical">
+            {c.guide.tabs.map((t, i) => (
+              <button role="tab" id={`tab-${t.key}`} aria-controls={`pane-${t.key}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab={t.key}>
+                <Icon name={t.icon} size={20} /><span>{t.label}</span><Icon name="arrow" size={17} class="sg-go" />
+              </button>
+            ))}
+          </div>
+          <div class="sg-panes">
+            {c.guide.tabs.map((t, i) => (
+              <div class="sg-pane" role="tabpanel" id={`pane-${t.key}`} aria-labelledby={`tab-${t.key}`} data-tab-pane={t.key} hidden={i !== 0} tabindex="0">
+                <span class="sg-ic"><Icon name={t.icon} size={34} /></span>
+                <h3 class="h-display h3">{t.label}</h3>
+                <p class="sg-text">{t.text}</p>
+                {t.tip && <p class="sg-tip"><strong>Tip from the crew</strong>{t.tip}</p>}
+                <a class="textlink" href={SITE.phoneHref}>Call about {t.label.toLowerCase()} <Icon name="arrow" size={17} /></a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Sunline from={c.guide ? 'var(--sand)' : 'var(--shell)'} to="var(--deep-3)" at="left" />
+  <ProcessSection eyebrow={`How ${short} works`} line1="Simple, fast" line2="and effective." lead="Four steps, the same every time. You know the price before we start." steps={c.process} />
+
+  <section class="sw section shell">
+    <div class="wrap sw-grid">
+      <figure class="sw-photo" data-reveal="up">
+        <div class="arch sw-arch"><Image src={crew} alt="The Plumbing By Paul crew and their families in front of two company trucks" widths={[480, 760, 1100]} sizes="(max-width: 980px) 92vw, 540px" /></div>
+        <RingBadge size={136} tone="coral" class="sw-ring" />
+        <figcaption>The Plumbing By Paul crew, St. Petersburg</figcaption>
+      </figure>
+      <div>
+        <Eyebrow>Why Plumbing By Paul</Eyebrow>
+        <h2 class="h-display h2" data-split>Licensed, bonded <span class="c-coral-deep">and insured.</span></h2>
+        <ol class="sw-list">
+          {c.why.map((w, i) => (
+            <li data-reveal="up" data-delay={i * 0.08}>
+              <span class="sw-ic"><Icon name={w.icon} size={24} /></span>
+              <div><h3 class="h-display h4">{w.title}</h3><p>{w.text}</p></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title={c.ctaTitle} />
+  <ReviewsSection bg="sand" eyebrow="Real Google reviews" line1="Do not take" line2="our word for it." />
+
+  <Sunline from="var(--sand)" to="var(--deep)" at="right" />
+  <section class="sr section dark">
+    <div class="wrap sr-grid">
+      <div>
+        <Eyebrow>Related services</Eyebrow>
+        <h2 class="h-display h2" data-split>More from <span class="c-coral">{FAMILIES[s.family].name.toLowerCase()}.</span></h2>
+        <ul class="sr-list" data-stagger="up">
+          {related.map((r) => (
+            <li><a href={`/${r.slug}/`}>
+              <span class="sr-ic"><Icon name={r.icon} size={24} /></span>
+              <span class="sr-txt"><strong class="h-display">{r.name}</strong><span>{r.blurb}</span></span>
+              <Icon name="arrow" size={22} class="sr-go" />
+            </a></li>
+          ))}
+        </ul>
+        <a class="textlink sr-all" href="/services/" data-reveal="up">See all {SERVICES.length} services <Icon name="arrow" size={17} /></a>
+      </div>
+      <div class="sr-areas" data-reveal="up">
+        <h3 class="h-display h3">{s.name} across Pinellas County</h3>
+        <p>Based in St. Petersburg, working in every town in the county:</p>
+        <ul>{places.map((t) => { const h = townHref(t); return <li>{h ? <a href={h}><Icon name="pin" size={14} />{t.name}</a> : <span><Icon name="pin" size={14} />{t.name}</span>}</li>; })}</ul>
+        <a class="textlink" href="/service-areas/">Service area map <Icon name="arrow" size={17} /></a>
+      </div>
+    </div>
+  </section>
+
+  <FaqSection bg="shell" eyebrow={`${s.name} FAQ`} line1="Your questions," line2="answered." lead={`What people ask before they book ${short}. Anything else, just call.`} faqs={c.faqs} />
+  <Sunline from="var(--shell)" to="var(--coral)" sun="var(--deep)" at="center" />
+  <ContactSection line1={`Need ${short}?`} line2="Call Paul." preselect={s.slug} formTitle={`Free ${short} estimate`} />
+</Base>
+
+<style>
+  .si-grid { display: grid; grid-template-columns: 680fr 480fr; gap: clamp(36px, 5vw, 80px); align-items: center; }
+  .si-p { margin-top: 20px; font-size: 18px; color: var(--ink-2); max-width: 640px; }
+  .si-cta { margin-top: 32px; }
+  .si-card { position: relative; overflow: hidden; padding: clamp(28px, 3.4vw, 44px); border-radius: var(--radius); background: var(--deep); color: var(--on-dark); box-shadow: 10px 10px 0 0 var(--coral); }
+  .si-sun { position: absolute; right: -70px; top: -70px; width: 190px; height: 190px; border-radius: 50%; background: var(--coral); opacity: .9; }
+  .si-card ul { position: relative; display: grid; gap: 14px; margin-top: 22px; font-size: 17.5px; font-weight: 500; }
+  .si-card li { display: flex; align-items: center; gap: 14px; }
+  .si-tick { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--tide); color: var(--ink); flex: none; }
+  .si-note { display: flex; align-items: center; gap: 8px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line-dark); font-size: 15px; color: var(--on-dark-2); }
+  .si-note :global(.icon) { color: var(--tide); }
+
+  .sg-head { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 60px; align-items: end; }
+  .sg-grid { display: grid; grid-template-columns: 340px 1fr; gap: 22px; margin-top: clamp(32px, 4vw, 52px); }
+  .sg-tabs { display: grid; gap: 8px; align-content: start; }
+  .sg-tabs button { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; min-height: 60px; padding: 0 18px 0 20px; border-radius: 16px; background: #fff; box-shadow: 0 0 0 1.5px var(--line); text-align: left; font-family: var(--display); font-size: 19px; color: var(--ink); transition: background .25s, color .25s, transform .3s var(--ease-out), box-shadow .25s; }
+  .sg-tabs button :global(.icon) { color: var(--teal); }
+  .sg-tabs button :global(.sg-go) { opacity: 0; transform: translateX(-8px); transition: opacity .25s, transform .3s var(--ease-out); }
+  .sg-tabs button:hover { transform: translateX(4px); }
+  .sg-tabs button[aria-selected="true"] { background: var(--deep); color: var(--shell); box-shadow: none; }
+  .sg-tabs button[aria-selected="true"] :global(.icon) { color: var(--coral); }
+  .sg-tabs button[aria-selected="true"] :global(.sg-go) { opacity: 1; transform: none; }
+  .sg-pane { position: relative; height: 100%; padding: clamp(26px, 3.4vw, 48px); border-radius: var(--radius); background: #fff; box-shadow: 0 0 0 2px var(--ink), 8px 8px 0 0 var(--coral); }
+  .sg-ic { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--coral-soft); color: var(--coral-deep); margin-bottom: 20px; }
+  .sg-text { margin-top: 14px; font-size: 19px; color: var(--ink-2); max-width: 620px; }
+  .sg-tip { display: grid; gap: 4px; margin: 22px 0 10px; padding: 16px 20px; border-radius: 14px; background: var(--shell); border-left: 5px solid var(--tide); max-width: 620px; }
+  .sg-tip strong { font-size: 12.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--teal); }
+  .sg-pane .textlink { margin-top: 10px; }
+
+  .sw-grid { display: grid; grid-template-columns: 540fr 620fr; gap: clamp(40px, 6vw, 90px); align-items: center; }
+  .sw-photo { position: relative; }
+  .sw-arch { aspect-ratio: 540 / 600; }
+  .sw-photo :global(.sw-ring) { position: absolute; right: -28px; bottom: 44px; }
+  .sw-photo figcaption { margin-top: 12px; font-size: 14px; color: var(--ink-3); }
+  .sw-list { display: grid; gap: 0; margin-top: 28px; }
+  .sw-list li { display: grid; grid-template-columns: auto 1fr; gap: 20px; padding: 22px 0; border-top: 1.5px solid var(--line); }
+  .sw-list li:last-child { border-bottom: 1.5px solid var(--line); }
+  .sw-ic { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--deep); color: var(--tide); }
+  .sw-list p { margin-top: 6px; color: var(--ink-2); }
+
+  .sr-grid { display: grid; grid-template-columns: 700fr 460fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
+  .sr-list { display: grid; gap: 0; margin-top: 30px; border-top: 1px solid var(--line-dark); }
+  .sr-list a { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; padding: 20px 8px; border-bottom: 1px solid var(--line-dark); transition: background .3s, padding .35s var(--ease-out); }
+  .sr-list a:hover { background: var(--deep-2); padding-inline: 20px 16px; }
+  .sr-ic { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--deep-2); color: var(--tide); transition: background .3s, color .3s; }
+  .sr-list a:hover .sr-ic { background: var(--coral); color: var(--ink); }
+  .sr-txt { display: grid; gap: 4px; }
+  .sr-txt strong { font-size: 23px; font-weight: 400; line-height: 1.1; }
+  .sr-txt span { color: var(--on-dark-2); font-size: 15.5px; }
+  .sr-list :global(.sr-go) { color: var(--coral); transition: transform .35s var(--ease-out); }
+  .sr-list a:hover :global(.sr-go) { transform: translateX(6px); }
+  .sr-all { margin-top: 18px; }
+  .sr-areas { padding: clamp(24px, 3vw, 36px); border-radius: var(--radius); background: var(--deep-3); box-shadow: inset 0 0 0 1.5px var(--line-dark); }
+  .sr-areas p { margin-top: 10px; color: var(--on-dark-2); font-size: 16px; }
+  .sr-areas ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 14px; }
+  .sr-areas li a, .sr-areas li span { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line-dark); font-size: 14px; font-weight: 500; }
+  .sr-areas li :global(.icon) { color: var(--tide); }
+  .sr-areas li a { border-color: var(--tide); min-height: 44px; transition: background .25s, color .25s; }
+  .sr-areas li a:hover { background: var(--tide); color: var(--ink); }
+  .sr-areas li a:hover :global(.icon) { color: var(--ink); }
+
+  @media (max-width: 980px) {
+    .si-grid, .sw-grid, .sr-grid, .sg-head { grid-template-columns: 1fr; }
+    .sg-grid { grid-template-columns: 1fr; }
+    .sg-tabs { grid-template-columns: 1fr 1fr; }
+    .sg-tabs button :global(.sg-go) { display: none; }
+    .sg-tabs button { grid-template-columns: auto 1fr; }
+    .sw-photo { max-width: 520px; margin-inline: auto; }
+    .sw-photo :global(.sw-ring) { right: -8px; }
+  }
+  @media (max-width: 560px) {
+    .si-cta :global(.btn) { width: 100%; }
+    .si-card { box-shadow: 6px 6px 0 0 var(--coral); }
+    .sg-tabs button { min-height: 52px; font-size: 16.5px; padding: 0 12px; gap: 9px; }
+    .sg-pane { box-shadow: 0 0 0 2px var(--ink), 5px 5px 0 0 var(--coral); }
+    .sg-text { font-size: 17.5px; }
+    .sw-photo :global(.sw-ring) { width: 108px; height: 108px; bottom: 34px; }
+    .sr-list a { grid-template-columns: auto 1fr; gap: 14px; }
+    .sr-list :global(.sr-go) { display: none; }
+    .sr-txt strong { font-size: 20px; }
+  }
+</style>

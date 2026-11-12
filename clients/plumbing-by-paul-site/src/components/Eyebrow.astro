@@ -1,0 +1,7 @@
+---
+// Small label above a heading. The heart is the brand glyph ("Plumbing Pinellas with heart").
+import Icon from './Icon.astro';
+interface Props { class?: string; reveal?: boolean }
+const { class: cls = '', reveal = true } = Astro.props;
+---
+<p class={`eyebrow ${cls}`} data-reveal={reveal ? 'up' : undefined}><Icon name="heart" size={14} /><span><slot /></span></p>

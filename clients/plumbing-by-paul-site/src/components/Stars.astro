@@ -1,0 +1,6 @@
+---
+import Icon from './Icon.astro';
+interface Props { size?: number; label?: string }
+const { size = 16, label = 'Rated 4.9 out of 5' } = Astro.props;
+---
+<span class="stars" role="img" aria-label={label}>{[0,1,2,3,4].map(() => <Icon name="star" size={size} />)}</span>

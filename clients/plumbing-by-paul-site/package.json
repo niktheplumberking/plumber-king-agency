@@ -1,0 +1,19 @@
+{
+  "name": "plumbing-by-paul-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource/rubik": "^5.2.0",
+    "@fontsource/tilt-warp": "^5.2.0",
+    "astro": "^5.18.2",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.27",
+    "sharp": "^0.35.5"
+  }
+}

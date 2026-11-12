@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import Btn from '../components/Btn.astro';
+import { SITE } from '../data/site';
+import { SERVICES } from '../data/services';
+---
+<Base title="Page Not Found | Plumbing By Paul" description="This page is not here. Call Plumbing By Paul in St. Petersburg, FL on (727) 709-2552 or head back to the homepage for services across Pinellas County." noindex estimateHref="/#estimate">
+  <section class="nf dark hero">
+    <span class="nf-sun" aria-hidden="true" data-hero="1" data-hero-fx="pop"></span>
+    <div class="wrap nf-in">
+      <p class="nf-num h-display" aria-hidden="true" data-hero="1" data-hero-fx="up">404</p>
+      <h1 class="h-display h2" data-hero="2" data-hero-fx="lines">This pipe leads <span class="c-coral">nowhere.</span></h1>
+      <p class="lead nf-lead" data-hero="3" data-hero-fx="up">The page you wanted is not here (on the preview, some pages are still being built). The plumbing still works: call us or pick a service.</p>
+      <div class="btn-row nf-cta" data-hero="4" data-hero-fx="up" data-hero-children>
+        <Btn href={SITE.phoneHref} icon="phone" size="lg">Call {SITE.phone}</Btn>
+        <Btn href="/" variant="outline-light" size="lg" arrow>Back to the homepage</Btn>
+      </div>
+      <ul class="nf-links" data-hero="5" data-hero-fx="up" data-hero-children>{SERVICES.slice(0, 8).map((s) => <li><a href={`/${s.slug}/`}>{s.nav}</a></li>)}</ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { position: relative; overflow: hidden; padding-block: clamp(60px, 8vw, 110px) clamp(80px, 10vw, 140px); text-align: center; }
+  .nf-sun { position: absolute; left: 50%; bottom: 0; width: min(620px, 86vw); aspect-ratio: 2 / 1; margin-left: calc(min(620px, 86vw) / -2); border-radius: 999px 999px 0 0; background: var(--coral); opacity: .18; }
+  .nf-in { position: relative; display: grid; justify-items: center; }
+  .nf-num { font-size: clamp(110px, 20vw, 240px); line-height: .85; color: transparent; -webkit-text-stroke: 2px var(--tide); }
+  .nf-lead { margin-top: 18px; max-width: 580px; }
+  .nf-cta { margin-top: 30px; justify-content: center; }
+  .nf-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 36px; max-width: 760px; }
+  .nf-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line-dark); font-size: 14.5px; font-weight: 500; transition: background .25s, color .25s; }
+  .nf-links a:hover { background: var(--tide); color: var(--ink); }
+  @media (max-width: 560px) { .nf-cta :global(.btn) { width: 100%; } }
+</style>

@@ -1,0 +1,13 @@
+---
+import Icon from './Icon.astro';
+interface Props { href?: string; variant?: 'coral'|'ink'|'shell'|'outline-light'|'outline-dark'; size?: 'sm'|'lg'|''; icon?: string; arrow?: boolean; sub?: string; class?: string; type?: 'submit'|'button'; full?: boolean; label?: string; target?: string }
+const { href, variant = 'coral', size = '', icon, arrow = false, sub, class: cls = '', type, full = false, label, target } = Astro.props;
+const Tag = href ? 'a' : 'button';
+const classes = `btn btn-${variant} ${size ? 'btn-' + size : ''} ${full ? 'btn-full' : ''} ${cls}`;
+---
+<Tag href={href} type={href ? undefined : (type ?? 'button')} class={classes} data-btn aria-label={label} target={target} rel={target === '_blank' ? 'noopener' : undefined}>
+  <span class="btn-fill" aria-hidden="true"></span>
+  {icon && <Icon name={icon} size={size === 'sm' ? 17 : size === 'lg' ? 24 : 20} />}
+  {sub ? <span class="btn-two"><span><slot /></span><small>{sub}</small></span> : <span><slot /></span>}
+  {arrow && <Icon name="arrow" size={size === 'sm' ? 16 : 20} class="icon-arrow" />}
+</Tag>

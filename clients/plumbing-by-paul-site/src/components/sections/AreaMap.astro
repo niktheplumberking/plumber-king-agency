@@ -1,0 +1,66 @@
+---
+// Real map of Pinellas County, drawn from US Census coastline data (see data/map.ts) so it carries the brand colours.
+// Town pins come from real coordinates (data/towns.ts). `focus` = town name to highlight (town pages).
+import { MAP, LAND, project } from '../../data/map';
+import { BASE, TOWNS, townHref } from '../../data/towns';
+import { SITE } from '../../data/site';
+interface Props { focus?: string }
+const { focus = '' } = Astro.props;
+const shop = project(SITE.geo.lat, SITE.geo.lng);
+const pins = [BASE, ...TOWNS].map((t) => ({ ...t, ...project(t.lat, t.lng), href: townHref(t) }));
+const rays = Array.from({ length: 8 }, (_, i) => { const a = (Math.PI * 2 * i) / 8; return { x1: Math.cos(a) * 11, y1: Math.sin(a) * 11, x2: Math.cos(a) * 16, y2: Math.sin(a) * 16 }; });
+---
+<figure class="amap">
+  <svg viewBox={`0 0 ${MAP.w} ${MAP.h}`} role="group" aria-labelledby="amap-t amap-d">
+    <title id="amap-t">Map of the Plumbing By Paul service area</title>
+    <desc id="amap-d">Pinellas County, Florida, from Tarpon Springs in the north to St. Pete Beach in the south, with the shop in St. Petersburg and the towns served.</desc>
+    <g class="amap-far"><path d={LAND.hillsborough} /><path d={LAND.pasco} /><path d={LAND.manatee} /></g>
+    <path class="amap-land" d={LAND.pinellas} data-draw />
+    <text class="amap-water" x="34" y="250" transform="rotate(-90 34 250)">Gulf of Mexico</text>
+    <text class="amap-water" x="372" y="470" transform="rotate(-70 372 470)">Tampa Bay</text>
+    {pins.map((p) => {
+      const on = p.name === focus;
+      const big = p.name === BASE.name;
+      const inner = (
+        <g class:list={['amap-pin', { on, big }]} transform={`translate(${p.x} ${p.y})`}>
+          {on && <circle class="amap-pulse" r="14" />}
+          <circle class="amap-dot" r={on ? 7 : big ? 6 : 4.5} />
+          <text x={p.side === 'l' ? -11 : 11} y="4.5" text-anchor={p.side === 'l' ? 'end' : 'start'}>{p.name}</text>
+        </g>
+      );
+      return p.href && !on ? <a href={p.href} aria-label={`Plumber in ${p.name}`}>{inner}</a> : inner;
+    })}
+    <g class="amap-shop" transform={`translate(${shop.x} ${shop.y})`}>
+      {rays.map((r) => <line x1={r.x1.toFixed(1)} y1={r.y1.toFixed(1)} x2={r.x2.toFixed(1)} y2={r.y2.toFixed(1)} />)}
+      <circle r="7.5" />
+      <text x="-21" y="4.5" text-anchor="end">Our shop</text>
+    </g>
+  </svg>
+  <figcaption>Coastline: US Census Bureau. Pins are town centers.</figcaption>
+</figure>
+<style>
+  .amap { position: relative; border-radius: var(--radius); background: var(--deep-3); padding: clamp(14px, 2vw, 26px); box-shadow: inset 0 0 0 1.5px var(--line-dark); }
+  .amap svg { width: 100%; height: auto; overflow: hidden; border-radius: 12px; }
+  .amap-far path { fill: #0a3f47; }
+  .amap-land { fill: #12606a; stroke: var(--tide); stroke-width: 1.4; stroke-linejoin: round; }
+  .amap-water { font: 600 10px var(--body); letter-spacing: .32em; text-transform: uppercase; fill: rgba(122,219,208,.5); }
+  .amap-pin text { font: 600 12.5px var(--body); fill: var(--shell); paint-order: stroke; stroke: var(--deep-3); stroke-width: 3.5px; stroke-linejoin: round; }
+  .amap-dot { fill: var(--shell); stroke: var(--deep-3); stroke-width: 2; transition: r .3s, fill .3s; }
+  .amap-pin.big text { font-size: 15px; font-weight: 700; }
+  .amap-pin.on .amap-dot { fill: var(--coral); }
+  .amap-pin.on text { font-size: 16px; font-weight: 700; fill: var(--sun); }
+  .amap-pulse { fill: none; stroke: var(--coral); stroke-width: 2; transform-origin: center; transform-box: fill-box; animation: amap-pulse 2.2s ease-out infinite; }
+  .amap a:hover .amap-dot { fill: var(--coral); }
+  .amap a:hover text { fill: var(--sun); }
+  .amap-shop circle { fill: var(--coral); stroke: var(--deep-3); stroke-width: 2; }
+  .amap-shop line { stroke: var(--coral); stroke-width: 2.2; stroke-linecap: round; }
+  .amap-shop text { font: 700 12px var(--body); letter-spacing: .06em; text-transform: uppercase; fill: var(--coral); paint-order: stroke; stroke: var(--deep-3); stroke-width: 3.5px; stroke-linejoin: round; }
+  .amap figcaption { margin-top: 8px; font-size: 12px; color: var(--on-dark-2); text-align: right; }
+  @media (max-width: 640px) {
+    .amap-pin text { font-size: 16px; }
+    .amap-pin.big text, .amap-pin.on text { font-size: 18px; }
+    .amap-shop text { font-size: 14px; }
+    .amap-water { font-size: 11px; }
+  }
+  @keyframes amap-pulse { from { transform: scale(.5); opacity: 1; } to { transform: scale(1.9); opacity: 0; } }
+</style>

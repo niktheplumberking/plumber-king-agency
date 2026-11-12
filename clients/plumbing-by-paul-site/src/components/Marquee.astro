@@ -1,0 +1,22 @@
+---
+// Endless band (brand motif: sun glyph between the words). Scroll velocity speeds it up (motion.ts).
+import Icon from './Icon.astro';
+interface Props { items: string[]; tone?: 'tide' | 'coral' | 'deep'; dir?: 1 | -1 }
+const { items, tone = 'tide', dir = -1 } = Astro.props;
+const loop = [...items, ...items];
+---
+<div class={`marquee mq-${tone}`} data-marquee data-dir={dir} aria-hidden="true">
+  <div class="marquee-track">
+    {[0, 1].map(() => <div class="mq-set">{loop.map((t) => <span class="mq-item"><span>{t}</span><Icon name="sun" size={26} /></span>)}</div>)}
+  </div>
+</div>
+<style>
+  .marquee { padding-block: 18px; }
+  .mq-tide { background: var(--tide); color: var(--ink); }
+  .mq-coral { background: var(--coral); color: var(--ink); }
+  .mq-deep { background: var(--deep-3); color: var(--shell); }
+  .mq-set { display: flex; flex: none; }
+  .mq-item { display: inline-flex; align-items: center; gap: 28px; padding-right: 28px; font-family: var(--display); font-size: clamp(26px, 3.4vw, 46px); line-height: 1; white-space: nowrap; }
+  .mq-tide .mq-item :global(.icon) { color: var(--deep); }
+  .mq-deep .mq-item :global(.icon) { color: var(--coral); }
+</style>

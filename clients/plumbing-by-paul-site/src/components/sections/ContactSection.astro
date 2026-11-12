@@ -1,0 +1,74 @@
+---
+// The closing section: coral, loud, with the phone number as the headline act and the full estimate form (id="estimate").
+import Icon from '../Icon.astro';
+import Eyebrow from '../Eyebrow.astro';
+import Btn from '../Btn.astro';
+import RingBadge from '../RingBadge.astro';
+import EstimateForm from './EstimateForm.astro';
+import { SITE } from '../../data/site';
+interface Props { eyebrow?: string; line1?: string; line2?: string; lead?: string; preselect?: string; town?: string; formTitle?: string }
+const { eyebrow = 'Get in touch', line1 = 'Need a plumber?', line2 = 'Call Paul.', preselect = '', town = '', formTitle = 'Get a free estimate',
+  lead = 'Burst pipe, backed-up drain or no hot water: call now, the line is answered 24/7 for emergencies. Not urgent? Send the form and we call you back.' } = Astro.props;
+const N = 15;
+const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (i / (N - 1)); return { x1: 500 - Math.cos(a) * 330, y1: 500 - Math.sin(a) * 330, x2: 500 - Math.cos(a) * (i % 2 ? 420 : 470), y2: 500 - Math.sin(a) * (i % 2 ? 420 : 470) }; });
+---
+<section class="ct section coralbg" id="estimate">
+  <div class="ct-burst" aria-hidden="true">
+    <svg class="ct-rays" viewBox="0 0 1000 500" data-draw>{rays.map((l) => <line x1={l.x1.toFixed(0)} y1={l.y1.toFixed(0)} x2={l.x2.toFixed(0)} y2={l.y2.toFixed(0)} />)}</svg>
+    <span class="ct-sun" data-sunrise></span>
+  </div>
+  <div class="wrap ct-grid">
+    <div class="ct-copy">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="h-display ct-h" data-split>{line1} <span class="ct-h2">{line2}</span></h2>
+      <p class="lead ct-lead" data-reveal="up">{lead}</p>
+      <a class="ct-phone" href={SITE.phoneHref} data-reveal="up" aria-label={`Call ${SITE.phone}`}>
+        <span class="ct-phone-ic"><Icon name="phone" size={30} /></span>
+        <span><small>Tap to call · {SITE.hoursShort} line</small><strong class="h-display">{SITE.phone}</strong></span>
+      </a>
+      <ul class="ct-facts" data-stagger="up">
+        <li><Icon name="tag" size={18} />Free estimates</li>
+        <li><Icon name="shield" size={18} />Licensed, bonded & insured</li>
+        <li><Icon name="heart" size={18} />1-year workmanship warranty</li>
+      </ul>
+    </div>
+    <div class="ct-form" data-reveal="up">
+      <RingBadge size={128} tone="deep" class="ct-ring" />
+      <EstimateForm id="estimate-form" title={formTitle} preselect={preselect} town={town} />
+    </div>
+  </div>
+</section>
+<style>
+  .ct { overflow: hidden; }
+  .ct-burst { position: absolute; left: 26%; bottom: 0; width: clamp(760px, 92vw, 1500px); aspect-ratio: 2 / 1; transform: translateX(-50%); pointer-events: none; }
+  .ct-rays { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ct-rays line { stroke: #ff8a75; stroke-width: 9; stroke-linecap: round; }
+  .ct-sun { position: absolute; left: 20%; bottom: 0; width: 60%; aspect-ratio: 2 / 1; border-radius: 999px 999px 0 0; background: #ff8a75; opacity: .6; }
+  .ct-grid { position: relative; display: grid; grid-template-columns: 620fr 540fr; gap: clamp(36px, 5vw, 80px); align-items: center; }
+  .ct-h { font-size: clamp(46px, 6.6vw, 96px); }
+  .ct-h2 { display: inline-block; color: var(--shell); background: var(--deep); padding: .02em .2em .1em; border-radius: .2em; transform: rotate(-2deg); margin-top: .08em; }
+  .ct-lead { margin-top: 20px; max-width: 540px; font-weight: 500; }
+  .ct-phone { display: inline-flex; align-items: center; gap: 18px; margin-top: 30px; padding: 14px 34px 14px 14px; border-radius: 999px; background: var(--deep); color: var(--shell); box-shadow: 8px 8px 0 0 var(--ink); transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out); }
+  .ct-phone:hover { transform: translate(-3px, -3px); box-shadow: 12px 12px 0 0 var(--ink); }
+  .ct-phone-ic { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--coral); color: var(--ink); flex: none; }
+  .ct-phone small { display: block; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--tide); }
+  .ct-phone strong { display: block; font-size: clamp(30px, 3.6vw, 48px); line-height: 1.05; font-weight: 400; white-space: nowrap; }
+  .ct-facts { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 30px; font-weight: 600; font-size: 16px; }
+  .ct-facts li { display: inline-flex; align-items: center; gap: 8px; }
+  .ct-form { position: relative; }
+  .ct-form :global(.ct-ring) { position: absolute; z-index: 2; right: -34px; top: -58px; transform: rotate(10deg); }
+  .ct-form :global(.ef-card) { box-shadow: 10px 10px 0 0 var(--ink); border: 2px solid var(--ink); border-top-width: 2px; }
+  @media (max-width: 1280px) { .ct-form :global(.ct-ring) { right: -10px; } }
+  @media (max-width: 980px) {
+    .ct-grid { grid-template-columns: 1fr; }
+    .ct-form :global(.ct-ring) { right: 8px; top: -64px; width: 104px; height: 104px; }
+    .ct-form { margin-top: 30px; }
+  }
+  @media (max-width: 560px) {
+    .ct-phone { width: 100%; padding-right: 18px; gap: 14px; box-shadow: 6px 6px 0 0 var(--ink); }
+    .ct-phone-ic { width: 56px; height: 56px; }
+    .ct-phone small { font-size: 11.5px; }
+    .ct-form :global(.ef-card) { box-shadow: 6px 6px 0 0 var(--ink); }
+    .ct-facts { flex-direction: column; gap: 10px; }
+  }
+</style>

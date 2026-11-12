@@ -22,7 +22,7 @@ const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (i / (N -
       <Eyebrow>{eyebrow}</Eyebrow>
       <h2 class="h-display ct-h" data-split>{line1} <span class="ct-h2">{line2}</span></h2>
       <p class="lead ct-lead" data-reveal="up">{lead}</p>
-      <a class="ct-phone" href={SITE.phoneHref} data-reveal="up" aria-label={`Call ${SITE.phone}`}>
+      <a class="ct-phone" href={SITE.phoneHref} data-reveal="up">
         <span class="ct-phone-ic"><Icon name="phone" size={30} /></span>
         <span><small>Tap to call · {SITE.hoursShort} line</small><strong class="h-display">{SITE.phone}</strong></span>
       </a>

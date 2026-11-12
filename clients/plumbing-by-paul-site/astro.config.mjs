@@ -6,10 +6,9 @@ export default defineConfig({
   site,
   trailingSlash: 'always',
   build: { inlineStylesheets: 'always', format: 'directory' },
-  integrations: [sitemap({ filter: (p) => !/\/thank-you\/|\/404/.test(p) })],
+  integrations: [sitemap({ filter: (p) => !/\/(thank-you|privacy|terms|404)\/?$/.test(p) })],
   image: { responsiveStyles: false },
   compressHTML: true,
-  // prefetchAll is off while nav pages (/services/, /about/ ...) are still unbuilt: hovering them logged a 404.
-  // Turn it back to true once every linked page exists.
-  prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
+  // Every internal link must point at a built page: hovering a missing one logs a 404 in the console.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
 });

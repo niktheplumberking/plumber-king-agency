@@ -49,7 +49,7 @@ All internal links end with a slash (`trailingSlash: 'always'`).
 | `sections/ReviewsSection` | Score plus the three real quotes. `bg` shell or sand. |
 | `sections/ProcessSection` | Four steps with the travelling sun. Pass `steps` to override. |
 | `sections/FaqSection` | Accordion plus FAQPage schema. Pass `faqs`. Only one FAQ section with `schema` per page. |
-| `sections/AreasSection` + `AreaMap` | Real Pinellas map with town pins. `focus` = town slug to highlight. |
+| `sections/AreasSection` + `AreaMap` | Real Pinellas map with town pins. `focus` = town name to highlight. Safe to use twice on one page (ids are unique). |
 | `sections/EstimateForm` | `variant` card or bar. `preselect` = service name, `town` = town name. |
 | `sections/ContactSection` | The coral ending with phone and form. |
 | `sections/CtaBand` | Short mid-page call band. `title`, `text`. |
@@ -84,10 +84,14 @@ for a script. Do not add a second animation library.
 
 ## 5. Adding a service page
 
-All 13 services already have a URL (`src/pages/[service].astro`). Drain cleaning has full content. The other 12
-show a starter page built from `services.ts` and are flagged `basic: true`, which keeps them `noindex`.
+All 13 services have a URL (`src/pages/[service].astro`) and a full entry. A service with no entry falls back to a
+starter page built from `services.ts`, flagged `basic: true`, which keeps it `noindex`.
 
-To finish one: add an entry to `SERVICE_CONTENT` in `src/data/service-content.ts` keyed by the slug, following
+The closing headline and the form title come from `SERVICE_CONTACT` in `services.ts` ("No hot water?",
+"Free water heater estimate"). A new service needs a line there, written by hand. Never build copy by
+lowercasing a service name.
+
+To add one: add an entry to `SERVICE_CONTENT` in `src/data/service-content.ts` keyed by the slug, following
 the `ServiceContent` type and the drain cleaning entry (H1 halves, lead, intro, includes, optional tabbed guide,
 why, process, 5 to 7 FAQs, related slugs, CTA title). Add or check its photo in `src/data/images.ts`.
 Write from the matching file in `source-site-text/`. Titles under 60 characters and metas of 140 to 160 live
@@ -95,7 +99,7 @@ in `services.ts` and are already written.
 
 ## 6. Adding a town page
 
-Only Clearwater is built. A town page is generated only when its slug is in `BUILT_TOWNS` (`towns.ts`) **and** it
+Clearwater and Largo are built. A town page is generated only when its slug is in `BUILT_TOWNS` (`towns.ts`) **and** it
 has an entry in `src/data/town-content.ts`. Until then the town shows as a plain chip, not a link.
 
 A town page must have real local substance (neighbourhoods, ZIP codes, what is different about plumbing there,
@@ -113,11 +117,20 @@ into Clearwater's text.
 - NAP must match `SITE` in `site.ts` exactly, everywhere.
 - Buttons and links at least 44 px tall. Text contrast from the table in `BRAND.md` only.
 
-## 8. Pages still to build (linked in the nav, 404 today)
+## 8. Pages: what exists and what is left
 
-`/services/`, `/about/`, `/service-areas/`, `/reviews/`, `/contact/`, `/privacy/`, `/terms/`.
-When they all exist, set `prefetchAll: true` again in `astro.config.mjs` (it is off so hovering a missing page
-does not log a 404).
+Built: home, `/services/`, all 13 service pages (full content), `/about/`, `/reviews/`, `/contact/`,
+`/service-areas/`, town pages for Clearwater and Largo, `/privacy/`, `/terms/`, `/thank-you/`, 404.
+
+Still to build: the other 13 town pages (Seminole, Pinellas Park, Dunedin, Palm Harbor, Tarpon Springs, Safety
+Harbor, Oldsmar, Gulfport, Treasure Island, St. Pete Beach, Madeira Beach, Kenneth City, Belleair), each only with
+real local content (section 6).
+
+`/privacy/` and `/terms/` are noindex drafts and are kept out of the sitemap, with `/thank-you/`, in
+`astro.config.mjs`. Do not add them back until the text is approved.
+
+`prefetchAll` is on, so every internal link must point at a built page. A link to a missing page logs a 404 in the
+console on hover. Link an unbuilt town as a plain chip (use `townHref`, which returns nothing until it is built).
 
 ## 9. Verify before you say done
 

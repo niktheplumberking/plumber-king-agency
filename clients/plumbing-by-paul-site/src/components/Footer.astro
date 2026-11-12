@@ -13,7 +13,7 @@ const places = [BASE, ...TOWNS];
   <div class="wrap">
     <div class="ftr-top">
       <div class="ftr-brand">
-        <a href="/" aria-label="Plumbing By Paul home"><Logo tone="light" size="lg" /></a>
+        <a href="/" class="ftr-home"><Logo tone="light" size="lg" /><span class="sr-only"> home</span></a>
         <p class="ftr-line">Family-owned plumbing for homes and businesses across Pinellas County. Open 7 days, with a 24/7 emergency line.</p>
         <a class="gbadge" href={SITE.googleMapsUrl} target="_blank" rel="noopener"><GoogleG size={18} /><strong>{SITE.rating}</strong><Stars size={14} /><span>{SITE.reviewCount} Google reviews</span></a>
       </div>
@@ -59,6 +59,7 @@ const places = [BASE, ...TOWNS];
   .ftr { position: relative; padding-top: clamp(56px, 7vw, 88px); overflow: hidden; }
   .ftr-top { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px 64px; padding-bottom: 44px; border-bottom: 1px solid var(--line-dark); }
   .ftr-line { margin-top: 20px; max-width: 420px; color: var(--on-dark-2); }
+  .ftr-home { display: inline-flex; }
   .ftr-brand .gbadge { margin-top: 22px; }
   .ftr-brand .gbadge:hover { border-color: var(--tide); }
   .ftr-nap { font-style: normal; }

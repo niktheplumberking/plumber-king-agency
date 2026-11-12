@@ -31,7 +31,10 @@ const top = c.topServices.map((slug) => SERVICES.find((s) => s.slug === slug)!).
 const rest = SERVICES.filter((s) => !c.topServices.includes(s.slug));
 const near = t.neighbours.map((n) => townByName(n)!).filter(Boolean);
 const title = `Plumber in ${t.name}, FL | Plumbing By Paul`;
-const description = `Plumber in ${t.name}, FL. Family-owned Plumbing By Paul fixes drains, leaks, water heaters and sewer lines. Open 7 days, 24/7 emergency line.`;
+// Meta description must land in 140-160 characters for every town name, short (Largo) or long (Treasure Island).
+const metaBase = `Plumber in ${t.name}, FL. Family-owned Plumbing By Paul fixes drains, leaks, water heaters and sewer lines.`;
+const description = [' Open 7 days, 24/7 emergency line. Free estimates.', ' Open 7 days, 24/7 emergency line.', ' Open 7 days, 24/7 emergencies.']
+  .map((tail) => metaBase + tail).find((d) => d.length <= 160) as string;
 const schema = [{
   '@context': 'https://schema.org', '@type': 'Service', '@id': `${site}/${t.slug}/#service`,
   name: `Plumber in ${t.name}, FL`, serviceType: 'Plumbing', description, url: `${site}/${t.slug}/`,

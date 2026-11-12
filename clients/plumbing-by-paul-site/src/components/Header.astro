@@ -13,10 +13,10 @@ const fams = (Object.keys(FAMILIES) as FamilyKey[]).map((k) => ({ k, ...FAMILIES
 const rest = NAV.filter((n) => n.href !== '/services/');
 const onService = path.startsWith('/services') || SERVICES.some((s) => path.includes(s.slug));
 ---
-<div class="topbar" data-intro="topbar">
+<section class="topbar" data-intro="topbar" aria-label="Reviews, hours and social links">
   <div class="wrap topbar-in">
-    <a class="tb-rate" href={SITE.googleMapsUrl} target="_blank" rel="noopener" aria-label={`${SITE.rating} stars from ${SITE.reviewCount} Google reviews. Opens Google Maps.`}>
-      <GoogleG size={15} /><Stars size={13} /><span><strong>{SITE.rating}</strong> · {SITE.reviewCount} Google reviews</span>
+    <a class="tb-rate" href={SITE.googleMapsUrl} target="_blank" rel="noopener">
+      <GoogleG size={15} /><span aria-hidden="true" class="tb-stars"><Stars size={13} /></span><span><strong>{SITE.rating}</strong> · {SITE.reviewCount} Google reviews</span><span class="sr-only"> (opens Google Maps)</span>
     </a>
     <p class="tb-mid"><Icon name="pin" size={15} />Serving all of Pinellas County from St. Petersburg</p>
     <div class="tb-right">
@@ -25,11 +25,11 @@ const onService = path.startsWith('/services') || SERVICES.some((s) => path.incl
       <a href={SITE.instagram} aria-label="Plumbing By Paul on Instagram" target="_blank" rel="noopener" class="tb-soc"><Icon name="instagram" size={17} /></a>
     </div>
   </div>
-</div>
+</section>
 <header class="hdr" data-header>
   <div class="hdr-bar">
     <div class="wrap hdr-in">
-      <a href="/" class="brand" aria-label="Plumbing By Paul home" data-intro="brand"><Logo eager /></a>
+      <a href="/" class="brand" data-intro="brand"><Logo eager /><span class="sr-only"> home</span></a>
       <nav class="nav" aria-label="Main">
         <ul class="nav-list">
           <li class="has-mega" data-intro="nav">
@@ -89,6 +89,7 @@ const onService = path.startsWith('/services') || SERVICES.some((s) => path.incl
   .tb-rate { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
   .tb-rate:hover span { text-decoration: underline; text-underline-offset: 3px; }
   .tb-rate strong { font-weight: 700; }
+  .tb-stars { display: inline-flex; }
   .tb-mid { display: inline-flex; align-items: center; gap: 7px; color: var(--on-dark-2); }
   .tb-mid :global(.icon), .tb-hours :global(.icon) { color: var(--tide); }
   .tb-right { display: flex; align-items: center; gap: 0; }
@@ -164,7 +165,7 @@ const onService = path.startsWith('/services') || SERVICES.some((s) => path.incl
     .tb-soc { display: none; }
     .tb-long { display: none; } .tb-short { display: inline; }
     .tb-hours { margin-right: 0; gap: 5px; }
-    .tb-rate :global(.stars) { display: none; }
+    .tb-stars { display: none; }
     .brand :global(.logo-badge) { width: 46px; height: 46px; }
     .brand :global(.logo-word) { font-size: 21px; }
     .brand :global(.logo-sub) { font-size: 9.5px; letter-spacing: .1em; }

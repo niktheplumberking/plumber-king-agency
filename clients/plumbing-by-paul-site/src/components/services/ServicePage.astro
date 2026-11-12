@@ -16,7 +16,7 @@ import FaqSection from '../sections/FaqSection.astro';
 import ContactSection from '../sections/ContactSection.astro';
 import CtaBand from '../sections/CtaBand.astro';
 import { SITE } from '../../data/site';
-import { SERVICES, FAMILIES, type Service } from '../../data/services';
+import { SERVICES, FAMILIES, SERVICE_CONTACT, type Service } from '../../data/services';
 import { contentFor } from '../../data/service-content';
 import { SERVICE_IMG } from '../../data/images';
 import { BASE, TOWNS, townHref } from '../../data/towns';
@@ -29,7 +29,8 @@ const img = SERVICE_IMG[s.slug];
 const site = Astro.site!.toString().replace(/\/$/, '');
 const related = c.related.map((slug) => SERVICES.find((x) => x.slug === slug)!).filter(Boolean);
 const places = [BASE, ...TOWNS];
-const short = s.nav.toLowerCase();
+// Hand-written closing headline per service ("No hot water?"), never the lowercased service name.
+const contact = SERVICE_CONTACT[s.slug] ?? { need: 'Need a plumber?', form: 'Get a free estimate' };
 const schema = [{
   '@context': 'https://schema.org', '@type': 'Service', '@id': `${site}/${s.slug}/#service`,
   name: `${s.name} in St. Petersburg, FL`, serviceType: s.name, description: s.description, url: `${site}/${s.slug}/`,
@@ -51,7 +52,7 @@ const schema = [{
           <Btn href="#estimate" variant="outline-dark" arrow>Free estimate</Btn>
         </div>
       </div>
-      <aside class="si-card" data-reveal="up" aria-label={`What you get with ${short}`}>
+      <aside class="si-card" data-reveal="up" aria-label="What you get">
         <span class="si-sun" aria-hidden="true"></span>
         <p class="h-display h3">What you get</p>
         <ul data-stagger="up">
@@ -97,7 +98,7 @@ const schema = [{
   )}
 
   <Sunline from={c.guide ? 'var(--sand)' : 'var(--shell)'} to="var(--deep-3)" at="left" />
-  <ProcessSection eyebrow={`How ${short} works`} line1="Simple, fast" line2="and effective." lead="Four steps, the same every time. You know the price before we start." steps={c.process} />
+  <ProcessSection eyebrow="How it works" line1="Simple, fast" line2="and effective." lead="Four steps, the same every time. You know the price before we start." steps={c.process} />
 
   <section class="sw section shell">
     <div class="wrap sw-grid">
@@ -150,9 +151,9 @@ const schema = [{
     </div>
   </section>
 
-  <FaqSection bg="shell" eyebrow={`${s.name} FAQ`} line1="Your questions," line2="answered." lead={`What people ask before they book ${short}. Anything else, just call.`} faqs={c.faqs} />
+  <FaqSection bg="shell" eyebrow={`${s.name} FAQ`} line1="Your questions," line2="answered." lead="What people ask before they book. Anything else, just call." faqs={c.faqs} />
   <Sunline from="var(--shell)" to="var(--coral)" sun="var(--deep)" at="center" />
-  <ContactSection line1={`Need ${short}?`} line2="Call Paul." preselect={s.slug} formTitle={`Free ${short} estimate`} />
+  <ContactSection line1={contact.need} line2="Call Paul." preselect={s.slug} formTitle={contact.form} />
 </Base>
 
 <style>

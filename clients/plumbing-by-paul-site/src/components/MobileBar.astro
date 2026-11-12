@@ -4,10 +4,10 @@ import { SITE } from '../data/site';
 interface Props { estimateHref?: string }
 const { estimateHref = '#estimate' } = Astro.props;
 ---
-<div class="mbar" data-mbar>
+<nav class="mbar" data-mbar aria-label="Call or get an estimate">
   <a href={SITE.phoneHref} class="mbar-call" data-btn><span class="btn-fill" aria-hidden="true"></span><Icon name="phone" size={20} /><span>Call now</span></a>
   <a href={estimateHref} class="mbar-est" data-btn><span class="btn-fill" aria-hidden="true"></span><Icon name="calendar" size={19} /><span>Free estimate</span></a>
-</div>
+</nav>
 <style>
   .mbar { display: none; }
   @media (max-width: 760px) {

@@ -71,3 +71,20 @@ export const SERVICES: Service[] = [
 
 export const serviceBySlug = (slug: string) => SERVICES.find((s) => s.slug === slug);
 export const servicesByFamily = (f: FamilyKey) => SERVICES.filter((s) => s.family === f);
+
+/** Closing headline and form title for each service page, written by hand so each one reads like a person said it. */
+export const SERVICE_CONTACT: Record<string, { need: string; form: string }> = {
+  'clogged-drain-repair-st-petersburg-fl': { need: 'Drain clogged?', form: 'Free clogged drain estimate' },
+  'drain-cleaning-st-petersburg-fl': { need: 'Need drain cleaning?', form: 'Free drain cleaning estimate' },
+  'drain-camera-inspection-st-petersburg-fl': { need: 'Need a camera inspection?', form: 'Free camera inspection estimate' },
+  'sewer-line-service-st-petersburg-fl': { need: 'Sewer line trouble?', form: 'Free sewer line estimate' },
+  'repiping-st-petersburg-fl': { need: 'Need a repipe?', form: 'Free repiping estimate' },
+  'leak-detection-st-petersburg-fl': { need: 'Got a leak?', form: 'Free leak repair estimate' },
+  'gas-line-services-st-petersburg-fl': { need: 'Need gas line work?', form: 'Free gas line estimate' },
+  'water-heater-repair-st-petersburg-fl': { need: 'No hot water?', form: 'Free water heater estimate' },
+  'toilet-repair-st-petersburg-fl': { need: 'Toilet trouble?', form: 'Free toilet repair estimate' },
+  'garbage-disposal-repair-st-petersburg-fl': { need: 'Disposal jammed?', form: 'Free garbage disposal estimate' },
+  'water-softeners-filtration-st-petersburg-fl': { need: 'Hard water?', form: 'Free water softener estimate' },
+  'emergency-plumber-st-petersburg-fl': { need: 'Plumbing emergency?', form: 'Not urgent? Get a free estimate' },
+  'commercial-plumbing-st-petersburg-fl': { need: 'Need a commercial plumber?', form: 'Free commercial plumbing estimate' },
+};

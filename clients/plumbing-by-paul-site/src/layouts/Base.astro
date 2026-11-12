@@ -22,7 +22,9 @@ interface Props {
 const { title, description, noindex = false, crumbs = [], schema = [], ogImage = ogDefault,
   ogAlt = 'The Plumbing By Paul crew in light blue shirts in front of their service trucks in St. Petersburg', bodyClass = '', estimateHref = '#estimate' } = Astro.props;
 const site = Astro.site!.toString().replace(/\/$/, '');
-const canonical = site + Astro.url.pathname;
+// The 404 page has no address of its own: no canonical, and its share URL is the home page.
+const is404 = Astro.url.pathname.startsWith('/404');
+const canonical = is404 ? site + '/' : site + Astro.url.pathname;
 const og = await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 const ogUrl = new URL(og.src, site).toString();
 const robots = NOINDEX ? 'noindex, nofollow' : noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large';
@@ -66,7 +68,7 @@ const ld = [business, ...(breadcrumb ? [breadcrumb] : []), ...schema];
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <link rel="canonical" href={canonical} />
+  {!is404 && <link rel="canonical" href={canonical} />}
   <meta name="robots" content={robots} />
   <meta name="theme-color" content="#042A30" />
   <meta name="format-detection" content="telephone=yes" />

@@ -165,7 +165,8 @@ ul, ol { padding: 0; list-style: none; }
 }
 .input::placeholder { color: #6b7a7c; }
 .input:hover { border-color: #9a8f78; }
-.input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(10, 104, 102, 0.18); }
+/* Two solid rings: white then teal, so the focus shows on a white card and on a dark section alike. */
+.input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--teal); }
 select.input { padding-right: 44px; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%230b2b30' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
 textarea.input { height: 112px; padding: 14px 18px; resize: vertical; }
 .form-note { font-size: 13px; color: var(--ink-3); }

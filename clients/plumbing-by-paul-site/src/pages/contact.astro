@@ -122,7 +122,15 @@ const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (-0.08 + 
       <div class="vs-map" data-reveal="up">
         <span class="vs-sun" aria-hidden="true"></span>
         <div class="vs-frame">
-          <iframe src={mapSrc} title={`Google map showing the Plumbing By Paul shop at ${fullAddress}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <!-- Click-to-load: nothing from Google loads until the visitor asks for the map (it was 2.2 MB of third-party script). -->
+          <div class="vs-facade" data-map-facade data-src={mapSrc} data-title={`Google map showing the Plumbing By Paul shop at ${fullAddress}`}>
+            <span class="vs-streets" aria-hidden="true"></span>
+            <span class="vs-dot" aria-hidden="true"><Icon name="pin" size={34} /></span>
+            <p class="vs-fa-addr h-display">{SITE.street}</p>
+            <p class="vs-fa-city">{SITE.city}, {SITE.region} {SITE.zip}</p>
+            <button type="button" class="btn btn-ink vs-load" data-map-load><Icon name="pin" size={18} /><span>Show the Google map</span></button>
+            <p class="vs-fa-note">The map loads from Google when you press the button.</p>
+          </div>
         </div>
         <span class="vs-pin h-display" aria-hidden="true"><Icon name="pin" size={20} />The shop</span>
       </div>
@@ -212,7 +220,16 @@ const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (-0.08 + 
   .vs-map { position: relative; isolation: isolate; }
   .vs-sun { position: absolute; z-index: -1; right: 8%; top: -70px; width: 220px; aspect-ratio: 1; border-radius: 50%; background: var(--coral); }
   .vs-frame { position: relative; overflow: hidden; aspect-ratio: 680 / 520; border-radius: var(--radius); border: 6px solid #fff; box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 0 var(--ink); background: #e8e2d4; }
-  .vs-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .vs-frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .vs-facade { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 20px; text-align: center; background: var(--sand); isolation: isolate; }
+  /* A plain drawn street grid, not a real map: two sets of pale lines, slightly turned. */
+  .vs-streets { position: absolute; inset: -20%; z-index: -1; transform: rotate(-8deg); opacity: .9;
+    background: repeating-linear-gradient(0deg, transparent 0 58px, #fff 58px 66px), repeating-linear-gradient(90deg, transparent 0 92px, #fff 92px 100px), linear-gradient(var(--sand), var(--sand)); }
+  .vs-dot { display: grid; place-items: center; width: 76px; height: 76px; margin-bottom: 8px; border-radius: 50%; background: var(--coral); color: var(--ink); box-shadow: 0 0 0 8px rgba(255, 107, 82, .28), 0 0 0 2px var(--ink); }
+  .vs-fa-addr { font-size: clamp(22px, 2.4vw, 30px); color: var(--ink); background: var(--sand); padding: 0 10px; border-radius: 8px; }
+  .vs-fa-city { font-weight: 600; color: var(--ink-2); background: var(--sand); padding: 0 10px; border-radius: 8px; }
+  .vs-load { margin-top: 14px; }
+  .vs-fa-note { margin-top: 6px; font-size: 13.5px; color: var(--ink-2); background: var(--sand); padding: 2px 10px; border-radius: 8px; }
   .vs-pin { position: absolute; right: -14px; top: -20px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px 10px 12px; border-radius: 999px; background: var(--coral); color: var(--ink); font-size: 19px; transform: rotate(5deg); box-shadow: 0 14px 30px -12px rgba(0,0,0,.45); pointer-events: none; }
   .vs-addr { margin-top: 22px; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.15; color: var(--ink); }
   .vs-note { margin-top: 14px; color: var(--ink-2); max-width: 440px; }
@@ -254,3 +271,13 @@ const rays = Array.from({ length: N }, (_, i) => { const a = Math.PI * (-0.08 + 
     .vs-cta :global(.btn) { width: 100%; }
   }
 </style>
+<script>
+  // Swap the drawn card for the real Google map only when asked.
+  const facade = document.querySelector<HTMLElement>('[data-map-facade]');
+  facade?.querySelector('[data-map-load]')?.addEventListener('click', () => {
+    const frame = document.createElement('iframe');
+    frame.src = facade.dataset.src!; frame.title = facade.dataset.title!;
+    frame.loading = 'lazy'; frame.referrerPolicy = 'no-referrer-when-downgrade'; frame.allowFullscreen = true; frame.tabIndex = 0;
+    facade.replaceWith(frame); frame.focus();
+  });
+</script>

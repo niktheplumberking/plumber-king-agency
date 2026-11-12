@@ -99,7 +99,13 @@ in `services.ts` and are already written.
 
 ## 6. Adding a town page
 
-Clearwater and Largo are built. A town page is generated only when its slug is in `BUILT_TOWNS` (`towns.ts`) **and** it
+Clearwater and Largo are built, and they are deliberately not the same page: each has its own section order
+(`layout`), headings, photos, service notes and FAQ in `town-content.ts`. Measured on the built pages after swapping
+the town name, 60% of three-word runs (70% of five-word runs) are unique to each. A new town must keep that up:
+write it fresh, pick the layout the neighbouring town does not use, and read the rules at the top of the file.
+Distances are straight-line from the shop and must say so (`{miles}`).
+
+A town page is generated only when its slug is in `BUILT_TOWNS` (`towns.ts`) **and** it
 has an entry in `src/data/town-content.ts`. Until then the town shows as a plain chip, not a link.
 
 A town page must have real local substance (neighbourhoods, ZIP codes, what is different about plumbing there,
@@ -132,6 +138,18 @@ real local content (section 6).
 `prefetchAll` is on, so every internal link must point at a built page. A link to a missing page logs a 404 in the
 console on hover. Link an unbuilt town as a plain chip (use `townHref`, which returns nothing until it is built).
 
+## 8b. Rules that came out of the outside review
+
+- "10+ years" is always "10+ years of experience" (Paul's wording). Never "in Pinellas", never anything added.
+- One licensing line per page at most ("licensed, bonded and insured"), while the licence number is unconfirmed.
+- No headcounts in alt text. Describe the scene.
+- No third-party embeds on load. The Contact page map is a drawn card with a "Show the Google map" button
+  (`data-map-facade`); the privacy page describes it. Keep both in step.
+- Photos: the four large crew photos are stored at 900 to 1200 px wide so that no built image is over 300 KB.
+  After adding a photo, check `dist/_astro` for files over 300 KB.
+- Share image (og:image) is always a real crew photo (the `Base.astro` default), never stock.
+- `robots.txt` has no Disallow lines: noindex pages must stay crawlable so the tag is seen.
+
 ## 9. Verify before you say done
 
 `npx astro build` with 0 errors. Then look at the page in a browser at 1440 and 390 wide, with motion and with
@@ -148,6 +166,10 @@ reduced motion: nothing hidden, no sideways scroll, console clean, axe 0 violati
 - Alycia Hernandez's role and that her photo may be used. Crew first names appear only inside the review quotes.
 - Google review count (941 on 26 Oct 2026): re-read on launch day.
 - Map pin for the shop is approximate. Take the exact pin from the Google Business Profile.
-- Clearwater neighbourhoods and ZIP codes are public geography: Paul should confirm he serves all of them.
+- Clearwater and Largo: neighbourhood names, roads and ZIP codes are public geography, shown on the page as "from public
+  maps". Paul should confirm he serves all of them. The Largo notes on manufactured homes and on who owns the sewer
+  pipe are general advice, not claims about his jobs: Paul to confirm he is happy with them.
+- Crew first names (Phil, Chris, Alex, Steven) come only from the review quotes. Nobody is called a technician as a
+  fact. Paul to confirm names and roles before they are used anywhere else.
 - Mascot artwork: ownership, and a vector file if one exists.
 - Form: no back end yet (`FORM_LIVE = false`). Needs a real endpoint and a test send before launch.

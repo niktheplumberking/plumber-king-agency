@@ -33,7 +33,7 @@ const onService = path.startsWith('/services') || SERVICES.some((s) => path.incl
       <nav class="nav" aria-label="Main">
         <ul class="nav-list">
           <li class="has-mega" data-intro="nav">
-            <a href="/services/" class:list={['nav-a', { on: onService }]} aria-haspopup="true">Services <Icon name="chevronDown" size={15} class="nav-chev" /></a>
+            <a href="/services/" class:list={['nav-a', { on: onService }]} aria-haspopup="true" aria-expanded="false" data-mega-trigger>Services <Icon name="chevronDown" size={15} class="nav-chev" /></a>
             <div class="mega">
               <div class="mega-grid">
                 {fams.map((f) => (
@@ -115,6 +115,8 @@ const onService = path.startsWith('/services') || SERVICES.some((s) => path.incl
   .nav-a :global(.nav-chev) { transition: transform .3s var(--ease-out); }
   .has-mega:hover :global(.nav-chev), .has-mega:focus-within :global(.nav-chev) { transform: rotate(180deg); }
   .has-mega { position: static; }
+  /* Escape closes the menu even while it is hovered or focused. */
+  .has-mega.is-shut:hover .mega, .has-mega.is-shut:focus-within .mega { opacity: 0; visibility: hidden; }
   .mega { position: absolute; left: 0; right: 0; top: 100%; padding-top: 10px; opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity .25s, transform .35s var(--ease-out), visibility .25s; }
   .has-mega:hover .mega, .has-mega:focus-within .mega { opacity: 1; visibility: visible; transform: none; }
   .mega-grid { width: min(var(--wrap), 100% - var(--gutter) * 2); margin-inline: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 28px; padding: 30px 34px 22px; background: #fff; border-radius: var(--radius) var(--radius) 0 0; box-shadow: var(--shadow); }

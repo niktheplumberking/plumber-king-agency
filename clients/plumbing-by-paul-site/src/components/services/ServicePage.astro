@@ -38,7 +38,7 @@ const schema = [{
   areaServed: [{ '@type': 'AdministrativeArea', name: 'Pinellas County, FL' }, ...places.map((t) => ({ '@type': 'City', name: `${t.name}, FL` }))],
 }];
 ---
-<Base title={s.title} description={s.description} crumbs={[{ name: 'Services', href: '/services/' }, { name: s.name, href: `/${s.slug}/` }]} schema={schema} ogImage={img.src} ogAlt={img.alt} noindex={c.basic}>
+<Base title={s.title} description={s.description} crumbs={[{ name: 'Services', href: '/services/' }, { name: s.name, href: `/${s.slug}/` }]} schema={schema} noindex={c.basic}>
   <PageHero crumbs={[{ name: 'Services', href: '/services/' }, { name: s.name, href: `/${s.slug}/` }]} eyebrow={c.eyebrow} line1={c.h1a} line2={c.h1b} lead={c.lead} image={img.src} alt={img.alt} />
 
   <section class="si section shell">
@@ -229,6 +229,9 @@ const schema = [{
   @media (max-width: 560px) {
     .si-cta :global(.btn) { width: 100%; }
     .si-card { box-shadow: 6px 6px 0 0 var(--coral); }
+    /* Small enough to clear the first list line on a phone, whatever its length. */
+    .si-sun { right: -46px; top: -46px; width: 104px; height: 104px; }
+    .si-card ul { margin-top: 26px; }
     .sg-tabs button { min-height: 52px; font-size: 16.5px; padding: 0 12px; gap: 9px; }
     .sg-pane { box-shadow: 0 0 0 2px var(--ink), 5px 5px 0 0 var(--coral); }
     .sg-text { font-size: 17.5px; }

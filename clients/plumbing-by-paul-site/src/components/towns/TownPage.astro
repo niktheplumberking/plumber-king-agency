@@ -1,7 +1,11 @@
 ---
-// Town page template. Give it a town from towns.ts; local content comes from town-content.ts.
-// Section order: hero (dark) > intro + neighborhoods (shell) > local problems (sand) > services in town (dark) >
-// process (deep) > reviews (shell) > map + nearby towns (dark) > FAQ (sand) > contact (coral).
+// Town page template. Give it a town from towns.ts; everything local comes from town-content.ts.
+// Each town picks its own section order (layout), headings, photos, service notes and FAQ, so two town pages are not the
+// same page with the name swapped (see the rules at the top of town-content.ts).
+//   local-first:    hero > intro + map names (shell) > local (sand) > services (dark) > marquee > process (deep) >
+//                   reviews (shell) > map + nearby towns (dark) > FAQ (sand) > contact (coral)
+//   services-first: hero > intro + map names (shell) > services (dark) > local (sand) > map + nearby towns (dark) >
+//                   reviews (shell) > call band (deep) > FAQ (sand) > contact (coral)
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Icon from '../Icon.astro';
@@ -15,21 +19,37 @@ import ReviewsSection from '../sections/ReviewsSection.astro';
 import FaqSection from '../sections/FaqSection.astro';
 import ContactSection from '../sections/ContactSection.astro';
 import AreasSection from '../sections/AreasSection.astro';
+import CtaBand from '../sections/CtaBand.astro';
 import { SITE } from '../../data/site';
 import { SERVICES } from '../../data/services';
 import { TOWN_CONTENT } from '../../data/town-content';
-import { townByName, townHref, milesFromShop, type Town } from '../../data/towns';
-import heroImg from '../../assets/img/source-site/team-trucks-1.jpg';
+import { townByName, milesFromShop, type Town } from '../../data/towns';
+import trucksImg from '../../assets/img/source-site/team-trucks-1.jpg';
+import familiesImg from '../../assets/img/source-site/team-trucks-2-families.jpg';
 import eventImg from '../../assets/img/source-site/team-community-event.jpg';
+import giftsImg from '../../assets/img/source-site/team-truck-event.jpg';
 
 interface Props { town: Town }
 const { town: t } = Astro.props;
 const c = TOWN_CONTENT[t.slug];
 const site = Astro.site!.toString().replace(/\/$/, '');
 const miles = milesFromShop(t);
+const near = t.neighbours.map((n) => townByName(n)!).filter(Boolean);
+const nearList = near.map((n) => n.name).join(', ').replace(/, ([^,]*)$/, ' and $1');
+/** Fill {miles} and {near} in a content string. */
+const fill = (x: string) => x.replaceAll('{miles}', String(miles)).replaceAll('{near}', nearList);
 const top = c.topServices.map((slug) => SERVICES.find((s) => s.slug === slug)!).filter(Boolean);
 const rest = SERVICES.filter((s) => !c.topServices.includes(s.slug));
-const near = t.neighbours.map((n) => townByName(n)!).filter(Boolean);
+const faqs = c.faqs.map((f) => ({ q: fill(f.q), a: fill(f.a) }));
+const hero = c.heroPhoto === 'families'
+  ? { img: familiesImg, alt: 'The Plumbing By Paul crew in light blue shirts with family members, in front of two company trucks', pos: '50% center' }
+  : { img: trucksImg, alt: 'The Plumbing By Paul crew in light blue shirts in front of two company trucks', pos: '38% center' };
+const localPhoto = c.localPhoto === 'gifts'
+  ? { img: giftsImg, alt: 'Plumbing By Paul crew members holding small gift boxes in front of two company trucks', cap: 'The crew and the trucks', pos: 'center 40%' }
+  : { img: eventImg, alt: 'Plumbing By Paul team members at a community event next to a company trailer', cap: 'Out in the community', pos: 'center 62%' };
+const order = c.layout === 'services-first'
+  ? ['intro', 'sun-shell-deep', 'services', 'local', 'sun-sand-deep', 'areas', 'reviews', 'cta', 'faq']
+  : ['intro', 'local', 'sun-sand-deep', 'services', 'marquee', 'process', 'reviews', 'areas', 'faq'];
 const title = `Plumber in ${t.name}, FL | Plumbing By Paul`;
 // Meta description must land in 140-160 characters for every town name, short (Largo) or long (Treasure Island).
 const metaBase = `Plumber in ${t.name}, FL. Family-owned Plumbing By Paul fixes drains, leaks, water heaters and sewer lines.`;
@@ -45,89 +65,99 @@ const crumbs = [{ name: 'Service areas', href: '/service-areas/' }, { name: t.na
 ---
 <Base title={title} description={description} crumbs={crumbs} schema={schema}>
   <PageHero crumbs={crumbs} eyebrow={`Serving ${t.name} · Pinellas County`} line1="Plumber in" line2={`${t.name}, FL`} lead={c.lead}
-    image={heroImg} alt="The Plumbing By Paul crew in light blue shirts in front of two company trucks" imgPos="38% center"
-    tagTitle={`About ${miles} miles`} tagText="from our shop, in a straight line" />
+    image={hero.img} alt={hero.alt} imgPos={hero.pos} tagTitle={fill(c.heroTag[0])} tagText={fill(c.heroTag[1])} />
 
-  <section class="ti section shell">
-    <div class="wrap ti-grid">
-      <div>
-        <Eyebrow>{t.name} plumbing</Eyebrow>
-        <h2 class="h-display h2" data-split>{c.introTitle[0]} <span class="c-coral-deep">{c.introTitle[1]}</span></h2>
-        {c.intro.map((p) => <p class="ti-p" data-reveal="up">{p}</p>)}
-        <div class="btn-row ti-cta" data-reveal="up">
-          <Btn href={SITE.phoneHref} icon="phone">Call {SITE.phone}</Btn>
-          <Btn href="#estimate" variant="outline-dark" arrow>Free estimate</Btn>
-        </div>
-      </div>
-      <aside class="ti-card" data-reveal="up" aria-label={`Where we work in ${t.name}`}>
-        <p class="h-display h3"><Icon name="pin" size={24} />Where we work in {t.name}</p>
-        <ul class="ti-hoods" data-stagger="pop">{c.neighborhoods.map((n) => <li>{n}</li>)}</ul>
-        <p class="ti-zip"><strong>ZIP codes</strong>{c.zips.join(' · ')}</p>
-        <p class="ti-any">Not on the list? We cover every street in {t.name}.</p>
-      </aside>
-    </div>
-  </section>
-
-  <section class="tl section sand">
-    <div class="wrap tl-grid">
-      <div class="tl-side">
-        <Eyebrow>Local know-how</Eyebrow>
-        <h2 class="h-display h2" data-split>{c.localTitle[0]} <span class="c-coral-deep">{c.localTitle[1]}</span></h2>
-        <figure class="tl-photo frame" data-reveal="up">
-          <Image src={eventImg} alt="Plumbing By Paul team members at a community event next to a company trailer" widths={[420, 720]} sizes="(max-width: 980px) 92vw, 420px" />
-          <figcaption>Out in the community</figcaption>
-        </figure>
-      </div>
-      <ol class="tl-list">
-        {c.local.map((l, i) => (
-          <li data-reveal="up">
-            <span class="tl-n h-display">{String(i + 1).padStart(2, '0')}</span>
+  {order.map((key) => (
+    <Fragment>
+      {key === 'intro' && (
+        <section class="ti section shell">
+          <div class="wrap ti-grid">
             <div>
-              <h3 class="h-display h3"><Icon name={l.icon} size={26} />{l.title}</h3>
-              <p>{l.text}</p>
+              <Eyebrow>{t.name} plumbing</Eyebrow>
+              <h2 class="h-display h2" data-split>{c.introTitle[0]} <span class="c-coral-deep">{c.introTitle[1]}</span></h2>
+              {c.intro.map((p) => <p class="ti-p" data-reveal="up">{fill(p)}</p>)}
+              <div class="btn-row ti-cta" data-reveal="up">
+                <Btn href={SITE.phoneHref} icon="phone">Call {SITE.phone}</Btn>
+                <Btn href="#estimate" variant="outline-dark" arrow>Free estimate</Btn>
+              </div>
             </div>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
+            <aside class="ti-card" data-reveal="up" aria-label={c.hoodsTitle}>
+              <p class="h-display h3"><Icon name="pin" size={24} />{c.hoodsTitle}</p>
+              <ul class="ti-hoods" data-stagger="pop">{c.neighborhoods.map((n) => <li>{n}</li>)}</ul>
+              <p class="ti-zip"><strong>ZIP codes</strong>{c.zips.join(' · ')}</p>
+              <p class="ti-any">{c.hoodsNote}</p>
+            </aside>
+          </div>
+        </section>
+      )}
 
-  <Sunline from="var(--sand)" to="var(--deep)" at="right" />
-  <section class="ts section dark">
-    <div class="wrap">
-      <div class="ts-head">
-        <div>
-          <Eyebrow>What we fix in {t.name}</Eyebrow>
-          <h2 class="h-display h2" data-split>Every plumbing job, <span class="c-coral">one crew.</span></h2>
-        </div>
-        <p class="lead" data-reveal="up">The calls we get most from {t.name}, plus everything else on the truck.</p>
-      </div>
-      <ul class="ts-grid" data-stagger="up">
-        {top.map((s) => (
-          <li><a href={`/${s.slug}/`}>
-            <span class="ts-ic"><Icon name={s.icon} size={26} /></span>
-            <span class="ts-txt"><strong class="h-display">{s.name}</strong><span>{s.blurb}</span></span>
-            <Icon name="arrow" size={20} class="ts-go" />
-          </a></li>
-        ))}
-      </ul>
-      <div class="ts-more" data-reveal="up">
-        <p class="h-display">Also on the truck</p>
-        <ul>{rest.map((s) => <li><a href={`/${s.slug}/`}>{s.nav}<Icon name="arrow" size={14} /></a></li>)}</ul>
-      </div>
-    </div>
-  </section>
+      {key === 'local' && (
+        <section class="tl section sand">
+          <div class="wrap tl-grid">
+            <div class="tl-side">
+              <Eyebrow>{c.localEyebrow}</Eyebrow>
+              <h2 class="h-display h2" data-split>{c.localTitle[0]} <span class="c-coral-deep">{c.localTitle[1]}</span></h2>
+              <figure class="tl-photo frame" data-reveal="up">
+                <Image src={localPhoto.img} alt={localPhoto.alt} widths={[420, 720]} sizes="(max-width: 980px) 92vw, 420px" style={`object-position:${localPhoto.pos}`} />
+                <figcaption>{localPhoto.cap}</figcaption>
+              </figure>
+            </div>
+            <ol class="tl-list">
+              {c.local.map((l, i) => (
+                <li data-reveal="up">
+                  <span class="tl-n h-display">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3 class="h-display h3"><Icon name={l.icon} size={26} />{l.title}</h3>
+                    <p>{fill(l.text)}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
 
-  <Marquee tone="tide" items={[`Plumber in ${t.name}`, 'Open 7 days', '24/7 emergency line', 'Free estimates', 'Family owned']} />
-  <ProcessSection eyebrow={`How it works in ${t.name}`} />
-  <ReviewsSection eyebrow="Real Google reviews" line1="Pinellas has spoken." line2="941 times." />
+      {key === 'sun-sand-deep' && <Sunline from="var(--sand)" to="var(--deep)" at="right" />}
+      {key === 'sun-shell-deep' && <Sunline from="var(--shell)" to="var(--deep)" at="left" />}
 
-  <AreasSection focus={t.name} eyebrow={`${t.name} and nearby`} line1={`${t.name},`} line2="and the towns around it."
-    lead={`${t.name} is about ${miles} miles from our St. Petersburg shop in a straight line. We also work next door in ${near.map((n) => n.name).join(', ').replace(/, ([^,]*)$/, ' and $1')}.`} />
+      {key === 'services' && (
+        <section class="ts section dark">
+          <div class="wrap">
+            <div class="ts-head">
+              <div>
+                <Eyebrow>What we fix in {t.name}</Eyebrow>
+                <h2 class="h-display h2" data-split>{c.servicesTitle[0]} <span class="c-coral">{c.servicesTitle[1]}</span></h2>
+              </div>
+              <p class="lead" data-reveal="up">{c.servicesLead}</p>
+            </div>
+            <ul class="ts-grid" data-stagger="up">
+              {top.map((s) => (
+                <li><a href={`/${s.slug}/`}>
+                  <span class="ts-ic"><Icon name={s.icon} size={26} /></span>
+                  <span class="ts-txt"><strong class="h-display">{s.name}</strong><span>{c.serviceNotes[s.slug] ?? s.blurb}</span></span>
+                  <Icon name="arrow" size={20} class="ts-go" />
+                </a></li>
+              ))}
+            </ul>
+            <div class="ts-more" data-reveal="up">
+              <p class="h-display">Also on the truck</p>
+              <ul>{rest.map((s) => <li><a href={`/${s.slug}/`}>{s.nav}<Icon name="arrow" size={14} /></a></li>)}</ul>
+            </div>
+          </div>
+        </section>
+      )}
 
-  <FaqSection eyebrow={`${t.name} plumbing FAQ`} line1={`${t.name} questions,`} line2="straight answers." lead={`What ${t.name} homeowners ask before they book. Anything else, just call.`} faqs={c.faqs} />
+      {key === 'marquee' && <Marquee tone="tide" items={[`Plumber in ${t.name}`, 'Open 7 days', '24/7 emergency line', 'Free estimates', 'Family owned']} />}
+      {key === 'process' && <ProcessSection eyebrow={`How it works in ${t.name}`} />}
+      {key === 'reviews' && <ReviewsSection eyebrow="Real Google reviews" line1={c.reviewsTitle[0]} line2={c.reviewsTitle[1]} />}
+      {key === 'areas' && <AreasSection focus={t.name} eyebrow={`${t.name} and nearby`} line1={c.areasTitle[0]} line2={c.areasTitle[1]} lead={fill(c.areasLead)} />}
+      {key === 'cta' && <CtaBand title={c.ctaTitle} />}
+      {key === 'faq' && <FaqSection eyebrow={`${t.name} plumbing FAQ`} line1={c.faqTitle[0]} line2={c.faqTitle[1]} lead={c.faqLead} faqs={faqs} />}
+    </Fragment>
+  ))}
+
   <Sunline from="var(--sand)" to="var(--coral)" sun="var(--deep)" at="center" />
-  <ContactSection line1={`Need a plumber in ${t.name}?`} line2="Call Paul." town={t.name} />
+  <ContactSection line1={c.contact[0]} line2={c.contact[1]} lead={c.contactLead} formTitle={c.formTitle} town={t.name} />
 </Base>
 
 <style>
@@ -141,12 +171,11 @@ const crumbs = [{ name: 'Service areas', href: '/service-areas/' }, { name: t.na
   .ti-hoods li { padding: 8px 15px; border-radius: 999px; background: var(--shell); box-shadow: inset 0 0 0 1.5px var(--line); font-size: 15px; font-weight: 600; }
   .ti-zip { display: grid; gap: 4px; margin-top: 22px; padding-top: 18px; border-top: 1.5px solid var(--line); font-size: 15.5px; color: var(--ink-2); }
   .ti-zip strong { font-size: 12.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--teal); }
-  .ti-any { margin-top: 14px; font-size: 15px; font-weight: 600; }
+  .ti-any { margin-top: 14px; font-size: 14.5px; color: var(--ink-2); }
 
   .tl-grid { display: grid; grid-template-columns: 440fr 720fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
   .tl-side { position: sticky; top: 130px; }
   .tl-photo { margin-top: 30px; aspect-ratio: 420 / 300; transform: rotate(-2deg); border: 6px solid #fff; box-shadow: var(--shadow); }
-  .tl-photo img { object-position: center 62%; }
   .tl-photo figcaption { position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px; background: var(--deep); color: var(--shell); font-size: 12.5px; font-weight: 600; }
   .tl-list { display: grid; gap: 0; }
   .tl-list li { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 34px 0; border-top: 2px solid var(--ink); }

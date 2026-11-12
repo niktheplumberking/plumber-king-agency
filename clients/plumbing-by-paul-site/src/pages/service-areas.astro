@@ -123,7 +123,7 @@ const faqs = [
         <h2 class="h-display h2" data-split>Find your town <span class="c-coral-deep">on the line.</span></h2>
         <p class="lead rt-lead" data-reveal="up">{all.length} towns and cities, one shop in the middle. The miles are straight-line distances from our shop, worked out from map coordinates, not drive times.</p>
         <figure class="rt-photo frame" data-reveal="up">
-          <Image src={trucksImg} alt="Ten Plumbing By Paul crew members holding small gift boxes in front of two company trucks" widths={[420, 680]} sizes="(max-width: 980px) 92vw, 420px" />
+          <Image src={trucksImg} alt="Plumbing By Paul crew members holding small gift boxes in front of two company trucks" widths={[420, 680]} sizes="(max-width: 980px) 92vw, 420px" />
           <figcaption><Icon name="truck" size={16} />Look for these trucks in your street</figcaption>
         </figure>
         <p class="rt-note" data-reveal="up"><Icon name="pin" size={18} /><span><strong>Not on the line?</strong> If it is in Pinellas County, we cover it. Just call.</span></p>
@@ -150,7 +150,7 @@ const faqs = [
                   <span class="rt-dot rt-sun" aria-hidden="true"><Icon name="sun" size={22} /></span>
                   <div class="rt-txt">
                     <h3 class="h-display">Our shop</h3>
-                    <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.zip}. Every truck starts the day here.</p>
+                    <p>{SITE.street}, {SITE.city}, {SITE.region} {SITE.zip}. This is the shop and office.</p>
                   </div>
                   <p class="rt-mi"><strong class="h-display">0</strong><span>mi</span></p>
                 </li>
@@ -183,7 +183,7 @@ const faqs = [
               <g transform={`translate(${b.pt.x} ${b.pt.y})`}><circle class="tp-pulse" r="18" /><circle class="tp-dot" r="11" /></g>
             </svg>
             <div class="tp-body">
-              <p class="tp-mi"><Icon name="pin" size={16} />About {b.miles} miles away</p>
+              <p class="tp-mi"><Icon name="pin" size={16} />About {b.miles} miles from the shop, in a straight line</p>
               <h3 class="h-display tp-name">{b.t.name}</h3>
               <ul class="tp-hoods">{b.c.neighborhoods.map((n) => <li>{n}</li>)}</ul>
               <p class="tp-zip"><strong>ZIP codes</strong>{b.c.zips.join(' · ')}</p>

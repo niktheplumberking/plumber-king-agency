@@ -28,12 +28,12 @@ const schema = [{
 }];
 
 const stats = [
-  { n: SITE.claims.years, suffix: '+', label: 'years of plumbing in Pinellas' },
+  { n: SITE.claims.years, suffix: '+', label: 'years of experience' },
   { n: SITE.claims.customers, suffix: '+', label: 'happy customers' },
   { n: SITE.reviewCount, suffix: '', label: `Google reviews, rated ${SITE.rating}` },
 ];
 
-// Each line a customer wrote that names a technician: exact substrings of the real reviews in site.ts.
+// Each line a customer wrote that names someone from the crew (names come from the reviews only, roles are not confirmed): exact substrings of the real reviews in site.ts.
 const named = [
   { names: 'Phil', r: REVIEWS[0], line: 'Phil was here within the hour and fixed it in under an hour.' },
   { names: 'Chris & Alex', r: REVIEWS[1], line: 'Chris & Alex did absolutely incredible job, look at the welding!' },
@@ -142,7 +142,7 @@ const arc = ang.map((a) => ({ x: 50 - Math.cos(Math.PI * a) * 38, b: 12 + Math.s
       <div class="cw-low">
         <div class="cw-named">
           <h3 class="h-display h3 cw-named-h" data-reveal="up">The names customers write down</h3>
-          <p class="cw-named-p" data-reveal="up">Our technicians, by first name, as they appear in real Google reviews.</p>
+          <p class="cw-named-p" data-reveal="up">First names, exactly as customers wrote them in real Google reviews.</p>
           <ol class="cw-ledger" data-stagger="up">
             {named.map((n) => (
               <li>
@@ -187,7 +187,7 @@ const arc = ang.map((a) => ({ x: 50 - Math.cos(Math.PI * a) * 38, b: 12 + Math.s
         </div>
       </div>
       <figure class="wy-photo frame" data-reveal="up">
-        <Image src={crew} alt="Fourteen Plumbing By Paul crew members in light blue work shirts in front of two company trucks with the Paul mascot on the side" widths={[640, 1000, 1400]} sizes="(max-width: 1280px) 92vw, 1240px" />
+        <Image src={crew} alt="The Plumbing By Paul crew in light blue work shirts in front of two company trucks with the Paul mascot on the side" widths={[640, 1000, 1400]} sizes="(max-width: 1280px) 92vw, 1240px" />
         <figcaption><Icon name="truck" size={18} />Look for the light blue shirts and Paul's face on the truck.</figcaption>
       </figure>
     </div>

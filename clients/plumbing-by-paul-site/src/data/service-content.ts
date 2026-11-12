@@ -287,10 +287,10 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
   'gas-line-services-st-petersburg-fl': {
     h1a: 'Gas line services in', h1b: 'St. Petersburg, FL',
     eyebrow: 'Pipes, leaks & gas',
-    lead: 'Gas leak detection and repair, new gas lines and appliance hookups, done carefully by a licensed team. If you smell gas right now, get everyone outside first, then call for help from there.',
+    lead: 'Gas leak detection and repair, new gas lines and appliance hookups, done carefully and checked for leaks before we leave. If you smell gas right now, get everyone outside first, then call for help from there.',
     introTitle: ['Gas work, done', 'safely and correctly.'],
     intro: [
-      'Gas line work takes precision, the right licence and experience. We take it seriously, because your safety comes before anything else on the job.',
+      'Gas line work takes precision and experience. We take it seriously, because your safety comes before anything else on the job.',
       'Adding a gas range, dryer or water heater, worried about a leak, or need a line checked? We install, repair and inspect gas lines for homes and businesses across Pinellas County.',
       'Near the Gulf and the bay, salt air speeds up corrosion on exposed metal, including outdoor gas piping. That is one more reason to have older lines looked at.',
     ],
@@ -306,7 +306,7 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       ],
     },
     why: [
-      { icon: 'shield', title: 'Licensed for the work', text: 'Every member of the team is licensed, bonded and insured, and gas work gets care at every step.' },
+      { icon: 'shield', title: 'Care at every step', text: 'Gas work is not rushed. Every member of the team is licensed, bonded and insured.' },
       { icon: 'truck', title: 'Prepared for the job', text: 'The truck arrives with the tools and fittings loaded, so the work gets done without a second trip.' },
       { icon: 'tag', title: 'Price before work', text: 'A free estimate first, and no hidden fees.' },
     ],
@@ -321,7 +321,7 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { q: 'Can you hook up a new gas stove or dryer?', a: 'Yes. We connect gas ranges, dryers, water heaters and other gas appliances, and check the connection for leaks before we leave.' },
       { q: 'Do you install new gas lines?', a: 'Yes. We install new gas lines for homes and businesses, for example for a remodel or a new appliance.' },
       { q: 'Do you repair gas leaks?', a: 'Yes. We find gas leaks, repair the line and test it before the gas is used again.' },
-      { q: 'Can I do gas work myself?', a: 'We do not recommend it. Gas work needs the right licence, fittings and testing, and a small mistake can be dangerous. Call a licensed plumber.' },
+      { q: 'Can I do gas work myself?', a: 'We do not recommend it. Gas work needs the right fittings and testing, and a small mistake can be dangerous. Leave it to a professional.' },
       { q: 'Does salt air affect outdoor gas lines?', a: 'It can. Salt air near the Gulf and the bay speeds up corrosion on exposed metal, including gas piping on the outside of a house. If your outdoor lines look rusty, have them inspected.' },
     ],
     related: ['water-heater-repair-st-petersburg-fl', 'leak-detection-st-petersburg-fl', 'commercial-plumbing-st-petersburg-fl'],

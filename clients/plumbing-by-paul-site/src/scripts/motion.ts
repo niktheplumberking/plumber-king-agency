@@ -115,6 +115,17 @@ function initHeader() {
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // Services menu: it opens on hover or keyboard focus (CSS). Keep aria-expanded true to what is on screen, and let Escape close it.
+  const mega = document.querySelector<HTMLElement>('.has-mega');
+  const trigger = mega?.querySelector<HTMLElement>('[data-mega-trigger]');
+  if (mega && trigger) {
+    const sync = () => trigger.setAttribute('aria-expanded', String(mega.matches(':hover, :focus-within') && !mega.classList.contains('is-shut')));
+    const reopen = () => { mega.classList.remove('is-shut'); sync(); };
+    mega.addEventListener('mouseenter', reopen); mega.addEventListener('focusin', reopen);
+    mega.addEventListener('mouseleave', reopen); mega.addEventListener('focusout', () => requestAnimationFrame(reopen));
+    mega.addEventListener('keydown', (e) => { if (e.key === 'Escape') { mega.classList.add('is-shut'); trigger.focus(); sync(); } });
+  }
 }
 
 /* ---------- mobile menu ---------- */

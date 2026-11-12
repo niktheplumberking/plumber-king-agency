@@ -114,7 +114,7 @@ const rays = Array.from({ length: N }, (_, i) => { const a = (Math.PI * 2 * i) /
             <figcaption>
               <span class="rf-av" aria-hidden="true">{r.initial}</span>
               <span><strong>{r.name}</strong><small>{r.topic}</small></span>
-              <span class="rf-crew">Crew named: {r.crew.join(' & ')}</span>
+              <span class="rf-crew">Names in this review: {r.crew.join(' & ')}</span>
             </figcaption>
           </figure>
         ))}
@@ -166,7 +166,7 @@ const rays = Array.from({ length: N }, (_, i) => { const a = (Math.PI * 2 * i) /
       <div class="cn-copy">
         <Eyebrow>The people behind the stars</Eyebrow>
         <h2 class="h-display h2" data-split>They remember <span class="c-coral-deep">the names.</span></h2>
-        <p class="lead cn-lead" data-reveal="up">Customers often name the technician who came out. In these three reviews, four names come up.</p>
+        <p class="lead cn-lead" data-reveal="up">Customers often write down the name of whoever came out. In these three reviews, four first names come up.</p>
         <ul class="cn-names" data-stagger="up">
           {crewCount.map((c) => <li><span class="h-display">{c.n}</span><small>named in {c.c} {c.c === 1 ? 'review' : 'reviews'}</small></li>)}
         </ul>

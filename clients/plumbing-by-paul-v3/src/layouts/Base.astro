@@ -90,18 +90,20 @@ const is404 = path === '/404';
   <meta name="geo.region" content="US-FL" />
   <meta name="geo.placename" content="St. Petersburg" />
   <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
+  {/* Inline scripts ship as written (no minifier), so their comments live here, outside the page (QA round 2: Home HTML size).
+     Wide screens: above 1440 px the whole 1440 Figma layout is scaled up with CSS zoom, so proportions hold at any desktop
+     width (same idea as United). Zoom re-lays out text and vectors at the new size, so nothing is blurred. Set here, before
+     first paint. The width is the viewport minus the classic scrollbar (measured once by forcing it on for a moment), and
+     a ResizeObserver re-fits when the scrollbar comes or goes (Lenis stopped under the loader). --zoom feeds the CSS
+     tokens that use vw (tokens.css --vw100: use it instead of 100vw). Below 1441 px nothing changes.
+     In <head> there is no body yet: the page will scroll, so fit() leaves room for its scrollbar. */}
   <script is:inline>
-    // Wide screens: above 1440 px the whole 1440 Figma layout is scaled up with CSS zoom, so proportions hold at any desktop
-    // width (same idea as United). Zoom re-lays out text and vectors at the new size, so nothing is blurred. Set here, before
-    // first paint. The width is the viewport minus the classic scrollbar (measured once by forcing it on for a moment), and
-    // a ResizeObserver re-fits when the scrollbar comes or goes (Lenis stopped under the loader). --zoom feeds the CSS
-    // tokens that use vw (tokens.css --vw100: use it instead of 100vw). Below 1441 px nothing changes.
     (function () {
       var d = document.documentElement, sb = 0;
       try { var o = d.style.overflowY; d.style.overflowY = 'scroll'; sb = Math.max(0, window.innerWidth - d.clientWidth); d.style.overflowY = o; } catch (e) {}
       function fit() {
         var w = d.clientWidth || window.innerWidth;
-        if (!document.body) w = window.innerWidth - sb; // in <head>: the page will scroll, so leave room for its scrollbar now
+        if (!document.body) w = window.innerWidth - sb;
         var z = w > 1440 ? Math.round(w / 1440 * 10000) / 10000 : 1;
         var s = z > 1 ? String(z) : '';
         if (d.style.zoom !== s) { d.style.zoom = s; d.style.setProperty('--zoom', String(z)); }
@@ -111,8 +113,9 @@ const is404 = path === '/404';
       document.addEventListener('DOMContentLoaded', function () { fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(d); });
     })();
   </script>
+  {/* Decide before first paint (MOTION.md): motion on? loader this visit? curtain lift after an in-site click?
+     Safety: if the motion module never boots within 3.5 s, show everything. */}
   <script is:inline>
-    // Decide before first paint (MOTION.md): motion on? loader this visit? curtain lift after an in-site click?
     (function () {
       var d = document.documentElement; d.classList.add('js');
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -124,7 +127,6 @@ const is404 = path === '/404';
       try { seen = sessionStorage.getItem('pbp-intro') === '1'; internal = sessionStorage.getItem('pbp-nav') === '1'; sessionStorage.removeItem('pbp-nav'); } catch (e) {}
       if (!seen && !hist && d.getAttribute('data-loader') !== 'off') d.classList.add('intro');
       else if (internal && !hist) d.classList.add('pt-in');
-      // Safety: if the motion module never boots, show everything.
       setTimeout(function () { if (!window.__pbpMotion) d.classList.remove('motion', 'intro', 'pt-in'); }, 3500);
     })();
   </script>

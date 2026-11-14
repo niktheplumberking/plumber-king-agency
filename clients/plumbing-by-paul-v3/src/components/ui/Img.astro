@@ -1,5 +1,7 @@
 ---
-// Responsive photo: AVIF + WebP + JPEG fallback via astro:assets <Picture>, srcset widths, `sizes`, and a focal point.
+// Responsive photo: AVIF + JPEG fallback via astro:assets <Picture>, srcset widths, `sizes`, and a focal point. No WebP
+// source (QA round 2): AVIF covers current browsers; the rest get the JPEG, same picture. The WebP list cost ~0.8 KB
+// (brotli) of Home HTML, part of what pushed mobile LCP to 2.6 s.
 //   <Img name="hero-01-family-house-yard-signs-truck" alt="..." sizes="(min-width:1024px) 572px, 92vw" focus="100% 60%" />
 // `name` = file name in src/assets/photos without .jpg. `priority` = the LCP image (eager + fetchpriority high, no lazy).
 // The <img> fills its parent (object-fit: cover): size the parent, not the image.
@@ -26,7 +28,7 @@ const zs = crop > 1.02 || cropM > 1.02 ? cropSizes(z.sizes, crop, cropM) : z.siz
 const w = zoomWidths(widths ?? [360, 540, 720, 960, 1280, 1600, 2000], z.slot, src.width);
 if (crop > 1.02 && z.slot) { const need = Math.min(src.width, Math.ceil((z.slot * crop * 2) / 40) * 40); if (need > Math.max(...w)) w.push(need); }
 ---
-<Picture src={src} alt={alt} widths={w} sizes={zs} formats={['avif', 'webp']} fallbackFormat="jpg" quality={priority ? 60 : 62}
+<Picture src={src} alt={alt} widths={w} sizes={zs} formats={['avif']} fallbackFormat="jpg" quality={priority ? 60 : 62}
   loading={priority ? 'eager' : 'lazy'} decoding={priority ? 'sync' : 'async'} fetchpriority={priority ? 'high' : 'auto'}
   class:list={['img', cls]} style={`object-fit:${fit};object-position:${focus}`} {...rest} />
 <style>

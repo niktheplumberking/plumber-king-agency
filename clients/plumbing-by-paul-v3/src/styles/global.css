@@ -42,6 +42,7 @@ button { cursor: pointer; background: none; border: 0; padding: 0; }
 .h2 { font-weight: 800; font-size: var(--fz-h2); line-height: 1.14; letter-spacing: -0.01em; text-wrap: balance; }
 @media (max-width: 479px) { .h2 { letter-spacing: -0.016em; } } /* matches the Figma mobile line breaks (fonts render ~1% wider) */
 .h2 .l2, .h1 .l2, .display .l2 { color: var(--blue); }
+.h2.sz-n { font-size: var(--fz-h2-n); line-height: 1.17; } /* narrow/split-column H2 (SectionHead size="n") */
 .on-navy .h2, .bg-navy .h2 { color: var(--white); }
 .on-navy .h2 .l2, .bg-navy .h2 .l2 { color: var(--sky); }
 .h3 { font-weight: 700; font-size: var(--fz-h3s); line-height: 1.25; letter-spacing: -0.005em; }
@@ -150,7 +151,36 @@ button { cursor: pointer; background: none; border: 0; padding: 0; }
 /* ---------- motion pre-states (MOTION.md). Only under html.motion; each element is released by .m-built when motion.ts builds its tween;
    the 3.5 s safety in Base.astro removes .motion if the module never runs, so nothing stays hidden. ---------- */
 html.motion [data-m-section] [data-t]:not(.m-built):not([data-fx="frame"]):not([data-fx="nudge"]) { opacity: 0; }
+/* Under the first-visit loader or the page curtain the hero is covered anyway: keep it painted (LCP); motion.ts applies its
+   pre-states when the cover starts to lift. */
+html.motion.intro [data-m-section][data-m-hero] [data-t]:not(.m-built), html.motion.pt-in [data-m-section][data-m-hero] [data-t]:not(.m-built) { opacity: 1; }
 html.lenis, html.lenis body { height: auto; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* ---------- touch targets (QA, Nick's bar: 44 px on phones and tablets). Small standalone links keep their look and their
+   layout; an invisible ::after grows the tap area to at least 44 px tall. Only for links that have no ::after and are not
+   absolutely positioned. ---------- */
+@media (max-width: 1023px) {
+  .tlink, .crumbs a, .pr-call, .sg-call, .fm-call, .sy-call, .tb-call, .tp-call, .as-tel, .bp-v, .sc-call, .sc-see, .kc-ph,
+  .fq-more a, .tp-link a, .wh-call a, .th8-ask a, .at-line a, .em-t a, .rpill, .wl-phone, .olc-ph, .ec-ph { position: relative; }
+  .tlink::after, .crumbs a::after, .pr-call::after, .sg-call::after, .fm-call::after, .sy-call::after, .tb-call::after, .tp-call::after,
+  .as-tel::after, .bp-v::after, .sc-call::after, .sc-see::after, .kc-ph::after, .fq-more a::after, .tp-link a::after, .wh-call a::after,
+  .th8-ask a::after, .at-line a::after, .em-t a::after, .rpill::after, .wl-phone::after, .olc-ph::after, .ec-ph::after { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 44px; margin-top: -22px; }
+  /* already absolutely positioned: hit area only */
+  .ks-open::after, a.hm-lab::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 44px; margin-top: -22px; }
+  .tk-r dd a, .hr-row dd a, .fm-links a { position: relative; }
+  .tk-r dd a::after, .hr-row dd a::after, .fm-links a::after { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 44px; margin-top: -22px; }
+}
+/* desktop: footer links and the top bar reach the 24 px minimum (WCAG 2.2 target size) */
+@media (min-width: 768px) {
+  .ft .fbody a:not(.tlink), .ft a.mail, .ubar .pay, .ubar .ub-r { position: relative; }
+  .ft .fbody a:not(.tlink)::after, .ft a.mail::after, .ubar .pay::after, .ubar .ub-r::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 28px; margin-top: -14px; }
+}
+/* phones: the rating link fills the 36 px top bar (the bar itself is the limit; still above the 24 px WCAG minimum) */
+@media (max-width: 767px) { .ubar .ub-r { position: relative; } .ubar .ub-r::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 36px; margin-top: -18px; } }
+/* phone numbers never break in the middle */
+a[href^="tel:"] { white-space: nowrap; }
+/* long call links wrap their label; the number inside them sits in .nowrap */
+a[href^="tel:"]:is(.pr-call, .sg-call, .ty-call, .tb-call, .rvn-call) { white-space: normal; }

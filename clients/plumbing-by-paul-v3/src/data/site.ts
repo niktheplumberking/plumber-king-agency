@@ -50,10 +50,16 @@ export const SITE = {
     writeReviewUrl: 'https://search.google.com/local/writereview?placeid=ChIJ__-LnAz8wogRZE-DlVtycL8',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plumbing+By+Paul+LLC&query_place_id=ChIJ__-LnAz8wogRZE-DlVtycL8',
   },
-  // Paul's current payment link was not found in source-site-text. Until he supplies it, "Make a payment" goes to /contact.
-  paymentUrl: '/contact',
+  // Paul's current payment link was not found in source-site-text. Until he supplies it (empty here), every "pay" link
+  // is a tel: link labelled "Call to pay an invoice" (PAY below), never a link to /contact.
+  paymentUrl: '' as string,
   bbb: 'A+ rating with the BBB', // text only, not accredited: never the seal
 } as const;
+
+/** The pay link everywhere: the real payment page once SITE.paymentUrl is set, until then a call to the office. */
+export const PAY = SITE.paymentUrl
+  ? { href: SITE.paymentUrl, label: 'Make a payment', external: SITE.paymentUrl.startsWith('http') }
+  : { href: SITE.tel, label: 'Call to pay an invoice', external: false };
 
 export const PROOF = [
   { label: `Lic. ${SITE.licence}`, icon: 'badge' },

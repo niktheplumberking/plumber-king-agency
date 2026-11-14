@@ -112,6 +112,9 @@ import { REVIEWS } from '../../data/reviews';
   .cf-t { flex: 1; max-width: 700px; font-weight: 500; font-size: 17px; line-height: 26px; }
   .cf-t strong { font-weight: 800; }
   .c-f :global(.cf-cb) { margin-left: auto; min-height: 60px; }
+  @media (min-width: 1200px) and (max-width: 1439px) {
+    .c-d { grid-template-columns: 112px 1fr; } .cd-t { padding: 22px 20px; } .cd-h { font-size: 18px; line-height: 23px; } .cd-d { font-size: 13px; line-height: 19px; }
+  }
   @media (max-width: 1199px) {
     .bento { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
     .c-a { grid-row: auto; grid-column: 1 / -1; }

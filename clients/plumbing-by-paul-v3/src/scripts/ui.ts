@@ -215,7 +215,10 @@ function crew() {
 /* ---------- mobile call bar: appears once the hero has scrolled away, steps aside over the waterline CTA ---------- */
 function callBar() {
   const bar = $('[data-mbar]'); if (!bar) return;
-  const first = $('main section'); const cta = $('#estimate');
+  // "Free estimate" points at the waterline form; pages without one (contact, legal, thank-you, 404) use the contact form.
+  const est = $<HTMLAnchorElement>('a.mb-est[href="#estimate"]', bar); // safety net if a page forgets Base's `estimate`
+  if (est && !document.getElementById('estimate')) est.href = document.getElementById('request') ? '#request' : '/contact#request';
+  const first = $('main section'); const cta = $('#estimate') ?? $('#request');
   let pastHero = false, atCta = false;
   const sync = () => bar.classList.toggle('is-on', pastHero && !atCta);
   if (first) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe(first);
@@ -236,4 +239,12 @@ function formBits() {
   });
 }
 
-header(); mega(); mobileMenu(); footer(); accordions(); carousels(); crew(); callBar(); formBits();
+/* ---------- Montserrat italic, loaded after the page (only small quotes and map labels use it) ---------- */
+function lazyItalic() {
+  if (!('FontFace' in window)) return;
+  const add = () => new FontFace('Montserrat', "url('/fonts/montserrat-latin-wght-italic.woff2') format('woff2')", { style: 'italic', weight: '100 900', display: 'swap' })
+    .load().then((f) => document.fonts.add(f)).catch(() => { /* offline or blocked: the slanted upright face stays */ });
+  if (document.readyState === 'complete') add(); else window.addEventListener('load', add, { once: true });
+}
+
+lazyItalic(); header(); mega(); mobileMenu(); footer(); accordions(); carousels(); crew(); callBar(); formBits();

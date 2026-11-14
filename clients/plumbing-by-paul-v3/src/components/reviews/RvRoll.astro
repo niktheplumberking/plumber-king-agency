@@ -36,14 +36,15 @@ const r: Review = { n: 5, name: 'Doriana Atchley', age: 'Edited 4 weeks ago', fu
   .rvr-media { position: relative; grid-row: 1 / span 2; width: 400px; height: 500px; }
   .sky-blk { position: absolute; inset: 24px 24px -24px -24px; border-radius: 28px; background: var(--sky); }
   .rvr-main { position: absolute; inset: 0; }
-  .rvr-snap { position: absolute; left: 440px; top: 196px; width: 200px; height: 260px; transform: rotate(5deg); z-index: 2; }
+  /* The tilted snapshot stays inside the 600 px media column (its rotated box ends ~10 px before the copy column). */
+  .rvr-snap { position: absolute; left: 378px; top: 196px; width: 200px; height: 260px; transform: rotate(5deg); z-index: 2; }
   .rvr-copy { padding-top: 8px; }
   .rvr-p { max-width: 560px; margin-top: 20px; font-size: 17px; line-height: 29px; color: var(--slate); }
   .rvr-card { position: relative; z-index: 3; grid-column: 1 / -1; width: 620px; margin: -170px 0 0 350px; }
   .rvr-card :global(.rcard) { box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); }
   .rvr-card :global(.q) { font-size: 18px; line-height: 28px; }
   .rvr-sc { position: absolute; right: -230px; bottom: -64px; font-size: 40px; line-height: 1; color: var(--blue); transform: rotate(-5deg); }
-  @media (max-width: 1279px) { .rvr-in { grid-template-columns: 520px minmax(0, 1fr); } .rvr-card { margin-left: 260px; } .rvr-sc { right: -120px; } }
+  @media (max-width: 1279px) { .rvr-in { grid-template-columns: 520px minmax(0, 1fr); } .rvr-snap { left: 296px; } .rvr-card { margin-left: 260px; } .rvr-sc { right: -120px; } }
   @media (max-width: 1023px) {
     .rvr { padding: 56px 0 64px; }
     .rvr-in { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 32px; }

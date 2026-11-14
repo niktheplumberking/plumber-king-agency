@@ -1,15 +1,15 @@
 ---
 // K5 Everything else (Figma 432:4882). Navy band; four action cards (navy, 1 px sky border) overlap its top edge, each with a
 // sky medallion on its top edge; swoosh into the white FAQ below. Mobile: 2 x 2, the link becomes a round icon button.
-// STICKY: payment link not supplied yet (SITE.paymentUrl is '/contact'), so "Make a payment" calls the office until it is.
+// STICKY: payment link not supplied yet (SITE.paymentUrl is empty), so the card calls the office until it is (PAY).
 // STICKY: Paul to confirm he is hiring at launch (card 3 comes out if not).
 import Icon from '../ui/Icon.astro';
 import Swoosh from '../ui/Swoosh.astro';
-import { SITE } from '../../data/site';
-const payHref = SITE.paymentUrl === '/contact' ? SITE.tel : SITE.paymentUrl;
-const payExt = payHref.startsWith('http');
+import { SITE, PAY } from '../../data/site';
+const payHref = PAY.href;
+const payExt = PAY.external;
 const cards = [
-  { i: 'card', t: 'Pay an invoice', d: 'Make a payment online.', l: 'Make a payment', href: payHref, ext: payExt, li: payExt ? 'external' : 'phone', sr: payExt ? '' : ' (call the office)' },
+  { i: 'card', t: 'Pay an invoice', d: payExt ? 'Make a payment online.' : 'Call the office and we take the payment.', l: PAY.label, href: payHref, ext: payExt, li: payExt ? 'external' : 'phone', sr: payExt ? '' : ' (call the office)' },
   { i: 'star', t: 'Leave a review', d: 'Tell the neighbors how we did.', l: 'Review us on Google', href: SITE.google.writeReviewUrl, ext: true, li: 'external', sr: '' },
   { i: 'wrench', t: 'Work with us', d: "We're hiring skilled plumbers.", l: 'Email the office', href: `mailto:${SITE.email}?subject=${encodeURIComponent('Work with us')}`, ext: false, li: 'mail', sr: '' },
 ];

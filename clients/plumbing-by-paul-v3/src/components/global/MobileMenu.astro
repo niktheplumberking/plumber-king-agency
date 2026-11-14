@@ -11,8 +11,8 @@ import { NAV } from '../../data/nav';
 import { SERVICES, EMERGENCY } from '../../data/services';
 import { TOWNS_LINKED } from '../../data/towns';
 import { SITE } from '../../data/site';
-interface Props { path: string; }
-const { path } = Astro.props;
+interface Props { path: string; estimate?: string; }
+const { path, estimate = '#estimate' } = Astro.props;
 ---
 <div class="mnav on-navy" id="mnav" role="dialog" aria-modal="true" aria-label="Menu" data-mnav hidden>
   <div class="mn-top">
@@ -41,7 +41,7 @@ const { path } = Astro.props;
     </ul>
     <div class="mn-cta" data-mn-item>
       <CallButton v="priN" block />
-      <Button href="#estimate" v="secN" block data-menu-close-link>Get a free estimate</Button>
+      <Button href={estimate} v="secN" block data-menu-close-link>Get a free estimate</Button>
     </div>
     <div class="mn-meta" data-mn-item>
       <RatingPill dark small />

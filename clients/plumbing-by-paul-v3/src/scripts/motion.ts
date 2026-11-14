@@ -266,7 +266,7 @@ function introChrome(tl: gsap.core.Timeline) {
   if (brand) tl.from(brand, { yPercent: -110, duration: 0.9, ease: BACK }, 0.15);
 }
 
-function runLoader(onHandoff: () => void) {
+function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
   const ld = document.querySelector<HTMLElement>('[data-loader]');
   if (!ld || !html.classList.contains('intro')) { onHandoff(); return; }
   const panel = ld.querySelector<HTMLElement>('.ld-panel')!;
@@ -288,6 +288,8 @@ function runLoader(onHandoff: () => void) {
   const lift = () => {
     if (lifted) return; lifted = true;
     fill?.kill(); build.progress(1);
+    onLift(); // the panel still covers the page: the hero takes its pre-states now, unseen
+    const skipBtn = ld.querySelector('.ld-skip'); if (skipBtn) gsap.to(skipBtn, { autoAlpha: 0, duration: 0.2 }); // it sits outside the panel
     const h = window.innerHeight + (edge?.getBoundingClientRect().height ?? 120) + 8;
     const out = gsap.timeline({ onComplete: () => {
       html.classList.remove('intro'); ld.style.display = 'none';
@@ -307,9 +309,10 @@ function runLoader(onHandoff: () => void) {
   window.addEventListener('keydown', skip, { once: true });
 }
 
-function runCurtainIn(onHandoff: () => void) {
+function runCurtainIn(onHandoff: () => void, onLift: () => void = () => {}) {
   const pt = document.querySelector<HTMLElement>('[data-pt]');
   if (!pt || !html.classList.contains('pt-in')) return false;
+  onLift();
   const panel = pt.querySelector<HTMLElement>('.pt-panel')!;
   const edge = pt.querySelector<SVGElement>('.pt-edge');
   const h = window.innerHeight + (edge?.getBoundingClientRect().height ?? 120) + 8;
@@ -361,7 +364,11 @@ function boot() {
   const intro = html.classList.contains('intro');
   if (intro) introChrome(chrome);
 
-  sections('hero', (tl) => { heroTl = tl; });
+  // Under the loader or the curtain the hero stays visible (CSS) so its photo and text paint early for LCP;
+  // its pre-states are applied only when the cover starts to lift, while the panel still hides the page.
+  let heroBuilt = false;
+  const buildHero = () => { if (heroBuilt) return; heroBuilt = true; sections('hero', (tl) => { heroTl = tl; }); };
+  if (!intro && !html.classList.contains('pt-in')) buildHero();
   curtainOut();
   // Everything below the fold is wired when the main thread is free, so it does not compete with the first paint.
   const rest = () => { sections('rest'); signatures(); pointer(); ScrollTrigger.refresh(); };
@@ -370,11 +377,12 @@ function boot() {
   let handed = false;
   const handoff = () => {
     if (handed) return; handed = true;
+    buildHero();
     chrome.play();
     heroTl?.play();
     window.dispatchEvent(new CustomEvent('pbp:handoff'));
   };
-  if (!runCurtainIn(handoff)) runLoader(handoff);
+  if (!runCurtainIn(handoff, buildHero)) runLoader(handoff, buildHero);
   // Fonts change line breaks: re-measure triggers once they are in.
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
 }

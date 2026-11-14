@@ -18,14 +18,14 @@ const id = sid(slug, 'faq');
 // FaqItem drops the space between a1 and a2 (an Astro fragment trims it), so the space travels inside a2 here and the
 // FAQPage JSON-LD is emitted below from the clean text instead of by Faq.astro.
 const items = f.items.map((i) => ({ ...i, a2: i.a2 ? ` ${i.a2}` : undefined }));
-const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f.items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: [i.a1, i.a2].filter(Boolean).join(' ') } })) };
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f.items.filter((i) => !i.noSchema).map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: [i.a1, i.a2].filter(Boolean).join(' ') } })) };
 ---
 <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 {layout === 'a' ? (
 <section class="fq fq-a" aria-labelledby={id} data-m-section>
   <div class="wrap fq-grid">
     <div class="fq-side">
-      <SectionHead eyebrow={f.eyebrow} l1={f.l1} l2={f.l2} id={id} class="fq-head" />
+      <SectionHead eyebrow={f.eyebrow} l1={f.l1} l2={f.l2} id={id} size="n" class="fq-head" />
       <aside class="fq-help" aria-label="Ask a person" data-t="4" data-fx="rise">
         <Seal d={104} deg={6} class="fq-seal" />
         <div class="fq-card">

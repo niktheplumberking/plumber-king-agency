@@ -21,5 +21,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemLi
   .crumbs a { display: inline-block; padding: 2px 0; color: var(--press); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: transparent; transition: text-decoration-color var(--dur-2); }
   .crumbs a:hover { text-decoration-color: currentColor; }
   .crumbs [aria-current] { color: var(--navy); }
+  /* below 1024 the logo tab hangs to y=120, where some heroes start: keep the crumbs clear of it (no overlap, full tap area) */
+  @media (max-width: 1023px) { .crumbs { padding-top: 8px; } }
   .dark ol { color: var(--soft); } .dark a { color: var(--sky); } .dark [aria-current] { color: var(--white); }
 </style>

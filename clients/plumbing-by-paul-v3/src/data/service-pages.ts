@@ -479,7 +479,7 @@ export const SERVICE_PAGES: Record<string, SvcPage> = {
       { q: 'Do you repipe both homes and businesses?', a1: 'Yes.', a2: 'We repipe and design plumbing for residential and commercial properties.', link: { text: 'Commercial plumbing', href: '/commercial-plumbing' } },
       { q: 'Will I get a quote before the work starts?', a1: 'Yes.', a2: 'After the inspection you get a quote and a timeline, so you know what to expect before the project begins.' },
       { q: 'Can you design plumbing for a new property?', a1: 'Yes.', a2: 'We design plumbing systems around the building, how it will be used and your budget.' },
-      { q: 'Is repiping covered by a warranty?', a1: 'Our work comes with a 1-year workmanship warranty.', a2: 'If something we did is not right, call the office and we come back.' },
+      { noSchema: true, q: 'Is repiping covered by a warranty?', a1: 'Our work comes with a 1-year workmanship warranty.', a2: 'If something we did is not right, call the office and we come back.' },
     ] },
     related: { eyebrow: 'Often part of the same job', l1: 'Pipes, pressure', l2: 'and leaks', cards: [
       { t: 'Leak detection', href: '/leak-detection', icon: 'droplets' }, { t: 'Water softeners and filtration', href: '/water-softeners', icon: 'drop' },

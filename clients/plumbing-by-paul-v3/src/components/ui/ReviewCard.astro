@@ -55,5 +55,6 @@ const pats = (r.fixedBy ?? []).slice(0, 2);
   .n { font-weight: 600; font-size: 15px; line-height: 22px; }
   .m { font-weight: 500; font-size: 12px; line-height: 18px; color: var(--slate-2); }
   .navy .m { color: var(--soft); }
+  .tint .m { color: var(--slate); } /* slate-2 on tint is 4.4:1; slate passes AA */
   @media (max-width: 767px) { .rcard { padding: 22px; } .rcard.has-patch { padding-top: 30px; } .q { font-size: 15px; line-height: 25px; } }
 </style>

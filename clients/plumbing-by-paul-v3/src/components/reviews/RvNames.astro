@@ -26,7 +26,7 @@ const max = NAMED[0][1];
           ))}
         </ol>
         <p class="rvn-cap" data-t="3">Reviews that mention each name, out of the 170 most relevant Google reviews we read on 13 Nov 2026. JR's count is approximate.</p>
-        <div data-t="3" class="rvn-lk"><TextLink href={SITE.tel} lead="phone" icon={false}>Ask for your favorite by name: {SITE.phone}</TextLink></div>
+        <div data-t="3" class="rvn-lk"><TextLink href={SITE.tel} lead="phone" icon={false} class="rvn-call">Ask for your favorite by name: <span class="nowrap">{SITE.phone}</span></TextLink></div>
       </div>
       <div class="rvn-media">
         <span class="tint-blk" aria-hidden="true"></span>
@@ -60,7 +60,7 @@ const max = NAMED[0][1];
   @media (max-width: 1279px) { .rvn-grid { grid-template-columns: minmax(0, 1fr) 320px; } .rvn-media { width: 320px; height: 400px; margin: 0; } .fill { width: calc(var(--w) * .7); } }
   @media (max-width: 1023px) {
     .rvn { padding: 64px 0 72px; }
-    .rvn-grid { grid-template-columns: 1fr; row-gap: 40px; margin-top: 28px; }
+    .rvn-grid { grid-template-columns: minmax(0, 1fr); row-gap: 40px; margin-top: 28px; }
     .board { gap: 18px; padding: 20px 16px; border-radius: 20px; }
     .row { grid-template-columns: 120px 1fr; height: 34px; }
     .rp :global(.patch) { width: 120px; height: 46px; }

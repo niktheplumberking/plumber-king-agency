@@ -5,7 +5,7 @@
 import Eyebrow from './Eyebrow.astro';
 interface Props {
   eyebrow: string; l1: string; l2?: string; lead?: string; dark?: boolean; center?: boolean; script?: string;
-  ebScript?: string; dot?: boolean; level?: 'h1' | 'h2'; inline?: boolean; size?: 'h2' | 'h1' | 'cta' | 'sm'; id?: string; class?: string; leadWidth?: string;
+  ebScript?: string; dot?: boolean; level?: 'h1' | 'h2'; inline?: boolean; size?: 'h2' | 'h1' | 'cta' | 'sm' | 'n'; id?: string; class?: string; leadWidth?: string;
 }
 const { eyebrow, l1, l2, lead, dark = false, center = false, script, ebScript, dot, level = 'h2', size = 'h2', inline = false, id, class: cls, leadWidth } = Astro.props;
 const Tag = level;

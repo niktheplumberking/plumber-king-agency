@@ -96,7 +96,9 @@ const rows: [string, string, string?][] = [
   .ks-snap { position: absolute; left: 30px; top: 300px; z-index: 2; width: 220px; height: 290px; transform: rotate(-5deg); }
   .ks-cap { position: absolute; left: 300px; top: 462px; z-index: 2; }
   .ks-capm { display: none; }
-  @media (max-width: 1279px) { .ks-map { width: 640px; } .ks-open { left: auto; right: 24px; } .ks-ticket { width: 400px; } }
+  /* below 1440 the ticket covers the map's right side: the maps pill moves under the location label */
+  @media (max-width: 1439px) { .ks-open { left: 24px; right: auto; top: 64px; } }
+  @media (max-width: 1279px) { .ks-map { width: 640px; } .ks-ticket { width: 400px; } }
   @media (max-width: 1023px) {
     .ks { padding: 56px 0 64px; }
     .ks-stage { margin-top: 28px; min-height: 0; display: grid; }

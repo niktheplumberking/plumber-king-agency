@@ -12,6 +12,7 @@ import TextLink from '../ui/TextLink.astro';
 import { SITE } from '../../data/site';
 import { ALL, JOBS, PLUMBERS, named } from './data';
 const FIRST = 12;
+const FIRST_M = 6; // phones: six first (Figma mobile), the rest behind "Show more reviews"
 const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 === 2 ? 'tint' : 'navy') : i === 4 ? 'tint' : 'white');
 ---
 <section class="rva" id="all-reviews" aria-labelledby="rva-h" data-m-section data-rv>
@@ -37,7 +38,7 @@ const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 
     <p class="rva-count" role="status" aria-live="polite" data-rv-count></p>
     <ul role="list" class="rv-grid" data-rv-grid>
       {ALL.map((r, i) => (
-        <li class:list={['rv-item', i >= FIRST && 'is-more']} data-jobs={r.jobs.join(' ')} data-who={named(r).join(' ')} data-t="4">
+        <li class:list={['rv-item', i >= FIRST && 'is-more', i >= FIRST_M && i < FIRST && 'is-more-m']} data-jobs={r.jobs.join(' ')} data-who={named(r).join(' ')} data-t="4">
           <ReviewCard r={r} v={variant(i)} t={false} />
         </li>
       ))}
@@ -63,6 +64,8 @@ const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 
     const empty = root.querySelector<HTMLElement>('[data-rv-empty]');
     let job = 'all', who = '', expanded = false;
     const desk = window.matchMedia('(min-width: 1024px)');
+    const phone = window.matchMedia('(max-width: 767px)');
+    const isMore = (it: HTMLElement) => it.classList.contains('is-more') || (phone.matches && it.classList.contains('is-more-m'));
 
     const layout = () => {
       const vis = items.filter((it) => !it.hidden);
@@ -79,7 +82,7 @@ const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 
       items.forEach((it, i) => {
         const okJob = job === 'all' || (it.dataset.jobs ?? '').split(' ').includes(job);
         const okWho = !who || (it.dataset.who ?? '').split(' ').includes(who);
-        const show = okJob && okWho && (filtered || expanded || !it.classList.contains('is-more'));
+        const show = okJob && okWho && (filtered || expanded || !isMore(it));
         const was = !it.hidden;
         it.hidden = !show;
         it.classList.toggle('shown', show);
@@ -104,13 +107,14 @@ const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 
     }));
     more?.addEventListener('click', () => {
       expanded = true; apply(true);
-      const next = items.find((it) => it.classList.contains('is-more') && !it.hidden);
+      const next = items.find((it) => isMore(it) && !it.hidden);
       next?.querySelector<HTMLElement>('figure')?.setAttribute('tabindex', '-1');
       next?.querySelector<HTMLElement>('figure')?.focus({ preventScroll: true });
     });
     apply();
     new ResizeObserver(() => layout()).observe(grid);
     desk.addEventListener('change', layout);
+    phone.addEventListener('change', () => apply());
     document.fonts?.ready.then(() => { layout(); window.dispatchEvent(new Event('resize')); });
   }
 </script>
@@ -144,6 +148,10 @@ const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 
   .rv-item { padding-top: 26px; }
   .rv-js .rv-item.off { padding-top: 54px; }
   .rv-item[hidden], :global(html.js) .rv-item.is-more:not(.shown) { display: none; }
+  @media (max-width: 767px) {
+    :global(html.js) .rv-item.is-more-m:not(.shown) { display: none; }
+    .rv-item :global(.q) { font-size: 14px; line-height: 22px; } /* Figma mobile card text */
+  }
   .rv-item :global(.q p) { white-space: pre-line; overflow-wrap: anywhere; }
   .rv-item :global(.rcard.tint), .rv-item :global(.rcard.navy) { padding-bottom: 40px; }
   .rv-item :global(.rcard.tint .m) { color: var(--slate); }

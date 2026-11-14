@@ -14,7 +14,7 @@ const id = sid(slug, 'signs');
   <div class="wrap">
     <div class="sg-head">
       <SectionHead eyebrow={s.eyebrow} l1={s.l1} l2={s.l2} id={id} />
-      <a href={SITE.tel} class="sg-call" data-t="3"><Icon name="phone" size={18} />Seeing one of these? Call {SITE.phone}</a>
+      <a href={SITE.tel} class="sg-call" data-t="3"><Icon name="phone" size={18} /><span>Seeing one of these? Call <span class="nowrap">{SITE.phone}</span></span></a>
     </div>
     <ol class="sg-grid" role="list" data-t="4" data-stagger>
       {s.items.map((c, i) => (
@@ -29,7 +29,7 @@ const id = sid(slug, 'signs');
         </li>
       ))}
     </ol>
-    <a href={SITE.tel} class="sg-call sg-call-m"><Icon name="phone" size={18} />Seeing one of these? Call {SITE.phone}</a>
+    <a href={SITE.tel} class="sg-call sg-call-m"><Icon name="phone" size={18} /><span>Seeing one of these? Call <span class="nowrap">{SITE.phone}</span></span></a>
   </div>
 </section>
 <style>

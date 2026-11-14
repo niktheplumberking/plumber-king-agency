@@ -13,17 +13,17 @@ import TextLink from '../ui/TextLink.astro';
 import { SITE } from '../../data/site';
 const items: FaqEntry[] = [
   { tag: 'Pricing', q: 'How much does a plumber cost in St. Petersburg?', a1: 'It depends on the job, and we tell you the price before we start.', a2: `Estimates are free. Call ${SITE.phone}, describe what you see, and we'll give you an honest idea of what it involves.`, link: { text: `Call ${SITE.phone}`, href: SITE.tel } },
-  { tag: 'Trust', q: 'Are you licensed and insured?', a1: `Yes. Plumbing By Paul LLC is a Florida certified plumbing contractor, licence ${SITE.licence}, and has been in business since 2015.`, a2: 'You can check the licence yourself at myfloridalicense.com. We are also bonded and insured.' },
+  { tag: 'Trust', noSchema: true, q: 'Are you licensed and insured?', a1: `Yes. Plumbing By Paul LLC is a Florida certified plumbing contractor, licence ${SITE.licence}, and has been in business since 2015.`, a2: 'You can check the licence yourself at myfloridalicense.com. We are also bonded and insured.' },
   { tag: 'Emergency', q: 'Do you come out for emergencies?', a1: `Yes. For a burst pipe, a sewer backup or a failed water heater, call ${SITE.phone} right away.`, a2: 'Shut off the water at the main valve near your meter first if you can do it safely.' },
   { tag: 'Area', q: 'Which areas do you cover?', a1: 'We work across Pinellas County from our shop in St. Petersburg, including Clearwater and Seminole.', a2: "If you're not sure whether we come to you, call and ask." },
-  { tag: 'Warranty', q: 'Do you guarantee your work?', a1: 'Yes. Our work comes with a 1-year workmanship warranty.', a2: "If something we fixed isn't right, call the office and we come back." },
+  { tag: 'Warranty', noSchema: true, q: 'Do you guarantee your work?', a1: 'Yes. Our work comes with a 1-year workmanship warranty.', a2: "If something we fixed isn't right, call the office and we come back." },
   { tag: 'Service', q: 'Do you work on businesses as well as homes?', a1: 'Yes. The trucks say "Commercial and Residential" for a reason.', a2: 'Recent jobs in our reviews include an office and a church hall.' },
 ];
 ---
 <section class="hfaq" aria-labelledby="hfaq-h" data-m-section>
   <div class="wrap hf-grid">
     <div class="hf-side">
-      <SectionHead eyebrow="Good questions" l1="Things people ask" l2="before they call" id="hfaq-h" lead="Straight answers. If yours isn't here, ask the office." leadWidth="380px" class="hf-head" />
+      <SectionHead eyebrow="Good questions" l1="Things people ask" l2="before they call" id="hfaq-h" size="n" lead="Straight answers. If yours isn't here, ask the office." leadWidth="380px" class="hf-head" />
       <aside class="hf-help" aria-label="Ask a person" data-t="4" data-fx="rise">
         <Seal d={112} deg={6} class="hf-seal" />
         <div class="hf-card">

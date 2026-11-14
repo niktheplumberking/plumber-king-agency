@@ -1,6 +1,6 @@
 ---
 // E2 The first five minutes (Figma 433:9390 / 439:3304): numbered rail of four steps over a pipe run, Yellowtail numeral
-// stickers on each card's top-left. Steps 1 to 3 are from Paul's own FAQ (PAUL TO CONFIRM the wording). Emits HowTo JSON-LD for the four steps.
+// stickers on each card's top-left. Steps 1 to 3 are from Paul's own FAQ (PAUL TO CONFIRM the wording). No HowTo JSON-LD: Google retired HowTo rich results in 2023.
 import SectionHead from '../ui/SectionHead.astro';
 import TextLink from '../ui/TextLink.astro';
 import Icon from '../ui/Icon.astro';
@@ -12,7 +12,6 @@ const FIRST_FIVE = [
   { t: 'Open a tap.', d: "With the main off, run a faucet to drain what's left in the pipes.", i: 'drop' },
   { t: `Call ${SITE.phone}.`, d: "Tell us what you see. We'll tell you what to do next.", i: 'phone' },
 ];
-const howTo = { '@context': 'https://schema.org', '@type': 'HowTo', name: 'What to do in the first five minutes of a plumbing emergency', step: FIRST_FIVE.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s.t, text: s.d })) };
 ---
 <section class="ff" aria-labelledby="ff-h" data-m-section>
   <div class="wrap ff-head">
@@ -36,7 +35,6 @@ const howTo = { '@context': 'https://schema.org', '@type': 'HowTo', name: 'What 
     </ol>
   </div>
 </section>
-<script type="application/ld+json" set:html={JSON.stringify(howTo)} />
 <style>
   .ff { position: relative; background: var(--white); padding: 52px 0 112px; }
   .ff-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }

@@ -18,8 +18,12 @@ import Curtain from '../components/global/Curtain.astro';
 interface Props {
   title: string; description: string; path: string; og?: string; ogAlt?: string; jsonld?: object[];
   noindex?: boolean; bodyClass?: string; loader?: boolean; type?: 'website' | 'article';
+  /** Optional early AVIF preload of the LCP photo: the same name, sizes and widths as its `<Img priority>`. */
+  preload?: { name: string; sizes: string; widths: number[] };
+  /** Target of the mobile call bar's "Free estimate": the waterline form (#estimate) unless the page has none. */
+  estimate?: string;
 }
-const { title, description, path, og = 'hero-01-family-house-yard-signs-truck', ogAlt, jsonld = [], noindex, bodyClass, loader = true, type = 'website' } = Astro.props;
+const { title, description, path, og = 'hero-01-family-house-yard-signs-truck', ogAlt, jsonld = [], noindex, bodyClass, loader = true, type = 'website', preload, estimate = '#estimate' } = Astro.props;
 
 // Preview builds are noindex unless PUBLIC_NOINDEX is exactly "false" (launch build only).
 const envNoindex = String(import.meta.env.PUBLIC_NOINDEX ?? 'true').toLowerCase() !== 'false';
@@ -34,9 +38,20 @@ const ogUrl = new URL(ogImg.src, Astro.site).href;
 const logoImg = await getImage({ src: logo, width: 512, format: 'png' });
 const logoUrl = new URL(logoImg.src, Astro.site).href;
 
+// Same options as Img.astro's AVIF <source> (quality 60 for priority images), so the preloaded files are the ones the page uses.
+let lcpSet: string | undefined;
+if (preload) {
+  const src = photos[`/src/assets/photos/${preload.name}.jpg`]?.default;
+  if (!src) throw new Error(`Base: preload photo "${preload.name}" not found`);
+  const img = await getImage({ src, widths: preload.widths.filter((x) => x <= src.width), sizes: preload.sizes, format: 'avif', quality: 60 });
+  lcpSet = img.srcSet.attribute;
+}
 const gtm = import.meta.env.PUBLIC_GTM_ID as string | undefined;
 const ga = import.meta.env.PUBLIC_GA_ID as string | undefined;
-const ld = [plumberSchema(logoUrl, ogUrl), ...jsonld];
+// The site-wide Plumber entity carries the same image on every page (entity data stays constant).
+const entityImg = await getImage({ src: photos['/src/assets/photos/hero-01-family-house-yard-signs-truck.jpg'].default, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 78 });
+const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), ...jsonld];
+const is404 = path === '/404';
 ---
 <!doctype html>
 <html lang="en-US" data-loader={loader ? undefined : 'off'}>
@@ -45,22 +60,22 @@ const ld = [plumberSchema(logoUrl, ogUrl), ...jsonld];
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  <link rel="canonical" href={canonical} />
+  {!is404 && <link rel="canonical" href={canonical} />}
   <meta name="robots" content={robots} />
   <meta name="theme-color" content="#111032" />
   <meta name="format-detection" content="telephone=no" />
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
+  {lcpSet && preload && <link rel="preload" as="image" type="image/avif" imagesrcset={lcpSet} imagesizes={preload.sizes} fetchpriority="high" />}
   <link rel="preload" href="/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/yellowtail-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/russo-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <meta property="og:type" content={type} />
   <meta property="og:site_name" content={SITE.name} />
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:url" content={canonical} />
+  {!is404 && <meta property="og:url" content={canonical} />}
   <meta property="og:image" content={ogUrl} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -101,10 +116,10 @@ const ld = [plumberSchema(logoUrl, ogUrl), ...jsonld];
   {loader && <Loader />}
   <Curtain />
   <UtilityBar />
-  <Header path={path} />
+  <Header path={path} estimate={estimate} />
   <main id="main" tabindex="-1"><slot /></main>
   <Footer />
-  <MobileCallBar />
+  <MobileCallBar estimate={estimate} />
   <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion';</script>
 </body>
 </html>

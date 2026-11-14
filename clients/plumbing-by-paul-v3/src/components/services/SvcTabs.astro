@@ -39,7 +39,7 @@ const pad = (x: number) => String(x).padStart(2, '0');
             <h3 class="tb-t">{it.label}</h3>
             <p class="tb-x">{it.text}</p>
             {it.href && <TextLink href={it.href} class="tb-more">{it.hrefText ?? 'Read more'}</TextLink>}
-            <a href={SITE.tel} class="tb-call"><Icon name="phone" size={18} />{t.foot}: {SITE.phone}</a>
+            <a href={SITE.tel} class="tb-call"><Icon name="phone" size={18} /><span>{t.foot}: <span class="nowrap">{SITE.phone}</span></span></a>
           </div>
         ))}
       </div>

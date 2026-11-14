@@ -62,4 +62,6 @@ const pct = (x: number, y: number) => `left:${(x / 600) * 100}%;top:${(y / 700) 
     .l-sm { left: -4% !important; top: 47% !important; }
     .l-sp { left: auto !important; right: -4%; top: 88% !important; }
   }
+  /* narrow phones: the labels stay inside the viewport */
+  @media (max-width: 389px) { .l-cw, .l-sp { right: 0; } .l-sm { left: 0 !important; } }
 </style>

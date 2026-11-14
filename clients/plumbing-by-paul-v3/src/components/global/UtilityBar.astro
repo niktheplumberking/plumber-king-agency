@@ -2,7 +2,7 @@
 // Utility bar (navy, 40 px; 36 mobile). Scrolls away; the header below it is sticky.
 import Stars from '../ui/Stars.astro';
 import Icon from '../ui/Icon.astro';
-import { SITE } from '../../data/site';
+import { SITE, PAY } from '../../data/site';
 ---
 <aside class="ubar" data-intro="topbar" aria-label="Rating, licence and hours">
   <div class="wrap ub-in">
@@ -14,7 +14,7 @@ import { SITE } from '../../data/site';
     <p class="ub-rt">
       <span class="dot" aria-hidden="true"></span><span class="h-long">{SITE.hours.line}</span><span class="h-short">{SITE.hours.short}</span>
       <span class="sep" aria-hidden="true"></span>
-      <a href={SITE.paymentUrl} class="pay">Make a payment</a>
+      <a href={PAY.href} class="pay" {...(PAY.external ? { target: '_blank', rel: 'noopener' } : {})}>{PAY.label}</a>
     </p>
   </div>
 </aside>

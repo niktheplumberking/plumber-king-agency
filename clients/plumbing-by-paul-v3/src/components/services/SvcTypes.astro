@@ -36,7 +36,7 @@ const n = t.cards.length;
   <div class="wrap">
     <div class="ty-bar" data-t="3">
       {t.lead && <p>{t.lead}</p>}
-      <a href={SITE.tel} class="ty-call"><Icon name="phone" size={18} />{t.link}: {SITE.phone}</a>
+      <a href={SITE.tel} class="ty-call"><Icon name="phone" size={18} /><span>{t.link}: <span class="nowrap">{SITE.phone}</span></span></a>
     </div>
   </div>
 </section>

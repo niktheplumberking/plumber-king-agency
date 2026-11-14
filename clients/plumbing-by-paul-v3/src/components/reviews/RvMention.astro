@@ -59,7 +59,7 @@ const max = TOPICS[0][1];
     .tag { position: static; height: 32px; padding: 0 10px; margin-left: auto; flex: none; }
     .tag b { font-size: 18px; }
     .bt:has(.tag) { margin-right: 0; }
-    .top .bf { width: calc(var(--w) - 112px); }
+    .top .bf { width: auto; flex: 1 1 0; min-width: 0; } /* the top topic is the 100% bar: it fills what the tag leaves */
     .cap { font-size: 12px; margin-top: 18px; }
   }
 </style>

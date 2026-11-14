@@ -19,12 +19,12 @@ const STAND = 'Paul to supply. No numbers are published until he does.';
     <div class="pr-copy">
       <Eyebrow text={p.eyebrow ?? 'What it costs'} />
       {layout === 'a' ? (
-        <h2 class="h2" id={id} data-t="2"><span class="l1">{p.l1}</span> <span class="l2">{p.l2}</span></h2>
+        <h2 class="h2 sz-n" id={id} data-t="2"><span class="l1">{p.l1}</span> <span class="l2">{p.l2}</span></h2>
       ) : (
         <h2 class="pr-st" id={id} data-t="2">{p.l1} <b>{p.l2}</b></h2>
       )}
       {p.p && <p class="lead pr-p" data-t="3">{p.p}</p>}
-      <a href={SITE.tel} class="pr-call" data-t="3"><Icon name="phone" size={18} />Get your price: {SITE.phone}</a>
+      <a href={SITE.tel} class="pr-call" data-t="3"><Icon name="phone" size={18} /><span>Get your price: <span class="nowrap">{SITE.phone}</span></span></a>
     </div>
     <div class="pr-card" data-t="4" data-fx="toss">
       <p class="label pr-l">Prices from Paul</p>

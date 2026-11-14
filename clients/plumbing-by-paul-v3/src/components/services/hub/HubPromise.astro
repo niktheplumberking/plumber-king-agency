@@ -3,7 +3,7 @@
 // decides (STICKY 7). The spotlight quote is Renee Frias, word for word (REVIEWS.md n23, last sentence left off).
 import SectionHead from '../../ui/SectionHead.astro';
 import Icon from '../../ui/Icon.astro';
-import Seal from '../../ui/Seal.astro';
+import Stamp from '../../ui/Stamp.astro';
 import Stars from '../../ui/Stars.astro';
 import GoogleG from '../../ui/GoogleG.astro';
 import Patch from '../../ui/Patch.astro';
@@ -19,7 +19,7 @@ for (const h of RENEE.hl ?? []) q = q.replace(esc(h), `<mark>${esc(h)}</mark>`);
   <div class="wrap">
     <SectionHead eyebrow="Paul's promise" l1="Same four things," l2="every single job" id="pm-h" />
     <div class="pm-band">
-      <Seal d={160} deg={-4} class="pm-seal" />
+      <Stamp d={150} deg={-4} class="pm-seal" />
       <ul role="list" class="pm-cells" data-t="4" data-stagger>
         {PROMISE.map((c, i) => (
           <li><span class="pm-w"><Icon name={c.icon} size={22} /><span class="num">{String(i + 1).padStart(2, '0')}</span></span><h3>{c.t}</h3><p>{c.d}</p></li>

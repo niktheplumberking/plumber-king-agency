@@ -16,7 +16,7 @@ const id = sid(slug, 'related');
 <section class="rl" aria-labelledby={id} data-m-section>
   <div class="wrap rl-grid">
     <div class="rl-side">
-      <SectionHead eyebrow={r.eyebrow} l1={r.l1} l2={r.l2} id={id} />
+      <SectionHead eyebrow={r.eyebrow} l1={r.l1} l2={r.l2} id={id} size="n" />
       <div class="rl-towns" data-t="5" data-stagger>{TOWNS_LINKED.map((t) => <TownChip name={t.name} href={t.href} />)}</div>
     </div>
     <div class="rl-main">

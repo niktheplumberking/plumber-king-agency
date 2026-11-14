@@ -24,6 +24,15 @@ npm run check:links  # every internal link in dist must resolve (lists pages not
 Vercel also sends `X-Robots-Tag: noindex, nofollow` on any `*.vercel.app` host, so previews stay out of Google
 even if `PUBLIC_NOINDEX` is wrong. Live hosting is decided by the agency, not this repo.
 
+## Launch checklist (production build)
+
+1. Set `PUBLIC_NOINDEX=false` in the **Production** environment only (previews keep the default `true`). Without it the
+   whole live site ships `noindex, nofollow` and a `Disallow: /` robots.txt.
+2. Set `PUBLIC_FORM_ENDPOINT` (see Forms) and `SITE_URL` if the domain differs.
+3. After the deploy, check the live head and robots:
+   `curl -s https://plumbingbypaulllc.com/robots.txt` must show `Allow: /` and the sitemap line, and
+   `curl -s https://plumbingbypaulllc.com/ | grep -o '<meta name="robots"[^>]*>'` must show `index, follow`.
+
 ## Forms
 
 - With JS: name and a 10-digit phone are checked in plain words. With `PUBLIC_FORM_ENDPOINT` set, the form POSTs
@@ -31,11 +40,13 @@ even if `PUBLIC_NOINDEX` is wrong. Live hosting is decided by the agency, not th
   Without an endpoint (preview), it goes straight to `/thank-you` and **sends nothing**.
 - Without JS and without an endpoint, the form falls back to `GET /thank-you`, which puts the name and phone in the
   URL. Set `PUBLIC_FORM_ENDPOINT` before launch (it switches the no-JS fallback to POST).
-- `/thank-you` is not built yet (phase 2/3).
+- `/thank-you` is the form target (noindex, no loader).
 
 ## Paul to confirm (from the Figma yellow notes on Home and the global sections)
 
 Nothing below is presented as more certain than the note allows; the site shows what the note says it shows.
+Unconfirmed claims (1-year warranty, bonded and insured) stay visible as designed but are left out of the FAQPage
+JSON-LD (`noSchema` on the FAQ item), so structured data states verified facts only.
 
 1. **Hours.** Google: open daily 8 AM to 5 PM. Old site: 24/7 emergency. The site shows "Open 7 days, 8 AM to 5 PM"
    and "24/7 emergency line" (`SITE.hours`). Which is true?
@@ -52,7 +63,8 @@ Nothing below is presented as more certain than the note allows; the site shows 
 11. **Tankless and hydro jetting.** Does he install/service tankless and own a jetter?
 12. **Vector logo** from the wrap shop (the site uses the raster logo from his current site).
 13. **Price ranges** for the common jobs (FAQ 01 says "estimates are free" and gives no numbers until he supplies them).
-14. **Payment link.** "Make a payment" goes to `/contact` until he gives the real link (`SITE.paymentUrl`).
+14. **Payment link.** Until he gives the real link (`SITE.paymentUrl`, empty now), every pay link (top bar, footer, the
+    /contact card) is a `tel:` link labelled "Call to pay an invoice" (`PAY` in `src/data/site.ts`). Setting the URL switches them all to "Make a payment".
 15. **Process step 2** heads-up text ("We tell you who's coming"): confirm that is how the office works.
 16. **Geo pin.** Latitude/longitude came from the v2 build (approximate). Check against the Google Business Profile pin.
 17. **Counts to refresh at launch.** Google rating 4.9 from 947 reviews and the Instagram post count (740) were read on
@@ -68,7 +80,7 @@ Nothing below is presented as more certain than the note allows; the site shows 
 26. **Services hub offer slot.** /services "Paul's promise" shows the same labelled offer slot (financing, first-visit offer or maintenance plan) as item 8.
 27. **Tankless link.** There is no tankless page: the "Tankless water heaters" links on /services (job-ticket list and the Hot water family) go to /water-heaters#types. Confirm, or ask for a page (see item 11).
 28. **/emergency-plumbing.** The "first five minutes" steps and the hurricane section wording (Storms) are written from his old site and photos: confirm the advice. The after-hours charge FAQ is a labelled stand-in (left out of the FAQ schema). The "24/7" wording follows item 1. JR's patch is used on the spotlight review: confirm it is him.
-29. **Town pages (/service-areas/clearwater-fl, /service-areas/seminole-fl).** Drive time from the shop is a labelled slot (measure on Google Maps). Confirm the four "local problems" per town, the Floridan Aquifer hard-water line, the Seminole "Pinellas County Utilities" supply line, the neighborhood chips, the permit wording, and any travel charge. Town review and job-photo slots are labelled stand-ins until he sends a review and photos from that town (Seminole has none yet).
+29. **Town pages (/service-areas/clearwater-fl, /service-areas/seminole-fl).** Drive time from the shop is a labelled slot ("Drive time from the shop: Paul to confirm"; measure on Google Maps). Confirm the four "local problems" per town, the Floridan Aquifer hard-water line, the Seminole "Pinellas County Utilities" supply line, the neighborhood chips, the permit wording, and any travel charge. Town review and job-photo slots are labelled stand-ins until he sends a review and photos from that town (Seminole has none yet).
 30. **/service-areas.** The St. Pete sewer lateral rebate card: check the program on stpete.org before launch. "Outside Pinellas?" and "travel charge" FAQs are labelled stand-ins (not in the schema). Permission for the classroom photo; the sponsorship wording ("we sponsor the teams") needs his OK. Only Clearwater and Seminole have pages; the other town chips have no links yet.
 31. **/about.** The "in line at Publix" line, the timeline milestones and years, owner bios and titles (and how Alycia writes her name), crew first names on the patch wall, the four house rules, the toilet-costume photo, "BBB A+ rating", "Bonded and insured" (item 4) and the warranty (item 2), and whether he is hiring at launch.
 32. **/our-work.** The three job stories (what was done, where), the before/after slider is a labelled stand-in until he sends a matched pair, the remodel photos depend on item 10, and the Instagram count follows item 17.

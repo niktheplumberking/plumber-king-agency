@@ -1,5 +1,5 @@
 ---
-// A4 Local knowledge (Figma A4): four text-only cards with a Russo index and a "Guide" tag, staggered up and down over a
+// A4 Local knowledge (Figma A4): four text-only cards with a Russo index and a "Service" tag (they link to service pages; the guides are not written yet), staggered up and down over a
 // sky band behind their lower half. The guide articles are not written yet, so each card links to the service page that
 // covers the topic today (labelled as that service); "All guides" goes to the planned /guides hub.
 import SectionHead from '../ui/SectionHead.astro';
@@ -22,7 +22,7 @@ const cards = [
       <ul role="list" class="ak-cards" data-track tabindex="0" aria-label="Local plumbing facts, scroll sideways for more" data-t="4" data-stagger>
         {cards.map((c, i) => (
           <li class="ak-card" data-slide>
-            <p class="ak-top"><span class="num ak-n">0{i + 1}</span><span class="label ak-tag">Guide</span></p>
+            <p class="ak-top"><span class="num ak-n">0{i + 1}</span><span class="label ak-tag">Service</span></p>
             <h3 class="ak-t">{c.t}</h3>
             <p class="ak-d">{c.d}</p>
             <TextLink href={c.href} class="ak-l" size={14}>{c.link}</TextLink>

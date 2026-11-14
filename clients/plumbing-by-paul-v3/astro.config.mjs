@@ -10,7 +10,7 @@ export default defineConfig({
   site: SITE,
   // URLs have no trailing slash, matching the canonicals and Paul's current site paths.
   trailingSlash: 'never',
-  build: { format: 'file', inlineStylesheets: 'auto' },
+  build: { format: 'file', inlineStylesheets: 'always' },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [
     sitemap({

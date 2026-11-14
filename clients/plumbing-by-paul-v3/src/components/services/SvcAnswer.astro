@@ -7,7 +7,7 @@ import JobTicket from '../ui/JobTicket.astro';
 import CallButton from '../ui/CallButton.astro';
 import Button from '../ui/Button.astro';
 import ProofChips from '../ui/ProofChips.astro';
-import Seal from '../ui/Seal.astro';
+import Stamp from '../ui/Stamp.astro';
 import { SITE } from '../../data/site';
 import type { SvcPage } from '../../data/service-pages';
 import { rich, sid } from './fmt';
@@ -28,7 +28,7 @@ const b = d.layout === 'b';
     </div>
     <div class="sa-tk">
       <JobTicket title={a.ticket} no={`Lic. ${SITE.licence}`} rows={a.rows} class="sa-ticket" />
-      <Seal d={120} deg={8} class="sa-seal" />
+      <Stamp d={120} deg={8} class="sa-seal" />
     </div>
   </div>
 </section>
@@ -84,6 +84,8 @@ const b = d.layout === 'b';
     .sa-tk :global(.sa-ticket .row) { padding: 12px 18px; grid-template-columns: 40% 1fr; }
     .sa-tk :global(.sa-ticket dt), .sa-tk :global(.sa-ticket dd) { font-size: 14px; line-height: 21px; }
     .sa-tk :global(.sa-ticket .no) { display: none; }
-    .sa-tk :global(.sa-seal) { --d: 88px !important; right: -6px; bottom: -40px; }
+    /* the stamp hangs under the ticket (Figma mobile), clear of the last row's licence number */
+    .sa-tk { margin-bottom: 64px; }
+    .sa-tk :global(.sa-seal) { --d: 88px !important; right: -6px; bottom: -78px; }
   }
 </style>

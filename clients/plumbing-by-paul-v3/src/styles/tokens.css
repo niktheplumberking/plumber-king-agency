@@ -2,8 +2,8 @@
    Do not add colours. No orange / red / coral / teal. Amber (--star) only for rating stars. */
 @font-face { font-family: 'Montserrat'; font-style: normal; font-weight: 100 900; font-display: swap;
   src: url('/fonts/montserrat-latin-wght-normal.woff2') format('woff2-variations'), url('/fonts/montserrat-latin-wght-normal.woff2') format('woff2'); }
-@font-face { font-family: 'Montserrat'; font-style: italic; font-weight: 100 900; font-display: swap;
-  src: url('/fonts/montserrat-latin-wght-italic.woff2') format('woff2-variations'), url('/fonts/montserrat-latin-wght-italic.woff2') format('woff2'); }
+/* Montserrat italic (a few small quotes and map labels) is added by src/scripts/ui.ts after the load event, so it never
+   competes with the LCP photo; until then the browser slants the upright face. */
 @font-face { font-family: 'Russo One'; font-style: normal; font-weight: 400; font-display: swap;
   src: url('/fonts/russo-one-latin-400-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Yellowtail'; font-style: normal; font-weight: 400; font-display: swap;
@@ -40,6 +40,7 @@
   --fz-h1: clamp(2.125rem, 2.476vw + 24.3px, 3.75rem);      /* 34 -> 60 */
   --fz-h2: clamp(1.75rem, 1.524vw + 22.1px, 2.75rem);       /* 28 -> 44 */
   --fz-h2-cta: clamp(1.75rem, 1.714vw + 21.3px, 2.875rem);  /* 28 -> 46 (Figma waterline) */
+  --fz-h2-n: clamp(1.75rem, 0.762vw + 25px, 2.25rem);       /* 28 -> 36 (Figma: H2s in narrow or split columns) */
   --fz-h3: clamp(1.3125rem, 0.476vw + 19.1px, 1.625rem);    /* 21 -> 26 */
   --fz-h3s: clamp(1.25rem, 0.381vw + 18.5px, 1.5rem);       /* 20 -> 24 (card titles in Figma) */
   --fz-h4: clamp(1.0625rem, 0.19vw + 16.3px, 1.1875rem);    /* 17 -> 19 */

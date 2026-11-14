@@ -1,6 +1,6 @@
 // Header + footer navigation. Every href here must be a built page before launch (see BUILDERS.md "Pages still to build").
 import { SERVICES, EMERGENCY } from './services';
-import { SITE } from './site';
+import { SITE, PAY } from './site';
 
 export const NAV = [
   { label: 'Services', href: '/services', menu: 'services' as const },
@@ -29,7 +29,7 @@ export const FOOTER = {
     { label: 'Guides', href: '/guides' },
     { label: 'FAQ', href: '/faq' },
     { label: 'Contact', href: '/contact' },
-    { label: 'Make a payment', href: SITE.paymentUrl },
+    { label: PAY.label, href: PAY.href, external: PAY.external },
     { label: 'Leave us a Google review', href: SITE.google.writeReviewUrl, external: true },
   ],
   legal: [

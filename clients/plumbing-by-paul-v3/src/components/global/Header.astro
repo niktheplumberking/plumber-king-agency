@@ -12,8 +12,8 @@ import MegaAreas from './MegaAreas.astro';
 import MobileMenu from './MobileMenu.astro';
 import { NAV } from '../../data/nav';
 import { SITE } from '../../data/site';
-interface Props { path: string; }
-const { path } = Astro.props;
+interface Props { path: string; estimate?: string; }
+const { path, estimate = '#estimate' } = Astro.props;
 const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
 ---
 <header class="hdr" data-header>
@@ -38,7 +38,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         </ul>
       </nav>
       <div class="cta">
-        <Button href="#estimate" v="sec" class="fe" magnetic={false}>Free estimate</Button>
+        <Button href={estimate} v="sec" class="fe" magnetic={false}>Free estimate</Button>
         <CallButton class="cb" />
         <a href={SITE.tel} class="icb" aria-label={`Call ${SITE.phone}`}><Icon name="phone" size={20} /></a>
         <button type="button" class="menu-btn" aria-expanded="false" aria-controls="mnav" data-menu-open>
@@ -50,7 +50,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   <MegaServices />
   <MegaAreas />
 </header>
-<MobileMenu path={path} />
+<MobileMenu path={path} estimate={estimate} />
 <style>
   .hdr { position: sticky; top: 0; z-index: var(--z-header); transition: transform .5s var(--ease-out); }
   .hdr.is-hidden { transform: translateY(calc(-100% - 30px)); }
@@ -83,5 +83,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     .tab { width: 84px; height: 84px; padding: 4px 9px 8px; border-radius: 0 0 16px 16px; }
     .is-scrolled .tab { width: 64px; height: 64px; padding: 4px 7px 5px; }
   }
-  @media (min-width: 768px) and (max-width: 1199px) { .tab { width: 100px; height: 100px; } }
+  @media (min-width: 1024px) and (max-width: 1199px) { .tab { width: 100px; height: 100px; } }
+  /* very narrow phones: tighter header so nothing runs off the edge (the estimate stays in the call bar and the menu) */
+  @media (max-width: 359px) { .cta { gap: 6px; } .cta :global(.fe) { padding: 0 9px; font-size: 12px; } }
 </style>

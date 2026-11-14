@@ -56,16 +56,19 @@
   --section-y: clamp(64px, 3.81vw + 49px, 104px);   /* 64 mobile -> 104 desktop */
   --gutter: clamp(20px, 7.6vw - 9.6px, 120px);       /* page margin: 20 at 390, 100 at 1440 (content then max 1200) */
   --content: 1200px;
+  /* wide-screen zoom (Base.astro): 1 up to 1440 px, then viewport/1440. 1vw inside the zoomed page renders zoom times wider,
+     so full-bleed maths must use --vw100 (the viewport width in layout px), never raw 100vw. Same for vh: --vh100. */
+  --zoom: 1; --vw100: calc(100vw / var(--zoom)); --vh100: calc(100vh / var(--zoom));
 
   /* radii */
   --r-xs: 6px; --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-2xl: 40px; --r-full: 999px;
 
   /* shadows: navy-tinted only */
   --sh-1: 0 1px 2px rgba(17,16,50,.06), 0 2px 8px rgba(17,16,50,.05);
-  --sh-2: 0 14px 32px -10px rgba(17,16,50,.18);
-  --sh-3: 0 36px 72px -28px rgba(17,16,50,.38);
+  --sh-2: 0 12px 28px rgba(17,16,50,.14);   /* Figma prelude sh('2') */
+  --sh-3: 0 28px 56px rgba(17,16,50,.22);   /* Figma prelude sh('3') */
   --sh-stripe: 0 6px 0 var(--sky), 0 12px 0 var(--blue), 0 24px 36px rgba(17,16,50,.16);
-  --sh-sticker: 0 3px 0 rgba(17,16,50,.14), 0 10px 18px -6px rgba(17,16,50,.3);
+  --sh-sticker: 0 3px 0 rgba(17,16,50,.14), 0 10px 18px rgba(17,16,50,.26); /* Figma sh('sticker') */
   --in-bar: inset 5px 0 0 var(--blue);
 
   /* motion (see MOTION.md). One easing family. */

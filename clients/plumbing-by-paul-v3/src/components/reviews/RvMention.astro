@@ -20,7 +20,7 @@ const max = TOPICS[0][1];
           <li class:list={['bar', i === 0 && 'top']} style={`--w:${Math.max(3, (v / max) * 100)}%`}>
             <span class="bl">{t}</span>
             <span class="bt"><span class="bf"></span>
-              {i === 0 ? <span class="tag"><b class="num">{v}</b> mentions</span> : <span class="bv num">{v}</span>}
+              {i === 0 ? <span class="tag"><b class="num">{v}</b> <span class="tw">mentions</span></span> : <span class="bv num">{v}</span>}
             </span>
           </li>
         ))}
@@ -30,11 +30,11 @@ const max = TOPICS[0][1];
   </div>
 </section>
 <style>
-  .rvm { position: relative; z-index: 3; background: var(--navy); color: var(--white); padding: 104px 0; }
+  .rvm { position: relative; z-index: 3; background: var(--navy); color: var(--white); padding: 96px 0 104px; }
   .rvm-in { display: grid; grid-template-columns: minmax(0, 384px) minmax(0, 792px); justify-content: space-between; align-items: start; column-gap: 24px; }
   .rvm-p { max-width: 360px; margin-top: 20px; font-weight: 500; font-size: 17px; line-height: 28px; color: var(--tint); }
   .rvm-src { display: inline-flex; align-items: center; gap: 8px; height: 44px; margin-top: 26px; padding: 0 14px; border-radius: 12px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); font-weight: 600; font-size: 14px; }
-  .chart { position: relative; margin: -152px 0 0; padding: 40px 36px 28px; border-radius: 28px; background: var(--navy); box-shadow: inset 0 0 0 1px var(--sky), var(--sh-3); }
+  .chart { position: relative; margin: -144px 0 0; padding: 40px 36px 40px; border-radius: 28px; background: var(--navy); box-shadow: inset 0 0 0 1px var(--sky), var(--sh-3); }
   .bars { display: grid; gap: 16px; margin: 0; padding: 0; }
   .bar { display: grid; grid-template-columns: 232px 1fr; align-items: center; }
   .bl { font-weight: 600; font-size: 14px; line-height: 28px; color: var(--white); }
@@ -43,23 +43,24 @@ const max = TOPICS[0][1];
   .bv { font-size: 20px; line-height: 28px; color: var(--sky); }
   .tag { position: absolute; right: -88px; top: -6px; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px; border-radius: 10px; background: var(--sky); color: var(--navy); box-shadow: var(--sh-sticker); font-weight: 700; font-size: 12px; }
   .tag b { font-size: 22px; line-height: 26px; font-weight: 400; }
-  .cap { margin-top: 26px; font-weight: 500; font-size: 13px; line-height: 18px; color: var(--soft); }
+  .cap { margin-top: 34px; font-weight: 500; font-size: 13px; line-height: 18px; color: var(--soft); }
   @media (max-width: 1199px) { .rvm-in { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); } .bar { grid-template-columns: 200px 1fr; } }
   @media (max-width: 1023px) {
+    /* Figma 441:7687: heading at 56, chart card 350 x 542 (pad 24 / 20 / 30), rows 18 + 6 + 22, 12 apart; tracks stop
+       52 px short so the top value tag (52 x 32) sits in that column at the card edge */
     .rvm { padding: 56px 0 64px; }
     .rvm-in { grid-template-columns: 1fr; row-gap: 28px; }
     .rvm-p { font-size: 15px; line-height: 24px; margin-top: 14px; }
     .rvm-src { display: none; }
-    .chart { margin: 0; padding: 22px 16px 18px; border-radius: 20px; }
+    .chart { margin: 0; padding: 24px 20px 30px; border-radius: 20px; }
     .bars { gap: 12px; }
-    .bar { grid-template-columns: 1fr; gap: 4px; }
+    .bar { grid-template-columns: 1fr; gap: 6px; }
     .bl { font-size: 13px; line-height: 18px; }
-    .bt { height: 22px; margin-right: 0; }
-    .bv { font-size: 16px; }
-    .tag { position: static; height: 32px; padding: 0 10px; margin-left: auto; flex: none; }
-    .tag b { font-size: 18px; }
-    .bt:has(.tag) { margin-right: 0; }
-    .top .bf { width: auto; flex: 1 1 0; min-width: 0; } /* the top topic is the 100% bar: it fills what the tag leaves */
-    .cap { font-size: 12px; margin-top: 18px; }
+    .bt { height: 22px; margin-right: 52px; }
+    .bv { font-size: 16px; line-height: 22px; }
+    .tag { right: -54px; top: -5px; height: 32px; width: 52px; padding: 0; justify-content: center; }
+    .tag b { font-size: 18px; line-height: 20px; }
+    .tw { display: none; }
+    .cap { font-size: 12px; line-height: 16px; margin-top: 20px; letter-spacing: -0.012em; }
   }
 </style>

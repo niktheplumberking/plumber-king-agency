@@ -7,6 +7,7 @@ import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { SITE } from '../data/site';
 import { plumberSchema, abs } from '../lib/schema';
+import { zoomSizes, zoomWidths } from '../components/ui/zoomSizes';
 import logo from '../assets/brand/logo-plumbing-by-paul.png';
 import UtilityBar from '../components/global/UtilityBar.astro';
 import Header from '../components/global/Header.astro';
@@ -40,11 +41,13 @@ const logoUrl = new URL(logoImg.src, Astro.site).href;
 
 // Same options as Img.astro's AVIF <source> (quality 60 for priority images), so the preloaded files are the ones the page uses.
 let lcpSet: string | undefined;
+let lcpSizes: string | undefined;
 if (preload) {
   const src = photos[`/src/assets/photos/${preload.name}.jpg`]?.default;
   if (!src) throw new Error(`Base: preload photo "${preload.name}" not found`);
-  const img = await getImage({ src, widths: preload.widths.filter((x) => x <= src.width), sizes: preload.sizes, format: 'avif', quality: 60 });
-  lcpSet = img.srcSet.attribute;
+  const z = zoomSizes(preload.sizes);
+  const img = await getImage({ src, widths: zoomWidths(preload.widths, z.slot, src.width), sizes: z.sizes, format: 'avif', quality: 60 });
+  lcpSet = img.srcSet.attribute; lcpSizes = z.sizes;
 }
 const gtm = import.meta.env.PUBLIC_GTM_ID as string | undefined;
 const ga = import.meta.env.PUBLIC_GA_ID as string | undefined;
@@ -67,7 +70,7 @@ const is404 = path === '/404';
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  {lcpSet && preload && <link rel="preload" as="image" type="image/avif" imagesrcset={lcpSet} imagesizes={preload.sizes} fetchpriority="high" />}
+  {lcpSet && preload && <link rel="preload" as="image" type="image/avif" imagesrcset={lcpSet} imagesizes={lcpSizes} fetchpriority="high" />}
   <link rel="preload" href="/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/russo-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <meta property="og:type" content={type} />
@@ -87,6 +90,27 @@ const is404 = path === '/404';
   <meta name="geo.region" content="US-FL" />
   <meta name="geo.placename" content="St. Petersburg" />
   <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
+  <script is:inline>
+    // Wide screens: above 1440 px the whole 1440 Figma layout is scaled up with CSS zoom, so proportions hold at any desktop
+    // width (same idea as United). Zoom re-lays out text and vectors at the new size, so nothing is blurred. Set here, before
+    // first paint. The width is the viewport minus the classic scrollbar (measured once by forcing it on for a moment), and
+    // a ResizeObserver re-fits when the scrollbar comes or goes (Lenis stopped under the loader). --zoom feeds the CSS
+    // tokens that use vw (tokens.css --vw100: use it instead of 100vw). Below 1441 px nothing changes.
+    (function () {
+      var d = document.documentElement, sb = 0;
+      try { var o = d.style.overflowY; d.style.overflowY = 'scroll'; sb = Math.max(0, window.innerWidth - d.clientWidth); d.style.overflowY = o; } catch (e) {}
+      function fit() {
+        var w = d.clientWidth || window.innerWidth;
+        if (!document.body) w = window.innerWidth - sb; // in <head>: the page will scroll, so leave room for its scrollbar now
+        var z = w > 1440 ? Math.round(w / 1440 * 10000) / 10000 : 1;
+        var s = z > 1 ? String(z) : '';
+        if (d.style.zoom !== s) { d.style.zoom = s; d.style.setProperty('--zoom', String(z)); }
+      }
+      fit();
+      window.addEventListener('resize', fit);
+      document.addEventListener('DOMContentLoaded', function () { fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(d); });
+    })();
+  </script>
   <script is:inline>
     // Decide before first paint (MOTION.md): motion on? loader this visit? curtain lift after an in-site click?
     (function () {

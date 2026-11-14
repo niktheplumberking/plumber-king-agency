@@ -22,11 +22,13 @@ const { idx, tag, q, a1, a2, link, open = false, name } = Astro.props;
 <style>
   .faq { position: relative; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; transition: background var(--dur-3) var(--ease-out), box-shadow var(--dur-3) var(--ease-out); }
   .faq[open] { background: var(--tint); box-shadow: var(--in-bar); }
-  summary { display: flex; align-items: center; gap: 18px; padding: 24px 28px; list-style: none; cursor: pointer; border-radius: inherit; }
+  /* Figma FAQ item: closed 102 (24 px padding + the 1 px border in layout), open 227 (24 / 12 gap / answer / 24) */
+  summary { display: flex; align-items: center; gap: 18px; padding: 25px 29px; list-style: none; cursor: pointer; border-radius: inherit; }
+  .faq[open] summary { padding: 24px 28px 12px; }
   summary::-webkit-details-marker { display: none; }
   .idx { color: var(--press); font-size: 22px; line-height: 28px; flex: none; }
   .qq { flex: 1; display: grid; gap: 4px; justify-items: start; }
-  .tag { padding: 3px 8px; border-radius: 6px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 600; font-size: 11px; line-height: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--slate); }
+  .tag { padding: 4px 9px; border-radius: 6px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 600; font-size: 11px; line-height: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--slate); }
   .faq[open] .tag { background: var(--white); }
   .qt { font-weight: 700; font-size: var(--fz-h4); line-height: 26px; color: var(--navy); }
   .pm { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--navy); flex: none; transition: background var(--dur-2), transform var(--dur-3) var(--ease-out); }
@@ -40,7 +42,8 @@ const { idx, tag, q, a1, a2, link, open = false, name } = Astro.props;
   .ans { display: grid; gap: 10px; justify-items: start; padding: 0 28px 24px 80px; font-size: 16px; line-height: 27px; color: var(--navy); }
   .ans strong { font-weight: 600; }
   @media (max-width: 767px) {
-    summary { gap: 12px; padding: 18px; }
+    summary { gap: 12px; padding: 19px; }
+    .faq[open] summary { padding: 18px 18px 12px; }
     .idx { font-size: 18px; }
     .qt { font-size: 17px; line-height: 24px; }
     .ans { padding: 0 18px 18px; font-size: 15px; line-height: 25px; }

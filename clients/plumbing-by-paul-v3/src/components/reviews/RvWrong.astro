@@ -21,17 +21,18 @@ import { SITE } from '../../data/site';
 <style>
   .rvx { position: relative; background: var(--tint); padding: 96px 0 104px; }
   .rvx-card { position: relative; max-width: 960px; margin: 0 auto; padding: 44px 56px 44px 120px; border-radius: 24px; background: var(--white); box-shadow: inset 6px 0 0 var(--blue), var(--sh-2); }
-  .rvx-card :global(.rvx-seal) { position: absolute; left: -40px; top: -42px; }
+  .rvx-card :global(.rvx-seal) { position: absolute; left: -40px; top: -30px; }
   .rvx-h { max-width: 784px; font-weight: 800; font-size: 28px; line-height: 36px; letter-spacing: -0.018em; color: var(--navy); }
   .rvx-h .l2 { color: var(--blue); }
   .rvx-p { max-width: 784px; margin-top: 16px; font-size: 17px; line-height: 29px; color: var(--slate); }
   .rvx-row { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin-top: 16px; }
   .rvx-sc { font-size: 32px; line-height: 36px; color: var(--blue); }
   @media (max-width: 1023px) {
-    .rvx { padding: 72px 0 64px; }
-    .rvx-card { padding: 52px 22px 24px; border-radius: 20px; }
-    .rvx-card :global(.rvx-seal) { --d: 72px !important; left: 8px; top: -40px; }
-    .rvx-h { font-size: 20px; line-height: 26px; }
+    .rvx { padding: 84px 0 64px; }
+    .rvx-card { padding: 52px 24px 28px; border-radius: 20px; }
+    .rvx-card :global(.rvx-seal) { --d: 85px !important; left: 3px; top: -32px; } /* Figma 441:8148: 99 px, card -2 / -37 */
+    .rvx-h { font-size: 22px; line-height: 28px; }
+    .rvx-p { margin-top: 14px; }
     .rvx-p { font-size: 15px; line-height: 25px; }
     .rvx-row { display: grid; }
     .rvx-row :global(.btn) { width: 100%; }

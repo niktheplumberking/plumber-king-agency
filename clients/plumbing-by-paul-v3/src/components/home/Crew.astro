@@ -17,7 +17,7 @@ const first = CREW[0];
       lead="Our customers keep naming the same people in their Google reviews. So we sewed the names on." />
     <div class="cr-stage">
       <div class="cr-photo frame" data-t="4" data-fx="frame">
-        <Img name="hero-02-crew-16-two-trucks" alt="The Plumbing By Paul crew in their blue shirts in front of two wrapped trucks" sizes="(min-width: 1280px) 1200px, calc(100vw - 40px)" focus="50% 78%" widths={[400, 700, 1000, 1400, 1800]} data-parallax="0.05" />
+        <Img name="hero-02-crew-16-two-trucks" alt="The Plumbing By Paul crew in their blue shirts in front of two wrapped trucks" sizes="(min-width: 1280px) 1200px, calc(100vw - 40px)" focus="50% 78%" widths={[400, 700, 1000, 1400, 1800]} />
         <PhotoTag class="cr-tag">The crew · St. Petersburg</PhotoTag>
       </div>
       <figure class="cr-card" aria-live="polite" data-t="4" data-fx="rise" data-crew-card>
@@ -55,10 +55,9 @@ const first = CREW[0];
   </div>
 </section>
 <style>
-  .crew { background: var(--white); padding: 104px 0; }
-  .cr-stage { position: relative; margin-top: 48px; }
+  .crew { background: var(--white); padding: 104px 0 84px; }
+  .cr-stage { position: relative; margin-top: 44px; }
   .cr-photo { height: 470px; border-radius: var(--r-xl); box-shadow: var(--sh-2); }
-  .cr-photo :global(img) { transform: scale(1.08); }
   .cr-photo :global(.cr-tag) { position: absolute; left: 24px; top: 24px; z-index: 2; }
   .cr-card { position: absolute; left: 24px; top: calc(470px - 218px); z-index: 3; width: 380px; margin: 0; padding: 24px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-3); }
   .cc-real { display: grid; gap: 10px; }
@@ -100,5 +99,14 @@ const first = CREW[0];
     .cr-named, .cr-photo :global(.cr-tag) { display: none; }
     .cc-q { font-size: 22px; line-height: 28px; }
     .cr-foot { display: grid; margin-top: 24px; gap: 16px; }
+  }
+  /* Figma mobile 426:4812: photo 350x250 28 px under the heading, patches overlap it by 26, card 10 below the rail. */
+  @media (max-width: 767px) {
+    .cr-stage { margin-top: 28px; }
+    .cr-photo { aspect-ratio: 350 / 250; }
+    .cr-rail { margin-top: -26px; scroll-padding-inline: var(--gutter); }
+    .cr-card { margin-top: 10px; padding: 21px; }
+    .cr-foot { margin-top: 16px; gap: 14px; }
+    .cr-foot .caption { font-size: 12px; line-height: 18px; }
   }
 </style>

@@ -28,8 +28,9 @@ import { TIPS } from './faqData';
   </div>
 </section>
 <style>
-  .fb { position: relative; z-index: 2; background: linear-gradient(var(--navy) 0 calc(100% - 140px), var(--tint) calc(100% - 140px)); color: var(--white); padding: 96px 0 0; }
-  .fb :global(.flow) { height: calc(100% - 140px); }
+  /* Figma 441:3835 / 441:3903: the navy ends 40 px above the tip cards' bottom edge */
+  .fb { position: relative; z-index: 2; background: linear-gradient(var(--navy) 0 calc(100% - 40px), var(--tint) calc(100% - 40px)); color: var(--white); padding: 96px 0 0; }
+  .fb :global(.flow) { height: calc(100% - 40px); }
   .fb-head { position: relative; display: flex; justify-content: space-between; align-items: flex-end; }
   .fb-head :global(.fb-stamp) { margin: 0 0 -20px; }
   .fb-rail { position: relative; margin-top: 64px; }
@@ -43,9 +44,10 @@ import { TIPS } from './faqData';
   .tc-d { margin-top: 6px; font-size: 14px; line-height: 20px; color: var(--slate); }
   @media (max-width: 1199px) { .fb-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 48px; } }
   @media (max-width: 1023px) {
-    .fb { padding-top: 56px; background: linear-gradient(var(--navy) 0 calc(100% - 130px), var(--tint) calc(100% - 130px)); }
+    .fb { padding-top: 56px; background: linear-gradient(var(--navy) 0 calc(100% - 69px), var(--tint) calc(100% - 69px)); } /* Figma 441:4607: navy ends 65 above the cards' bottom */
+    .fb :global(.flow) { height: calc(100% - 69px); }
     .fb-head :global(.fb-stamp) { display: none; }
-    .fb-rail { margin-top: 48px; }
+    .fb-rail { margin-top: 8px; }
     .fb-cards { display: flex; gap: 14px; width: auto; padding: 32px var(--gutter) 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
     .fb-cards::-webkit-scrollbar { display: none; }
     .tc { flex: none; width: 184px; scroll-snap-align: start; }

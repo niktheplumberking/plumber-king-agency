@@ -36,7 +36,8 @@ const b = d.layout === 'b';
   .sa { position: relative; }
   .sa-grid { display: grid; grid-template-columns: minmax(0, 640px) minmax(0, 500px); justify-content: space-between; column-gap: 60px; align-items: start; }
   .sa-main { display: grid; justify-items: start; }
-  .sa-main :global(.sa-qa) { width: 100%; padding: 32px 40px 32px 40px; border-radius: 24px; }
+  .sa-main :global(.sa-qa) { width: 100%; padding: 32px 32px 32px 40px; border-radius: 20px; }
+  .sa-a .sa-main :global(.sa-qa) { min-height: 286px; } /* Figma 439:7720 (six lines there; the phone number never breaks here) */
   .sa-main :global(.sa-qa .qb) { font-size: 19px; line-height: 32px; }
   .sa-main :global(.sa-qa .qb strong) { font-weight: 700; }
   .sa-main :global(.tel) { color: var(--press); font-weight: 700; white-space: nowrap; }
@@ -50,24 +51,44 @@ const b = d.layout === 'b';
   .sa-tk :global(.sa-ticket header) { height: 64px; padding: 0 28px; }
   .sa-tk :global(.sa-ticket::before) { top: 64px; border-top: 0; }
   .sa-tk :global(.sa-ticket dl) { padding: 0; }
-  .sa-tk :global(.sa-ticket .row) { padding: 14px 28px; border-bottom: 0; }
+  .sa-tk :global(.sa-ticket .row) { grid-template-columns: 176px minmax(0, 1fr); gap: 16px; padding: 13px 28px; border-bottom: 0; }
   .sa-tk :global(.sa-ticket .row:nth-child(even)) { background: var(--mist); }
-  .sa-tk :global(.sa-ticket dt) { font-family: var(--f-sans); font-weight: 700; font-size: 15px; line-height: 22px; letter-spacing: 0; text-transform: none; color: var(--navy); padding-top: 0; }
-  .sa-tk :global(.sa-ticket dd) { font-weight: 500; color: var(--slate); }
+  .sa-tk :global(.sa-ticket dt) { font-family: var(--f-sans); font-weight: 700; font-size: 14px; line-height: 22px; letter-spacing: 0; text-transform: none; color: var(--navy); padding-top: 0; }
+  .sa-tk :global(.sa-ticket dd) { font-weight: 500; font-size: 15px; line-height: 22px; color: var(--slate); }
   .sa-tk :global(.sa-ticket .stand dd) { color: var(--slate-2); }
-  .sa-tk :global(.sa-seal) { position: absolute; right: -40px; bottom: -44px; z-index: 3; }
+  .sa-tk :global(.sa-seal) { position: absolute; right: -40px; bottom: -61px; z-index: 3; }
+  /* Figma 439:7720 / 439:7619: zap icon before the Russo label (13 px); clipboard icon + 14 px title in the ticket header;
+     ticket rows 176 px key column, 16 gap, 13/28 padding, key 14 bold navy, value 15/22 medium slate. No perforation. */
+  .sa-main :global(.sa-qa) { gap: 14px; }
+  .sa-main :global(.sa-qa .ql) { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: .1em; }
+  .sa-main :global(.sa-qa .ql::before) { content: ''; width: 16px; height: 16px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .sa-a .sa-tk { padding-top: 0; }
+  .sa-a .sa-tk::before { display: none; }
+  .sa-tk :global(.sa-ticket header .label) { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; letter-spacing: .08em; }
+  .sa-tk :global(.sa-ticket header .label::before) { content: ''; flex: none; width: 20px; height: 20px; background: var(--sky); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='2' width='8' height='4' rx='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='8' y='2' width='8' height='4' rx='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='m9 14 2 2 4-4'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .sa-tk :global(.sa-ticket .no) { font-size: 11px; letter-spacing: .1em; }
 
-  .sa-a { background: var(--white); padding: 24px 0 104px; }
-  .sa-b { background: var(--tint); padding: 8px 0 104px; }
+
+  /* Figma 03 W2 (439:7617): answer at 56; the ticket (439:7618) starts 56 px above the section, inside the hero */
+  .sa-a { position: relative; z-index: 3; background: var(--white); padding: 56px 0 102px; }
+  .sa-a .sa-tk { margin-top: -112px; }
+  .sa-b { background: var(--tint); padding: 8px 0 106px; }
   .sa-b .sa-grid { grid-template-columns: minmax(0, 500px) minmax(0, 620px); }
   .sa-b .sa-main { order: 2; }
-  .sa-b .sa-tk { order: 1; margin-top: -120px; transform: rotate(-2deg); z-index: 3; }
-  .sa-b .sa-main { margin-top: -100px; position: relative; z-index: 3; }
+  .sa-b .sa-tk { order: 1; margin-top: -44px; transform: rotate(-2deg); z-index: 3; }
+  .sa-b .sa-main { margin-top: -48px; position: relative; z-index: 3; }
+  /* Figma 04 D2 (443:11712): ticket box 33 px and answer 40 px above the section; 56 px buttons; stamp on the ticket foot */
+  @media (min-width: 1024px) {
+    .sa-b .sa-btns :global(.btn) { min-height: 56px; height: 56px; }
+    .sa-b .sa-tk :global(.sa-seal) { right: -45px; bottom: -44px; }
+  }
   .sa-b .sa-main :global(.sa-qa) { background: var(--white); box-shadow: inset 0 6px 0 var(--sky), var(--sh-2); }
   @media (max-width: 1199px) and (min-width: 1024px) { .sa-grid, .sa-b .sa-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); column-gap: 40px; } }
   @media (max-width: 1023px) {
     .sa-grid, .sa-b .sa-grid { grid-template-columns: minmax(0, 1fr); row-gap: 44px; }
     .sa-a { padding: 8px 0 72px; }
+    .sa-a .sa-tk { margin-top: 0; }
+    .sa-a .sa-main :global(.sa-qa) { min-height: 0; }
     .sa-b { padding: 0 0 72px; }
     .sa-b .sa-tk { margin-top: 0; transform: none; }
     .sa-b .sa-main { margin-top: 0; }
@@ -87,5 +108,29 @@ const b = d.layout === 'b';
     /* the stamp hangs under the ticket (Figma mobile), clear of the last row's licence number */
     .sa-tk { margin-bottom: 64px; }
     .sa-tk :global(.sa-seal) { --d: 88px !important; right: -6px; bottom: -78px; }
+    /* Figma 03 mobile W2 (443:5800): the answer box rises 70 px into the hero; ticket 36 below it, 112 px key column,
+       13/18 row padding, 14/22 text; stamp 96 hanging under the ticket's right corner; 110 to the next section. */
+    .sa-a { padding: 0 0 110px; }
+    .sa-a .sa-grid { row-gap: 36px; }
+    .sa-a .sa-main { position: relative; z-index: 3; margin-top: -70px; }
+    .sa-a .sa-main :global(.sa-qa) { gap: 12px; padding: 22px 22px 22px 26px; }
+    .sa-a .sa-main :global(.sa-qa .ql) { font-size: 12px; }
+    .sa-a .sa-main :global(.sa-qa .qb) { font-size: 16px; line-height: 27px; }
+    .sa-a .sa-tk { margin-bottom: 0; }
+    .sa-a .sa-tk::before { display: block; left: 11px; right: 11px; top: -7px; background-size: 29.8px 12px; } /* Figma mobile perforation */
+    .sa-a .sa-tk :global(.sa-ticket header) { padding: 0 18px; }
+    .sa-a .sa-tk :global(.sa-ticket header .label) { font-size: 12px; }
+    .sa-a .sa-tk :global(.sa-ticket .row) { grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding: 13px 18px; }
+    .sa-a .sa-tk :global(.sa-ticket dt), .sa-a .sa-tk :global(.sa-ticket dd) { line-height: 22px; }
+    .sa-a .sa-tk :global(.sa-seal) { --d: 96px !important; right: -8px; bottom: -87px; }
+    /* Figma 04 mobile D2 (443:12849): ticket rises 30 px into the hero, stamp 96 hanging off its right foot (clipped at the
+       screen edge as drawn), the answer 74 below the ticket, 60 to the next section */
+    .sa-b { padding: 0 0 60px; overflow-x: clip; }
+    .sa-b .sa-grid { row-gap: 74px; }
+    .sa-b .sa-tk { margin: -42px 0 0; }
+    .sa-b .sa-main :global(.sa-qa) { gap: 12px; padding: 22px 22px 22px 26px; }
+    .sa-b .sa-main :global(.sa-qa .ql) { font-size: 12px; }
+    .sa-b .sa-main :global(.sa-qa .qb) { font-size: 16px; line-height: 27px; }
+    .sa-b .sa-tk :global(.sa-seal) { --d: 96px !important; right: -27px; bottom: -72px; }
   }
 </style>

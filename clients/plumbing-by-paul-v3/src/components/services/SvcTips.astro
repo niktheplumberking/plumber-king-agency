@@ -53,6 +53,17 @@ const id = sid(slug, 'tips');
   .tp-wt b { color: var(--navy); font-weight: 700; }
   .tp-call { display: inline-flex; align-items: center; gap: 8px; flex: none; color: var(--press); font-weight: 700; font-size: 16px; }
   .tp-call:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* Figma 04 D9 (443:12318): head at 96, 440 x 480 photo at 112 on a sky block offset 24, tips 26 px lines with
+     16/15 padding, the "slow" bar 24 px padded, 120 to the next section */
+  @media (min-width: 1024px) {
+    .tp { padding: 96px 0 120px; }
+    .tp-grid { grid-template-columns: 440px minmax(0, 640px); }
+    .tp-media { height: 480px; margin-top: 16px; }
+    .tp-back { left: 24px; right: -24px; top: 24px; bottom: -24px; }
+    .tp-list { margin-top: 30px; }
+    .tp-list li { padding: 16px 0 15px; }
+    .tp-warn { margin-top: 20px; padding: 20px 56px 20px 24px; gap: 16px; }
+  }
   @media (max-width: 1199px) and (min-width: 1024px) { .tp-grid { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); } .tp-warn { margin-left: -120px; } }
   @media (max-width: 1023px) {
     .tp { padding: 64px 0 72px; }
@@ -67,5 +78,15 @@ const id = sid(slug, 'tips');
     .tp-list li { gap: 14px; padding: 14px 0; }
     .tp-list p { font-size: 15px; line-height: 24px; }
     .tp-ph :global(.tp-cap) { left: 12px; right: 12px; bottom: 12px; font-size: 12px; }
+    /* Figma 04 mobile D9 (443:13342): tips 19 under the head with 24 px lines and a 6 px rhythm, the warning 15 below,
+       the photo 36 below on a sky block offset 18/16, caption 18 off its foot; 64 to the next section */
+    .tp { padding: 64px 0 64px; }
+    .tp-list { margin-top: 19px; }
+    .tp-list li { gap: 12px; padding: 12px 0 14px; margin-bottom: 3px; }
+    .tp-list p, .tp-warn { font-size: 16px; }
+    .tp-warn { margin-top: 12px; padding: 16px; gap: 12px; flex-wrap: nowrap; }
+    .tp-call { display: none; } /* the drawing has no link in the mobile warning; the call bar carries the number */
+    .tp-back { left: 18px; right: -18px; top: 16px; bottom: -16px; }
+    .tp-ph :global(.tp-cap) { right: auto; max-width: 250px; bottom: 18px; }
   }
 </style>

@@ -18,7 +18,7 @@ const { text, dark = false, script, dot = false, class: cls, t = '1', as: Tag = 
   .dark .eb-s { color: var(--white); }
   .live { position: relative; width: 16px; height: 16px; flex: none; }
   .live::before, .live::after { content: ''; position: absolute; border-radius: 50%; background: var(--sky); }
-  .live::before { inset: 0; opacity: .3; animation: live 2s var(--ease-out) infinite; }
+  .live::before { inset: 0; opacity: .3; animation: live 2s var(--ease-out) 3; }
   .live::after { inset: 4px; }
   @keyframes live { 0% { transform: scale(.6); opacity: .5; } 100% { transform: scale(1.5); opacity: 0; } }
 </style>

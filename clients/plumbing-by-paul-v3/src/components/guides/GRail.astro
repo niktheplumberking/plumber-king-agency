@@ -63,6 +63,7 @@ const { items, eyebrow = 'Keep reading', l1 = 'More plain answers', l2 = 'from t
 <style>
   .gr { position: relative; padding: 72px 0 72px; overflow: clip; }
   .ov { padding-top: 136px; }
+  .bg-tint:not(.ov) { padding-top: 96px; } /* FAQ F4 (441:3903): heading 136 below the navy, which ends 40 into this band */
   .bg-white { background: var(--white); } .bg-tint { background: var(--tint); }
   .gr-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
   .gr-act { display: flex; align-items: center; gap: 24px; padding-bottom: 4px; }
@@ -96,6 +97,7 @@ const { items, eyebrow = 'Keep reading', l1 = 'More plain answers', l2 = 'from t
   @media (max-width: 1023px) {
     .gr { padding: 48px 0 40px; }
     .ov { padding-top: 96px; }
+    .bg-tint:not(.ov) { padding-top: 59px; }
     .gr-head { display: block; }
     .gr-act { display: none; }
     .gr-stage { margin-top: 12px; }

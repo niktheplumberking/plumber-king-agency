@@ -30,7 +30,7 @@ const mark = (q: string, hl: string[] = []) => { let h = esc(q); for (const x of
     </div>
     <div class="rv-rail" data-carousel>
       <div class:list={['rv-cards', `n${n}`]} data-track tabindex="0" role="group" aria-label="Reviews, scroll sideways for more" data-t="4" data-stagger>
-        {r.list.map((x, i) => <div class:list={['rv-cell', `c${i}`]} data-slide><ReviewCard r={x} v={i === 1 ? 'navy' : 'white'} t={false} /></div>)}
+        {(n === 3 ? [1, 0, 2] : r.list.map((_, i) => i)).map((i) => <div class:list={['rv-cell', `c${i}`]} data-slide><ReviewCard r={r.list[i]} v={i === 1 ? 'navy' : 'white'} t={false} /></div>)}
       </div>
       {n > 1 && <div class="rv-dots" aria-hidden="true">{r.list.map((_, i) => <i data-dot class:list={[i === 0 && 'on']}></i>)}<span><span data-count-now>1</span> of {n} · swipe</span></div>}
     </div>
@@ -47,7 +47,7 @@ const mark = (q: string, hl: string[] = []) => { let h = esc(q); for (const x of
     <div class="rv-rail rv-brail" data-carousel>
       <div class="rv-bcards" data-track tabindex="0" role="group" aria-label="Reviews, scroll sideways for more" data-t="4" data-stagger>
         <figure class="rv-big" data-slide>
-          {big.fixedBy && big.fixedBy.length > 0 && <div class="rb-pats" aria-label={`Fixed by ${big.fixedBy.slice(0, 2).join(' and ')}`}>{big.fixedBy.slice(0, 2).map((p, i) => <Patch name={p} dark deg={i ? 4 : -3} t={false} />)}</div>}
+          {big.fixedBy && big.fixedBy.length > 0 && <div class="rb-pats" role="group" aria-label={`Fixed by ${big.fixedBy.slice(0, 2).join(' and ')}`}>{big.fixedBy.slice(0, 2).map((p, i) => <Patch name={p} dark deg={i ? 4 : -3} t={false} />)}</div>}
           <Stars size={18} />
           <blockquote class="rb-q"><p set:html={mark(big.quote, big.hl)} /></blockquote>
           {big.tags && big.tags.length > 0 && <ul role="list" class="rb-tags" aria-label="Service">{big.tags.map((tg) => <li><Icon name="wrench" size={12} />{tg}</li>)}</ul>}
@@ -74,6 +74,22 @@ const mark = (q: string, hl: string[] = []) => { let h = esc(q); for (const x of
   .rv-cell.c1 { margin-top: 32px; } .rv-cell.c2 { margin-top: 64px; }
   .rv-dots { display: none; }
   .rv-a :global(.rv-all) { margin-top: 36px; }
+  /* Figma 03 W8 (439:8068): head at 112, cards from 328 (stepped 32), the "all reviews" link under the first card, level
+     with the foot of the tallest one; the topic chip hangs 30 px below the head; 150 below. */
+  @media (min-width: 1024px) {
+    .rv-a { padding: 112px 0 150px; }
+    .rv-a .wrap { position: relative; }
+    .rv-a .rv-cell.c0 { order: 1; } .rv-a .rv-cell.c1 { order: 2; } .rv-a .rv-cell.c2 { order: 3; } /* DOM puts the navy card first for the mobile rail (Figma 03 mobile W8) */
+    .rv-a .rv-cards { margin-top: 84px; }
+    .rv-a .rv-chip { margin-bottom: -25px; padding: 14px 20px; border-radius: 18px; box-shadow: 0 10px 18px rgba(17,16,50,.26), 0 3px 0 rgba(17,16,50,.14); transform: rotate(-3deg); }
+    .rv-a .rc-n { line-height: 48px; }
+    .rv-a .rc-g { font-weight: 600; font-size: 13px; line-height: 18px; }
+    .rv-a .rc-t b { font-weight: 800; font-size: 16px; }
+    .rv-a :global(.rv-all) { position: absolute; left: 0; bottom: 0; margin: 0; }
+    .rv-a :global(.rcard.white) { padding: 29px; }
+    .rv-a :global(.rcard.navy) { padding: 28px; }
+    .rv-a :global(.rcard .tags li) { padding-block: 5px; }
+  }
 
   .rv-b { padding: 120px 0 104px; }
   .rv-bgrid { display: grid; grid-template-columns: minmax(0, 480px) minmax(0, 660px); justify-content: space-between; column-gap: 60px; row-gap: 32px; grid-template-rows: auto auto 1fr; align-items: start; }
@@ -85,6 +101,18 @@ const mark = (q: string, hl: string[] = []) => { let h = esc(q); for (const x of
   .rv-big + .rv-cell { grid-column: 2; grid-row: 2; }
   .rv-big + .rv-cell + .rv-cell { grid-column: 2; grid-row: 3; margin-top: 8px; }
   .rv-b .rv-cell { padding-top: 26px; }
+  /* Figma 04 D7 (443:12169): pill at 96, head at 104, the 480 x 870 navy card 32 above the section with 54 px between its
+     stars, quote, tags and reviewer; side cards at 284 and 580; 120 to the next section */
+  @media (min-width: 1024px) {
+    .rv-b { padding: 96px 0 120px; }
+    .rv-bgrid { row-gap: 22px; }
+    .rv-bhead { padding-top: 8px; }
+    .rv-big { margin-top: -128px; padding: 40px; gap: 0; }
+    .rv-big .rb-q { margin-top: 54px; }
+    .rv-big .rb-tags { margin-top: 54px; }
+    .rv-big .rb-by { margin-top: 54px; }
+    .rv-big + .rv-cell + .rv-cell { margin-top: -15px; }
+  }
   .rv-b :global(.rcard.tint .m) { color: var(--slate); } /* 4.5:1 on tint */
   .rb-pats { position: absolute; right: 8px; top: -32px; display: flex; }
   .rb-pats :global(.patch + .patch) { margin-left: -28px; }
@@ -113,6 +141,18 @@ const mark = (q: string, hl: string[] = []) => { let h = esc(q); for (const x of
     .rv-dots i:global(.on) { width: 22px; background: var(--press); }
     .rv-dots span { margin-left: 6px; }
     .rv-a :global(.rv-all) { margin-top: 24px; }
+    /* Figma 03 mobile W8 (443:6144): chip 34 below the head, cards keep their own height (no stretch), 22 padding with
+       the patches over the edge, quote 15/24, 26 px tags; dots 16 under the cards, link 15 under the dots. */
+    .rv-a { padding: 64px 0 90px; }
+    .rv-a .rv-head { gap: 34px; }
+    .rv-a .rv-cards { align-items: flex-start; margin-top: 0; }
+    .rv-a .rv-cell :global(.rcard) { height: auto; }
+    .rv-a :global(.rcard.has-patch) { padding-top: 22px; }
+    .rv-a :global(.rcard .q) { line-height: 24px; }
+    .rv-a :global(.rcard .m) { font-size: 11px; letter-spacing: -0.01em; }
+    .rv-a :global(.rcard .tags li) { padding-block: 5px; }
+    .rv-a .rv-dots { margin-top: 8px; line-height: 15px; }
+    .rv-a :global(.rv-all) { margin-top: 15px; }
     .rv-bgrid { grid-template-columns: minmax(0, 1fr); }
     .rv-bhead { grid-column: 1; padding-top: 0; }
     .rv-pill { position: static; margin-top: 20px; }
@@ -125,5 +165,17 @@ const mark = (q: string, hl: string[] = []) => { let h = esc(q); for (const x of
     .rb-pats :global(.patch .pn) { font-size: 22px; line-height: 22px; }
     .rb-q { margin-top: 4px; font-size: 15px; line-height: 24px; }
     .rb-tags { margin-top: 4px; } .rb-by { margin-top: 4px; }
+    /* Figma 04 mobile D7 (443:13202): head only (no pill), the rail 14 below it, cards at their own height with 22 px
+       padding and 14 px rhythm, quote 15/24; dots 16 under the cards */
+    .rv-b { padding: 56px 0 77px; }
+    .rv-b .rv-pill { display: none; }
+    .rv-bgrid { row-gap: 0; }
+    .rv-b .rv-bcards { align-items: flex-start; margin-top: 14px; }
+    .rv-b .rv-cell :global(.rcard) { height: auto; }
+    .rv-b :global(.rcard.has-patch) { padding-top: 22px; }
+    .rv-big { padding: 22px; gap: 14px; }
+    .rb-q { margin-top: 0; line-height: 24px; }
+    .rb-tags, .rb-by { margin-top: 0; }
+    .rv-b .rv-dots { margin-top: 8px; line-height: 15px; }
   }
 </style>

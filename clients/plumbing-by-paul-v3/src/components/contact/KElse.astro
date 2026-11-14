@@ -44,9 +44,9 @@ const cards = [
   <Swoosh class="ke-sw" below="var(--white)" h={110} />
 </section>
 <style>
-  .ke { position: relative; background: var(--navy); color: var(--white); padding: 0 0 130px; margin-top: 40px; }
+  .ke { position: relative; background: var(--navy); color: var(--white); padding: 0 0 126px; margin-top: 40px; }
   .ke-cards { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; transform: translateY(-40px); }
-  .kec { position: relative; display: flex; flex-direction: column; min-height: 204px; padding: 56px 24px 24px; border-radius: 20px; background: var(--navy); box-shadow: inset 0 0 0 1px var(--sky), var(--sh-3); }
+  .kec { position: relative; display: flex; flex-direction: column; min-height: 204px; padding: 56px 24px 16px; border-radius: 20px; background: var(--navy); box-shadow: inset 0 0 0 1px var(--sky), var(--sh-3); }
   .kmed { position: absolute; left: 24px; top: -28px; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--sky); color: var(--navy); box-shadow: 0 0 0 4px var(--white), var(--sh-sticker); }
   .kec-n { position: absolute; right: 24px; top: 24px; font-size: 13px; letter-spacing: .08em; color: var(--sky); }
   .kec-t { font-weight: 700; font-size: 20px; line-height: 26px; }
@@ -61,13 +61,13 @@ const cards = [
   @media (max-width: 1199px) { .ke-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 1023px) {
     .ke { padding-bottom: 70px; margin-top: 32px; }
-    .ke-cards { gap: 36px 12px; transform: translateY(-28px); }
-    .kec { min-height: 184px; padding: 44px 14px 14px; border-radius: 16px; }
-    .kmed { left: 14px; top: -22px; width: 44px; height: 44px; }
+    .ke-cards { gap: 40px 12px; transform: translateY(-32px); } /* Figma 435:3787: 169 x 212 cards */
+    .kec { min-height: 212px; padding: 44px 16px 14px; border-radius: 16px; }
+    .kmed { left: 16px; top: -26px; width: 52px; height: 52px; }
     .kmed :global(svg) { width: 20px; height: 20px; }
     .kec-n { display: none; }
     .kec-t { font-size: 16px; line-height: 22px; }
-    .kec-d { font-size: 12px; line-height: 17px; }
+    .kec-d { font-size: 13px; line-height: 19px; margin-top: 6px; }
     .kec-l { align-self: flex-end; justify-content: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; background: var(--sky); color: var(--navy); }
     .kec-l .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .kec-so { gap: 6px; }

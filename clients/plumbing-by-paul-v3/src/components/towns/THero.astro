@@ -41,13 +41,13 @@ const h = t.hero;
       </ul>
     </div>
     <div class="th-media">
-      <div class="th-frame frame frame-3" data-t="4" data-fx="frame" data-parallax-wrap>
-        <Img name={h.photo} alt={h.alt} sizes="(min-width: 1024px) 560px, calc(100vw - 40px)" focus={h.focus} priority widths={[400, 600, 800, 1100, 1400]} data-parallax="0.05" />
+      <div class="th-frame frame frame-3" data-t="4" data-fx="frame">
+        <Img name={h.photo} alt={h.alt} sizes="(min-width: 1024px) 560px, calc(100vw - 40px)" focus={h.focus} priority widths={[400, 600, 800, 1100, 1400, 2520]} />
         <Swoosh class="th-corner" w={300} h={90} draw={false} />
       </div>
       <Caption class="th-cap">{h.cap}</Caption>
       <p class="th-route" data-t="5" data-fx="pop">
-        <Seal d={36} t={false} />
+        <Seal d={48} t={false} />
         <span><b>St. Pete shop <Icon name="arrow" size={14} /> {t.name}</b><small class="label">From 64th Way N</small></span>
       </p>
     </div>
@@ -55,27 +55,27 @@ const h = t.hero;
   <Swoosh class="th-sw" below="#FFFFFF" />
 </section>
 <style>
-  .th { position: relative; background: linear-gradient(180deg, var(--mist), var(--mist) 70%, var(--white)); padding: 52px 0 0; overflow: clip; }
+  .th { position: relative; background: linear-gradient(180deg, var(--mist), var(--mist) 70%, var(--white)); padding: 65px 0 0; overflow: clip; }
   .th-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 590fr) minmax(0, 560fr); column-gap: 50px; align-items: start; }
   .th-copy { display: grid; justify-items: start; }
   .th-copy :global(.th-eb) { margin-top: 18px; }
   .th-h1 { margin-top: 18px; line-height: 1.0667; }
+  @media (min-width: 1024px) { .th-h1 { font-size: 64px; line-height: 68px; letter-spacing: -.015em; } }
   .hl { display: block; } .hl.l2 { color: var(--blue); }
   .ul-wrap { position: relative; display: inline-block; }
   .ul-wrap :global(.ul) { position: absolute; left: 0; bottom: -10px; width: calc(100% + 18px); }
   .th-lead { margin-top: 30px; max-width: 540px; }
-  .th-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .th-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 31px; }
   .th-chips { display: flex; flex-wrap: nowrap; width: max-content; gap: 8px; margin: 24px 0 0; padding: 0; }
-  .th-media { position: relative; margin-top: 38px; }
-  .th-frame { position: relative; aspect-ratio: 560 / 440; border-radius: var(--r-2xl); }
-  .th-frame :global(img) { transform: scale(1.06); }
+  .th-media { position: relative; margin-top: 11px; }
+  .th-frame { position: relative; aspect-ratio: 560 / 440; border-radius: 40px; box-shadow: 0 28px 28px rgba(17, 16, 50, .22); }
   .th-frame :global(.th-corner) { position: absolute; left: 0; bottom: 0; width: 34%; height: auto; z-index: 2; transform: scaleY(-1) scaleX(-1); transform-origin: center; }
   .th-media :global(.th-cap) { position: absolute; left: 124px; bottom: -14px; z-index: 3; }
-  .th-route { position: absolute; z-index: 3; left: -36px; top: -24px; display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 14px; background: var(--white); box-shadow: var(--sh-2); }
-  .th-route b { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; line-height: 18px; }
+  .th-route { position: absolute; z-index: 3; left: -36px; top: -24px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 18px; background: var(--white); box-shadow: 0 12px 28px rgba(17, 16, 50, .14); }
+  .th-route b { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; line-height: 18px; }
   .th-route b :global(svg) { color: var(--blue); }
-  .th-route small { display: block; font-size: 10px; color: var(--press); }
-  .th :global(.th-sw) { position: relative; z-index: 1; margin-top: 40px; margin-bottom: -1px; }
+  .th-route small { display: block; margin-top: 2px; font-family: var(--f-num); font-size: 10px; line-height: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--press); }
+  .th :global(.th-sw) { position: relative; z-index: 1; margin-top: 18px; margin-bottom: -1px; }
   @media (max-width: 1279px) and (min-width: 1024px) { .th-chips { flex-wrap: wrap; width: auto; } }
   @media (max-width: 1023px) {
     .th { padding-top: 36px; }

@@ -1,7 +1,8 @@
 ---
 // First-visit-per-session loader (MOTION.md "Loader"). Shown only when <html> has .intro (set before paint in Base.astro).
-// Beats: 1 ring draws round the seal  2 the seal pops and settles  3 the three livery stripes slide in  4 the pipe fills
-// with water while the page loads (min 1.5 s, max 3.2 s)  5 the navy panel lifts with the van's swoosh as its trailing edge,
+// Beats, one at a time (each starts when the previous is ~70 % done): 1 ring draws round the seal  2 the seal settles
+// 3 the three livery stripes slide in  4 the words, then the pipe; it fills
+// with water while the page loads (min 1.8 s, max 3.4 s)  5 the navy panel lifts with the van's swoosh as its trailing edge,
 // handing straight into the hero entrance. Click, tap or any key skips. The hero image loads underneath (LCP not blocked).
 import { Image } from 'astro:assets';
 import seal from '../../assets/brand/seal-mascot.png';

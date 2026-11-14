@@ -30,7 +30,7 @@ const cards = [
       <ul role="list" class="bo-cards" data-t="4" data-stagger>
         {cards.map((c) => (
           <li class="bo-card" style={`--deg:${c.deg}deg`} data-fx="toss">
-            <div class="bo-ph"><Img name={c.photo} alt={c.alt} sizes="(min-width: 1024px) 311px, 45vw" widths={[320, 640]} focus="50% 30%" /></div>
+            <div class="bo-ph"><Img name={c.photo} alt={c.alt} sizes="(min-width: 1024px) 311px, 45vw" widths={[320, 640, 1150]} focus="50% 30%" /></div>
             <span class="bo-pw"><Patch name={c.patch} label="Owner" deg={-4} t={false} /></span>
             <p class="bo-n">{c.name}</p>
             <p class="label bo-r">{c.role}</p>
@@ -47,7 +47,7 @@ const cards = [
   </div>
 </section>
 <style>
-  .bo { position: relative; background: var(--white); padding: 120px 0 104px; overflow-x: clip; }
+  .bo { position: relative; background: var(--white); padding: 120px 0 96px; overflow-x: clip; }
   .bo-in { display: grid; grid-template-columns: minmax(0, 460fr) minmax(0, 658fr); column-gap: 82px; align-items: start; }
   .bo-p { margin-top: 24px; font-size: 17px; line-height: 29px; color: var(--slate); }
   .bo-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 28px; }

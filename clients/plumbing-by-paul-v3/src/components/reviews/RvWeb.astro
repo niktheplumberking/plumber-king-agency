@@ -46,18 +46,19 @@ const cells = [
   .cell :global(.ct) { position: absolute; right: 28px; top: 30px; }
   .rvw-cap { margin-top: 24px; text-align: center; font-weight: 500; font-size: 13px; line-height: 18px; color: var(--slate-2); }
   @media (max-width: 1023px) {
-    .rvw { padding: 48px 0 56px; }
-    .rvw::before { top: 150px; height: 160px; }
+    /* Figma 441:8105: cards 340 x 116, 16 apart, the middle one 10 in; sky band 150-370 behind them */
+    .rvw { padding: 56px 0 56px; }
+    .rvw::before { top: 150px; height: 220px; }
     .rvw :global(.rvw-eb) { justify-content: flex-start; }
-    .cells { grid-template-columns: 1fr; gap: 12px; margin-top: 22px; }
-    .cell { height: auto; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 22px; align-items: center; padding: 18px 22px; border-radius: 20px; }
-    .mid { margin: 0 0 0 8px; }
-    .ck { grid-column: 2; grid-row: 1; font-size: 15px; }
+    .cells { grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+    .cell { width: min(340px, 100% - 10px); height: auto; min-height: 116px; display: grid; grid-template-columns: 98px 1fr; grid-template-rows: auto auto; column-gap: 20px; align-content: center; align-items: center; padding: 22px 20px; border-radius: 20px; }
+    .mid { margin: 0 0 0 10px; }
+    .ck { grid-column: 2; grid-row: 1; font-size: 16px; line-height: 20px; align-self: end; }
     .cv { grid-column: 1; grid-row: 1 / span 2; margin: 0; }
-    .cv .num { font-size: 44px; line-height: 48px; }
+    .cv .num { font-size: 48px; line-height: 52px; }
     .cv :global(.stars) { display: none; }
-    .cd { grid-column: 2; grid-row: 2; margin: 2px 0 0; font-size: 13px; line-height: 18px; }
+    .cd { grid-column: 2; grid-row: 2; margin: 12px 0 0; font-size: 13px; line-height: 18px; align-self: start; }
     .cell :global(.ct) { display: none; }
-    .rvw-cap { text-align: left; }
+    .rvw-cap { text-align: left; margin-top: 20px; }
   }
 </style>

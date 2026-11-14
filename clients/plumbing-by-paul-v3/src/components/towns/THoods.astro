@@ -16,13 +16,13 @@ const h = t.hoods;
     <div class="th8-media">
       <span class="th8-off" aria-hidden="true"></span>
       <figure class="th8-frame frame frame-3" data-t="4" data-fx="frame">
-        <Img name={h.photo} alt={h.alt} focus={h.focus} sizes="(min-width: 1024px) 588px, calc(100vw - 40px)" widths={[400, 600, 900, 1200]} />
+        <Img name={h.photo} alt={h.alt} focus={h.focus} sizes="(min-width: 1024px) 588px, calc(100vw - 40px)" widths={[400, 600, 900, 1200, 2160]} />
         <figcaption><Caption class="th8-cap" small>{h.cap}</Caption></figcaption>
       </figure>
     </div>
     <SectionHead eyebrow={h.eyebrow} l1={h.l1} l2={h.l2} id="th8-h" class="th8-head" />
     <ul role="list" class="th8-chips" data-t="5" data-stagger aria-label={`Neighborhoods we work in around ${t.name}`}>
-      {h.chips.map((c) => <li><span class="th8-chip"><Icon name="pin" size={16} />{c}</span></li>)}
+      {h.chips.map((c) => <li><span class="th8-chip"><Icon name="pin" size={18} />{c}</span></li>)}
     </ul>
     <p class="th8-ask" data-t="3"><span class="th8-ai" aria-hidden="true"><Icon name="phone" size={18} /></span><span>{h.line} <a href={SITE.tel}>{SITE.phone}</a>.</span></p>
   </div>
@@ -37,12 +37,12 @@ const h = t.hoods;
   .th8-frame :global(img) { display: block; }
   .th8-frame :global(.th8-cap) { position: absolute; left: 24px; top: 20px; z-index: 2; }
   .th8-in :global(.th8-head) { grid-column: 2; grid-row: 1; margin-top: 8px; }
-  .th8-chips { position: relative; z-index: 2; grid-column: 2; grid-row: 2; display: flex; flex-wrap: wrap; gap: 12px 10px; margin: 28px 0 0 -160px; padding: 0; }
-  .th8-chip { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: var(--r-full); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); font-weight: 600; font-size: 15px; color: var(--navy); white-space: nowrap; }
+  .th8-chips { position: relative; z-index: 2; grid-column: 2; grid-row: 2; display: flex; flex-wrap: wrap; gap: 10px; margin: 40px 0 0 -160px; padding: 0; }
+  .th8-chip { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 16px; border-radius: var(--r-full); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), 0 12px 28px rgba(17, 16, 50, .14); font-weight: 600; font-size: 16px; line-height: 20px; color: var(--navy); white-space: nowrap; }
   .th8-chip :global(svg) { color: var(--blue); }
-  .th8-ask { grid-column: 2; grid-row: 3; display: flex; align-items: center; gap: 16px; align-self: start; margin-top: 28px; padding: 14px 22px; border-radius: 16px; background: var(--tint); font-weight: 600; font-size: 15px; line-height: 22px; color: var(--navy); }
+  .th8-ask { grid-column: 2; grid-row: 3; display: flex; align-items: center; gap: 16px; align-self: start; min-height: 72px; margin-top: 28px; padding: 14px 18px; border-radius: 16px; background: var(--tint); font-weight: 600; font-size: 15px; line-height: 22px; color: var(--navy); }
   .th8-ask a { color: var(--press); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-  .th8-ai { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--white); color: var(--press); }
+  .th8-ai { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--press); }
   @media (max-width: 1199px) { .th8-chips { margin-left: -100px; } }
   @media (max-width: 1023px) {
     .th8 { padding: 56px 0 64px; }

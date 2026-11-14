@@ -40,7 +40,8 @@ import { SITE } from '../../data/site';
   </div>
 </section>
 <style>
-  .areas { position: relative; z-index: 1; background: var(--tint); padding: 96px 0 104px; }
+  /* z 3: the map card hangs 40 px up into Our work (z 2), so this section must stack above it (Figma 427:3686). */
+  .areas { position: relative; z-index: 3; background: var(--tint); padding: 96px 0 104px; }
   .ar-grid { display: grid; grid-template-columns: minmax(0, 588px) minmax(0, 540px); justify-content: space-between; column-gap: 72px; align-items: start; }
   .ar-map { position: relative; margin-top: -136px; }
   .ar-photo { position: absolute; left: calc(349 / 588 * 100%); top: calc(511 / 600 * 100%); width: 280px; margin: 0; z-index: 2; }
@@ -70,5 +71,17 @@ import { SITE } from '../../data/site';
     .ar-act { display: block; }
     .ar-act :global(.ar-btn) { width: 100%; }
     .ar-act :global(.ar-tel) { display: none; }
+  }
+  /* Figma mobile 426:5199: map 28 under the heading, 40 / 34 px chips, ask row 64 tall with a 40 px icon, 64 px to the edge. */
+  @media (max-width: 767px) {
+    .areas { padding-bottom: 64px; }
+    .ar-map { margin-top: 28px; }
+    .ar-linked { margin-top: 44px; }
+    .ar-linked :global(.town) { min-height: 40px !important; }
+    .ar-route :global(.town) { min-height: 34px !important; }
+    .ar-also { margin: 16px 0 9px; }
+    .ar-ask { margin-top: 20px; gap: 12px; padding: 12px 14px; }
+    .ar-ai { width: 40px; height: 40px; }
+    .ar-act { margin-top: 16px; }
   }
 </style>

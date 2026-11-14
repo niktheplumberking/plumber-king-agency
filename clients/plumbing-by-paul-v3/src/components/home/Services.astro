@@ -66,11 +66,13 @@ const more = [
   </div>
 </section>
 <style>
-  .svc { position: relative; z-index: 2; background: var(--white); padding: 104px 0 0; }
+  /* No z-index here: the More panel (z 3) must paint over the Family section's tint where it hangs into it, and the Family
+     background must paint over this section's white (Figma 427:2984 straddles the join, 126 px above it). */
+  .svc { position: relative; background: var(--white); padding: 104px 0 0; }
   .sv-head { display: grid; grid-template-columns: 760px 1fr; gap: 56px; align-items: end; }
   .sv-lead { max-width: 384px; justify-self: end; }
   .sv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 24px; margin: 56px 0 0; padding: 0; }
-  .scard { position: relative; display: grid; grid-template-rows: 208px 1fr; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
+  .scard { position: relative; display: grid; grid-template-rows: 208px 1fr; min-height: 452px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
   .scard.feat { box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
   .scard:hover { transform: translateY(-6px); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
   .scard.feat:hover { box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
@@ -80,53 +82,63 @@ const more = [
   .sc-ph :global(.sc-tag) { position: absolute; left: 16px; top: 16px; }
   .scard :global(.sc-md) { position: absolute; left: 28px; top: 176px; z-index: 2; transition: transform .5s var(--ease-back); }
   .scard:hover :global(.sc-md) { transform: rotate(-10deg) scale(1.06); }
-  .sc-b { display: grid; grid-template-rows: auto 1fr auto; padding: 46px 28px 24px; }
+  .sc-b { display: grid; grid-template-rows: auto 1fr auto; padding: 46px 28px 16px; }
   .sc-t { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; font-size: var(--fz-h3s); line-height: 30px; }
   .most { padding: 5px 10px; border-radius: 6px; background: var(--navy); color: var(--white); font-size: 10px; line-height: 12px; }
   .sc-d { margin-top: 8px; font-size: 15px; line-height: 23px; color: var(--slate); }
-  .sc-l { position: relative; display: grid; gap: 6px; justify-items: start; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
-  .sc-call { display: inline-flex; align-items: center; gap: 8px; min-height: 22px; font-weight: 700; font-size: 14px; line-height: 20px; color: var(--press); }
+  .sc-l { position: relative; display: grid; gap: 8px; justify-items: start; margin-top: 13px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .sc-call { display: inline-flex; align-items: center; gap: 8px; min-height: 20px; font-weight: 700; font-size: 14px; line-height: 20px; color: var(--press); }
   .sc-call:hover { text-decoration: underline; text-underline-offset: 3px; }
-  .sc-see { display: inline-flex; align-items: center; gap: 6px; min-height: 22px; font-weight: 600; font-size: 14px; line-height: 20px; color: var(--navy); }
+  .sc-see { display: inline-flex; align-items: center; gap: 6px; min-height: 20px; font-weight: 600; font-size: 14px; line-height: 20px; color: var(--navy); }
   .sc-see:hover span { text-decoration: underline; text-underline-offset: 3px; }
   .sc-see :global(.sc-dot) { position: absolute; right: 0; top: 50%; margin-top: -13px; }
   .sc-see:hover :global(.sc-dot) { transform: translateX(4px); background: var(--press); color: var(--white); }
   .sv-dots, .sv-also { display: none; }
-  .more { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr 318px; gap: 32px; margin: 64px 0 -126px; padding: 30px 32px 30px 36px; border-radius: var(--r-xl); background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
-  .mo-h { color: var(--sky); font-size: 13px; }
+  .more { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr 318px; gap: 34px; margin: 24px 0 -82px; padding: 30px 32px 16px 36px; border-radius: var(--r-xl); background: var(--navy); color: var(--white); box-shadow: 0 28px 28px rgba(17,16,50,.22); }
+  .mo-h { color: var(--sky); font-size: 13px; line-height: 16px; }
   .mo-chips { display: flex; flex-wrap: wrap; gap: 10px 8px; margin: 12px 0 0; padding: 0; max-width: 780px; }
-  .mo-chips a { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 10px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); font-weight: 600; font-size: 14px; color: var(--white); transition: background var(--dur-2), box-shadow var(--dur-2); }
+  .mo-chips a { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 14px; border-radius: 10px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); font-weight: 600; font-size: 14px; color: var(--white); transition: background var(--dur-2), box-shadow var(--dur-2); }
   .mo-chips a :global(svg) { color: var(--sky); transition: transform var(--dur-2) var(--ease-out); }
   .mo-chips a:hover { background: var(--navy-3); box-shadow: inset 0 0 0 1px var(--sky); }
   .mo-chips a:hover :global(svg) { transform: translateX(3px); }
-  .offer { display: grid; align-content: start; gap: 10px; padding: 22px; border-radius: 16px; background: var(--navy-2); border: 2px dashed var(--sky); }
+  .offer { display: grid; align-content: start; gap: 9px; height: 136px; padding: 18px; /* + 2 px dashed border = Figma 20 */ border-radius: 16px; background: var(--navy-2); border: 2px dashed var(--sky); }
   .offer .label { color: var(--sky); font-size: 12px; }
   .offer p:last-child { font-weight: 500; font-size: 13px; line-height: 19px; color: var(--tint); }
   @media (max-width: 1199px) {
     .sv-head { grid-template-columns: 1fr; gap: 20px; } .sv-lead { justify-self: start; max-width: 640px; }
     .sv-grid { grid-template-columns: repeat(2, 1fr); }
     .more { grid-template-columns: 1fr; }
+    .offer { height: auto; }
   }
   @media (max-width: 767px) {
+    .svc :global(.shead .h2) { text-wrap: balance; } /* Figma breaks "And the ones / under the yard." (its glyphs run a touch wider) */
     .svc { padding-top: 64px; }
-    .sv-rail { margin-top: 28px; }
-    .sv-grid { display: flex; gap: 16px; margin: 0 calc(-1 * var(--gutter)); padding: 10px var(--gutter) 24px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+    .sv-rail { margin-top: 18px; }
+    .sv-grid { display: flex; gap: 16px; margin: 0 calc(-1 * var(--gutter)); padding: 10px var(--gutter) 30px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
     .sv-grid::-webkit-scrollbar { display: none; }
-    .scard { flex: 0 0 300px; scroll-snap-align: start; grid-template-rows: 180px 1fr; }
+    .scard { flex: 0 0 300px; scroll-snap-align: start; grid-template-rows: 180px 1fr; min-height: 0; }
     .scard :global(.sc-md) { --d: 56px !important; left: 22px; top: 152px; }
-    .sc-b { padding: 40px 22px 20px; }
+    .sc-b { padding: 40px 22px 23px; } /* Figma 426:4666: 300 x 430 */
+    .sc-l { margin-top: 8px; gap: 13px; }
+    .sc-call, .sc-see { min-height: 17px; line-height: 17px; }
     .sc-t { font-size: 21px; line-height: 26px; } .most { display: none; }
     .sc-d { font-size: 14px; line-height: 21px; }
     .sc-see :global(.sc-dot) { display: none; }
-    .sv-dots { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+    .sv-dots { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
     .dots { display: flex; gap: 6px; }
     .dots i { width: 8px; height: 8px; border-radius: 4px; background: var(--line); transition: width .4s var(--ease-out), background .4s; }
     .dots i:global(.on) { width: 22px; background: var(--press); }
     .cnt { font-weight: 500; font-size: 12px; color: var(--slate-2); }
-    .sv-also { display: block; margin-top: 20px; font-weight: 500; font-size: 13px; line-height: 20px; color: var(--slate); }
-    .more { margin: 40px 0 -150px; padding: 20px; gap: 16px; border-radius: 24px; }
-    .mo-chips a { position: relative; font-size: 13px; min-height: 40px; padding: 0 12px; }
-    .mo-chips a::after { content: ""; position: absolute; inset: -2px 0; }
-    .offer { padding: 14px 16px; }
+    .sv-also { display: block; margin-top: 25px; font-weight: 500; font-size: 13px; line-height: 20px; color: var(--slate); }
+    /* Figma 426:4717: 350 x 407, starts 60 px under the "Also" line and hangs 287 px into the Family section */
+    .more { margin: 60px 0 -287px; padding: 20px; gap: 12px; border-radius: 24px; box-shadow: var(--sh-3); }
+    .mo-h { font-size: 12px; line-height: 15px; }
+    .mo-chips { gap: 8px 6px; margin-top: 12px; }
+    .mo-chips a { position: relative; gap: 5px; font-size: 13px; min-height: 34px; padding: 0 10px; }
+    .mo-chips a :global(svg) { width: 12px; height: 12px; }
+    .mo-chips a::after { content: ""; position: absolute; inset: -5px 0; } /* 44 px tap height */
+    .offer { gap: 4px; padding: 12px; border-radius: 14px; } /* + 2 px dashed border = Figma 14 */
+    .offer .label { font-size: 11px; }
+    .offer p:last-child { font-size: 12px; line-height: 18px; }
   }
 </style>

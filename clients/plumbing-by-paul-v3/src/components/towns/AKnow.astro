@@ -34,7 +34,7 @@ const cards = [
   </div>
 </section>
 <style>
-  .ak { position: relative; background: var(--white); padding: 136px 0 84px; }
+  .ak { position: relative; background: var(--white); padding: 136px 0 64px; }
   .ak-band { position: absolute; left: 0; right: 0; bottom: 0; height: 260px; background: var(--sky); }
   .ak-in { position: relative; z-index: 1; }
   .ak-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
@@ -51,13 +51,13 @@ const cards = [
   .ak-card :global(.ak-l) { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); width: 100%; }
   .ak-dots { display: none; }
   @media (max-width: 1023px) {
-    .ak { padding: 56px 0 48px; }
-    .ak-band { height: 150px; }
+    .ak { padding: 96px 0 35px; }
+    .ak-band { height: 241px; }
     .ak-head { display: block; }
     .ak-head :global(.ak-all) { display: none; }
-    .ak-cards { display: flex; gap: 12px; margin: 28px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; }
+    .ak-cards { display: flex; gap: 12px; margin: 18px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; }
     .ak-cards::-webkit-scrollbar { display: none; }
-    .ak-card { flex: 0 0 280px; min-height: 300px; scroll-snap-align: start; }
+    .ak-card { flex: 0 0 280px; min-height: 340px; scroll-snap-align: start; }
     .ak-card:nth-child(even) { margin: 0; }
     .ak-t { font-size: 17px; line-height: 23px; }
     .ak-dots { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--navy); }

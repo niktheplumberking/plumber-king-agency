@@ -18,7 +18,7 @@ const id = sid(slug, 'local');
     <div class="lk-head">
       <Eyebrow text={l.eyebrow} />
       <h2 class="h2 lk-h" id={id} data-t="2"><span>{l.l1}</span> <span>{l.l2}</span></h2>
-      <Seal d={112} deg={6} class="lk-seal" />
+      <Seal d={115} deg={6} class="lk-seal" />
     </div>
     <div class="lk-cards" data-t="4" data-stagger>
       {l.cards.map((c) => (
@@ -33,16 +33,17 @@ const id = sid(slug, 'local');
   </div>
 </section>
 <style>
-  .lk { position: relative; background: var(--white); padding: 104px 0 104px; margin-top: 40px; }
-  .lk-band { position: absolute; left: 0; right: 0; top: 0; bottom: 140px; background: var(--sky); }
+  .lk { position: relative; background: var(--white); padding: 72px 0 96px; margin-top: 0; }
+  .lk-band { position: absolute; left: 0; right: 0; top: 0; bottom: 136px; background: var(--sky); }
   .lk-in { position: relative; z-index: 1; }
   .lk-head { position: relative; display: grid; justify-items: start; gap: 16px; }
   .lk-head :global(.eyebrow) { color: var(--navy); }
   .lk-h { color: var(--navy); max-width: 900px; }
   .lk-h span { display: block; }
-  .lk-head :global(.lk-seal) { position: absolute; right: 16px; top: -40px; }
-  .lk-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 52px; }
-  .lk-card { display: grid; align-content: start; gap: 16px; padding: 32px 32px 36px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }
+  @media (min-width: 1024px) { .lk-h { font-size: 40px; line-height: 46px; } }
+  .lk-head :global(.lk-seal) { position: absolute; right: -3px; top: -34px; }
+  .lk-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+  .lk-card { display: grid; align-content: start; gap: 14px; padding: 32px; min-height: 316px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }
   .lk-l { display: flex; align-items: center; gap: 14px; }
   .lk-l .well { width: 48px; height: 48px; }
   .lk-l .label { color: var(--press); font-size: 12px; }
@@ -51,6 +52,7 @@ const id = sid(slug, 'local');
   .lk-a b { color: var(--navy); font-weight: 700; }
   @media (max-width: 1023px) {
     .lk { padding: 64px 0 64px; margin-top: 24px; }
+    .lk-card { min-height: 0; }
     .lk-band { bottom: 50%; }
     .lk-h { padding-right: 70px; }
     .lk-head :global(.lk-seal) { --d: 64px !important; right: 0; top: -8px; }
@@ -59,5 +61,15 @@ const id = sid(slug, 'local');
     .lk-l .well { width: 40px; height: 40px; }
     .lk-q { font-size: 19px; line-height: 26px; }
     .lk-a { font-size: 15px; line-height: 25px; }
+    /* Figma 03 mobile W9 (443:6257): head at 44 (300 px measure), seal 62 on its right, cards 28 below, 22 padding,
+       42 px label well, the link a 44 px row; the sky band stops 388 px above the section foot. */
+    .lk { padding: 44px 0 64px; margin-top: 0; }
+    .lk-band { bottom: 444px; } /* the Figma render ends the band just above the second card */
+    .lk-h { padding-right: 40px; font-size: 30px; line-height: 32px; letter-spacing: -0.01em; }
+    .lk-head :global(.lk-seal) { --d: 62px !important; right: -9px; top: -15px; }
+    .lk-cards { margin-top: 28px; }
+    .lk-card { padding: 22px; }
+    .lk-l .well { width: 42px; height: 42px; }
+    .lk-card :global(.lk-link) { min-height: 44px; }
   }
 </style>

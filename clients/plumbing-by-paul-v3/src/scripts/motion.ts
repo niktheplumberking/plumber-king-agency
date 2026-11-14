@@ -14,38 +14,38 @@ declare global { interface Window { __pbpMotion?: boolean; __pbpLenis?: Lenis } 
 const html = document.documentElement;
 const MOTION = html.classList.contains('motion');
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-const EASE = 'expo.out';
-const BACK = 'back.out(1.7)';
-/** Tier start offsets (s) inside one section timeline. T1 eyebrow, T2 headline, T3 body/CTA, T4 media, T5 accents. */
-const TIER_AT: Record<string, number> = { '1': 0, '2': 0.12, '3': 0.42, '4': 0.55, '5': 0.9 };
-const SAME_TIER_GAP = 0.08;
+/* Timing grammar (MOTION.md section 0 has the measurements it comes from). ONE THING AT A TIME: a section is a sequence of
+ * steps (eyebrow -> headline -> body -> CTAs -> media -> accents). A step starts when the previous one is 70 % through its
+ * duration (OVERLAP 0.3); with power3.out that is ~97 % of the way there visually, so the eye has already left it. */
+const EASE = 'power3.out';          // every entrance
+const SOFT = 'power2.out';          // opacity-only fades
+const ACCENT = 'back.out(1.3)';     // tier-5 accents only: a small settle, never a bounce
+const OVERLAP = 0.3;                // max share of a step that the next step may overlap
+const LINE_GAP = 0.12;              // headline lines (two26: 0.12)
+const SIB_GAP = 0.12;               // children of one data-stagger group (cards, chips)
+const SIB_SPAN = 0.84;              // a group's whole stagger never spans longer than this
+const DUR = { slide: 0.6, lines: 0.8, rise: 0.7, media: 0.9, nudge: 0.8, fade: 0.8, frame: 1.1, toss: 0.8, pop: 0.55, spin: 0.8, write: 0.9 };
+const DEFAULT_FX: Record<string, string> = { '1': 'slide', '2': 'lines', '3': 'rise', '4': 'rise', '5': 'pop' };
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel) as NodeListOf<any>) as T[];
+const shown = (el: Element) => el.getClientRects().length > 0 || getComputedStyle(el).display === 'contents';
 
 /* ------------------------------------------------------------------ entrances */
 
-/** Build the tween for one element according to its tier and data-fx. Returns a timeline positioned at 0. */
-function entrance(el: HTMLElement): gsap.core.Timeline {
-  const tl = gsap.timeline();
-  const tier = el.dataset.t || '3';
-  const fx = el.dataset.fx || ({ '1': 'slide', '2': 'lines', '3': 'rise', '4': 'rise', '5': 'pop' } as Record<string, string>)[tier];
-  const stagger = el.hasAttribute('data-stagger');
-  // Staggered groups animate their children; a child with its own data-t keeps its own tier and effect.
-  const targets: Element[] = stagger ? Array.from(el.children).filter((c) => !c.hasAttribute('data-t')) : [el];
-  if (stagger) gsap.set(el, { autoAlpha: 1 });
-  const each = stagger ? 0.07 : 0;
-  // A CSS `transition: transform` (buttons, patches, cards) fights GSAP's per-frame writes and freezes the element
-  // part-way. Switch transitions off while the entrance runs; hand them back afterwards (float keeps it off).
-  const moved = Array.from(new Set<Element>([el, ...targets]));
-  gsap.set(moved, { transition: 'none' });
+/** True on a plain load (no loader, no curtain): the hero paints uncovered, so its photo must not be hidden (LCP). */
+let heroUncovered = false;
 
+/** One effect on one target. Every tween is a from()/immediateRender so the start state is applied the moment it is built.
+ *  Effects animate transform/opacity/clip-path only and always end exactly on the element's resting CSS state, so clearing
+ *  the inline values afterwards changes nothing on screen (the round-1 glitch was a clear that did). */
+function effect(t: HTMLElement, fx: string, tier: string, i = 0): gsap.core.Timeline {
+  const tl = gsap.timeline();
   switch (fx) {
     case 'lines': {
-      const hl = $$('.hl', el);
+      const hl = $$('.hl', t);
       if (hl.length) {
-        gsap.set(el, { autoAlpha: 1 });
         // The hero headline has explicit line spans: mask each, then unwrap so underlines and descenders are free.
         const inner = hl.map((line) => {
           line.classList.add('m-line');
@@ -54,87 +54,145 @@ function entrance(el: HTMLElement): gsap.core.Timeline {
           line.appendChild(s);
           return s;
         });
-        tl.from(inner, { yPercent: 108, duration: 1, ease: EASE, stagger: 0.09 });
-        tl.add(() => hl.forEach((line, i) => { line.classList.remove('m-line'); while (inner[i].firstChild) line.insertBefore(inner[i].firstChild!, inner[i]); inner[i].remove(); }));
+        tl.set(t, { autoAlpha: 1 });
+        tl.from(inner, { yPercent: 105, duration: DUR.lines, ease: EASE, stagger: LINE_GAP, immediateRender: true }, 0);
+        tl.add(() => hl.forEach((line, k) => { line.classList.remove('m-line'); while (inner[k].firstChild) line.insertBefore(inner[k].firstChild!, inner[k]); inner[k].remove(); }));
       } else {
-        // Split at play time (fonts are in by then, so the lines are the real lines), revert when done.
-        gsap.set(el, { autoAlpha: 0 });
-        const play = () => {
-          gsap.set(el, { autoAlpha: 1 });
-          const split = SplitText.create(el, { type: 'lines', mask: 'lines', linesClass: 'm-l' });
-          gsap.from(split.lines, { yPercent: 108, duration: 1, ease: EASE, stagger: 0.09, onComplete: () => split.revert() });
-        };
-        tl.add(() => (document.fonts && document.fonts.status !== 'loaded' ? document.fonts.ready.then(play) : play()), 0.001);
+        // Split now (the band waits for fonts before building, so these are the real lines); revert when done.
+        const split = SplitText.create(t, { type: 'lines', mask: 'lines', linesClass: 'm-l' });
+        tl.set(t, { autoAlpha: 1 });
+        tl.from(split.lines, { yPercent: 105, duration: DUR.lines, ease: EASE, stagger: LINE_GAP, immediateRender: true }, 0);
+        tl.add(() => split.revert());
       }
       break;
     }
-    case 'slide': tl.from(targets, { x: -18, autoAlpha: 0, duration: 0.7, ease: EASE, stagger: each }); break;
-    // LCP-safe: moves but never hides (the hero's biggest text block must paint under the loader, or LCP waits for the handoff).
-    case 'nudge': tl.from(targets, { y: 22, duration: 0.9, ease: EASE, stagger: each }); break;
-    case 'fade': tl.from(targets, { autoAlpha: 0, duration: 0.9, ease: 'power1.out', stagger: each }); break;
+    case 'slide': tl.from(t, { x: -16, autoAlpha: 0, duration: DUR.slide, ease: EASE, immediateRender: true }); break;
+    // LCP-safe on a plain load: moves but never hides (the hero's biggest text block must paint early). Under the loader or
+    // the curtain it has already painted (LCP is taken), so it fades in on its turn instead of sitting there before the headline.
+    case 'nudge': tl.from(t, { y: 16, ...(heroUncovered ? {} : { autoAlpha: 0 }), duration: DUR.nudge, ease: EASE, immediateRender: true }); break;
+    case 'fade': tl.from(t, { autoAlpha: 0, duration: DUR.fade, ease: SOFT, immediateRender: true }); break;
     case 'frame': {
-      // Media reveal: the frame opens from a rounded inset while the photo settles from 1.14. Never fully hidden (LCP).
-      const img = el.querySelector('img');
-      gsap.set(el, { autoAlpha: 1 });
-      tl.fromTo(el, { clipPath: 'inset(7% 9% 7% 9% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: 1.3, ease: EASE, clearProps: 'clipPath' });
-      if (img) tl.fromTo(img, { scale: 1.14 }, { scale: 1, duration: 1.6, ease: EASE, clearProps: 'transform' }, 0);
+      // The frame (border ring, shadow, tint) rises in while its photo opens from a rounded inset and settles from 1.06.
+      // The photo is written through the individual CSS `scale` property (by hand: GSAP's `scale` would rewrite `transform`
+      // and wipe a CSS transform on the img), so it multiplies with, never replaces, the img's own CSS. It ends at scale 1
+      // and clip inset(0) on the img itself, both "no change", so removing them afterwards moves nothing.
+      const img = t.querySelector('img');
+      if (heroUncovered && t.closest('[data-m-hero]')) { tl.set(t, { autoAlpha: 1 }); break; } // plain load: the LCP photo stays put
+      // fromTo: a below-the-fold frame is pre-hidden inline (sections()), so a from() would tween 0 -> 0.
+      tl.fromTo(t, { y: 28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: DUR.media * 0.8, ease: EASE, immediateRender: true, clearProps: 'transform,opacity,visibility' }, 0);
+      if (img) {
+        const p = { k: 0 };
+        const paint = () => {
+          const k = p.k, i = 9 * (1 - k), r = 24 * (1 - k);
+          img.style.clipPath = `inset(${i.toFixed(3)}% round ${r.toFixed(2)}px)`;
+          img.style.scale = String(1 + 0.06 * (1 - k));
+        };
+        paint();
+        tl.to(p, { k: 1, duration: DUR.frame, ease: EASE, onUpdate: paint, onComplete: () => { img.style.clipPath = ''; img.style.scale = ''; } }, 0.05);
+      }
       break;
     }
-    case 'toss': tl.from(targets, { y: 50, rotation: () => gsap.utils.random(-12, 12), scale: 0.88, autoAlpha: 0, duration: 1, ease: BACK, stagger: each }); break;
-    case 'pop': tl.from(targets, { scale: 0.4, rotation: -18, autoAlpha: 0, duration: 0.75, ease: BACK, stagger: each || 0.06 }); break;
-    case 'spin': tl.from(targets, { scale: 0.6, rotation: -160, autoAlpha: 0, duration: 1.1, ease: EASE, stagger: each }); break;
-    case 'write': tl.fromTo(targets, { clipPath: 'inset(-20% 100% -20% -5%)', autoAlpha: 1 }, { clipPath: 'inset(-20% -5% -20% -5%)', duration: 1, ease: 'power2.inOut', stagger: each, clearProps: 'clipPath' }); break;
-    case 'float':
-      tl.from(targets, { y: 30, autoAlpha: 0, duration: 0.9, ease: EASE, stagger: each });
-      tl.add(() => targets.forEach((t, i) => gsap.to(t, { y: -8, duration: 2.4 + i * 0.3, ease: 'sine.inOut', yoyo: true, repeat: -1 })));
+    case 'toss': {
+      // Tilted snapshots: settle into their CSS tilt from a few degrees off, alternating sides. No overshoot.
+      tl.from(t, { y: 36, rotation: i % 2 ? '-=5' : '+=5', autoAlpha: 0, duration: DUR.toss, ease: EASE, immediateRender: true });
       break;
+    }
+    case 'pop': tl.from(t, { scale: 0.72, rotation: '-=8', autoAlpha: 0, duration: DUR.pop, ease: ACCENT, immediateRender: true }); break;
+    case 'spin': tl.from(t, { scale: 0.8, rotation: '-=90', autoAlpha: 0, duration: DUR.spin, ease: EASE, immediateRender: true }); break;
+    case 'write': tl.fromTo(t, { clipPath: 'inset(-20% 100% -20% -5%)', autoAlpha: 1 }, { clipPath: 'inset(-20% -5% -20% -5%)', duration: DUR.write, ease: 'power2.inOut', immediateRender: true, clearProps: 'clipPath' }); break;
+    case 'float': // retired: no loops in the eye line. Behaves like rise.
     case 'rise':
     default: {
-      const y = tier === '4' ? 56 : 26;
-      tl.from(targets, { y, autoAlpha: 0, duration: tier === '4' ? 1.1 : 0.85, ease: EASE, stagger: each });
+      const media = tier === '4';
+      tl.from(t, { y: media ? 40 : 24, autoAlpha: 0, duration: media ? DUR.media : DUR.rise, ease: EASE, immediateRender: true });
     }
   }
-  if (fx !== 'float') tl.add(() => gsap.set(moved, { clearProps: 'transition' }));
   return tl;
 }
 
-/** Elements of a section in tier order (then DOM order), with their start time. */
+/** Build the entrance of one [data-t] element (or of its children, with data-stagger). Returns a timeline positioned at 0. */
+function entrance(el: HTMLElement): gsap.core.Timeline {
+  const tl = gsap.timeline();
+  const tier = el.dataset.t || '3';
+  const fx = el.dataset.fx || DEFAULT_FX[tier];
+  const stagger = el.hasAttribute('data-stagger');
+  // Staggered groups animate their rendered children; a child with its own data-t keeps its own tier (skipped here),
+  // a child with its own data-fx (a frame photo in a bento) uses that effect inside the group's stagger.
+  const kids = stagger ? (Array.from(el.children) as HTMLElement[]).filter((c) => !c.hasAttribute('data-t') && shown(c)) : [el];
+  if (stagger) gsap.set(el, { autoAlpha: 1 });
+  // A CSS `transition: transform` (buttons, patches, cards) fights GSAP's per-frame writes: off while the entrance runs.
+  const moved = Array.from(new Set<Element>([el, ...kids]));
+  gsap.set(moved, { transition: 'none' });
+  const gap = kids.length > 1 ? Math.min(SIB_GAP, SIB_SPAN / (kids.length - 1)) : 0;
+  kids.forEach((k, i) => tl.add(effect(k, (stagger && k.dataset.fx) || fx, tier, i), i * gap));
+  tl.add(() => { gsap.set(moved, { clearProps: 'transition' }); });
+  return tl;
+}
+
+/** What "one step" is: the tier, with CTAs (anything holding a .btn) split from body text so they get their own beat. */
+const stepOf = (el: HTMLElement) => {
+  const t = el.dataset.t || '3';
+  const cta = t === '3' && (el.classList.contains('btn') || (!!el.querySelector('.btn') && !el.matches('p, h1, h2, h3, h4')));
+  return cta ? '3c' : t;
+};
+const STEP_ORDER = ['1', '2', '3', '3c', '4', '5'];
+
+/** A section's elements as one sequence: tier order (CTAs after body), DOM order inside a tier. Different steps run one
+ *  after another (overlap <= OVERLAP); siblings of the same step follow at a gap that scales with their size. */
 function choreograph(els: HTMLElement[]): gsap.core.Timeline {
   const tl = gsap.timeline({ paused: true });
-  const count: Record<string, number> = {};
-  els.forEach((el) => {
-    const t = el.dataset.t || '3';
-    const n = (count[t] = (count[t] ?? -1) + 1);
-    tl.add(entrance(el), (TIER_AT[t] ?? 0.4) + n * SAME_TIER_GAP);
+  const ordered = els.map((el, i) => ({ el, i, s: STEP_ORDER.indexOf(stepOf(el)) })).sort((a, b) => a.s - b.s || a.i - b.i);
+  let step = -1, stepEnd = 0, prevStart = 0, prevDur = 0, prevGroup = false;
+  ordered.forEach(({ el, s }) => {
+    const e = entrance(el);
+    const d = e.duration();
+    let at: number;
+    if (s !== step) { at = stepEnd; step = s; }
+    // After a whole staggered group (a chip row, a card grid) the next sibling waits for the group, like a new step.
+    else at = prevGroup ? prevStart + prevDur * (1 - OVERLAP) : prevStart + Math.min(0.4, Math.max(SIB_GAP, prevDur * 0.45));
+    tl.add(e, at);
+    prevStart = at; prevDur = d; prevGroup = el.hasAttribute('data-stagger');
+    stepEnd = Math.max(stepEnd, at + d * (1 - OVERLAP));
   });
-  // Stripe underlines / hand-drawn strokes inside this group draw after the accents land.
   return tl;
 }
 
 const pageTop = (el: Element) => el.getBoundingClientRect().top + window.scrollY;
+const fontsIn = () => (document.fonts && document.fonts.status !== 'loaded'
+  ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 700))]) : Promise.resolve());
 
-/** Build section entrances. `only` = 'hero' (the handoff sections, built at once) or 'rest' (built when the main thread is idle).
+/** Build section entrances. `only` = 'hero' (the handoff section, built at once) or 'rest' (wired when the main thread is idle).
  *  Elements stay pre-hidden by CSS until they get .m-built; a band's tweens are built only when it scrolls in (cheap setup),
  *  and .m-built is added in the same task as the tweens, so nothing flashes. */
 function sections(only: 'hero' | 'rest', heroPlay: (tl: gsap.core.Timeline) => void = () => {}) {
   const vh = window.innerHeight;
-  // Read phase first (all measurements), then the write phase (tweens): no layout thrash on slow phones.
+  // Read phase first (all measurements), then the write phase: no layout thrash on slow phones.
   const plans = $$('[data-m-section]').filter((sec) => sec.hasAttribute('data-m-hero') === (only === 'hero')).map((sec) => {
-    const els = $$('[data-t]', sec).filter((el) => el.getClientRects().length > 0 || getComputedStyle(el).display === 'contents');
+    const els = $$('[data-t]', sec).filter(shown);
     const tops = new Map<HTMLElement, number>(els.map((el) => [el, pageTop(el)]));
-    return { sec, els, tops, top: pageTop(sec), draws: $$<SVGPathElement>('[data-draw]', sec) };
+    const frames = els.filter((el) => el.dataset.fx === 'frame' || (el.hasAttribute('data-stagger') && el.querySelector(':scope > [data-fx="frame"]')));
+    const inView = new Set(frames.filter((el) => el.getBoundingClientRect().top < vh));
+    return { sec, els, tops, top: pageTop(sec), draws: $$<SVGPathElement>('[data-draw]', sec), frames, inView };
   });
-  plans.forEach(({ sec, els, tops, top, draws }) => {
+  plans.forEach(({ sec, els, tops, top, draws, frames, inView }) => {
     // Elements not rendered right now (other breakpoint) are released at once: they never animate.
     $$('[data-t]', sec).forEach((el) => { if (!tops.has(el)) el.classList.add('m-built'); });
     if (draws.length) gsap.set(draws, { drawSVG: '0%' });
     if (sec.hasAttribute('data-m-hero')) {
       els.forEach((el) => el.classList.add('m-built'));
       const tl = choreograph(els);
-      if (draws.length) tl.to(draws, { drawSVG: '100%', duration: 0.9, ease: 'power2.inOut', stagger: 0.12 }, 1.05);
+      // Accents last: the stripe underline draws, then the swoosh ribbons run along the hero's bottom edge.
+      if (draws.length) tl.to(draws, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut', stagger: 0.12 }, '>-0.25');
+      const sw = $$<SVGElement>('svg[data-swoosh]', sec);
+      sw.forEach((svg) => { svg.dataset.mDone = '1'; tl.add(swooshIn(svg), '>-0.3'); });
+      // The hero carries the most steps of any section; it runs 1.2x so the whole sequence lands in ~3.8 s (ratios kept).
+      tl.timeScale(1.2);
       heroPlay(tl);
       return;
     }
+    // Frames are not pre-hidden by CSS (LCP rule). One already on screen when we wire (a reload mid-page) is left as it is;
+    // the rest take their start state now, while they are still below the fold, so nothing flashes when they play.
+    frames.forEach((f) => { if (inView.has(f)) f.dataset.mStatic = '1'; });
     // Long sections: elements more than ~0.8 viewport below the section top get their own band and trigger,
     // so a tier-4 photo at the bottom of a tall section does not animate while it is still off screen.
     const bands = new Map<number, HTMLElement[]>();
@@ -144,14 +202,35 @@ function sections(only: 'hero' | 'rest', heroPlay: (tl: gsap.core.Timeline) => v
       bands.get(b)!.push(el);
     });
     bands.forEach((group) => {
-      const first = group.reduce((a, b) => (tops.get(a)! <= tops.get(b)! ? a : b));
+      const live = group.filter((el) => !el.dataset.mStatic);
+      group.forEach((el) => { if (el.dataset.mStatic) el.classList.add('m-built'); });
+      if (!live.length) return;
+      // Hide this band's frames now (they are below the fold): built tweens re-apply the same start state.
+      live.filter((el) => frames.includes(el)).forEach((f) => gsap.set(f.dataset.fx === 'frame' ? f : f.querySelectorAll(':scope > [data-fx="frame"]'), { autoAlpha: 0 }));
+      const first = live.reduce((a, b) => (tops.get(a)! <= tops.get(b)! ? a : b));
       ScrollTrigger.create({ trigger: first, start: 'top 88%', once: true, onEnter: () => {
-        group.forEach((el) => el.classList.add('m-built'));
-        choreograph(group).play();
+        // Wait (briefly) for fonts and for this band's lazy photos to decode, so a photo never pops in mid-reveal.
+        const imgs = live.flatMap((el) => $$<HTMLImageElement>('img', el)).filter((im) => !im.complete);
+        const decoded = Promise.all(imgs.map((im) => im.decode().catch(() => {})));
+        Promise.all([fontsIn(), Promise.race([decoded, new Promise((r) => setTimeout(r, 450))])]).then(() => {
+          live.forEach((el) => el.classList.add('m-built'));
+          const tl = choreograph(live);
+          // Arrived late (an anchor jump or a fast fling put the band well up the screen): play it quicker, not slower.
+          if (first.getBoundingClientRect().top < window.innerHeight * 0.35) tl.timeScale(2.2);
+          tl.play();
+        });
       } });
     });
-    draws.forEach((p) => ScrollTrigger.create({ trigger: p.closest('svg') ?? p, start: 'top 85%', once: true, onEnter: () => gsap.to(p, { drawSVG: '100%', duration: 0.9, delay: 0.5, ease: 'power2.inOut' }) }));
+    draws.forEach((p) => ScrollTrigger.create({ trigger: p.closest('svg') ?? p, start: 'top 85%', once: true, onEnter: () => gsap.to(p, { drawSVG: '100%', duration: 0.8, delay: 0.6, ease: 'power2.inOut' }) }));
   });
+}
+
+/** Swoosh edge: the three ribbons run in from the leading side, one after another. */
+function swooshIn(svg: SVGElement): gsap.core.Timeline {
+  const flip = svg.getAttribute('class')?.includes('flip');
+  const tl = gsap.timeline();
+  tl.fromTo($$('.sw-b', svg), { clipPath: flip ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.1, ease: 'power3.inOut', stagger: 0.14, immediateRender: true });
+  return tl;
 }
 
 /* ------------------------------------------------------------------ signature moments */
@@ -174,33 +253,20 @@ function signatures() {
       gsap.to(o, { n: d, duration: 1.4 + i * 0.35, ease: 'power3.out', delay: 0.2, onUpdate: () => r.style.setProperty('--n', String(o.n)) });
     }) });
   });
-  // Parallax: data-parallax="0.08" = travel as a fraction of the element height. The image is scaled to hide edges.
-  $$('[data-parallax]').forEach((el) => {
-    const p = parseFloat(el.dataset.parallax || '0.08');
-    const img = el.tagName === 'PICTURE' || el.tagName === 'IMG' ? el : el.querySelector('img') ?? el;
-    gsap.set(img, { scale: 1 + p * 2 });
-    gsap.fromTo(img, { yPercent: -p * 100 }, { yPercent: p * 100, ease: 'none', scrollTrigger: { trigger: el.parentElement ?? el, start: 'top bottom', end: 'bottom top', scrub: true } });
+  // Parallax (data-parallax, data-parallax-wrap) is retired: photos sit still and crisp once revealed (round-2 brief).
+  // The attributes are ignored, so markup that still carries them is harmless.
+  // Swoosh edges (outside the hero, which runs its own as the last accent): ribbons run in once, when they scroll in.
+  $$<SVGElement>('svg[data-swoosh]').forEach((svg) => {
+    if (svg.dataset.mDone) return;
+    const tl = swooshIn(svg).pause();
+    ScrollTrigger.create({ trigger: svg, start: 'top 92%', once: true, onEnter: () => { tl.play(); } });
   });
-  $$('[data-parallax-wrap]').forEach((wrap) => {
-    const pic = wrap.querySelector('picture') ?? wrap.querySelector('img');
-    if (pic) gsap.fromTo(pic, { yPercent: -3 }, { yPercent: 5, ease: 'none', scrollTrigger: { trigger: wrap, start: 'top top+=80', end: 'bottom top', scrub: true } });
-  });
-  // Swoosh edges: the three ribbons run in from the leading side.
-  $$('svg[data-swoosh]').forEach((svg) => {
-    const flip = svg.getAttribute('class')?.includes('flip');
-    gsap.fromTo($$('.sw-b', svg), { clipPath: flip ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.4, ease: 'power3.inOut', stagger: 0.12, scrollTrigger: { trigger: svg, start: 'top 95%', once: true } });
-  });
-  // Flow lines: a slow current along each line (dash offset), only while on screen, and only on desktop pointers
-  // (it repaints large SVGs; phones keep the static lines and the battery).
-  if (FINE) $$('svg[data-flow]').forEach((svg) => {
-    const paths = $$<SVGPathElement>('path', svg);
-    paths.forEach((p) => { p.style.strokeDasharray = '140 60'; });
-    const tw = gsap.to(paths, { strokeDashoffset: -400, duration: 14, ease: 'none', repeat: -1, stagger: { each: 0.8 }, paused: true });
-    ScrollTrigger.create({ trigger: svg, start: 'top bottom', end: 'bottom top', onToggle: (s) => (s.isActive ? tw.play() : tw.pause()) });
-  });
+  // Flow lines stay static: the old endless dash drift repainted large SVGs behind the photos every frame (a loop in the
+  // eye line and a scroll-jank source). data-flow is kept as a hook but does nothing.
   // Map: the county outline draws, the truck route flows.
   $$('[data-draw-map]').forEach((p) => gsap.fromTo(p, { drawSVG: '0%' }, { drawSVG: '100%', duration: 2, ease: 'power2.inOut', scrollTrigger: { trigger: p.closest('svg'), start: 'top 80%', once: true } }));
-  $$('[data-route]').forEach((p) => gsap.to(p, { strokeDashoffset: -112, duration: 3, ease: 'none', repeat: -1 }));
+  // The dashed truck route flows once after the outline has drawn, then rests (no endless loop).
+  $$('[data-route]').forEach((p) => gsap.to(p, { strokeDashoffset: -112, duration: 2.4, ease: 'power1.inOut', delay: 1.6, scrollTrigger: { trigger: p.closest('svg'), start: 'top 80%', once: true } }));
   // Process pipe: the water follows the scroll. Horizontal on desktop, down the left on mobile.
   const mm = gsap.matchMedia();
   $$('[data-pipe]').forEach((pipe) => {
@@ -262,8 +328,8 @@ function pointer() {
 function introChrome(tl: gsap.core.Timeline) {
   const bar = document.querySelector('[data-intro="topbar"]');
   const brand = document.querySelector('[data-intro="brand"]');
-  if (bar) tl.from(bar, { autoAlpha: 0, duration: 0.6, ease: 'power1.out' }, 0);
-  if (brand) tl.from(brand, { yPercent: -110, duration: 0.9, ease: BACK }, 0.15);
+  if (bar) tl.from(bar, { autoAlpha: 0, duration: 0.5, ease: SOFT }, 0);
+  if (brand) tl.from(brand, { yPercent: -100, duration: 0.7, ease: EASE }, 0.1);
 }
 
 function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
@@ -273,16 +339,18 @@ function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
   const edge = ld.querySelector<SVGElement>('.ld-edge');
   const water = ld.querySelector<HTMLElement>('.ld-water');
   const t0 = performance.now();
-  const MIN = 1500, MAX = 3200;
+  const MIN = 1800, MAX = 3400;
   window.__pbpLenis?.stop();
+  // One beat at a time, each starting when the previous is ~70 % done: ring, seal, stripes, words, pipe.
   const build = gsap.timeline();
   build
-    .to(ld.querySelector('.ld-ring circle'), { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 0)
-    .to(ld.querySelector('.ld-seal'), { scale: 1, duration: 0.7, ease: BACK }, 0.45)
-    .to($$('.ld-stripes path', ld), { x: 0, xPercent: 0, autoAlpha: 1, duration: 0.6, ease: EASE, stagger: 0.08 }, 0.7)
-    .to([ld.querySelector('.ld-word'), ld.querySelector('.ld-pipe')], { autoAlpha: 1, duration: 0.5, ease: 'power1.out', stagger: 0.1 }, 0.9);
+    .to(ld.querySelector('.ld-ring circle'), { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0)
+    .to(ld.querySelector('.ld-seal'), { scale: 1, duration: 0.6, ease: ACCENT }, 0.56)
+    .to($$('.ld-stripes path', ld), { x: 0, xPercent: 0, autoAlpha: 1, duration: 0.5, ease: EASE, stagger: 0.1 }, 0.98)
+    .to(ld.querySelector('.ld-word'), { autoAlpha: 1, duration: 0.45, ease: SOFT }, 1.38)
+    .to(ld.querySelector('.ld-pipe'), { autoAlpha: 1, duration: 0.4, ease: SOFT }, 1.66);
   // Water fills toward 85 % while the page loads, then to full.
-  const fill = water ? gsap.to(water, { scaleX: 0.85, duration: 2.2, ease: 'power2.out', delay: 0.9 }) : null;
+  const fill = water ? gsap.to(water, { scaleX: 0.85, duration: 1.6, ease: 'power2.out', delay: 1.75 }) : null;
 
   let lifted = false;
   const lift = () => {
@@ -290,7 +358,8 @@ function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
     fill?.kill(); build.progress(1);
     onLift(); // the panel still covers the page: the hero takes its pre-states now, unseen
     const skipBtn = ld.querySelector('.ld-skip'); if (skipBtn) gsap.to(skipBtn, { autoAlpha: 0, duration: 0.2 }); // it sits outside the panel
-    const h = window.innerHeight + (edge?.getBoundingClientRect().height ?? 120) + 8;
+    // Layout px (offsetHeight), not getBoundingClientRect: under the wide-screen zoom a rect is in zoomed px.
+    const h = panel.offsetHeight + ((edge as any)?.clientHeight || 120) + 8;
     const out = gsap.timeline({ onComplete: () => {
       html.classList.remove('intro'); ld.style.display = 'none';
       try { sessionStorage.setItem('pbp-intro', '1'); } catch (e) { /* storage blocked: loader may show again next visit */ }
@@ -299,7 +368,8 @@ function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
     if (water) out.to(water, { scaleX: 1, duration: 0.3, ease: 'power2.out' });
     out.to(ld.querySelector('.ld-core'), { y: -40, autoAlpha: 0, duration: 0.45, ease: 'power2.in' }, '>-0.05');
     out.to(panel, { y: -h, duration: 1.05, ease: 'power3.inOut' }, '<0.1');
-    out.add(onHandoff, '<0.42');
+    // The panel rises from the bottom, so the hero (top of the page) is uncovered last: hand off just past mid-lift.
+    out.add(onHandoff, '<0.45');
   };
   const ready = () => { const wait = Math.max(0, MIN - (performance.now() - t0)); gsap.delayedCall(wait / 1000, lift); };
   if (document.readyState === 'complete') ready(); else window.addEventListener('load', ready, { once: true });
@@ -312,14 +382,17 @@ function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
 function runCurtainIn(onHandoff: () => void, onLift: () => void = () => {}) {
   const pt = document.querySelector<HTMLElement>('[data-pt]');
   if (!pt || !html.classList.contains('pt-in')) return false;
-  onLift();
   const panel = pt.querySelector<HTMLElement>('.pt-panel')!;
   const edge = pt.querySelector<SVGElement>('.pt-edge');
-  const h = window.innerHeight + (edge?.getBoundingClientRect().height ?? 120) + 8;
-  gsap.timeline({ delay: 0.05, onComplete: () => { html.classList.remove('pt-in'); gsap.set(panel, { clearProps: 'transform' }); } })
-    .to(pt.querySelector('.pt-mark'), { autoAlpha: 0, y: 20, duration: 0.3, ease: 'power2.in' })
-    .to(panel, { y: h, duration: 0.9, ease: 'power3.inOut' }, 0.1)
-    .add(onHandoff, 0.38);
+  // The fonts are cached from the previous page; wait for them (max 0.7 s) so the hero headline splits on its real lines.
+  fontsIn().then(() => {
+    onLift();
+    const h = panel.offsetHeight + ((edge as any)?.clientHeight || 120) + 8; // layout px (see runLoader)
+    gsap.timeline({ delay: 0.05, onComplete: () => { html.classList.remove('pt-in'); gsap.set(panel, { clearProps: 'transform' }); } })
+      .to(pt.querySelector('.pt-mark'), { autoAlpha: 0, y: 20, duration: 0.3, ease: 'power2.in' })
+      .to(panel, { y: h, duration: 0.9, ease: 'power3.inOut' }, 0.1)
+      .add(onHandoff, 0.38);
+  });
   return true;
 }
 
@@ -353,33 +426,49 @@ function boot() {
   if (!MOTION) return;
   window.__pbpMotion = true;
 
-  const lenis = new Lenis({ duration: 1.1, anchors: { offset: -96 }, autoRaf: false });
+  // Lenis = United's live settings (lerp 0.1, wheelMultiplier 1, smooth wheel, native touch). Lenis lerp is frame-rate
+  // independent (damp), so it feels the same at 60 and 120 Hz. One clock: Lenis is driven by the GSAP ticker and
+  // ScrollTrigger updates on every Lenis scroll, so no scrollerProxy is needed (Lenis scrolls the real window).
+  const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 * (parseFloat(document.documentElement.style.zoom) || 1) }, autoRaf: false });
   window.__pbpLenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
+  // Re-measure when the page geometry changes without a window resize: the wide-screen zoom on <html> (Base.astro sets
+  // style.zoom, also from a ResizeObserver when the scrollbar comes or goes) and content height changes (accordions,
+  // late images, the mobile menu). Debounced so a burst of changes costs one refresh.
+  let rt = 0, lastZoom = html.style.zoom, lastH = 0;
+  const remeasure = () => { clearTimeout(rt); rt = window.setTimeout(() => { lenis.resize(); ScrollTrigger.refresh(); }, 180); };
+  new MutationObserver(() => { if (html.style.zoom !== lastZoom) { lastZoom = html.style.zoom; remeasure(); } }).observe(html, { attributes: true, attributeFilter: ['style'] });
+  if ('ResizeObserver' in window) new ResizeObserver(() => { const h = document.body.scrollHeight; if (Math.abs(h - lastH) > 2) { lastH = h; remeasure(); } }).observe(document.body);
 
   let heroTl: gsap.core.Timeline | null = null;
   const chrome = gsap.timeline({ paused: true });
   const intro = html.classList.contains('intro');
   if (intro) introChrome(chrome);
+  heroUncovered = !intro && !html.classList.contains('pt-in');
 
   // Under the loader or the curtain the hero stays visible (CSS) so its photo and text paint early for LCP;
   // its pre-states are applied only when the cover starts to lift, while the panel still hides the page.
   let heroBuilt = false;
   const buildHero = () => { if (heroBuilt) return; heroBuilt = true; sections('hero', (tl) => { heroTl = tl; }); };
-  if (!intro && !html.classList.contains('pt-in')) buildHero();
   curtainOut();
   // Everything below the fold is wired when the main thread is free, so it does not compete with the first paint.
   const rest = () => { sections('rest'); signatures(); pointer(); ScrollTrigger.refresh(); };
   if ('requestIdleCallback' in window) (window as any).requestIdleCallback(rest, { timeout: 900 }); else setTimeout(rest, 200);
 
   let handed = false;
+  // A plain load builds the hero here, once the fonts are in (max 0.7 s), so a split headline gets its real lines.
   const handoff = () => {
     if (handed) return; handed = true;
+    if (!heroBuilt) { fontsIn().then(play); return; }
+    play();
+  };
+  const play = () => {
     buildHero();
     chrome.play();
-    heroTl?.play();
+    // The header settles first; the hero sequence starts as it is ~40 % done (one thing at a time).
+    if (heroTl) chrome.duration() ? gsap.delayedCall(chrome.duration() * 0.4, () => heroTl!.play()) : heroTl.play();
     window.dispatchEvent(new CustomEvent('pbp:handoff'));
   };
   if (!runCurtainIn(handoff, buildHero)) runLoader(handoff, buildHero);

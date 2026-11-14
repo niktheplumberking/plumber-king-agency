@@ -63,21 +63,21 @@ const rules = [
   .br-foot :global(.br-g) { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); }
   @media (max-width: 1279px) { .br-in { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); } .br-card { width: calc(100% - 36px); } .br-sc { left: 120px; } }
   @media (max-width: 1023px) {
-    .br { padding: 56px 0 64px; }
-    .br-in { grid-template-columns: 1fr; row-gap: 32px; }
-    .br-stw { position: absolute; right: -6px; top: 26px; margin: 0; width: 90px; height: 90px; }
-    .br-sts { transform: scale(.6); }
+    .br { padding: 64px 0 64px; }
+    .br-in { grid-template-columns: 1fr; row-gap: 44px; }
+    .br-stw { position: absolute; right: -6px; top: 8px; margin: 0; width: 117px; height: 117px; }
+    .br-sts { transform: scale(.78); }
     .br-side :global(.shead) { padding-right: 96px; }
     .br-sc { display: none; }
-    .br-stack { display: grid; gap: 28px; }
+    .br-stack { display: grid; gap: 30px; }
     .br-card, .br-card + .br-card { width: auto; min-height: 0 !important; margin: 0 !important; }
-    .br-top { padding: 20px 18px 16px 64px; }
-    .br-num { left: 14px; top: -10px; font-size: 56px; }
-    .br-t { font-size: 17px; line-height: 22px; }
-    .br-s { font-size: 13px; line-height: 19px; }
+    .br-top { padding: 20px 20px 20px 68px; }
+    .br-num { left: 15px; top: -23px; font-size: 76px; line-height: 72px; }
+    .br-t { font-size: 18px; line-height: 24px; }
+    .br-s { margin-top: 6px; font-size: 15px; line-height: 24px; }
     .br-tick { display: none; }
-    .br-foot { padding: 14px 18px 16px; }
-    .br-foot blockquote { font-size: 13px; line-height: 20px; }
+    .br-foot { padding: 14px 20px; }
+    .br-foot blockquote { font-size: 13px; line-height: 21px; }
     .br-foot :global(.br-g) { display: none; }
   }
 </style>

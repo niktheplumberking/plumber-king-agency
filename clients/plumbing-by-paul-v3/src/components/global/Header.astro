@@ -70,7 +70,8 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   .nl :global(.chev) { color: var(--blue); transition: transform .35s var(--ease-out); }
   .nl[aria-expanded='true'] :global(.chev) { transform: rotate(180deg); }
   .cta { margin-left: auto; display: flex; align-items: center; gap: 12px; }
-  .cta :global(.fe) { padding: 0 22px; font-size: 15px; }
+  .cta :global(.fe) { padding: 0 24px; font-size: 15px; }
+  .cta :global(.cb) { min-height: 56px; } /* Figma header call button 238 x 56 */
   .icb, .menu-btn { display: none; place-items: center; width: 44px; height: 44px; border-radius: 12px; flex: none; }
   .icb { background: var(--press); color: var(--white); }
   .menu-btn { background: var(--tint); color: var(--navy); }

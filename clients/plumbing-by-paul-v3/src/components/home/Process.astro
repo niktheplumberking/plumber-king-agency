@@ -55,9 +55,9 @@ const steps = [
 </section>
 <style>
   .proc { position: relative; background: var(--white); padding: 104px 0 0; overflow: clip; }
-  .pr-stage { position: relative; margin-top: 70px; }
-  .pipe { position: absolute; left: -60px; right: -60px; top: 0; height: 130px; pointer-events: none; }
-  .run { position: absolute; left: 8px; right: 7px; top: -7px; height: 14px; border-radius: 7px; background: var(--navy); overflow: hidden; }
+  .pr-stage { position: relative; margin-top: 68px; }
+  .pipe { position: absolute; left: -68px; right: -60px; top: 0; height: 130px; pointer-events: none; }
+  .run { position: absolute; left: 8px; right: 0; top: -7px; height: 14px; border-radius: 7px; background: var(--navy); overflow: hidden; }
   .water, .water-v { position: absolute; border-radius: 5px; background: var(--sky); }
   .water { left: 2px; right: 2px; top: 2px; bottom: 2px; transform-origin: left center; }
   .water::after { content: ''; position: absolute; left: 4px; right: 4px; top: 2px; height: 2px; border-radius: 1px; background: rgba(255,255,255,.55); }
@@ -81,10 +81,10 @@ const steps = [
   .st-top { display: flex; justify-content: space-between; align-items: center; }
   .st-n { font-size: 64px; line-height: 60px; color: var(--blue); }
   .st-t { font-weight: 700; font-size: 19px; line-height: 25px; }
-  .st-d { font-size: 14px; line-height: 22px; color: var(--slate); padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .st-d { font-size: 14px; line-height: 22px; color: var(--slate); padding-bottom: 10px; border-bottom: 1px solid var(--line); }
   .st-q { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 11px; border-left: 3px solid var(--sky); }
   .st-q blockquote { margin: 0; font-style: italic; font-weight: 500; font-size: 13px; line-height: 19px; color: var(--slate); }
-  .st-q figcaption { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; }
+  .st-q figcaption { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; line-height: 15px; }
   .st-card :global(.st-seal) { position: absolute; right: -32px; bottom: -40px; }
   .pr-cta { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 48px; padding-bottom: 150px; }
   .pr-cta p { font-weight: 700; font-size: 18px; }
@@ -112,5 +112,18 @@ const steps = [
     .pr-cta { display: grid; justify-content: stretch; gap: 10px; margin-top: 40px; padding-bottom: 104px; }
     .pr-cta p { display: none; }
     .pr-cta :global(.btn) { width: 100%; }
+  }
+  /* Figma mobile 426:4987: 300 px cards at x 70 (padding 21), 18 apart, pipe at x 23, run and tee 33 / 27 below each card top. */
+  @media (max-width: 767px) {
+    .pipe { left: 3px; top: -10px; }
+    .steps { gap: 18px; padding-left: 50px; }
+    .drop { left: -47px; top: 33px; width: 47px; }
+    .tee.t0 { left: 1px; }
+    .st-card { padding: 21px 19px 21px 21px; gap: 8px; }
+    .st-top { left: 16px; top: 21px; }
+    .st-t { display: flex; align-items: center; min-height: 44px; }
+    .st-d { line-height: 21px; padding-bottom: 8px; }
+    .st-q { gap: 8px; } .st-q blockquote { line-height: 18px; }
+    .pr-cta { margin-top: 38px; padding-bottom: 112px; }
   }
 </style>

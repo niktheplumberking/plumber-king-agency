@@ -85,15 +85,16 @@ const facts = [['answered on the', 'first ring'], ['here', 'within the hour'], [
   .cell:hover :global(img) { transform: scale(1.05); }
   .cell :global(.wk-cap) { position: absolute; left: 16px; bottom: 16px; z-index: 2; }
   .cell :global(.wk-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
-  .c-ig { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr auto; column-gap: 24px; padding: 28px 30px; border-radius: var(--r-xl); background: var(--sky); color: var(--navy); }
+  /* Figma 427:3668: icon 30/28, 740 at 28/66, text at 176/72 (190 wide), link at 30/172 */
+  .c-ig { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr auto; column-gap: 30px; padding: 28px 30px 32px 28px; border-radius: var(--r-xl); background: var(--sky); color: var(--navy); }
   .c-ig :global(.ig-i) { grid-column: 1; }
   .c-ig :global(.ig-t) { grid-column: 2; justify-self: end; }
-  .ig-n { grid-column: 1; align-self: center; font-size: 64px; line-height: 64px; }
-  .ig-d { grid-column: 2; align-self: center; font-weight: 600; font-size: 15px; line-height: 22px; }
+  .ig-n { grid-column: 1; align-self: start; margin-top: 12px; font-size: 64px; line-height: 64px; }
+  .ig-d { grid-column: 2; align-self: start; max-width: 190px; margin-top: 18px; font-weight: 600; font-size: 15px; line-height: 22px; }
   .ig-l { grid-column: 1 / -1; color: var(--navy) !important; }
   .work :global(.wk-all-m) { display: none; }
   @media (max-width: 1023px) {
-    .work { padding: 0 0 64px; }
+    .work { display: flow-root; padding: 0 0 64px; } /* flow-root: the spotlight's negative margin must not collapse through, or the white starts above the Emergency edge */
     .spot { position: relative; top: auto; right: auto; width: 100%; margin: -170px 0 0; padding: 20px; gap: 12px; }
     .spot :global(.sp-p) { right: 10px; top: -28px; --x: 0; }
     .sp-top span { display: none; }
@@ -115,5 +116,23 @@ const facts = [['answered on the', 'first ring'], ['here', 'within the hour'], [
     .ig-n { font-size: 48px; line-height: 48px; }
     .cell :global(.wk-cap) { position: static; display: block; margin-top: 8px; padding: 0; background: none; box-shadow: none; font-size: 12px; line-height: 17px; color: var(--slate); }
     .work :global(.wk-all-m) { display: inline-flex; margin-top: 24px; }
+  }
+  /* Figma mobile 426:5141: spotlight hangs 110 into Emergency, 170/246/170/150 photo masonry 10 apart, 130 px Instagram tile. */
+  @media (max-width: 767px) {
+    .work { padding-bottom: 72px; }
+    .spot { margin-top: -110px; }
+    .sp-q { line-height: 24px; }
+    .wk-grid { margin-top: 24px; }
+    .cell { margin-bottom: 10px; }
+    .cell :global(img) { aspect-ratio: 167 / 170; }
+    .c-d :global(img) { aspect-ratio: 167 / 246; }
+    .c-b :global(img) { aspect-ratio: 167 / 150; }
+    .c-ig { display: grid; grid-template-columns: 110px 1fr; grid-template-rows: 22px 42px 24px; column-gap: 20px; padding: 20px 20px 22px; margin-top: 9px; }
+    .c-ig :global(.ig-i) { grid-column: 1; grid-row: 1; }
+    .c-ig :global(.ig-t) { display: none; }
+    .ig-n { grid-column: 1; grid-row: 2 / 4; margin-top: 14px; }
+    .ig-d { grid-column: 2; grid-row: 1 / 3; margin-top: 6px; max-width: none; font-size: 14px; line-height: 19px; }
+    .ig-l { grid-column: 2; grid-row: 3; }
+    .work :global(.wk-all-m) { margin-top: 20px; }
   }
 </style>

@@ -72,7 +72,7 @@ const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 
       vis.forEach((it, v) => it.classList.toggle('off', v === 1));
       if (!desk.matches) { items.forEach((it) => (it.style.gridRowEnd = '')); return; }
       vis.forEach((it) => {
-        const h = it.getBoundingClientRect().height + 40;
+        const h = it.offsetHeight + 40; // layout px: getBoundingClientRect() includes the wide-screen CSS zoom
         it.style.gridRowEnd = `span ${Math.ceil(h / 4)}`;
       });
     };
@@ -141,16 +141,16 @@ const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 
   .fpatch[aria-pressed='true'] { color: var(--navy); }
   .fpatch[aria-pressed='true']::before { background: var(--sky); }
   .fpatch[aria-pressed='true']::after { border-color: var(--white); }
-  .rva-count { margin-top: 20px; font-weight: 600; font-size: 13px; line-height: 18px; color: var(--slate-2); }
-  .rva-count:empty { display: none; }
-  .rv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; margin: 40px 0 0; padding: 0; }
+  /* the live count is for screen readers (Figma shows none): cards start 30 below the filter bar */
+  .rva-count { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .rv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; margin: 30px 0 0; padding: 0; }
   .rv-js .rv-grid { grid-auto-rows: 4px; row-gap: 0; align-items: start; }
   .rv-item { padding-top: 26px; }
   .rv-js .rv-item.off { padding-top: 54px; }
   .rv-item[hidden], :global(html.js) .rv-item.is-more:not(.shown) { display: none; }
   @media (max-width: 767px) {
     :global(html.js) .rv-item.is-more-m:not(.shown) { display: none; }
-    .rv-item :global(.q) { font-size: 14px; line-height: 22px; } /* Figma mobile card text */
+    .rv-item :global(.q) { font-size: 15px; line-height: 26px; } /* Figma 441:7818: 15 / 26 */
   }
   .rv-item :global(.q p) { white-space: pre-line; overflow-wrap: anywhere; }
   .rv-item :global(.rcard.tint), .rv-item :global(.rcard.navy) { padding-bottom: 40px; }

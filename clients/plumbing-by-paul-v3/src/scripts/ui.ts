@@ -205,7 +205,7 @@ function crew() {
       if (MOTION() && card) {
         card.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(8px) rotate(-.6deg)' }], { duration: 160, easing: 'ease-in' }).onfinish = () => {
           swap();
-          card.animate([{ opacity: 0, transform: 'translateY(-8px) rotate(.6deg)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.34,1.56,.64,1)' });
+          card.animate([{ opacity: 0, transform: 'translateY(-8px) rotate(.6deg)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.215,.61,.355,1)' }); // power3.out: calm, no overshoot
         };
       } else swap();
     }));

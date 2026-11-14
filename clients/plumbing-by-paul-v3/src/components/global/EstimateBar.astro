@@ -42,9 +42,9 @@ const { idp = 'qe', class: cls } = Astro.props;
   .eb-msg { grid-column: 1 / -1; margin-top: -12px; }
   @media (max-width: 1199px) { .eb-f { grid-template-columns: 1fr 1fr; } .ebar { grid-template-columns: 1fr; gap: 16px; } .br { display: none; } }
   @media (max-width: 767px) {
-    .ebar { padding: 24px 20px 20px; gap: 12px; }
+    .ebar { padding: 21px 20px; gap: 12px; } /* Figma 426:4377: 341 tall */
     .eb-l { display: contents; }
-    .eb-n { order: 9; justify-content: center; margin-top: 0; }
+    .eb-n { order: 9; justify-content: center; margin-top: 0; line-height: 15px; }
     .eb-f { grid-template-columns: 1fr; }
     .eb-in .input { min-height: 52px; }
     .ebar :global(.eb-btn) { min-height: 52px; }

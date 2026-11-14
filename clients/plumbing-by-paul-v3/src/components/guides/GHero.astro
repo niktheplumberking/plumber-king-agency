@@ -25,7 +25,7 @@ import { SITE } from '../../data/site';
     <div class="gh-by" data-t="3">
       <Seal d={48} flat t={false} class="by-seal" />
       <div class="by-t">
-        <p class="by-1">By the Plumbing By Paul crew · {SITE.licenceLabel} {SITE.licence}</p>
+        <p class="by-1"><span class="b1a">By the Plumbing By Paul crew</span><span class="b1s"> · </span><span class="b1b">{SITE.licenceLabel} {SITE.licence}</span></p>
         <p class="by-2"><Icon name="calendar" size={13} /><time datetime="2026-11">Updated November 2026</time><span class="sep" aria-hidden="true">·</span><Icon name="clock" size={13} />5 minute read</p>
       </div>
     </div>
@@ -50,14 +50,14 @@ import { SITE } from '../../data/site';
   </div>
 </section>
 <style>
-  .gh { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 40px 0 304px; }
+  .gh { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 64px 0 308px; } /* Figma 439:9735 */
   .gh :global(.fl-m) { display: none; }
   .gh-in { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
   .gh-in :global(.crumbs ol) { justify-content: center; }
-  .gh :global(.gh-eb) { margin-top: 16px; }
-  .gh-h { margin-top: 14px; font-size: var(--fz-h1); line-height: 1.1; letter-spacing: -0.025em; }
+  .gh :global(.gh-eb) { margin-top: 12px; }
+  .gh-h { margin-top: 12px; font-size: var(--fz-h1); line-height: 1.1; letter-spacing: -0.025em; }
   .gh-h .l1, .gh-h .l2 { display: block; }
-  .gh-lead { margin-top: 18px; max-width: 640px; font-size: 18px; line-height: 30px; }
+  .gh-lead { margin-top: 16px; max-width: 640px; font-size: 18px; line-height: 30px; }
   .gh-by { display: flex; align-items: center; gap: 14px; margin-top: 26px; padding: 10px 22px 10px 10px; border-radius: 999px; background: var(--white); box-shadow: var(--sh-2); text-align: left; }
   .by-1 { font-weight: 600; font-size: 13px; line-height: 18px; color: var(--navy); }
   .by-2 { display: flex; align-items: center; gap: 6px; margin-top: 1px; font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate); }
@@ -80,25 +80,30 @@ import { SITE } from '../../data/site';
   .gq-f { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding-top: 16px; border-top: 1px solid var(--line); font-weight: 500; font-size: 15px; line-height: 22px; color: var(--slate); }
   .gq-box :global(.gq-seal) { position: absolute; right: -40px; top: -42px; }
   @media (max-width: 1023px) {
-    .gh { padding: 20px 0 210px; }
+    /* Figma 439:10620 / 439:10654 (mobile): H1 32 / 36, byline in three lines, photo 338 x 210 rising 110 px into the
+       hero, the answer box (17 / 27) overlapping its bottom by 28 */
+    .gh { padding: 38px 0 150px; }
     .gh :global(.fl-d) { display: none; } .gh :global(.fl-m) { display: block; }
     .gh-in { justify-items: start; text-align: left; }
     .gh-in :global(.crumbs ol) { justify-content: flex-start; }
-    .gh :global(.gh-eb) { margin-top: 12px; }
-    .gh-h { margin-top: 10px; }
-    .gh-lead { margin-top: 14px; font-size: 15px; line-height: 24px; }
-    .gh-by { align-items: flex-start; margin-top: 20px; padding: 14px 16px 14px 12px; border-radius: 16px; }
-    .by-1 { font-size: 11px; line-height: 15px; }
-    .by-2 { flex-wrap: wrap; font-size: 11px; color: var(--press); }
+    .gh :global(.gh-eb) { margin-top: 10px; }
+    .gh-h { margin-top: 16px; font-size: 32px; line-height: 36px; }
+    .gh-lead { margin-top: 16px; font-size: 16px; line-height: 26px; }
+    .gh-by { width: 100%; align-items: center; gap: 12px; margin-top: 20px; padding: 12px 16px 12px 12px; border-radius: 16px; }
+    .gh-by :global(.by-seal) { --d: 44px !important; }
+    .by-1 { display: grid; gap: 0; }
+    .b1a { font-size: 13px; line-height: 18px; } .b1s { display: none; } .b1b { font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate); }
+    .by-2 { flex-wrap: wrap; font-size: 12px; color: var(--press); }
     .gq { padding-bottom: 40px; }
-    .gq-media { height: 200px; margin-top: -170px; width: calc(100% - 14px); justify-self: start; }
-    .gq-blk { inset: 14px -14px -14px 14px; border-radius: 24px; }
+    .gq-media { height: 210px; margin-top: -110px; width: calc(100% - 12px); justify-self: start; }
+    .gq-blk { inset: 12px -12px -12px 12px; border-radius: 24px; }
     .gq-frame { border-radius: 24px; }
-    .gq-media :global(.gq-patch) { left: 8px; top: -20px; zoom: .74; }
+    .gq-media :global(.gq-patch) { left: 10px; top: -20px; zoom: .82; }
     .gq-media :global(.gq-tag) { display: none; }
-    .gq-box { margin-top: -10px; padding: 22px 18px 20px 22px; gap: 12px; }
-    .gq-a { font-size: 16px; line-height: 26px; }
-    .gq-f { font-size: 13px; display: grid; justify-items: start; }
-    .gq-box :global(.gq-seal) { right: -8px; top: -26px; --d: 52px !important; }
+    .gq-box { margin-top: -28px; padding: 23px 21px 23px 23px; gap: 12px; }
+    .gq-a { font-size: 17px; line-height: 27px; }
+    .gq-f { font-size: 14px; display: grid; justify-items: start; padding-top: 12px; gap: 4px; }
+    .gq-box :global(.gq-seal) { right: -15px; top: -34px; --d: 64px !important; }
   }
+
 </style>

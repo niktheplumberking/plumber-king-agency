@@ -13,10 +13,10 @@ const rows = [
 ---
 <section class="em on-navy" aria-labelledby="em-h" data-m-section>
   <div class="em-ph" data-t="4" data-fx="fade">
-    <Img name="fleet-van-street-4284px" alt="The Plumbing By Paul van parked on a St. Petersburg street at dusk" sizes="(min-width: 1024px) 64vw, 100vw" focus="50% 56%" widths={[480, 800, 1200, 1600]} data-parallax="0.08" />
+    <Img name="fleet-van-street-4284px" alt="The Plumbing By Paul van parked on a St. Petersburg street at dusk" sizes="(min-width: 1024px) 64vw, 100vw" focus="50% 56%" widths={[480, 800, 1200, 1600]} />
   </div>
   <div class="wrap em-in">
-    <SectionHead eyebrow="Water where it shouldn't be?" dot l1="Shut off the water." l2="Then call Paul." dark id="em-h" class="em-head"
+    <SectionHead eyebrow="Water where it shouldn't be?" dot l1="Shut off the water." l2="Then call Paul." dark id="em-h" class="em-head" leadWidth="520px"
       lead="Burst pipe, sewage backing up, a water heater letting go. Don't wait and see. The sooner we know, the less it costs you." />
     <div class="em-cta" data-t="3">
       <CallButton v="priN" l2="24/7 emergency line" size="lg" />
@@ -30,7 +30,6 @@ const rows = [
 <style>
   .em { position: relative; background: var(--navy); color: var(--white); padding: 96px 0 96px; overflow: hidden; min-height: 720px; }
   .em-ph { position: absolute; top: 0; right: 0; bottom: 0; width: 64%; overflow: hidden; }
-  .em-ph :global(img) { transform: scale(1.1); }
   .em-ph::before, .em-ph::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
   .em-ph::before { background: linear-gradient(90deg, var(--navy) 0%, rgba(17,16,50,.45) 50%, rgba(17,16,50,.1) 100%); }
   .em-ph::after { bottom: auto; height: 160px; background: linear-gradient(var(--navy), rgba(17,16,50,0)); opacity: .9; }
@@ -54,5 +53,19 @@ const rows = [
     .em-cta :global(.tlink) { order: 3; margin-top: 24px; }
     .em-rows { order: 2; width: 100%; margin-top: 20px; }
     .em-rows li { align-items: flex-start; }
+  }
+  /* Figma mobile 426:5102: 250 px photo, heading 40 px up into it, rows 13/15 padding with 19 px text, 158 px to the edge. */
+  @media (max-width: 767px) {
+    .em { padding-bottom: 158px; }
+    .em-ph { height: 250px; }
+    .em-in { margin-top: -40px; }
+    .em-in :global(.em-head .h2) { line-height: 38px; }
+    .em-in :global(.em-head .lead) { line-height: 26px; }
+    .em-cta :global(.btn) { margin-top: 22px; }
+    .em-cta :global(.tlink) { margin-top: 18px; }
+    .em-rows { gap: 10px; }
+    .em-rows li { gap: 12px; padding: 13px 15px; }
+    .ri { width: 36px; height: 36px; }
+    .em-rows p { line-height: 19px; }
   }
 </style>

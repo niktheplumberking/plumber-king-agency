@@ -27,13 +27,13 @@ const [a, b, c] = j.photos;
     <div class="tj-media" data-t="4" data-stagger>
       <span class="tj-off" aria-hidden="true"></span>
       <figure class="tj-f tj-big frame frame-3" data-fx="frame">
-        <Img name={a.photo} alt={a.alt} focus={a.focus} sizes="(min-width: 1024px) 432px, calc(100vw - 40px)" widths={[400, 700, 900]} />
+        <Img name={a.photo} alt={a.alt} focus={a.focus} sizes="(min-width: 1024px) 432px, calc(100vw - 40px)" widths={[400, 700, 900, 1620]} />
         <PhotoTag class="tj-tag">On the job</PhotoTag>
         <figcaption><Caption class="tj-cap">{a.cap}</Caption></figcaption>
       </figure>
       {[b, c].map((p, i) => (
         <figure class:list={['tj-f tj-sm frame-3', `s${i + 1}`]} data-fx="frame">
-          <Img name={p.photo} alt={p.alt} focus={p.focus} sizes="(min-width: 1024px) 248px, 50vw" widths={[260, 500]} />
+          <Img name={p.photo} alt={p.alt} focus={p.focus} sizes="(min-width: 1024px) 248px, 50vw" widths={[260, 500, 900]} />
           <figcaption><Caption class="tj-cap" small>{p.cap}</Caption></figcaption>
         </figure>
       ))}
@@ -41,16 +41,16 @@ const [a, b, c] = j.photos;
   </div>
 </section>
 <style>
-  .tj { position: relative; background: var(--white); padding: 104px 0 120px; }
+  .tj { position: relative; background: var(--white); padding: 104px 0 120px; overflow-x: clip; }
   .tj-in { display: grid; grid-template-columns: minmax(0, 440fr) minmax(0, 704fr); column-gap: 56px; align-items: start; }
   .tj-copy :global(.tj-more) { margin-top: 24px; }
-  .tj-slot { display: flex; gap: 16px; margin-top: 36px; padding: 20px 24px; border-radius: 16px; border: 1.5px dashed var(--blue); background: var(--mist); }
+  .tj-slot { display: flex; gap: 16px; margin-top: 36px; padding: 20px 24px; border-radius: 16px; border: 2px dashed var(--blue); background: var(--mist); }
   .tj-si { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--press); }
   .tj-sl { color: var(--press); }
   .tj-st { margin-top: 4px; font-weight: 700; font-size: 18px; line-height: 24px; }
   .tj-sb { margin-top: 4px; font-size: 14px; line-height: 20px; color: var(--slate); }
-  .tj-media { position: relative; display: grid; grid-template-columns: 432fr 248fr; grid-template-rows: 200px 200px; gap: 24px; padding-right: 28px; }
-  .tj-off { position: absolute; left: 28px; top: 28px; right: 0; bottom: -28px; border-radius: 28px; background: var(--tint); }
+  .tj-media { position: relative; display: grid; grid-template-columns: 432fr 248fr; grid-template-rows: 200px 200px; gap: 24px; }
+  .tj-off { position: absolute; left: 28px; top: 28px; right: -28px; bottom: -28px; border-radius: 28px; background: var(--tint); }
   .tj-f { position: relative; margin: 0; }
   .tj-f :global(img) { display: block; border-radius: var(--r-lg); }
   .tj-big :global(img) { border-radius: var(--r-xl); }

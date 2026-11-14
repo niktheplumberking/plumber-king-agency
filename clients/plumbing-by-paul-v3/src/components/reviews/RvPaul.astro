@@ -35,12 +35,15 @@ import Img from '../ui/Img.astro';
   .bar { width: 40px; height: 3px; border-radius: 2px; background: var(--navy); }
   @media (max-width: 1199px) { .rvp-in { grid-template-columns: 380px minmax(0, 1fr); } }
   @media (max-width: 1023px) {
-    .rvp { padding: 56px 0 64px; }
-    .rvp-in { grid-template-columns: 1fr; row-gap: 32px; }
+    /* Figma 441:8006: quote 24 / 33, photo 240 x 300 tilted (bbox 255 x 312), signature plate past its right edge */
+    .rvp { padding: 56px 0 52px; }
+    .rvp-in { grid-template-columns: 1fr; row-gap: 50px; }
     .rvp-q { order: 1; }
-    .rvp-media { order: 2; width: calc(100% - 24px); max-width: 320px; height: auto; aspect-ratio: 240 / 300; margin: 0 0 0 4px; }
+    blockquote { margin-top: 16px; }
+    blockquote p { font-size: 26px; line-height: 33px; }
+    .rvp-media { order: 2; width: 240px; height: 300px; margin: 0 0 0 10px; }
     .rvp-block { inset: 14px -14px -14px 14px; }
-    .rvp-sig { right: -16px; bottom: -6px; width: 120px; height: 58px; font-size: 44px; border-radius: 14px; }
-    figcaption { margin-top: 20px; font-size: 15px; }
+    .rvp-sig { right: -88px; bottom: -4px; width: 128px; height: 64px; font-size: 48px; border-radius: 14px; }
+    figcaption { margin-top: 18px; font-size: 15px; line-height: 22px; }
   }
 </style>

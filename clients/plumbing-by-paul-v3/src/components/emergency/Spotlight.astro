@@ -29,7 +29,7 @@ import Caption from '../ui/Caption.astro';
     </figure>
     <div class="sp-photo" data-t="4" data-fx="toss">
       <div class="snap sp-snap">
-        <Img name="fleet-box-truck-rear-three-quarter" alt="The Plumbing By Paul box truck, rear three-quarter view, with the mascot on the wrap" sizes="(min-width: 1024px) 260px, 300px" focus="50% 40%" widths={[300, 520, 780]} />
+        <Img name="fleet-box-truck-rear-three-quarter" alt="The Plumbing By Paul box truck, rear three-quarter view, with the mascot on the wrap" sizes="(min-width: 1024px) 260px, 320px" focus="50% 40%" widths={[300, 520, 780, 1400]} />
       </div>
       <Caption class="sp-cap">The box truck, wrapped like the vans.</Caption>
     </div>
@@ -48,7 +48,7 @@ import Caption from '../ui/Caption.astro';
   .sp-by { position: relative; display: flex; align-items: center; gap: 14px; width: min(700px, 100%); }
   .sp-av { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--sky); color: var(--navy); font-size: 19px; flex: none; }
   .sp-nm { flex: 1; display: grid; } .sp-nm b { font-weight: 700; font-size: 17px; line-height: 24px; } .sp-nm small { font-weight: 500; font-size: 13px; line-height: 18px; color: var(--soft); }
-  .sp-photo { position: absolute; right: 8px; top: 50%; width: 278px; transform: translateY(-46%); }
+  .sp-photo { position: absolute; right: -14px; top: calc(50% - 20px); width: 278px; transform: translateY(-46%); }
   .sp-snap { width: 260px; height: 320px; margin-left: 10px; transform: rotate(4deg); }
   .sp-photo :global(.sp-cap) { position: absolute; right: 0; bottom: -20px; z-index: 2; }
   @media (max-width: 1279px) and (min-width: 1024px) { .sp-card { width: calc(100% - 180px); } .sp-q { right: 60px; } .sp-pw { left: 50%; } }

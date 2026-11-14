@@ -22,7 +22,7 @@ const a = SITE.address;
     <div class="bs-media">
       <span class="bs-off" aria-hidden="true"></span>
       <figure class="bs-frame frame frame-3" data-t="4" data-fx="frame">
-        <Img name="about-paul-office-mascot-wall-50th" alt="Paul with his arms crossed in front of the Plumbing By Paul mascot logo on the office wall" sizes="(min-width: 1024px) 384px, calc(100vw - 40px)" focus="40% 50%" widths={[400, 600, 800]} />
+        <Img name="about-paul-office-mascot-wall-50th" alt="Paul with his arms crossed in front of the Plumbing By Paul mascot logo on the office wall" sizes="(min-width: 1024px) 384px, calc(100vw - 40px)" focus="40% 50%" widths={[400, 600, 800, 1440]} />
         <PhotoTag class="bs-tag">The shop · 64th Way N</PhotoTag>
       </figure>
       <p class="bs-pull" data-t="5" data-fx="rise"><span class="bs-tick" aria-hidden="true"></span><span class="script">Plumbing Pinellas with Heart</span></p>
@@ -34,7 +34,7 @@ const a = SITE.address;
   </div>
 </section>
 <style>
-  .bs { position: relative; background: var(--white); padding: 96px 0 100px; }
+  .bs { position: relative; background: var(--white); padding: 96px 0 150px; }
   .bs-in { display: grid; grid-template-columns: minmax(0, 600fr) minmax(0, 384fr); justify-content: space-between; column-gap: 216px; align-items: start; }
   .bs-text { display: grid; gap: 16px; margin-top: 28px; font-size: 17px; line-height: 29px; color: var(--slate); }
   .bs-text strong { font-weight: 700; color: var(--navy); }
@@ -45,19 +45,19 @@ const a = SITE.address;
   .bs-pull { position: absolute; z-index: 3; right: -35px; top: 428px; display: flex; align-items: center; gap: 0; width: 605px; height: 112px; padding: 0 36px 0 40px; border-radius: 18px; background: var(--white); box-shadow: var(--sh-3); transform: rotate(-3deg); }
   .bs-tick { position: absolute; left: 24px; top: 16px; width: 26px; height: 12px; background: linear-gradient(var(--sky) 0 3px, transparent 3px 4.5px, var(--blue) 4.5px 7.5px, transparent 7.5px 9px, var(--navy) 9px 12px); transform: skewX(-20deg); }
   .bs-pull .script { font-size: 44px; line-height: 1; color: var(--blue); white-space: nowrap; }
-  .bs-shop { position: relative; display: flex; align-items: center; gap: 18px; margin-top: 60px; padding: 22px 24px; border-radius: 18px; background: var(--tint); }
-  .bs-si { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--press); }
+  .bs-shop { position: relative; display: flex; align-items: center; gap: 18px; min-height: 128px; margin-top: 60px; padding: 20px 24px 20px 20px; border-radius: 18px; background: var(--tint); }
+  .bs-si { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--white); color: var(--press); }
   .bs-shop .label { display: block; color: var(--press); }
   .bs-addr { display: block; margin-top: 8px; font-weight: 600; font-size: 16px; line-height: 23px; color: var(--navy); }
   @media (max-width: 1279px) { .bs-in { column-gap: 72px; } .bs-pull { width: 520px; } .bs-pull .script { font-size: 38px; } }
   @media (max-width: 1023px) {
-    .bs { padding: 56px 0 64px; }
+    .bs { padding: 56px 0 106px; }
     .bs-in { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
     .bs-text { gap: 14px; margin-top: 20px; font-size: 15px; line-height: 26px; }
     .bs-media { padding-top: 0; }
-    .bs-off { display: none; }
-    .bs-frame { height: 380px; border-radius: var(--r-xl); }
-    .bs-pull { position: relative; right: auto; top: auto; width: auto; height: 64px; margin: -40px 10px 0; padding: 0 16px 0 22px; border-radius: 14px; }
+    .bs-off { left: 14px; top: 14px; height: 400px; }
+    .bs-frame { height: 400px; border-radius: var(--r-xl); }
+    .bs-pull { position: relative; right: auto; top: auto; width: auto; height: 64px; margin: -33px 9px 0 8px; padding: 0 16px 0 22px; border-radius: 14px; }
     .bs-tick { left: 12px; top: 10px; width: 18px; height: 9px; }
     .bs-pull .script { font-size: 24px; }
     .bs-shop { display: none; }

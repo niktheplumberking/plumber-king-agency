@@ -92,7 +92,7 @@ const r: Review = { n: 27, name: 'Daniel Herzog', age: '8 months ago', full: fal
   }));
 </script>
 <style>
-  .kf { position: relative; background: var(--white); padding: 160px 0 112px; }
+  .kf { position: relative; background: var(--white); padding: 160px 0 121px; }
   .kf-in { display: grid; grid-template-columns: 690px minmax(0, 450px); justify-content: space-between; column-gap: 40px; align-items: start; }
   .kf-formcol { position: relative; }
   .kform { position: relative; display: grid; gap: 20px; padding: 36px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); color: var(--navy); }
@@ -105,7 +105,7 @@ const r: Review = { n: 27, name: 'Daniel Herzog', age: '8 months ago', full: fal
   .iw { position: relative; display: block; }
   .iw .input { padding-right: 46px; }
   .iw :global(svg) { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--blue); pointer-events: none; }
-  .kf-ta { min-height: 104px; padding: 14px 16px; resize: vertical; }
+  .kf-ta { height: 104px; min-height: 104px; padding: 14px 16px; resize: vertical; }
   .kf-set { margin: 0; padding: 0; border: 0; min-width: 0; }
   .kf-set legend { padding: 0; margin-bottom: 8px; font-weight: 600; font-size: 14px; line-height: 20px; }
   .kf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -131,7 +131,7 @@ const r: Review = { n: 27, name: 'Daniel Herzog', age: '8 months ago', full: fal
   .kf-em a:hover { text-decoration: underline; }
 
   .kf-side { padding-top: 0; }
-  .kf-steps { position: relative; margin-top: 40px; }
+  .kf-steps { position: relative; margin-top: 32px; }
   .vpipe { position: absolute; left: 17px; top: 8px; bottom: 60px; width: 14px; }
   .vrun { position: absolute; inset: 0; border-radius: 7px; background: var(--navy); overflow: hidden; }
   .vwater { position: absolute; left: 2px; right: 2px; top: 2px; bottom: 2px; border-radius: 5px; background: var(--sky); transform-origin: center top; }
@@ -145,21 +145,24 @@ const r: Review = { n: 27, name: 'Daniel Herzog', age: '8 months ago', full: fal
 
   @media (max-width: 1279px) { .kf-in { grid-template-columns: minmax(0, 600px) minmax(0, 400px); } }
   @media (max-width: 1023px) {
-    .kf { padding: 56px 0 64px; }
-    .kf-in { grid-template-columns: minmax(0, 1fr); row-gap: 56px; }
-    .kform { gap: 18px; padding: 28px 18px 20px; }
-    .kf-formcol :global(.kf-seal) { right: -6px; top: -26px; --d: 64px !important; }
-    .kf-t { font-size: 24px; line-height: 28px; padding-right: 50px; }
+    /* Figma 435:3455: the form card rises 28 px into the hero; 21 px padding, fields 16 apart; steps with 44 px nodes */
+    .kf { z-index: 4; padding: 0 0 72px; overflow-x: clip; }
+    .kf-formcol { margin-top: -28px; }
+    .kf-in { grid-template-columns: minmax(0, 1fr); row-gap: 72px; }
+    .kform { gap: 16px; padding: 21px 21px 21px; }
+    .kf-formcol :global(.kf-seal) { right: -20px; top: -31px; --d: 80px !important; }
+    .kf-t { font-size: 24px; line-height: 28px; padding-right: 76px; }
     .kf-s { font-size: 14px; line-height: 20px; }
-    .kf-row { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .kf-row { grid-template-columns: minmax(0, 1fr); gap: 16px; }
     .kf-em { font-size: 13px; line-height: 19px; align-items: flex-start; }
     .kf-steps { margin-top: 28px; }
-    .vpipe { left: 11px; bottom: 40px; width: 12px; }
-    .steps { gap: 36px; }
-    .steps li { grid-template-columns: 36px minmax(0, 1fr); column-gap: 18px; }
-    .node { width: 36px; height: 36px; font-size: 16px; }
-    .st-t { padding-top: 0; font-size: 16px; line-height: 22px; }
-    .st-d { font-size: 13px; line-height: 20px; }
-    .kf-rev { margin-top: 48px; }
+    .vpipe { left: 15px; bottom: 40px; width: 14px; }
+    .steps { gap: 30px; }
+    .steps li { grid-template-columns: 44px minmax(0, 1fr); column-gap: 16px; }
+    .node { width: 44px; height: 44px; font-size: 18px; }
+    .st-t { padding-top: 0; font-size: 16px; line-height: 24px; }
+    .st-d { margin-top: 4px; font-size: 14px; line-height: 22px; }
+    .kf-rev { margin-top: 51px; }
   }
+
 </style>

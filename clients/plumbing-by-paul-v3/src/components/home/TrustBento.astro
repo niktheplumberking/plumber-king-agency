@@ -122,15 +122,21 @@ import { REVIEWS } from '../../data/reviews';
   }
   @media (max-width: 767px) {
     .trust { padding: 64px 0; }
+    .trust :global(.tr-head .h2) { text-wrap: wrap; } /* Figma breaks "947 neighbors can't all / be wrong." (no balancing) */
     .bento { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
     .c { border-radius: 24px; }
-    .c-a { padding: 20px; display: grid; justify-items: center; }
+    /* Figma 426:4481 (350 x 338): meter 302 x 86, checked line, divider, 4.9 + stars, then the link on its own row */
+    .c-a { padding: 20px 20px 24px; display: grid; justify-items: center; }
     .ca-top { justify-self: stretch; } .ca-chk { display: none; }
-    .c-a :global(.ca-m) { --cw: 52px !important; --ch: 68px !important; --z: 41px !important; margin-top: 18px; }
+    .c-a :global(.ca-m) { --cw: 50px !important; --ch: 66px !important; --z: 40px !important; margin-top: 18px; }
     .ca-cap { display: none; }
-    .ca-chk-m { display: block; justify-self: stretch; text-align: center; margin-top: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--line); font-weight: 500; font-size: 12px; color: var(--slate); }
-    .ca-bot { justify-self: stretch; gap: 24px; }
-    .ca-big { font-size: 64px; line-height: 64px; }
+    .ca-chk-m { display: block; justify-self: stretch; text-align: center; margin-top: 8px; padding-bottom: 17px; border-bottom: 1px solid var(--line); font-weight: 500; font-size: 12px; line-height: 15px; color: var(--slate); }
+    .ca-bot { justify-self: stretch; display: grid; grid-template-columns: 98px 1fr; gap: 0 32px; align-items: start; }
+    .ca-big { grid-row: 1 / 3; font-size: 64px; line-height: 64px; }
+    .ca-r { display: contents; }
+    .ca-r :global(.stars) { grid-column: 2; margin-top: 8px; --star-size: 20px !important; gap: 1.6px; }
+    .ca-out { grid-column: 2; margin-top: 10px; font-size: 14px; line-height: 17px; }
+    .ca-r :global(.tlink) { grid-column: 1 / -1; margin-top: 22px; }
     .c-b { order: 1; padding: 20px; } .cb-h b { font-size: 20px; line-height: 24px; } .cb-h small { font-size: 13px; } .cb-i { width: 46px; height: 46px; }
     .cb-y { gap: 6px; } .cb-y li { padding: 6px 10px; font-size: 14px; }
     .c-e { order: 2; margin-top: 10px; padding: 20px; } .c-e blockquote { font-size: 15px; line-height: 23px; }

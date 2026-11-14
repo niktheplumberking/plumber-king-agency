@@ -43,13 +43,13 @@ const rows = [
   </div>
 </section>
 <style>
-  .fam { position: relative; z-index: 1; background: var(--tint); padding: 168px 0 70px; }
+  .fam { position: relative; z-index: 1; background: var(--tint); padding: 168px 0 24px; } /* Figma section 952: the tilted script line ends 14 px above the edge */
   .fam-in { display: grid; grid-template-columns: 580px 1fr; gap: 0; align-items: start; }
   .fam-media { position: relative; width: 464px; height: 610px; margin-top: 22px; }
   .fm-block { position: absolute; left: -24px; top: 24px; width: 440px; height: 560px; border-radius: var(--r-xl); background: var(--sky); }
   .fm-photo { position: absolute; left: 0; top: 0; width: 440px; height: 560px; }
-  .fm-snap { position: absolute; left: 350px; top: 383px; width: 196px; height: 250px; transform: rotate(-5deg); z-index: 2; }
-  .fam-media :global(.fm-p1) { position: absolute; left: 12px; top: 538px; z-index: 3; }
+  .fm-snap { position: absolute; left: 350px; top: 360px; width: 196px; height: 250px; transform: rotate(-5deg); z-index: 2; }
+  .fam-media :global(.fm-p1) { position: absolute; left: 12px; top: 548px; z-index: 3; }
   .fam-media :global(.fm-p2) { position: absolute; left: 146px; top: 546px; z-index: 3; }
   .fam-copy { position: relative; display: grid; justify-items: start; max-width: 620px; }
   .fc-p { margin-top: 24px; font-size: 17px; line-height: 28px; }
@@ -59,7 +59,7 @@ const rows = [
   .rows li + li { border-top: 1px solid var(--line); }
   .rows p { flex: 1; font-size: 16px; line-height: 25px; color: var(--slate); }
   .rows b { font-weight: 700; color: var(--navy); }
-  .fam-script { order: 9; justify-self: end; margin-top: 2px; font-size: 46px; line-height: 1; color: var(--blue); transform: rotate(-3deg); }
+  .fam-script { order: 9; justify-self: end; margin-top: 16px; font-size: 46px; line-height: 1; color: var(--blue); transform: rotate(-3deg); }
   .fam-cta { display: flex; align-items: center; gap: 28px; margin-top: 34px; }
   .fc-call { font-weight: 700; }
   @media (max-width: 1199px) { .fam-in { grid-template-columns: 1fr 1fr; gap: 48px; } .fam-media { width: 100%; max-width: 440px; height: auto; aspect-ratio: 440 / 610; } .fm-block, .fm-photo { width: 100%; height: auto; aspect-ratio: 440/560; } .fm-snap { left: auto; right: -20px; top: auto; bottom: 0; width: 40%; height: auto; aspect-ratio: 196/250; } .fam-media :global(.fm-p1) { top: auto; bottom: 6%; } .fam-media :global(.fm-p2) { top: auto; bottom: 4%; left: 30%; } }
@@ -80,5 +80,16 @@ const rows = [
     .fam-script { order: 0; justify-self: start; margin-top: 28px; font-size: 34px; }
     .fam-cta { display: grid; width: 100%; gap: 16px; justify-items: center; margin-top: 20px; }
     .fam-cta :global(.btn) { width: 100%; }
+  }
+  /* Figma mobile 424:2340: photo 350x400 at 335 (48 px under the hanging More panel), sky block -10/+16, snapshot and patches hang below the photo. */
+  @media (max-width: 767px) {
+    .fam { padding-top: 335px; }
+    .fam-media { aspect-ratio: 350 / 424; }
+    .fm-block { left: -10px; top: 16px; aspect-ratio: 350 / 400; }
+    .fm-photo { aspect-ratio: 350 / 400; }
+    .fm-snap { width: 118px; bottom: -22px; }
+    .fam-media :global(.fm-p1) { left: 9px; bottom: -5px; }
+    .fam-media :global(.fm-p2) { left: 120px; bottom: -3px; }
+    .fc-p { margin-top: 18px; } .fc-p + .fc-p { margin-top: 12px; } .rows { margin-top: 22px; }
   }
 </style>

@@ -35,7 +35,7 @@ const ticks = Array.from({ length: 62 }, (_, i) => i + 1);
   </div>
 </section>
 <style>
-  .kb { position: relative; background: var(--white); padding: 96px 0 150px; overflow: clip; }
+  .kb { position: relative; background: var(--white); padding: 96px 0 136px; overflow: clip; }
   .kb-in { display: grid; grid-template-columns: 440px minmax(0, 640px); justify-content: space-between; align-items: start; }
   .kb-media { position: relative; width: 440px; height: 440px; }
   .kb-blk { position: absolute; inset: 26px -26px -26px 26px; border-radius: 40px; background: var(--sky); }
@@ -51,16 +51,18 @@ const ticks = Array.from({ length: 62 }, (_, i) => i + 1);
   .kb-lk { margin-top: 24px; }
   @media (max-width: 1279px) { .kb-in { grid-template-columns: 400px minmax(0, 1fr); column-gap: 64px; } .kb-media { width: 400px; height: 400px; } .kb-tape { left: -64px; width: calc(100% + 64px); } }
   @media (max-width: 1023px) {
-    .kb { padding: 48px 0 64px; }
-    .kb-in { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
-    .kb-media { width: calc(100% - 14px); height: auto; aspect-ratio: 300 / 290; }
+    .kb { padding: 64px 0 84px; } /* Figma 435:3710 */
+    .kb-in { grid-template-columns: minmax(0, 1fr); row-gap: 50px; }
+    .kb-media { width: calc(100% - 14px); height: auto; aspect-ratio: 336 / 330; }
     .kb-blk { inset: 14px -14px -14px 14px; border-radius: 28px; }
     .kb-frame { border-radius: 24px; }
     .kb-copy { padding-top: 0; }
     .kb-tape { position: relative; left: auto; top: auto; display: block; width: 100%; height: 30px; margin-top: 34px; overflow: hidden; }
     .kb-copy :global(.kb-eb) { position: absolute; top: 0; }
     .kb-h { margin-top: 18px; font-size: 28px; line-height: 32px; }
-    .kb-p { margin-top: 14px; font-size: 15px; line-height: 24px; }
+    .kb-chips { gap: 6px; flex-wrap: nowrap; }
+    .kb-chips :global(.chip) { padding: 0 10px; font-size: 13px; gap: 5px; }
+    .kb-p { margin-top: 16px; font-size: 16px; line-height: 26px; }
     .kb-chips { margin-top: 18px; }
     .kb-lk { margin-top: 18px; }
   }

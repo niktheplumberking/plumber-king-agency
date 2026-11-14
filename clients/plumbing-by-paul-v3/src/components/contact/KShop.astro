@@ -43,7 +43,7 @@ const rows: [string, string, string?][] = [
         </svg>
         <p class="ks-lbl label"><Icon name="pin" size={14} />{SITE.address.city}, FL {SITE.address.zip}</p>
         <span class="ks-pin"><Seal d={64} deg={-6} /></span>
-        <p class="ks-mk"><b>{SITE.name}</b><span>{SITE.address.street}</span></p>
+        <p class="ks-mk"><b>{SITE.name}</b><span>{SITE.address.street}</span><i class="mk-m">Our shop · 64th Way N</i></p>
         <a class="ks-open" href={SITE.google.mapsUrl} target="_blank" rel="noopener">Open in Google Maps<Icon name="external" size={16} /><span class="sr-only"> (opens in a new tab)</span></a>
       </div>
       <div class="ks-ticket" data-t="4">
@@ -74,13 +74,14 @@ const rows: [string, string, string?][] = [
   .ks-lbl :global(svg) { color: var(--blue); }
   .ks-pin { position: absolute; left: 47.5%; top: 54.5%; transform: translate(-50%, -50%); }
   .ks-mk { position: absolute; left: calc(47.5% + 62px); top: 54.5%; transform: translateY(-50%); display: grid; padding: 10px 16px; border-radius: 12px; background: var(--navy); color: var(--white); }
+  .mk-m { display: none; }
   .ks-mk::before { content: ''; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; background: var(--navy); border-radius: 2px; transform: translateY(-50%) rotate(45deg); }
   .ks-mk b { position: relative; font-size: 14px; line-height: 20px; }
   .ks-mk span { position: relative; font-weight: 500; font-size: 12px; line-height: 18px; color: var(--soft); }
   .ks-open { position: absolute; left: 500px; top: 372px; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 999px; background: var(--white); box-shadow: var(--sh-2); font-weight: 700; font-size: 14px; color: var(--navy); text-decoration: none; }
   .ks-open :global(svg) { color: var(--press); }
   .ks-open:hover { box-shadow: inset 0 0 0 1.5px var(--blue), var(--sh-2); }
-  .ks-ticket { position: absolute; right: 0; top: -56px; z-index: 2; width: 440px; padding: 34px 28px 28px; border-radius: 20px; background: var(--white); box-shadow: var(--sh-3); }
+  .ks-ticket { position: absolute; right: 0; top: -59px; z-index: 2; width: 440px; padding: 34px 28px 38px; border-radius: 20px; background: var(--white); box-shadow: var(--sh-3); }
   .perf { position: absolute; left: 15px; right: 15px; top: -7px; height: 14px; background: radial-gradient(circle at 7px 7px, var(--tint) 6.5px, transparent 7px) 0 0 / 25px 14px repeat-x; }
   .tk-h { padding-bottom: 12px; border-bottom: 2px solid var(--navy); font-size: 12px; color: var(--press); }
   .tk-dl { margin: 2px -16px 0; }
@@ -92,34 +93,35 @@ const rows: [string, string, string?][] = [
   .tk-r dd a:hover { text-decoration: underline; }
   .tk-r dd.ph { font-size: 19px; line-height: 24px; color: var(--press); }
   .ks-ticket :global(.tk-btn) { margin-top: 20px; }
-  .ks-ticket :global(.tk-seal) { position: absolute; right: -40px; bottom: -40px; }
-  .ks-snap { position: absolute; left: 30px; top: 300px; z-index: 2; width: 220px; height: 290px; transform: rotate(-5deg); }
+  .ks-ticket :global(.tk-seal) { position: absolute; right: -30px; bottom: -51px; }
+  .ks-snap { position: absolute; left: 40px; top: 243px; z-index: 2; width: 220px; height: 290px; transform: rotate(-5deg); }
   .ks-cap { position: absolute; left: 300px; top: 462px; z-index: 2; }
   .ks-capm { display: none; }
   /* below 1440 the ticket covers the map's right side: the maps pill moves under the location label */
   @media (max-width: 1439px) { .ks-open { left: 24px; right: auto; top: 64px; } }
   @media (max-width: 1279px) { .ks-map { width: 640px; } .ks-ticket { width: 400px; } }
   @media (max-width: 1023px) {
-    .ks { padding: 56px 0 64px; }
+    .ks { padding: 64px 0 58px; } /* Figma 435:3602 */
     .ks-stage { margin-top: 28px; min-height: 0; display: grid; }
     .ks-map { width: 100%; height: 240px; border-radius: 20px 20px 0 0; }
-    .ks-map svg { transform: scale(1.5); transform-origin: 47% 58%; }
+    .ks-map svg { transform: scale(1.5); transform-origin: 80.5% 63.5%; } /* keeps the shop under the pin at 31% / 50% (Figma) */
+    .ks-pin { left: 31%; top: 50%; }
     .ks-lbl { display: none; }
     .ks-open { left: 10px; right: auto; top: 12px; height: 36px; padding: 0 12px; font-size: 12px; }
     .ks-pin :global(.seal) { --d: 52px !important; }
-    .ks-mk { left: calc(47.5% + 40px); padding: 8px 12px; background: var(--white); color: var(--navy); box-shadow: var(--sh-1); }
-    .ks-mk::before { background: var(--white); }
-    .ks-mk b { font-weight: 600; font-size: 12px; line-height: 16px; } .ks-mk b::after { content: ' · 64th Way N'; }
-    .ks-mk span { display: none; }
-    .ks-ticket { position: relative; right: auto; top: auto; width: auto; padding: 24px 16px 22px; border-radius: 0 0 20px 20px; }
-    .tk-dl { margin: 2px -6px 0; }
-    .tk-r { grid-template-columns: 74px minmax(0, 1fr); padding: 10px 8px; gap: 8px; }
+    .ks-mk { left: calc(31% + 36px); top: 50%; padding: 8px 12px; border-radius: 10px; background: var(--white); color: var(--navy); box-shadow: var(--sh-1); }
+    .ks-mk::before { display: none; }
+    .ks-mk b, .ks-mk span { display: none; }
+    .ks-mk .mk-m { display: block; font-style: normal; font-weight: 600; font-size: 13px; line-height: 18px; white-space: nowrap; }
+    .ks-ticket { position: relative; right: auto; top: auto; width: auto; margin-top: -28px; padding: 28px 20px 22px; border-radius: 20px; }
+    .tk-dl { margin: 2px -12px 0; }
+    .tk-r { grid-template-columns: 76px minmax(0, 1fr); padding: 8px 12px; gap: 8px; }
     .tk-r dt { font-size: 10px; }
     .tk-r dd { font-size: 13px; line-height: 19px; }
     .tk-r dd.ph { font-size: 16px; }
-    .ks-ticket :global(.tk-seal) { right: auto; left: -6px; bottom: -48px; --d: 64px !important; }
-    .ks-snap { position: relative; left: auto; top: auto; justify-self: end; width: 140px; height: 184px; margin: 28px 6px 0 0; transform: rotate(5deg); }
+    .ks-ticket :global(.tk-seal) { right: auto; left: -5px; bottom: -54px; --d: 72px !important; }
+    .ks-snap { position: relative; left: auto; top: auto; justify-self: end; width: 150px; height: 196px; margin: -20px -8px 0 0; transform: rotate(5deg); }
     .ks-cap { display: none; }
-    .ks-capm { display: block; position: absolute; left: 0; bottom: 40px; width: 150px; font-size: 26px; line-height: 30px; color: var(--press); transform: rotate(-4deg); }
+    .ks-capm { display: block; position: absolute; left: 4px; bottom: 56px; width: 140px; font-size: 26px; line-height: 30px; color: var(--press); transform: rotate(-4deg); }
   }
 </style>

@@ -25,7 +25,7 @@ const cards = [
         <li class="ar-card">
           <figure>
             <p class="ar-place"><Icon name="pin" size={15} />{c.place}</p>
-            {c.patches && <div class="ar-pats" aria-label={`Fixed by ${c.patches.join(' and ')}`}>{c.patches.map((p, i) => <span class:list={['ar-pw', `p${i}`]}><Patch name={p} deg={i ? -6 : 5} /></span>)}</div>}
+            {c.patches && <div class="ar-pats" role="group" aria-label={`Fixed by ${c.patches.join(' and ')}`}>{c.patches.map((p, i) => <span class:list={['ar-pw', `p${i}`]}><Patch name={p} deg={i ? -6 : 5} /></span>)}</div>}
             <Stars size={15} />
             <blockquote class="ar-q"><p set:html={c.q} /></blockquote>
             {c.service && <p class="ar-svc"><Icon name="wrench" size={12} />{c.service}</p>}

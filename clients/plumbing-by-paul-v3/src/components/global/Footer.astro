@@ -82,8 +82,8 @@ const a = SITE.address;
 </footer>
 <style>
   .ft { position: relative; background: var(--sky); padding-top: 32px; overflow: hidden; }
-  .ft-card { position: relative; z-index: 2; padding: 56px; border-radius: var(--r-2xl); background: var(--white); box-shadow: var(--sh-3); }
-  .ft-top { display: grid; grid-template-columns: 118px minmax(0, 380px) 1fr auto; align-items: center; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .ft-card { position: relative; z-index: 2; padding: 50px 56px 40px; /* Figma 427:4084 */ border-radius: var(--r-2xl); background: var(--white); box-shadow: var(--sh-3); }
+  .ft-top { display: grid; grid-template-columns: 118px minmax(0, 380px) 1fr auto; align-items: center; gap: 32px; padding-bottom: 30px; border-bottom: 1px solid var(--line); }
   .ft-logo { display: block; width: 118px; }
   .ft-logo :global(img) { width: 100%; height: auto; transition: transform .5s var(--ease-back); }
   .ft-logo:hover :global(img) { transform: rotate(-4deg); }
@@ -92,12 +92,12 @@ const a = SITE.address;
   .fm-t { display: grid; font-size: 14px; line-height: 20px; }
   .fm-t > span { display: inline-flex; align-items: center; gap: 6px; }
   .ft-cols { display: grid; grid-template-columns: minmax(max-content, 1.65fr) .8fr 1.05fr 1.05fr; gap: 32px; padding: 36px 0 32px; border-bottom: 1px solid var(--line); }
-  .fh { margin: 0 0 16px; }
+  .fh { margin: 0 0 20px; font-size: 13px; line-height: 16px; }
   .fh-b { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-num); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--navy); cursor: default; }
   .fh-b :global(.fh-i) { display: none; }
   .fbody ul { display: grid; gap: 10px; margin: 0; padding: 0; align-content: start; }
   .fcol-svc .fbody { display: grid; grid-template-columns: max-content max-content; gap: 10px 24px; }
-  .fbody li { line-height: 20px; }
+  .fbody li { font-size: 15px; line-height: 20px; }
   .fbody a:not(.tlink) { font-weight: 500; font-size: 15px; line-height: 20px; color: var(--slate); transition: color var(--dur-2); }
   .fbody a:not(.tlink):hover { color: var(--press); text-decoration: underline; text-underline-offset: 3px; }
   address { display: grid; gap: 10px; font-style: normal; font-weight: 500; font-size: 14px; line-height: 21px; color: var(--slate); }
@@ -115,7 +115,7 @@ const a = SITE.address;
   .ft-proof .lic { color: var(--press); font-size: 15px; }
   .pi { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--blue); flex: none; }
   .pi-sky { background: var(--sky); color: var(--navy); }
-  .ft-sea { position: relative; height: 200px; margin-top: -70px; }
+  .ft-sea { position: relative; height: 190px; margin-top: -70px; }
   .wm::before { content: attr(data-wm); }
   .wm { position: absolute; right: max(var(--gutter), calc(50% - 600px)); bottom: -38px; font-size: 230px; line-height: 230px; color: rgba(255,255,255,.32); white-space: nowrap; }
   .tag { position: absolute; left: max(var(--gutter), calc(50% - 600px)); bottom: 28px; font-size: 44px; line-height: 1.2; color: var(--navy); }
@@ -163,5 +163,24 @@ const a = SITE.address;
     .tag { font-size: 24px; bottom: 12px; left: 20px; }
     .fb-in { flex-direction: column; align-items: flex-start; gap: 0; padding-block: 16px 12px; }
     .fb-in ul { gap: 20px; } .fb-lic { display: none; } .lic-m { display: inline; }
+  }
+  /* Figma mobile 426:5542: card padding 22, 84 px logo beside the line, 16 px rhythm, separate 47 px accordion rows 16 apart,
+     compact Find us lines (each link still at least 24 px tall with 10 px between, WCAG 2.5.8), 104 px of sea under the card. */
+  @media (max-width: 767px) {
+    .ft-card { padding: 22px; }
+    .ft-top { grid-template-columns: 84px 1fr; gap: 16px 14px; padding-bottom: 0; }
+    .ft-logo { width: 84px; }
+    .ft-line { font-size: 14px; line-height: 21px; }
+    .ft-top :global(.ft-call) { min-height: 60px; }
+    .ft-cols { gap: 16px; padding: 16px 0; }
+    .fh-b { min-height: 47px; }
+    .fcol-find .fbody { margin-top: -4px; padding-bottom: 14px; }
+    .fcol-find address { gap: 10px; }
+    .fcol-find .fbody a:not(.tlink) { min-height: 24px; }
+    .fcol-find .addr { line-height: 21px; }
+    .fcol-find .mail { line-height: 16px; }
+    .fcol-find .soc { margin-top: 10px; }
+    .fcol-find .soc a { width: 40px; height: 40px; min-height: 40px; }
+    .ft-sea { height: 144px; }
   }
 </style>

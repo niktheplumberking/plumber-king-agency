@@ -23,9 +23,9 @@ const items: FaqEntry[] = [
 <section class="hfaq" aria-labelledby="hfaq-h" data-m-section>
   <div class="wrap hf-grid">
     <div class="hf-side">
-      <SectionHead eyebrow="Good questions" l1="Things people ask" l2="before they call" id="hfaq-h" size="n" lead="Straight answers. If yours isn't here, ask the office." leadWidth="380px" class="hf-head" />
+      <SectionHead eyebrow="Good questions" l1="Things people ask" l2="before they call" id="hfaq-h" size="sm" lead="Straight answers. If yours isn't here, ask the office." leadWidth="380px" class="hf-head" />
       <aside class="hf-help" aria-label="Ask a person" data-t="4" data-fx="rise">
-        <Seal d={112} deg={6} class="hf-seal" />
+        <Seal d={104} deg={8} class="hf-seal" />
         <div class="hf-card">
           <p class="hf-t">Rather just ask a person?</p>
           <p class="hf-d">The office is open every day, 8 AM to 5 PM.</p>
@@ -46,11 +46,11 @@ const items: FaqEntry[] = [
   .hf-grid { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 690px); justify-content: space-between; column-gap: 64px; align-items: start; }
   .hf-side { position: sticky; top: calc(var(--header-h) + 32px); }
   .hf-help { position: relative; width: 384px; max-width: 100%; margin-top: 76px; }
-  .hf-help :global(.hf-seal) { position: absolute; right: -3px; top: -65px; z-index: 2; }
+  .hf-help :global(.hf-seal) { position: absolute; right: 3px; top: -58px; z-index: 2; } /* Figma 427:3868: d104, 8deg */
   .hf-card { position: relative; overflow: hidden; padding: 44px 28px 64px; border-radius: 24px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
   .hf-t { max-width: 230px; margin: 0; font-weight: 700; font-size: 22px; line-height: 28px; }
   .hf-d { margin: 12px 0 0; font-weight: 500; font-size: 14px; line-height: 21px; color: var(--soft); }
-  .hf-card :global(.hf-call) { position: relative; z-index: 1; margin-top: 28px; }
+  .hf-card :global(.hf-call) { position: relative; z-index: 1; margin-top: 39px; min-height: 60px; }
   .hf-card :global(.hf-sw) { position: absolute; left: 0; right: 0; bottom: 0; }
   .hf-side :global(.hf-chips) { margin-top: 28px; max-width: 384px; }
   .hf-list { display: grid; gap: 24px; justify-items: start; }
@@ -69,5 +69,15 @@ const items: FaqEntry[] = [
     .hf-d { font-size: 13px; }
     .hf-card :global(.hf-call) { width: 100%; margin-top: 18px; }
     .hf-side :global(.hf-chips) { display: none; }
+  }
+  /* Figma mobile 426:5349: accordion 24 under the heading (items 10 apart), link 18 below, help card 70 below (230 tall), 64 to the edge. */
+  @media (max-width: 767px) {
+    .hfaq { padding-bottom: 64px; }
+    .hf-list { margin-top: 24px; gap: 18px; }
+    .hf-list :global(.faqs) { gap: 10px; }
+    .hf-help { margin-top: 70px; }
+    .hf-card { padding: 36px 20px 48px; }
+    .hf-d { margin-top: 6px; line-height: 19px; }
+    .hf-card :global(.hf-call) { margin-top: 11px; min-height: 58px; }
   }
 </style>

@@ -61,7 +61,21 @@ const id = sid(slug, 'versus');
   .vs-or { display: none; }
   .vs-right { display: grid; gap: 20px; padding-top: 0; }
   .vs-right :global(.vs-btn) { justify-content: center; }
-  @media (max-width: 1199px) and (min-width: 1024px) { .vs-grid { grid-template-columns: minmax(0, 1fr) 240px minmax(0, 1fr); } .vs-mid { height: 560px; } }
+  /* Figma 04 D4 (443:11945): the 588 px section is all navy; the 300 x 652 photo starts 32 above it and hangs 32 below
+     into the next section, an offset block 22/20 behind; 28 px card padding, 26 px rows 12 apart. */
+  @media (min-width: 1024px) {
+    .vs { z-index: 2; padding: 88px 0; }
+    .vs-band { bottom: 0; }
+    .vs-grid { grid-template-columns: minmax(0, 420px) 360px minmax(0, 420px); column-gap: 0; }
+    .vs-left { gap: 44px; }
+    .vs-card { padding: 28px; }
+    .vs-card ul { gap: 12px; margin-top: 12px; }
+    .vs-card li { line-height: 26px; }
+    .vs-mid { width: 300px; height: 652px; margin: -120px 0 -120px 30px; }
+    .vs-back { left: 22px; right: -22px; top: 20px; bottom: -20px; }
+    .vs-ph :global(.vs-cap) { bottom: 18px; }
+  }
+  @media (max-width: 1199px) and (min-width: 1024px) { .vs-grid { grid-template-columns: minmax(0, 1fr) 280px minmax(0, 1fr); column-gap: 20px; } .vs-mid { width: 240px; height: 560px; margin-left: 20px; } }
   @media (max-width: 1023px) {
     .vs { padding: 64px 0 64px; background: var(--navy); }
     .vs-band { bottom: 0; }
@@ -75,5 +89,17 @@ const id = sid(slug, 'versus');
     .vs-right { order: 5; gap: 16px; }
     .vs-card { padding: 24px 22px 26px; }
     .vs-t { font-size: 20px; }
+    /* Figma 04 mobile D4 (443:13020): a 350 x 200 photo 28 under the head, caption 22 over its foot; cards 22 padded,
+       26 px rows 10 apart, 16 between the cards and the button; 64 to the next section */
+    .vs-mid { height: 200px; margin: 28px 0 0; }
+    .vs-left :global(.shead h2) { font-size: 34px; line-height: 39px; }
+    .vs-back { display: none; }
+    .vs-ph :global(.vs-cap) { left: 12px; right: auto; bottom: -9px; }
+    .vs-card { padding: 22px; }
+    .vs-t { line-height: 26px; }
+    .vs-card ul { gap: 10px; margin-top: 10px; }
+    .vs-card li { line-height: 26px; }
+    .vs-right { gap: 16px; margin-top: 16px; }
+    .vs-or { margin: -32px 22px -24px 0; width: 57px; height: 57px; }
   }
 </style>

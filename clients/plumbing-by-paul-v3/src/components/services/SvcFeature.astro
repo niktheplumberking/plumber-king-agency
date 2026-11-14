@@ -25,7 +25,7 @@ const id = sid(slug, 'feature');
         <div class="ft-slot" data-t="4" data-fx="fade"><Icon name="camera" size={26} /><p class="label">{f.placeholder}</p></div>
       )}
       <div class="ft-ph frame" data-t="4" data-fx="frame">
-        <Img name={f.photo.name} alt={f.photo.alt} focus={f.photo.focus} sizes="(min-width: 1024px) 300px, 180px" widths={[320, 480, 640]} />
+        <Img name={f.photo.name} alt={f.photo.alt} focus={f.photo.focus} sizes={f.placeholder ? '(min-width: 1024px) 300px, 180px' : '(min-width: 1024px) 380px, calc(100vw - 40px)'} widths={[320, 480, 640, 800]} />
         <PhotoTag class="ft-tag">{f.tag}</PhotoTag>
       </div>
       <ReviewCard r={f.review.r} class="ft-rv" t="5" />
@@ -47,6 +47,17 @@ const id = sid(slug, 'feature');
   .nop .ft-ph { width: 380px; }
   .ft-ph :global(.ft-tag) { position: absolute; left: 22px; top: 22px; z-index: 2; }
   .ft-media :global(.ft-rv) { position: absolute; left: 0; top: 146px; width: 460px; z-index: 2; box-shadow: var(--sh-3); }
+  /* Figma 04 D6 (443:12117): head at 104, lead 28 under the H2, links 28 under the lead; slot and photo 28 down the
+     media column, the review card at 168; 192 to the next section */
+  @media (min-width: 1024px) {
+    .ft { padding: 104px 0 192px; }
+    .ft :global(.shead .lead) { margin-top: 7px; }
+    .ft-links { margin-top: 28px; }
+    .ft-media { height: 428px; }
+    .ft-slot { top: 28px; }
+    .ft-ph { top: 28px; }
+    .ft-media :global(.ft-rv) { top: 168px; }
+  }
   @media (max-width: 1199px) and (min-width: 1024px) { .ft-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 500px); } .ft-media :global(.ft-rv) { width: 380px; } .ft-ph { width: 250px; } .ft-slot { width: 220px; } }
   @media (max-width: 1023px) {
     .ft { padding: 64px 0 72px; }
@@ -59,5 +70,13 @@ const id = sid(slug, 'feature');
     .nop .ft-ph { grid-column: 1 / -1; }
     .ft-ph :global(.ft-tag) { display: none; }
     .ft-media :global(.ft-rv) { position: relative; left: auto; top: auto; width: auto; grid-column: 1 / -1; margin-top: -30px; }
+    /* Figma 04 mobile D6 (443:13153): links 20 under the lead and 8 apart; slot 158 + photo 180, the 330 px review card
+       20 px over the photo's foot; 60 to the next section */
+    .ft { padding-bottom: 60px; }
+    .ft :global(.shead .lead) { font-size: 16px; line-height: 25px; }
+    .ft-grid { row-gap: 62px; }
+    .ft-links { gap: 8px; margin-top: 20px; }
+    .ft-media { grid-template-columns: 158px 180px; }
+    .ft-media :global(.ft-rv) { width: 330px; max-width: 100%; margin-top: -20px; }
   }
 </style>

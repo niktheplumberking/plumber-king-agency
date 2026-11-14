@@ -11,10 +11,10 @@ import Icon from '../ui/Icon.astro';
 import Seal from '../ui/Seal.astro';
 import FlowLines from '../ui/FlowLines.astro';
 const fan = [
-  { n: 'service-tech-under-bath-vanity', alt: 'A tech lying on a bathroom floor working under a vanity', deg: -5, f: '50% 50%' },
-  { n: 'service-tech-logo-shirt-framing', alt: 'A tech in a Plumbing By Paul shirt working among new wall framing', deg: -2, f: '50% 40%' },
-  { n: 'fleet-van-at-coastal-stilt-house', alt: 'A Plumbing By Paul van parked at a raised coastal house', deg: 2, f: '50% 60%' },
-  { n: 'service-two-techs-vanity-install', alt: 'Two techs kneeling to install a bathroom vanity', deg: 5, f: '50% 50%' },
+  { n: 'service-tech-under-bath-vanity', alt: 'A tech lying on a bathroom floor working under a vanity', deg: -5, f: '50% 75%' },
+  { n: 'service-tech-logo-shirt-framing', alt: 'A tech in a Plumbing By Paul shirt working among new wall framing', deg: -2, f: '50% 30%' },
+  { n: 'fleet-van-at-coastal-stilt-house', alt: 'A Plumbing By Paul van parked at a raised coastal house', deg: 2, f: '35% 50%' },
+  { n: 'service-two-techs-vanity-install', alt: 'Two techs kneeling to install a bathroom vanity', deg: 5, f: '62% 50%' },
 ];
 ---
 <section class="oh" aria-labelledby="oh-h" data-m-section data-m-hero>
@@ -34,10 +34,10 @@ const fan = [
   <ul role="list" class="oh-fan" data-t="4" data-stagger aria-label="Four job photos">
     {fan.map((p, i) => (
       <li class:list={['oh-p', `p${i}`]} style={`--deg:${p.deg}deg`} data-fx="frame">
-        <div class="oh-ph frame"><Img name={p.n} alt={p.alt} focus={p.f} priority={i === 1} sizes="(min-width: 1024px) 298px, 44vw" widths={[300, 600]} /></div>
+        <div class="oh-ph frame"><Img name={p.n} alt={p.alt} focus={p.f} priority={i === 1} sizes="(min-width: 1024px) 298px, 44vw" widths={[300, 600, 1080]} /></div>
       </li>
     ))}
-    <li class="oh-seal" aria-hidden="true"><Seal d={111} deg={-6} /></li>
+    <li class="oh-seal" aria-hidden="true"><Seal d={96} deg={10} /></li>
   </ul>
 </section>
 <style>
@@ -53,14 +53,15 @@ const fan = [
   .oh-chip { position: absolute; left: 952px; top: 239px; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 12px; background: var(--white); box-shadow: var(--sh-2); font-weight: 700; font-size: 14px; color: var(--navy); transform: rotate(4deg); }
   .oh-chip :global(svg) { color: var(--blue); }
   .oh-fan { position: absolute; left: 50%; top: 476px; width: 1041px; height: 352px; margin: 0 0 0 -520px; padding: 0; list-style: none; }
-  .oh-p { position: absolute; top: 0; transform: rotate(var(--deg)); }
-  .oh-ph { width: 100%; height: 100%; border-radius: var(--r-xl); box-shadow: 0 0 0 7px var(--white), var(--sh-3); }
+  /* Figma O2 cluster: 270 x 330 frames (8 px white border inside), centres at x 363/601/839/1077 and y 654/636 of the hero */
+  .oh-p { position: absolute; top: 0; width: 270px; height: 330px; transform: rotate(var(--deg)); }
+  .oh-ph { width: 100%; height: 100%; border: 8px solid var(--white); border-radius: 24px; box-shadow: 0 28px 56px rgba(17, 16, 50, .22); }
   .oh-ph :global(img) { display: block; }
-  .p0 { left: 0; top: 25px; width: 298px; height: 352px; z-index: 1; }
-  .p1 { left: 246px; top: 0; width: 281px; height: 339px; z-index: 2; }
-  .p2 { left: 496px; top: -10px; width: 281px; height: 339px; z-index: 1; }
-  .p3 { left: 743px; top: 2px; width: 298px; height: 352px; z-index: 2; }
-  .oh-seal { position: absolute; left: 466px; top: -46px; z-index: 3; }
+  .p0 { left: 28px; top: 13px; z-index: 1; }
+  .p1 { left: 266px; top: -5px; z-index: 2; }
+  .p2 { left: 504px; top: -5px; z-index: 1; }
+  .p3 { left: 742px; top: 13px; z-index: 2; }
+  .oh-seal { position: absolute; left: 471px; top: -38px; z-index: 3; }
   @media (max-width: 1199px) { .oh-ours, .oh-chip { display: none; } .oh-fan { transform: scale(.9); transform-origin: top center; } }
   @media (max-width: 1023px) {
     .oh { height: auto; padding: 32px 0 0; overflow-x: clip; }
@@ -69,15 +70,18 @@ const fan = [
     .oh-bc { justify-self: start; }
     .oh-h1 { font-size: 40px; line-height: 44px; }
     .oh-lead { margin-top: 16px; font-size: 16px; line-height: 26px; }
-    .oh-btns { display: grid; width: 100%; gap: 10px; margin-top: 24px; }
+    .oh-btns { display: grid; grid-template-columns: 1fr; justify-content: stretch; width: 100%; gap: 12px; margin-top: 22px; }
     .oh-btns :global(.btn) { width: 100%; }
     .oh-btns :global(.btn-sec) { min-height: 56px; }
-    .oh-fan { position: relative; left: 50%; top: auto; width: 620px; height: 260px; margin: 44px 0 -96px -310px; transform: none; }
-    .p0 { left: 0; top: 18px; width: 166px; height: 210px; }
-    .p1 { left: 150px; top: 0; width: 160px; height: 200px; }
-    .p2 { left: 300px; top: -4px; width: 160px; height: 200px; }
-    .p3 { left: 450px; top: 6px; width: 166px; height: 210px; }
-    .oh-seal { left: 276px; top: -34px; }
+    /* Figma O2 mobile cluster: ~170 x 214 frames, centres at x -52/107/293/472 of the viewport */
+    .oh-fan { position: relative; left: 50%; top: auto; width: 700px; height: 214px; margin: 43px 0 -37px -350px; transform: none; }
+    .oh-p { width: 170px; height: 214px; }
+    .oh-ph { border-width: 6px; border-radius: 18px; box-shadow: 0 16px 32px rgba(17, 16, 50, .2); }
+    .p0 { left: 18px; top: 31px; }
+    .p1 { left: 177px; top: 6px; }
+    .p2 { left: 363px; top: 0; }
+    .p3 { left: 542px; top: 14px; }
+    .oh-seal { left: 330px; top: -25px; }
     .oh-seal :global(.seal) { --d: 64px !important; }
   }
 </style>

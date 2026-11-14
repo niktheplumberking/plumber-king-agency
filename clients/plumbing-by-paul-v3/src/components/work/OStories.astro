@@ -21,7 +21,7 @@ const rows = [
         <li class:list={['os-row', i % 2 && 'flip']}>
           <div class="os-media" data-t="4">
             <span class="os-off" aria-hidden="true"></span>
-            <figure class="os-ph frame frame-3" data-fx="frame"><Img name={r.n} alt={r.alt} focus={r.f} sizes="(min-width: 1024px) 456px, calc(100vw - 40px)" widths={[460, 700, 920]} /></figure>
+            <figure class="os-ph frame frame-3" data-fx="frame"><Img name={r.n} alt={r.alt} focus={r.f} sizes="(min-width: 1024px) 456px, calc(100vw - 40px)" widths={[460, 700, 920, 1660]} /></figure>
             <div class="os-tk" data-fx="pop"><p class="os-tkh"><span class="label">Job ticket</span><span class="num">0{i + 1}</span></p><p class="os-tkb"><b>{r.tk}</b><small>Shot on the job by our crew</small></p></div>
           </div>
           <div class="os-copy" data-t="3">
@@ -70,18 +70,19 @@ const rows = [
   .os-close p { flex: 1; font-weight: 600; font-size: 16px; color: var(--navy); }
   @media (max-width: 1199px) { .os-row, .os-row.flip { grid-template-columns: 420px 1fr; } .os-row.flip { grid-template-columns: 1fr 420px; } .os-tk { left: 220px; } }
   @media (max-width: 1023px) {
-    .os { padding: 56px 0 64px; }
-    .os-list { gap: 56px; margin-top: 32px; }
-    .os-row, .os-row.flip { grid-template-columns: 1fr; row-gap: 60px; }
+    .os { padding: 64px 0 98px; }
+    .os-list { gap: 36px; margin-top: 36px; }
+    .os-row, .os-row.flip { grid-template-columns: 1fr; row-gap: 52px; }
+    .os-media { width: 340px; max-width: calc(100% - 10px); }
     .os-row.flip .os-media { order: 0; }
     .os-off { display: none; }
-    .os-ph { height: 240px; border-radius: var(--r-lg); }
-    .os-tk, .flip .os-tk { left: auto; right: 10px; top: 186px; width: 186px; }
+    .os-ph { height: 210px; border-radius: var(--r-lg); }
+    .os-tk, .flip .os-tk { left: auto; right: -22px; top: 160px; width: 181px; }
     .os-copy { padding-top: 6px; }
     .os-t { font-size: 20px; line-height: 26px; }
     .os-t .num { font-size: 16px; }
     .os-d { font-size: 15px; line-height: 24px; }
-    .os-close { flex-direction: column; align-items: flex-start; margin-top: 48px; padding: 20px; }
+    .os-close { flex-direction: column; align-items: flex-start; margin-top: 36px; padding: 20px; }
     .os-close :global(.btn) { width: 100%; }
   }
 </style>

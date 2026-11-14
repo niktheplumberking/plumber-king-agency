@@ -47,16 +47,17 @@ const facts = [['answered on the', 'first ring'], ['here', 'within the hour'], [
   </div>
 </section>
 <style>
-  .wc { position: relative; background: var(--white); padding: 40px 0 24px; }
+  .wc { position: relative; background: var(--white); padding: 40px 0 24px; overflow-x: clip; }
   .wc-band { position: absolute; left: 0; right: 0; top: 40px; height: 272px; background: var(--sky); }
   .wc-in { position: relative; }
   .wc-head { position: absolute; left: 0; top: 64px; width: 340px; display: grid; gap: 16px; }
   .wc-head .h2 { letter-spacing: -.025em; }
+  @media (min-width: 1024px) { .wc-head { top: 92px; width: 320px; } .wc-head .h2 { font-size: 40px; line-height: 46px; letter-spacing: -.01em; } }
   .wc-head :global(.eyebrow) { color: var(--navy); }
   .wc-head .h2 .l1, .wc-head .h2 .l2 { display: block; }
   .wc-head .h2 .l2 { color: var(--navy); }
   .wc-stage { position: relative; margin-left: 360px; margin-top: -28px; }
-  .wc-pipe { position: absolute; left: 12px; right: calc(-1 * max(var(--gutter), (100vw - 1200px) / 2)); top: 164px; height: 14px; border-radius: 7px; background: var(--navy); }
+  .wc-pipe { position: absolute; left: 12px; right: calc(-1 * max(var(--gutter), (var(--vw100) - 1200px) / 2)); top: 164px; height: 14px; border-radius: 7px; background: var(--navy); }
   .wc-pipe span { position: absolute; inset: 2px; border-radius: 5px; background: var(--sky); }
   .wc-pipe span::after { content: ''; position: absolute; left: 4px; right: 4px; top: 2px; height: 2px; border-radius: 1px; background: rgba(255,255,255,.55); }
   .wc-cards { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 0; padding: 0; }

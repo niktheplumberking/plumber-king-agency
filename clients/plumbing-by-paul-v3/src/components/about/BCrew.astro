@@ -17,7 +17,7 @@ const P: [string, number, number][] = [
 <section class="bc" id="crew" aria-labelledby="bc-h" data-m-section>
   <div class="wrap bc-in">
     <figure class="bc-wide frame frame-3" data-t="4" data-fx="frame">
-      <Img name="crew-families-two-trucks" alt="The Plumbing By Paul crew and their families in blue shirts in front of two wrapped trucks" sizes="(min-width: 1024px) 1200px, calc(100vw - 40px)" widths={[600, 900, 1200, 1600, 2000]} focus="50% 50%" />
+      <Img name="crew-families-two-trucks" alt="The Plumbing By Paul crew and their families in blue shirts in front of two wrapped trucks" sizes="(min-width: 1024px) 1200px, calc(100vw - 40px)" widths={[600, 900, 1200, 1600, 2000, 3600]} focus="50% 50%" />
       <PhotoTag class="bc-tag">The crew · St. Petersburg</PhotoTag>
       <figcaption><Caption class="bc-cap">The crew and their families.</Caption></figcaption>
     </figure>
@@ -32,7 +32,7 @@ const P: [string, number, number][] = [
       </div>
     </div>
     <figure class="bc-office" data-t="4" data-fx="toss">
-      <div class="bc-oph frame"><Img name="office-team-with-paul" alt="Paul sitting with the office team" sizes="(min-width: 1024px) 304px, 80vw" widths={[320, 640]} focus="50% 50%" /></div>
+      <div class="bc-oph frame"><Img name="office-team-with-paul" alt="Paul sitting with the office team" sizes="(min-width: 1024px) 304px, 80vw" widths={[320, 640, 1150]} focus="50% 50%" /></div>
       <figcaption><Caption class="bc-ocap" small>Paul with the office team.</Caption></figcaption>
       <ul role="list" class="bc-opat" aria-label="Office names from our Google reviews">
         <li><Patch name="Missy" label="Office" deg={-6} t={false} /></li>
@@ -43,13 +43,13 @@ const P: [string, number, number][] = [
 </section>
 <style>
   .bc { position: relative; background: var(--sky); padding: 0 0 100px; margin-top: 64px; overflow-x: clip; }
-  .bc-in { position: relative; min-height: 896px; }
+  .bc-in { position: relative; min-height: 860px; }
   .bc-wide { position: relative; top: -64px; height: 460px; margin: 0; }
   .bc-wide :global(.bc-tag) { position: absolute; left: 24px; top: 24px; z-index: 2; }
   .bc-wide :global(.bc-cap) { position: absolute; right: 24px; top: 24px; z-index: 2; }
   .bc-wall { position: absolute; left: 0; top: 396px; width: 100%; margin: 0; padding: 0; list-style: none; z-index: 3; }
   .bc-wall li { position: absolute; left: var(--x); top: var(--y); }
-  .bc-copy { position: absolute; left: 0; top: 628px; display: grid; grid-template-columns: 460px 380px; column-gap: 20px; }
+  .bc-copy { position: absolute; left: 0; top: 628px; display: grid; grid-template-columns: 460px 380px; column-gap: 20px; align-items: start; }
   .bc-copy :global(.bc-head .eyebrow), .bc-copy :global(.bc-head .l1), .bc-copy :global(.bc-head .l2), .bc-copy :global(.bc-head h2) { color: var(--navy); }
   .bc-side { padding-top: 36px; font-size: 16px; line-height: 26px; color: var(--navy); }
   .bc-side :global(.bc-l) { margin-top: 18px; color: var(--navy); }
@@ -68,9 +68,10 @@ const P: [string, number, number][] = [
     .bc-wall { position: relative; top: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 4px; margin-top: -18px; transform: none; justify-items: center; }
     .bc-wall li { position: static; width: 112px; height: 44px; }
     .bc-wall li :global(.patch) { transform: scale(.76) rotate(var(--deg)); transform-origin: left top; }
-    .bc-copy { position: static; display: block; margin-top: 32px; }
+    .bc-copy { position: static; display: block; margin-top: 46px; }
     .bc-side { padding-top: 16px; font-size: 15px; line-height: 24px; }
-    .bc-office { position: relative; left: auto; right: auto; top: auto; width: 280px; margin: 40px auto 30px; transform: rotate(3deg); }
+    .bc-office { position: relative; left: auto; right: auto; top: auto; width: 240px; margin: 43px auto 40px; transform: rotate(3deg); }
+    .bc-oph { height: 290px; }
     .bc-oph { height: 250px; }
     .bc-opat { left: -10px; bottom: -30px; transform: scale(.8); transform-origin: left bottom; }
   }

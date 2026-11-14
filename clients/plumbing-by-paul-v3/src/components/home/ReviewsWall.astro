@@ -27,7 +27,7 @@ import { SITE } from '../../data/site';
             {col.map((c) => <div class="rw-cell" data-slide><ReviewCard r={c.r} v={c.navy ? 'navy' : 'white'} t={false} /></div>)}
             {ci === 1 && (
               <div class="roll" data-t="5" data-fx="toss">
-                <div class="roll-ph"><Img name="brand-gift-roll-closeup" alt="The Plumbing By Paul blue roll gift, wrapped with a branded tag" sizes="340px" focus="50% 62%" widths={[360, 680]} /></div>
+                <div class="roll-ph"><Img name="brand-gift-roll-closeup" alt="The Plumbing By Paul blue roll gift, wrapped with a branded tag" sizes="292px" focus="50% 62%" widths={[320, 600]} /></div>
                 <Caption class="roll-cap">The blue roll. Every customer gets one.</Caption>
               </div>
             )}
@@ -47,37 +47,36 @@ import { SITE } from '../../data/site';
   </div>
 </section>
 <style>
-  .rw { position: relative; background: var(--tint); padding: 104px 0 0; overflow: hidden; }
+  .rw { position: relative; background: var(--tint); padding: 104px 0 0; overflow: clip; }
   .rw-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
   .rw-head :global(.rw-sh) { max-width: 900px; }
   @media (min-width: 1024px) { .rw-head { position: relative; } .rw-meta { position: absolute; right: 0; top: 0; } } /* Figma: the 900 px head runs under the pill column */
-  .rw-meta { display: grid; justify-items: end; gap: 14px; padding-top: 24px; }
+  .rw-meta { display: grid; justify-items: end; gap: 18px; padding-top: 24px; }
   .rw-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 72px; align-items: start; }
   .rw-col { position: relative; display: grid; gap: 36px; }
   .rw-col.c1 { padding-top: 40px; } .rw-col.c2 { padding-top: 16px; }
-  .roll { position: absolute; left: calc(50% - 170px); top: calc(100% + 6px); width: 340px; height: 300px; padding: 8px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-3); transform: rotate(4deg); z-index: 1; }
-  .roll-ph { position: relative; height: 284px; overflow: hidden; border-radius: 14px; }
-  .roll :global(.roll-cap) { position: absolute; left: 20px; top: 244px; }
+  /* Figma 427:3382: 306 x 270 white card (7 px mat, radius 18, sh-3 at 0.9 scale), tilted 4deg, under the middle column. */
+  .roll { position: absolute; left: 58px; top: calc(100% + 4px); width: 306px; height: 270px; padding: 7px; border-radius: 18px; background: var(--white); box-shadow: 0 25px 50px rgba(17,16,50,.22); transform: rotate(4deg); z-index: 1; }
+  .roll-ph { position: relative; height: 256px; overflow: hidden; border-radius: 12.6px; }
+  .roll :global(.roll-cap) { position: absolute; left: 18px; top: 220px; padding: 7px 11px; border-radius: 9px; font-size: 11.7px; line-height: 18px; }
   .rw-dots { display: none; }
   .roll-m { display: none; }
-  .rw-cta { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 44px; padding-bottom: 88px; pointer-events: none; }
+  .rw-cta { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; padding-bottom: 188px; pointer-events: none; } /* Figma: section 1450 tall, the roll ends 48 px above it */
   .rw-cta > div { display: grid; gap: 14px; justify-items: start; pointer-events: auto; }
   .ct-l { grid-column: 1; } .ct-r { grid-column: 3; }
   .ct-t { font-weight: 700; font-size: 20px; line-height: 26px; }
-  .rw::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(rgba(232,243,248,0), var(--tint)); pointer-events: none; z-index: 2; }
   @media (max-width: 1199px) {
     .rw-head { display: grid; } .rw-meta { justify-items: start; padding-top: 0; }
   }
   @media (max-width: 1023px) {
-    .rw { padding-top: 64px; }
-    .rw::after { display: none; }
+    .rw { padding: 64px 0; } /* bottom padding, not a roll margin: a margin collapses out of the section */
     .rw-cols { display: flex; gap: 16px; margin: 32px calc(-1 * var(--gutter)) 0; padding: 30px var(--gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; align-items: flex-start; }
     .rw-cols::-webkit-scrollbar { display: none; }
     .rw-col { display: contents; }
     .rw-col.c1, .rw-col.c2 { padding: 0; }
     .rw-cell { flex: 0 0 min(310px, 80vw); scroll-snap-align: start; }
     .roll { display: none; }
-    .roll.roll-m { display: block; position: relative; left: auto; top: auto; width: min(310px, 100%); height: 206px; margin: 0 auto 64px; }
+    .roll.roll-m { display: block; position: relative; left: auto; top: auto; width: min(310px, 100%); height: 206px; margin: 0 auto; }
     .rw-head :global(.rw-all), .rw :global(.rw-all) { display: none; }
     .roll-m .roll-ph { height: 190px; }
     .roll-m :global(.roll-cap) { top: auto; bottom: 18px; left: 16px; font-size: 12px; padding: 6px 10px; }
@@ -88,5 +87,14 @@ import { SITE } from '../../data/site';
     .ct-t { display: none; }
     .rw-cta > div { justify-items: stretch; } .ct-r { grid-column: 1; }
     .rw-cta :global(.btn) { width: 100%; }
+  }
+  /* Figma mobile 426:4869: pill 16 under the heading, cards 40 under the pill, roll 25 under the buttons, 52 above the edge. */
+  @media (max-width: 767px) {
+    .rw-head { gap: 16px; }
+    .rw :global(.rw-sh .h2) { line-height: 31px; }
+    .rw-cols { margin-top: 10px; }
+    .rw-dots { margin-top: 20px; }
+    .rw-cta { margin-top: 26px; padding-bottom: 36px; }
+    .rw { padding-bottom: 52px; }
   }
 </style>

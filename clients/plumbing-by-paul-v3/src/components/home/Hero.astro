@@ -35,10 +35,10 @@ import { SITE } from '../../data/site';
       <ProofChips v="white" scroll class="hero-chips" />
     </div>
     <div class="hero-media">
-      <div class="hf frame-3" data-t="4" data-fx="frame" data-parallax-wrap>
-        <Img name="hero-01-family-house-yard-signs-truck" alt="Paul, Alycia and their son in front of a St. Petersburg home, with Plumbing By Paul yard signs and the wrapped truck" sizes="(min-width: 1440px) 572px, (min-width: 1024px) 40vw, calc(100vw - 40px)" focus="100% 60%" priority widths={[400, 600, 800, 1000, 1200, 1500]} data-parallax="0.06" />
-        <Caption class="hf-cap">Paul, Alycia and their son.<span class="cap-d"> St. Petersburg.</span></Caption>
+      <div class="hf frame frame-3" data-t="4" data-fx="frame">
+        <Img name="hero-01-family-house-yard-signs-truck" alt="Paul, Alycia and their son in front of a St. Petersburg home, with Plumbing By Paul yard signs and the wrapped truck" sizes="(min-width: 1440px) 715px, (min-width: 1024px) 50vw, calc(100vw - 40px)" focus="100% 60%" priority widths={[400, 600, 800, 1000, 1300, 1600]} />
       </div>
+      <Caption class="hf-cap" data-t="5" data-fx="pop">Paul, Alycia and their son.<span class="cap-d"> St. Petersburg.</span></Caption>
       <div class="sn snap" data-t="4" data-fx="toss">
         <Img name="service-tech-kitchen-sink-smiling" alt="A Plumbing By Paul tech smiling while working under a sink" sizes="(min-width: 1024px) 206px, 124px" focus="70% 45%" widths={[260, 420, 620]} />
       </div>
@@ -51,24 +51,25 @@ import { SITE } from '../../data/site';
   <Swoosh class="hero-sw" below="#FFFFFF" />
 </section>
 <style>
-  .hero { position: relative; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 60px 0 76px; overflow: clip; }
+  .hero { position: relative; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 60px 0 80px; overflow: clip; }
   .hero :global(.fl-m) { display: none; }
   .hero-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 590fr) minmax(0, 572fr); column-gap: 38px; }
   .hero-copy { display: grid; justify-items: start; align-content: start; }
   .hero-copy :global(.eyebrow) { margin-top: 28px; }
-  .display { margin-top: 18px; font-size: var(--fz-display); line-height: 1.0667; letter-spacing: -0.025em; }
+  .display { margin-top: 14px; font-size: var(--fz-display); line-height: 1.0667; letter-spacing: -0.025em; }
   .hl { display: block; }
   .hl.l2 { color: var(--blue); }
   .ul-wrap { position: relative; display: inline-block; }
   .ul-wrap :global(.ul) { position: absolute; left: 2px; right: -6px; bottom: -8px; width: calc(100% + 4px); }
-  .hero-lead { margin-top: 26px; max-width: 548px; font-size: var(--fz-lead); line-height: 1.667; }
-  .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .hero-lead { margin-top: 20px; max-width: 548px; font-size: var(--fz-lead); line-height: 1.667; }
+  .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
   .hero-btns :global(.btn-sec) { padding: 0 28px; }
   .hero-copy :global(.hero-chips) { margin-top: 24px; max-width: 590px; }
   .hero-media { position: relative; margin-top: 4px; }
-  .hf { position: relative; aspect-ratio: 572 / 476; border-radius: var(--r-2xl); }
-  .hf :global(img) { transform: scale(1.06); }
-  .hf :global(.hf-cap) { position: absolute; left: 24px; bottom: 20px; z-index: 2; }
+  /* Figma hero frame: radius 40, shadow sh-3, no white border (the white border is the snapshot's). */
+  .hf { position: relative; overflow: hidden; isolation: isolate; aspect-ratio: 572 / 476; border-radius: var(--r-2xl); box-shadow: var(--sh-3); } /* the frame clips its photo (MOTION.md: no transforms on photos) */
+  /* the caption plate straddles the photo's bottom edge (Figma 427:2487: 8 px below it), so it sits outside the clipped frame */
+  .hero-media :global(.hf-cap) { position: absolute; left: 24px; top: 448px; z-index: 2; }
   .sn { position: absolute; right: -45px; top: 371px; width: 206px; height: 250px; transform: rotate(5deg); z-index: 3; }
   .bob-chip { position: absolute; right: 0; top: -24px; z-index: 3; display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; border-radius: 14px; background: var(--white); box-shadow: var(--sh-2); color: var(--blue); }
   .bob-chip b { display: block; font-weight: 700; font-size: 13px; line-height: 16px; color: var(--navy); }
@@ -77,23 +78,29 @@ import { SITE } from '../../data/site';
   .hero :global(.hero-sw) { position: absolute; left: 0; bottom: 0; z-index: 1; }
   @media (max-width: 1279px) and (min-width: 1024px) { .sn { right: -12px; width: 180px; height: 218px; top: auto; bottom: -96px; } }
   @media (max-width: 1023px) {
-    .hero { padding: 44px 0 116px; }
+    .hero { padding: 44px 0 110px; }
+    /* Figma mobile pill 426:4293: 281 x 36 (G 16, 4.9 at 16, stars 12, 13 px label) */
+    .hero-copy :global(.rpill) { height: 36px; padding: 0 12px; gap: 8px; }
+    .hero-copy :global(.rpill .v) { font-size: 16px; }
+    .hero-copy :global(.rpill .c) { font-size: 13px; }
+    .hero-copy :global(.rpill .stars) { --star-size: 12px; gap: 1px; }
+    .hero-copy :global(.rpill > svg) { width: 16px; height: 16px; }
     .hero :global(.fl-d) { display: none; } .hero :global(.fl-m) { display: block; }
     .hero-in { grid-template-columns: 1fr; }
     .hero-copy { display: contents; }
     .hero-copy > :global(*) { justify-self: start; }
     .hero-copy :global(.eyebrow) { margin-top: 20px; }
-    .display { margin-top: 12px; }
+    .display { margin-top: 10px; line-height: 1.1; }
     .ul-wrap :global(.ul) { bottom: -6px; }
-    .hero-lead { margin-top: 20px; }
+    .hero-lead { margin-top: 18px; line-height: 26px; }
     .hero-btns { display: grid; width: 100%; gap: 10px; margin-top: 22px; }
     .hero-btns :global(.btn) { width: 100%; }
     .hero-btns :global(.btn-sec) { min-height: 56px; }
-    .hero-media { margin-top: 48px; }
+    .hero-media { margin-top: 34px; }
     .hf { aspect-ratio: 350 / 300; border-radius: var(--r-xl); }
-    .hf :global(.hf-cap) { left: 10px; bottom: 22px; font-size: 12px; line-height: 18px; padding: 6px 10px; }
+    .hero-media :global(.hf-cap) { left: 10px; top: 282px; } /* straddles the photo's bottom edge, as on desktop */
     .cap-d { display: none; }
-    .sn { right: -2px; top: auto; bottom: -46px; width: 124px; height: 150px; border-radius: 16px; box-shadow: 0 0 0 6px var(--white), var(--sh-3); }
+    .sn { right: -18px; top: auto; bottom: -36px; width: 124px; height: 150px; border-radius: 16px; box-shadow: 0 0 0 6px var(--white), var(--sh-3); }
     .bob-chip { left: 12px; right: auto; top: -14px; height: 38px; padding: 0 10px; border-radius: 12px; gap: 6px; }
     .bob-chip :global(svg) { width: 16px; height: 16px; }
     .bob-chip b { display: inline; font-size: 12px; } .bc-years { display: none; } .bc-m { display: inline; font-family: var(--f-sans); font-weight: 700; font-size: 12px; letter-spacing: 0; color: var(--navy); }

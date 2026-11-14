@@ -34,7 +34,8 @@ const { idx, q, a1, a2, tip, open = false, name } = Astro.props;
   .faq[open] .pm :global(.i-minus) { opacity: 1; transform: none; }
   summary:hover .pm { transform: scale(1.08); }
   .acc-body { overflow: hidden; }
-  .ans { display: grid; gap: 14px; padding: 0 28px 24px 80px; font-size: 16px; line-height: 27px; color: var(--navy); }
+  .faq[open] summary { padding-bottom: 12px; }
+  .ans { display: grid; gap: 10px; padding: 0 28px 24px 80px; font-size: 16px; line-height: 27px; color: var(--navy); } /* Figma 441:3635 */
   .ans strong { font-weight: 600; }
   .tip { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--white); box-shadow: var(--sh-1); }
   .tip > span { display: grid; }

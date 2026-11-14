@@ -25,8 +25,8 @@ const items = [
             <div class="btl-card">
               <p class="num btl-y">{it.y}</p>
               <p class="btl-t"><b>{it.b}</b>{it.r}</p>
-              {it.badge && <span class="btl-badge"><Img name="award-best-of-the-bay-2026-winner-badge" alt="Best of the Bay 2026 winner badge, Best Plumbing Company" sizes="145px" widths={[160, 300]} fit="contain" /></span>}
-              {it.today && <figure class="btl-snap snap"><Img name="hero-04-crew-new-jerseys-box-truck" alt="The crew in their new jerseys in front of the box truck" sizes="(min-width: 1024px) 182px, 40vw" widths={[200, 400]} focus="50% 55%" /></figure>}
+              {it.badge && <span class="btl-badge"><Img name="award-best-of-the-bay-2026-winner-badge" alt="Best of the Bay 2026 winner badge, Best Plumbing Company" sizes="145px" widths={[160, 300, 540]} fit="contain" /></span>}
+              {it.today && <figure class="btl-snap snap"><Img name="hero-04-crew-new-jerseys-box-truck" alt="The crew in their new jerseys in front of the box truck" sizes="(min-width: 1024px) 182px, 40vw" widths={[200, 400, 720]} focus="50% 55%" /></figure>}
             </div>
           </li>
         ))}
@@ -46,14 +46,14 @@ const items = [
   .btl-node::before { content: ''; position: absolute; left: 4px; width: 14px; height: 56px; border-radius: 3px; background: var(--sky); box-shadow: inset 0 0 0 2px var(--navy); z-index: -1; }
   .up .btl-node::before { bottom: 11px; }
   .down .btl-node::before { top: 11px; }
-  .btl-card { position: absolute; left: -136px; width: 272px; padding: 18px 20px 22px; border-radius: 16px; background: var(--white); box-shadow: var(--sh-2); }
+  .btl-card { position: absolute; left: -136px; width: 272px; padding: 18px 22px; border-radius: 20px; background: var(--white); box-shadow: 0 12px 28px rgba(17, 16, 50, .14); }
   .up .btl-card { bottom: calc(100% - 194px); }
   .down .btl-card { top: 306px; }
   .btl-i:first-child .btl-card { left: -100px; width: 288px; }
   .today .btl-card { left: -188px; width: 288px; min-height: 245px; background: var(--navy); color: var(--white); }
-  .btl-y { font-size: 26px; line-height: 1; color: var(--press); }
+  .btl-y { font-size: 30px; line-height: 34px; color: var(--blue); }
   .today .btl-y { color: var(--sky); }
-  .btl-t { margin-top: 12px; font-size: 14px; line-height: 21px; color: var(--slate); }
+  .btl-t { margin-top: 6px; font-size: 15px; line-height: 23px; color: var(--slate); }
   .btl-t b { font-weight: 700; color: var(--navy); }
   .today .btl-t { color: var(--soft); } .today .btl-t b { color: var(--white); }
   .btl-badge { position: absolute; right: -126px; top: -78px; width: 145px; height: 145px; padding: 10px; border-radius: 18px; background: var(--white); box-shadow: var(--sh-3); transform: rotate(6deg); }
@@ -71,7 +71,8 @@ const items = [
     .btl-node::before { display: none; }
     .btl-card, .up .btl-card, .down .btl-card, .btl-i:first-child .btl-card, .today .btl-card { position: relative; left: 0; top: auto; bottom: auto !important; width: auto; min-height: 0; padding: 16px 18px 18px; }
     .today .btl-card { padding-bottom: 120px; }
-    .btl-y { font-size: 22px; }
+    .btl-y { font-size: 22px; color: var(--press); }
+    .today .btl-y { color: var(--sky); }
     .btl-t { margin-top: 8px; font-size: 13px; line-height: 20px; }
     .btl-i:has(.btl-badge) .btl-t { padding-right: 76px; }
     .btl-badge { right: 8px; top: 10px; width: 76px; height: 76px; padding: 5px; border-radius: 12px; }

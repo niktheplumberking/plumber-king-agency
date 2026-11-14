@@ -27,44 +27,55 @@ const id = sid(slug, 'compare');
     {c.strip && (
       <a href={c.strip.href} class="cp-strip" data-t="3">
         <span class="cp-sw"><Icon name="search" size={20} /></span>
-        <span class="cp-st">{c.strip.text} <b>{c.strip.link}</b></span>
+        <span class="cp-st">{c.strip.text} <b>{c.strip.link}<Icon name="arrow" size={18} class="cp-ia" /></b></span>
         <ArrowDot d={40} class="cp-ad" />
       </a>
     )}
   </div>
 </section>
 <style>
-  .cp { position: relative; background: var(--white); padding: 104px 0; }
+  /* Figma 03 W4 (439:7835): head at 96, 588 x 304 cards at 292, the guide strip 40 below; the type cards of W5 rise 40 px
+     into the 170 px foot */
+  .cp { position: relative; background: var(--white); padding: 96px 0 170px; }
   .cp-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 64px; align-items: stretch; }
-  .cp-card { display: grid; align-content: start; gap: 28px; padding: 34px 36px 40px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+  .cp-card { display: grid; align-content: start; gap: 32px; min-height: 304px; padding: 36px 36px 40px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
   .cp-card.r { box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
   .cp-top { display: flex; align-items: center; gap: 16px; }
   .cp-w { width: 56px; height: 56px; }
   .cp-w.dk { background: var(--navy); color: var(--white); }
   .cp-l { color: var(--press); font-size: 11px; }
   .cp-t { margin-top: 2px; font-weight: 700; font-size: 26px; line-height: 32px; }
-  .cp-list { display: grid; gap: 14px; margin: 0; padding: 0; }
-  .cp-list li { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 16px; line-height: 24px; color: var(--navy); }
+  .cp-list { display: grid; gap: 12px; margin: 0; padding: 0; }
+  .cp-list li { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 16px; line-height: 26px; color: var(--navy); }
   .ck { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--tint); color: var(--blue); }
   .cp-or { position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 30px; line-height: 1; box-shadow: 0 0 0 5px var(--white), var(--sh-2); padding-bottom: 6px; }
   .cp-strip { display: flex; align-items: center; gap: 16px; margin-top: 40px; padding: 14px 28px 14px 28px; border-radius: var(--r-lg); background: var(--tint); color: var(--navy); font-weight: 500; font-size: 17px; line-height: 26px; transition: background var(--dur-2); }
   .cp-strip:hover { background: #DCEDF5; }
   .cp-sw { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--white); color: var(--blue); }
   .cp-st { flex: 1; }
+  .cp-st :global(.cp-ia) { display: none; }
   .cp-st b { color: var(--press); font-weight: 700; }
   .cp-strip:hover b { text-decoration: underline; text-underline-offset: 4px; }
   @media (max-width: 1023px) {
     .cp { padding: 64px 0; }
-    .cp :global(.shead) { justify-items: start; text-align: left; }
-    .cp-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; margin-top: 36px; }
-    .cp-card { gap: 20px; padding: 24px 22px 28px; border-radius: 20px; }
+    .cp-card { min-height: 0; }
+    .cp :global(.shead.center) { justify-items: start; text-align: left; }
+    .cp-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; margin-top: 28px; }
+    .cp-card { gap: 10px; padding: 23px; border-radius: 20px; }
+    .cp-list { gap: 10px; }
     .cp-w { width: 46px; height: 46px; }
     .cp-l { display: none; }
-    .cp-t { font-size: 21px; line-height: 26px; }
-    .cp-list li { font-size: 15px; line-height: 22px; align-items: flex-start; }
+    .cp-t { font-size: 21px; line-height: 26px; letter-spacing: -0.015em; }
+    .cp-list li { gap: 12px; font-size: 15px; line-height: 26px; align-items: flex-start; }
+    .cp-top { gap: 12px; }
     .cp-or { width: 60px; height: 60px; margin: -30px 0 0 -30px; font-size: 26px; }
-    .cp-strip { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 44px; padding: 20px 18px; font-size: 15px; line-height: 23px; }
+    .cp-strip { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 40px; padding: 18px; font-size: 15px; line-height: 23px; }
     .cp-sw { display: none; }
     .cp-strip :global(.cp-ad) { width: 32px; height: 32px; }
+    /* Figma 03 mobile W4: a plain line, then the underlined guide link with a small arrow (no arrow disc) */
+    .cp-strip { grid-template-columns: minmax(0, 1fr); color: var(--slate); line-height: 20px; }
+    .cp-strip :global(.cp-ad) { display: none; }
+    .cp-st b { display: block; margin-top: 6px; font-size: 16px; line-height: 22px; text-decoration: underline; text-underline-offset: 4px; }
+    .cp-st :global(.cp-ia) { display: inline-block; margin-left: 8px; vertical-align: -3px; }
   }
 </style>

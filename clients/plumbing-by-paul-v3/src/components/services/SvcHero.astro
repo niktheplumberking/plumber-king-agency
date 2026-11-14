@@ -66,14 +66,14 @@ const [p0, p1, p2] = h.photos;
           </div>
         )}
       </div>
-      <Seal d={64} deg={-6} class="c-seal" />
+      <Seal d={66} deg={-6} class="c-seal" />
     </div>
   </div>
 </section>
 ) : (
 <section class="sh sh-b" aria-labelledby={id} data-m-section data-m-hero>
   <div class="b-ph" data-t="4" data-fx="frame">
-    <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 50vw, 100vw" priority widths={[480, 720, 960, 1280, 1600]} data-parallax="0.05" />
+    <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 50vw, 100vw" priority widths={[480, 720, 960, 1280, 1600]} />
     {h.tag && <PhotoTag class="b-tag">{h.tag}</PhotoTag>}
   </div>
   <div class="wrap sh-in">
@@ -93,7 +93,7 @@ const [p0, p1, p2] = h.photos;
     </div>
     {h.mini && (
       <figure class="b-mini" data-t="5" data-fx="pop">
-        <div class="bm-pats" aria-label={`Fixed by ${h.mini.patches.join(' and ')}`}>
+        <div class="bm-pats" role="group" aria-label={`Fixed by ${h.mini.patches.join(' and ')}`}>
           {h.mini.patches.slice(0, 2).map((n, i) => <Patch name={n} size="mini" label="" deg={i % 2 ? 5 : -4} t={false} />)}
         </div>
         <Stars size={14} />
@@ -102,7 +102,7 @@ const [p0, p1, p2] = h.photos;
       </figure>
     )}
   </div>
-  <Swoosh class="b-sw" below="#E8F3F8" />
+  <Swoosh class="b-sw" below="#E8F3F8" h={110} />
 </section>
 )}
 <style>
@@ -123,30 +123,42 @@ const [p0, p1, p2] = h.photos;
   .sh-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; max-width: 520px; }
 
   /* ---- layout a ---- */
-  .sh-a { background: linear-gradient(180deg, var(--mist), var(--white)); padding: 56px 0 56px; }
+  /* Figma 03 W1 (439:7528): H1 50/56, collage = tall tile 300 x 512 + two 236 x 228 tiles on a sky block, 6 px white
+     border inside each tile, the rating pill on the tall tile's foot; the job ticket of W2 rises 56 px into the hero. */
+  .sh-a { background: linear-gradient(180deg, var(--mist), var(--white)); padding: 56px 0 84px; }
   .sh-a :global(.fl-m) { display: none; }
-  .sh-a .sh-h1 { font-size: clamp(2.125rem, 1.8vw + 30px, 3.5rem); } /* Figma 03: 56 px, three lines */
-  .sh-a .sh-in { grid-template-columns: minmax(0, 1fr) 572px; column-gap: 40px; }
-  .sh-col { position: relative; height: 540px; margin-top: -4px; }
-  .c-big { position: absolute; left: 0; top: 0; width: 302px; height: 500px; border-radius: var(--r-xl); }
-  .c-big :global(.c-tag) { position: absolute; left: 22px; top: 22px; z-index: 2; }
-  .c-pill { position: absolute; left: -6px; top: 474px; z-index: 3; }
-  .c-side { position: absolute; left: 324px; top: 30px; width: 240px; height: 486px; }
-  .c-panel { position: absolute; left: 12px; right: -22px; top: 0; bottom: -8px; border-radius: var(--r-xl); background: var(--soft); }
-  .c-sm { position: absolute; left: 0; width: 240px; height: 228px; border-radius: 22px; }
-  .c1 { top: 8px; } .c2 { top: 256px; }
-  .c2 :global(.c-cap) { position: absolute; left: 14px; bottom: 6px; z-index: 2; }
-  .sh-col :global(.c-seal) { position: absolute; left: 286px; top: 244px; z-index: 4; }
+  .sh-a .sh-copy :global(.eyebrow) { margin-top: 20px; }
+  .sh-a .sh-h1 { font-size: clamp(2.125rem, 1.43vw + 29.4px, 3.125rem); line-height: 1.12; letter-spacing: -0.015em; } /* 50/56 at 1440 */
+  .sh-a .sh-lead { margin-top: 26px; }
+  .sh-a .sh-rows { gap: 8px; margin-top: 18px; }
+  .sh-a .sh-rows li { gap: 12px; line-height: 26px; }
+  .sh-a .sh-rows li :global(svg) { box-sizing: border-box; width: 26px; height: 26px; padding: 6px; border-radius: 50%; background: var(--white); }
+  .sh-a .sh-btns { margin-top: 20px; }
+  .sh-a .sh-in { grid-template-columns: minmax(0, 1fr) 584px; column-gap: 56px; }
+  .sh-col { position: relative; height: 532px; }
+  .sh-a .frame { box-shadow: 0 12px 28px rgba(17, 16, 50, .14); }
+  .sh-a .frame::after { content: ''; position: absolute; inset: 0; z-index: 1; border: 6px solid var(--white); border-radius: inherit; pointer-events: none; }
+  .c-big { position: absolute; left: 12px; top: 0; width: 300px; height: 512px; border-radius: var(--r-xl); }
+  .sh-a .c-big { box-shadow: 0 28px 56px rgba(17, 16, 50, .22); }
+  .c-big :global(.c-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .c-pill { position: absolute; left: 0; top: 492px; z-index: 3; }
+  .c-side { position: absolute; left: 336px; top: 32px; width: 236px; height: 480px; }
+  .c-panel { position: absolute; left: 24px; right: -24px; top: -8px; height: 500px; border-radius: var(--r-xl); background: var(--soft); }
+  .c-sm { position: absolute; left: 0; width: 236px; height: 228px; border-radius: 24px; }
+  .c1 { top: 0; } .c2 { top: 252px; }
+  .c2 :global(.c-cap) { position: absolute; left: 16px; bottom: -8px; z-index: 2; }
+  .c-sm { overflow: visible; } .c-sm :global(img) { border-radius: inherit; }
+  .sh-col :global(.c-seal) { position: absolute; left: 291px; top: 248px; z-index: 4; }
 
   /* ---- layout b ---- */
-  .sh-b { background: var(--white); padding: 56px 0 150px; }
-  .b-ph { position: absolute; top: 0; right: 0; bottom: 70px; width: 50%; overflow: hidden; }
+  .sh-b { background: var(--white); padding: 58px 0 108px; } /* Figma 04 D1 (443:11626): 680 tall, photo full height */
+  .sh-b .sh-btns { margin-top: 26px; }
+  .b-ph { position: absolute; top: 0; right: 0; bottom: 0; width: 50%; overflow: hidden; }
   .b-ph::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, var(--white) 0%, rgba(255,255,255,.55) 12%, rgba(255,255,255,0) 32%); }
-  .b-ph :global(img) { transform: scale(1.06); }
   .b-ph :global(.b-tag) { position: absolute; right: 44px; top: 132px; z-index: 2; }
   .sh-b .sh-in { grid-template-columns: minmax(0, 560px) 1fr; }
   .sh-b .sh-lead { max-width: 520px; }
-  .b-mini { position: absolute; z-index: 3; left: 548px; top: 360px; width: 330px; margin: 0; padding: 22px 20px 18px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-3); display: grid; gap: 8px; }
+  .b-mini { position: absolute; z-index: 3; left: 548px; top: 302px; width: 330px; margin: 0; padding: 22px 20px 18px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-3); display: grid; gap: 8px; }
   .bm-pats { position: absolute; right: 0; top: -18px; display: flex; }
   .bm-pats :global(.patch + .patch) { margin-left: -10px; }
   .b-mini blockquote { margin: 0; font-weight: 600; font-size: 15px; line-height: 23px; color: var(--navy); }
@@ -155,8 +167,9 @@ const [p0, p1, p2] = h.photos;
 
   @media (max-width: 1199px) and (min-width: 1024px) {
     .sh-a .sh-in { grid-template-columns: minmax(0, 1fr) 470px; }
-    .c-big { width: 250px; height: 440px; } .c-pill { top: 414px; }
+    .c-big { left: 0; width: 250px; height: 440px; } .c-pill { top: 414px; }
     .c-side { left: 268px; width: 200px; } .c-sm { width: 200px; height: 200px; } .c2 { top: 222px; }
+    .c-panel { height: 430px; right: -12px; }
     .sh-col :global(.c-seal) { left: 230px; top: 206px; }
     .b-mini { left: auto; right: 40px; top: auto; bottom: 120px; }
   }
@@ -184,12 +197,35 @@ const [p0, p1, p2] = h.photos;
     .c2 :global(.c-cap) { display: none; }
     .sh-col :global(.c-seal) { --d: 48px !important; left: calc(50% - 24px); top: auto; bottom: 112px; }
 
+    /* Figma 03 mobile W1 (443:5729): H1 38/42, rows 15/26 with 6 gap, tall tile 350 x 260, pill 18 px over its foot,
+       two 167 x 140 tiles 16 below the pill, 5 px inside border, seal 52 on the tiles' top edge. */
+    .sh-a { padding: 36px 0 150px; }
+    .sh-a .sh-copy :global(.eyebrow) { margin-top: 12px; }
+    .sh-a .sh-h1 { margin-top: 14px; font-size: 38px; line-height: 42px; letter-spacing: -0.015em; text-wrap: wrap; }
+    .sh-a .sh-lead { margin-top: 28px; }
+    .sh-a .sh-rows { gap: 6px; margin-top: 18px; }
+    .sh-a .sh-rows li { font-size: 15px; }
+    .sh-a .sh-btns { margin-top: 22px; }
+    .sh-a .sh-col { gap: 0 16px; }
+    .sh-a .c-big { left: 0; height: 260px; border-radius: 24px; }
+    .sh-a .frame::after { border-width: 5px; }
+    .sh-a .c-pill { margin-top: -18px; }
+    .sh-a .c-sm { margin-top: 12px; border-radius: 18px; } /* the pill box is 40 tall (36 in Figma) */
+    .sh-a .sh-col :global(.c-seal) { --d: 52px !important; left: calc(50% - 26px); bottom: 111px; }
+
     .sh-b { padding: 0 0 72px; }
+    .sh-b .sh-btns { margin-top: 22px; }
+    /* Figma 04 mobile D1 (443:12768): crumbs 22 under the photo, H1 36/41, lead 16 under it, 84 to the ticket */
+    .sh-b { padding-bottom: 84px; }
+    .sh-b .sh-h1 { font-size: 36px; line-height: 41px; }
+    .sh-b .sh-lead { margin-top: 16px; }
+    .sh-b .sh-chips { margin-top: 20px; }
+    .sh-b .b-mini { top: 176px; }
     .b-ph { position: relative; width: 100%; height: 330px; bottom: auto; }
     .b-ph::before { background: linear-gradient(0deg, rgba(255,255,255,.0) 0%, rgba(255,255,255,0) 100%); }
     .b-ph :global(.b-tag) { right: auto; left: 16px; top: 16px; }
     .sh-b .sh-in { grid-template-columns: minmax(0, 1fr); position: static; }
-    .sh-b .sh-copy { padding-top: 28px; }
+    .sh-b .sh-copy { padding-top: 8px; }
     .b-mini { left: auto; right: var(--gutter); top: 186px; width: min(250px, 66vw); padding: 16px 14px 14px; gap: 6px; }
     .b-mini blockquote { font-size: 13px; line-height: 19px; }
     .b-mini figcaption { font-size: 11px; }

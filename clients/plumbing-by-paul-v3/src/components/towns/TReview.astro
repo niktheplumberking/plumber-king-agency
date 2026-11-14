@@ -49,7 +49,7 @@ const paras = q ? q.paras.map((p) => esc(p).replace(esc(q.hl), `<mark>${esc(q.hl
 <style>
   .tr { position: relative; background: var(--navy); color: var(--white); padding: 112px 0 96px; overflow: visible; }
   .tr :global(.tr-fl) { position: absolute; inset: 0; overflow: hidden; }
-  .tr-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 440fr) minmax(0, 620fr); column-gap: 140px; align-items: start; }
+  .tr-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 440fr) minmax(0, 620fr); column-gap: 100px; padding-right: 40px; align-items: start; }
   .tr-pill { margin-top: 28px; }
   .tr-copy :global(.tr-all) { margin-top: 24px; }
   .tr-side { position: relative; margin-top: -152px; }
@@ -73,7 +73,7 @@ const paras = q ? q.paras.map((p) => esc(p).replace(esc(q.hl), `<mark>${esc(q.hl
   .tr-note :global(svg) { flex: none; margin-top: 3px; }
   @media (max-width: 1023px) {
     .tr { padding: 56px 0 56px; }
-    .tr-in { display: flex; flex-direction: column; }
+    .tr-in { display: flex; flex-direction: column; padding-right: 0; }
     .tr-copy { display: contents; }
     .tr-pill { order: 3; margin-top: 0; display: none; }
     .tr-copy :global(.tr-all) { order: 4; margin-top: 40px; }

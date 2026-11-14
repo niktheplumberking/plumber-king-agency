@@ -11,11 +11,11 @@ const { r, v = 'white', class: cls, patches = true, t = '4', style } = Astro.pro
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 let q = esc(r.quote);
 for (const h of r.hl ?? []) q = q.replace(esc(h), `<mark>${esc(h)}</mark>`);
-const pats = (r.fixedBy ?? []).slice(0, 2);
+const pats = (r.fixedBy ?? []).slice(0, 3);
 ---
 <figure class:list={['rcard', v, cls, pats.length && patches && 'has-patch']} data-t={t === false ? undefined : t} style={style}>
   {patches && pats.length > 0 && (
-    <div class="pats" aria-label={`Fixed by ${pats.join(' and ')}`}>
+    <div class="pats" role="group" aria-label={`Fixed by ${pats.join(' and ')}`}>
       {pats.map((n, i) => <Patch name={n} dark={v === 'navy'} deg={i % 2 ? 4 : -3} style={i % 2 ? 'margin-top:-6px' : ''} />)}
     </div>
   )}
@@ -56,5 +56,5 @@ const pats = (r.fixedBy ?? []).slice(0, 2);
   .m { font-weight: 500; font-size: 12px; line-height: 18px; color: var(--slate-2); }
   .navy .m { color: var(--soft); }
   .tint .m { color: var(--slate); } /* slate-2 on tint is 4.4:1; slate passes AA */
-  @media (max-width: 767px) { .rcard { padding: 22px; } .rcard.has-patch { padding-top: 30px; } .q { font-size: 15px; line-height: 25px; } }
+  @media (max-width: 767px) { .rcard, .rcard.has-patch { padding: 23px; } .q { font-size: 15px; line-height: 24px; } .tags li { padding: 5px 8px; } } /* Figma mobile 426:4892 */
 </style>

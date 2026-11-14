@@ -17,7 +17,7 @@ const a = SITE.address;
   <div class="wrap as-in">
     <div class="as-media">
       <figure class="as-ph frame" data-t="4" data-fx="frame">
-        <Img name="shop-door-wrap" alt="The Plumbing By Paul shop door, wrapped with the logo and phone number" sizes="(min-width: 1024px) 362px, 70vw" widths={[360, 540, 760]} focus="50% 40%" />
+        <Img name="shop-door-wrap" alt="The Plumbing By Paul shop door, wrapped with the logo and phone number" sizes="(min-width: 1024px) 362px, 70vw" widths={[360, 540, 760, 1370]} focus="50% 40%" />
         <PhotoTag class="as-tag">5565 64th Way N</PhotoTag>
       </figure>
       <div class="as-tk" data-t="4" data-fx="rise">
@@ -61,6 +61,7 @@ const a = SITE.address;
   .as-tkb :global(.btn) { margin-bottom: 20px; }
   .as-stw { position: absolute; right: -46px; top: -62px; }
   .as-copy { padding-top: 39px; }
+  @media (min-width: 1024px) { .as-copy :global(.h2) { max-width: none; font-size: 40px; line-height: 46px; letter-spacing: -.01em; text-wrap: wrap; } .as-copy :global(.shead .lead) { margin-top: 8px; } }
   .as-cta { margin-top: 32px; }
   @media (max-width: 1199px) { .as-tk { left: 220px; } }
   @media (max-width: 1023px) {

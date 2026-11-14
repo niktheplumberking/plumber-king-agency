@@ -27,7 +27,7 @@ const cards = [
       {cards.map((c, i) => (
         <li class:list={['orv-c', c.dark && 'dark on-navy', `c${i}`]}>
           <figure>
-            <span class="orv-pw" aria-label={`Fixed by ${c.patch}`}><Patch name={c.patch} dark={c.dark} deg={i ? 4 : -4} t={false} /></span>
+            <span class="orv-pw" role="group" aria-label={`Fixed by ${c.patch}`}><Patch name={c.patch} dark={c.dark} deg={i ? 4 : -4} t={false} /></span>
             <Stars size={15} />
             <blockquote class="orv-q"><p set:html={c.q} /></blockquote>
             <ul role="list" class="orv-tags" aria-label="Service">{c.tags.map((t) => <li><Icon name="wrench" size={12} />{t}</li>)}</ul>

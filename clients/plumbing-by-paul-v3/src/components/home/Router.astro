@@ -65,11 +65,11 @@ const tiles = [
     .tile { height: 160px; padding: 14px 14px 0; border-radius: 18px; }
     .ti-ic { width: 42px; height: 42px; } .ti-ic :global(svg) { width: 22px; height: 22px; }
     .ti-n { right: 16px; top: 18px; font-size: 11px; }
-    .ti-t { margin-top: 10px; font-size: 15px; line-height: 19px; }
+    .ti-t { margin-top: 10px; min-height: 38px; font-size: 15px; line-height: 19px; } /* Figma: the description sits at 108 whether the title is one line or two */
     .ti-d { font-size: 12px; line-height: 17px; max-width: 118px; }
     .dd { display: none; } .dm { display: inline; }
     .tile :global(.ti-a) { --d: 34px !important; right: -6px; bottom: -6px; }
   }
   .router :global(.rt-all-m) { display: none; }
-  @media (max-width: 767px) { .router :global(.rt-all-m) { display: inline-flex; margin-top: 28px; } }
+  @media (max-width: 767px) { .router :global(.rt-all-m) { display: inline-flex; margin-top: 24px; } }
 </style>

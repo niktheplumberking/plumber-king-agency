@@ -31,28 +31,29 @@ const r: Review = { n: 5, name: 'Doriana Atchley', age: 'Edited 4 weeks ago', fu
   </div>
 </section>
 <style>
-  .rvr { position: relative; background: var(--tint); padding: 104px 0 112px; overflow: clip; }
+  .rvr { position: relative; background: var(--tint); padding: 104px 0 108px; overflow: clip; }
   .rvr-in { position: relative; display: grid; grid-template-columns: 600px minmax(0, 600px); justify-content: space-between; grid-template-rows: auto auto; }
   .rvr-media { position: relative; grid-row: 1 / span 2; width: 400px; height: 500px; }
   .sky-blk { position: absolute; inset: 24px 24px -24px -24px; border-radius: 28px; background: var(--sky); }
   .rvr-main { position: absolute; inset: 0; }
   /* The tilted snapshot stays inside the 600 px media column (its rotated box ends ~10 px before the copy column). */
-  .rvr-snap { position: absolute; left: 378px; top: 196px; width: 200px; height: 260px; transform: rotate(5deg); z-index: 2; }
+  .rvr-snap { position: absolute; left: 363px; top: 66px; width: 200px; height: 260px; transform: rotate(5deg); z-index: 2; } /* Figma bbox 472,162 222x276 */
   .rvr-copy { padding-top: 8px; }
   .rvr-p { max-width: 560px; margin-top: 20px; font-size: 17px; line-height: 29px; color: var(--slate); }
-  .rvr-card { position: relative; z-index: 3; grid-column: 1 / -1; width: 620px; margin: -170px 0 0 350px; }
+  .rvr-card { position: relative; z-index: 3; grid-column: 1 / -1; width: 620px; margin: -134px 0 0 350px; }
   .rvr-card :global(.rcard) { box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); }
   .rvr-card :global(.q) { font-size: 18px; line-height: 28px; }
-  .rvr-sc { position: absolute; right: -230px; bottom: -64px; font-size: 40px; line-height: 1; color: var(--blue); transform: rotate(-5deg); }
+  .rvr-sc { position: absolute; right: -200px; bottom: -50px; font-size: 40px; line-height: 1; color: var(--blue); transform: rotate(-5deg); }
   @media (max-width: 1279px) { .rvr-in { grid-template-columns: 520px minmax(0, 1fr); } .rvr-snap { left: 296px; } .rvr-card { margin-left: 260px; } .rvr-sc { right: -120px; } }
   @media (max-width: 1023px) {
-    .rvr { padding: 56px 0 64px; }
-    .rvr-in { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 32px; }
-    .rvr-media { grid-row: auto; width: calc(100% - 24px); height: auto; aspect-ratio: 300 / 340; margin-left: 12px; }
-    .sky-blk { inset: 14px 14px -14px -14px; }
-    .rvr-snap { left: auto; right: -18px; top: auto; bottom: -14px; width: 110px; height: 150px; }
+    /* Figma 441:8069: photo 290 x 360 on a sky block (-10 / +14), snapshot 128 x 170 at 5 deg over its lower right */
+    .rvr { padding: 64px 0 64px; }
+    .rvr-in { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 40px; }
+    .rvr-media { grid-row: auto; width: min(290px, 100% - 60px); height: 360px; margin-bottom: 16px; }
+    .sky-blk { inset: 14px 10px -14px -10px; }
+    .rvr-snap { left: auto; right: -75px; top: 196px; width: 128px; height: 170px; }
     .rvr-p { font-size: 16px; line-height: 26px; margin-top: 14px; }
-    .rvr-card { width: auto; margin: 8px 0 0; }
+    .rvr-card { width: auto; margin: 0; }
     .rvr-card :global(.q) { font-size: 15px; line-height: 25px; }
     .rvr-sc { display: none; }
   }

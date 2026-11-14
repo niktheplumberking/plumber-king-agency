@@ -57,7 +57,9 @@ const { idp = 'est', title = 'Get a free estimate', sub = 'Three quick things an
   .eup:focus-within { outline: 3px solid var(--blue); outline-offset: 2px; }
   .enote { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; font-size: 12px; color: var(--slate); }
   @media (max-width: 767px) {
-    .ecard { padding: 24px 20px; }
+    .ecard { gap: 14px; padding: 20px; } /* Figma mobile 426:5478: 20 px padding, 14 px rhythm, 52 px inputs, 64 px upload */
+    .ecard :global(.input) { min-height: 52px; height: 52px; }
+    .eup { min-height: 64px; }
     .erow { grid-template-columns: 1fr; }
     .et { font-size: 22px; line-height: 28px; }
   }

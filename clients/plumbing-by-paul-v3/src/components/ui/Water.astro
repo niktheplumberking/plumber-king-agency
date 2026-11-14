@@ -21,7 +21,7 @@ const wave = (y0: number, fill: string) => {
 <style>
   .water { position: absolute; left: 0; right: 0; height: 120px; overflow: hidden; pointer-events: none; }
   .w { position: absolute; top: 0; left: 0; width: calc(100% + 720px); height: 100%; background-repeat: repeat-x; background-size: 720px 100%; }
-  :global(html.motion) .w1 { animation: drift 11s linear infinite; }
-  :global(html.motion) .w2 { animation: drift 7.5s linear infinite reverse; }
+  :global(html.motion) .w1 { animation: drift 11s linear 2; /* two passes, then still (no endless loops) */ }
+  :global(html.motion) .w2 { animation: drift 7.5s linear 2 reverse; }
   @keyframes drift { to { transform: translateX(-720px); } }
 </style>

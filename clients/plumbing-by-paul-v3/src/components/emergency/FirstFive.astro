@@ -36,11 +36,11 @@ const FIRST_FIVE = [
   </div>
 </section>
 <style>
-  .ff { position: relative; background: var(--white); padding: 52px 0 112px; }
+  .ff { position: relative; background: var(--white); padding: 52px 0 112px; overflow-x: clip; }
   .ff-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
   .ff-head :global(.ff-link) { margin-bottom: 4px; }
   .ff-stage { position: relative; margin-top: 72px; }
-  .ff-pipe { position: absolute; left: calc(-1 * max(var(--gutter), (100vw - 1200px) / 2)); right: calc(-1 * max(var(--gutter), (100vw - 1200px) / 2)); top: 115px; height: 14px; border-radius: 7px; background: var(--navy); }
+  .ff-pipe { position: absolute; left: calc(-1 * max(var(--gutter), (var(--vw100) - 1200px) / 2)); right: calc(-1 * max(var(--gutter), (var(--vw100) - 1200px) / 2)); top: 115px; height: 14px; border-radius: 7px; background: var(--navy); }
   .ff-pipe span { position: absolute; inset: 2px; border-radius: 5px; background: var(--sky); }
   .ff-pipe span::after { content: ''; position: absolute; left: 4px; right: 4px; top: 2px; height: 2px; border-radius: 1px; background: rgba(255,255,255,.55); }
   .ff-list { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 0; padding: 0; }

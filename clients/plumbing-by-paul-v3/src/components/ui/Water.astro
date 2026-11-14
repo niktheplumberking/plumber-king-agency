@@ -1,0 +1,22 @@
+---
+// The waterline: two wave layers (soft behind, sky in front) that drift slowly (CSS, paused for reduced motion).
+interface Props { class?: string; amp?: number; }
+const { class: cls, amp = 14 } = Astro.props;
+const wl = 360, w = 2880, h = 120;
+const wave = (y0: number, ph: number) => {
+  let d = `M0 ${h} L0 ${y0}`; const half = wl / 2; let x = -ph, up = true; d += ` L${Math.max(0, x)} ${y0}`;
+  while (x < w) { d += ` Q${x + half / 2} ${y0 + (up ? -amp : amp)} ${x + half} ${y0}`; x += half; up = !up; }
+  return d + ` L${w} ${h}Z`;
+};
+---
+<div class:list={['water', cls]} aria-hidden="true" data-water>
+  <svg class="w1" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none"><path fill="#A9D3E4" d={wave(amp + 2, 90)} /></svg>
+  <svg class="w2" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none"><path fill="#61ADCB" d={wave(amp + 14, 0)} /></svg>
+</div>
+<style>
+  .water { position: absolute; left: 0; right: 0; height: 120px; overflow: hidden; pointer-events: none; }
+  .water svg { position: absolute; top: 0; left: 0; width: 200%; height: 100%; }
+  :global(html.motion) .w1 { animation: drift 22s linear infinite; }
+  :global(html.motion) .w2 { animation: drift 15s linear infinite reverse; }
+  @keyframes drift { to { transform: translateX(-50%); } }
+</style>

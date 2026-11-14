@@ -1,0 +1,59 @@
+---
+// C8 Neighborhoods (Figma 440:2977): framed photo on a tint offset block left; heading right; a cloud of neighborhood
+// chips (not links: there are no neighborhood pages) that overlaps the photo's right edge; an ask row with the phone.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const h = t.hoods;
+---
+<section class="th8" aria-labelledby="th8-h" data-m-section>
+  <div class="wrap th8-in">
+    <div class="th8-media">
+      <span class="th8-off" aria-hidden="true"></span>
+      <figure class="th8-frame frame frame-3" data-t="4" data-fx="frame">
+        <Img name={h.photo} alt={h.alt} focus={h.focus} sizes="(min-width: 1024px) 588px, calc(100vw - 40px)" widths={[400, 600, 900, 1200]} />
+        <figcaption><Caption class="th8-cap" small>{h.cap}</Caption></figcaption>
+      </figure>
+    </div>
+    <SectionHead eyebrow={h.eyebrow} l1={h.l1} l2={h.l2} id="th8-h" class="th8-head" />
+    <ul role="list" class="th8-chips" data-t="5" data-stagger aria-label={`Neighborhoods we work in around ${t.name}`}>
+      {h.chips.map((c) => <li><span class="th8-chip"><Icon name="pin" size={16} />{c}</span></li>)}
+    </ul>
+    <p class="th8-ask" data-t="3"><span class="th8-ai" aria-hidden="true"><Icon name="phone" size={18} /></span><span>{h.line} <a href={SITE.tel}>{SITE.phone}</a>.</span></p>
+  </div>
+</section>
+<style>
+  .th8 { position: relative; background: var(--white); padding: 88px 0 104px; }
+  .th8-in { display: grid; grid-template-columns: minmax(0, 588fr) minmax(0, 540fr); grid-template-rows: auto auto 1fr; column-gap: 72px; }
+  .th8-media { position: relative; grid-column: 1; grid-row: 1 / 4; align-self: start; }
+  .th8-off { position: absolute; left: -24px; top: 32px; right: 24px; bottom: -32px; border-radius: 28px; background: var(--tint); }
+  .th8-frame { position: relative; margin: 0; aspect-ratio: 588 / 330; border-radius: var(--r-xl); }
+  .th8-frame { overflow: hidden; }
+  .th8-frame :global(img) { display: block; }
+  .th8-frame :global(.th8-cap) { position: absolute; left: 24px; top: 20px; z-index: 2; }
+  .th8-in :global(.th8-head) { grid-column: 2; grid-row: 1; margin-top: 8px; }
+  .th8-chips { position: relative; z-index: 2; grid-column: 2; grid-row: 2; display: flex; flex-wrap: wrap; gap: 12px 10px; margin: 28px 0 0 -160px; padding: 0; }
+  .th8-chip { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: var(--r-full); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); font-weight: 600; font-size: 15px; color: var(--navy); white-space: nowrap; }
+  .th8-chip :global(svg) { color: var(--blue); }
+  .th8-ask { grid-column: 2; grid-row: 3; display: flex; align-items: center; gap: 16px; align-self: start; margin-top: 28px; padding: 14px 22px; border-radius: 16px; background: var(--tint); font-weight: 600; font-size: 15px; line-height: 22px; color: var(--navy); }
+  .th8-ask a { color: var(--press); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .th8-ai { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--white); color: var(--press); }
+  @media (max-width: 1199px) { .th8-chips { margin-left: -100px; } }
+  @media (max-width: 1023px) {
+    .th8 { padding: 56px 0 64px; }
+    .th8-in { display: flex; flex-direction: column; }
+    .th8-in :global(.th8-head) { order: 1; margin: 0; }
+    .th8-media { order: 2; width: 100%; margin-top: 28px; }
+    .th8-off { left: -8px; top: 16px; right: 8px; bottom: -16px; border-radius: 20px; }
+    .th8-frame { border-radius: var(--r-lg); aspect-ratio: 350 / 190; }
+    .th8-frame :global(.th8-cap) { left: 12px; top: 12px; font-size: 11px; }
+    .th8-chips { order: 3; margin: -6px 0 0; padding: 0 6px; gap: 8px 6px; }
+    .th8-chip { height: 40px; padding: 0 12px; gap: 6px; font-size: 14px; }
+    .th8-ask { order: 4; margin-top: 24px; padding: 14px 16px; font-size: 14px; }
+  }
+</style>

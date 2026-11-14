@@ -1,0 +1,96 @@
+---
+// 13d Thank you (Figma 443:9268 / mobile 443:9553). Mist; a huge faint "Thank you" in Yellowtail behind a white confirmation
+// card; the seal drops onto the card's top edge; a tilted snapshot of the blue roll overlaps its bottom-right with a script
+// caption; three step chips hang on a short pipe below; a sky band with the swoosh leads into the footer.
+// STICKY: callback time from Paul for step 2. The conversion event fires on this page (GTM, existing IDs: Base/analytics).
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import Img from '../ui/Img.astro';
+import TextLink from '../ui/TextLink.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+const steps = ['We read your request', 'We call you back', 'You get a price before any work starts'];
+---
+<section class="ty" aria-labelledby="ty-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <p class="ty-bg script" aria-hidden="true">Thank you</p>
+  <div class="wrap ty-in">
+    <div class="ty-stage">
+      <div class="ty-card" data-t="4" data-fx="nudge">
+        <Seal d={160} deg={-6} class="ty-seal" eager />
+        <Eyebrow text="Got it" />
+        <h1 class="h1 ty-h" id="ty-h" data-t="2"><span class="l1">Thanks.</span> <span class="l2">We'll call you back.</span></h1>
+        <p class="ty-p" data-t="3">Your request is with the office at our St. Pete shop. A real person will ring you on the number you gave us.</p>
+        <p class="ty-ur" data-t="3"><span class="ur-i" aria-hidden="true"><Icon name="siren" size={20} /></span><span><b>Water on the floor right now?</b> Don't wait for us. <a href={SITE.tel}>Call {SITE.phone}.</a></span></p>
+        <p class="ty-lk" data-t="3">
+          <TextLink href="/" size={15}>Back to home</TextLink>
+          <TextLink href="/reviews" size={15}>Read our reviews</TextLink>
+          <TextLink href={SITE.social.instagram} icon="ig" size={15} external>Follow us on Instagram</TextLink>
+        </p>
+      </div>
+      <div class="ty-snap snap" data-t="5" data-fx="toss"><Img name="brand-gift-roll-closeup" alt="The blue gift-wrapped toilet roll with the Plumbing By Paul tag" sizes="(min-width: 1024px) 180px, 120px" focus="50% 70%" widths={[180, 360]} /></div>
+      <p class="ty-cap script" data-t="5" data-fx="write">There's one of these<br />in your future.</p>
+    </div>
+    <div class="ty-steps">
+      <span class="ty-pipe" aria-hidden="true"><i class="c0"></i><i class="c1"></i></span>
+      <ol role="list" class="chips" aria-label="What happens next" data-t="4" data-stagger>
+        {steps.map((t, i) => <li><span class="cn num" aria-hidden="true">{i + 1}</span><span><span class="sr-only">Step {i + 1}: </span>{t}</span></li>)}
+      </ol>
+    </div>
+  </div>
+  <div class="ty-band"><Swoosh h={110} above="transparent" /></div>
+</section>
+<style>
+  .ty { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white) 70%); padding: 70px 0 0; }
+  .ty :global(.fl-m) { display: none; }
+  .ty :global(.flow) { height: 80%; }
+  .ty-bg { position: absolute; left: 50%; top: 80px; transform: translateX(-50%); margin: 0; font-size: 330px; line-height: 330px; white-space: nowrap; color: var(--sky); opacity: .16; pointer-events: none; }
+  .ty-in { position: relative; z-index: 2; display: grid; justify-items: center; }
+  .ty-stage { position: relative; width: min(720px, 100%); margin-top: 80px; }
+  .ty-card { position: relative; display: grid; justify-items: center; gap: 18px; padding: 96px 48px 48px; border-radius: 28px; background: var(--white); box-shadow: var(--sh-3); text-align: center; }
+  .ty-card :global(.ty-seal) { position: absolute; left: calc(50% - 80px); top: -80px; }
+  .ty-h { font-size: clamp(2rem, 1.905vw + 25px, 3.25rem); line-height: 1.12; letter-spacing: -0.02em; }
+  .ty-h .l1, .ty-h .l2 { display: block; }
+  .ty-p { max-width: 540px; font-weight: 500; font-size: 18px; line-height: 30px; color: var(--slate); }
+  .ty-ur { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; border-radius: 14px; background: var(--tint); font-weight: 500; font-size: 16px; line-height: 24px; color: var(--navy); text-align: left; }
+  .ur-i { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--white); color: var(--blue); }
+  .ty-ur a { font-weight: 700; color: var(--press); text-decoration: none; }
+  .ty-ur a:hover { text-decoration: underline; }
+  .ty-lk { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; padding-top: 6px; }
+  .ty-snap { position: absolute; right: -150px; bottom: -40px; z-index: 3; width: 180px; height: 230px; transform: rotate(6deg); }
+  .ty-cap { position: absolute; right: -180px; bottom: 250px; width: 230px; font-size: 28px; line-height: 32px; color: var(--blue); transform: rotate(-4deg); }
+  .ty-steps { position: relative; margin: 60px 0 96px; }
+  .ty-pipe { position: absolute; left: -40px; right: -40px; top: calc(50% - 7px); height: 14px; border-radius: 3px; background: linear-gradient(var(--navy) 0 0) center / 100% 14px no-repeat; }
+  .ty-pipe::after { content: ''; position: absolute; left: 2px; right: 2px; top: 2px; bottom: 2px; background: var(--sky); }
+  .ty-pipe i { position: absolute; top: -6px; width: 12px; height: 26px; border-radius: 3px; background: var(--navy); }
+  .ty-pipe i::after { content: ''; position: absolute; inset: 2px; border-radius: 2px; background: var(--soft); }
+  .ty-pipe .c0 { left: -8px; } .ty-pipe .c1 { right: -8px; }
+  .chips { position: relative; display: flex; gap: 16px; margin: 0; padding: 0; }
+  .chips li { display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 18px 0 8px; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 2px var(--navy), var(--sh-sticker); font-weight: 700; font-size: 15px; color: var(--navy); white-space: nowrap; }
+  .cn { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 15px; }
+  .ty-band { position: relative; background: var(--sky); padding-top: 40px; }
+  .ty-band :global(svg) { display: block; }
+  @media (max-width: 1199px) { .ty-snap { right: -60px; } .ty-cap { right: -70px; bottom: 260px; width: 200px; font-size: 24px; } }
+  @media (max-width: 1023px) {
+    .ty { padding-top: 40px; }
+    .ty :global(.fl-d) { display: none; } .ty :global(.fl-m) { display: block; }
+    .ty-bg { top: 70px; font-size: 120px; line-height: 120px; }
+    .ty-stage { margin-top: 56px; }
+    .ty-card { gap: 14px; padding: 64px 22px 150px; border-radius: 24px; }
+    .ty-card :global(.ty-seal) { --d: 112px !important; left: calc(50% - 56px); top: -56px; }
+    .ty-p { font-size: 16px; line-height: 26px; }
+    .ty-ur { font-size: 14px; line-height: 21px; align-items: flex-start; }
+    .ty-lk { display: grid; justify-items: start; width: 100%; }
+    .ty-snap { right: 20px; bottom: -30px; width: 120px; height: 150px; }
+    .ty-cap { right: auto; left: 22px; bottom: 30px; width: 170px; font-size: 22px; line-height: 26px; }
+    .ty-steps { justify-self: start; margin: 64px 0 56px; }
+    .ty-pipe { left: 15px; right: auto; top: -10px; bottom: -10px; width: 14px; height: auto; background: var(--navy); }
+    .ty-pipe::after { inset: 2px; }
+    .ty-pipe i { display: none; }
+    .chips { flex-direction: column; gap: 12px; }
+    .chips li { height: auto; min-height: 48px; padding: 6px 16px 6px 8px; font-size: 13px; white-space: normal; }
+  }
+</style>

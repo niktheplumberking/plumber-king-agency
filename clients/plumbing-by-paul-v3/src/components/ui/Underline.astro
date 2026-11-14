@@ -1,0 +1,10 @@
+---
+// Stripe underline (three hand-drawn livery strokes) under one key phrase per page. Motion: draws in (data-draw).
+interface Props { w?: number; class?: string; style?: string; }
+const { w = 468, class: cls, style } = Astro.props;
+const c = ['#61ADCB', '#2A7FA8', '#111032'];
+---
+<svg class:list={['uline', cls]} viewBox={`0 0 ${w} 14`} preserveAspectRatio="none" aria-hidden="true" style={style}>
+  {c.map((col, i) => { const yy = 2 + i * 4; return <path data-draw fill="none" stroke-linecap="round" stroke={col} stroke-width="2.6" d={`M${2 + i * 5} ${yy + 2} C${w * 0.3} ${yy - 2} ${w * 0.65} ${yy + 3} ${w - 2 - (2 - i) * 9} ${yy - 1}`} />; })}
+</svg>
+<style> .uline { display: block; height: 14px; overflow: visible; } </style>

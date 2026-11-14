@@ -1,0 +1,24 @@
+---
+// The water meter: a number on mechanical drums (last drum sky). Rolls up to its value on first view (data-meter, motion tier 4).
+// Without JS / reduced motion it simply shows the value. Screen readers get `label`.
+interface Props { digits: string; label: string; cw?: number; ch?: number; gap?: number; pad?: number; class?: string; }
+const { digits, label, cw = 56, ch = 76, gap = 6, pad = 8, class: cls } = Astro.props;
+const z = Math.round(ch * 0.6);
+---
+<span class:list={['meter', cls]} role="img" aria-label={label} style={`--cw:${cw}px;--ch:${ch}px;--g:${gap}px;--p:${pad}px;--z:${z}px`} data-meter>
+  {digits.split('').map((d, i) => (
+    <span class:list={['drum', i === digits.length - 1 && 'last']} aria-hidden="true">
+      <span class="reel" style={`--n:${d}`} data-digit={d}>{[0,1,2,3,4,5,6,7,8,9].map((n) => <span>{n}</span>)}</span>
+    </span>
+  ))}
+</span>
+<style>
+  .meter { display: inline-flex; gap: var(--g); padding: var(--p); border-radius: 12px; background: var(--navy); }
+  .drum { position: relative; width: var(--cw); height: var(--ch); overflow: hidden; border-radius: 6px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); color: var(--white); font-family: var(--f-num); font-size: var(--z); }
+  .drum::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(17,16,50,.55), transparent 28%, transparent 72%, rgba(17,16,50,.55)); }
+  .drum::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(255,255,255,.06); z-index: 1; }
+  .last { background: var(--sky); box-shadow: inset 0 0 0 1px var(--soft); color: var(--navy); }
+  .last::after { background: linear-gradient(180deg, rgba(17,16,50,.18), transparent 30%, transparent 70%, rgba(17,16,50,.18)); }
+  .reel { display: flex; flex-direction: column; transform: translateY(calc(var(--n) * -1 * var(--ch))); }
+  .reel > span { display: grid; place-items: center; height: var(--ch); line-height: 1; }
+</style>

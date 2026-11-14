@@ -1,0 +1,71 @@
+---
+// Free advice (Figma 04 D9): a framed photo on a sky backing left, head + ruled tip list right, and a tint warning bar
+// that overlaps the photo with a call link.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Tick from '../ui/Tick.astro';
+import { SITE } from '../../data/site';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { t: NonNullable<SvcPage['tips']>; slug: string; }
+const { t, slug } = Astro.props;
+const id = sid(slug, 'tips');
+---
+<section class="tp" aria-labelledby={id} data-m-section>
+  <div class="wrap tp-grid">
+    <div class="tp-media" data-t="4" data-fx="frame">
+      <span class="tp-back" aria-hidden="true"></span>
+      <div class="tp-ph frame">
+        <Img name={t.photo.name} alt={t.photo.alt} focus={t.photo.focus} sizes="(min-width: 1024px) 440px, calc(100vw - 40px)" widths={[400, 600, 880]} />
+        <Caption class="tp-cap">{t.caption}</Caption>
+      </div>
+    </div>
+    <div class="tp-copy">
+      <SectionHead eyebrow={t.eyebrow} l1={t.l1} l2={t.l2} script={t.l2} id={id} />
+      <ul role="list" class="tp-list" data-t="4" data-stagger>
+        {t.items.map((x) => <li><Tick scale={1.3} class="tp-tick" /><p><b>{x.b}</b> {x.t}</p></li>)}
+      </ul>
+    </div>
+    <p class="tp-warn" data-t="3" data-fx="rise">
+      <span class="tp-wi"><Icon name="alert" size={22} /></span>
+      <span class="tp-wt"><b>{t.warn.b}</b> {t.warn.t}</span>
+      <a href={SITE.tel} class="tp-call"><Icon name="phone" size={18} />Call now<span class="sr-only">: {SITE.phone}</span></a>
+    </p>
+  </div>
+</section>
+<style>
+  .tp { position: relative; background: var(--white); padding: 104px 0 120px; }
+  .tp-grid { position: relative; display: grid; grid-template-columns: minmax(0, 450px) minmax(0, 640px); justify-content: space-between; column-gap: 60px; align-items: start; }
+  .tp-media { position: relative; grid-row: 1 / span 2; height: 500px; }
+  .tp-back { position: absolute; left: 30px; right: -18px; top: 30px; bottom: -22px; border-radius: var(--r-xl); background: var(--sky); }
+  .tp-ph { position: absolute; inset: 0; border-radius: var(--r-xl); }
+  .tp-ph :global(.tp-cap) { position: absolute; left: 20px; bottom: 30px; max-width: 300px; z-index: 2; }
+  .tp-list { display: grid; margin: 40px 0 0; padding: 0; }
+  .tp-list li { display: flex; align-items: flex-start; gap: 22px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .tp-list li :global(.tp-tick) { flex: none; margin-top: 6px; }
+  .tp-list p { font-size: 17px; line-height: 26px; color: var(--slate); }
+  .tp-list b { color: var(--navy); font-weight: 700; }
+  .tp-warn { grid-column: 2; position: relative; z-index: 2; display: flex; align-items: center; gap: 18px; margin: 22px 0 0 -180px; padding: 22px 56px 22px 24px; border-radius: var(--r-lg); background: var(--tint); box-shadow: var(--sh-2); font-size: 17px; line-height: 26px; color: var(--slate); }
+  .tp-wi { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--navy); color: var(--white); }
+  .tp-wt { flex: 1; }
+  .tp-wt b { color: var(--navy); font-weight: 700; }
+  .tp-call { display: inline-flex; align-items: center; gap: 8px; flex: none; color: var(--press); font-weight: 700; font-size: 16px; }
+  .tp-call:hover { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .tp-grid { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); } .tp-warn { margin-left: -120px; } }
+  @media (max-width: 1023px) {
+    .tp { padding: 64px 0 72px; }
+    .tp-grid { grid-template-columns: minmax(0, 1fr); }
+    .tp-copy { order: 1; }
+    .tp-warn { order: 2; grid-column: 1; margin: 24px 0 0; padding: 18px 18px; gap: 14px; font-size: 15px; line-height: 24px; flex-wrap: wrap; }
+    .tp-wi { width: 36px; height: 36px; }
+    .tp-wt { flex: 1 1 200px; }
+    .tp-media { order: 3; grid-row: auto; height: 300px; margin: 36px 18px 0 0; }
+    .tp-back { left: 18px; right: -14px; top: 18px; bottom: -14px; }
+    .tp-list { margin-top: 24px; }
+    .tp-list li { gap: 14px; padding: 14px 0; }
+    .tp-list p { font-size: 15px; line-height: 24px; }
+    .tp-ph :global(.tp-cap) { left: 12px; right: 12px; bottom: 12px; font-size: 12px; }
+  }
+</style>

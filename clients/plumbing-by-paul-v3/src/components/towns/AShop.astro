@@ -1,0 +1,82 @@
+---
+// A3 The shop (Figma A3): navy, the shop-door photo tilted 3 degrees, a white "Find us" job ticket overlapping the photo
+// and the section's bottom edge, the round stamp on the ticket corner; copy right. NAP in text, identical to Google.
+import SectionHead from '../ui/SectionHead.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import Img from '../ui/Img.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+import Stamp from '../ui/Stamp.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import { SITE } from '../../data/site';
+const a = SITE.address;
+---
+<section class="as on-navy" aria-labelledby="as-h" data-m-section>
+  <FlowLines variant="navy" class="as-fl" />
+  <div class="wrap as-in">
+    <div class="as-media">
+      <figure class="as-ph frame" data-t="4" data-fx="frame">
+        <Img name="shop-door-wrap" alt="The Plumbing By Paul shop door, wrapped with the logo and phone number" sizes="(min-width: 1024px) 362px, 70vw" widths={[360, 540, 760]} focus="50% 40%" />
+        <PhotoTag class="as-tag">5565 64th Way N</PhotoTag>
+      </figure>
+      <div class="as-tk" data-t="4" data-fx="rise">
+        <p class="as-tkh"><span class="label">Job ticket: find us</span></p>
+        <div class="as-tkb">
+          <p class="as-tkt">Plumbing By Paul LLC</p>
+          <ul role="list" class="as-rows">
+            <li><span class="as-ri"><Icon name="pin" size={18} /></span><span>{a.street}<br />{a.city}, {a.region} {a.zip}</span></li>
+            <li><span class="as-ri"><Icon name="phone" size={18} /></span><a href={SITE.tel} class="as-tel">{SITE.phone}</a></li>
+            <li><span class="as-ri"><Icon name="clock" size={18} /></span><span>{SITE.hours.office}</span></li>
+          </ul>
+          <Button href={SITE.google.mapsUrl} v="pri" icon="nav" block external magnetic={false}>Open in Google Maps</Button>
+        </div>
+        <span class="as-stw"><Stamp d={144} deg={12} text="PLUMBING BY PAUL · ST. PETERSBURG · " /></span>
+      </div>
+    </div>
+    <div class="as-copy">
+      <SectionHead eyebrow="Home base" l1="A real shop," l2="with a real front door" dark id="as-h" lead="We're not a call center with a local phone number. The trucks leave from 64th Way North every morning and come back every night." />
+      <div class="as-cta" data-t="3"><CallButton v="priN" /></div>
+    </div>
+  </div>
+</section>
+<style>
+  .as { position: relative; z-index: 2; background: var(--navy); color: var(--white); padding: 89px 0 0; height: 620px; overflow-x: clip; }
+  .as :global(.as-fl) { position: absolute; inset: 0; overflow: hidden; }
+  .as-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 712fr) minmax(0, 440fr); column-gap: 48px; }
+  .as-media { position: relative; height: 531px; }
+  .as-ph { position: absolute; left: 9px; top: 0; width: 362px; height: 457px; margin: 0; transform: rotate(-3deg); border-radius: var(--r-xl); }
+  .as-ph :global(.as-tag) { position: absolute; left: 40px; top: 30px; z-index: 2; }
+  .as-tk { position: absolute; left: 290px; top: 199px; width: 430px; border-radius: 20px; background: var(--white); color: var(--navy); box-shadow: var(--sh-3); }
+  .as-tk::before { content: ''; position: absolute; left: -10px; top: 76px; width: 20px; height: 20px; border-radius: 50%; background: var(--navy); }
+  .as-tkh { padding: 16px 28px; border-radius: 20px 20px 0 0; background: var(--mist); }
+  .as-tkh .label { display: inline-flex; align-items: center; gap: 8px; color: var(--press); }
+  .as-tkb { padding: 18px 28px 8px; }
+  .as-tkt { font-weight: 800; font-size: 22px; line-height: 28px; }
+  .as-rows { margin: 12px 0 18px; padding: 0; }
+  .as-rows li { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line); font-weight: 500; font-size: 15px; line-height: 21px; }
+  .as-rows li:last-child { border-bottom: 1px solid var(--line); }
+  .as-ri { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--tint); color: var(--blue); }
+  .as-tel { font-weight: 700; font-size: 20px; color: var(--press); }
+  .as-tkb :global(.btn) { margin-bottom: 20px; }
+  .as-stw { position: absolute; right: -46px; top: -62px; }
+  .as-copy { padding-top: 39px; }
+  .as-cta { margin-top: 32px; }
+  @media (max-width: 1199px) { .as-tk { left: 220px; } }
+  @media (max-width: 1023px) {
+    .as { height: auto; padding: 56px 0 0; }
+    .as-in { display: flex; flex-direction: column-reverse; }
+    .as-copy { padding-top: 0; }
+    .as-cta { display: none; }
+    .as-cta :global(.btn) { width: 100%; }
+    .as-media { height: auto; margin-top: 44px; padding-bottom: 0; }
+    .as-ph { position: relative; left: 0; width: 72%; height: 260px; border-radius: var(--r-lg); }
+    .as-tk { position: relative; left: auto; top: auto; width: auto; margin: -64px 0 -40px 14px; }
+    .as-tkh { padding: 12px 18px; }
+    .as-tkb { padding: 14px 18px 4px; }
+    .as-tkt { font-size: 18px; line-height: 24px; }
+    .as-rows li { font-size: 13px; gap: 12px; padding: 10px 0; }
+    .as-tel { font-size: 17px; }
+    .as-stw { right: -6px; top: -50px; transform: scale(.6); transform-origin: top right; }
+  }
+</style>

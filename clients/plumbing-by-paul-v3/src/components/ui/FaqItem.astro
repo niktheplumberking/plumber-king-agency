@@ -1,0 +1,48 @@
+---
+// One FAQ accordion item on native <details> (works without JS; motion.ts animates height). The first sentence `a1`
+// is the direct answer (semi-bold, AEO). `open` = starts open (one per list). Pass schema data via Faq.astro.
+import Icon from './Icon.astro';
+import TextLink from './TextLink.astro';
+interface Props { idx: string; tag?: string; q: string; a1: string; a2?: string; link?: { text: string; href: string }; open?: boolean; name?: string; }
+const { idx, tag, q, a1, a2, link, open = false, name } = Astro.props;
+---
+<details class="faq" open={open} data-acc name={name}>
+  <summary>
+    <span class="idx num" aria-hidden="true">{idx}</span>
+    <span class="qq">{tag && <span class="tag">{tag}</span>}<span class="qt">{q}</span></span>
+    <span class="pm" aria-hidden="true"><Icon name="plus" size={18} class="i-plus" /><Icon name="minus" size={18} class="i-minus" /></span>
+  </summary>
+  <div class="acc-body">
+    <div class="ans">
+      <p><strong>{a1}</strong>{a2 && <>{' '}{a2}</>}</p>
+      {link && <TextLink href={link.href} size={15}>{link.text}</TextLink>}
+    </div>
+  </div>
+</details>
+<style>
+  .faq { position: relative; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; transition: background var(--dur-3) var(--ease-out), box-shadow var(--dur-3) var(--ease-out); }
+  .faq[open] { background: var(--tint); box-shadow: var(--in-bar); }
+  summary { display: flex; align-items: center; gap: 18px; padding: 24px 28px; list-style: none; cursor: pointer; border-radius: inherit; }
+  summary::-webkit-details-marker { display: none; }
+  .idx { color: var(--press); font-size: 22px; line-height: 28px; flex: none; }
+  .qq { flex: 1; display: grid; gap: 4px; justify-items: start; }
+  .tag { padding: 3px 8px; border-radius: 6px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 600; font-size: 11px; line-height: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--slate); }
+  .faq[open] .tag { background: var(--white); }
+  .qt { font-weight: 700; font-size: var(--fz-h4); line-height: 26px; color: var(--navy); }
+  .pm { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--navy); flex: none; transition: background var(--dur-2), transform var(--dur-3) var(--ease-out); }
+  .pm :global(svg) { position: absolute; transition: opacity var(--dur-2), transform var(--dur-3) var(--ease-out); }
+  .pm :global(.i-minus) { opacity: 0; transform: rotate(-90deg); }
+  .faq[open] .pm { background: var(--navy); color: var(--white); }
+  .faq[open] .pm :global(.i-plus) { opacity: 0; transform: rotate(90deg); }
+  .faq[open] .pm :global(.i-minus) { opacity: 1; transform: none; }
+  summary:hover .pm { transform: scale(1.08); }
+  .acc-body { overflow: hidden; }
+  .ans { display: grid; gap: 10px; justify-items: start; padding: 0 28px 24px 80px; font-size: 16px; line-height: 27px; color: var(--navy); }
+  .ans strong { font-weight: 600; }
+  @media (max-width: 767px) {
+    summary { gap: 12px; padding: 18px; }
+    .idx { font-size: 18px; }
+    .qt { font-size: 17px; line-height: 24px; }
+    .ans { padding: 0 18px 18px; font-size: 15px; line-height: 25px; }
+  }
+</style>

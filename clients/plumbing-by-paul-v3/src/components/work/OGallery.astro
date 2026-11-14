@@ -1,0 +1,101 @@
+---
+// O2 Gallery (Figma O2): tint; centred heading; a sticky filter bar overlapping the gallery top; masonry of job photos,
+// each with a Russo photo tag and a factual caption plate, and a dashed slot for the photos Paul still has to send.
+// The three photos used in the job stories below are left out here so no photo appears twice on the page.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+const cats = [['all', 'All'], ['wh', 'Water heaters'], ['dr', 'Drains'], ['sw', 'Sewer'], ['pp', 'Pipes'], ['fx', 'Fixtures']];
+const tag: Record<string, string> = { wh: 'Water heaters', dr: 'Drains', sw: 'Sewer', pp: 'Pipes', fx: 'Fixtures' };
+const items = [
+  { n: 'service-tech-at-cleanout', c: 'dr', h: 340, col: 0, cap: 'Working a yard cleanout.', alt: 'A tech crouched over an open yard cleanout with a drain hose' },
+  { n: 'service-tech-threading-pipe-truck', c: 'pp', h: 300, col: 0, cap: 'Threading pipe by the truck.', alt: 'A tech threading pipe on a vise beside the truck' },
+  { n: 'service-trutankless-unit', c: 'wh', h: 210, col: 1, cap: 'Trutankless unit, mounted.', alt: 'A black Trutankless electric water heater mounted on a wall' },
+  { n: 'service-tech-digging-with-van', c: 'sw', h: 390, col: 1, cap: 'Digging for a line, truck out front.', alt: 'A tech digging in a front yard with the Plumbing By Paul van behind him' },
+  { n: 'service-tech-kitchen-sink-smiling', c: 'fx', h: 260, col: 2, cap: 'Under a kitchen sink.', alt: 'A smiling tech working under a kitchen sink' },
+  { n: 'hero-05-tech-toilet-repair-pro', c: 'fx', h: 190, col: 2, cap: 'Toilet repair.', alt: 'A tech in gloves repairing a toilet' },
+  { n: 'service-tech-logo-shirt-back-tile', c: 'fx', h: 390, col: 3, cap: 'Shower valve work at a tiled wall.', alt: 'A tech in a logo shirt working on a shower valve at a tiled wall' },
+  { n: 'service-tech-under-sink-smiling', c: 'fx', h: 246, col: 3, cap: 'Under a vintage bathroom sink. Still smiling.', alt: 'A tech smiling while working under a vintage pink bathroom sink' },
+];
+---
+<section class="og" aria-labelledby="og-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="The gallery" l1="Pipes, heaters," l2="drains and dirt" id="og-h" center />
+    <div class="og-bar" role="group" aria-label="Filter photos" data-og-filters data-t="3">
+      {cats.map(([k, l]) => (
+        <button type="button" class="og-f" data-og-f={k} aria-pressed={k === 'all' ? 'true' : 'false'}>{l}{k === 'all' && <span class="og-cnt">{items.length}</span>}</button>
+      ))}
+    </div>
+    <div class="og-grid" data-og-grid data-t="4" data-stagger>
+      {[0, 1, 2, 3].map((col) => (
+        <ul role="list" class:list={['og-col', `k${col}`]}>
+          {items.filter((it) => it.col === col).map((it) => (
+            <li class="og-i" data-og-c={it.c}>
+              <figure class="og-f2" style={`--h:${it.h}px`}>
+                <Img name={it.n} alt={it.alt} sizes="(min-width: 1024px) 282px, 45vw" widths={[300, 600]} />
+                <PhotoTag class="og-tag">{tag[it.c]}</PhotoTag>
+                <figcaption><Caption class="og-cap" small>{it.cap}</Caption></figcaption>
+              </figure>
+            </li>
+          ))}
+          {col === 2 && (
+            <li class="og-i og-slotli" data-og-c="slot">
+              <p class="og-slot"><Icon name="camera" size={20} /><span class="label">Photo from Paul: 10 to 20 more job photos, with the town for each</span></p>
+            </li>
+          )}
+        </ul>
+      ))}
+    </div>
+    <p class="sr-only" aria-live="polite" data-og-live></p>
+  </div>
+</section>
+<script>
+  // Filter chips: show only the matching category (the stand-in slot shows with "All" only). Works as a plain
+  // gallery without JS (every photo visible, chips do nothing).
+  document.querySelectorAll<HTMLElement>('[data-og-filters]').forEach((bar) => {
+    const sec = bar.closest('section')!;
+    const items = [...sec.querySelectorAll<HTMLElement>('[data-og-c]')];
+    const live = sec.querySelector<HTMLElement>('[data-og-live]');
+    bar.querySelectorAll<HTMLButtonElement>('[data-og-f]').forEach((b) => b.addEventListener('click', () => {
+      const k = b.dataset.ogF!;
+      bar.querySelectorAll('[data-og-f]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      let n = 0;
+      items.forEach((it) => { const on = k === 'all' || it.dataset.ogC === k; it.hidden = !on; if (on && it.dataset.ogC !== 'slot') n++; });
+      if (live) live.textContent = `${n} photo${n === 1 ? '' : 's'} shown`;
+    }));
+  });
+</script>
+<style>
+  .og { position: relative; background: var(--tint); padding: 176px 0 112px; }
+  .og-bar { position: sticky; top: 100px; z-index: 5; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; width: max-content; max-width: 100%; margin: 36px auto -20px; padding: 7px; border-radius: 16px; background: var(--white); box-shadow: var(--sh-2); }
+  .og-f { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 10px; background: var(--mist); color: var(--navy); font: inherit; font-weight: 600; font-size: 14px; cursor: pointer; transition: background var(--dur-2), color var(--dur-2); }
+  .og-f:hover { background: var(--tint); }
+  .og-f[aria-pressed='true'] { background: var(--navy); color: var(--white); }
+  .og-cnt { display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--blue); color: var(--white); font-family: var(--f-num); font-size: 11px; }
+  .og-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; align-items: start; padding: 40px 0 0; }
+  .og-col { display: grid; gap: 24px; margin: 0; padding: 0; }
+  .og-col.k1, .og-col.k2 { margin-top: 28px; }
+  .og-i[hidden] { display: none; }
+  .og-f2 { position: relative; height: var(--h); margin: 0; overflow: hidden; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-2); isolation: isolate; }
+  .og-f2 :global(img) { display: block; transition: transform .8s var(--ease-out); }
+  .og-f2:hover :global(img) { transform: scale(1.04); }
+  .og-f2 :global(.og-tag) { position: absolute; left: 12px; top: 12px; z-index: 2; }
+  .og-f2 :global(.og-cap) { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2; width: fit-content; max-width: calc(100% - 24px); }
+  .og-slot { display: grid; place-items: center; align-content: center; gap: 10px; min-height: 162px; padding: 20px; border-radius: var(--r-lg); border: 1.5px dashed var(--blue); background: var(--mist); color: var(--press); text-align: center; }
+  .og-slot .label { font-size: 10px; line-height: 15px; }
+  @media (max-width: 1023px) {
+    .og { padding: 136px 0 64px; }
+    .og-bar { top: 76px; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; width: auto; margin: 24px calc(-1 * var(--gutter)) -16px; border-radius: 0; padding: 7px var(--gutter); scrollbar-width: none; }
+    .og-bar::-webkit-scrollbar { display: none; }
+    .og-f { flex: none; padding: 0 14px; font-size: 13px; }
+    .og-grid { grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 32px; }
+    .og-col { gap: 10px; }
+    .og-col.k1, .og-col.k2 { margin-top: 0; }
+    .og-col.k1, .og-col.k3 { margin-top: 20px; }
+    .og-f2 { height: calc(var(--h) * .62); border-radius: var(--r-md); }
+    .og-f2 :global(.og-tag) { left: 8px; top: 8px; }
+    .og-f2 :global(.og-cap) { left: 8px; bottom: 8px; font-size: 11px; line-height: 15px; padding: 4px 8px; }
+  }
+</style>

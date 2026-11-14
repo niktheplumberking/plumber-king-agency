@@ -1,0 +1,13 @@
+---
+// /guides hub. No Figma frame: a small page in the guide style that lists only the guides that are built (see
+// components/guides/data.ts BUILT). Unbuilt titles appear only as non-link "Coming soon" cards in the guide rails.
+import Base from '../../layouts/Base.astro';
+import GHub from '../../components/guides/GHub.astro';
+import WaterlineCTA from '../../components/global/WaterlineCTA.astro';
+---
+<Base title="Plumbing Guides · Plumbing By Paul St. Pete"
+  description="Plain answers from a licensed St. Petersburg plumber: water heaters, repairs and Pinellas County permits, written by the Plumbing By Paul crew."
+  path="/guides" og="service-trutankless-unit" ogAlt="A tankless water heater mounted on a block wall">
+  <GHub />
+  <WaterlineCTA />
+</Base>

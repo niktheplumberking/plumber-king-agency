@@ -1,0 +1,72 @@
+---
+// C4 The six calls (Figma 440:2623 / mobile C4): six link cards on a rail, each with a medallion hanging over its top edge.
+// The first card is the "lead" one: sky medallion, solid arrow, van-stripe shadow. Mobile: a swipe rail with dots.
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import Icon from '../ui/Icon.astro';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const c = t.calls;
+const n = c.items.length;
+---
+<section class="tc" aria-labelledby="tc-h" data-m-section>
+  <div class="wrap">
+    <div class="tc-head">
+      <SectionHead eyebrow={c.eyebrow} l1={c.l1} l2={c.l2} id="tc-h" />
+      <TextLink href="/services" class="tc-all">All services</TextLink>
+    </div>
+    <div class="tc-rail" data-carousel>
+      <ul role="list" class="tc-cards" data-track tabindex="0" aria-label="Services, scroll sideways for more" data-t="4" data-stagger>
+        {c.items.map((it, i) => (
+          <li class:list={['tc-card', i === 0 && 'lead']} data-slide>
+            <a href={it.href} class="tc-a">
+              <span class="tc-med" aria-hidden="true"><Icon name={it.icon} size={28} /></span>
+              <h3 class="tc-t">{it.name}</h3>
+              <p class="tc-d">{it.line}</p>
+              <span class="tc-foot"><span class="num tc-n" aria-hidden="true">0{i + 1}</span><span class="tc-go" aria-hidden="true"><Icon name="arrow" size={18} /></span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="tc-dots" aria-hidden="true">{c.items.map((_, i) => <i data-dot class:list={[i === 0 && 'on']}></i>)}<span><span data-count-now>1</span> of {n} · swipe</span></div>
+    </div>
+  </div>
+</section>
+<style>
+  .tc { position: relative; background: var(--white); padding: 104px 0 124px; }
+  .tc-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .tc-head :global(.tc-all) { margin-bottom: 6px; }
+  .tc-cards { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 19px; margin: 76px 0 0; padding: 0; }
+  .tc-card { position: relative; display: flex; }
+  .tc-a { position: relative; display: flex; flex-direction: column; width: 100%; min-height: 204px; padding: 58px 18px 18px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1.5px var(--line), var(--sh-1); color: var(--navy); transition: transform .45s var(--ease-out), box-shadow .45s var(--ease-out); }
+  .tc-a:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1.5px var(--blue), var(--sh-2); }
+  .lead .tc-a { box-shadow: inset 0 0 0 1.5px var(--line), var(--sh-stripe); }
+  .tc-med { position: absolute; left: 14px; top: -28px; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--white); color: var(--blue); box-shadow: var(--sh-sticker); transition: transform .45s var(--ease-out); }
+  .lead .tc-med { background: var(--sky); color: var(--navy); box-shadow: 0 0 0 4px var(--white), var(--sh-sticker); }
+  .tc-a:hover .tc-med { transform: rotate(-8deg) scale(1.05); }
+  .tc-t { font-weight: 700; font-size: 17px; line-height: 22px; }
+  .tc-d { margin-top: 10px; font-size: 13px; line-height: 20px; color: var(--slate); }
+  .tc-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 14px; }
+  .tc-n { font-size: 13px; color: var(--press); }
+  .tc-go { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--navy); transition: transform .35s var(--ease-out), background .35s; }
+  .lead .tc-go { background: var(--press); color: var(--white); }
+  .tc-a:hover .tc-go { transform: translateX(3px); }
+  .tc-dots { display: none; }
+  @media (max-width: 1199px) { .tc-cards { gap: 12px; } .tc-a { padding-inline: 14px; } .tc-t { font-size: 16px; } }
+  @media (max-width: 1023px) {
+    .tc { padding: 64px 0 72px; }
+    .tc-head { display: block; }
+    .tc-head :global(.tc-all) { display: none; }
+    .tc-cards { display: flex; gap: 12px; margin: 0 calc(-1 * var(--gutter)); padding: 46px var(--gutter) 26px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; }
+    .tc-cards::-webkit-scrollbar { display: none; }
+    .tc-card { flex: 0 0 168px; scroll-snap-align: start; }
+    .tc-a { min-height: 180px; padding: 50px 14px 14px; }
+    .tc-d { margin-top: 8px; }
+    .tc-t { font-size: 16px; }
+    .tc-dots { display: flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 12px; color: var(--slate); }
+    .tc-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .4s var(--ease-out), background .4s; }
+    .tc-dots i:global(.on) { width: 22px; background: var(--blue); }
+    .tc-dots span { margin-left: 6px; }
+  }
+</style>

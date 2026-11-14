@@ -1,0 +1,146 @@
+---
+// Legal page template (Figma 443:7819 / 443:8222 privacy, 443:8551 / 443:8945 terms). Compact mist hero (eyebrow, H1,
+// "Last updated" pill and the "Draft for Paul's review" pill); white body with the plain-English summary card overlapping the
+// hero edge, a sticky contents card + "Rather just ask a person?" card left, and the numbered sections right (hairlines).
+// Mobile: contents collapse into an accordion. [Bracketed] text is shown in press blue so it is easy to spot in review.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import Tick from '../ui/Tick.astro';
+import CallButton from '../ui/CallButton.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import type { LegalDoc } from './legalData';
+interface Props { doc: LegalDoc }
+const { doc } = Astro.props;
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const rich = (s: string) => esc(s).replace(/\[[^\]]+\]/g, (m) => `<span class="todo">${m}</span>`).replace(/\n/g, '<br />');
+const secs = doc.sections.map(([h, b]) => ({ id: slug(h), h, b }));
+---
+<section class="lh" aria-labelledby="lh-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="wrap lh-in">
+    <div>
+      <Breadcrumbs items={[{ label: doc.crumb, href: doc.path }]} />
+      <Eyebrow text="The small print" class="lh-eb" />
+      <h1 class="h1 lh-h" id="lh-h" data-t="2">{doc.title}</h1>
+    </div>
+    <div class="lh-pills" data-t="3">
+      <span class="pill"><Icon name="calendar" size={14} />Last updated: [date at launch]</span>
+      <span class="pill draft label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5M9 13h6M9 17h4" /></svg>Draft for Paul's review</span>
+    </div>
+  </div>
+</section>
+<section class="lb" data-m-section>
+  <div class="wrap lb-in">
+    <div class="sum" data-t="3">
+      <Seal d={64} deg={-8} t={false} class="sum-seal" />
+      <h2 class="sum-h">The short version.</h2>
+      <p class="sum-p">{doc.summary}</p>
+    </div>
+    <aside class="lb-side">
+      <nav class="toc" aria-labelledby="ltoc-h" data-ltoc>
+        <p class="toc-h label" id="ltoc-h"><Tick />On this page</p>
+        <ol role="list">{secs.map((s, i) => <li><a href={`#${s.id}`} data-ltoc-link={s.id}><span class="tn num">{i + 1}</span><span>{s.h}</span></a></li>)}</ol>
+      </nav>
+      <div class="ask on-navy">
+        <p class="ask-t">Rather just ask a person?</p>
+        <CallButton v="priN" l2="A real person picks up" />
+      </div>
+    </aside>
+    <details class="toc-m">
+      <summary><Tick /><span class="tm-t">On this page · {secs.length} sections</span><span class="tm-pm" aria-hidden="true"><Icon name="plus" size={18} /></span></summary>
+      <ol role="list">{secs.map((s, i) => <li><a href={`#${s.id}`}><span class="tn num">{i + 1}</span>{s.h}</a></li>)}</ol>
+    </details>
+    <div class="txt">
+      {secs.map((s, i) => (
+        <section class="ls" aria-labelledby={s.id}>
+          <h2 id={s.id}><span class="ln num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{s.h}</h2>
+          <p set:html={rich(s.b)} />
+        </section>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  const toc = document.querySelector<HTMLElement>('[data-ltoc]');
+  if (toc) {
+    const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('[data-ltoc-link]'));
+    const heads = links.map((a) => document.getElementById(a.dataset.ltocLink!)).filter(Boolean) as HTMLElement[];
+    let tk = false;
+    const up = () => {
+      tk = false; let cur = 0;
+      heads.forEach((h, i) => { if (h.getBoundingClientRect().top <= window.innerHeight * 0.3) cur = i; });
+      links.forEach((a, i) => (i === cur ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+    };
+    window.addEventListener('scroll', () => { if (!tk) { tk = true; requestAnimationFrame(up); } }, { passive: true });
+    up();
+  }
+  document.querySelectorAll<HTMLAnchorElement>('.toc-m a').forEach((a) => a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')));
+</script>
+<style>
+  .lh { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 40px 0 72px; }
+  .lh :global(.fl-m) { display: none; }
+  .lh-in { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+  .lh :global(.lh-eb) { margin-top: 16px; }
+  .lh-h { margin-top: 8px; font-size: clamp(2rem, 1.905vw + 25px, 3.25rem); line-height: 1.12; letter-spacing: -0.02em; }
+  .lh-pills { display: flex; flex-wrap: wrap; gap: 12px; padding-bottom: 12px; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); font-weight: 600; font-size: 13px; color: var(--navy); }
+  .pill :global(svg) { color: var(--blue); }
+  .pill.draft { background: var(--navy); color: var(--white); box-shadow: none; font-size: 11px; }
+  .pill.draft svg { color: var(--sky); }
+  .lb { position: relative; background: var(--white); padding: 0 0 72px; }
+  .lb-in { display: grid; grid-template-columns: 282px minmax(0, 774px); grid-template-areas: '. sum' 'side txt'; justify-content: start; column-gap: 24px; }
+  .sum { grid-area: sum; position: relative; z-index: 2; margin-top: -32px; padding: 28px 28px 28px 92px; border-radius: 20px; background: var(--tint); box-shadow: var(--in-bar), var(--sh-2); }
+  .sum :global(.sum-seal) { position: absolute; left: 14px; top: calc(50% - 32px); }
+  .sum-h { font-weight: 800; font-size: 22px; line-height: 28px; color: var(--navy); }
+  .sum-p { margin-top: 8px; font-weight: 500; font-size: 17px; line-height: 28px; color: var(--navy); overflow-wrap: anywhere; }
+  .lb-side { grid-area: side; position: sticky; top: calc(var(--header-h) + 24px); align-self: start; display: grid; gap: 20px; margin-top: -40px; transition: top .45s var(--ease-out); }
+  :global(body:has(.hdr.is-hidden)) .lb-side { top: 24px; }
+  .toc { padding: 18px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .toc-h { display: flex; align-items: center; gap: 8px; padding: 0 6px 10px; font-size: 12px; color: var(--navy); }
+  .toc ol { display: grid; gap: 2px; margin: 0; padding: 0; }
+  .toc a { position: relative; display: flex; gap: 10px; padding: 8px 12px; border-radius: 8px; overflow: hidden; font-weight: 500; font-size: 14px; line-height: 20px; color: var(--slate); text-decoration: none; transition: background var(--dur-2), color var(--dur-2); }
+  .toc a:hover { background: var(--mist); color: var(--navy); }
+  .toc a[aria-current] { background: var(--tint); color: var(--navy); font-weight: 700; }
+  .toc a[aria-current]::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--blue); }
+  .tn { flex: none; min-width: 14px; font-size: 13px; color: var(--press); }
+  .ask { display: grid; gap: 10px; padding: 20px; border-radius: 20px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .ask-t { font-weight: 800; font-size: 18px; line-height: 24px; max-width: 200px; }
+  .toc-m { display: none; }
+  .txt { grid-area: txt; margin-top: 16px; }
+  .ls { padding: 32px 0; scroll-margin-top: calc(var(--header-h) + 24px); }
+  .ls + .ls { border-top: 1px solid var(--line); }
+  .ls h2 { display: flex; align-items: baseline; gap: 12px; font-weight: 800; font-size: 28px; line-height: 36px; letter-spacing: -.015em; color: var(--navy); scroll-margin-top: calc(var(--header-h) + 24px); }
+  .ln { font-size: 16px; color: var(--press); }
+  .ls p { margin-top: 12px; font-size: 17px; line-height: 28px; color: var(--slate); }
+  .ls p :global(.todo) { font-weight: 600; color: var(--press); }
+  @media (max-width: 1023px) {
+    .lh { padding: 20px 0 64px; }
+    .lh :global(.fl-d) { display: none; } .lh :global(.fl-m) { display: block; }
+    .lh-in { display: grid; justify-content: start; }
+    .lh-pills { display: grid; justify-items: start; gap: 8px; padding: 0; }
+    .lb { padding-bottom: 48px; }
+    .lb-in { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'sum' 'tocm' 'txt'; }
+    .sum { margin-top: -32px; padding: 40px 20px 22px; }
+    .sum :global(.sum-seal) { left: auto; right: 14px; top: -28px; --d: 56px !important; }
+    .sum-h { font-size: 19px; }
+    .sum-p { font-size: 15px; line-height: 24px; }
+    .lb-side { display: none; }
+    .toc-m { grid-area: tocm; display: block; margin-top: 24px; border-radius: 14px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); }
+    .toc-m summary { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 16px; list-style: none; cursor: pointer; }
+    .toc-m summary::-webkit-details-marker { display: none; }
+    .tm-t { flex: 1; font-weight: 700; font-size: 14px; color: var(--navy); }
+    .tm-pm { display: grid; color: var(--navy); transition: transform var(--dur-2); }
+    .toc-m[open] .tm-pm { transform: rotate(45deg); }
+    .toc-m ol { display: grid; margin: 0; padding: 0 8px 12px; }
+    .toc-m a { display: flex; gap: 10px; align-items: center; min-height: 44px; padding: 0 8px; font-weight: 500; font-size: 14px; color: var(--navy); text-decoration: none; }
+    .txt { margin-top: 4px; }
+    .ls { padding: 22px 0; }
+    .ls h2 { font-size: 21px; line-height: 28px; gap: 10px; }
+    .ln { font-size: 14px; }
+    .ls p { margin-top: 8px; font-size: 15px; line-height: 25px; }
+  }
+</style>

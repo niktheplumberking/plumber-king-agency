@@ -1,0 +1,88 @@
+---
+// /guides hub (no Figma frame; built in the guide page's style). Lists ONLY guides that are built (BUILT in ./data): no
+// "coming soon" titles here. Hero (mist, flow lines) with the built guides as large cards overlapping into a white section.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Img from '../ui/Img.astro';
+import TextLink from '../ui/TextLink.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import { BUILT } from './data';
+---
+<section class="hh" aria-labelledby="hh-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="wrap hh-in">
+    <Breadcrumbs items={[{ label: 'Guides', href: '/guides' }]} />
+    <Eyebrow text="Guides" class="hh-eb" />
+    <h1 class="h1 hh-h" id="hh-h" data-t="2"><span class="l1">Plain answers</span> <span class="l2">from the crew</span></h1>
+    <p class="lead hh-lead" data-t="3" data-fx="nudge">Written by the people who do the work in Pinellas County. More guides are on the way.</p>
+  </div>
+</section>
+<section class="hl" aria-label="All guides" data-m-section>
+  <div class="wrap">
+    <ul role="list" class="hl-list" data-t="4" data-stagger>
+      {BUILT.map((g, i) => (
+        <li class="hc">
+          <div class="hc-ph frame" aria-hidden="true"><Img name="service-tankless-water-heater-install" alt="" sizes="(min-width: 1024px) 460px, calc(100vw - 40px)" focus="50% 62%" widths={[460, 920]} /></div>
+          <div class="hc-b">
+            <span class="hc-n num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <p class="hc-c label"><Icon name={g.icon} size={16} />Guide · {g.cat}</p>
+            <h2 class="hc-t"><a href={g.href}>{g.title}</a></h2>
+            {g.blurb && <p class="hc-d">{g.blurb}</p>}
+            <p class="hc-m"><Icon name="clock" size={14} />{g.minutes} minute read · Updated November 2026</p>
+            <span class="hc-l" aria-hidden="true"><span class="t">Read the guide</span><Icon name="arrow" size={16} /></span>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <p class="hl-more" data-t="3">Have a question we haven't covered? <TextLink href="/faq">See the FAQ</TextLink></p>
+  </div>
+</section>
+<style>
+  .hh { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 40px 0 150px; }
+  .hh :global(.fl-m) { display: none; }
+  .hh-in { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
+  .hh-in :global(.crumbs ol) { justify-content: center; }
+  .hh :global(.hh-eb) { margin-top: 16px; }
+  .hh-h { margin-top: 14px; letter-spacing: -0.025em; }
+  .hh-h .l1, .hh-h .l2 { display: block; }
+  .hh-lead { margin-top: 18px; max-width: 600px; }
+  .hl { position: relative; background: var(--white); padding: 0 0 96px; }
+  .hl-list { display: grid; gap: 24px; margin: -96px auto 0; padding: 0; max-width: 1000px; position: relative; z-index: 2; }
+  .hc { position: relative; display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 40px; align-items: center; padding: 24px; border-radius: 28px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); transition: box-shadow var(--dur-2); }
+  .hc:hover { box-shadow: inset 0 0 0 1.5px var(--blue), var(--sh-3); }
+  .hc:has(a:focus-visible) { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .hc-ph { height: 280px; border-radius: 20px; }
+  .hc-b { position: relative; display: grid; gap: 10px; justify-items: start; padding-right: 16px; }
+  .hc-n { position: absolute; right: 0; top: -6px; display: grid; place-items: center; width: 60px; height: 50px; border-radius: 14px; background: var(--navy); color: var(--white); font-size: 22px; box-shadow: var(--sh-sticker); }
+  .hc-c { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--press); }
+  .hc-c :global(svg) { color: var(--blue); }
+  .hc-t { font-weight: 800; font-size: 30px; line-height: 36px; letter-spacing: -.015em; color: var(--navy); max-width: 380px; }
+  .hc-t a { color: inherit; text-decoration: none; }
+  .hc-t a::after { content: ''; position: absolute; inset: 0; border-radius: 28px; }
+  .hc-t a:focus-visible { outline: none; }
+  .hc { isolation: isolate; } .hc-b { position: static; } .hc-n { right: 40px; top: 30px; }
+  .hc-d { font-weight: 500; font-size: 17px; line-height: 27px; color: var(--slate); }
+  .hc-m { display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 13px; color: var(--slate); }
+  .hc-m :global(svg) { color: var(--blue); }
+  .hc-l { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-weight: 600; font-size: 15px; color: var(--press); }
+  .hc-l .t { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .hl-more { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; margin-top: 48px; font-weight: 500; color: var(--slate); }
+  @media (max-width: 1023px) {
+    .hh { padding: 20px 0 110px; }
+    .hh :global(.fl-d) { display: none; } .hh :global(.fl-m) { display: block; }
+    .hh-in { justify-items: start; text-align: left; }
+    .hh-in :global(.crumbs ol) { justify-content: flex-start; }
+    .hh-lead { margin-top: 12px; }
+    .hl { padding-bottom: 64px; }
+    .hl-list { margin-top: -72px; }
+    .hc { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 14px 14px 22px; border-radius: 22px; }
+    .hc-ph { height: 190px; border-radius: 16px; }
+    .hc-b { padding: 0 6px; }
+    .hc-n { right: 26px; top: 26px; width: 48px; height: 40px; font-size: 18px; }
+    .hc-t { font-size: 22px; line-height: 28px; }
+    .hc-d { font-size: 15px; line-height: 24px; }
+    .hl-more { justify-content: flex-start; margin-top: 32px; }
+  }
+</style>

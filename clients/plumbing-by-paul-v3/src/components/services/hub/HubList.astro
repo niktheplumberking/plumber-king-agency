@@ -1,0 +1,80 @@
+---
+// S5 The full list (Figma 02): every service on one job ticket (perforated top, two columns of seven, an arrow disc
+// outside each row), a navy emergency row and the seal on the corner.
+import SectionHead from '../../ui/SectionHead.astro';
+import Icon from '../../ui/Icon.astro';
+import ArrowDot from '../../ui/ArrowDot.astro';
+import Seal from '../../ui/Seal.astro';
+import { SITE } from '../../../data/site';
+import { LIST, HREF } from './hub';
+const cols = [LIST.slice(0, 7), LIST.slice(7)];
+---
+<section class="hl" aria-labelledby="hl-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="The whole list" l1="Fourteen services." l2="One phone number." center id="hl-h" />
+    <div class="hl-tk" data-t="4" data-fx="rise">
+      <header><span class="label"><Icon name="clipboard" size={18} />Job ticket: what can we do for you?</span><span class="label hl-no">Lic. {SITE.licence}</span></header>
+      <div class="hl-cols">
+        {cols.map((c) => (
+          <ul role="list" class="hl-col">
+            {c.map(([t, d, ic], i) => (
+              <li><a href={HREF[t]} class:list={['hl-row', i % 2 === 0 && 'alt']}>
+                <span class="hl-ic"><Icon name={ic} size={20} /></span>
+                <span class="hl-tx"><b>{t}</b><small>{d}</small></span>
+                <ArrowDot d={36} class="hl-ad" />
+              </a></li>
+            ))}
+          </ul>
+        ))}
+      </div>
+      <a href="/emergency-plumbing" class="hl-em">
+        <span class="hl-emi"><Icon name="siren" size={22} /></span>
+        <span class="hl-tx"><b>Emergency plumbing</b><small>Burst pipe or backup? Call us now.</small></span>
+        <span class="num hl-ph">{SITE.phone}</span>
+      </a>
+      <Seal d={120} deg={8} class="hl-seal" />
+    </div>
+  </div>
+</section>
+<style>
+  .hl { position: relative; background: var(--white); padding: 104px 0 120px; }
+  .hl-tk { position: relative; margin-top: 56px; padding: 0 0 28px; border-radius: 22px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .hl-tk::before { content: ''; position: absolute; z-index: 2; left: 18px; right: 18px; top: -6px; height: 12px; background: radial-gradient(circle, var(--white) 4.5px, transparent 5px) 0 0 / 26px 12px repeat-x; }
+  header { display: flex; justify-content: space-between; align-items: center; height: 64px; padding: 0 28px; border-radius: 22px 22px 0 0; background: var(--navy); color: var(--white); }
+  header .label { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; }
+  header .label :global(svg) { color: var(--sky); }
+  .hl-no { color: var(--sky); }
+  .hl-cols { display: grid; grid-template-columns: 1fr 1fr; column-gap: 80px; padding: 16px 28px 0; position: relative; }
+  .hl-cols::before { content: ''; position: absolute; left: 50%; top: 24px; bottom: 8px; border-left: 2px dashed var(--line); }
+  .hl-col { display: grid; gap: 12px; margin: 0; padding: 0; }
+  .hl-row { position: relative; display: flex; align-items: center; gap: 16px; min-height: 64px; padding: 8px 40px 8px 12px; border-radius: 14px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); color: var(--navy); transition: box-shadow var(--dur-2); }
+  .hl-row.alt { background: var(--mist); box-shadow: none; }
+  .hl-row:hover { box-shadow: inset 0 0 0 1px var(--blue); }
+  .hl-ic { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .hl-tx { display: grid; flex: 1; min-width: 0; }
+  .hl-tx b { font-weight: 700; font-size: 18px; line-height: 24px; }
+  .hl-tx small { font-weight: 500; font-size: 14px; line-height: 20px; color: var(--slate); }
+  .hl-row :global(.hl-ad) { position: absolute; right: -18px; top: 50%; margin-top: -18px; }
+  .hl-row:hover :global(.hl-ad) { background: var(--press); }
+  .hl-em { display: flex; align-items: center; gap: 16px; margin: 20px 28px 0; padding: 16px 160px 16px 16px; border-radius: 16px; background: var(--navy); color: var(--white); }
+  .hl-emi { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--sky); color: var(--navy); }
+  .hl-em .hl-tx b { font-size: 20px; } .hl-em .hl-tx small { color: var(--soft); }
+  .hl-ph { color: var(--sky); font-size: 32px; line-height: 36px; white-space: nowrap; }
+  .hl-em:hover .hl-ph { text-decoration: underline; text-underline-offset: 6px; }
+  .hl-tk :global(.hl-seal) { position: absolute; right: -36px; bottom: -40px; }
+  @media (max-width: 1023px) {
+    .hl { padding: 64px 0 88px; }
+    .hl-tk { margin-top: 32px; padding-bottom: 20px; }
+    header { padding: 0 18px; } .hl-no { display: none; }
+    .hl-cols { grid-template-columns: minmax(0, 1fr); row-gap: 10px; padding: 14px 14px 0; }
+    .hl-cols::before { display: none; }
+    .hl-col { gap: 10px; }
+    .hl-row { min-height: 72px; padding: 8px 46px 8px 10px; gap: 12px; }
+    .hl-row :global(.hl-ad) { right: 8px; width: 30px; height: 30px; margin-top: -15px; }
+    .hl-ic { width: 38px; height: 38px; }
+    .hl-tx b { font-size: 16px; line-height: 21px; } .hl-tx small { font-size: 13px; line-height: 18px; }
+    .hl-em { display: grid; grid-template-columns: auto minmax(0, 1fr); margin: 14px 14px 0; padding: 16px; gap: 12px; }
+    .hl-ph { grid-column: 1 / -1; font-size: 26px; }
+    .hl-tk :global(.hl-seal) { --d: 72px !important; right: -6px; bottom: -36px; }
+  }
+</style>

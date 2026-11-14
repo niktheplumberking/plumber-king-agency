@@ -1,0 +1,56 @@
+---
+// O8 Instagram (Figma O8): a sky stat tile (post count read 13 Nov 2026; refresh at build) overlapping the first of four
+// photo tiles from the crew's own camera roll. These are site photos, not a live feed.
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+const tiles = [
+  { n: 'community-toy-drive-team', alt: 'The team with a pile of donated toys', cap: 'Toy drive.' },
+  { n: 'crew-six-at-truck', alt: 'Six crew members standing at a wrapped truck', cap: 'The crew.' },
+  { n: 'brand-gift-roll-closeup', alt: 'A Plumbing By Paul branded gift roll up close', cap: 'The gift roll.' },
+  { n: 'hero-04-crew-new-jerseys-box-truck', alt: 'The crew in new blue jerseys in front of the box truck', cap: 'New jerseys.' },
+];
+---
+<section class="oi" aria-label="Plumbing By Paul on Instagram" data-m-section>
+  <div class="wrap oi-in">
+    <div class="oi-stat" data-t="4" data-fx="rise">
+      <p class="oi-h"><Icon name="ig" size={18} />{SITE.social.instagramHandle}</p>
+      <p class="num oi-n">{SITE.social.instagramPosts}</p>
+      <p class="oi-k">posts and counting</p>
+      <a class="oi-btn" href={SITE.social.instagram} target="_blank" rel="noopener"><Icon name="ig" size={16} />Follow along on Instagram<span class="sr-only"> (opens in a new tab)</span></a>
+    </div>
+    <ul role="list" class="oi-tiles" data-t="4" data-stagger>
+      {tiles.map((t) => (
+        <li class="oi-t frame">
+          <Img name={t.n} alt={t.alt} sizes="(min-width: 1024px) 207px, 45vw" widths={[220, 440]} focus="50% 45%" />
+          <span class="oi-ig" aria-hidden="true"><Icon name="ig" size={16} /></span>
+          <Caption class="oi-cap" small>{t.cap}</Caption>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .oi { position: relative; background: var(--tint); padding: 87px 0 63px; }
+  .oi-in { position: relative; display: grid; grid-template-columns: 302px 1fr; align-items: start; }
+  .oi-stat { position: relative; z-index: 2; width: 329px; height: 276px; margin-left: -27px; padding: 26px 28px; border-radius: 24px; background: var(--sky); color: var(--navy); box-shadow: var(--sh-3); transform: rotate(-3deg); }
+  .oi-h { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+  .oi-n { margin-top: 18px; font-size: 76px; line-height: 1; }
+  .oi-k { margin-top: 8px; font-weight: 600; font-size: 16px; }
+  .oi-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 18px; padding: 0 16px; border-radius: 12px; background: var(--navy); color: var(--white); font-weight: 700; font-size: 13px; transition: transform var(--dur-2) var(--ease-out); }
+  .oi-btn:hover { transform: translateY(-2px); }
+  .oi-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 11px 0 0; padding: 0; }
+  .oi-t { position: relative; height: 222px; border-radius: var(--r-lg); }
+  .oi-t :global(img) { display: block; }
+  .oi-ig { position: absolute; right: 12px; top: 12px; z-index: 2; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--white); color: var(--navy); box-shadow: var(--sh-1); }
+  .oi-t :global(.oi-cap) { position: absolute; left: 12px; bottom: 12px; z-index: 2; }
+  @media (max-width: 1023px) {
+    .oi { padding: 56px 0 64px; }
+    .oi-in { grid-template-columns: 1fr; row-gap: 24px; }
+    .oi-stat { width: auto; height: auto; margin: 0 6px; padding: 22px 22px; transform: rotate(-2deg); }
+    .oi-n { font-size: 60px; }
+    .oi-tiles { grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; }
+    .oi-t { height: 170px; border-radius: var(--r-md); }
+  }
+</style>

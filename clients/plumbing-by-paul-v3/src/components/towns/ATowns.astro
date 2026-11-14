@@ -1,0 +1,79 @@
+---
+// A2 Towns (Figma A2): heading, three town cards with map crops (St. Petersburg = home base, larger, van-stripe shadow),
+// and the "On our route" tint panel overlapping the grid's bottom edge. Route towns are chips, not links (no doorway pages).
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import TownChip from '../ui/TownChip.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import RouteMap from './RouteMap.astro';
+import { SITE } from '../../data/site';
+const cards = [
+  { name: 'St. Petersburg', d: 'Home base. The shop, the office and most of the crew are here.', href: '/', link: 'Plumber in St. Petersburg', vb: [160, 330, 330, 120] as [number, number, number, number], shop: true, home: true },
+  { name: 'Clearwater', d: 'Beach houses, older neighborhoods and everything in between.', href: '/service-areas/clearwater-fl', link: 'Plumber in Clearwater', vb: [130, 136, 230, 104] as [number, number, number, number], dest: [252, 184] as [number, number] },
+  { name: 'Seminole', d: 'Right next door to the shop.', href: '/service-areas/seminole-fl', link: 'Plumber in Seminole', vb: [130, 284, 230, 104] as [number, number, number, number], dest: [240, 330] as [number, number] },
+];
+const route = ['Largo', 'Pinellas Park', 'Gulfport', 'Kenneth City', 'South Pasadena', 'St. Pete Beach', 'Treasure Island', 'Madeira Beach', 'Dunedin', 'Palm Harbor', 'Safety Harbor', 'Tarpon Springs', 'Oldsmar'];
+---
+<section class="at" aria-labelledby="at-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="Pick your town" l1="Where the trucks" l2="go every week" id="at-h" class="at-head" />
+    <ul role="list" class="at-grid" data-t="4" data-stagger>
+      {cards.map((c, i) => (
+        <li class:list={['at-card', c.home && 'home']}>
+          <div class="at-map">
+            <RouteMap vb={c.vb} dest={c.dest} shop={!!c.shop} water={false} class="at-rm" />
+            {c.home && <span class="at-tag"><Icon name="house" size={13} />Home base</span>}
+          </div>
+          <div class="at-body">
+            <h3 class="at-t">{c.name}</h3>
+            <span class="num at-n" aria-hidden="true">0{i + 1}</span>
+            <p class="at-d">{c.d}</p>
+            <TextLink href={c.href} class="at-l">{c.link}</TextLink>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <div class="at-route" data-t="5">
+      <div class="at-rl">
+        <Eyebrow text="On our route" t={false} />
+        <p class="at-line">Your town's not a link yet? We still come. Call <a href={SITE.tel}>{SITE.phone}</a>.</p>
+      </div>
+      <ul role="list" class="at-chips" aria-label="Other towns on our route">
+        {route.map((n) => <li><TownChip name={n} h={36} /></li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+<style>
+  .at { position: relative; background: var(--white); padding: 112px 0 96px; }
+  .at-grid { display: grid; grid-template-columns: 486fr 333fr 333fr; gap: 24px; margin: 56px 0 0; padding: 0; }
+  .at-card { position: relative; display: flex; flex-direction: column; min-height: 340px; padding: 8px; border-radius: 22px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); }
+  .at-card.home { box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .at-map { position: relative; height: 150px; border-radius: 16px; overflow: hidden; }
+  .at-map :global(.at-rm) { position: absolute; inset: 0; width: 100%; height: 100% !important; aspect-ratio: auto !important; border-radius: 16px; }
+  .at-tag { position: absolute; left: 12px; top: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px; background: var(--navy); color: var(--white); font-family: var(--f-num); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  .at-body { position: relative; flex: 1; display: flex; flex-direction: column; padding: 22px 16px 26px; }
+  .at-t { font-weight: 800; font-size: 26px; line-height: 32px; letter-spacing: -.01em; }
+  .at-n { position: absolute; right: 18px; top: 28px; font-size: 13px; color: var(--press); }
+  .at-d { margin-top: 8px; font-size: 15px; line-height: 23px; color: var(--slate); max-width: 420px; }
+  .at-body :global(.at-l) { margin-top: 16px; }
+  .at-route { position: relative; z-index: 2; display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: center; margin-top: -24px; padding: 28px 32px; border-radius: 22px; background: var(--tint); box-shadow: var(--sh-2); }
+  .at-line { margin-top: 10px; font-weight: 600; font-size: 15px; line-height: 23px; color: var(--navy); }
+  .at-line a { color: var(--press); text-decoration: underline; text-underline-offset: 3px; }
+  .at-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+  @media (max-width: 1023px) {
+    .at { padding: 112px 0 64px; }
+    .at-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 28px; }
+    .at-card { min-height: 0; }
+    .at-map { height: 108px; }
+    .at-body { padding: 18px 12px 20px; }
+    .at-t { font-size: 22px; line-height: 28px; }
+    .at-d { font-size: 14px; line-height: 22px; }
+    .at-route { grid-template-columns: 1fr; gap: 16px; margin-top: -12px; padding: 22px 16px; }
+    .at-rl { display: contents; }
+    .at-line { order: 3; margin: 0; font-size: 14px; line-height: 21px; }
+    .at-chips { gap: 8px 6px; }
+    .at-chips :global(.town) { padding: 0 11px; font-size: 13px; }
+  }
+</style>

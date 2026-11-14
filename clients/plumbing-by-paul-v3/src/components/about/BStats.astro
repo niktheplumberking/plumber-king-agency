@@ -1,0 +1,64 @@
+---
+// B3 Stats band (Figma B3): a navy card that overlaps the story above (64 px) and the timeline below; four cells, the second
+// a white meter cell rising above the card's top edge. Every number from SITE (checked 13 Nov 2026). No "2,500+ customers".
+import Meter from '../ui/Meter.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import { SITE } from '../../data/site';
+const years = 2026 - Number(SITE.founded);
+---
+<section class="bst" aria-label="Plumbing By Paul in numbers" data-m-section>
+  <div class="wrap">
+    <div class="bst-card on-navy" data-t="4" data-fx="rise">
+      <FlowLines variant="navy" class="bst-fl" />
+      <ul role="list" class="bst-row" data-stagger>
+        <li class="bst-c"><span class="num bst-n">{years}</span><span class="bst-k">years in business</span><span class="bst-s">since June {SITE.founded}</span></li>
+        <li class="bst-c bst-meter">
+          <span class="bst-g"><GoogleG size={18} />Google reviews</span>
+          <Meter digits={String(SITE.rating.count)} label={`${SITE.rating.count} Google reviews`} cw={40} ch={58} gap={6} pad={6} class="bst-m" />
+          <span class="script bst-sc">and counting</span>
+          <span class="bst-s dk">checked {SITE.rating.checked}</span>
+        </li>
+        <li class="bst-c"><span class="bst-nr"><span class="num bst-n sky">{SITE.rating.value}</span><Stars size={16} /></span><span class="bst-k">out of 5 on Google</span><span class="bst-s">{SITE.rating.count} reviews</span></li>
+        <li class="bst-c"><span class="num bst-n">4x</span><span class="bst-k">Best of the Bay</span><span class="bst-s">Best Plumbing Company</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<style>
+  .bst { position: relative; z-index: 2; background: linear-gradient(180deg, var(--white) 0 50%, var(--tint) 50%); padding: 0; height: 236px; }
+  .bst-card { position: relative; top: -64px; height: 268px; border-radius: var(--r-2xl); background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .bst-card :global(.bst-fl) { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+  .bst-row { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; height: 100%; margin: 0; padding: 0 30px; }
+  .bst-c { display: flex; flex-direction: column; justify-content: center; padding: 0 16px; border-left: 1px solid rgba(255,255,255,.14); }
+  .bst-c:first-child { border-left: 0; }
+  .bst-n { font-size: 80px; line-height: 1; color: var(--white); }
+  .bst-n.sky { color: var(--sky); }
+  .bst-nr { display: flex; align-items: center; gap: 14px; }
+  .bst-k { margin-top: 18px; font-weight: 700; font-size: 18px; line-height: 24px; }
+  .bst-s { margin-top: 4px; font-size: 14px; color: var(--soft); }
+  .bst-meter { position: relative; top: -44px; align-self: start; align-items: center; height: 266px; margin: 0 12px; padding: 18px 16px; border: 0; border-radius: 22px; background: var(--white); color: var(--navy); box-shadow: var(--sh-3); justify-content: flex-start; }
+  .bst-meter + .bst-c { border-left: 0; }
+  .bst-g { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
+  .bst-meter :global(.bst-m) { margin-top: 16px; }
+  .bst-sc { margin-top: 18px; font-size: 26px; line-height: 1; color: var(--blue); }
+  .bst-s.dk { margin-top: 10px; font-size: 13px; color: var(--slate); }
+  @media (max-width: 1199px) { .bst-n { font-size: 64px; } .bst-row { padding: 0 12px; } }
+  @media (max-width: 1023px) {
+    .bst { height: auto; padding: 0 0 28px; background: linear-gradient(180deg, var(--white) 0 40px, var(--tint) 40px); }
+    .bst-card { top: 0; height: auto; margin-top: 0; border-radius: var(--r-xl); }
+    .bst-row { grid-template-columns: 1fr 1fr; padding: 26px 18px 30px; row-gap: 26px; }
+    .bst-c { padding: 0 6px; border: 0; justify-content: flex-start; }
+    .bst-n { font-size: 52px; }
+    .bst-nr { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .bst-k { margin-top: 12px; font-size: 14px; line-height: 19px; }
+    .bst-s { font-size: 11px; }
+    .bst-meter { order: -1; grid-column: 2; grid-row: 1; top: -44px; height: auto; margin: 0 0 -44px; padding: 12px 10px 14px; border-radius: 16px; }
+    .bst-c:first-child { grid-column: 1; grid-row: 1; }
+    .bst-g { font-size: 12px; gap: 6px; }
+    .bst-meter :global(.bst-m) { margin-top: 10px; transform: scale(.82); }
+    .bst-sc { margin-top: 6px; font-size: 20px; }
+    .bst-s.dk { margin-top: 6px; font-size: 10px; }
+  }
+</style>

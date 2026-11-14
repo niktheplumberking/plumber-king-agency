@@ -1,0 +1,53 @@
+---
+// Hero estimate bar (desktop: one row 1200 x 116 straddling the hero's bottom edge; mobile: stacked card).
+// Same handler as EstimateCard (forms.ts). "Call me back" = the request; problem is a select here.
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import { PROBLEMS } from '../../data/site';
+import { FORM_ENDPOINT, THANK_YOU } from '../../lib/form';
+interface Props { idp?: string; class?: string; }
+const { idp = 'qe', class: cls } = Astro.props;
+---
+<form class:list={['ebar', cls]} action={FORM_ENDPOINT || THANK_YOU} method={FORM_ENDPOINT ? 'post' : 'get'} data-estimate-form novalidate aria-labelledby={`${idp}-h`}>
+  <div class="eb-l">
+    <h2 class="label eb-h" id={`${idp}-h`}>Quick estimate</h2>
+    <p class="eb-n"><Icon name="lock" size={13} /><span>We call you back.<br class="br" /> No spam, ever.</span></p>
+  </div>
+  <div class="eb-f">
+    <label class="eb-in"><span class="sr-only">Your name</span><input class="input" name="name" autocomplete="name" placeholder="Your name" required /><Icon name="user" size={20} /></label>
+    <label class="eb-in"><span class="sr-only">Phone</span><input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone" required /><Icon name="phone" size={20} /></label>
+    <label class="eb-in eb-sel"><span class="sr-only">What's going on?</span>
+      <select class="input" name="problem" data-placeholder>
+        <option value="" selected>What's going on?</option>
+        {PROBLEMS.map((p) => <option value={p}>{p}</option>)}
+      </select><Icon name="down" size={20} />
+    </label>
+    <Button type="submit" icon="phone" class="eb-btn">Call me back</Button>
+  </div>
+  <p class="form-msg eb-msg" role="alert" data-form-msg></p>
+</form>
+<style>
+  .ebar { position: relative; display: grid; grid-template-columns: 184px 1fr; align-items: center; gap: 28px; padding: 30px 28px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .ebar::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; border-radius: 20px 20px 0 0; background: var(--sky); }
+  .eb-h { color: var(--press); font-size: 13px; line-height: 16px; }
+  .eb-n { display: flex; gap: 6px; margin-top: 6px; font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate); }
+  .eb-n :global(svg) { margin-top: 2px; flex: none; }
+  .eb-f { display: grid; grid-template-columns: 1fr 1fr 1.16fr auto; gap: 12px; }
+  .eb-in { position: relative; display: block; }
+  .eb-in .input { padding-right: 48px; }
+  .eb-in > :global(svg) { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--blue); pointer-events: none; }
+  .eb-sel select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+  .eb-sel select:invalid, .eb-sel select.is-empty { color: var(--slate-2); }
+  .ebar :global(.eb-btn) { min-width: 192px; }
+  .eb-msg { grid-column: 1 / -1; margin-top: -12px; }
+  @media (max-width: 1199px) { .eb-f { grid-template-columns: 1fr 1fr; } .ebar { grid-template-columns: 1fr; gap: 16px; } .br { display: none; } }
+  @media (max-width: 767px) {
+    .ebar { padding: 24px 20px 20px; gap: 12px; }
+    .eb-l { display: contents; }
+    .eb-n { order: 9; justify-content: center; margin-top: 0; }
+    .eb-f { grid-template-columns: 1fr; }
+    .eb-in .input { min-height: 52px; }
+    .ebar :global(.eb-btn) { min-height: 52px; }
+    .eb-msg { margin-top: 0; }
+  }
+</style>

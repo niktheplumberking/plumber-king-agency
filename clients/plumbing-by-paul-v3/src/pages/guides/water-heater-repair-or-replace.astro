@@ -1,0 +1,30 @@
+---
+// 12 Guide (PAGES.md U1-U7, Figma desktop 439:2340 / mobile 439:10591). Article + FAQPage (+ BreadcrumbList from the crumbs,
+// Plumber entity from Base). FAQPage covers U4 items 01-04 (05 still holds the [Paul to supply starting prices] placeholder).
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import GHero from '../../components/guides/GHero.astro';
+import GBody from '../../components/guides/GBody.astro';
+import GFaq from '../../components/guides/GFaq.astro';
+import GRail from '../../components/guides/GRail.astro';
+import GAuthor from '../../components/guides/GAuthor.astro';
+import WaterlineCTA from '../../components/global/WaterlineCTA.astro';
+import { articleSchema } from '../../lib/schema';
+import { WH_FAQ, MORE } from '../../components/guides/data';
+import heroPhoto from '../../assets/photos/service-tankless-water-heater-install.jpg';
+const path = '/guides/water-heater-repair-or-replace';
+const description = "Is your water heater worth repairing? A St. Petersburg plumber's plain answer: age, leaks, repair history, Pinellas permits and what replacement involves.";
+const img = await getImage({ src: heroPhoto, width: 1200, format: 'jpg', quality: 78 });
+const article = articleSchema({ headline: 'Repair or replace your water heater?', path, description, datePublished: '2026-11-14', image: new URL(img.src, Astro.site).href });
+const faq = { '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: WH_FAQ.filter((f) => f.idx !== '05').map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: `${f.a1} ${f.a2}` } })) };
+---
+<Base title="Repair or Replace a Water Heater in Florida?" description={description} path={path} type="article"
+  og="service-tankless-water-heater-install" ogAlt="A tankless water heater installed on a garage wall" jsonld={[article, faq]}>
+  <GHero />
+  <GBody />
+  <GFaq />
+  <GRail items={MORE} />
+  <GAuthor />
+  <WaterlineCTA l1="Still not sure?" l2="We'll look at it for free." />
+</Base>

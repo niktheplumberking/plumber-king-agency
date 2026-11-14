@@ -1,0 +1,44 @@
+---
+// Utility bar (navy, 40 px; 36 mobile). Scrolls away; the header below it is sticky.
+import Stars from '../ui/Stars.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+---
+<aside class="ubar" data-intro="topbar" aria-label="Rating, licence and hours">
+  <div class="wrap ub-in">
+    <p class="ub-l">
+      <a href={SITE.google.reviewsUrl} target="_blank" rel="noopener" class="ub-r"><Stars size={13} /><span>{SITE.rating.value} · {SITE.rating.count} Google reviews</span><span class="sr-only"> (opens in a new tab)</span></a>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="ub-lic"><Icon name="badge" size={15} />Lic. {SITE.licence}</span>
+    </p>
+    <p class="ub-rt">
+      <span class="dot" aria-hidden="true"></span><span class="h-long">{SITE.hours.line}</span><span class="h-short">{SITE.hours.short}</span>
+      <span class="sep" aria-hidden="true"></span>
+      <a href={SITE.paymentUrl} class="pay">Make a payment</a>
+    </p>
+  </div>
+</aside>
+<style>
+  .ubar { position: relative; z-index: calc(var(--z-header) + 1); background: var(--navy); color: var(--white); font-weight: 500; font-size: 13px; line-height: 20px; }
+  .ub-in { display: flex; justify-content: space-between; align-items: center; height: 40px; gap: 16px; }
+  .ub-l, .ub-rt { display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+  .ub-r { display: inline-flex; align-items: center; gap: 12px; font-weight: 600; }
+  .ub-r:hover span:not(.sr-only) { text-decoration: underline; text-underline-offset: 3px; }
+  .ub-lic { display: inline-flex; align-items: center; gap: 6px; }
+  .ub-lic :global(svg) { color: var(--sky); }
+  .sep { width: 1px; height: 14px; background: var(--navy-3); }
+  .dot { position: relative; width: 16px; height: 16px; }
+  .dot::before, .dot::after { content: ''; position: absolute; border-radius: 50%; background: var(--sky); }
+  .dot::before { inset: 0; opacity: .3; } .dot::after { inset: 4px; }
+  .pay { color: var(--sky); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .pay:hover { color: var(--white); }
+  .h-short { display: none; }
+  @media (max-width: 899px) {
+    .ub-in { height: 36px; } .ubar { font-size: 12px; }
+    .ub-lic, .ub-l .sep, .ub-rt .sep, .pay, .h-long { display: none; }
+    .h-short { display: inline; }
+    .ub-r { gap: 8px; } .ub-r :global(.stars) { --star-size: 11px; }
+    .dot { width: 8px; height: 8px; } .dot::before { display: none; } .dot::after { inset: 0; }
+    .ub-rt { gap: 6px; }
+  }
+</style>

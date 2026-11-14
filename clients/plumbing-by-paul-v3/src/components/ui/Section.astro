@@ -1,0 +1,15 @@
+---
+// Section wrapper: background, vertical rhythm, motion scope. Every content section of every page uses it.
+//   <Section bg="tint" id="family" label="family-h"> ... </Section>
+// bg: white | tint | mist | navy | sky | none. pad: full (104/64) | compact (48/32) | none. Adds data-m-section (MOTION.md).
+interface Props { bg?: 'white' | 'tint' | 'mist' | 'navy' | 'sky' | 'none'; id?: string; label?: string; pad?: 'full' | 'compact' | 'none'; class?: string; as?: string; style?: string; [k: string]: any; }
+const { bg = 'white', id, label, pad = 'full', class: cls, as: Tag = 'section', style, ...rest } = Astro.props;
+---
+<Tag id={id} aria-labelledby={label} class:list={['sec', bg !== 'none' && `bg-${bg}`, bg === 'navy' && 'on-navy', `pad-${pad}`, cls]} style={style} data-m-section {...rest}>
+  <slot />
+</Tag>
+<style>
+  .sec { position: relative; }
+  .pad-full { padding-block: var(--section-y); }
+  .pad-compact { padding-block: clamp(32px, 1.524vw + 26px, 48px); }
+</style>

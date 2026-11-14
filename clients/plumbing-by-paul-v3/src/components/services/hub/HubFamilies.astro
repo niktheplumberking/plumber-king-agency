@@ -1,0 +1,92 @@
+---
+// S4 The four families (Figma 02): head + lead, then an image accordion: one panel open (photo + white card with links),
+// three closed panels with a vertical Russo label, a + button and a medallion. Buttons switch the open panel.
+// Mobile: four stacked cards, every card open. Without JS: the first panel is open and the others still link via the list.
+import SectionHead from '../../ui/SectionHead.astro';
+import Icon from '../../ui/Icon.astro';
+import Img from '../../ui/Img.astro';
+import { SITE } from '../../../data/site';
+import { FAMILIES, HREF } from './hub';
+const pad = (x: number) => String(x).padStart(2, '0');
+---
+<section class="fm" aria-labelledby="fm-h" data-m-section>
+  <div class="wrap">
+    <div class="fm-head">
+      <SectionHead eyebrow="Four families of work" l1="It all comes down to" l2="four things" id="fm-h" />
+      <p class="lead fm-lead" data-t="3">Water coming in, water going out, water getting hot, and the fixtures you touch every day.</p>
+    </div>
+    <div class="fm-row" data-acc-row data-t="4" data-stagger>
+      {FAMILIES.map((f, i) => (
+        <article class="fm-p" data-open={i === 0 ? 'true' : 'false'} aria-labelledby={`fm-t${i}`}>
+          <div class="fm-ph"><Img name={f.photo.name} alt={f.photo.alt} focus={f.photo.focus} sizes="(min-width: 1024px) 588px, calc(100vw - 40px)" widths={[400, 600, 900, 1200]} /></div>
+          <span class="fm-shade" aria-hidden="true"></span>
+          <p class="label fm-tag"><span class="fm-no">{pad(i + 1)}</span><span class="fm-st"> · Open</span></p>
+          <button type="button" class="fm-btn" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`fm-c${i}`} data-acc-btn>
+            <span class="fm-vl">{f.t}</span><span class="fm-plus"><Icon name="plus" size={18} /></span><span class="sr-only">Show {f.t}</span>
+          </button>
+          <span class="fm-med2" aria-hidden="true"><Icon name={f.icon} size={22} /></span>
+          <div class="fm-card" id={`fm-c${i}`}>
+            <span class="fm-med" aria-hidden="true"><Icon name={f.icon} size={24} /></span>
+            <h3 class="fm-t" id={`fm-t${i}`}>{f.t}</h3>
+            <p class="fm-d">{f.d}</p>
+            <ul role="list" class="fm-links">{f.links.map((l) => <li><a href={HREF[l]}>{l}<Icon name="arrow" size={14} /></a></li>)}</ul>
+            <a href={SITE.tel} class="fm-call"><Icon name="phone" size={18} />{f.call}<span class="sr-only">: {SITE.phone}</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-acc-row]').forEach((row) => {
+    const panels = Array.from(row.querySelectorAll<HTMLElement>('.fm-p'));
+    panels.forEach((p) => p.querySelector<HTMLButtonElement>('[data-acc-btn]')?.addEventListener('click', () => {
+      panels.forEach((o) => { const on = o === p; o.dataset.open = String(on); o.querySelector('[data-acc-btn]')?.setAttribute('aria-expanded', String(on)); });
+      p.querySelector<HTMLElement>('.fm-card a')?.focus({ preventScroll: true });
+    }));
+  });
+</script>
+<style>
+  .fm { position: relative; background: var(--tint); padding: 104px 0; }
+  .fm-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+  .fm-lead { max-width: 440px; padding-bottom: 4px; }
+  .fm-row { display: flex; gap: 24px; height: 520px; margin-top: 56px; }
+  .fm-p { position: relative; flex: 180 1 0; min-width: 0; margin-top: 24px; border-radius: 28px; overflow: hidden; background: var(--navy); transition: flex-grow .6s var(--ease-out), margin .6s var(--ease-out); }
+  .fm-p[data-open='true'] { flex-grow: 588; margin-top: 0; overflow: visible; }
+  .fm-ph { position: absolute; inset: 0; border-radius: 28px; overflow: hidden; }
+  .fm-shade { position: absolute; inset: 0; border-radius: 28px; background: linear-gradient(180deg, rgba(17,16,50,.35) 0%, rgba(17,16,50,.1) 35%, rgba(17,16,50,.85) 100%); transition: opacity .4s; }
+  .fm-p[data-open='true'] .fm-shade { opacity: 0; }
+  .fm-tag { position: absolute; left: 20px; top: 22px; z-index: 2; color: var(--white); font-size: 13px; }
+  .fm-st { display: none; }
+  .fm-p[data-open='true'] .fm-tag { padding: 5px 10px; border-radius: 6px; background: var(--navy); font-size: 11px; }
+  .fm-p[data-open='true'] .fm-st { display: inline; }
+  .fm-btn { position: absolute; inset: 0; z-index: 1; display: block; width: 100%; border: 0; padding: 0; background: none; cursor: pointer; color: var(--white); font: inherit; }
+  .fm-vl { position: absolute; left: 50%; bottom: 110px; transform: translateX(-50%) rotate(180deg); writing-mode: vertical-rl; white-space: nowrap; font-family: var(--f-num); font-size: 22px; line-height: 28px; text-align: left; }
+  .fm-plus { position: absolute; right: 18px; top: 16px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--white); color: var(--navy); }
+  .fm-med2 { position: absolute; left: 50%; bottom: 24px; z-index: 2; display: grid; place-items: center; width: 60px; height: 60px; margin-left: -30px; border-radius: 50%; background: var(--sky); color: var(--navy); box-shadow: 0 0 0 4px var(--white); pointer-events: none; }
+  .fm-p[data-open='true'] .fm-btn, .fm-p[data-open='true'] .fm-med2 { display: none; }
+  .fm-card { display: none; position: absolute; left: 24px; bottom: -32px; z-index: 3; width: min(452px, calc(100% - 48px)); padding: 52px 28px 26px; border-radius: 20px; background: var(--white); box-shadow: var(--sh-3); }
+  .fm-p[data-open='true'] .fm-card { display: block; }
+  .fm-med { position: absolute; left: 24px; top: -32px; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--sky); color: var(--navy); box-shadow: 0 0 0 4px var(--white), var(--sh-2); }
+  .fm-t { font-weight: 800; font-size: 26px; line-height: 32px; }
+  .fm-d { margin-top: 10px; font-size: 15px; line-height: 24px; color: var(--slate); }
+  .fm-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; }
+  .fm-links a { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: 8px; background: var(--tint); color: var(--navy); font-weight: 600; font-size: 14px; }
+  .fm-links a :global(svg) { color: var(--blue); }
+  .fm-links a:hover { background: #DCEDF5; }
+  .fm-call { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--press); font-weight: 700; font-size: 15px; }
+  .fm-call:hover { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 1023px) {
+    .fm { padding: 64px 0; }
+    .fm-head { display: grid; gap: 16px; }
+    .fm-row { display: grid; gap: 20px; height: auto; margin-top: 32px; }
+    .fm-p, .fm-p[data-open='true'] { margin: 0; overflow: visible; background: none; }
+    .fm-ph { position: relative; height: 190px; border-radius: 20px; }
+    .fm-shade, .fm-btn, .fm-med2 { display: none; }
+    .fm-tag, .fm-p[data-open='true'] .fm-tag { left: 14px; top: 14px; padding: 4px 8px; border-radius: 6px; background: var(--navy); font-size: 11px; }
+    .fm-st, .fm-p[data-open='true'] .fm-st { display: none; }
+    .fm-card, .fm-p[data-open='true'] .fm-card { display: block; position: relative; left: auto; bottom: auto; width: auto; margin: -24px 10px 0; padding: 40px 20px 20px; }
+    .fm-med { width: 52px; height: 52px; top: -26px; left: 18px; }
+    .fm-t { font-size: 21px; line-height: 26px; }
+  }
+</style>

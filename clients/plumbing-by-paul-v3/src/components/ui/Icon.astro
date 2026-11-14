@@ -1,0 +1,12 @@
+---
+// <Icon name="phone" size={20} /> : Lucide outline icon from icons.ts. Decorative by default (aria-hidden);
+// pass `label` to make it a meaningful image.
+import { ICONS } from './icons';
+interface Props { name: string; size?: number; stroke?: number; class?: string; label?: string; }
+const { name, size = 24, stroke = 1.75, class: cls, label } = Astro.props;
+const body = ICONS[name];
+if (!body) throw new Error(`Icon "${name}" is not in icons.ts`);
+---
+<svg class:list={['icon', cls]} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width={stroke}
+  stroke-linecap="round" stroke-linejoin="round" aria-hidden={label ? undefined : 'true'} role={label ? 'img' : undefined}
+  aria-label={label} focusable="false" set:html={body} />

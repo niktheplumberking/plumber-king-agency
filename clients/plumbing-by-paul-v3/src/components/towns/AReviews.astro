@@ -1,0 +1,73 @@
+---
+// A5 Reviews by place (Figma A5): tint, two staggered review cards with a navy place tag on the top-left and sewn
+// "fixed by" patches top-right. Quotes word for word from REVIEWS_ALL; the second is the tail of Alix's review, marked "...".
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Icon from '../ui/Icon.astro';
+import Patch from '../ui/Patch.astro';
+const cards = [
+  { place: 'St. Petersburg', name: 'Luke Utting', age: '10 months ago', patches: ['Alycia', 'Phil'],
+    q: 'Plumbing by Paul Came to <mark>my home in St. Petersburg</mark> same day and fixed the leak at my meter box in just a few short hours. Very happy with service provided by Alycia &amp; Phil' },
+  { place: 'St. Pete / Clearwater', name: 'Alix McKeel', age: '2 months ago', service: 'Water heater installation',
+    q: '... They were very nice and respectful of our home- made sure to clean up. Highly recommend to <mark>anyone in need of a plumber in St.Pete / Clearwater</mark>' },
+];
+---
+<section class="ar" aria-labelledby="ar-h" data-m-section>
+  <div class="wrap">
+    <div class="ar-head">
+      <SectionHead eyebrow="From around the county" l1="Neighbors," l2="town by town" id="ar-h" />
+      <TextLink href="/reviews" class="ar-all">Read all reviews</TextLink>
+    </div>
+    <ul role="list" class="ar-grid" data-t="4" data-stagger>
+      {cards.map((c) => (
+        <li class="ar-card">
+          <figure>
+            <p class="ar-place"><Icon name="pin" size={15} />{c.place}</p>
+            {c.patches && <div class="ar-pats" aria-label={`Fixed by ${c.patches.join(' and ')}`}>{c.patches.map((p, i) => <span class:list={['ar-pw', `p${i}`]}><Patch name={p} deg={i ? -6 : 5} /></span>)}</div>}
+            <Stars size={15} />
+            <blockquote class="ar-q"><p set:html={c.q} /></blockquote>
+            {c.service && <p class="ar-svc"><Icon name="wrench" size={12} />{c.service}</p>}
+            <figcaption class="ar-by"><span class="ar-av" aria-hidden="true">{c.name.charAt(0)}</span><span><b>{c.name}</b><small>Google review · {c.age}</small></span><GoogleG size={20} class="ar-g" /></figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+    <TextLink href="/reviews" class="ar-allm">Read all reviews</TextLink>
+  </div>
+</section>
+<style>
+  .ar { position: relative; background: var(--tint); padding: 104px 0 112px; }
+  .ar-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .ar-head :global(.ar-all) { margin-bottom: 6px; }
+  .ar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; margin: 72px 0 0; padding: 0; }
+  .ar-card:nth-child(2) { margin-top: 44px; }
+  .ar-card figure { position: relative; margin: 0; padding: 44px 36px 26px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .ar-place { position: absolute; left: 28px; top: -19px; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border-radius: 10px; background: var(--navy); color: var(--white); font-weight: 700; font-size: 13px; box-shadow: var(--sh-2); }
+  .ar-place :global(svg) { color: var(--sky); }
+  .ar-pats { position: absolute; right: 0; top: -38px; display: flex; }
+  .ar-pw.p0 { margin-right: -14px; transform: translateY(8px); }
+  .ar-q { margin: 16px 0 0; font-size: 17px; line-height: 27px; color: var(--navy); }
+  .ar-q :global(mark) { background: none; color: var(--navy); font-weight: 700; text-decoration: underline; text-decoration-color: var(--soft); text-decoration-thickness: 5px; text-underline-offset: 3px; text-decoration-skip-ink: none; }
+  .ar-svc { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 3px 8px; border-radius: 6px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 500; font-size: 12px; }
+  .ar-by { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+  .ar-av { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--press); font-weight: 700; font-size: 14px; }
+  .ar-by b { display: block; font-weight: 700; font-size: 15px; line-height: 19px; }
+  .ar-by small { display: block; font-size: 12px; color: var(--slate-2); }
+  .ar-by :global(.ar-g) { margin-left: auto; }
+  .ar :global(.ar-allm) { display: none; }
+  @media (max-width: 1023px) {
+    .ar { padding: 56px 0 64px; }
+    .ar-head { display: block; }
+    .ar-head :global(.ar-all) { display: none; }
+    .ar-grid { grid-template-columns: 1fr; gap: 36px; margin-top: 44px; }
+    .ar-card:nth-child(2) { margin-top: 0; }
+    .ar-card figure { padding: 36px 20px 20px; }
+    .ar-place { left: 16px; height: 34px; font-size: 12px; }
+    .ar-pw.p0 { display: none; }
+    .ar-pats { right: 8px; top: -30px; transform: scale(.82); transform-origin: top right; }
+    .ar-q { font-size: 15px; line-height: 25px; }
+    .ar :global(.ar-allm) { display: inline-flex; margin-top: 32px; }
+  }
+</style>

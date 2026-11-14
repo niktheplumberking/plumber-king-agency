@@ -1,0 +1,65 @@
+---
+// Service areas hero map (Figma 07, "Pinellas County map, not in a card"): the same stylised county drawing as PinellasMap,
+// scaled 1.2 into a 600 x 700 frame, sitting straight on the tint with a deep shadow. The three town-page towns are sky;
+// the seal is the pin on the shop; white town labels float off the edge on dotted leader lines. Only real town pages link.
+import Seal from '../ui/Seal.astro';
+import Icon from '../ui/Icon.astro';
+interface Props { class?: string }
+const { class: cls } = Astro.props;
+const LAND = 'M196 44 L332 40 L372 70 L360 120 L326 150 L330 196 L366 236 L410 276 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L240 468 L222 420 L206 364 L192 304 L182 244 L172 186 L168 130 L176 80 Z';
+const AREAS = ['M240 372 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L246 462 Z', 'M170 150 L326 150 L330 196 L340 214 L176 214 Z', 'M190 300 L282 296 L286 352 L240 368 L204 360 Z'];
+const dots: [string, number, number][] = [['Palm Harbor', 202.6, 49], ['Dunedin', 159.4, 118.6], ['Safety Harbor', 267.4, 135.4], ['Largo', 205, 260.2], ['Pinellas Park', 301, 303.4], ['Kenneth City', 279.4, 377.8], ['Gulfport', 286.6, 596.2]];
+const beaches: [string, number, number][] = [['Madeira Beach', -2.4, 415], ['Treasure Island', 9.6, 487], ['St. Pete Beach', 43.2, 581]];
+const pct = (x: number, y: number) => `left:${(x / 600) * 100}%;top:${(y / 700) * 100}%`;
+---
+<div class:list={['hmap', cls]}>
+  <svg viewBox="0 0 600 700" role="img" aria-label="Map of Pinellas County. Our shop is in St. Petersburg. Clearwater and Seminole have their own pages; we also work in Palm Harbor, Dunedin, Safety Harbor, Largo, Pinellas Park, Kenneth City, Gulfport and the beach towns.">
+    <path d="M85.6 108 C80.8 216 97.6 336 131.2 444 C152.8 504 184 559.2 232 600" fill="none" stroke="#A9D3E4" stroke-width="8.4" stroke-linecap="round" stroke-dasharray="55 12" />
+    <g transform="translate(-81.6 -24) scale(1.2)">
+      <path class="hm-land" d={LAND} fill="#FFFFFF" stroke="#2A7FA8" stroke-width="1.5" stroke-linejoin="round" />
+      {AREAS.map((d) => <path d={d} fill="#61ADCB" stroke="#2A7FA8" stroke-width="1.5" stroke-linejoin="round" />)}
+      <g fill="none" stroke="#C9DCE6" stroke-width="1.2"><path d="M176 98 L366 96"/><path d="M178 258 L384 252"/><path d="M286 300 L428 300"/></g>
+    </g>
+    <g font-family="Russo One, sans-serif" fill="#111032" letter-spacing=".8">
+      <text x="163.2" y="199" font-size="14">CLEARWATER</text><text x="175.2" y="366" font-size="13">SEMINOLE</text><text x="273.6" y="555" font-size="15">ST. PETERSBURG</text>
+    </g>
+    <g font-family="Montserrat, sans-serif" font-weight="500" font-size="13" fill="#111032">
+      {dots.map(([t, x, y]) => <g><circle cx={x} cy={y} r="3.4" fill="#FFFFFF" stroke="#111032" stroke-width="1.8" /><text x={x + 9} y={y + 4.5}>{t}</text></g>)}
+      {beaches.map(([t, x, y]) => <text x={x} y={y} fill="#454867">{t}</text>)}
+    </g>
+    <g font-family="Montserrat, sans-serif" font-style="italic" font-weight="500" font-size="15" fill="#2A7FA8">
+      <text x="-24" y="204">Gulf of Mexico</text><text x="440" y="134">Old Tampa Bay</text><text x="500" y="454">Tampa Bay</text>
+    </g>
+    <g fill="none" stroke="#111032" stroke-width="1.6" stroke-dasharray="2 4" stroke-linecap="round">
+      <path d="M300 192 L470 198" /><path d="M156 396 L60 342" /><path d="M422 490 L512 592" />
+    </g>
+    <g fill="#FFFFFF" stroke="#111032" stroke-width="2.6"><circle cx="300" cy="192" r="5" /><circle cx="156" cy="396" r="5" /><circle cx="422" cy="490" r="5" /></g>
+  </svg>
+  <span class="hm-seal" style={pct(278.4, 482.1)}><Seal d={123} deg={-6} /></span>
+  <a class="hm-lab l-cw" href="/service-areas/clearwater-fl" style={pct(468, 176)}><span class="hm-ic"><Icon name="pin" size={16} /></span><span><b>Clearwater</b><small class="label">Town page</small></span></a>
+  <a class="hm-lab l-sm" href="/service-areas/seminole-fl" style={pct(-52, 296)}><span class="hm-ic"><Icon name="pin" size={16} /></span><span><b>Seminole</b><small class="label">Town page</small></span></a>
+  <span class="hm-lab home l-sp" style={pct(440, 591)}><span class="hm-ic"><Icon name="house" size={16} /></span><span><b>St. Petersburg</b><small class="label">Home base</small></span></span>
+</div>
+<style>
+  .hmap { position: relative; aspect-ratio: 600 / 700; container-type: inline-size; }
+  .hmap svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .hm-land { filter: drop-shadow(0 30px 40px rgba(17,16,50,.28)); }
+  .hm-seal { position: absolute; transform: translate(-50%, -50%); }
+  .hm-seal :global(.seal) { --d: 20.5cqw !important; }
+  .hm-lab { position: absolute; display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px 10px 12px; border-radius: 12px; background: var(--white); box-shadow: var(--sh-2); color: var(--navy); white-space: nowrap; transition: transform .35s var(--ease-out), box-shadow .35s; }
+  a.hm-lab:hover { transform: translateY(-3px); box-shadow: var(--sh-3); }
+  .hm-ic { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .home .hm-ic { background: var(--navy); color: var(--white); }
+  .hm-lab b { display: block; font-weight: 700; font-size: 15px; line-height: 20px; }
+  .hm-lab small { display: block; font-size: 10px; line-height: 13px; color: var(--press); }
+  @media (max-width: 1023px) {
+    .hm-lab { gap: 8px; padding: 7px 12px 7px 8px; border-radius: 10px; }
+    .hm-ic { width: 26px; height: 26px; }
+    .hm-ic :global(svg) { width: 13px; height: 13px; }
+    .hm-lab b { font-size: 12px; line-height: 16px; }
+    .hm-lab small { font-size: 8px; line-height: 10px; }
+    .l-cw { left: auto !important; right: -4%; }
+    .l-sm { left: -4% !important; top: 47% !important; }
+    .l-sp { left: auto !important; right: -4%; top: 88% !important; }
+  }
+</style>

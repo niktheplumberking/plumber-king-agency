@@ -1,0 +1,78 @@
+---
+// O7 Reviews (Figma O7): heading + rating pill + "Read all 947 on Google" left; two review cards (white, then navy)
+// with sewn "fixed by" patches; the first rides up over the swoosh. Quotes word for word (the second shortened with "...").
+import SectionHead from '../ui/SectionHead.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import TextLink from '../ui/TextLink.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Icon from '../ui/Icon.astro';
+import Patch from '../ui/Patch.astro';
+import { SITE } from '../../data/site';
+const cards = [
+  { name: 'Jamie Horn', age: '3 weeks ago', tags: ['Shower installation'], patch: 'Chris', dark: false,
+    q: 'Chris did an excellent job installing our freestanding tub. He was professional, courteous, and clearly took pride in his work. <mark>The installation looks fantastic</mark>, and we’re thrilled with how it turned out. I’d gladly recommend Chris to anyone looking for a skilled, dependable plumber!' },
+  { name: 'Mark Smith', age: 'a month ago', tags: ['Water heater repair', 'Shower repair'], patch: 'Brian', dark: true,
+    q: 'So, I figure replacing a shower cartridge is pretty straight forward right? Not when is an old system and impossible to find. Thank you Brian and Plumbing by Paul for <mark>getting a temporary fix in place super fast</mark>. ...' },
+];
+---
+<section class="orv" aria-labelledby="orv-h" data-m-section>
+  <div class="wrap orv-in">
+    <div class="orv-side">
+      <SectionHead eyebrow="The finished job, in their words" l1="Looks good." l2="Works better." id="orv-h" />
+      <div class="orv-pill" data-t="3"><RatingPill /></div>
+      <TextLink href={SITE.google.reviewsUrl} external icon="external" class="orv-all">Read all {SITE.rating.count} on Google</TextLink>
+    </div>
+    <ul role="list" class="orv-cards" data-t="4" data-stagger>
+      {cards.map((c, i) => (
+        <li class:list={['orv-c', c.dark && 'dark on-navy', `c${i}`]}>
+          <figure>
+            <span class="orv-pw" aria-label={`Fixed by ${c.patch}`}><Patch name={c.patch} dark={c.dark} deg={i ? 4 : -4} t={false} /></span>
+            <Stars size={15} />
+            <blockquote class="orv-q"><p set:html={c.q} /></blockquote>
+            <ul role="list" class="orv-tags" aria-label="Service">{c.tags.map((t) => <li><Icon name="wrench" size={12} />{t}</li>)}</ul>
+            <figcaption class="orv-by"><span class="orv-av" aria-hidden="true">{c.name.charAt(0)}</span><span><b>{c.name}</b><small>Google review · {c.age}</small></span><GoogleG size={20} class="orv-g" /></figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .orv { position: relative; z-index: 2; background: var(--white); padding: 96px 0 104px; }
+  .orv-in { display: grid; grid-template-columns: 384px 1fr; column-gap: 24px; align-items: start; }
+  .orv-pill { margin-top: 24px; }
+  .orv-side :global(.orv-all) { margin-top: 20px; }
+  .orv-cards { position: relative; display: grid; grid-template-columns: 384px 384px; justify-content: end; gap: 24px; margin: 0; padding: 0; }
+  .c0 { margin-top: -126px; }
+  .c1 { margin-top: -16px; }
+  .orv-c figure { position: relative; margin: 0; padding: 30px 26px 24px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); }
+  .dark figure { background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .orv-pw { position: absolute; right: 4px; top: -30px; }
+  .orv-q { margin: 14px 0 0; font-size: 15px; line-height: 25px; color: var(--slate); }
+  .dark .orv-q { color: rgba(255,255,255,.88); }
+  .orv-q :global(mark) { background: none; color: var(--navy); font-weight: 700; text-decoration: underline; text-decoration-color: var(--soft); text-decoration-thickness: 4px; text-underline-offset: 3px; text-decoration-skip-ink: none; }
+  .dark .orv-q :global(mark) { color: var(--white); text-decoration-color: var(--blue); }
+  .orv-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; padding: 0; }
+  .orv-tags li { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 6px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 500; font-size: 11px; color: var(--navy); }
+  .dark .orv-tags li { background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); color: var(--white); }
+  .orv-by { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+  .orv-av { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--press); font-weight: 700; font-size: 14px; }
+  .dark .orv-av { background: var(--sky); color: var(--navy); }
+  .orv-by b { display: block; font-weight: 700; font-size: 15px; }
+  .orv-by small { display: block; font-size: 12px; color: var(--slate-2); }
+  .dark .orv-by small { color: var(--soft); }
+  .orv-by :global(.orv-g) { margin-left: auto; }
+  @media (max-width: 1279px) { .orv-cards { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 1023px) {
+    .orv { padding: 48px 0 64px; }
+    .orv-in { grid-template-columns: 1fr; row-gap: 48px; }
+    .orv-pill { display: none; }
+    .orv-side { display: contents; }
+    .orv-side :global(.orv-all) { order: 3; margin-top: -16px; justify-self: start; }
+    .orv-cards { grid-template-columns: 1fr; gap: 44px; }
+    .c0, .c1 { margin-top: 0; }
+    .orv-c figure { padding: 28px 20px 20px; }
+    .orv-pw { transform: scale(.82); transform-origin: top right; }
+  }
+</style>

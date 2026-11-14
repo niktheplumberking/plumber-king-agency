@@ -1,0 +1,61 @@
+---
+// A1 Service areas hero (Figma 441:8412 A1): tint + flow lines, copy left, the county map right. The map is not in a card;
+// it overhangs the hero's bottom edge into the towns section (z-index above it).
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import HubMap from './HubMap.astro';
+---
+<section class="ah" aria-labelledby="ah-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="ah-fl" />
+  <div class="wrap ah-in">
+    <div class="ah-copy">
+      <Breadcrumbs items={[{ label: 'Service areas', href: '/service-areas' }]} />
+      <Eyebrow text="Service areas · Pinellas County, FL" class="ah-eb" />
+      <h1 class="display ah-h1" id="ah-h" data-t="2">
+        <span class="hl">Plumbing all</span>
+        <span class="hl">of Pinellas,</span>
+        <span class="hl script ah-sc">with heart</span>
+      </h1>
+      <p class="lead ah-lead" data-t="3" data-fx="nudge">One shop in St. Petersburg, a fleet of blue-and-white trucks, and a county we know street by street.</p>
+      <div class="ah-btns" data-t="3" data-stagger>
+        <CallButton />
+        <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+      </div>
+      <div class="ah-pill" data-t="5"><RatingPill /></div>
+    </div>
+    <div class="ah-map" data-t="4" data-fx="rise"><HubMap /></div>
+  </div>
+</section>
+<style>
+  .ah { position: relative; z-index: 2; background: var(--tint); padding: 68px 0 0; height: 650px; }
+  .ah :global(.ah-fl) { position: absolute; inset: 0; overflow: hidden; }
+  .ah-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 560fr) minmax(0, 600fr); column-gap: 40px; }
+  .ah-copy { display: grid; justify-items: start; align-content: start; }
+  .ah-copy :global(.ah-eb) { margin-top: 22px; }
+  .ah-h1 { margin-top: 18px; font-size: 64px; line-height: 66px; }
+  .hl { display: block; }
+  .ah-sc { color: var(--blue); font-size: 74px; line-height: 70px; transform: rotate(-3deg); transform-origin: left; width: max-content; }
+  .ah-lead { margin-top: 18px; max-width: 500px; }
+  .ah-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .ah-pill { margin-top: 24px; }
+  .ah-map { position: relative; margin-top: -2px; }
+  @media (max-width: 1199px) { .ah-h1 { font-size: 54px; line-height: 58px; } .ah-sc { font-size: 62px; } }
+  @media (max-width: 1023px) {
+    .ah { padding-top: 36px; height: auto; padding-bottom: 0; }
+    .ah :global(.ah-fl) { display: none; }
+    .ah-in { grid-template-columns: 1fr; }
+    .ah-copy :global(.ah-eb) { margin-top: 18px; }
+    .ah-h1 { font-size: 40px; line-height: 42px; }
+    .ah-sc { font-size: 48px; line-height: 50px; }
+    .ah-lead { margin-top: 14px; font-size: 16px; line-height: 26px; }
+    .ah-btns { display: grid; width: 100%; gap: 10px; margin-top: 22px; }
+    .ah-btns :global(.btn) { width: 100%; }
+    .ah-btns :global(.btn-sec) { min-height: 56px; }
+    .ah-pill { display: none; }
+    .ah-map { width: 340px; max-width: 100%; margin: 36px auto -72px; }
+  }
+</style>

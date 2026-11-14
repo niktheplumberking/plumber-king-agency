@@ -1,0 +1,92 @@
+---
+// H8 Reviews wall (Figma 427:3161): six real Google reviews word for word in three offset columns (middle column navy),
+// the blue-roll photo card tilted over the bottom edge. Mobile: one swipe rail with dots.
+import SectionHead from '../ui/SectionHead.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import TextLink from '../ui/TextLink.astro';
+import ReviewCard from '../ui/ReviewCard.astro';
+import Button from '../ui/Button.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import { HOME_WALL } from '../../data/reviews';
+import { SITE } from '../../data/site';
+---
+<section class="rw" aria-labelledby="rw-h" data-m-section>
+  <div class="wrap">
+    <div class="rw-head">
+      <SectionHead eyebrow="Real Google reviews" l1={'They rarely say "they fixed my plumbing."'} l2="They talk about how they were treated." id="rw-h" size="sm" class="rw-sh" />
+      <div class="rw-meta" data-t="3">
+        <RatingPill />
+        <TextLink href={SITE.google.reviewsUrl} icon="external" external class="rw-all">Read all 947 on Google</TextLink>
+      </div>
+    </div>
+    <div class="rw-rail" data-carousel>
+      <div class="rw-cols" data-track tabindex="0" role="group" aria-label="Google reviews, scroll sideways for more">
+        {HOME_WALL.map((col, ci) => (
+          <div class:list={['rw-col', `c${ci}`]} data-t="4" data-stagger>
+            {col.map((c) => <div class="rw-cell" data-slide><ReviewCard r={c.r} v={c.navy ? 'navy' : 'white'} t={false} /></div>)}
+            {ci === 1 && (
+              <div class="roll" data-t="5" data-fx="toss">
+                <div class="roll-ph"><Img name="brand-gift-roll-closeup" alt="The Plumbing By Paul blue roll gift, wrapped with a branded tag" sizes="340px" focus="50% 62%" widths={[360, 680]} /></div>
+                <Caption class="roll-cap">The blue roll. Every customer gets one.</Caption>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div class="rw-dots" aria-hidden="true">{[0,1,2,3,4,5].map((i) => <i data-dot class:list={[i === 0 && 'on']}></i>)}</div>
+    </div>
+    <div class="rw-cta" data-t="3">
+      <div class="ct-l"><p class="ct-t">947 of these and counting.</p><Button href="/reviews" arrow>Read more reviews</Button></div>
+      <div class="ct-r"><p class="ct-t">Had us out? Tell the neighbors.</p><Button href={SITE.google.writeReviewUrl} v="sec" icon="external" external>Leave us a Google review</Button></div>
+    </div>
+    <div class="roll roll-m">
+      <div class="roll-ph"><Img name="brand-gift-roll-closeup" alt="" sizes="300px" focus="50% 62%" widths={[360, 680]} /></div>
+      <Caption class="roll-cap">The blue roll. Every customer gets one.</Caption>
+    </div>
+  </div>
+</section>
+<style>
+  .rw { position: relative; background: var(--tint); padding: 104px 0 0; overflow: hidden; }
+  .rw-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
+  .rw-head :global(.rw-sh) { max-width: 900px; }
+  @media (min-width: 1024px) { .rw-head { position: relative; } .rw-meta { position: absolute; right: 0; top: 0; } } /* Figma: the 900 px head runs under the pill column */
+  .rw-meta { display: grid; justify-items: end; gap: 14px; padding-top: 24px; }
+  .rw-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 72px; align-items: start; }
+  .rw-col { position: relative; display: grid; gap: 36px; }
+  .rw-col.c1 { padding-top: 40px; } .rw-col.c2 { padding-top: 16px; }
+  .roll { position: absolute; left: calc(50% - 170px); top: calc(100% + 6px); width: 340px; height: 300px; padding: 8px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-3); transform: rotate(4deg); z-index: 1; }
+  .roll-ph { position: relative; height: 284px; overflow: hidden; border-radius: 14px; }
+  .roll :global(.roll-cap) { position: absolute; left: 20px; top: 244px; }
+  .rw-dots { display: none; }
+  .roll-m { display: none; }
+  .rw-cta { position: relative; z-index: 3; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 44px; padding-bottom: 88px; pointer-events: none; }
+  .rw-cta > div { display: grid; gap: 14px; justify-items: start; pointer-events: auto; }
+  .ct-l { grid-column: 1; } .ct-r { grid-column: 3; }
+  .ct-t { font-weight: 700; font-size: 20px; line-height: 26px; }
+  .rw::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 90px; background: linear-gradient(rgba(232,243,248,0), var(--tint)); pointer-events: none; z-index: 2; }
+  @media (max-width: 1199px) {
+    .rw-head { display: grid; } .rw-meta { justify-items: start; padding-top: 0; }
+  }
+  @media (max-width: 1023px) {
+    .rw { padding-top: 64px; }
+    .rw::after { display: none; }
+    .rw-cols { display: flex; gap: 16px; margin: 32px calc(-1 * var(--gutter)) 0; padding: 30px var(--gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; align-items: flex-start; }
+    .rw-cols::-webkit-scrollbar { display: none; }
+    .rw-col { display: contents; }
+    .rw-col.c1, .rw-col.c2 { padding: 0; }
+    .rw-cell { flex: 0 0 min(310px, 80vw); scroll-snap-align: start; }
+    .roll { display: none; }
+    .roll.roll-m { display: block; position: relative; left: auto; top: auto; width: min(310px, 100%); height: 206px; margin: 0 auto 64px; }
+    .rw-head :global(.rw-all), .rw :global(.rw-all) { display: none; }
+    .roll-m .roll-ph { height: 190px; }
+    .roll-m :global(.roll-cap) { top: auto; bottom: 18px; left: 16px; font-size: 12px; padding: 6px 10px; }
+    .rw-dots { display: flex; gap: 6px; margin-top: 16px; }
+    .rw-dots i { width: 8px; height: 8px; border-radius: 4px; background: var(--line); transition: width .4s var(--ease-out), background .4s; }
+    .rw-dots i:global(.on) { width: 22px; background: var(--press); }
+    .rw-cta { display: grid; grid-template-columns: 1fr; margin-top: 28px; padding-bottom: 40px; gap: 12px; }
+    .ct-t { display: none; }
+    .rw-cta > div { justify-items: stretch; } .ct-r { grid-column: 1; }
+    .rw-cta :global(.btn) { width: 100%; }
+  }
+</style>

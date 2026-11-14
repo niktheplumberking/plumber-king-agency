@@ -1,0 +1,38 @@
+---
+// U4 FAQ (Figma 439:2340). Tint, centred head; a vertical pipe with a flange at each item runs down the left of the accordion
+// (decorative); seal on the accordion's top-right; swoosh into the white rail section. FAQPage JSON-LD is emitted by the page
+// (01-04 only: 05 still carries the [Paul to supply starting prices] placeholder).
+import SectionHead from '../ui/SectionHead.astro';
+import Faq from '../ui/Faq.astro';
+import Seal from '../ui/Seal.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { WH_FAQ } from './data';
+---
+<section class="gf" aria-labelledby="gf-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="Short answers" l1="The questions" l2="behind the question" center id="gf-h" />
+    <div class="gf-acc">
+      <span class="gf-pipe" aria-hidden="true">{WH_FAQ.map((_, i) => <i style={`top:${8 + i * 21}%`}></i>)}</span>
+      <Faq items={WH_FAQ} schema={false} group="gfaq" />
+      <Seal d={96} deg={8} class="gf-seal" />
+    </div>
+  </div>
+  <Swoosh class="gf-sw" below="var(--white)" h={110} />
+</section>
+<style>
+  .gf { position: relative; background: var(--tint); padding: 96px 0 0; }
+  .gf-acc { position: relative; width: min(840px, 100%); margin: 48px auto 0; }
+  .gf-acc :global(.faq) { background: var(--white); }
+  .gf-pipe { position: absolute; left: -64px; top: 20px; bottom: 20px; width: 14px; border-radius: 7px; background: var(--sky); box-shadow: inset 0 0 0 2px var(--navy); }
+  .gf-pipe i { position: absolute; left: -5px; width: 24px; height: 8px; border-radius: 2px; background: var(--white); box-shadow: inset 0 0 0 2px var(--navy); }
+  .gf-acc :global(.gf-seal) { position: absolute; right: -34px; top: -26px; z-index: 2; }
+  .gf :global(.gf-sw) { position: relative; display: block; margin-top: 60px; }
+  @media (max-width: 1023px) {
+    .gf { padding-top: 56px; }
+    .gf :global(.shead) { justify-items: start; text-align: left; }
+    .gf-acc { margin-top: 24px; }
+    .gf-pipe { display: none; }
+    .gf-acc :global(.gf-seal) { right: 0; top: -84px; --d: 60px !important; }
+    .gf :global(.gf-sw) { margin-top: 40px; }
+  }
+</style>

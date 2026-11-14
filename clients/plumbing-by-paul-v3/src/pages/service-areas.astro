@@ -1,0 +1,37 @@
+---
+// 07 Service areas hub (Figma 441:8412 / 443:10753). Only towns with real pages link (Clearwater, Seminole; St. Petersburg
+// goes home); every other town is honest text. Meta trimmed from the PAGES.md line (166 chars) to 151.
+import Base from '../layouts/Base.astro';
+import AHero from '../components/towns/AHero.astro';
+import ATowns from '../components/towns/ATowns.astro';
+import AShop from '../components/towns/AShop.astro';
+import AKnow from '../components/towns/AKnow.astro';
+import AReviews from '../components/towns/AReviews.astro';
+import ACommunity from '../components/towns/ACommunity.astro';
+import AFaq from '../components/towns/AFaq.astro';
+import WaterlineCTA from '../components/global/WaterlineCTA.astro';
+import { abs, BUSINESS_ID } from '../lib/schema';
+const towns = ['St. Petersburg', 'Clearwater', 'Seminole', 'Largo', 'Pinellas Park', 'Gulfport', 'Kenneth City', 'South Pasadena', 'St. Pete Beach', 'Treasure Island', 'Madeira Beach', 'Dunedin', 'Palm Harbor', 'Safety Harbor', 'Tarpon Springs', 'Oldsmar'];
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Service', name: 'Plumbing in Pinellas County, FL', serviceType: 'Plumber', url: abs('/service-areas'),
+  provider: { '@id': BUSINESS_ID() },
+  areaServed: [{ '@type': 'AdministrativeArea', name: 'Pinellas County, FL' }, ...towns.map((name) => ({ '@type': 'City', name }))],
+};
+---
+<Base
+  title="Plumber Serving All of Pinellas County · Plumbing By Paul"
+  description="Plumbing By Paul covers St. Petersburg, Clearwater, Seminole and all of Pinellas County from one St. Pete shop. Licensed, family-owned. (727) 709-2552."
+  path="/service-areas"
+  og="shop-door-wrap"
+  ogAlt="The Plumbing By Paul shop door in St. Petersburg"
+  jsonld={[ld]}
+>
+  <AHero />
+  <ATowns />
+  <AShop />
+  <AKnow />
+  <AReviews />
+  <ACommunity />
+  <AFaq />
+  <WaterlineCTA l1="Somewhere in Pinellas?" l2="Then we're nearby." />
+</Base>

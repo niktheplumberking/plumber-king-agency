@@ -1,0 +1,87 @@
+---
+// Header: white bar 88 px (64 mobile) with the logo tab hanging 20 px onto the hero, nav with two mega menus,
+// "Free estimate" + two-line call button. Sticky, compacts after 60 px, hides on scroll down, shows on scroll up (ui.ts).
+// Below 1200 px: Free estimate pill, call icon, menu button -> MobileMenu.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-plumbing-by-paul.png';
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import CallButton from '../ui/CallButton.astro';
+import MegaServices from './MegaServices.astro';
+import MegaAreas from './MegaAreas.astro';
+import MobileMenu from './MobileMenu.astro';
+import { NAV } from '../../data/nav';
+import { SITE } from '../../data/site';
+interface Props { path: string; }
+const { path } = Astro.props;
+const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
+---
+<header class="hdr" data-header>
+  <div class="hdr-bar">
+    <div class="wrap hdr-in">
+      <a href="/" class="tab" aria-label={`${SITE.name}, home`} data-intro="brand">
+        <Image src={logo} alt="" width={180} height={193} loading="eager" class="tab-logo" />
+      </a>
+      <nav class="nav" aria-label="Main">
+        <ul role="list" class="nav-list">
+          {NAV.map((n) => (
+            <li class:list={['ni', n.menu && 'has-mega']} data-mega-item={n.menu}>
+              {n.menu ? (
+                <button type="button" class="nl" aria-expanded="false" aria-controls={`mega-${n.menu}`} data-mega-btn={n.menu}>
+                  <span>{n.label}</span><Icon name="down" size={16} class="chev" />
+                </button>
+              ) : (
+                <a href={n.href} class="nl" aria-current={isCurrent(n.href) ? 'page' : undefined}><span>{n.label}</span></a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="cta">
+        <Button href="#estimate" v="sec" class="fe" magnetic={false}>Free estimate</Button>
+        <CallButton class="cb" />
+        <a href={SITE.tel} class="icb" aria-label={`Call ${SITE.phone}`}><Icon name="phone" size={20} /></a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="mnav" data-menu-open>
+          <Icon name="menu" size={22} /><span class="sr-only">Menu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <MegaServices />
+  <MegaAreas />
+</header>
+<MobileMenu path={path} />
+<style>
+  .hdr { position: sticky; top: 0; z-index: var(--z-header); transition: transform .5s var(--ease-out); }
+  .hdr.is-hidden { transform: translateY(calc(-100% - 30px)); }
+  .hdr-bar { position: relative; height: var(--header-h); background: var(--white); box-shadow: var(--sh-1); }
+  .hdr-bar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--line); }
+  .hdr-in { position: relative; display: flex; align-items: center; height: 100%; gap: 24px; }
+  .tab { position: relative; z-index: 2; align-self: flex-start; display: block; width: 124px; height: 112px; padding: 6px 17px 10px; margin-top: 0; border-radius: 0 0 20px 20px; background: var(--white); box-shadow: var(--sh-2); flex: none; transition: height .45s var(--ease-out), width .45s var(--ease-out), padding .45s var(--ease-out), box-shadow .45s; }
+  .tab::before { content: ''; position: absolute; left: 0; right: 0; top: -4px; height: 24px; background: var(--white); }
+  .tab :global(.tab-logo) { position: relative; width: 100%; height: 100%; object-fit: contain; transition: transform .5s var(--ease-back); }
+  .tab:hover :global(.tab-logo) { transform: rotate(-3deg) scale(1.04); }
+  .is-scrolled .tab { height: 88px; width: 96px; padding: 6px 12px 8px; box-shadow: none; }
+  .nav { margin-left: 16px; }
+  .nav-list { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; }
+  .nl { position: relative; display: inline-flex; align-items: center; gap: 4px; height: 44px; font-weight: 600; font-size: 15px; color: var(--navy); white-space: nowrap; }
+  .nl::after { content: ''; position: absolute; left: 0; right: 0; bottom: 6px; height: 2px; border-radius: 2px; background: var(--sky); transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease-out); }
+  .nl:hover::after, .nl[aria-current='page']::after, .nl[aria-expanded='true']::after { transform: scaleX(1); transform-origin: left; }
+  .nl :global(.chev) { color: var(--blue); transition: transform .35s var(--ease-out); }
+  .nl[aria-expanded='true'] :global(.chev) { transform: rotate(180deg); }
+  .cta { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .cta :global(.fe) { padding: 0 22px; font-size: 15px; }
+  .icb, .menu-btn { display: none; place-items: center; width: 44px; height: 44px; border-radius: 12px; flex: none; }
+  .icb { background: var(--press); color: var(--white); }
+  .menu-btn { background: var(--tint); color: var(--navy); }
+  @media (max-width: 1279px) { .nav-list { gap: 20px; } .nav { margin-left: 4px; } }
+  @media (max-width: 1199px) {
+    .nav, .cta :global(.cb) { display: none; }
+    .icb, .menu-btn { display: grid; }
+    .cta { gap: 10px; }
+    .cta :global(.fe) { min-height: 44px; padding: 0 12px; font-size: 13px; box-shadow: inset 0 0 0 1.5px var(--navy); border-radius: 12px; }
+    .tab { width: 84px; height: 84px; padding: 4px 9px 8px; border-radius: 0 0 16px 16px; }
+    .is-scrolled .tab { width: 64px; height: 64px; padding: 4px 7px 5px; }
+  }
+  @media (min-width: 768px) and (max-width: 1199px) { .tab { width: 100px; height: 100px; } }
+</style>

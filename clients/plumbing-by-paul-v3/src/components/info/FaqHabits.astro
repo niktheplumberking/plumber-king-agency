@@ -1,0 +1,53 @@
+---
+// FAQ hub F3 Keep your plumbing healthy (Figma 441:3483). Navy band with faint flow lines and the KEEP US AWAY stamp; six white
+// tip cards (Yellowtail numerals on their corners) overlap the band's bottom edge into the tint guides section below.
+// Mobile: the cards scroll sideways. All six habits are from Paul's current FAQ page.
+import SectionHead from '../ui/SectionHead.astro';
+import Stamp from '../ui/Stamp.astro';
+import Icon from '../ui/Icon.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import { TIPS } from './faqData';
+---
+<section class="fb on-navy" aria-labelledby="fb-h" data-m-section>
+  <FlowLines variant="navy" />
+  <div class="wrap fb-head">
+    <SectionHead eyebrow="Prevention" l1="Six habits that" l2="keep us away" script="away" dark id="fb-h" />
+    <Stamp text="KEEP US AWAY · SIX HABITS · KEEP US AWAY · " d={150} deg={8} class="fb-stamp" />
+  </div>
+  <div class="fb-rail">
+    <ol role="list" class="fb-cards" data-t="4" data-stagger tabindex="0" aria-label="Six habits, scrolls sideways on small screens">
+      {TIPS.map((t, i) => (
+        <li class="tc">
+          <span class="tc-n script" aria-hidden="true">{i + 1}</span>
+          <span class="tc-i" aria-hidden="true"><Icon name={t.i} size={20} /></span>
+          <h3 class="tc-t"><span class="sr-only">Habit {i + 1}: </span>{t.t}</h3>
+          <p class="tc-d">{t.d}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .fb { position: relative; z-index: 2; background: linear-gradient(var(--navy) 0 calc(100% - 140px), var(--tint) calc(100% - 140px)); color: var(--white); padding: 96px 0 0; }
+  .fb :global(.flow) { height: calc(100% - 140px); }
+  .fb-head { position: relative; display: flex; justify-content: space-between; align-items: flex-end; }
+  .fb-head :global(.fb-stamp) { margin: 0 0 -20px; }
+  .fb-rail { position: relative; margin-top: 64px; }
+  .fb-cards { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 19px; width: min(var(--content), 100% - 2 * var(--gutter)); margin: 0 auto; padding: 0; }
+  .fb-cards:focus-visible { outline: 3px solid var(--sky); outline-offset: 4px; }
+  .tc { position: relative; min-height: 240px; padding: 80px 16px 24px; border-radius: 20px; background: var(--white); color: var(--navy); box-shadow: var(--sh-3); }
+  .tc::after { content: ''; position: absolute; left: 16px; right: 16px; bottom: 0; height: 4px; border-radius: 4px 4px 0 0; background: var(--sky); }
+  .tc-n { position: absolute; left: 10px; top: -30px; font-size: 72px; line-height: 72px; color: var(--blue); }
+  .tc-i { position: absolute; right: 16px; top: 16px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .tc-t { font-weight: 700; font-size: 17px; line-height: 22px; }
+  .tc-d { margin-top: 6px; font-size: 14px; line-height: 20px; color: var(--slate); }
+  @media (max-width: 1199px) { .fb-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 48px; } }
+  @media (max-width: 1023px) {
+    .fb { padding-top: 56px; background: linear-gradient(var(--navy) 0 calc(100% - 130px), var(--tint) calc(100% - 130px)); }
+    .fb-head :global(.fb-stamp) { display: none; }
+    .fb-rail { margin-top: 48px; }
+    .fb-cards { display: flex; gap: 14px; width: auto; padding: 32px var(--gutter) 4px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+    .fb-cards::-webkit-scrollbar { display: none; }
+    .tc { flex: none; width: 184px; scroll-snap-align: start; }
+  }
+</style>

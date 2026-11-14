@@ -1,0 +1,116 @@
+---
+// H9 Process (Figma 427:3402): "From first call to fixed". Four step cards hang off a pipe run that fills with water as you
+// scroll (data-pipe-fill, scrubbed). Mobile: the pipe runs down the left. Each step carries an exact Google review fragment.
+// PAUL TO CONFIRM: the heads-up text before arrival (step 2) is standard on every job.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Seal from '../ui/Seal.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { PROCESS_PROOF } from '../../data/reviews';
+const steps = [
+  { n: '1', t: 'Call, or send a photo.', d: 'A real person at our shop picks up, asks a few questions and books you in.', i: 'phone' },
+  { n: '2', t: "We tell you who's coming.", d: "You'll know when to expect us and who's knocking.", i: 'users' },
+  { n: '3', t: 'You hear the price first.', d: "We look, explain what's wrong in plain words and give you the cost before any work starts.", i: 'clipboard' },
+  { n: '4', t: 'Fixed, tested, cleaned up.', d: 'We run the water, wipe our footprints and leave you a blue roll to say thanks.', i: 'check' },
+] as const;
+---
+<section class="proc" aria-labelledby="proc-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="How it works" l1="From first call" l2="to fixed" script="fixed" center id="proc-h" />
+  </div>
+  <div class="pr-stage wrap">
+    <div class="pipe" aria-hidden="true" data-pipe>
+      <span class="cap c0"></span>
+      <span class="run"><span class="water" data-pipe-fill></span></span>
+      <span class="elbow"><span class="water-v" data-pipe-fill-v></span></span>
+      <span class="cap c1"></span>
+    </div>
+    <ol class="steps" role="list" data-t="4" data-stagger>
+      {steps.map((s, i) => (
+        <li class:list={['step', i % 2 && 'off']}>
+          <span class="drop" aria-hidden="true"><span class="tee t0"></span><span class="tee t1"></span></span>
+          <div class="st-card">
+            <div class="st-top"><span class="st-n script" aria-hidden="true">{s.n}</span><span class="well well-round"><Icon name={s.i} size={22} /></span></div>
+            <h3 class="st-t"><span class="sr-only">Step {s.n}: </span>{s.t}</h3>
+            <p class="st-d">{s.d}</p>
+            <figure class="st-q">
+              <blockquote><p>"{PROCESS_PROOF[s.n].quote}"</p></blockquote>
+              <figcaption><GoogleG size={12} />{PROCESS_PROOF[s.n].name}</figcaption>
+            </figure>
+            {i === 3 && <Seal d={92} deg={8} class="st-seal" />}
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class="pr-cta" data-t="3">
+      <p>Step 1 starts here:</p>
+      <CallButton />
+      <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+    </div>
+  </div>
+  <Swoosh class="pr-sw" flip below="#111032" />
+</section>
+<style>
+  .proc { position: relative; background: var(--white); padding: 104px 0 0; overflow: clip; }
+  .pr-stage { position: relative; margin-top: 70px; }
+  .pipe { position: absolute; left: -60px; right: -60px; top: 0; height: 130px; pointer-events: none; }
+  .run { position: absolute; left: 8px; right: 7px; top: -7px; height: 14px; border-radius: 7px; background: var(--navy); overflow: hidden; }
+  .water, .water-v { position: absolute; border-radius: 5px; background: var(--sky); }
+  .water { left: 2px; right: 2px; top: 2px; bottom: 2px; transform-origin: left center; }
+  .water::after { content: ''; position: absolute; left: 4px; right: 4px; top: 2px; height: 2px; border-radius: 1px; background: rgba(255,255,255,.55); }
+  .elbow { position: absolute; right: 0; top: -7px; width: 14px; height: 120px; border-radius: 7px; background: var(--navy); overflow: hidden; }
+  .water-v { left: 2px; right: 2px; top: 2px; bottom: 2px; transform-origin: center top; }
+  .cap { position: absolute; border-radius: 3px; background: var(--navy); }
+  .cap::after { content: ''; position: absolute; inset: 2px; border-radius: 2px; background: var(--soft); }
+  .c0 { left: 0; top: -13px; width: 12px; height: 26px; }
+  .c1 { right: -4px; top: 108px; width: 22px; height: 12px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 48px; margin: 0; padding: 0; align-items: start; }
+  .step { position: relative; padding-top: 52px; }
+  .step.off { padding-top: 86px; }
+  .drop { position: absolute; left: 125px; top: 0; width: 14px; height: 56px; border-radius: 7px; background: var(--navy); }
+  .drop::after { content: ''; position: absolute; left: 2px; right: 2px; top: 2px; bottom: 2px; border-radius: 5px; background: var(--sky); }
+  .off .drop { height: 90px; }
+  .tee { position: absolute; left: -6px; width: 26px; height: 12px; border-radius: 3px; background: var(--navy); z-index: 1; }
+  .tee::after { content: ''; position: absolute; inset: 2px; border-radius: 2px; background: var(--soft); }
+  .t0 { top: -6px; } .t1 { bottom: -6px; }
+  .st-card { position: relative; display: grid; gap: 10px; padding: 26px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); transition: transform .5s var(--ease-out); }
+  .step:hover .st-card { transform: translateY(-4px); }
+  .st-top { display: flex; justify-content: space-between; align-items: center; }
+  .st-n { font-size: 64px; line-height: 60px; color: var(--blue); }
+  .st-t { font-weight: 700; font-size: 19px; line-height: 25px; }
+  .st-d { font-size: 14px; line-height: 22px; color: var(--slate); padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .st-q { display: flex; flex-direction: column; gap: 4px; margin: 0; padding-left: 11px; border-left: 3px solid var(--sky); }
+  .st-q blockquote { margin: 0; font-style: italic; font-weight: 500; font-size: 13px; line-height: 19px; color: var(--slate); }
+  .st-q figcaption { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; }
+  .st-card :global(.st-seal) { position: absolute; right: -32px; bottom: -40px; }
+  .pr-cta { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 48px; padding-bottom: 150px; }
+  .pr-cta p { font-weight: 700; font-size: 18px; }
+  .proc :global(.pr-sw) { position: absolute; left: 0; bottom: 0; }
+  @media (max-width: 1279px) { .steps { gap: 24px; } .drop { left: 50%; margin-left: -7px; } }
+  @media (max-width: 1023px) {
+    .proc { padding-top: 64px; }
+    .pr-stage { margin-top: 36px; }
+    .pipe { left: 0; right: auto; top: 0; bottom: 210px; width: 14px; height: auto; }
+    .run { left: 0; right: auto; top: 0; bottom: 0; width: 14px; height: auto; }
+    .water { transform-origin: center top; }
+    .elbow, .c1 { display: none; }
+    .c0 { left: -6px; top: -4px; width: 26px; height: 12px; }
+    .steps { grid-template-columns: 1fr; gap: 16px; padding-left: 40px; }
+    .step, .step.off { padding-top: 0; }
+    .drop { left: -40px; top: 34px; width: 40px; height: 14px; margin: 0; }
+    .off .drop { height: 14px; }
+    .tee { width: 12px; height: 26px; top: -6px; } .t0 { left: 24px; } .t1 { left: auto; right: -2px; bottom: auto; }
+    .st-card { padding: 20px 18px; gap: 8px; }
+    .st-top { justify-content: flex-start; gap: 6px; } .st-top .well { display: none; }
+    .st-n { font-size: 48px; line-height: 44px; }
+    .st-top { position: absolute; left: 14px; top: 16px; }
+    .st-t { padding-left: 30px; font-size: 17px; line-height: 22px; }
+    .st-card :global(.st-seal) { --d: 64px !important; right: -8px; bottom: -24px; }
+    .pr-cta { display: grid; justify-content: stretch; gap: 10px; margin-top: 40px; padding-bottom: 104px; }
+    .pr-cta p { display: none; }
+    .pr-cta :global(.btn) { width: 100%; }
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+// O3 Job stories (Figma O3): three alternating rows, each a framed photo on a tint offset with a mini job ticket over its
+// lower corner, and copy saying only what the photo shows. The story itself (the call, what we found, what we did) is a
+// labelled slot until Paul tells three recent jobs.
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import Button from '../ui/Button.astro';
+import Img from '../ui/Img.astro';
+import Icon from '../ui/Icon.astro';
+const rows = [
+  { n: 'service-sewer-line-trench-pvc', alt: 'A new white PVC sewer line in an open trench', t: 'New sewer line, in the trench', d: 'New PVC pipe laid in an open trench, before the dirt goes back.', tk: 'Sewer', link: 'Sewer line service', href: '/sewer-service', f: '40% 50%' },
+  { n: 'service-tankless-water-heater-install', alt: 'A finished tankless water heater install with copper lines on a garage wall', t: 'Tankless water heater, installed', d: 'A finished tankless install with copper lines.', tk: 'Water heater', link: 'Water heater service', href: '/water-heaters', f: '50% 40%' },
+  { n: 'service-tech-ladder-under-raised-house', alt: 'A tech on a ladder running pipe under a raised house', t: 'Plumbing under a raised house', d: 'One of our techs on a ladder, running pipe under a raised house.', tk: 'Pipes', link: 'Repiping service', href: '/repiping', f: '50% 50%' },
+];
+---
+<section class="os" aria-labelledby="os-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="Job stories" l1="What was wrong," l2="and what we did" id="os-h" />
+    <ol class="os-list">
+      {rows.map((r, i) => (
+        <li class:list={['os-row', i % 2 && 'flip']}>
+          <div class="os-media" data-t="4">
+            <span class="os-off" aria-hidden="true"></span>
+            <figure class="os-ph frame frame-3" data-fx="frame"><Img name={r.n} alt={r.alt} focus={r.f} sizes="(min-width: 1024px) 456px, calc(100vw - 40px)" widths={[460, 700, 920]} /></figure>
+            <div class="os-tk" data-fx="pop"><p class="os-tkh"><span class="label">Job ticket</span><span class="num">0{i + 1}</span></p><p class="os-tkb"><b>{r.tk}</b><small>Shot on the job by our crew</small></p></div>
+          </div>
+          <div class="os-copy" data-t="3">
+            <h3 class="os-t"><span class="num">0{i + 1}</span> {r.t}</h3>
+            <p class="os-d">{r.d}</p>
+            <p class="os-slot"><Icon name="clipboard" size={14} />Story slot: the call, what we found, what we did</p>
+            <TextLink href={r.href} size={15}>{r.link}</TextLink>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class="os-close" data-t="3">
+      <span class="os-ci" aria-hidden="true"><Icon name="camera" size={18} /></span>
+      <p>Have a job you'd like us to look at? Send a photo with your estimate request.</p>
+      <Button href="#estimate" v="pri" arrow magnetic={false}>Get a free estimate</Button>
+    </div>
+  </div>
+</section>
+<style>
+  .os { position: relative; background: var(--white); padding: 104px 0 112px; }
+  .os-list { display: grid; gap: 72px; margin: 56px 0 0; padding: 0; list-style: none; }
+  .os-row { display: grid; grid-template-columns: 456px 560px; column-gap: 64px; align-items: start; }
+  .os-row.flip { grid-template-columns: 560px 456px; justify-content: space-between; }
+  .os-row.flip .os-media { order: 2; }
+  .os-media { position: relative; }
+  .os-off { position: absolute; left: -20px; top: 20px; width: 100%; height: 300px; border-radius: var(--r-xl); background: var(--tint); }
+  .flip .os-off { left: 20px; }
+  .os-ph { position: relative; height: 300px; margin: 0; }
+  .os-ph :global(img) { display: block; }
+  .os-tk { position: absolute; left: 284px; top: 233px; z-index: 2; width: 218px; border-radius: 14px; background: var(--white); box-shadow: var(--sh-3); transform: rotate(3deg); overflow: hidden; }
+  .flip .os-tk { left: -39px; top: 248px; transform: rotate(-3deg); }
+  .os-tkh { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: var(--navy); color: var(--white); }
+  .os-tkh .label { color: var(--white); font-size: 10px; }
+  .os-tkh .num { font-size: 11px; color: var(--sky); }
+  .os-tkb { padding: 10px 14px 14px; }
+  .os-tkb b { display: block; font-weight: 700; font-size: 16px; color: var(--navy); }
+  .os-tkb small { display: block; margin-top: 2px; font-size: 12px; color: var(--slate); }
+  .os-copy { padding-top: 34px; }
+  .os-t { font-weight: 800; font-size: 26px; line-height: 32px; }
+  .os-t .num { color: var(--press); font-size: 20px; }
+  .os-d { margin-top: 14px; max-width: 460px; font-size: 16px; line-height: 26px; color: var(--slate); }
+  .os-slot { display: inline-flex; align-items: center; gap: 8px; margin: 16px 0 18px; padding: 8px 14px; border-radius: 10px; border: 1.5px dashed var(--blue); background: var(--mist); color: var(--press); font-weight: 600; font-size: 12px; }
+  .os-copy :global(.tlink) { display: flex; width: fit-content; }
+  .os-close { display: flex; align-items: center; gap: 16px; margin-top: 64px; padding: 20px 24px 20px 28px; border-radius: 18px; background: var(--tint); }
+  .os-ci { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--white); color: var(--press); }
+  .os-close p { flex: 1; font-weight: 600; font-size: 16px; color: var(--navy); }
+  @media (max-width: 1199px) { .os-row, .os-row.flip { grid-template-columns: 420px 1fr; } .os-row.flip { grid-template-columns: 1fr 420px; } .os-tk { left: 220px; } }
+  @media (max-width: 1023px) {
+    .os { padding: 56px 0 64px; }
+    .os-list { gap: 56px; margin-top: 32px; }
+    .os-row, .os-row.flip { grid-template-columns: 1fr; row-gap: 60px; }
+    .os-row.flip .os-media { order: 0; }
+    .os-off { display: none; }
+    .os-ph { height: 240px; border-radius: var(--r-lg); }
+    .os-tk, .flip .os-tk { left: auto; right: 10px; top: 186px; width: 186px; }
+    .os-copy { padding-top: 6px; }
+    .os-t { font-size: 20px; line-height: 26px; }
+    .os-t .num { font-size: 16px; }
+    .os-d { font-size: 15px; line-height: 24px; }
+    .os-close { flex-direction: column; align-items: flex-start; margin-top: 48px; padding: 20px; }
+    .os-close :global(.btn) { width: 100%; }
+  }
+</style>

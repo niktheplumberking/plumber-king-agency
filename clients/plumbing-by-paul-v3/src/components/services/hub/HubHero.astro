@@ -1,0 +1,119 @@
+---
+// S1 Hero + S2 emergency strip (Figma 02). Copy left; the hero frame right with corner stripes, the Best of the Bay chip,
+// the "14 services, one crew" ticket card over its bottom-left and a caption. The sky strip overlaps the hero's foot.
+import Breadcrumbs from '../../ui/Breadcrumbs.astro';
+import Eyebrow from '../../ui/Eyebrow.astro';
+import Underline from '../../ui/Underline.astro';
+import CallButton from '../../ui/CallButton.astro';
+import Button from '../../ui/Button.astro';
+import RatingPill from '../../ui/RatingPill.astro';
+import Img from '../../ui/Img.astro';
+import Caption from '../../ui/Caption.astro';
+import Icon from '../../ui/Icon.astro';
+import Seal from '../../ui/Seal.astro';
+import FlowLines from '../../ui/FlowLines.astro';
+import Wave from '../Wave.astro';
+import { SITE } from '../../../data/site';
+---
+<section class="hh" aria-labelledby="hh-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="wrap hh-in">
+    <div class="hh-copy">
+      <Breadcrumbs items={[{ label: 'Services', href: '/services' }]} />
+      <Eyebrow text="Plumbing services · St. Petersburg and Pinellas" />
+      <h1 class="hh-h1" id="hh-h" data-t="2">
+        <span class="hl">Every plumbing job,</span>
+        <span class="hl l2"><span class="ul-wrap">one family crew<Underline class="ul" /></span></span>
+      </h1>
+      <p class="lead hh-lead" data-t="3" data-fx="nudge">You don't need to know what it's called. Tell us what you see, hear or smell, and we'll send the right person with the right parts on the truck.</p>
+      <div class="hh-btns" data-t="3" data-stagger>
+        <CallButton />
+        <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+      </div>
+      <div class="hh-pill" data-t="5"><RatingPill /></div>
+    </div>
+    <div class="hh-media">
+      <div class="hh-ph frame frame-3" data-t="4" data-fx="frame">
+        <Img name="hero-05-tech-toilet-repair-pro" alt="A Plumbing By Paul technician repairing a toilet in a bathroom" sizes="(min-width: 1024px) 560px, calc(100vw - 40px)" focus="60% 50%" priority widths={[400, 600, 800, 1120]} />
+        <svg class="hh-stripes" viewBox="0 0 120 90" aria-hidden="true"><path d="M0 0h120v90C100 40 60 12 0 0z" fill="#111032"/><path d="M28 0h92v70C104 34 74 10 28 0z" fill="#2A7FA8"/><path d="M60 0h60v46C108 22 88 6 60 0z" fill="#61ADCB"/></svg>
+      </div>
+      <Caption class="hh-cap">On the job: a toilet repair.</Caption>
+      <p class="hh-bob" data-t="5" data-fx="pop"><Icon name="award" size={20} /><span><b>{SITE.awards.name}</b><small>{SITE.awards.years.join(' · ')}</small></span></p>
+      <p class="hh-tk" data-t="5" data-fx="toss"><span class="num">14</span><span>services, one crew</span></p>
+    </div>
+  </div>
+</section>
+<section class="em" aria-label="Plumbing emergency" data-m-section>
+  <Wave />
+  <div class="wrap em-in">
+    <Seal d={72} deg={-6} class="em-seal" />
+    <span class="em-i"><Icon name="alert" size={22} /></span>
+    <p class="em-t" data-t="3"><b>Water on the floor right now?</b> <span>Shut the water off at the meter and call <a href={SITE.tel}>{SITE.phone}</a>.</span></p>
+    <Button href="/emergency-plumbing" v="navy" icon="siren" arrow class="em-btn">Emergency plumbing</Button>
+  </div>
+</section>
+<style>
+  .hh { position: relative; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 56px 0 104px; overflow: clip; }
+  .hh :global(.fl-m) { display: none; }
+  .hh-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) 560px; column-gap: 40px; align-items: start; }
+  .hh-copy { display: grid; justify-items: start; }
+  .hh-copy :global(.eyebrow) { margin-top: 22px; }
+  .hh-h1 { margin-top: 16px; font-weight: 800; font-size: clamp(2.125rem, 1.8vw + 30px, 3.5rem); line-height: 1.1; letter-spacing: -0.025em; }
+  .hl { display: block; } .hl.l2 { color: var(--blue); }
+  .ul-wrap { position: relative; display: inline-block; }
+  .ul-wrap :global(.ul) { position: absolute; left: 2px; bottom: -10px; width: calc(100% + 4px); }
+  .hh-lead { margin-top: 30px; max-width: 560px; }
+  .hh-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .hh-btns :global(.btn-sec) { padding: 0 28px; }
+  .hh-pill { margin-top: 28px; }
+  .hh-media { position: relative; margin-top: 16px; height: 500px; }
+  .hh-ph { position: absolute; left: 0; right: 0; top: 0; height: 440px; border-radius: var(--r-2xl); }
+  .hh-stripes { position: absolute; right: 0; top: 0; z-index: 2; width: 120px; height: 90px; }
+  .hh-media :global(.hh-cap) { position: absolute; right: 20px; top: 424px; z-index: 3; }
+  .hh-bob { position: absolute; left: -24px; top: 32px; z-index: 3; display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; border-radius: 14px; background: var(--white); box-shadow: var(--sh-2); color: var(--blue); }
+  .hh-bob b { display: block; font-weight: 700; font-size: 13px; line-height: 16px; color: var(--navy); }
+  .hh-bob small { display: block; font-family: var(--f-num); font-size: 10px; line-height: 14px; letter-spacing: .04em; color: var(--press); }
+  .hh-tk { position: absolute; left: -46px; top: 366px; z-index: 3; display: flex; align-items: center; gap: 30px; width: 246px; height: 124px; padding: 0 24px; border-radius: 18px; background: var(--white); box-shadow: inset 4px 0 0 var(--white), var(--sh-stripe); font-weight: 700; font-size: 17px; line-height: 22px; color: var(--navy); }
+  .hh-tk::before { content: ''; position: absolute; left: -6px; top: 10px; bottom: 10px; width: 12px; background: radial-gradient(circle, var(--sky) 2.5px, transparent 3px) 0 0 / 12px 10px repeat-y; }
+  .hh-tk .num { font-size: 64px; line-height: 64px; color: var(--blue); }
+  .hh-tk span:last-child { max-width: 100px; }
+
+  .em { position: relative; z-index: 3; background: var(--sky); margin-top: -24px; }
+  .em-in { position: relative; display: flex; align-items: center; gap: 18px; min-height: 104px; padding: 14px 0 14px 104px; }
+  .em-in :global(.em-seal) { position: absolute; left: 0; top: -52px; }
+  .em-i { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--navy); color: var(--white); }
+  .em-t { flex: 1; color: var(--navy); font-weight: 500; font-size: 17px; line-height: 26px; }
+  .em-t b { display: block; font-weight: 800; font-size: 21px; line-height: 28px; }
+  .em-t a { font-weight: 700; color: var(--navy); white-space: nowrap; }
+  .em-t a:hover { text-decoration: underline; }
+  .em-in :global(.em-btn) { flex: none; min-height: 56px; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .hh-in { grid-template-columns: minmax(0, 1fr) 460px; } .hh-tk { left: -20px; } }
+  @media (max-width: 1023px) {
+    .hh { padding: 36px 0 72px; }
+    .hh :global(.fl-d) { display: none; } .hh :global(.fl-m) { display: block; }
+    .hh-in { grid-template-columns: minmax(0, 1fr); }
+    .hh-h1 { font-size: 34px; line-height: 40px; letter-spacing: -0.02em; margin-top: 12px; }
+    .ul-wrap :global(.ul) { bottom: -7px; }
+    .hh-lead { margin-top: 22px; font-size: 16px; line-height: 26px; }
+    .hh-btns { display: grid; width: 100%; gap: 10px; margin-top: 22px; }
+    .hh-btns :global(.btn) { width: 100%; }
+    .hh-btns :global(.btn-sec) { min-height: 56px; }
+    .hh-pill { margin-top: 20px; }
+    .hh-media { margin-top: 40px; height: 330px; }
+    .hh-ph { height: 280px; border-radius: var(--r-xl); }
+    .hh-stripes { width: 80px; height: 60px; }
+    .hh-media :global(.hh-cap) { display: none; }
+    .hh-bob { left: 12px; top: -16px; height: 40px; padding: 0 10px; }
+    .hh-bob small { display: none; }
+    .hh-tk { left: 10px; top: 226px; width: 200px; height: 96px; gap: 18px; font-size: 15px; line-height: 20px; }
+    .hh-tk .num { font-size: 48px; line-height: 48px; }
+    .em { margin-top: 0; }
+    .em-in { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 40px 0 28px; }
+    .em-in :global(.em-seal) { --d: 56px !important; left: auto; right: 0; top: -36px; }
+    .em-i { width: 40px; height: 40px; }
+    .em-t { font-size: 15px; line-height: 23px; }
+    .em-t b { font-size: 18px; line-height: 24px; }
+    .em-in :global(.em-btn) { grid-column: 1 / -1; width: 100%; }
+  }
+</style>

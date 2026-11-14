@@ -1,0 +1,61 @@
+---
+// Often booked with (Figma 03 W11): tint band, head + linked town chips left, four service cards right (sky icon disc on
+// the top edge, arrow), and a white line naming the towns with a link to all service areas. Mobile: the cards swipe.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import ArrowDot from '../ui/ArrowDot.astro';
+import TownChip from '../ui/TownChip.astro';
+import TextLink from '../ui/TextLink.astro';
+import { TOWNS_LINKED } from '../../data/towns';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { r: NonNullable<SvcPage['related']>; slug: string; }
+const { r, slug } = Astro.props;
+const id = sid(slug, 'related');
+---
+<section class="rl" aria-labelledby={id} data-m-section>
+  <div class="wrap rl-grid">
+    <div class="rl-side">
+      <SectionHead eyebrow={r.eyebrow} l1={r.l1} l2={r.l2} id={id} />
+      <div class="rl-towns" data-t="5" data-stagger>{TOWNS_LINKED.map((t) => <TownChip name={t.name} href={t.href} />)}</div>
+    </div>
+    <div class="rl-main">
+      <ul class="rl-cards" role="list" data-t="4" data-stagger>
+        {r.cards.map((c) => (
+          <li><a href={c.href} class="rl-card"><span class="rl-ic"><Icon name={c.icon} size={22} /></span><span class="rl-t">{c.t}</span><ArrowDot d={32} v="tint" class="rl-ad" /></a></li>
+        ))}
+      </ul>
+      <p class="rl-line" data-t="3"><Icon name="pin" size={20} /><span>{r.line}</span><TextLink href="/service-areas" class="rl-all">All service areas</TextLink></p>
+    </div>
+  </div>
+</section>
+<style>
+  .rl { position: relative; background: var(--tint); padding: 96px 0 104px; }
+  .rl-grid { display: grid; grid-template-columns: minmax(0, 430px) minmax(0, 740px); justify-content: space-between; column-gap: 30px; align-items: start; }
+  .rl-side { padding-top: 0; }
+  .rl-towns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; max-width: 360px; }
+  .rl-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 0; padding: 30px 0 0; }
+  .rl-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; height: 150px; padding: 50px 14px 14px 20px; border-radius: 16px; background: var(--white); box-shadow: var(--sh-2); color: var(--navy); transition: transform .4s var(--ease-out), box-shadow .4s; }
+  .rl-card:hover { transform: translateY(-4px); box-shadow: var(--sh-3); }
+  .rl-ic { position: absolute; left: 16px; top: -28px; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--sky); color: var(--navy); box-shadow: 0 0 0 4px var(--white), var(--sh-1); }
+  .rl-t { font-weight: 700; font-size: 16px; line-height: 22px; }
+  .rl-card :global(.rl-ad) { align-self: flex-end; }
+  .rl-card:hover :global(.rl-ad) { transform: translateX(3px); }
+  .rl-line { display: flex; align-items: center; gap: 12px; margin-top: 30px; padding: 16px 24px; border-radius: 16px; background: var(--white); font-weight: 600; font-size: 14px; line-height: 20px; color: var(--navy); }
+  .rl-line > :global(svg) { color: var(--blue); flex: none; }
+  .rl-line > span { flex: 1; }
+  .rl-line :global(.rl-all) { flex: none; font-size: 15px; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .rl-grid { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); } }
+  @media (max-width: 1023px) {
+    .rl { padding: 64px 0 64px; }
+    .rl-grid { grid-template-columns: minmax(0, 1fr); }
+    .rl-towns { display: none; }
+    .rl-cards { display: flex; gap: 12px; margin: 16px calc(-1 * var(--gutter)) 0; padding: 32px var(--gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .rl-cards::-webkit-scrollbar { display: none; }
+    .rl-cards li { flex: 0 0 160px; scroll-snap-align: start; scroll-margin-left: var(--gutter); }
+    .rl-card { height: 130px; padding: 44px 12px 12px 16px; }
+    .rl-t { font-size: 14px; line-height: 20px; }
+    .rl-line { display: grid; gap: 14px; margin-top: 24px; padding: 20px 18px; }
+    .rl-line > :global(svg) { display: none; }
+  }
+</style>

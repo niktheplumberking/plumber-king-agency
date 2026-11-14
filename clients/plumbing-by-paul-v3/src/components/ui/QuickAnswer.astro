@@ -1,0 +1,19 @@
+---
+// Quick-answer box (AEO): a 40-60 word direct answer under the H1 of service, town and guide pages.
+// Tint card with the in-bar and a Russo label. Put the answer as the slot; `q` is the question it answers.
+interface Props { q?: string; label?: string; class?: string; }
+const { q, label = 'Quick answer', class: cls } = Astro.props;
+---
+<aside class:list={['qa', cls]} aria-label={label} data-t="3">
+  <p class="label ql">{label}</p>
+  {q && <p class="qq">{q}</p>}
+  <div class="qb"><slot /></div>
+</aside>
+<style>
+  .qa { display: grid; gap: 8px; padding: 24px 28px 24px 32px; border-radius: var(--r-lg); background: var(--tint); box-shadow: var(--in-bar); }
+  .ql { color: var(--press); }
+  .qq { font-weight: 700; font-size: var(--fz-h4); line-height: 1.36; }
+  .qb { font-size: var(--fz-body); line-height: 1.65; color: var(--navy); }
+  .qb :global(strong) { font-weight: 600; }
+  @media (max-width: 767px) { .qa { padding: 20px 20px 20px 24px; } }
+</style>

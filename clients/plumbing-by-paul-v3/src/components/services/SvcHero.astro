@@ -1,0 +1,198 @@
+---
+// Service hero. Layout a (Figma 03 W1): copy left with check rows; a three-photo collage right (tall frame + two stacked
+// frames on a sky panel, seal between, rating pill on the tall frame). Layout b (Figma 04 D1): copy left with proof chips;
+// a full-bleed photo right that fades into the page, a mini review card with crew patches, a swoosh into the tint band.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Underline from '../ui/Underline.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+import Chip from '../ui/Chip.astro';
+import Seal from '../ui/Seal.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Patch from '../ui/Patch.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { d: SvcPage; slug: string; }
+const { d, slug } = Astro.props;
+const h = d.hero;
+const id = sid(slug, 'h1');
+const [p0, p1, p2] = h.photos;
+---
+{d.layout === 'a' ? (
+<section class="sh sh-a" aria-labelledby={id} data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="wrap sh-in">
+    <div class="sh-copy">
+      <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: d.crumb, href: d.path }]} />
+      <Eyebrow text={h.eyebrow} />
+      <h1 class="sh-h1" id={id} data-t="2">
+        <span class="hl">{h.h1a}</span>
+        <span class="hl l2"><span class="ul-wrap">{h.h1b}<Underline class="ul" /></span></span>
+      </h1>
+      <p class="lead sh-lead" data-t="3" data-fx="nudge">{h.lead}</p>
+      {h.rows && (
+        <ul class="sh-rows" role="list" data-t="3" data-stagger>
+          {h.rows.map((r) => <li><Icon name="check" size={18} />{r}</li>)}
+        </ul>
+      )}
+      <div class="sh-btns" data-t="3" data-stagger>
+        <CallButton />
+        <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+      </div>
+    </div>
+    <div class="sh-col">
+      <div class="c-big frame frame-3" data-t="4" data-fx="frame">
+        <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 310px, calc(100vw - 40px)" priority widths={[360, 540, 720, 960]} />
+        {h.tag && <PhotoTag class="c-tag">{h.tag}</PhotoTag>}
+      </div>
+      <div class="c-pill" data-t="5" data-fx="pop"><RatingPill /></div>
+      <div class="c-side" aria-hidden="false">
+        <span class="c-panel" aria-hidden="true"></span>
+        {p1 && <div class="c-sm c1 frame" data-t="4" data-fx="rise"><Img name={p1.name} alt={p1.alt} focus={p1.focus} sizes="(min-width: 1024px) 240px, 50vw" widths={[300, 480, 640]} /></div>}
+        {p2 && (
+          <div class="c-sm c2 frame" data-t="4" data-fx="rise">
+            <Img name={p2.name} alt={p2.alt} focus={p2.focus} sizes="(min-width: 1024px) 240px, 50vw" widths={[300, 480, 640]} />
+            {h.caption && <Caption class="c-cap">{h.caption}</Caption>}
+          </div>
+        )}
+      </div>
+      <Seal d={64} deg={-6} class="c-seal" />
+    </div>
+  </div>
+</section>
+) : (
+<section class="sh sh-b" aria-labelledby={id} data-m-section data-m-hero>
+  <div class="b-ph" data-t="4" data-fx="frame">
+    <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 50vw, 100vw" priority widths={[480, 720, 960, 1280, 1600]} data-parallax="0.05" />
+    {h.tag && <PhotoTag class="b-tag">{h.tag}</PhotoTag>}
+  </div>
+  <div class="wrap sh-in">
+    <div class="sh-copy">
+      <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: d.crumb, href: d.path }]} />
+      <Eyebrow text={h.eyebrow} />
+      <h1 class="sh-h1" id={id} data-t="2">
+        <span class="hl">{h.h1a}</span>
+        <span class="hl l2">{h.h1b}</span>
+      </h1>
+      <p class="lead sh-lead" data-t="3" data-fx="nudge">{h.lead}</p>
+      <div class="sh-btns" data-t="3" data-stagger>
+        <CallButton />
+        <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+      </div>
+      {h.chips && <div class="sh-chips" data-t="5" data-stagger>{h.chips.map((c) => <Chip icon={c.icon}>{c.label}</Chip>)}</div>}
+    </div>
+    {h.mini && (
+      <figure class="b-mini" data-t="5" data-fx="pop">
+        <div class="bm-pats" aria-label={`Fixed by ${h.mini.patches.join(' and ')}`}>
+          {h.mini.patches.slice(0, 2).map((n, i) => <Patch name={n} size="mini" label="" deg={i % 2 ? 5 : -4} t={false} />)}
+        </div>
+        <Stars size={14} />
+        <blockquote><p>{h.mini.quote}</p></blockquote>
+        <figcaption><GoogleG size={14} />{h.mini.name} · Google review</figcaption>
+      </figure>
+    )}
+  </div>
+  <Swoosh class="b-sw" below="#E8F3F8" />
+</section>
+)}
+<style>
+  .sh { position: relative; overflow: clip; }
+  .sh-in { position: relative; z-index: 2; display: grid; }
+  .sh-copy { display: grid; justify-items: start; align-content: start; }
+  .sh-copy :global(.eyebrow) { margin-top: 22px; }
+  .sh-h1 { margin-top: 16px; font-weight: 800; font-size: var(--fz-display); line-height: 1.0667; letter-spacing: -0.025em; text-wrap: balance; }
+  .hl { display: block; } .hl.l2 { color: var(--blue); }
+  .ul-wrap { position: relative; display: inline-block; }
+  .ul-wrap :global(.ul) { position: absolute; left: 2px; bottom: -10px; width: calc(100% + 4px); }
+  .sh-lead { margin-top: 24px; max-width: 560px; }
+  .sh-rows { display: grid; gap: 12px; margin: 22px 0 0; padding: 0; }
+  .sh-rows li { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 16px; line-height: 22px; color: var(--navy); }
+  .sh-rows li :global(svg) { color: var(--blue); flex: none; }
+  .sh-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .sh-btns :global(.btn-sec) { padding: 0 28px; }
+  .sh-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; max-width: 520px; }
+
+  /* ---- layout a ---- */
+  .sh-a { background: linear-gradient(180deg, var(--mist), var(--white)); padding: 56px 0 56px; }
+  .sh-a :global(.fl-m) { display: none; }
+  .sh-a .sh-h1 { font-size: clamp(2.125rem, 1.8vw + 30px, 3.5rem); } /* Figma 03: 56 px, three lines */
+  .sh-a .sh-in { grid-template-columns: minmax(0, 1fr) 572px; column-gap: 40px; }
+  .sh-col { position: relative; height: 540px; margin-top: -4px; }
+  .c-big { position: absolute; left: 0; top: 0; width: 302px; height: 500px; border-radius: var(--r-xl); }
+  .c-big :global(.c-tag) { position: absolute; left: 22px; top: 22px; z-index: 2; }
+  .c-pill { position: absolute; left: -6px; top: 474px; z-index: 3; }
+  .c-side { position: absolute; left: 324px; top: 30px; width: 240px; height: 486px; }
+  .c-panel { position: absolute; left: 12px; right: -22px; top: 0; bottom: -8px; border-radius: var(--r-xl); background: var(--soft); }
+  .c-sm { position: absolute; left: 0; width: 240px; height: 228px; border-radius: 22px; }
+  .c1 { top: 8px; } .c2 { top: 256px; }
+  .c2 :global(.c-cap) { position: absolute; left: 14px; bottom: 6px; z-index: 2; }
+  .sh-col :global(.c-seal) { position: absolute; left: 286px; top: 244px; z-index: 4; }
+
+  /* ---- layout b ---- */
+  .sh-b { background: var(--white); padding: 56px 0 150px; }
+  .b-ph { position: absolute; top: 0; right: 0; bottom: 70px; width: 50%; overflow: hidden; }
+  .b-ph::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, var(--white) 0%, rgba(255,255,255,.55) 12%, rgba(255,255,255,0) 32%); }
+  .b-ph :global(img) { transform: scale(1.06); }
+  .b-ph :global(.b-tag) { position: absolute; right: 44px; top: 132px; z-index: 2; }
+  .sh-b .sh-in { grid-template-columns: minmax(0, 560px) 1fr; }
+  .sh-b .sh-lead { max-width: 520px; }
+  .b-mini { position: absolute; z-index: 3; left: 548px; top: 360px; width: 330px; margin: 0; padding: 22px 20px 18px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-3); display: grid; gap: 8px; }
+  .bm-pats { position: absolute; right: 0; top: -18px; display: flex; }
+  .bm-pats :global(.patch + .patch) { margin-left: -10px; }
+  .b-mini blockquote { margin: 0; font-weight: 600; font-size: 15px; line-height: 23px; color: var(--navy); }
+  .b-mini figcaption { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate-2); }
+  .sh-b :global(.b-sw) { position: absolute; left: 0; bottom: 0; z-index: 1; }
+
+  @media (max-width: 1199px) and (min-width: 1024px) {
+    .sh-a .sh-in { grid-template-columns: minmax(0, 1fr) 470px; }
+    .c-big { width: 250px; height: 440px; } .c-pill { top: 414px; }
+    .c-side { left: 268px; width: 200px; } .c-sm { width: 200px; height: 200px; } .c2 { top: 222px; }
+    .sh-col :global(.c-seal) { left: 230px; top: 206px; }
+    .b-mini { left: auto; right: 40px; top: auto; bottom: 120px; }
+  }
+  @media (max-width: 1023px) {
+    .sh-copy :global(.eyebrow) { margin-top: 16px; }
+    .sh-h1 { margin-top: 12px; font-size: 34px; line-height: 40px; letter-spacing: -0.02em; }
+    .ul-wrap :global(.ul) { bottom: -7px; }
+    .sh-lead { margin-top: 18px; font-size: 16px; line-height: 26px; }
+    .sh-rows { gap: 10px; margin-top: 18px; } .sh-rows li { font-size: 15px; }
+    .sh-btns { display: grid; width: 100%; gap: 10px; margin-top: 22px; }
+    .sh-btns :global(.btn) { width: 100%; }
+    .sh-btns :global(.btn-sec) { min-height: 56px; }
+    .sh-chips { display: grid; justify-items: start; margin-top: 22px; }
+
+    .sh-a { padding: 36px 0 48px; }
+    .sh-a :global(.fl-d) { display: none; } .sh-a :global(.fl-m) { display: block; }
+    .sh-a .sh-in { grid-template-columns: minmax(0, 1fr); }
+    .sh-col { height: auto; margin-top: 34px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .c-big { position: relative; grid-column: 1 / -1; width: auto; height: 264px; border-radius: var(--r-lg); }
+    .c-big :global(.c-tag) { left: 14px; top: 14px; }
+    .c-pill { position: relative; grid-column: 1 / -1; left: auto; top: auto; justify-self: center; margin-top: -40px; }
+    .c-side { display: contents; }
+    .c-panel { display: none; }
+    .c-sm { position: relative; top: auto; width: auto; height: 140px; border-radius: 16px; margin-top: 8px; }
+    .c2 :global(.c-cap) { display: none; }
+    .sh-col :global(.c-seal) { --d: 48px !important; left: calc(50% - 24px); top: auto; bottom: 112px; }
+
+    .sh-b { padding: 0 0 72px; }
+    .b-ph { position: relative; width: 100%; height: 330px; bottom: auto; }
+    .b-ph::before { background: linear-gradient(0deg, rgba(255,255,255,.0) 0%, rgba(255,255,255,0) 100%); }
+    .b-ph :global(.b-tag) { right: auto; left: 16px; top: 16px; }
+    .sh-b .sh-in { grid-template-columns: minmax(0, 1fr); position: static; }
+    .sh-b .sh-copy { padding-top: 28px; }
+    .b-mini { left: auto; right: var(--gutter); top: 186px; width: min(250px, 66vw); padding: 16px 14px 14px; gap: 6px; }
+    .b-mini blockquote { font-size: 13px; line-height: 19px; }
+    .b-mini figcaption { font-size: 11px; }
+    .sh-b :global(.b-sw) { display: none; }
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+// B4 Timeline (Figma B4): a horizontal pipe with tee fittings as year nodes; cards alternate above and below; the Best of
+// the Bay 2026 badge (official file, on white) overlaps the 2026 card; a tilted crew snapshot overlaps the last (navy) card.
+// Mobile: vertical pipe at left, cards right. Milestones are the verified ones only (Paul to add his own).
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+const items = [
+  { y: '2015', b: 'Plumbing By Paul LLC opens', r: ' in St. Petersburg.', up: true },
+  { y: '2022', b: 'Best of the Bay.', r: ' Creative Loafing readers vote us Best Plumbing Company.' },
+  { y: '2023', b: 'They do it again.', r: '', up: true },
+  { y: '2024', b: 'And again.', r: '' },
+  { y: '2026', b: 'Fourth win.', r: ' Best Plumbing Company, Best of the Bay 2026.', up: true, badge: true },
+  { y: 'Today', b: '947 Google reviews,', r: ' new jerseys for the crew, and more trucks on the road than ever.', today: true },
+];
+---
+<section class="btl" aria-labelledby="btl-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="How we got here" l1="Eleven years," l2="one town" id="btl-h" />
+    <div class="btl-track">
+      <span class="btl-pipe" aria-hidden="true"></span>
+      <ol class="btl-list" data-t="4" data-stagger>
+        {items.map((it, i) => (
+          <li class:list={['btl-i', it.up ? 'up' : 'down', it.today && 'today']} style={`--i:${i}`}>
+            <span class="btl-node" aria-hidden="true"><i></i></span>
+            <div class="btl-card">
+              <p class="num btl-y">{it.y}</p>
+              <p class="btl-t"><b>{it.b}</b>{it.r}</p>
+              {it.badge && <span class="btl-badge"><Img name="award-best-of-the-bay-2026-winner-badge" alt="Best of the Bay 2026 winner badge, Best Plumbing Company" sizes="145px" widths={[160, 300]} fit="contain" /></span>}
+              {it.today && <figure class="btl-snap snap"><Img name="hero-04-crew-new-jerseys-box-truck" alt="The crew in their new jerseys in front of the box truck" sizes="(min-width: 1024px) 182px, 40vw" widths={[200, 400]} focus="50% 55%" /></figure>}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="script btl-still" aria-hidden="true">still counting</p>
+    </div>
+  </div>
+</section>
+<style>
+  .btl { position: relative; background: var(--tint); padding: 72px 0 100px; }
+  .btl-track { position: relative; height: 600px; margin-top: 18px; }
+  .btl-pipe { position: absolute; left: -24px; right: -24px; top: 243px; height: 14px; border-radius: 7px; background: var(--sky); box-shadow: inset 0 0 0 2px var(--navy), inset 0 4px 0 2px rgba(255,255,255,.45); }
+  .btl-list { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+  .btl-i { position: absolute; left: calc(var(--i) * 200px + 100px); top: 0; width: 0; height: 100%; }
+  .btl-node { position: absolute; left: -11px; top: 239px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 2.5px var(--navy); z-index: 2; }
+  .btl-node i { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
+  .btl-node::before { content: ''; position: absolute; left: 4px; width: 14px; height: 56px; border-radius: 3px; background: var(--sky); box-shadow: inset 0 0 0 2px var(--navy); z-index: -1; }
+  .up .btl-node::before { bottom: 11px; }
+  .down .btl-node::before { top: 11px; }
+  .btl-card { position: absolute; left: -136px; width: 272px; padding: 18px 20px 22px; border-radius: 16px; background: var(--white); box-shadow: var(--sh-2); }
+  .up .btl-card { bottom: calc(100% - 194px); }
+  .down .btl-card { top: 306px; }
+  .btl-i:first-child .btl-card { left: -100px; width: 288px; }
+  .today .btl-card { left: -188px; width: 288px; min-height: 245px; background: var(--navy); color: var(--white); }
+  .btl-y { font-size: 26px; line-height: 1; color: var(--press); }
+  .today .btl-y { color: var(--sky); }
+  .btl-t { margin-top: 12px; font-size: 14px; line-height: 21px; color: var(--slate); }
+  .btl-t b { font-weight: 700; color: var(--navy); }
+  .today .btl-t { color: var(--soft); } .today .btl-t b { color: var(--white); }
+  .btl-badge { position: absolute; right: -126px; top: -78px; width: 145px; height: 145px; padding: 10px; border-radius: 18px; background: var(--white); box-shadow: var(--sh-3); transform: rotate(6deg); }
+  .btl-badge :global(img) { display: block; }
+  .btl-snap { position: absolute; left: 126px; top: 127px; width: 182px; height: 164px; margin: 0; transform: rotate(4deg); }
+  .btl-still { position: absolute; left: 626px; top: 438px; font-size: 32px; color: var(--blue); transform: rotate(-6deg); }
+  @media (max-width: 1279px) { .btl-i { left: calc(var(--i) * (100% - 200px) / 5 + 100px); } .btl-card, .btl-i:first-child .btl-card { width: 210px; left: -105px; } .today .btl-card { width: 230px; left: -150px; } .btl-badge { right: -40px; width: 110px; height: 110px; top: -96px; } }
+  @media (max-width: 1023px) {
+    .btl { padding: 56px 0 64px; }
+    .btl-track { height: auto; margin-top: 28px; padding-left: 36px; }
+    .btl-pipe { left: 4px; right: auto; top: 0; bottom: 0; width: 14px; height: auto; }
+    .btl-list { position: relative; display: grid; gap: 14px; }
+    .btl-i { position: relative; left: 0 !important; width: auto; height: auto; }
+    .btl-node { left: -39px; top: 20px; }
+    .btl-node::before { display: none; }
+    .btl-card, .up .btl-card, .down .btl-card, .btl-i:first-child .btl-card, .today .btl-card { position: relative; left: 0; top: auto; bottom: auto !important; width: auto; min-height: 0; padding: 16px 18px 18px; }
+    .today .btl-card { padding-bottom: 120px; }
+    .btl-y { font-size: 22px; }
+    .btl-t { margin-top: 8px; font-size: 13px; line-height: 20px; }
+    .btl-i:has(.btl-badge) .btl-t { padding-right: 76px; }
+    .btl-badge { right: 8px; top: 10px; width: 76px; height: 76px; padding: 5px; border-radius: 12px; }
+    .btl-snap { left: auto; right: -6px; top: auto; bottom: -14px; width: 150px; height: 112px; }
+    .btl-still { display: none; }
+  }
+</style>

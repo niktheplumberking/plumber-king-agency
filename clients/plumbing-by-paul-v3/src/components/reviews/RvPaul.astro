@@ -1,0 +1,46 @@
+---
+// R4 Paul's words (Figma 443:3316). Sky field; tilted framed photo overlapping the band's top edge over a blue offset block,
+// a white plate with the Yellowtail signature on its corner; the quote in navy at h2 size (never white on sky).
+// STICKY: Paul to approve this quote on the site (source: his own 900-review post).
+import Eyebrow from '../ui/Eyebrow.astro';
+import Img from '../ui/Img.astro';
+---
+<section class="rvp" aria-label="From Paul" data-m-section>
+  <div class="wrap rvp-in">
+    <div class="rvp-media">
+      <span class="rvp-block" aria-hidden="true"></span>
+      <div class="rvp-photo snap" data-t="4" data-fx="toss">
+        <Img name="about-paul-alycia-jobsite-hardhat" alt="Paul and Alycia on a job site, Alycia in a blue hard hat" sizes="(min-width: 1024px) 360px, 300px" focus="50% 30%" widths={[360, 540, 720]} />
+      </div>
+      <span class="rvp-sig script" data-t="5" data-fx="pop" aria-hidden="true">Paul</span>
+    </div>
+    <figure class="rvp-q">
+      <Eyebrow text="From Paul" />
+      <blockquote data-t="2"><p>“900 reviews isn't a trophy on a shelf. People rarely say 'they fixed my plumbing.' They talk about how they were treated.”</p></blockquote>
+      <figcaption data-t="3"><span class="bar" aria-hidden="true"></span>Paul Alves, owner</figcaption>
+    </figure>
+  </div>
+</section>
+<style>
+  .rvp { position: relative; background: var(--sky); padding: 88px 0 96px; }
+  .rvp-in { display: grid; grid-template-columns: 420px minmax(0, 720px); justify-content: space-between; align-items: start; column-gap: 40px; }
+  .rvp-media { position: relative; width: 360px; height: 460px; margin: -144px 0 0 30px; }
+  .rvp-block { position: absolute; inset: 26px -30px -26px 30px; border-radius: 28px; background: var(--blue); transform: rotate(3deg); }
+  .rvp-photo { position: absolute; inset: 0; border-radius: 28px; transform: rotate(-3deg); }
+  .rvp-sig { position: absolute; right: -50px; bottom: 6px; z-index: 2; display: grid; place-items: center; width: 176px; height: 84px; border-radius: 18px; background: var(--white); box-shadow: var(--sh-3); color: var(--blue); font-size: 64px; line-height: 1; transform: rotate(-6deg); }
+  .rvp-q { margin: 0; display: grid; gap: 0; }
+  blockquote { margin: 18px 0 0; }
+  blockquote p { font-weight: 800; font-size: clamp(1.625rem, 1.333vw + 21px, 2.5rem); line-height: 1.25; letter-spacing: -0.025em; color: var(--navy); text-wrap: pretty; }
+  figcaption { display: flex; align-items: center; gap: 14px; margin-top: 28px; font-weight: 700; font-size: 17px; line-height: 24px; color: var(--navy); }
+  .bar { width: 40px; height: 3px; border-radius: 2px; background: var(--navy); }
+  @media (max-width: 1199px) { .rvp-in { grid-template-columns: 380px minmax(0, 1fr); } }
+  @media (max-width: 1023px) {
+    .rvp { padding: 56px 0 64px; }
+    .rvp-in { grid-template-columns: 1fr; row-gap: 32px; }
+    .rvp-q { order: 1; }
+    .rvp-media { order: 2; width: calc(100% - 24px); max-width: 320px; height: auto; aspect-ratio: 240 / 300; margin: 0 0 0 4px; }
+    .rvp-block { inset: 14px -14px -14px 14px; }
+    .rvp-sig { right: -16px; bottom: -6px; width: 120px; height: 58px; font-size: 44px; border-radius: 14px; }
+    figcaption { margin-top: 20px; font-size: 15px; }
+  }
+</style>

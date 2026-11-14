@@ -1,0 +1,102 @@
+---
+// S7 Paul's promise + offer slot, S8 spotlight review (Figma 02). The offer slot stays a labelled stand-in until Paul
+// decides (STICKY 7). The spotlight quote is Renee Frias, word for word (REVIEWS.md n23, last sentence left off).
+import SectionHead from '../../ui/SectionHead.astro';
+import Icon from '../../ui/Icon.astro';
+import Seal from '../../ui/Seal.astro';
+import Stars from '../../ui/Stars.astro';
+import GoogleG from '../../ui/GoogleG.astro';
+import Patch from '../../ui/Patch.astro';
+import RatingPill from '../../ui/RatingPill.astro';
+import TextLink from '../../ui/TextLink.astro';
+import Swoosh from '../../ui/Swoosh.astro';
+import { PROMISE, RENEE } from './hub';
+import { esc } from '../fmt';
+let q = esc(RENEE.quote);
+for (const h of RENEE.hl ?? []) q = q.replace(esc(h), `<mark>${esc(h)}</mark>`);
+---
+<section class="pm" aria-labelledby="pm-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="Paul's promise" l1="Same four things," l2="every single job" id="pm-h" />
+    <div class="pm-band">
+      <Seal d={160} deg={-4} class="pm-seal" />
+      <ul role="list" class="pm-cells" data-t="4" data-stagger>
+        {PROMISE.map((c, i) => (
+          <li><span class="pm-w"><Icon name={c.icon} size={22} /><span class="num">{String(i + 1).padStart(2, '0')}</span></span><h3>{c.t}</h3><p>{c.d}</p></li>
+        ))}
+      </ul>
+      <div class="pm-offer" data-t="5" data-fx="toss">
+        <p class="label">Paul's offer goes here</p>
+        <p class="pm-ot">Financing, a first-visit offer or a maintenance plan.</p>
+        <p class="pm-on">Paul to decide. This slot stays labelled until he does.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sp" aria-label="A customer review" data-m-section>
+  <div class="wrap">
+    <figure class="sp-card" data-t="4" data-fx="rise">
+      <span class="sp-mark script" aria-hidden="true">“</span>
+      <Patch name="Brian" deg={4} class="sp-patch" />
+      <p class="sp-meta"><Stars size={18} /><span>5.0 · Google review</span></p>
+      <blockquote class="sp-q"><p set:html={q} /></blockquote>
+      <figcaption class="sp-by">
+        <span class="sp-av num" aria-hidden="true">R</span>
+        <span class="sp-nm"><b>{RENEE.name}</b><small>Google review · {RENEE.age}</small></span>
+        <span class="sp-more"><GoogleG size={20} /><TextLink href="/reviews">Read more reviews</TextLink></span>
+      </figcaption>
+      <div class="sp-pill"><RatingPill /></div>
+    </figure>
+  </div>
+  <Swoosh class="sp-sw" below="#FFFFFF" />
+</section>
+<style>
+  .pm { position: relative; background: var(--white); padding: 104px 0 112px; }
+  .pm-band { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 300px; align-items: center; margin-top: 72px; padding: 44px 0 44px 40px; border-radius: 24px; background: var(--tint); }
+  .pm-band :global(.pm-seal) { position: absolute; left: 740px; top: -90px; z-index: 2; }
+  .pm-cells { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; }
+  .pm-cells li { padding: 0 24px 0 0; margin-right: 16px; border-right: 1px solid var(--line); }
+  .pm-cells li:last-child { border: 0; }
+  .pm-w { display: flex; align-items: center; gap: 14px; }
+  .pm-w :global(svg) { box-sizing: content-box; padding: 14px; border-radius: 12px; background: var(--white); color: var(--blue); }
+  .pm-w .num { color: var(--press); font-size: 13px; }
+  .pm-cells h3 { margin-top: 18px; font-weight: 800; font-size: 20px; line-height: 26px; }
+  .pm-cells p { margin-top: 6px; font-size: 14px; line-height: 21px; color: var(--slate); }
+  .pm-offer { position: relative; margin: 0 16px 0 -8px; padding: 24px 24px 22px; border: 2px dashed var(--press); border-radius: 18px; background: var(--white); box-shadow: var(--sh-2); transform: rotate(2deg); }
+  .pm-offer .label { color: var(--press); font-size: 12px; }
+  .pm-ot { margin-top: 10px; font-weight: 600; font-size: 16px; line-height: 24px; color: var(--navy); }
+  .pm-on { margin-top: 10px; font-size: 13px; line-height: 19px; color: var(--slate); }
+
+  .sp { position: relative; background: var(--tint); padding: 120px 0 200px; overflow: clip; }
+  .sp-card { position: relative; width: min(880px, 100%); margin: 0 auto; padding: 56px 56px 52px; border-radius: 28px; background: var(--white); box-shadow: var(--sh-3); }
+  .sp-mark { position: absolute; left: 20px; top: -80px; font-size: 180px; line-height: 1; color: var(--sky); }
+  .sp-card :global(.sp-patch) { position: absolute; right: 28px; top: -30px; }
+  .sp-meta { display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 14px; color: var(--slate); }
+  .sp-q { margin: 22px 0 0; font-weight: 500; font-size: 26px; line-height: 38px; color: var(--navy); }
+  .sp-q :global(mark) { background: none; color: inherit; font-weight: 700; text-decoration: underline; text-decoration-color: var(--soft); text-decoration-thickness: 8px; text-underline-offset: -1px; text-decoration-skip-ink: none; }
+  .sp-by { display: flex; align-items: center; gap: 14px; margin-top: 28px; }
+  .sp-av { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--tint); color: var(--press); font-size: 18px; }
+  .sp-nm { flex: 1; display: grid; } .sp-nm b { font-weight: 700; font-size: 17px; } .sp-nm small { font-size: 13px; color: var(--slate-2); }
+  .sp-more { display: inline-flex; align-items: center; gap: 12px; }
+  .sp-pill { position: absolute; left: 50%; bottom: -22px; transform: translateX(-50%); }
+  .sp :global(.sp-sw) { position: absolute; left: 0; bottom: 0; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .pm-band :global(.pm-seal) { left: auto; right: 320px; } }
+  @media (max-width: 1023px) {
+    .pm { padding: 64px 0 72px; }
+    .pm-band { grid-template-columns: minmax(0, 1fr); row-gap: 28px; margin-top: 88px; padding: 70px 18px 24px; }
+    .pm-band :global(.pm-seal) { --d: 104px !important; left: auto; right: 12px; top: -60px; }
+    .pm-cells { grid-template-columns: 1fr 1fr; row-gap: 24px; }
+    .pm-cells li { padding: 0 12px 0 0; margin: 0; border: 0; }
+    .pm-cells h3 { margin-top: 12px; font-size: 17px; line-height: 22px; }
+    .pm-cells p { font-size: 13px; line-height: 19px; }
+    .pm-offer { margin: 0 4px; }
+    .sp { padding: 96px 0 120px; }
+    .sp-card { padding: 40px 22px 44px; }
+    .sp-mark { font-size: 120px; top: -56px; left: 10px; }
+    .sp-card :global(.sp-patch) { width: 120px; height: 46px; right: 10px; }
+    .sp-q { font-size: 19px; line-height: 30px; }
+    .sp-by { flex-wrap: wrap; }
+    .sp-more { width: 100%; }
+    .sp-pill { position: static; transform: none; margin-top: 22px; }
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+// K3 The shop (Figma 432:4882). Tint. A stylised map card (the Pinellas drawing, zoomed on St. Pete, seal pin + navy marker
+// label; no map JS, no tiles) with an "Open in Google Maps" pill; a white job ticket with the NAP overlaps its right side and a
+// tilted shop-front snapshot its bottom-left. NAP exactly as on Google.
+// STICKY: who are the three men in the shop-front photo, and is it OK to show them? (If not: a dashed photo slot.)
+import SectionHead from '../ui/SectionHead.astro';
+import Seal from '../ui/Seal.astro';
+import Img from '../ui/Img.astro';
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import Caption from '../ui/Caption.astro';
+import { SITE } from '../../data/site';
+const land = 'M196 44 L332 40 L372 70 L360 120 L326 150 L330 196 L366 236 L410 276 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L240 468 L222 420 L206 364 L192 304 L182 244 L172 186 L168 130 L176 80 Z';
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${SITE.legalName}, ${SITE.address.street}, ${SITE.address.city}, ${SITE.address.region} ${SITE.address.zip}`)}&destination_place_id=${SITE.google.placeId}`;
+const rows: [string, string, string?][] = [
+  ['Name', SITE.legalName],
+  ['Address', `${SITE.address.street}\n${SITE.address.city}, ${SITE.address.region} ${SITE.address.zip}`],
+  ['Phone', SITE.phone, SITE.tel],
+  ['Email', SITE.email, `mailto:${SITE.email}`],
+  ['Hours', 'Every day, 8 AM to 5 PM'],
+  ['License', `Florida ${SITE.licence}`],
+];
+---
+<section class="ks" aria-labelledby="ks-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="The shop" l1="Find us on" l2="64th Way North" id="ks-h" />
+    <div class="ks-stage">
+      <div class="ks-map" data-t="4">
+        <svg viewBox="28 240 572 315" preserveAspectRatio="xMidYMid slice" role="img" aria-label={`Map: our shop at ${SITE.address.street}, ${SITE.address.city}, between Kenneth City, Pinellas Park and Gulfport`}>
+          <rect x="0" y="0" width="588" height="600" fill="#F4F9FC" />
+          <g fill="none" stroke="#C9DCE6" stroke-width="1"><path d="M0 330 C90 320 120 430 40 600"/><path d="M588 420 C520 430 500 520 540 600"/><path d="M588 230 C540 250 520 300 588 330"/></g>
+          <path d={land} fill="#E8F3F8" stroke="#2A7FA8" stroke-width="1.5" stroke-linejoin="round" />
+          <path d="M240 372 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L246 462 Z" fill="#61ADCB" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
+          <path d="M190 300 L282 296 L286 352 L240 368 L204 360 Z" fill="#61ADCB" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
+          <g fill="none" stroke="#FFFFFF" stroke-width="1.5"><path d="M178 258 L384 252"/><path d="M286 300 L428 300"/></g>
+          <path d="M150 250 C156 320 166 360 178 390 C196 440 222 486 262 520" fill="none" stroke="#A9D3E4" stroke-width="7" stroke-linecap="round" stroke-dasharray="46 10" />
+          <g font-family="Russo One, sans-serif" fill="#111032" letter-spacing=".8"><text x="276" y="486" font-size="13">ST. PETERSBURG</text><text x="208" y="333" font-size="11">SEMINOLE</text></g>
+          <g font-family="Montserrat, sans-serif" font-weight="600" font-size="12" fill="#454867">
+            {([['Pinellas Park', 318, 272], ['Kenneth City', 300, 330], ['Gulfport', 306, 522]] as [string, number, number][]).map(([t, x, y]) => <g><circle cx={x} cy={y} r="4" fill="#FFFFFF" stroke="#111032" stroke-width="2" /><text x={x + 9} y={y + 4}>{t}</text></g>)}
+            <text x="70" y="368">Madeira Beach</text>
+          </g>
+          <text x="486" y="483" font-family="Montserrat, sans-serif" font-style="italic" font-weight="500" font-size="13" fill="#2A7FA8">Tampa Bay</text>
+        </svg>
+        <p class="ks-lbl label"><Icon name="pin" size={14} />{SITE.address.city}, FL {SITE.address.zip}</p>
+        <span class="ks-pin"><Seal d={64} deg={-6} /></span>
+        <p class="ks-mk"><b>{SITE.name}</b><span>{SITE.address.street}</span></p>
+        <a class="ks-open" href={SITE.google.mapsUrl} target="_blank" rel="noopener">Open in Google Maps<Icon name="external" size={16} /><span class="sr-only"> (opens in a new tab)</span></a>
+      </div>
+      <div class="ks-ticket" data-t="4">
+        <span class="perf" aria-hidden="true"></span>
+        <h3 class="tk-h label">Job ticket: name, address, phone</h3>
+        <dl class="tk-dl">
+          {rows.map(([k, v, href]) => (
+            <div class="tk-r"><dt class="label">{k}</dt><dd class:list={[k === 'Phone' && 'num ph']}>{href ? <a href={href}>{v}</a> : v.split('\n').map((l, i) => <>{i > 0 && <br />}{l}</>)}</dd></div>
+          ))}
+        </dl>
+        <Button href={directions} icon="nav" block external class="tk-btn" magnetic={false}>Get directions</Button>
+        <Seal d={84} deg={-8} class="tk-seal" />
+      </div>
+      <div class="ks-snap snap" data-t="4" data-fx="toss">
+        <Img name="shop-front-three-men" alt="Three of the team outside the shop front on 64th Way N" sizes="(min-width: 1024px) 220px, 140px" focus="50% 50%" widths={[220, 440]} />
+      </div>
+      <span class="ks-cap" data-t="5"><Caption>The shop front on 64th Way N</Caption></span>
+      <p class="ks-capm script" aria-hidden="true">The shop front on 64th Way N</p>
+    </div>
+  </div>
+</section>
+<style>
+  .ks { position: relative; background: var(--tint); padding: 104px 0 110px; }
+  .ks-stage { position: relative; margin-top: 52px; min-height: 520px; }
+  .ks-map { position: relative; width: 800px; height: 440px; border-radius: 28px; overflow: hidden; background: var(--mist); box-shadow: var(--sh-3); }
+  .ks-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ks-lbl { position: absolute; left: 24px; top: 24px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 10px; background: var(--white); box-shadow: var(--sh-1); font-size: 11px; color: var(--press); }
+  .ks-lbl :global(svg) { color: var(--blue); }
+  .ks-pin { position: absolute; left: 47.5%; top: 54.5%; transform: translate(-50%, -50%); }
+  .ks-mk { position: absolute; left: calc(47.5% + 62px); top: 54.5%; transform: translateY(-50%); display: grid; padding: 10px 16px; border-radius: 12px; background: var(--navy); color: var(--white); }
+  .ks-mk::before { content: ''; position: absolute; left: -6px; top: 50%; width: 14px; height: 14px; background: var(--navy); border-radius: 2px; transform: translateY(-50%) rotate(45deg); }
+  .ks-mk b { position: relative; font-size: 14px; line-height: 20px; }
+  .ks-mk span { position: relative; font-weight: 500; font-size: 12px; line-height: 18px; color: var(--soft); }
+  .ks-open { position: absolute; left: 500px; top: 372px; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 999px; background: var(--white); box-shadow: var(--sh-2); font-weight: 700; font-size: 14px; color: var(--navy); text-decoration: none; }
+  .ks-open :global(svg) { color: var(--press); }
+  .ks-open:hover { box-shadow: inset 0 0 0 1.5px var(--blue), var(--sh-2); }
+  .ks-ticket { position: absolute; right: 0; top: -56px; z-index: 2; width: 440px; padding: 34px 28px 28px; border-radius: 20px; background: var(--white); box-shadow: var(--sh-3); }
+  .perf { position: absolute; left: 15px; right: 15px; top: -7px; height: 14px; background: radial-gradient(circle at 7px 7px, var(--tint) 6.5px, transparent 7px) 0 0 / 25px 14px repeat-x; }
+  .tk-h { padding-bottom: 12px; border-bottom: 2px solid var(--navy); font-size: 12px; color: var(--press); }
+  .tk-dl { margin: 2px -16px 0; }
+  .tk-r { display: grid; grid-template-columns: 108px minmax(0, 1fr); align-items: center; min-height: 54px; padding: 10px 16px; border-radius: 8px; }
+  .tk-r:nth-child(odd) { background: var(--mist); }
+  .tk-r dt { font-weight: 600; font-family: var(--f-body, inherit); font-size: 12px; color: var(--slate); }
+  .tk-r dd { margin: 0; font-weight: 600; font-size: 15px; line-height: 22px; color: var(--navy); overflow-wrap: anywhere; }
+  .tk-r dd a { color: inherit; text-decoration: none; }
+  .tk-r dd a:hover { text-decoration: underline; }
+  .tk-r dd.ph { font-size: 19px; line-height: 24px; color: var(--press); }
+  .ks-ticket :global(.tk-btn) { margin-top: 20px; }
+  .ks-ticket :global(.tk-seal) { position: absolute; right: -40px; bottom: -40px; }
+  .ks-snap { position: absolute; left: 30px; top: 300px; z-index: 2; width: 220px; height: 290px; transform: rotate(-5deg); }
+  .ks-cap { position: absolute; left: 300px; top: 462px; z-index: 2; }
+  .ks-capm { display: none; }
+  @media (max-width: 1279px) { .ks-map { width: 640px; } .ks-open { left: auto; right: 24px; } .ks-ticket { width: 400px; } }
+  @media (max-width: 1023px) {
+    .ks { padding: 56px 0 64px; }
+    .ks-stage { margin-top: 28px; min-height: 0; display: grid; }
+    .ks-map { width: 100%; height: 240px; border-radius: 20px 20px 0 0; }
+    .ks-map svg { transform: scale(1.5); transform-origin: 47% 58%; }
+    .ks-lbl { display: none; }
+    .ks-open { left: 10px; right: auto; top: 12px; height: 36px; padding: 0 12px; font-size: 12px; }
+    .ks-pin :global(.seal) { --d: 52px !important; }
+    .ks-mk { left: calc(47.5% + 40px); padding: 8px 12px; background: var(--white); color: var(--navy); box-shadow: var(--sh-1); }
+    .ks-mk::before { background: var(--white); }
+    .ks-mk b { font-weight: 600; font-size: 12px; line-height: 16px; } .ks-mk b::after { content: ' · 64th Way N'; }
+    .ks-mk span { display: none; }
+    .ks-ticket { position: relative; right: auto; top: auto; width: auto; padding: 24px 16px 22px; border-radius: 0 0 20px 20px; }
+    .tk-dl { margin: 2px -6px 0; }
+    .tk-r { grid-template-columns: 74px minmax(0, 1fr); padding: 10px 8px; gap: 8px; }
+    .tk-r dt { font-size: 10px; }
+    .tk-r dd { font-size: 13px; line-height: 19px; }
+    .tk-r dd.ph { font-size: 16px; }
+    .ks-ticket :global(.tk-seal) { right: auto; left: -6px; bottom: -48px; --d: 64px !important; }
+    .ks-snap { position: relative; left: auto; top: auto; justify-self: end; width: 140px; height: 184px; margin: 28px 6px 0 0; transform: rotate(5deg); }
+    .ks-cap { display: none; }
+    .ks-capm { display: block; position: absolute; left: 0; bottom: 40px; width: 150px; font-size: 26px; line-height: 30px; color: var(--press); transform: rotate(-4deg); }
+  }
+</style>

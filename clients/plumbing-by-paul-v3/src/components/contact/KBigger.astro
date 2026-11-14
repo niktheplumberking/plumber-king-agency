@@ -1,0 +1,67 @@
+---
+// K4 Estimates at your place (Figma 432:4882). Framed photo on a sky offset block with an ON SITE tag; a measuring-tape line
+// (2 px navy with tick marks, a one-off device) runs from the photo across the eyebrow. The link jumps to the form with
+// "Planning a project" selected (KForm's data-preselect handler).
+import Eyebrow from '../ui/Eyebrow.astro';
+import Img from '../ui/Img.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Chip from '../ui/Chip.astro';
+import TextLink from '../ui/TextLink.astro';
+const ticks = Array.from({ length: 62 }, (_, i) => i + 1);
+---
+<section class="kb" aria-labelledby="kb-h" data-m-section>
+  <div class="wrap kb-in">
+    <div class="kb-media">
+      <span class="kb-blk" aria-hidden="true"></span>
+      <div class="kb-frame frame" data-t="4" data-fx="frame">
+        <Img name="about-paul-measuring-with-alycia" alt="Paul measuring on a job site with Alycia" sizes="(min-width: 1024px) 440px, calc(100vw - 52px)" focus="50% 40%" widths={[440, 700, 880]} />
+      </div>
+      <PhotoTag class="kb-tag">On site</PhotoTag>
+    </div>
+    <div class="kb-copy">
+      <svg class="kb-tape" viewBox="0 -8 780 30" preserveAspectRatio="xMinYMid slice" aria-hidden="true" data-t="5" data-fx="write">
+        <rect x="0" y="0" width="780" height="2" fill="#111032" /><rect x="0" y="-8" width="6" height="20" rx="1" fill="#111032" />
+        {ticks.map((i) => <rect x={i * 12.5 - 0.75} y="2" width="1.5" height={i % 8 === 0 ? 14 : i % 4 === 0 ? 9 : 5} fill="#111032" />)}
+        {[1, 2, 3, 4, 5, 6, 7].map((n) => <text x={n * 100 + 4} y="22" font-family="Russo One, sans-serif" font-size="10" fill="#236F94">{n}</text>)}
+      </svg>
+      <Eyebrow text="Bigger jobs" class="kb-eb" />
+      <h2 class="h2 kb-h" id="kb-h" data-t="2"><span class="l1">Some things need</span> <span class="l2">a tape measure</span></h2>
+      <p class="kb-p" data-t="3">Repipes, remodels and new builds can't be priced over the phone. For those, we come out, look, measure and write it down. You get a clear price and the time to think about it.</p>
+      <ul role="list" class="kb-chips" data-t="3" data-stagger>
+        {['Repipes', 'Remodels', 'New builds'].map((t) => <li><Chip icon="ruler">{t}</Chip></li>)}
+      </ul>
+      <div data-t="3" class="kb-lk"><TextLink href="#request" data-preselect="Planning a project">Tell us about your project</TextLink></div>
+    </div>
+  </div>
+</section>
+<style>
+  .kb { position: relative; background: var(--white); padding: 96px 0 150px; overflow: clip; }
+  .kb-in { display: grid; grid-template-columns: 440px minmax(0, 640px); justify-content: space-between; align-items: start; }
+  .kb-media { position: relative; width: 440px; height: 440px; }
+  .kb-blk { position: absolute; inset: 26px -26px -26px 26px; border-radius: 40px; background: var(--sky); }
+  .kb-frame { position: absolute; inset: 0; border-radius: 32px; }
+  .kb-media :global(.kb-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .kb-copy { position: relative; padding-top: 36px; }
+  .kb-tape { position: absolute; left: -140px; top: 50px; width: 780px; height: 30px; overflow: visible; }
+  .kb-copy :global(.kb-eb) { position: relative; background: var(--white); padding-right: 12px; display: inline-flex; }
+  .kb-h { margin-top: 44px; font-size: 44px; line-height: 50px; letter-spacing: -.02em; }
+  .kb-h .l1, .kb-h .l2 { display: block; }
+  .kb-p { margin-top: 20px; max-width: 600px; font-weight: 500; font-size: 18px; line-height: 30px; color: var(--slate); }
+  .kb-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; padding: 0; }
+  .kb-lk { margin-top: 24px; }
+  @media (max-width: 1279px) { .kb-in { grid-template-columns: 400px minmax(0, 1fr); column-gap: 64px; } .kb-media { width: 400px; height: 400px; } .kb-tape { left: -64px; width: calc(100% + 64px); } }
+  @media (max-width: 1023px) {
+    .kb { padding: 48px 0 64px; }
+    .kb-in { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
+    .kb-media { width: calc(100% - 14px); height: auto; aspect-ratio: 300 / 290; }
+    .kb-blk { inset: 14px -14px -14px 14px; border-radius: 28px; }
+    .kb-frame { border-radius: 24px; }
+    .kb-copy { padding-top: 0; }
+    .kb-tape { position: relative; left: auto; top: auto; display: block; width: 100%; height: 30px; margin-top: 34px; overflow: hidden; }
+    .kb-copy :global(.kb-eb) { position: absolute; top: 0; }
+    .kb-h { margin-top: 18px; font-size: 28px; line-height: 32px; }
+    .kb-p { margin-top: 14px; font-size: 15px; line-height: 24px; }
+    .kb-chips { margin-top: 18px; }
+    .kb-lk { margin-top: 18px; }
+  }
+</style>

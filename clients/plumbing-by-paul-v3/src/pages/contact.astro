@@ -1,0 +1,29 @@
+---
+// 11 Contact (PAGES.md K1-K7, Figma desktop 432:4882 / mobile 433:8451). ContactPage schema (+ the site-wide Plumber entity
+// from Base). Map is a stylised drawing with an "Open in Google Maps" link: no map JS, no tiles.
+import Base from '../layouts/Base.astro';
+import KHero from '../components/contact/KHero.astro';
+import KForm from '../components/contact/KForm.astro';
+import KShop from '../components/contact/KShop.astro';
+import KBigger from '../components/contact/KBigger.astro';
+import KElse from '../components/contact/KElse.astro';
+import KFaq from '../components/contact/KFaq.astro';
+import PhoneCTA from '../components/contact/PhoneCTA.astro';
+import { contactPageSchema } from '../lib/schema';
+---
+<Base
+  title="Contact Plumbing By Paul · St. Petersburg FL"
+  description="Call (727) 709-2552 or request a free estimate. Plumbing By Paul, 5565 64th Way N Suite A, St. Petersburg, FL 33709. Open every day, 8 AM to 5 PM."
+  path="/contact"
+  og="office-team-with-paul"
+  ogAlt="The Plumbing By Paul office team with Paul at the shop"
+  jsonld={[contactPageSchema('/contact')]}
+>
+  <KHero />
+  <KForm />
+  <KShop />
+  <KBigger />
+  <KElse />
+  <KFaq />
+  <PhoneCTA />
+</Base>

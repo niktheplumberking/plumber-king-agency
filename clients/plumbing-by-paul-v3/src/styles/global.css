@@ -1,0 +1,156 @@
+/* Base + shared primitives. Component-specific styles live in each component's <style>. */
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 24px); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: clip; }
+body {
+  margin: 0; background: var(--white); color: var(--navy);
+  font-family: var(--f-sans); font-size: var(--fz-body); line-height: 1.65; font-weight: 400;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img, svg, video, picture { display: block; max-width: 100%; }
+img { height: auto; }
+h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 6px;
+}
+.on-navy :where(a, button, input, select, summary):focus-visible { outline-color: var(--sky); }
+::selection { background: var(--soft); color: var(--navy); }
+
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: fixed; left: 16px; top: -80px; z-index: 200; background: var(--navy); color: var(--white); padding: 12px 18px; border-radius: var(--r-md); font-weight: 700; transition: top .2s; }
+.skip:focus { top: 12px; }
+
+/* ---------- layout ---------- */
+.wrap { width: min(var(--content), 100% - 2 * var(--gutter)); margin-inline: auto; }
+.wrap-wide { width: min(1320px, 100% - 2 * var(--gutter)); margin-inline: auto; }
+.section { position: relative; padding-block: var(--section-y); }
+.bg-white { background: var(--white); } .bg-tint { background: var(--tint); } .bg-mist { background: var(--mist); }
+.bg-navy { background: var(--navy); color: var(--white); } .bg-sky { background: var(--sky); }
+
+/* ---------- type ---------- */
+.display { font-weight: 800; font-size: var(--fz-display); line-height: var(--lh-display); letter-spacing: -0.025em; }
+.h1 { font-weight: 800; font-size: var(--fz-h1); line-height: 1.07; letter-spacing: -0.015em; }
+.h2 { font-weight: 800; font-size: var(--fz-h2); line-height: 1.14; letter-spacing: -0.01em; text-wrap: balance; }
+@media (max-width: 479px) { .h2 { letter-spacing: -0.016em; } } /* matches the Figma mobile line breaks (fonts render ~1% wider) */
+.h2 .l2, .h1 .l2, .display .l2 { color: var(--blue); }
+.on-navy .h2, .bg-navy .h2 { color: var(--white); }
+.on-navy .h2 .l2, .bg-navy .h2 .l2 { color: var(--sky); }
+.h3 { font-weight: 700; font-size: var(--fz-h3s); line-height: 1.25; letter-spacing: -0.005em; }
+.h4 { font-weight: 700; font-size: var(--fz-h4); line-height: 1.36; }
+.lead { font-weight: 500; font-size: var(--fz-lead); line-height: 1.66; color: var(--slate); }
+.on-navy .lead, .bg-navy .lead { color: var(--tint); }
+.body { font-size: var(--fz-body); line-height: 1.65; color: var(--slate); }
+.small { font-size: var(--fz-small); line-height: 1.55; color: var(--slate); }
+.caption { font-size: var(--fz-caption); line-height: 1.5; font-weight: 500; color: var(--slate-2); }
+.script { font-family: var(--f-script); font-weight: 400; letter-spacing: 0; }
+.num { font-family: var(--f-num); font-weight: 400; }
+.label { font-family: var(--f-num); font-size: var(--fz-label); letter-spacing: .08em; text-transform: uppercase; line-height: 1.3; }
+.h2 .script { display: inline-block; font-size: 1.22em; line-height: .8; transform: rotate(-2deg) translateY(-2px); font-weight: 400; letter-spacing: 0; }
+.center { text-align: center; }
+/* split-line masks created by the motion module */
+.m-line { display: block; overflow: clip; overflow-clip-margin: .14em; padding-bottom: .06em; margin-bottom: -.06em; }
+.m-line > span { display: inline-block; will-change: transform; }
+
+/* ---------- buttons (6.1): 56 high, radius 14 ---------- */
+.btn {
+  --bg: var(--press); --fg: var(--white); --bd: transparent; --fill: var(--deep);
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 56px; padding: 0 28px; border-radius: var(--r-md);
+  background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 2px var(--bd);
+  font-weight: 700; font-size: 16px; line-height: 20px; white-space: nowrap; text-align: center;
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out), color var(--dur-2);
+}
+.btn svg { flex: none; width: 20px; height: 20px; }
+.btn .arrow { width: 18px; height: 18px; transition: transform var(--dur-2) var(--ease-out); }
+.btn:hover .arrow { transform: translateX(4px); }
+.btn::before { /* pointer-origin fill (positioned by motion.ts; CSS fallback grows from centre) */
+  content: ''; position: absolute; z-index: -1; left: var(--fx, 50%); top: var(--fy, 50%); width: 12px; height: 12px; margin: -6px 0 0 -6px;
+  border-radius: 50%; background: var(--fill); transform: scale(0); transition: transform .55s var(--ease-out);
+}
+.btn:hover::before { transform: scale(var(--fs, 40)); }
+.btn:active { transform: translateY(1px) scale(.99); }
+.btn-sec { --bg: var(--white); --fg: var(--navy); --bd: var(--navy); --fill: var(--tint); }
+.btn-priN { --bg: var(--sky); --fg: var(--navy); --fill: var(--soft); }
+.btn-secN { --bg: transparent; --fg: var(--white); --bd: var(--sky); --fill: var(--navy-2); }
+.btn-navy { --bg: var(--navy); --fg: var(--white); --fill: var(--navy-2); }
+.btn-white { --bg: var(--white); --fg: var(--navy); --fill: var(--tint); }
+.btn-block { width: 100%; }
+.btn-64 { min-height: 64px; }
+/* two-line call button */
+.btn-call { gap: 12px; padding: 0 22px 0 18px; min-height: 64px; text-align: left; }
+.btn-call .ph { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.18); }
+.btn-call .ph svg { width: 18px; height: 18px; }
+.btn-call.btn-priN .ph { background: rgba(17,16,50,.14); }
+.btn-call .l1 { display: block; font-size: 17px; line-height: 22px; font-weight: 700; }
+.btn-call .l2 { display: block; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: .01em; }
+
+/* text link with arrow */
+.tlink { display: inline-flex; align-items: center; gap: 8px; color: var(--press); font-weight: 600; font-size: 16px; line-height: 24px; }
+.tlink .t { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: currentColor; transition: text-decoration-color var(--dur-2); }
+.tlink svg { width: 18px; height: 18px; flex: none; transition: transform var(--dur-2) var(--ease-out); }
+.tlink:hover svg { transform: translateX(4px); }
+.tlink:hover .t { text-decoration-color: var(--sky); }
+.on-navy .tlink, .tlink.on-dark { color: var(--sky); }
+
+/* chips (6.2) */
+.chip { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 12px; border-radius: var(--r-sm); background: var(--tint); color: var(--navy); font-weight: 600; font-size: 14px; line-height: 20px; white-space: nowrap; }
+.chip svg { width: 16px; height: 16px; color: var(--blue); flex: none; }
+.chip-white { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.chip-dark { background: var(--navy-2); color: var(--white); box-shadow: inset 0 0 0 1px var(--navy-3); }
+.chip-dark svg { color: var(--sky); }
+
+/* icon wells */
+.well { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--tint); color: var(--blue); }
+.well svg { width: 22px; height: 22px; }
+.well-round { border-radius: 50%; }
+
+/* stars */
+.stars { display: inline-flex; gap: 2px; color: var(--star); flex: none; }
+.stars svg { width: var(--star-size, 16px); height: var(--star-size, 16px); }
+
+/* cards */
+.card { position: relative; background: var(--white); border-radius: var(--r-lg); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); }
+
+/* forms (6.4) */
+.field { display: grid; gap: 6px; }
+.field > span { font-weight: 600; font-size: 14px; line-height: 20px; color: var(--navy); }
+.input {
+  width: 100%; min-height: 56px; padding: 0 16px; border-radius: var(--r-sm); border: 1.5px solid var(--line); background: var(--mist);
+  font-size: 16px; line-height: 22px; color: var(--navy); transition: border-color var(--dur-2), box-shadow var(--dur-2), background var(--dur-2);
+}
+.input::placeholder { color: var(--slate-2); opacity: 1; }
+.input:hover { border-color: var(--soft); }
+.input:focus { outline: none; border-color: var(--blue); background: var(--white); box-shadow: 0 0 0 4px rgba(97,173,203,.28); }
+.input[aria-invalid='true'] { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(17,16,50,.12); }
+.form-msg { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--navy); }
+.form-msg:empty { display: none; }
+
+/* utility */
+.nowrap { white-space: nowrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+/* framed photo (the default photo treatment: white 6 px border outside + navy shadow) */
+.frame { position: relative; overflow: hidden; border-radius: var(--r-xl); box-shadow: 0 0 0 6px var(--white), var(--sh-2); background: var(--tint); isolation: isolate; }
+.frame-3 { box-shadow: 0 0 0 6px var(--white), var(--sh-3); }
+.snap { position: relative; overflow: hidden; border-radius: var(--r-lg); box-shadow: 0 0 0 8px var(--white), var(--sh-3); background: var(--tint); }
+
+/* ---------- motion pre-states (MOTION.md). Only under html.motion; each element is released by .m-built when motion.ts builds its tween;
+   the 3.5 s safety in Base.astro removes .motion if the module never runs, so nothing stays hidden. ---------- */
+html.motion [data-m-section] [data-t]:not(.m-built):not([data-fx="frame"]):not([data-fx="nudge"]) { opacity: 0; }
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }

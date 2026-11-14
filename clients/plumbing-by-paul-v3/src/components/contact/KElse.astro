@@ -1,0 +1,75 @@
+---
+// K5 Everything else (Figma 432:4882). Navy band; four action cards (navy, 1 px sky border) overlap its top edge, each with a
+// sky medallion on its top edge; swoosh into the white FAQ below. Mobile: 2 x 2, the link becomes a round icon button.
+// STICKY: payment link not supplied yet (SITE.paymentUrl is '/contact'), so "Make a payment" calls the office until it is.
+// STICKY: Paul to confirm he is hiring at launch (card 3 comes out if not).
+import Icon from '../ui/Icon.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+const payHref = SITE.paymentUrl === '/contact' ? SITE.tel : SITE.paymentUrl;
+const payExt = payHref.startsWith('http');
+const cards = [
+  { i: 'card', t: 'Pay an invoice', d: 'Make a payment online.', l: 'Make a payment', href: payHref, ext: payExt, li: payExt ? 'external' : 'phone', sr: payExt ? '' : ' (call the office)' },
+  { i: 'star', t: 'Leave a review', d: 'Tell the neighbors how we did.', l: 'Review us on Google', href: SITE.google.writeReviewUrl, ext: true, li: 'external', sr: '' },
+  { i: 'wrench', t: 'Work with us', d: "We're hiring skilled plumbers.", l: 'Email the office', href: `mailto:${SITE.email}?subject=${encodeURIComponent('Work with us')}`, ext: false, li: 'mail', sr: '' },
+];
+---
+<section class="ke on-navy" aria-labelledby="ke-h" data-m-section>
+  <h2 class="sr-only" id="ke-h">Everything else</h2>
+  <div class="wrap">
+    <ul role="list" class="ke-cards" data-t="4" data-stagger>
+      {cards.map((c, n) => (
+        <li class="kec">
+          <span class="kmed" aria-hidden="true">{c.i === 'card'
+            ? <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5" /><path d="M2.5 10h19M6.5 15h4" /></svg>
+            : <Icon name={c.i} size={26} />}</span>
+          <span class="kec-n num" aria-hidden="true">0{n + 1}</span>
+          <h3 class="kec-t">{c.t}</h3>
+          <p class="kec-d">{c.d}</p>
+          <a class="kec-l" href={c.href} {...(c.ext ? { target: '_blank', rel: 'noopener' } : {})}><span class="t">{c.l}</span><Icon name={c.li} size={16} /><span class="sr-only">{c.sr}{c.ext ? ' (opens in a new tab)' : ''}</span></a>
+        </li>
+      ))}
+      <li class="kec">
+        <span class="kmed" aria-hidden="true"><Icon name="heart" size={26} /></span>
+        <span class="kec-n num" aria-hidden="true">04</span>
+        <h3 class="kec-t">Say hello</h3>
+        <p class="kec-d">Facebook and Instagram, {SITE.social.instagramHandle}.</p>
+        <p class="kec-so">
+          <a href={SITE.social.facebook} target="_blank" rel="noopener" aria-label="Plumbing By Paul on Facebook (opens in a new tab)"><Icon name="fb" size={18} /></a>
+          <a href={SITE.social.instagram} target="_blank" rel="noopener" aria-label="Plumbing By Paul on Instagram (opens in a new tab)"><Icon name="ig" size={18} /></a>
+        </p>
+      </li>
+    </ul>
+  </div>
+  <Swoosh class="ke-sw" below="var(--white)" h={110} />
+</section>
+<style>
+  .ke { position: relative; background: var(--navy); color: var(--white); padding: 0 0 130px; margin-top: 40px; }
+  .ke-cards { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; transform: translateY(-40px); }
+  .kec { position: relative; display: flex; flex-direction: column; min-height: 204px; padding: 56px 24px 24px; border-radius: 20px; background: var(--navy); box-shadow: inset 0 0 0 1px var(--sky), var(--sh-3); }
+  .kmed { position: absolute; left: 24px; top: -28px; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--sky); color: var(--navy); box-shadow: 0 0 0 4px var(--white), var(--sh-sticker); }
+  .kec-n { position: absolute; right: 24px; top: 24px; font-size: 13px; letter-spacing: .08em; color: var(--sky); }
+  .kec-t { font-weight: 700; font-size: 20px; line-height: 26px; }
+  .kec-d { margin-top: 6px; font-size: 14px; line-height: 21px; color: var(--tint); }
+  .kec-l { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: auto; padding-top: 14px; color: var(--sky); font-weight: 600; font-size: 15px; text-decoration: none; align-self: flex-start; }
+  .kec-l .t { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .kec-l:hover .t { text-decoration-color: var(--white); }
+  .kec-so { display: flex; gap: 10px; margin-top: auto; padding-top: 14px; }
+  .kec-so a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--sky); color: var(--sky); transition: background var(--dur-2), color var(--dur-2); }
+  .kec-so a:hover { background: var(--sky); color: var(--navy); }
+  .ke :global(.ke-sw) { position: absolute; left: 0; right: 0; bottom: -1px; }
+  @media (max-width: 1199px) { .ke-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 1023px) {
+    .ke { padding-bottom: 70px; margin-top: 32px; }
+    .ke-cards { gap: 36px 12px; transform: translateY(-28px); }
+    .kec { min-height: 184px; padding: 44px 14px 14px; border-radius: 16px; }
+    .kmed { left: 14px; top: -22px; width: 44px; height: 44px; }
+    .kmed :global(svg) { width: 20px; height: 20px; }
+    .kec-n { display: none; }
+    .kec-t { font-size: 16px; line-height: 22px; }
+    .kec-d { font-size: 12px; line-height: 17px; }
+    .kec-l { align-self: flex-end; justify-content: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; background: var(--sky); color: var(--navy); }
+    .kec-l .t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .kec-so { gap: 6px; }
+  }
+</style>

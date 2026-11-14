@@ -1,0 +1,24 @@
+---
+// Eyebrow: stripe tick + 13 px caps label (+ optional live dot, + optional Yellowtail script words).
+// Motion: tier 1. Put data-t="1" on it (SectionHead does this for you).
+import Tick from './Tick.astro';
+interface Props { text: string; dark?: boolean; script?: string; dot?: boolean; class?: string; t?: string | false; as?: string; }
+const { text, dark = false, script, dot = false, class: cls, t = '1', as: Tag = 'p' } = Astro.props;
+---
+<Tag class:list={['eyebrow', { dark }, cls]} data-t={t === false ? undefined : t}>
+  <Tick dark={dark} />
+  {dot && <span class="live" aria-hidden="true"></span>}
+  <span class="eb-t">{text}</span>
+  {script && <span class="eb-s script">{script}</span>}
+</Tag>
+<style>
+  .eyebrow { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: var(--fz-eyebrow); line-height: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--navy); }
+  .eyebrow.dark { color: var(--sky); }
+  .eb-s { font-family: var(--f-script); text-transform: none; letter-spacing: 0; font-size: clamp(22px, .19vw + 21.3px, 24px); line-height: 22px; color: var(--blue); font-weight: 400; margin-left: 2px; transform: translateY(1px); }
+  .dark .eb-s { color: var(--white); }
+  .live { position: relative; width: 16px; height: 16px; flex: none; }
+  .live::before, .live::after { content: ''; position: absolute; border-radius: 50%; background: var(--sky); }
+  .live::before { inset: 0; opacity: .3; animation: live 2s var(--ease-out) infinite; }
+  .live::after { inset: 4px; }
+  @keyframes live { 0% { transform: scale(.6); opacity: .5; } 100% { transform: scale(1.5); opacity: 0; } }
+</style>

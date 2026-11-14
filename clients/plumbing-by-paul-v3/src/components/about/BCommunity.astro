@@ -1,0 +1,80 @@
+---
+// B8 Giving back (Figma B8): tint; bento of a large hurricane clean-up photo, a classroom photo, a tall booth photo and a
+// navy text cell; the toilet-costume snapshot (small, low-res source) tilts across two cells.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+---
+<section class="bcm" aria-labelledby="bcm-h" data-m-section>
+  <div class="wrap">
+    <div class="bcm-head">
+      <SectionHead eyebrow="Giving back" l1="Building community," l2="not just plumbing it" id="bcm-h" />
+      <p class="bcm-tent" data-t="5"><Icon name="heart" size={18} />Look for the blue tent</p>
+    </div>
+    <div class="bcm-bento" data-t="4" data-stagger>
+      <figure class="bcm-f bcm-big frame" data-fx="frame">
+        <Img name="community-hurricane-cleanup-crew" alt="Crew members with a neighbor after a hurricane clean-up" sizes="(min-width: 1024px) 486px, calc(100vw - 40px)" widths={[400, 700, 1000]} focus="50% 40%" />
+        <PhotoTag class="bcm-tag">Hurricane clean-up</PhotoTag>
+        <figcaption><Caption class="bcm-cap">After the storm, with a neighbor.</Caption></figcaption>
+      </figure>
+      <figure class="bcm-f bcm-class frame" data-fx="frame">
+        <Img name="community-classroom-visit" alt="Paul visiting an elementary classroom, children holding up blue gifts" sizes="(min-width: 1024px) 408px, 50vw" widths={[400, 800]} focus="50% 45%" />
+        <figcaption><Caption class="bcm-cap">Career day.</Caption></figcaption>
+      </figure>
+      <figure class="bcm-f bcm-booth frame" data-fx="frame">
+        <Img name="community-booth-night-event" alt="The Plumbing By Paul booth at a night event with stacked blue gift rolls" sizes="(min-width: 1024px) 258px, 50vw" widths={[300, 600]} focus="50% 50%" />
+        <figcaption><Caption class="bcm-cap">Gift rolls at the booth.</Caption></figcaption>
+      </figure>
+      <div class="bcm-cell on-navy" data-fx="rise">
+        <p class="label bcm-eb">In the neighborhood</p>
+        <p class="bcm-t">Hurricane clean-ups, toy drives, school visits and the occasional toilet costume. If something's happening in Pinellas, look for the blue tent.</p>
+        <span class="bcm-tick" aria-hidden="true"></span>
+      </div>
+      <figure class="bcm-snap" data-fx="toss">
+        <div class="snap bcm-sp"><Img name="community-paul-toilet-costume-talk" alt="Paul in a toilet costume giving a talk to a seated audience" sizes="(min-width: 1024px) 253px, 60vw" widths={[260, 500]} focus="50% 40%" /></div>
+        <figcaption><Caption class="bcm-scap" small>Yes, that's Paul.</Caption></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+<style>
+  .bcm { position: relative; background: var(--tint); padding: 104px 0 150px; }
+  .bcm-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .bcm-tent { display: inline-flex; align-items: center; gap: 10px; height: 48px; margin-bottom: 0; padding: 0 20px; border-radius: 14px; background: var(--white); box-shadow: var(--sh-1); font-weight: 700; font-size: 15px; color: var(--navy); }
+  .bcm-tent :global(svg) { color: var(--blue); }
+  .bcm-bento { position: relative; display: grid; grid-template-columns: 486fr 408fr 258fr; grid-template-rows: 216px 216px; gap: 24px; margin-top: 48px; }
+  .bcm-f { position: relative; margin: 0; border-radius: var(--r-xl); }
+  .bcm-f :global(img) { display: block; }
+  .bcm-big { grid-row: 1 / 3; }
+  .bcm-class { grid-column: 2; grid-row: 1; border-radius: var(--r-lg); }
+  .bcm-booth { grid-column: 3; grid-row: 1 / 3; }
+  .bcm-f :global(.bcm-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .bcm-f :global(.bcm-cap) { position: absolute; left: 20px; bottom: 20px; z-index: 2; }
+  .bcm-cell { position: relative; grid-column: 2; grid-row: 2; padding: 28px 32px; border-radius: var(--r-lg); background: var(--navy); color: var(--white); }
+  .bcm-eb { color: var(--sky); }
+  .bcm-t { margin-top: 14px; font-weight: 500; font-size: 16px; line-height: 25px; padding-right: 8px; }
+  .bcm-tick { position: absolute; right: 28px; top: 26px; width: 24px; height: 13px; background: linear-gradient(var(--sky) 0 3px, transparent 3px 5px, var(--blue) 5px 8px, transparent 8px 10px, var(--white) 10px 13px); transform: skewX(-20deg); }
+  .bcm-snap { position: absolute; left: 365px; top: 417px; z-index: 3; width: 253px; margin: 0; transform: rotate(-5deg); }
+  .bcm-sp { height: 180px; }
+  .bcm-sp :global(img) { display: block; }
+  .bcm-snap :global(.bcm-scap) { position: absolute; right: -24px; bottom: -18px; }
+  @media (max-width: 1199px) { .bcm-snap { left: 30%; } }
+  @media (max-width: 1023px) {
+    .bcm { padding: 56px 0 72px; }
+    .bcm-head { display: block; }
+    .bcm-tent { display: none; }
+    .bcm-bento { grid-template-columns: 1fr 1fr; grid-template-rows: 260px 170px auto auto; gap: 12px; margin-top: 28px; }
+    .bcm-big { grid-column: 1 / 3; grid-row: 1; border-radius: var(--r-lg); }
+    .bcm-class { grid-column: 1; grid-row: 2; border-radius: var(--r-md); }
+    .bcm-booth { grid-column: 2; grid-row: 2; border-radius: var(--r-md); }
+    .bcm-f :global(.bcm-cap) { left: 10px; bottom: 10px; font-size: 11px; line-height: 15px; padding: 5px 8px; }
+    .bcm-f :global(.bcm-tag) { left: 12px; top: 12px; }
+    .bcm-cell { grid-column: 1 / 3; grid-row: 3; padding: 22px 20px; border-radius: var(--r-lg); }
+    .bcm-t { font-size: 15px; line-height: 24px; }
+    .bcm-snap { position: relative; left: auto; top: auto; grid-column: 1 / 3; grid-row: 4; justify-self: end; width: 200px; margin: -26px 10px 14px 0; }
+    .bcm-sp { height: 140px; }
+    .bcm-snap :global(.bcm-scap) { right: auto; left: -60px; bottom: 8px; }
+  }
+</style>

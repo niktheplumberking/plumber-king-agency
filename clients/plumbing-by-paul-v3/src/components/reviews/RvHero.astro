@@ -1,0 +1,117 @@
+---
+// R1 Hero (Figma 443:2340 / mobile 441:7513). Copy left (breadcrumb, H1, lead, meter card, CTAs); right: a vertical
+// marquee wall of mini review cards (first sentences, word for word) behind top and bottom fades. The wall repeats quotes
+// that appear in full further down, so it is decorative (aria-hidden). It drifts only under html.motion (CSS), pauses on hover.
+// STICKY: count (947) and rating (4.9) checked 13 Nov 2026, refresh on launch day. No Review / AggregateRating schema.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Meter from '../ui/Meter.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import TextLink from '../ui/TextLink.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import MiniCard from './MiniCard.astro';
+import { SITE } from '../../data/site';
+import { MINI } from './data';
+// Four desktop columns of three (Figma order), offset; each list is doubled so the loop is seamless.
+const cols = [0, 1, 2, 3].map((c) => [0, 1, 2].map((r) => ({ ...MINI[(c * 3 + r) % 12], i: c * 3 + r })));
+const offs = [-36, 48, -96, 20];
+const dur = [46, 58, 50, 62];
+---
+<section class="rvh" aria-labelledby="rvh-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="rv-wall" aria-hidden="true" data-t="4" data-fx="fade">
+    {cols.map((col, c) => (
+      <div class="wcol" style={`--off:${offs[c]}px;--dur:${dur[c]}s`}>
+        <div class="wtrack">
+          {[...col, ...col].map((m, k) => <MiniCard q={m.q} by={m.by} patch={m.patch} navy={m.i % 5 === 2} deg={k % 2 ? 4 : -4} />)}
+        </div>
+      </div>
+    ))}
+    <span class="fade-t"></span><span class="fade-b"></span>
+  </div>
+  <div class="wrap rvh-in">
+    <Breadcrumbs items={[{ label: 'Reviews', href: '/reviews' }]} />
+    <Eyebrow text="Google reviews" class="rvh-eb" />
+    <h1 class="h1 rvh-h" id="rvh-h" data-t="2"><span class="l1">{SITE.rating.count} neighbors,</span> <span class="l2">{SITE.rating.value} stars</span></h1>
+    <p class="lead rvh-lead" data-t="3" data-fx="nudge">We didn't write any of this. Our customers did, on Google, in their own words. Typos included.</p>
+    <div class="mcard" data-t="4" data-fx="rise">
+      <div class="mc-row">
+        <Meter digits={String(SITE.rating.count)} label={`${SITE.rating.count} Google reviews`} cw={56} ch={80} gap={6} pad={9} class="mc-meter" />
+        <span class="mc-div" aria-hidden="true"></span>
+        <div class="mc-rate">
+          <span class="mc-v num">{SITE.rating.value}</span>
+          <span class="mc-side"><GoogleG size={30} /><span class="mc-of">out of 5</span></span>
+          <Stars size={18} class="mc-stars" />
+        </div>
+      </div>
+      <p class="mc-cap">Google reviews · checked {SITE.rating.checked}</p>
+    </div>
+    <div class="rvh-btns" data-t="3" data-stagger>
+      <CallButton />
+      <Button href={SITE.google.reviewsUrl} v="sec" icon="external" h64 external magnetic={false}>Read them on Google</Button>
+    </div>
+    <div data-t="3" class="rvh-lk"><TextLink href={SITE.google.writeReviewUrl} external>Leave us a review</TextLink></div>
+  </div>
+</section>
+<style>
+  .rvh { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 40px 0 120px; min-height: 794px; }
+  .rvh :global(.fl-m) { display: none; }
+  .rvh-in { position: relative; z-index: 2; display: grid; justify-items: start; }
+  .rvh-in > :global(*) { max-width: 520px; }
+  .rvh :global(.rvh-eb) { margin-top: 44px; }
+  .rvh-h { margin-top: 16px; font-size: var(--fz-h1); line-height: 1.067; letter-spacing: -0.025em; }
+  .rvh-h .l1, .rvh-h .l2 { display: block; white-space: nowrap; }
+  .rvh-lead { margin-top: 24px; max-width: 450px; }
+  .mcard { position: relative; width: 520px; margin-top: 28px; padding: 24px 24px 18px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .mc-row { display: flex; align-items: center; gap: 24px; }
+  .mc-div { width: 1px; height: 84px; background: var(--line); flex: none; }
+  .mc-rate { display: grid; grid-template-columns: auto auto; column-gap: 16px; align-items: center; }
+  .mc-v { font-size: 72px; line-height: 72px; color: var(--navy); grid-row: 1; }
+  .mc-side { display: grid; justify-items: start; gap: 6px; grid-row: 1; }
+  .mc-of { font-weight: 600; font-size: 14px; line-height: 20px; color: var(--slate); }
+  .mc-rate :global(.mc-stars) { grid-column: 1 / -1; margin-top: 6px; }
+  .mc-cap { margin-top: 14px; font-weight: 500; font-size: 13px; line-height: 18px; color: var(--slate); }
+  .rvh-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; max-width: none !important; }
+  .rvh-lk { margin-top: 18px; }
+
+  /* the wall */
+  .rv-wall { position: absolute; z-index: 1; top: 0; bottom: 0; left: calc(50% - 120px); width: 740px; display: flex; gap: 14px; padding-left: 6px; overflow: hidden; }
+  .wcol { width: 170px; flex: none; }
+  .wtrack { display: grid; gap: 20px; padding-top: 20px; margin-top: var(--off); }
+  :global(html.motion) .wtrack { animation: wall var(--dur) linear infinite; }
+  .rv-wall:hover .wtrack { animation-play-state: paused; }
+  @keyframes wall { to { transform: translateY(-50%); } }
+  .fade-t, .fade-b { position: absolute; left: 0; right: 0; pointer-events: none; z-index: 2; }
+  .fade-t { top: 0; height: 150px; background: linear-gradient(var(--mist), rgba(244,249,252,0)); }
+  .fade-b { bottom: 0; height: 160px; background: linear-gradient(rgba(255,255,255,0), var(--white)); }
+  @media (max-width: 1279px) and (min-width: 1024px) { .rv-wall { left: calc(50% - 40px); } }
+  @media (max-width: 1023px) {
+    .rvh { display: flex; flex-direction: column; padding: 28px 0 0; min-height: 0; }
+    .rv-wall { order: 2; }
+    .rvh :global(.fl-d) { display: none; } .rvh :global(.fl-m) { display: block; }
+    .rvh-in > :global(*) { max-width: 100%; }
+    .rvh :global(.rvh-eb) { margin-top: 24px; }
+    .rvh-h { margin-top: 12px; }
+    .rvh-lead { margin-top: 16px; }
+    .mcard { width: 100%; margin-top: 22px; padding: 16px 16px 14px; }
+    .mc-row { gap: 14px; }
+    .mc-row :global(.mc-meter) { --cw: 44px !important; --ch: 64px !important; --z: 38px !important; }
+    .mc-div { display: none; }
+    .mc-v { font-size: 48px; line-height: 52px; }
+    .mc-of { display: none; }
+    .rvh-btns { display: grid; width: 100%; gap: 10px; margin-top: 16px; }
+    .rvh-btns :global(.btn) { width: 100%; }
+    .rvh-btns :global(.btn-sec) { min-height: 56px; }
+    .rvh-lk { justify-self: center; margin-top: 12px; }
+    .rv-wall { position: relative; left: auto; width: auto; height: 300px; margin: 28px 0 0; padding: 0 var(--gutter); gap: 12px; justify-content: center; }
+    .wcol { width: min(167px, calc(50% - 6px)); }
+    .wcol:nth-child(n+3) { display: none; }
+    .fade-t { height: 60px; background: linear-gradient(var(--white), rgba(255,255,255,0)); }
+    .fade-b { height: 90px; }
+  }
+  @media (max-width: 380px) { .mc-row :global(.mc-meter) { --cw: 38px !important; --ch: 56px !important; --z: 34px !important; } .mc-v { font-size: 42px; } }
+</style>

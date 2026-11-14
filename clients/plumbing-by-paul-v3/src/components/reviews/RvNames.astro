@@ -1,0 +1,79 @@
+---
+// R5 The names in our reviews (Figma 443:3331). Leaderboard: a sewn patch overlaps the left end of each bar, the count in
+// Russo; a tilted framed crew photo over a tint offset block overlaps the board's right edge.
+// STICKY 5: crew names. Counts from the 170 most relevant Google reviews read 13 Nov 2026; JR's count is approximate.
+import SectionHead from '../ui/SectionHead.astro';
+import Patch from '../ui/Patch.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import TextLink from '../ui/TextLink.astro';
+import { SITE } from '../../data/site';
+import { NAMED } from './data';
+const max = NAMED[0][1];
+---
+<section class="rvn" aria-labelledby="rvn-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="Who gets named" l1="Some of these guys" l2="are getting famous" id="rvn-h" />
+    <div class="rvn-grid">
+      <div class="rvn-left">
+        <ol class="board" role="list" aria-label="Reviews that mention each name" data-t="4" data-stagger>
+          {NAMED.map(([n, c], i) => (
+            <li class:list={['row', i === 0 && 'first', i > 2 && 'pale']} style={`--w:${(c / max) * 100}%`}>
+              <span class="rp" aria-hidden="true"><Patch name={n} label={i === 0 ? 'MOST NAMED' : ''} deg={i % 2 ? 3 : -3} t={false} /></span>
+              <span class="rb" aria-hidden="true"><span class="fill"></span><span class="rc num">{c}</span>{i === 0 && <span class="ru">reviews</span>}</span>
+              <span class="sr-only">{n}: named in {c} reviews</span>
+            </li>
+          ))}
+        </ol>
+        <p class="rvn-cap" data-t="3">Reviews that mention each name, out of the 170 most relevant Google reviews we read on 13 Nov 2026. JR's count is approximate.</p>
+        <div data-t="3" class="rvn-lk"><TextLink href={SITE.tel} lead="phone" icon={false}>Ask for your favorite by name: {SITE.phone}</TextLink></div>
+      </div>
+      <div class="rvn-media">
+        <span class="tint-blk" aria-hidden="true"></span>
+        <div class="rvn-photo snap" data-t="4" data-fx="toss">
+          <Img name="crew-six-at-truck" alt="Six of the Plumbing By Paul crew standing together in front of the wrapped box truck" sizes="(min-width: 1024px) 384px, calc(100vw - 40px)" focus="50% 75%" widths={[400, 600, 800]} />
+        </div>
+        <Caption class="rvn-capt">Six of the crew, one truck.</Caption>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .rvn { position: relative; background: var(--white); padding: 104px 0 112px; }
+  .rvn-grid { display: grid; grid-template-columns: minmax(0, 828px) minmax(0, 340px); justify-content: space-between; column-gap: 32px; margin-top: 48px; align-items: start; }
+  .board { display: grid; gap: 32px; margin: 0; padding: 40px 40px 40px 32px; border-radius: 24px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); }
+  .row { position: relative; display: grid; grid-template-columns: 148px 1fr; align-items: center; height: 40px; }
+  .rp { position: relative; z-index: 2; margin-right: -36px; }
+  .rb { position: relative; display: flex; align-items: center; gap: 14px; height: 40px; }
+  .fill { height: 40px; width: calc(var(--w) * .82); border-radius: 0 8px 8px 0; background: var(--sky); flex: none; }
+  .first .fill { background: var(--blue); }
+  .pale .fill { background: var(--soft); }
+  .rc { font-size: 30px; line-height: 40px; color: var(--navy); }
+  .ru { font-weight: 600; font-size: 13px; color: var(--slate); margin-left: -4px; }
+  .rvn-cap { max-width: 560px; margin-top: 20px; font-weight: 500; font-size: 13px; line-height: 20px; color: var(--slate-2); }
+  .rvn-lk { margin-top: 18px; }
+  .rvn-lk :global(.tlink) { font-weight: 700; }
+  .rvn-media { position: relative; width: 384px; height: 480px; margin: 0 -60px 0 -100px; justify-self: end; }
+  .tint-blk { position: absolute; inset: 16px -24px -16px 24px; border-radius: 28px; background: var(--tint); }
+  .rvn-photo { position: absolute; inset: 0; border-radius: 28px; transform: rotate(3deg); }
+  .rvn-media :global(.rvn-capt) { position: absolute; right: 8px; bottom: 6px; z-index: 2; }
+  @media (max-width: 1279px) { .rvn-grid { grid-template-columns: minmax(0, 1fr) 320px; } .rvn-media { width: 320px; height: 400px; margin: 0; } .fill { width: calc(var(--w) * .7); } }
+  @media (max-width: 1023px) {
+    .rvn { padding: 64px 0 72px; }
+    .rvn-grid { grid-template-columns: 1fr; row-gap: 40px; margin-top: 28px; }
+    .board { gap: 18px; padding: 20px 16px; border-radius: 20px; }
+    .row { grid-template-columns: 120px 1fr; height: 34px; }
+    .rp :global(.patch) { width: 120px; height: 46px; }
+    .rp :global(.patch .pn) { font-size: 25px; line-height: 25px; }
+    .rp :global(.patch .pl) { font-size: 8px; line-height: 9px; }
+    .rp { margin-right: -28px; }
+    .rb { height: 28px; gap: 10px; }
+    .fill { height: 28px; width: calc(var(--w) * .62); }
+    .rc { font-size: 22px; line-height: 28px; }
+    .ru { display: none; }
+    .rvn-media { width: 100%; height: auto; aspect-ratio: 350 / 300; margin: 0; }
+    .tint-blk { display: none; }
+    .rvn-photo { transform: none; }
+    .rvn-media :global(.rvn-capt) { left: 12px; right: auto; bottom: 12px; font-size: 12px; line-height: 18px; padding: 6px 10px; }
+  }
+</style>

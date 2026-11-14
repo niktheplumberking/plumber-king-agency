@@ -1,0 +1,43 @@
+---
+// Home (PAGES.md 01, Figma desktop 419:1317 / mobile 424:2340). Section order is fixed by the brief.
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import Router from '../components/home/Router.astro';
+import TrustBento from '../components/home/TrustBento.astro';
+import TownBand from '../components/global/TownBand.astro';
+import Services from '../components/home/Services.astro';
+import Family from '../components/home/Family.astro';
+import Crew from '../components/home/Crew.astro';
+import ReviewsWall from '../components/home/ReviewsWall.astro';
+import Process from '../components/home/Process.astro';
+import Emergency from '../components/home/Emergency.astro';
+import OurWork from '../components/home/OurWork.astro';
+import Areas from '../components/home/Areas.astro';
+import HomeFaq from '../components/home/HomeFaq.astro';
+import WaterlineCTA from '../components/global/WaterlineCTA.astro';
+import { abs, BUSINESS_ID } from '../lib/schema';
+const website = { '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${abs('/')}/#website`, url: abs('/'), name: 'Plumbing By Paul', publisher: { '@id': BUSINESS_ID() } };
+---
+<Base
+  title="Plumber in St. Petersburg, FL · Plumbing By Paul"
+  description="Family-owned St. Pete plumber. 4.9 from 947 Google reviews, licensed (CFC1430367), Best of the Bay 2026. Water heaters, drains, leaks. Call (727) 709-2552."
+  path="/"
+  og="hero-01-family-house-yard-signs-truck"
+  ogAlt="The Plumbing By Paul family and truck outside a St. Petersburg home"
+  jsonld={[website]}
+>
+  <Hero />
+  <Router />
+  <TrustBento />
+  <TownBand />
+  <Services />
+  <Family />
+  <Crew />
+  <ReviewsWall />
+  <Process />
+  <Emergency />
+  <OurWork />
+  <Areas />
+  <HomeFaq />
+  <WaterlineCTA />
+</Base>

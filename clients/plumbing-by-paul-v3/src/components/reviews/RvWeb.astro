@@ -1,0 +1,63 @@
+---
+// R7 Other places people rate us (Figma 443:3419). Three stat cells over a thin sky band (the middle one raised).
+// STICKY: Paul to confirm. BBB as text only (not accredited: no seal). Yelp not shown. Nextdoor left out until confirmed.
+import Eyebrow from '../ui/Eyebrow.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Icon from '../ui/Icon.astro';
+import Stars from '../ui/Stars.astro';
+import Tick from '../ui/Tick.astro';
+import { SITE } from '../../data/site';
+const cells = [
+  { k: 'Google', v: SITE.rating.value, d: `from ${SITE.rating.count} reviews`, icon: 'g', stars: true },
+  { k: 'Facebook', v: '96%', d: 'recommend us (64 reviews)', icon: 'fb', blue: true },
+  { k: 'BBB', v: 'A+', d: 'rating', icon: 'shield' },
+];
+---
+<section class="rvw" aria-labelledby="rvw-h" data-m-section>
+  <div class="wrap">
+    <h2 class="sr-only" id="rvw-h">Ratings on other sites</h2>
+    <Eyebrow text="Around the web" class="rvw-eb" />
+    <ul role="list" class="cells" data-t="4" data-stagger>
+      {cells.map((c, i) => (
+        <li class:list={['cell', i === 1 && 'mid']}>
+          <p class="ck">{c.icon === 'g' ? <GoogleG size={22} /> : <Icon name={c.icon} size={22} />}{c.k}</p>
+          <p class="cv"><span class:list={['num', c.blue && 'blue']}>{c.v}</span>{c.stars && <Stars size={18} />}</p>
+          <p class="cd">{c.d}</p>
+          <Tick class="ct" />
+        </li>
+      ))}
+    </ul>
+    <p class="rvw-cap" data-t="3">Checked 13 Nov 2026.</p>
+  </div>
+</section>
+<style>
+  .rvw { position: relative; background: var(--white); padding: 80px 0 72px; }
+  .rvw::before { content: ''; position: absolute; left: 0; right: 0; top: 190px; height: 84px; background: var(--sky); }
+  .rvw :global(.rvw-eb) { justify-content: center; }
+  .cells { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 30px 0 0; padding: 0; align-items: start; }
+  .cell { position: relative; height: 208px; padding: 26px 28px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .mid { margin-top: -12px; }
+  .ck { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; line-height: 24px; color: var(--navy); }
+  .ck :global(svg) { color: var(--blue); }
+  .cv { display: flex; align-items: center; gap: 18px; margin-top: 12px; }
+  .cv .num { font-size: 80px; line-height: 84px; color: var(--navy); }
+  .cv .blue { color: var(--blue); }
+  .cd { margin-top: 10px; font-weight: 600; font-size: 15px; line-height: 22px; color: var(--slate); }
+  .cell :global(.ct) { position: absolute; right: 28px; top: 30px; }
+  .rvw-cap { margin-top: 24px; text-align: center; font-weight: 500; font-size: 13px; line-height: 18px; color: var(--slate-2); }
+  @media (max-width: 1023px) {
+    .rvw { padding: 48px 0 56px; }
+    .rvw::before { top: 150px; height: 160px; }
+    .rvw :global(.rvw-eb) { justify-content: flex-start; }
+    .cells { grid-template-columns: 1fr; gap: 12px; margin-top: 22px; }
+    .cell { height: auto; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 22px; align-items: center; padding: 18px 22px; border-radius: 20px; }
+    .mid { margin: 0 0 0 8px; }
+    .ck { grid-column: 2; grid-row: 1; font-size: 15px; }
+    .cv { grid-column: 1; grid-row: 1 / span 2; margin: 0; }
+    .cv .num { font-size: 44px; line-height: 48px; }
+    .cv :global(.stars) { display: none; }
+    .cd { grid-column: 2; grid-row: 2; margin: 2px 0 0; font-size: 13px; line-height: 18px; }
+    .cell :global(.ct) { display: none; }
+    .rvw-cap { text-align: left; }
+  }
+</style>

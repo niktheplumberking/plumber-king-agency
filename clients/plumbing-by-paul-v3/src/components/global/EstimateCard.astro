@@ -1,0 +1,64 @@
+---
+// Quick estimate card (DESIGN-SYSTEM 6.4): name, phone, "What's going on?" chips, optional photo, submit. Handled by forms.ts.
+// PUBLIC_FORM_ENDPOINT set: POSTs multipart there, then /thank-you. Unset (preview): validates, then /thank-you.
+// `idp` prefixes ids so two forms can live on one page.
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import { PROBLEMS } from '../../data/site';
+import { FORM_ENDPOINT, THANK_YOU } from '../../lib/form';
+interface Props { idp?: string; title?: string; sub?: string; class?: string; }
+const { idp = 'est', title = 'Get a free estimate', sub = 'Three quick things and we call you back.', class: cls } = Astro.props;
+---
+<form class:list={['ecard', cls]} action={FORM_ENDPOINT || THANK_YOU} method={FORM_ENDPOINT ? 'post' : 'get'} enctype={FORM_ENDPOINT ? 'multipart/form-data' : undefined}
+  data-estimate-form novalidate aria-labelledby={`${idp}-h`}>
+  <div class="eh">
+    <h3 id={`${idp}-h`} class="et">{title}</h3>
+    <p class="es">{sub}</p>
+  </div>
+  <div class="erow">
+    <label class="field"><span>Your name</span><input class="input" name="name" autocomplete="name" placeholder="Jane Smith" required /></label>
+    <label class="field"><span>Phone</span><input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(727) 000-0000" required /></label>
+  </div>
+  <fieldset class="ewhat">
+    <legend>What's going on?</legend>
+    <div class="echips">
+      {PROBLEMS.map((p, i) => (
+        <label class="echip"><input type="radio" name="problem" value={p} class="sr-only" /><span><Icon name="check" size={15} class="ck" />{p}</span></label>
+      ))}
+    </div>
+  </fieldset>
+  <label class="eup">
+    <input type="file" name="photo" accept="image/*" class="sr-only" data-photo />
+    <Icon name="camera" size={22} /><span data-photo-label>Add a photo (optional). It helps us quote faster.</span>
+  </label>
+  <p class="form-msg" role="alert" data-form-msg></p>
+  <Button type="submit" block arrow>Request my free estimate</Button>
+  <p class="enote"><Icon name="lock" size={13} />We call you back. No spam, ever.</p>
+</form>
+<style>
+  .ecard { position: relative; display: grid; gap: 16px; padding: 32px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-stripe); color: var(--navy); }
+  .ecard::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; border-radius: 20px 20px 0 0; background: var(--sky); }
+  .eh { display: grid; gap: 4px; }
+  .et { font-weight: 800; font-size: 26px; line-height: 32px; letter-spacing: -.01em; }
+  .es { font-weight: 500; font-size: 14px; line-height: 20px; color: var(--slate); }
+  .erow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ewhat { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .ewhat legend { padding: 0; margin-bottom: 8px; font-weight: 600; font-size: 14px; line-height: 20px; }
+  .echips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .echip span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: var(--r-sm); box-shadow: inset 0 0 0 1.5px var(--line); background: var(--white); font-weight: 600; font-size: 14px; cursor: pointer; transition: background var(--dur-2), box-shadow var(--dur-2), color var(--dur-2); }
+  .echip :global(.ck) { display: none; }
+  .echip:hover span { box-shadow: inset 0 0 0 1.5px var(--blue); }
+  .echip input:checked + span { background: var(--navy); color: var(--white); box-shadow: inset 0 0 0 1.5px var(--navy); }
+  .echip input:checked + span :global(.ck) { display: block; }
+  .echip input:focus-visible + span { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .eup { display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 10px 16px; border-radius: var(--r-sm); border: 2px dashed var(--sky); background: var(--mist); color: var(--slate); font-weight: 500; font-size: 13px; line-height: 18px; cursor: pointer; transition: background var(--dur-2); }
+  .eup :global(svg) { color: var(--blue); flex: none; }
+  .eup:hover { background: var(--tint); }
+  .eup:focus-within { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .enote { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; font-size: 12px; color: var(--slate); }
+  @media (max-width: 767px) {
+    .ecard { padding: 24px 20px; }
+    .erow { grid-template-columns: 1fr; }
+    .et { font-size: 22px; line-height: 28px; }
+  }
+</style>

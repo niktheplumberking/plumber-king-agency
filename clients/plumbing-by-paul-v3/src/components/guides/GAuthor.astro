@@ -1,0 +1,56 @@
+---
+// U6 Who wrote this (Figma 439:2340). Navy band; a white author card overlaps its top edge with the seal overlapping the
+// card's left edge; meter 947 + Google rating and two proof chips at right. One consistent business entity on every guide.
+import Seal from '../ui/Seal.astro';
+import Meter from '../ui/Meter.astro';
+import Stars from '../ui/Stars.astro';
+import Chip from '../ui/Chip.astro';
+import TextLink from '../ui/TextLink.astro';
+import { SITE } from '../../data/site';
+interface Props { topic?: { label: string; href: string } }
+const { topic = { label: 'Water heaters', href: '/water-heaters' } } = Astro.props;
+---
+<section class="ga" aria-labelledby="ga-h" data-m-section>
+  <div class="wrap">
+    <div class="ga-card" data-t="4">
+      <Seal d={128} deg={-8} class="ga-seal" />
+      <div class="ga-copy">
+        <h2 class="ga-h" id="ga-h">Written by the Plumbing By Paul crew.</h2>
+        <p class="ga-p">{SITE.legalName} is a family-owned plumbing company in St. Petersburg, Florida. {SITE.licenceLabel} {SITE.licence}. In business since {SITE.founded}. {SITE.rating.value} from {SITE.rating.count} Google reviews.</p>
+        <p class="ga-lk"><TextLink href="/about" size={15}>About us</TextLink><TextLink href={topic.href} size={15}>{topic.label}</TextLink></p>
+      </div>
+      <div class="ga-proof">
+        <div class="ga-m">
+          <Meter digits={String(SITE.rating.count)} label={`${SITE.rating.count} Google reviews`} cw={38} ch={52} gap={4} pad={6} />
+          <span class="ga-r"><b>Google reviews</b><span><span class="num">{SITE.rating.value}</span><Stars size={13} /></span></span>
+        </div>
+        <p class="ga-chips"><Chip icon="badge">Lic. {SITE.licence}</Chip><Chip icon="house">Since {SITE.founded}</Chip></p>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .ga { position: relative; background: linear-gradient(var(--white) 0 36px, var(--navy) 36px); padding: 0 0 70px; }
+  .ga-card { position: relative; display: flex; justify-content: space-between; gap: 32px; margin-left: 56px; padding: 34px 40px 34px 96px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }
+  .ga-card :global(.ga-seal) { position: absolute; left: -64px; top: calc(50% - 64px); }
+  .ga-h { font-weight: 800; font-size: 24px; line-height: 30px; color: var(--navy); }
+  .ga-p { max-width: 640px; margin-top: 10px; font-weight: 500; font-size: 16px; line-height: 26px; color: var(--slate); }
+  .ga-lk { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 14px; }
+  .ga-proof { display: grid; align-content: start; gap: 18px; padding-top: 16px; }
+  .ga-m { display: flex; align-items: center; gap: 14px; }
+  .ga-r { display: grid; gap: 2px; } .ga-r b { font-weight: 700; font-size: 15px; line-height: 20px; color: var(--navy); }
+  .ga-r > span { display: flex; align-items: center; gap: 6px; font-size: 16px; color: var(--navy); }
+  .ga-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 1199px) { .ga-card { flex-direction: column; } .ga-proof { padding-top: 0; } }
+  @media (max-width: 1023px) {
+    .ga { background: linear-gradient(var(--white) 0 30px, var(--navy) 30px); padding-bottom: 56px; }
+    .ga-card { margin: 34px 0 0; padding: 40px 18px 22px; gap: 16px; }
+    .ga-card :global(.ga-seal) { left: auto; right: 12px; top: -40px; --d: 72px !important; }
+    .ga-h { font-size: 19px; line-height: 25px; max-width: calc(100% - 70px); }
+    .ga-p { font-size: 13px; line-height: 21px; }
+    .ga-m { display: none; }
+    .ga-proof { order: 0; }
+    .ga-copy { display: contents; }
+    .ga-lk { order: 3; margin-top: 0; }
+  }
+</style>

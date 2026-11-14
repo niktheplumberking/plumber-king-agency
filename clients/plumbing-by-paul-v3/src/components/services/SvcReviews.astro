@@ -1,0 +1,129 @@
+---
+// Service reviews, word for word (src/data/service-pages.ts cites each one). Layout a (Figma 03 W8): head left + the
+// Google topic chip right, three cards stepped (white, navy, white). Layout b (Figma 04 D7): one big navy quote left,
+// head + rating pill + two stacked cards right. Mobile: a swipe rail with dots.
+import SectionHead from '../ui/SectionHead.astro';
+import ReviewCard from '../ui/ReviewCard.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import TextLink from '../ui/TextLink.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Stars from '../ui/Stars.astro';
+import Patch from '../ui/Patch.astro';
+import Icon from '../ui/Icon.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { esc, sid } from './fmt';
+interface Props { r: NonNullable<SvcPage['reviews']>; slug: string; layout: 'a' | 'b'; }
+const { r, slug, layout } = Astro.props;
+const id = sid(slug, 'reviews');
+const n = r.list.length;
+const big = r.list[0];
+const mark = (q: string, hl: string[] = []) => { let h = esc(q); for (const x of hl) h = h.replace(esc(x), `<mark>${esc(x)}</mark>`); return h; };
+---
+{layout === 'a' ? (
+<section class="rv rv-a" aria-labelledby={id} data-m-section>
+  <div class="wrap">
+    <div class="rv-head">
+      <SectionHead eyebrow={r.eyebrow} l1={r.l1} l2={r.l2} id={id} />
+      {r.chip ? (
+        <p class="rv-chip" data-t="5" data-fx="pop"><span class="num rc-n">{r.chip.n}</span><span class="rc-t"><span class="rc-g"><GoogleG size={14} />Google reviews mention</span><b>{r.chip.text}</b></span></p>
+      ) : <div data-t="3"><RatingPill /></div>}
+    </div>
+    <div class="rv-rail" data-carousel>
+      <div class:list={['rv-cards', `n${n}`]} data-track tabindex="0" role="group" aria-label="Reviews, scroll sideways for more" data-t="4" data-stagger>
+        {r.list.map((x, i) => <div class:list={['rv-cell', `c${i}`]} data-slide><ReviewCard r={x} v={i === 1 ? 'navy' : 'white'} t={false} /></div>)}
+      </div>
+      {n > 1 && <div class="rv-dots" aria-hidden="true">{r.list.map((_, i) => <i data-dot class:list={[i === 0 && 'on']}></i>)}<span><span data-count-now>1</span> of {n} · swipe</span></div>}
+    </div>
+    {r.link && <TextLink href="/reviews" class="rv-all" data-t="3">{r.link}</TextLink>}
+  </div>
+</section>
+) : (
+<section class="rv rv-b" aria-labelledby={id} data-m-section>
+  <div class="wrap rv-bgrid">
+    <div class="rv-bhead">
+      <SectionHead eyebrow={r.eyebrow} l1={r.l1} l2={r.l2} id={id} />
+      <div class="rv-pill" data-t="3"><RatingPill /></div>
+    </div>
+    <div class="rv-rail rv-brail" data-carousel>
+      <div class="rv-bcards" data-track tabindex="0" role="group" aria-label="Reviews, scroll sideways for more" data-t="4" data-stagger>
+        <figure class="rv-big" data-slide>
+          {big.fixedBy && big.fixedBy.length > 0 && <div class="rb-pats" aria-label={`Fixed by ${big.fixedBy.slice(0, 2).join(' and ')}`}>{big.fixedBy.slice(0, 2).map((p, i) => <Patch name={p} dark deg={i ? 4 : -3} t={false} />)}</div>}
+          <Stars size={18} />
+          <blockquote class="rb-q"><p set:html={mark(big.quote, big.hl)} /></blockquote>
+          {big.tags && big.tags.length > 0 && <ul role="list" class="rb-tags" aria-label="Service">{big.tags.map((tg) => <li><Icon name="wrench" size={12} />{tg}</li>)}</ul>}
+          <figcaption class="rb-by"><span class="rb-av num" aria-hidden="true">{big.name[0]}</span><span class="rb-nm"><span>{big.name}</span><small>Google review · {big.age}</small></span><GoogleG size={20} /></figcaption>
+        </figure>
+        {r.list.slice(1).map((x, i) => <div class="rv-cell" data-slide><ReviewCard r={x} v={i === 1 ? 'tint' : 'white'} t={false} /></div>)}
+      </div>
+      {n > 1 && <div class="rv-dots" aria-hidden="true">{r.list.map((_, i) => <i data-dot class:list={[i === 0 && 'on']}></i>)}<span><span data-count-now>1</span> of {n} · swipe</span></div>}
+    </div>
+  </div>
+</section>
+)}
+<style>
+  .rv { position: relative; background: var(--white); padding: 104px 0; }
+  .rv-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; }
+  .rv-chip { display: flex; align-items: center; gap: 14px; padding: 14px 20px 16px; border-radius: 16px; background: var(--sky); color: var(--navy); box-shadow: 0 6px 0 var(--soft), var(--sh-2); transform: rotate(-2deg); margin-bottom: 12px; }
+  .rc-n { font-size: 44px; line-height: 44px; }
+  .rc-t { display: grid; }
+  .rc-g { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; font-size: 14px; line-height: 20px; }
+  .rc-t b { font-weight: 700; font-size: 17px; line-height: 22px; }
+  .rv-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 72px; align-items: start; }
+  .rv-cards.n2 { grid-template-columns: repeat(2, minmax(0, 460px)); }
+  .rv-cards.n1 { grid-template-columns: minmax(0, 560px); }
+  .rv-cell.c1 { margin-top: 32px; } .rv-cell.c2 { margin-top: 64px; }
+  .rv-dots { display: none; }
+  .rv-a :global(.rv-all) { margin-top: 36px; }
+
+  .rv-b { padding: 120px 0 104px; }
+  .rv-bgrid { display: grid; grid-template-columns: minmax(0, 480px) minmax(0, 660px); justify-content: space-between; column-gap: 60px; row-gap: 32px; grid-template-rows: auto auto 1fr; align-items: start; }
+  .rv-bhead { grid-column: 2; grid-row: 1; position: relative; padding-top: 24px; }
+  .rv-pill { position: absolute; right: 0; top: 0; }
+  .rv-brail { display: contents; }
+  .rv-bcards { display: contents; }
+  .rv-big { grid-column: 1; grid-row: 1 / span 3; position: relative; align-self: start; margin: -170px 0 0; padding: 48px 40px 40px; border-radius: 24px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); display: grid; gap: 22px; }
+  .rv-big + .rv-cell { grid-column: 2; grid-row: 2; }
+  .rv-big + .rv-cell + .rv-cell { grid-column: 2; grid-row: 3; margin-top: 8px; }
+  .rv-b .rv-cell { padding-top: 26px; }
+  .rv-b :global(.rcard.tint .m) { color: var(--slate); } /* 4.5:1 on tint */
+  .rb-pats { position: absolute; right: 8px; top: -32px; display: flex; }
+  .rb-pats :global(.patch + .patch) { margin-left: -28px; }
+  .rb-q { margin: 26px 0 0; font-weight: 400; font-size: 26px; line-height: 42px; }
+  .rb-q :global(mark) { background: none; color: inherit; font-weight: 600; text-decoration: underline; text-decoration-color: var(--blue); text-decoration-thickness: 6px; text-underline-offset: 0; text-decoration-skip-ink: none; }
+  .rb-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; }
+  .rb-tags li { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 6px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); color: var(--tint); font-weight: 600; font-size: 12px; line-height: 16px; }
+  .rb-tags li :global(svg) { color: var(--sky); }
+  .rb-by { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+  .rb-av { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--sky); color: var(--navy); font-size: 16px; flex: none; }
+  .rb-nm { flex: 1; display: grid; font-weight: 600; font-size: 15px; line-height: 22px; }
+  .rb-nm small { font-weight: 500; font-size: 12px; line-height: 18px; color: var(--soft); }
+
+  @media (max-width: 1199px) and (min-width: 1024px) { .rv-bgrid { grid-template-columns: minmax(0, 400px) minmax(0, 1fr); column-gap: 40px; } .rb-q { font-size: 22px; line-height: 36px; } }
+  @media (max-width: 1023px) {
+    .rv, .rv-b { padding: 64px 0; }
+    .rv-head { display: grid; justify-items: start; gap: 24px; }
+    .rv-chip { margin-bottom: 0; padding: 10px 16px 12px; } .rc-n { font-size: 34px; line-height: 36px; } .rc-t b { font-size: 15px; } .rc-g { font-size: 12px; }
+    .rv-cards, .rv-bcards { display: flex; gap: 14px; margin: 40px calc(-1 * var(--gutter)) 0; padding: 30px var(--gutter) 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; align-items: stretch; }
+    .rv-cards::-webkit-scrollbar, .rv-bcards::-webkit-scrollbar { display: none; }
+    .rv-cell, .rv-big { flex: 0 0 min(306px, 82vw); scroll-snap-align: start; scroll-margin-left: var(--gutter); }
+    .rv-cell.c1, .rv-cell.c2 { margin-top: 0; }
+    .rv-cell :global(.rcard) { height: 100%; }
+    .rv-dots { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 12px; color: var(--slate-2); }
+    .rv-dots i { width: 8px; height: 8px; border-radius: 4px; background: var(--line); transition: width .4s var(--ease-out), background .4s; }
+    .rv-dots i:global(.on) { width: 22px; background: var(--press); }
+    .rv-dots span { margin-left: 6px; }
+    .rv-a :global(.rv-all) { margin-top: 24px; }
+    .rv-bgrid { grid-template-columns: minmax(0, 1fr); }
+    .rv-bhead { grid-column: 1; padding-top: 0; }
+    .rv-pill { position: static; margin-top: 20px; }
+    .rv-brail { display: block; grid-column: 1; grid-row: 2; }
+    .rv-big { margin: 0; padding: 30px 22px 22px; gap: 14px; }
+    .rv-big + .rv-cell, .rv-big + .rv-cell + .rv-cell { margin-top: 0; }
+    .rv-b .rv-cell { padding-top: 0; }
+    .rb-pats { right: 4px; top: -26px; }
+    .rb-pats :global(.patch) { width: 112px; height: 44px; }
+    .rb-pats :global(.patch .pn) { font-size: 22px; line-height: 22px; }
+    .rb-q { margin-top: 4px; font-size: 15px; line-height: 24px; }
+    .rb-tags { margin-top: 4px; } .rb-by { margin-top: 4px; }
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+// 13c Terms and conditions (PAGES.md 13b/13c, Figma desktop 443:8551 / mobile 443:8945). Draft text, labelled as a draft.
+import Base from '../layouts/Base.astro';
+import LegalPage from '../components/info/LegalPage.astro';
+import CompactCTA from '../components/info/CompactCTA.astro';
+import { TERMS } from '../components/info/legalData';
+---
+<Base title="Terms and Conditions · Plumbing By Paul St. Pete"
+  description="Terms for using the Plumbing By Paul website and booking our St. Petersburg plumbing services: estimates, scheduling, payment, warranty and liability."
+  path="/terms-and-conditions" og="office-team-with-paul" ogAlt="The Plumbing By Paul office team with Paul at the shop">
+  <LegalPage doc={TERMS} />
+  <CompactCTA />
+</Base>

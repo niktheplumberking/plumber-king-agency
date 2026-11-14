@@ -1,0 +1,50 @@
+---
+// FAQ hub accordion item: the shared FaqItem pattern (same markup hooks, so ui.ts animates it) plus an optional "Paul's tip"
+// plate inside the answer. Kept in info/ so the shared FaqItem stays as it is.
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+interface Props { idx: string; q: string; a1: string; a2?: string; tip?: string; open?: boolean; name?: string }
+const { idx, q, a1, a2, tip, open = false, name } = Astro.props;
+---
+<details class="faq" open={open} data-acc name={name} data-faq-item>
+  <summary>
+    <span class="idx num" aria-hidden="true">{idx}</span>
+    <span class="qt">{q}</span>
+    <span class="pm" aria-hidden="true"><Icon name="plus" size={18} class="i-plus" /><Icon name="minus" size={18} class="i-minus" /></span>
+  </summary>
+  <div class="acc-body">
+    <div class="ans">
+      <p><strong>{a1}</strong>{a2 && <>{' '}{a2}</>}</p>
+      {tip && <p class="tip"><Seal d={36} flat t={false} /><span><span class="label">Paul's tip</span><span class="tt">{tip}</span></span></p>}
+    </div>
+  </div>
+</details>
+<style>
+  .faq { position: relative; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; transition: background var(--dur-3) var(--ease-out), box-shadow var(--dur-3) var(--ease-out); }
+  .faq[open] { background: var(--tint); box-shadow: var(--in-bar); }
+  summary { display: flex; align-items: center; gap: 18px; padding: 24px 28px; list-style: none; cursor: pointer; border-radius: inherit; }
+  summary::-webkit-details-marker { display: none; }
+  .idx { color: var(--press); font-size: 22px; line-height: 28px; flex: none; }
+  .qt { flex: 1; font-weight: 700; font-size: var(--fz-h4); line-height: 26px; color: var(--navy); }
+  .pm { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--navy); flex: none; transition: background var(--dur-2), transform var(--dur-3) var(--ease-out); }
+  .pm :global(svg) { position: absolute; transition: opacity var(--dur-2), transform var(--dur-3) var(--ease-out); }
+  .pm :global(.i-minus) { opacity: 0; transform: rotate(-90deg); }
+  .faq[open] .pm { background: var(--navy); color: var(--white); }
+  .faq[open] .pm :global(.i-plus) { opacity: 0; transform: rotate(90deg); }
+  .faq[open] .pm :global(.i-minus) { opacity: 1; transform: none; }
+  summary:hover .pm { transform: scale(1.08); }
+  .acc-body { overflow: hidden; }
+  .ans { display: grid; gap: 14px; padding: 0 28px 24px 80px; font-size: 16px; line-height: 27px; color: var(--navy); }
+  .ans strong { font-weight: 600; }
+  .tip { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--white); box-shadow: var(--sh-1); }
+  .tip > span { display: grid; }
+  .tip .label { font-size: 11px; line-height: 14px; color: var(--press); }
+  .tt { font-weight: 600; font-size: 14px; line-height: 20px; color: var(--navy); }
+  @media (max-width: 767px) {
+    summary { gap: 12px; padding: 18px; }
+    .idx { font-size: 18px; }
+    .qt { font-size: 16px; line-height: 23px; }
+    .ans { padding: 0 18px 18px; font-size: 15px; line-height: 25px; }
+    .tt { font-size: 13px; }
+  }
+</style>

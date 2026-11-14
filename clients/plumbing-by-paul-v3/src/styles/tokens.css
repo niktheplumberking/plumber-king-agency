@@ -1,0 +1,80 @@
+/* Plumbing By Paul v3 design tokens. Source: plan/DESIGN-SYSTEM.md + the Figma prelude (build-kit/prelude.js `C`).
+   Do not add colours. No orange / red / coral / teal. Amber (--star) only for rating stars. */
+@font-face { font-family: 'Montserrat'; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url('/fonts/montserrat-latin-wght-normal.woff2') format('woff2-variations'), url('/fonts/montserrat-latin-wght-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Montserrat'; font-style: italic; font-weight: 100 900; font-display: swap;
+  src: url('/fonts/montserrat-latin-wght-italic.woff2') format('woff2-variations'), url('/fonts/montserrat-latin-wght-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Russo One'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/fonts/russo-one-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Yellowtail'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/fonts/yellowtail-latin-400-normal.woff2') format('woff2'); }
+/* Metric-matched fallback so the swap does not shift layout (CLS). */
+@font-face { font-family: 'Montserrat Fallback'; src: local('Arial'); size-adjust: 113%; ascent-override: 86%; descent-override: 22%; line-gap-override: 0%; }
+
+:root {
+  /* colour: brand core */
+  --navy: #111032;   /* ink, dark sections */
+  --navy-2: #1C1B45; /* raised surface on navy */
+  --navy-3: #34335E; /* hairline on navy */
+  --blue: #2A7FA8;   /* brand blue: second H2 line, icons */
+  --press: #236F94;  /* blue behind white text (buttons): 5.6:1 */
+  --deep: #1D5F80;   /* pressed / hover of --press */
+  --sky: #61ADCB;    /* highlights on navy; NEVER white text on it */
+  --soft: #A9D3E4;   /* highlighter, waves */
+  --tint: #E8F3F8;   /* light section bg, icon wells */
+  --mist: #F4F9FC;   /* inputs, hero wash */
+  --white: #FFFFFF;
+  --line: #C9DCE6;   /* hairlines on light */
+  --slate: #454867;  /* body text on light */
+  --slate-2: #5E7183;/* meta text on light */
+  --star: #F5A623;   /* rating stars only */
+
+  /* type */
+  --f-sans: 'Montserrat', 'Montserrat Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --f-num: 'Russo One', 'Montserrat', system-ui, sans-serif;  /* "door numbers": 947, 4.9, licence, labels */
+  --f-script: 'Yellowtail', 'Brush Script MT', cursive;       /* 1-4 words at a time */
+
+  /* fluid sizes: value at 390 -> value at 1440 */
+  --fz-display: clamp(2.5rem, 1.905vw + 32.6px, 3.75rem);   /* 40 -> 60 (home H1, Figma) */
+  --lh-display: 1.08;
+  --fz-h1: clamp(2.125rem, 2.476vw + 24.3px, 3.75rem);      /* 34 -> 60 */
+  --fz-h2: clamp(1.75rem, 1.524vw + 22.1px, 2.75rem);       /* 28 -> 44 */
+  --fz-h2-cta: clamp(1.75rem, 1.714vw + 21.3px, 2.875rem);  /* 28 -> 46 (Figma waterline) */
+  --fz-h3: clamp(1.3125rem, 0.476vw + 19.1px, 1.625rem);    /* 21 -> 26 */
+  --fz-h3s: clamp(1.25rem, 0.381vw + 18.5px, 1.5rem);       /* 20 -> 24 (card titles in Figma) */
+  --fz-h4: clamp(1.0625rem, 0.19vw + 16.3px, 1.1875rem);    /* 17 -> 19 */
+  --fz-lead: clamp(1rem, 0.19vw + 15.3px, 1.125rem);        /* 16 -> 18 */
+  --fz-body: clamp(1rem, 0.095vw + 15.6px, 1.0625rem);      /* 16 -> 17 */
+  --fz-small: clamp(0.875rem, 0.095vw + 13.6px, 0.9375rem); /* 14 -> 15 */
+  --fz-caption: 0.8125rem;                                    /* 13 */
+  --fz-eyebrow: clamp(0.75rem, 0.095vw + 11.6px, 0.8125rem); /* 12 -> 13 */
+  --fz-label: 0.6875rem;                                      /* 11 Russo label */
+
+  /* space (4 px base) */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 40px; --s8: 48px; --s9: 64px; --s10: 80px; --s11: 96px; --s12: 120px;
+  --section-y: clamp(64px, 3.81vw + 49px, 104px);   /* 64 mobile -> 104 desktop */
+  --gutter: clamp(20px, 7.6vw - 9.6px, 120px);       /* page margin: 20 at 390, 100 at 1440 (content then max 1200) */
+  --content: 1200px;
+
+  /* radii */
+  --r-xs: 6px; --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-2xl: 40px; --r-full: 999px;
+
+  /* shadows: navy-tinted only */
+  --sh-1: 0 1px 2px rgba(17,16,50,.06), 0 2px 8px rgba(17,16,50,.05);
+  --sh-2: 0 14px 32px -10px rgba(17,16,50,.18);
+  --sh-3: 0 36px 72px -28px rgba(17,16,50,.38);
+  --sh-stripe: 0 6px 0 var(--sky), 0 12px 0 var(--blue), 0 24px 36px rgba(17,16,50,.16);
+  --sh-sticker: 0 3px 0 rgba(17,16,50,.14), 0 10px 18px -6px rgba(17,16,50,.3);
+  --in-bar: inset 5px 0 0 var(--blue);
+
+  /* motion (see MOTION.md). One easing family. */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);      /* expo.out */
+  --ease-io: cubic-bezier(.65, 0, .35, 1);      /* power3.inOut-ish */
+  --ease-back: cubic-bezier(.34, 1.56, .64, 1); /* back.out: tier-5 accents only */
+  --dur-1: .2s; --dur-2: .35s; --dur-3: .6s;
+
+  /* layers */
+  --z-header: 50; --z-menu: 60; --z-callbar: 45; --z-curtain: 90; --z-loader: 100;
+  --header-h: 64px;
+}
+@media (min-width: 1024px) { :root { --header-h: 88px; } }

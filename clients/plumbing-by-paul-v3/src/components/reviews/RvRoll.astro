@@ -1,0 +1,58 @@
+---
+// R6 The blue roll (Figma 443:3382). Tint; framed roll photo on a sky offset block, a tilted snapshot of their son with the
+// roll, and Doriana's review (the closing lines of review #5, word for word) overlapping both photos' lower edge.
+// STICKY 6: the snapshot shows Paul and Alycia's son. Paul to confirm the roll is still given on every job and its origin.
+import SectionHead from '../ui/SectionHead.astro';
+import ReviewCard from '../ui/ReviewCard.astro';
+import Img from '../ui/Img.astro';
+import type { Review } from '../../data/reviews';
+const r: Review = { n: 5, name: 'Doriana Atchley', age: 'Edited 4 weeks ago', full: false, fixedBy: ['Brian'], hl: ['the cute Halloween toilet paper roll'],
+  quote: "Again we received incredible service, fast, knowledgeable, Brian was amazing! Thank you! I'm posting the cute Halloween toilet paper roll 🧻" };
+---
+<section class="rvr" aria-labelledby="rvr-h" data-m-section>
+  <div class="wrap rvr-in">
+    <div class="rvr-media">
+      <span class="sky-blk" aria-hidden="true"></span>
+      <div class="rvr-main frame" data-t="4" data-fx="frame">
+        <Img name="brand-gift-roll-closeup" alt="The blue gift-wrapped toilet roll with the Plumbing By Paul tag" sizes="(min-width: 1024px) 400px, calc(100vw - 80px)" focus="50% 60%" widths={[400, 600, 800]} />
+      </div>
+      <div class="rvr-snap snap" data-t="4" data-fx="toss">
+        <Img name="about-son-with-gift-roll-truck" alt="Paul and Alycia's son holding a blue gift roll in front of the truck" sizes="(min-width: 1024px) 200px, 110px" focus="50% 80%" widths={[220, 400]} />
+      </div>
+    </div>
+    <div class="rvr-copy">
+      <SectionHead eyebrow="A small thank-you" l1="Yes, we leave you" l2="a roll of toilet paper" id="rvr-h" />
+      <p class="rvr-p" data-t="3">Blue, wrapped, with our tag on it. It started as a joke and turned into the thing people post about. Think of it as a business card you'll never throw away.</p>
+    </div>
+    <div class="rvr-card">
+      <div data-t="4"><ReviewCard r={r} t={false} /></div>
+      <span class="rvr-sc script" data-t="5" data-fx="write" aria-hidden="true">you'll see</span>
+    </div>
+  </div>
+</section>
+<style>
+  .rvr { position: relative; background: var(--tint); padding: 104px 0 112px; overflow: clip; }
+  .rvr-in { position: relative; display: grid; grid-template-columns: 600px minmax(0, 600px); justify-content: space-between; grid-template-rows: auto auto; }
+  .rvr-media { position: relative; grid-row: 1 / span 2; width: 400px; height: 500px; }
+  .sky-blk { position: absolute; inset: 24px 24px -24px -24px; border-radius: 28px; background: var(--sky); }
+  .rvr-main { position: absolute; inset: 0; }
+  .rvr-snap { position: absolute; left: 440px; top: 196px; width: 200px; height: 260px; transform: rotate(5deg); z-index: 2; }
+  .rvr-copy { padding-top: 8px; }
+  .rvr-p { max-width: 560px; margin-top: 20px; font-size: 17px; line-height: 29px; color: var(--slate); }
+  .rvr-card { position: relative; z-index: 3; grid-column: 1 / -1; width: 620px; margin: -170px 0 0 350px; }
+  .rvr-card :global(.rcard) { box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); }
+  .rvr-card :global(.q) { font-size: 18px; line-height: 28px; }
+  .rvr-sc { position: absolute; right: -230px; bottom: -64px; font-size: 40px; line-height: 1; color: var(--blue); transform: rotate(-5deg); }
+  @media (max-width: 1279px) { .rvr-in { grid-template-columns: 520px minmax(0, 1fr); } .rvr-card { margin-left: 260px; } .rvr-sc { right: -120px; } }
+  @media (max-width: 1023px) {
+    .rvr { padding: 56px 0 64px; }
+    .rvr-in { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 32px; }
+    .rvr-media { grid-row: auto; width: calc(100% - 24px); height: auto; aspect-ratio: 300 / 340; margin-left: 12px; }
+    .sky-blk { inset: 14px 14px -14px -14px; }
+    .rvr-snap { left: auto; right: -18px; top: auto; bottom: -14px; width: 110px; height: 150px; }
+    .rvr-p { font-size: 16px; line-height: 26px; margin-top: 14px; }
+    .rvr-card { width: auto; margin: 8px 0 0; }
+    .rvr-card :global(.q) { font-size: 15px; line-height: 25px; }
+    .rvr-sc { display: none; }
+  }
+</style>

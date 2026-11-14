@@ -1,0 +1,29 @@
+---
+// C10 Nearby towns (Figma 440:3077): "Also nearby" + town chips. Only towns with a page are links; the rest are plain chips.
+import Eyebrow from '../ui/Eyebrow.astro';
+import TownChip from '../ui/TownChip.astro';
+import TextLink from '../ui/TextLink.astro';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+---
+<section class="tn" aria-label="Also nearby" data-m-section>
+  <div class="wrap tn-in">
+    <Eyebrow text="Also nearby" class="tn-eb" />
+    <ul role="list" class="tn-list" data-t="4" data-stagger>
+      {t.nearby.map((n) => <li><TownChip name={n.name} href={n.href} h={44} /></li>)}
+    </ul>
+    <TextLink href="/service-areas" class="tn-all" data-t="3">All of Pinellas County</TextLink>
+  </div>
+</section>
+<style>
+  .tn { position: relative; background: var(--white); padding: 72px 0 84px; }
+  .tn-in { display: flex; align-items: center; gap: 16px 20px; }
+  .tn-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; }
+  .tn-in :global(.tn-all) { margin-left: auto; }
+  @media (max-width: 1023px) {
+    .tn { padding: 56px 0 64px; }
+    .tn-in { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .tn-in :global(.tn-all) { margin: 8px 0 0; }
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+// Local knowledge (Figma 03 W9): sky band under a wave with the seal at the right, a navy two-line head, and two white
+// answer cards that hang below the band's bottom edge into the white page.
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import TextLink from '../ui/TextLink.astro';
+import Seal from '../ui/Seal.astro';
+import Wave from './Wave.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { l: NonNullable<SvcPage['local']>; slug: string; }
+const { l, slug } = Astro.props;
+const id = sid(slug, 'local');
+---
+<section class="lk" aria-labelledby={id} data-m-section>
+  <div class="lk-band"><Wave /></div>
+  <div class="wrap lk-in">
+    <div class="lk-head">
+      <Eyebrow text={l.eyebrow} />
+      <h2 class="h2 lk-h" id={id} data-t="2"><span>{l.l1}</span> <span>{l.l2}</span></h2>
+      <Seal d={112} deg={6} class="lk-seal" />
+    </div>
+    <div class="lk-cards" data-t="4" data-stagger>
+      {l.cards.map((c) => (
+        <article class="lk-card">
+          <p class="lk-l"><span class="well"><Icon name={c.icon} size={22} /></span><span class="label">{c.label}</span></p>
+          <h3 class="lk-q">{c.q}</h3>
+          <p class="lk-a"><b>{c.a1}</b> {c.a2}</p>
+          {c.link && <TextLink href={c.link.href} class="lk-link">{c.link.t}</TextLink>}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .lk { position: relative; background: var(--white); padding: 104px 0 104px; margin-top: 40px; }
+  .lk-band { position: absolute; left: 0; right: 0; top: 0; bottom: 140px; background: var(--sky); }
+  .lk-in { position: relative; z-index: 1; }
+  .lk-head { position: relative; display: grid; justify-items: start; gap: 16px; }
+  .lk-head :global(.eyebrow) { color: var(--navy); }
+  .lk-h { color: var(--navy); max-width: 900px; }
+  .lk-h span { display: block; }
+  .lk-head :global(.lk-seal) { position: absolute; right: 16px; top: -40px; }
+  .lk-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 52px; }
+  .lk-card { display: grid; align-content: start; gap: 16px; padding: 32px 32px 36px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }
+  .lk-l { display: flex; align-items: center; gap: 14px; }
+  .lk-l .well { width: 48px; height: 48px; }
+  .lk-l .label { color: var(--press); font-size: 12px; }
+  .lk-q { font-weight: 700; font-size: 22px; line-height: 30px; }
+  .lk-a { font-size: 16px; line-height: 27px; color: var(--slate); }
+  .lk-a b { color: var(--navy); font-weight: 700; }
+  @media (max-width: 1023px) {
+    .lk { padding: 64px 0 64px; margin-top: 24px; }
+    .lk-band { bottom: 50%; }
+    .lk-h { padding-right: 70px; }
+    .lk-head :global(.lk-seal) { --d: 64px !important; right: 0; top: -8px; }
+    .lk-cards { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 30px; }
+    .lk-card { padding: 22px 22px 26px; gap: 12px; border-radius: 20px; }
+    .lk-l .well { width: 40px; height: 40px; }
+    .lk-q { font-size: 19px; line-height: 26px; }
+    .lk-a { font-size: 15px; line-height: 25px; }
+  }
+</style>

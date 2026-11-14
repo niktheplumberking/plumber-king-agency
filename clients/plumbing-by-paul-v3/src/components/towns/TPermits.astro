@@ -1,0 +1,46 @@
+---
+// C7 Permits (Figma 440:2909): a sky band with a pipe run through it, a white fact card on top answering the permit
+// question (AEO), and the round "WE PULL THE PERMIT" stamp on the card's top-right corner.
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Stamp from '../ui/Stamp.astro';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const p = t.permits;
+---
+<section class="tpm" aria-labelledby="tpm-h" data-m-section>
+  <span class="tpm-band" aria-hidden="true"><span class="tpm-pipe"></span></span>
+  <div class="wrap">
+    <div class="tpm-card" data-t="4" data-fx="rise">
+      <span class="tpm-ic" aria-hidden="true"><Icon name="clipboard" size={28} /></span>
+      <div class="tpm-body">
+        <Eyebrow text={p.eyebrow} />
+        <h2 class="tpm-h" id="tpm-h" data-t="2">{p.q}</h2>
+        <p class="tpm-a" data-t="3">{p.a} <strong>{p.strong}</strong></p>
+      </div>
+      <span class="tpm-stw"><Stamp d={150} deg={10} text="WE PULL THE PERMIT · WE PULL THE PERMIT · " /></span>
+    </div>
+  </div>
+</section>
+<style>
+  .tpm { position: relative; background: var(--white); padding: 20px 0 72px; overflow-x: clip; }
+  .tpm-band { position: absolute; left: 0; right: 0; top: 48px; height: 200px; background: var(--sky); }
+  .tpm-pipe { position: absolute; left: 0; right: 0; top: 93px; height: 14px; background: linear-gradient(180deg, var(--navy) 0 2px, var(--white) 2px 5px, var(--navy) 5px 9px, var(--white) 9px 12px, var(--navy) 12px 14px); }
+  .tpm-card { position: relative; display: flex; gap: 32px; max-width: 1080px; margin: 0 auto; padding: 44px 160px 52px 44px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }
+  .tpm-ic { display: grid; place-items: center; flex: none; width: 72px; height: 72px; border-radius: 50%; background: var(--tint); color: var(--press); }
+  .tpm-h { margin-top: 12px; font-weight: 800; font-size: 30px; line-height: 38px; letter-spacing: -.01em; color: var(--navy); }
+  .tpm-a { margin-top: 14px; font-size: 17px; line-height: 28px; color: var(--slate); }
+  .tpm-a strong { font-weight: 700; color: var(--navy); }
+  .tpm-stw { position: absolute; right: -66px; top: -46px; }
+  @media (max-width: 1023px) {
+    .tpm { padding: 8px 0 48px; }
+    .tpm-band { top: 36px; height: 290px; }
+    .tpm-pipe { display: none; }
+    .tpm-card { flex-direction: column; gap: 18px; padding: 30px 22px 26px; border-radius: 20px; }
+    .tpm-ic { width: 56px; height: 56px; }
+    .tpm-h { font-size: 22px; line-height: 28px; margin-top: 10px; }
+    .tpm-a { font-size: 15px; line-height: 25px; }
+    .tpm-stw { right: 0; top: -30px; transform: scale(.62); transform-origin: top right; }
+  }
+</style>

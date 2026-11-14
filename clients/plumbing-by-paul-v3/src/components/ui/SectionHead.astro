@@ -1,0 +1,33 @@
+---
+// The fixed headline pattern (DESIGN-SYSTEM 2.2): eyebrow -> two-line two-tone H2 -> optional lead.
+// Motion tiers are wired: eyebrow t1, H2 t2 (line-split mask), lead t3.
+// `script` = one word of l2 set in Yellowtail. `level` lets an H1 use the same pattern on inner pages.
+import Eyebrow from './Eyebrow.astro';
+interface Props {
+  eyebrow: string; l1: string; l2?: string; lead?: string; dark?: boolean; center?: boolean; script?: string;
+  ebScript?: string; dot?: boolean; level?: 'h1' | 'h2'; inline?: boolean; size?: 'h2' | 'h1' | 'cta' | 'sm'; id?: string; class?: string; leadWidth?: string;
+}
+const { eyebrow, l1, l2, lead, dark = false, center = false, script, ebScript, dot, level = 'h2', size = 'h2', inline = false, id, class: cls, leadWidth } = Astro.props;
+const Tag = level;
+let l2html = l2;
+if (l2 && script && l2.includes(script)) l2html = l2.replace(script, `<span class="script">${script}</span>`);
+---
+<div class:list={['shead', { center, dark, inline }, cls]}>
+  <Eyebrow text={eyebrow} dark={dark} script={ebScript} dot={dot} />
+  <Tag class:list={['h2', `sz-${size}`]} id={id} data-t="2">
+    <span class="l1">{l1}</span>{l2 && <> <span class="l2" set:html={l2html} /></>}
+  </Tag>
+  {lead && <p class="lead" data-t="3" style={leadWidth ? `max-width:${leadWidth}` : undefined}>{lead}</p>}
+  <slot />
+</div>
+<style>
+  .shead { display: grid; gap: 16px; justify-items: start; }
+  .shead.center { justify-items: center; text-align: center; }
+  .shead .h2 .l1, .shead .h2 .l2 { display: block; }
+  @media (min-width: 1024px) { .shead.inline .h2 .l1, .shead.inline .h2 .l2 { display: inline; } }
+  .shead .lead { max-width: 640px; margin-top: 4px; }
+  .shead.center .lead { max-width: 620px; }
+  .sz-cta { font-size: var(--fz-h2-cta); line-height: 1.17; }
+  .sz-sm { font-size: clamp(1.75rem, 1.143vw + 23.5px, 2.5rem); line-height: 1.15; }
+  .sz-h1 { font-size: var(--fz-h1); line-height: 1.07; }
+</style>

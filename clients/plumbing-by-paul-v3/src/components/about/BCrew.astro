@@ -1,0 +1,77 @@
+---
+// B6 The crew (Figma B6): sky field. The wide crew photo overlaps the section's top edge; a wall of name patches (three
+// rows, alternating tilt) overlaps the photo's bottom edge; the tilted office photo with two OFFICE patches sits at right.
+// Names are the ones customers use in Google reviews; patches are not pinned to faces. Navy text on sky, never white.
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Patch from '../ui/Patch.astro';
+const P: [string, number, number][] = [
+  ['Brian', 7, 372], ['Phil', 172, 368], ['Chris', 338, 364], ['JR', 499, 372], ['Troy', 664, 368], ['Noah', 830, 364], ['Steven', 991, 372],
+  ['Miguel', 90, 440], ['Elvis', 256, 436], ['Josh', 417, 444], ['Jacob', 582, 440], ['Marcus', 748, 436], ['Kyle', 909, 444],
+  ['Matt', 8, 512], ['CJ', 174, 508], ['Carlton', 335, 516], ['Alex', 500, 512], ['Tim', 666, 508],
+];
+---
+<section class="bc" id="crew" aria-labelledby="bc-h" data-m-section>
+  <div class="wrap bc-in">
+    <figure class="bc-wide frame frame-3" data-t="4" data-fx="frame">
+      <Img name="crew-families-two-trucks" alt="The Plumbing By Paul crew and their families in blue shirts in front of two wrapped trucks" sizes="(min-width: 1024px) 1200px, calc(100vw - 40px)" widths={[600, 900, 1200, 1600, 2000]} focus="50% 50%" />
+      <PhotoTag class="bc-tag">The crew · St. Petersburg</PhotoTag>
+      <figcaption><Caption class="bc-cap">The crew and their families.</Caption></figcaption>
+    </figure>
+    <ul role="list" class="bc-wall" aria-label="Names from our Google reviews" data-t="5" data-stagger>
+      {P.map(([n, x, y], i) => <li style={`--x:${x}px;--y:${y - 396}px`}><Patch name={n} label="Crew" deg={i % 2 ? 2 : -3} t={false} /></li>)}
+    </ul>
+    <div class="bc-copy">
+      <SectionHead eyebrow="The blue shirts" l1="The names" l2="in our reviews" id="bc-h" class="bc-head" />
+      <div class="bc-side" data-t="3">
+        <p>We didn't pick these names. You did. Each one shows up again and again in our Google reviews.</p>
+        <TextLink href="/reviews" class="bc-l">Read what people say about them</TextLink>
+      </div>
+    </div>
+    <figure class="bc-office" data-t="4" data-fx="toss">
+      <div class="bc-oph frame"><Img name="office-team-with-paul" alt="Paul sitting with the office team" sizes="(min-width: 1024px) 304px, 80vw" widths={[320, 640]} focus="50% 50%" /></div>
+      <figcaption><Caption class="bc-ocap" small>Paul with the office team.</Caption></figcaption>
+      <ul role="list" class="bc-opat" aria-label="Office names from our Google reviews">
+        <li><Patch name="Missy" label="Office" deg={-6} t={false} /></li>
+        <li><Patch name="Melissa" label="Office" deg={5} t={false} /></li>
+      </ul>
+    </figure>
+  </div>
+</section>
+<style>
+  .bc { position: relative; background: var(--sky); padding: 0 0 100px; margin-top: 64px; overflow-x: clip; }
+  .bc-in { position: relative; min-height: 896px; }
+  .bc-wide { position: relative; top: -64px; height: 460px; margin: 0; }
+  .bc-wide :global(.bc-tag) { position: absolute; left: 24px; top: 24px; z-index: 2; }
+  .bc-wide :global(.bc-cap) { position: absolute; right: 24px; top: 24px; z-index: 2; }
+  .bc-wall { position: absolute; left: 0; top: 396px; width: 100%; margin: 0; padding: 0; list-style: none; z-index: 3; }
+  .bc-wall li { position: absolute; left: var(--x); top: var(--y); }
+  .bc-copy { position: absolute; left: 0; top: 628px; display: grid; grid-template-columns: 460px 380px; column-gap: 20px; }
+  .bc-copy :global(.bc-head .eyebrow), .bc-copy :global(.bc-head .l1), .bc-copy :global(.bc-head .l2), .bc-copy :global(.bc-head h2) { color: var(--navy); }
+  .bc-side { padding-top: 36px; font-size: 16px; line-height: 26px; color: var(--navy); }
+  .bc-side :global(.bc-l) { margin-top: 18px; color: var(--navy); }
+  .bc-office { position: absolute; left: 929px; top: 532px; width: 304px; margin: 0; transform: rotate(4deg); z-index: 2; }
+  .bc-oph { height: 369px; border-radius: var(--r-lg); box-shadow: 0 0 0 7px var(--white), var(--sh-3); }
+  .bc-oph :global(img) { display: block; }
+  .bc-office :global(.bc-ocap) { position: absolute; left: 18px; top: 32px; z-index: 2; }
+  .bc-opat { position: absolute; left: -36px; bottom: -32px; display: flex; gap: 2px; margin: 0; padding: 0; }
+  @media (max-width: 1279px) { .bc-wall { transform: scale(.86); transform-origin: left top; } .bc-office { left: auto; right: 0; } .bc-copy { grid-template-columns: 400px 300px; } }
+  @media (max-width: 1023px) {
+    .bc { margin-top: 40px; padding-bottom: 64px; }
+    .bc-in { min-height: 0; display: flex; flex-direction: column; }
+    .bc-wide { top: -40px; height: 230px; margin-bottom: -40px; border-radius: var(--r-lg); }
+    .bc-wide :global(.bc-tag) { display: none; }
+    .bc-wide :global(.bc-cap) { left: 12px; right: auto; top: 12px; font-size: 12px; padding: 6px 10px; }
+    .bc-wall { position: relative; top: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 4px; margin-top: -18px; transform: none; justify-items: center; }
+    .bc-wall li { position: static; width: 112px; height: 44px; }
+    .bc-wall li :global(.patch) { transform: scale(.76) rotate(var(--deg)); transform-origin: left top; }
+    .bc-copy { position: static; display: block; margin-top: 32px; }
+    .bc-side { padding-top: 16px; font-size: 15px; line-height: 24px; }
+    .bc-office { position: relative; left: auto; right: auto; top: auto; width: 280px; margin: 40px auto 30px; transform: rotate(3deg); }
+    .bc-oph { height: 250px; }
+    .bc-opat { left: -10px; bottom: -30px; transform: scale(.8); transform-origin: left bottom; }
+  }
+</style>

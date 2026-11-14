@@ -1,0 +1,46 @@
+---
+// A7 Area FAQ (Figma A7): tint, heading + "Short answer" + the two real town-page chips left; accordion right; seal on the
+// accordion's corner. Items 02 and 03 are labelled stand-ins and stay out of the FAQPage schema.
+import SectionHead from '../ui/SectionHead.astro';
+import Faq from '../ui/Faq.astro';
+import TownChip from '../ui/TownChip.astro';
+import Seal from '../ui/Seal.astro';
+import { SITE } from '../../data/site';
+const items = [
+  { q: 'Which areas does Plumbing By Paul serve?', a1: 'All of Pinellas County, from our shop in St. Petersburg.', a2: 'That includes St. Petersburg, Clearwater and Seminole, plus the towns and beaches in between.', link: { text: `Call ${SITE.phone}`, href: SITE.tel }, ok: true },
+  { q: 'Do you work outside Pinellas County?', a1: 'Stand-in: Paul to confirm.', a2: 'The answer will start with yes or no. Until then, ask when you call (727) 709-2552.', ok: false },
+  { q: 'Is there a travel charge?', a1: 'Stand-in: Paul to confirm.', a2: 'Until then, ask when you call (727) 709-2552.', ok: false },
+];
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: items.filter((i) => i.ok).map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: `${i.a1} ${i.a2}` } })) };
+---
+<section class="af" aria-labelledby="af-h" data-m-section>
+  <div class="wrap af-in">
+    <div class="af-side">
+      <SectionHead eyebrow="Area questions" l1="Do you come" l2="out to me?" lead="Short answer: if you're in Pinellas, yes." id="af-h" />
+      <ul role="list" class="af-chips" data-t="5" data-stagger aria-label="Town pages">
+        <li><TownChip name="St. Petersburg" href="/" h={40} /></li>
+        <li><TownChip name="Clearwater" href="/service-areas/clearwater-fl" h={40} /></li>
+        <li><TownChip name="Seminole" href="/service-areas/seminole-fl" h={40} /></li>
+      </ul>
+    </div>
+    <div class="af-col">
+      <Faq items={items.map(({ ok, ...i }) => i)} schema={false} group="faq-areas" />
+      <span class="af-seal"><Seal d={118} deg={-8} /></span>
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</section>
+<style>
+  .af { position: relative; background: var(--tint); padding: 104px 0 140px; }
+  .af-in { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 690px); justify-content: space-between; column-gap: 64px; align-items: start; }
+  .af-chips { display: flex; flex-wrap: wrap; gap: 10px 8px; margin: 32px 0 0; padding: 0; }
+  .af-col { position: relative; }
+  .af-seal { position: absolute; right: -66px; bottom: -112px; }
+  @media (max-width: 1023px) {
+    .af { padding: 56px 0 64px; }
+    .af-in { grid-template-columns: 1fr; row-gap: 28px; }
+    .af-chips { display: none; }
+    .af-side :global(.lead) { display: none; }
+    .af-seal { display: none; }
+  }
+</style>

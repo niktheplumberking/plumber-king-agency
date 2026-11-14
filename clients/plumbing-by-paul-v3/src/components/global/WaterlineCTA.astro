@@ -1,0 +1,101 @@
+---
+// Waterline CTA (G3): the last section of every page. Navy top, two drifting wave layers, the estimate card floating on the
+// waterline with the seal on its corner. Pages override h2 lines / lead via props. id="estimate" is the target of every
+// "Free estimate" button.  variant: 'form' (default) | 'phone' (phone-first: big call button instead of the card).
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import CallButton from '../ui/CallButton.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Water from '../ui/Water.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import EstimateCard from './EstimateCard.astro';
+import { SITE } from '../../data/site';
+interface Props { eyebrow?: string; l1?: string; l2?: string; lead?: string; variant?: 'form' | 'phone'; }
+const {
+  eyebrow = 'Ready when you are', l1 = "Tell us what's going on.", l2 = "We'll take it from here.",
+  lead = 'Call and a real person at our St. Pete shop picks up. Or send the form and we call you back.', variant = 'form',
+} = Astro.props;
+const facts = [
+  { icon: 'clock', a: 'Open 7 days', b: '8 AM to 5 PM', m: SITE.hours.line },
+  { icon: 'badge', a: 'Licensed', b: `Lic. ${SITE.licence}`, m: `Lic. ${SITE.licence}` },
+  { icon: 'g', a: `${SITE.rating.value} on Google`, b: `from ${SITE.rating.count} reviews`, m: `${SITE.rating.value} from ${SITE.rating.count} Google reviews` },
+];
+---
+<section class:list={['wl on-navy', `v-${variant}`]} id="estimate" aria-labelledby="wl-h" data-m-section>
+  <FlowLines variant="cta" />
+  <Water class="wl-water" />
+  <div class="wrap wl-in">
+    <div class="wl-copy">
+      <Eyebrow text={eyebrow} dark />
+      <h2 class="h2 sz-cta" id="wl-h" data-t="2"><span class="l1">{l1}</span> <span class="l2">{l2}</span></h2>
+      <p class="lead" data-t="3">{lead}</p>
+      <a href={SITE.tel} class="wl-phone num" data-t="3">{SITE.phone}</a>
+      <p class="wl-tap" data-t="3"><Icon name="phone" size={16} />Tap to call · a real person answers</p>
+      <CallButton v="priN" class="wl-callm" data-t="3" />
+      <ul role="list" class="wl-facts" data-t="5" data-stagger>
+        {facts.map((f) => (
+          <li><span class="fi">{f.icon === 'g' ? <GoogleG size={20} /> : <Icon name={f.icon} size={20} />}</span>
+            <span class="fd"><b>{f.a}</b><small>{f.b}</small></span><span class="fm">{f.m}</span></li>
+        ))}
+      </ul>
+    </div>
+    <div class="wl-card" data-t="4" data-fx="rise">
+      {variant === 'form' ? <EstimateCard idp="wl" /> : (
+        <div class="wl-phonecard">
+          <p class="label">Fastest way</p>
+          <p class="wpc-h">Call the shop. A real person picks up.</p>
+          <CallButton block size="lg" />
+          <a href="/contact" class="tlink"><span class="t">Or send us the details</span><Icon name="arrow" size={18} /></a>
+        </div>
+      )}
+      <Seal d={120} deg={8} class="wl-seal" />
+    </div>
+  </div>
+  <Swoosh class="wl-sw" h={110} above="transparent" />
+</section>
+<style>
+  .wl { position: relative; overflow: hidden; background: linear-gradient(var(--navy) 0 0) top / 100% 64% no-repeat, var(--sky); color: var(--white); padding: 92px 0 0; }
+  .wl :global(.flow) { height: 70%; }
+  .wl :global(.wl-water) { top: calc(64% - 28px); }
+  .wl-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) 448px; gap: 48px; align-items: start; }
+  .wl-copy { display: grid; gap: 16px; justify-items: start; padding-bottom: 40px; }
+  .wl-copy .h2 { font-size: var(--fz-h2-cta); line-height: 1.17; }
+  .wl-copy .h2 .l1, .wl-copy .h2 .l2 { display: block; }
+  .wl-copy .lead { max-width: 560px; margin-top: 4px; }
+  .wl-phone { margin-top: 6px; font-size: clamp(44px, 2.286vw + 35px, 68px); line-height: 1.06; color: var(--sky); letter-spacing: -.01em; transition: color var(--dur-2); }
+  .wl-phone:hover { color: var(--soft); }
+  .wl-tap { display: flex; align-items: center; gap: 8px; margin-top: -6px; font-weight: 600; font-size: 14px; }
+  .wl :global(.wl-callm) { display: none; }
+  .wl-facts { display: flex; flex-wrap: wrap; gap: 12px; margin: 72px 0 0; padding: 0; }
+  .wl-facts li { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; background: rgba(255,255,255,.92); color: var(--navy); }
+  .fi { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--tint); color: var(--blue); flex: none; }
+  .fd { display: grid; } .fd b { font-weight: 700; font-size: 15px; line-height: 20px; } .fd small { font-weight: 500; font-size: 13px; line-height: 18px; color: var(--slate); }
+  .fm { display: none; }
+  .wl-card { position: relative; margin-top: -20px; }
+  .wl-card :global(.wl-seal) { position: absolute; right: -46px; top: -54px; z-index: 3; }
+  .wl :global(.wl-sw) { position: relative; z-index: 1; margin-top: 70px; }
+  .wl-phonecard { position: relative; display: grid; gap: 16px; padding: 32px; border-radius: var(--r-lg); background: var(--white); color: var(--navy); box-shadow: var(--sh-stripe); }
+  .wl-phonecard .label { color: var(--press); }
+  .wpc-h { font-weight: 800; font-size: 26px; line-height: 32px; }
+  @media (max-width: 1199px) { .wl-in { grid-template-columns: minmax(0, 1fr) 400px; gap: 32px; } .wl-card :global(.wl-seal) { right: -10px; } }
+  @media (max-width: 1023px) {
+    .wl { padding-top: 64px; background: linear-gradient(var(--navy) 0 0) top / 100% 44% no-repeat, var(--sky); }
+    .wl :global(.wl-water) { top: calc(44% - 28px); }
+    .wl-in { grid-template-columns: 1fr; gap: 24px; }
+    .wl-copy { padding-bottom: 0; }
+    .wl-tap { display: none; }
+    .wl :global(.wl-callm) { display: inline-flex; width: 100%; }
+    .wl-phone { font-size: 40px; }
+    .wl-facts { order: 3; display: grid; width: 100%; margin: 0; gap: 8px; }
+    .wl-copy { display: contents; }
+    .wl-copy > :global(*) { justify-self: start; }
+    .wl-card { order: 2; margin-top: 16px; }
+    .wl-card :global(.wl-seal) { --d: 72px !important; right: -6px; top: -32px; }
+    .wl-facts li { padding: 8px 12px; gap: 10px; border-radius: 10px; }
+    .wl-facts .fi { width: auto; height: auto; background: none; }
+    .fd { display: none; } .fm { display: block; font-weight: 700; font-size: 14px; }
+    .wl :global(.wl-sw) { margin-top: 40px; }
+  }
+</style>

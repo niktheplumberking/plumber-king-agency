@@ -1,0 +1,11 @@
+---
+// Navy Russo label over a photo ("TANKLESS INSTALL", "ON THE JOB"). `live` adds the sky dot.
+interface Props { class?: string; live?: boolean; [k: string]: any; }
+const { class: cls, live, ...rest } = Astro.props;
+---
+<span class:list={['ptag label', cls]} {...rest}>{live && <i aria-hidden="true"></i>}<slot /></span>
+<style>
+  .ptag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px; background: rgba(17,16,50,.88); color: var(--white); line-height: 14px; }
+  i { width: 8px; height: 8px; border-radius: 50%; background: var(--sky); box-shadow: 0 0 0 0 rgba(97,173,203,.6); animation: ping 2s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 7px rgba(97,173,203,0); } 100% { box-shadow: 0 0 0 0 rgba(97,173,203,0); } }
+</style>

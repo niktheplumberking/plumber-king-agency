@@ -1,0 +1,39 @@
+---
+// Town page template (Figma 06, Clearwater). One data entry in src/data/town-pages.ts per town; every sentence is
+// written for that town (no shared paragraphs between towns). Sections C1-C10, then the town band and the waterline CTA.
+import Base from '../../layouts/Base.astro';
+import THero from './THero.astro';
+import TQuick from './TQuick.astro';
+import TProblems from './TProblems.astro';
+import TCalls from './TCalls.astro';
+import TReview from './TReview.astro';
+import TJobs from './TJobs.astro';
+import TPermits from './TPermits.astro';
+import THoods from './THoods.astro';
+import TFaq from './TFaq.astro';
+import TNearby from './TNearby.astro';
+import TownBand from '../global/TownBand.astro';
+import WaterlineCTA from '../global/WaterlineCTA.astro';
+import { serviceSchema } from '../../lib/schema';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const ld = {
+  ...serviceSchema({ name: `Plumbing in ${t.name}, FL`, path: t.path, description: t.description }),
+  areaServed: { '@type': 'City', name: t.name, containedInPlace: { '@type': 'AdministrativeArea', name: 'Pinellas County, FL' } },
+};
+---
+<Base title={t.title} description={t.description} path={t.path} og={t.hero.photo} ogAlt={t.ogAlt} jsonld={[ld]}>
+  <THero t={t} />
+  <TQuick t={t} />
+  <TProblems t={t} />
+  <TCalls t={t} />
+  <TReview t={t} />
+  <TJobs t={t} />
+  <TPermits t={t} />
+  <THoods t={t} />
+  <TFaq t={t} />
+  <TNearby t={t} />
+  <TownBand />
+  <WaterlineCTA l1={t.cta.l1} l2={t.cta.l2} />
+</Base>

@@ -1,0 +1,37 @@
+---
+// 02 Services hub (PAGES.md 02, Figma desktop 432:2340 / mobile 433:4641). Routes by symptom, by family and by the full
+// list, with one crawlable link per service. There is no tankless page: tankless links go to /water-heaters#types.
+import Base from '../layouts/Base.astro';
+import HubHero from '../components/services/hub/HubHero.astro';
+import HubSymptoms from '../components/services/hub/HubSymptoms.astro';
+import HubFamilies from '../components/services/hub/HubFamilies.astro';
+import HubList from '../components/services/hub/HubList.astro';
+import HubCommercial from '../components/services/hub/HubCommercial.astro';
+import HubPromise from '../components/services/hub/HubPromise.astro';
+import SvcFaq from '../components/services/SvcFaq.astro';
+import WaterlineCTA from '../components/global/WaterlineCTA.astro';
+import { FAQ } from '../components/services/hub/hub';
+import { abs, BUSINESS_ID } from '../lib/schema';
+import { LIST, HREF } from '../components/services/hub/hub';
+const ld = {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: 'Plumbing services', url: abs('/services'),
+  itemListElement: LIST.filter(([t]) => !HREF[t].includes('#')).map(([t], i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Service', name: t, url: abs(HREF[t]), provider: { '@id': BUSINESS_ID() } } })),
+};
+---
+<Base
+  title="Plumbing Services in St. Petersburg FL · Plumbing By Paul"
+  description="Every plumbing service from one licensed, family-owned St. Pete crew: water heaters, drains, sewer, repiping, leaks, toilets and gas. Free estimates."
+  path="/services"
+  og="hero-05-tech-toilet-repair-pro"
+  ogAlt="A Plumbing By Paul technician repairing a toilet"
+  jsonld={[ld]}
+>
+  <HubHero />
+  <HubSymptoms />
+  <HubFamilies />
+  <HubList />
+  <HubCommercial />
+  <HubPromise />
+  <SvcFaq f={FAQ} slug="services" layout="a" />
+  <WaterlineCTA l1="Whatever it is," l2="we've seen it before." />
+</Base>

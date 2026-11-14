@@ -1,0 +1,42 @@
+---
+// O4 Before and after (Figma O4, compact): navy band; a labelled stand-in for the compare slider overlaps the band's top
+// edge, its pipe-coupling handle drawn but inert. Needs one real before/after pair from the same angle; if none exists by
+// launch the section is removed, never faked.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import FlowLines from '../ui/FlowLines.astro';
+---
+<section class="oc on-navy" aria-labelledby="oc-h" data-m-section>
+  <FlowLines variant="navy" class="oc-fl" />
+  <div class="wrap oc-in">
+    <SectionHead eyebrow="Before and after" l1="Drag to see" l2="the difference" id="oc-h" dark />
+    <div class="oc-slot" data-t="4" data-fx="rise">
+      <div class="oc-half"><span class="oc-tag">Before</span><Icon name="camera" size={20} /><span class="label">Photo from Paul: before</span></div>
+      <div class="oc-half"><span class="oc-tag r">After</span><Icon name="camera" size={20} /><span class="label">Photo from Paul: after</span></div>
+      <span class="oc-pipe" aria-hidden="true"><span class="oc-cpl"><Icon name="left" size={12} /><Icon name="right" size={12} /></span></span>
+    </div>
+  </div>
+</section>
+<style>
+  .oc { position: relative; background: var(--navy); color: var(--white); padding: 0; height: 266px; }
+  .oc :global(.oc-fl) { position: absolute; inset: 0; overflow: hidden; }
+  .oc-in { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 620px; align-items: start; }
+  .oc-in :global(.shead) { margin-top: 72px; }
+  .oc-slot { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: 230px; margin-top: -36px; border-radius: 20px; background: var(--white); box-shadow: var(--sh-3); padding: 6px; }
+  .oc-half { position: relative; display: grid; place-items: center; align-content: center; gap: 10px; border: 1.5px dashed var(--blue); color: var(--press); text-align: center; }
+  .oc-half:first-child { border-right: 0; border-radius: 16px 0 0 16px; background: var(--tint); }
+  .oc-half:nth-child(2) { border-left: 0; border-radius: 0 16px 16px 0; background: var(--white); }
+  .oc-half .label { font-size: 10px; }
+  .oc-tag { position: absolute; left: 12px; top: 12px; padding: 4px 9px; border-radius: 6px; background: var(--navy); color: var(--white); font-family: var(--f-num); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+  .oc-tag.r { left: auto; right: 12px; }
+  .oc-pipe { position: absolute; left: 50%; top: -18px; bottom: -18px; width: 14px; margin-left: -7px; border-radius: 4px; background: var(--sky); box-shadow: inset 0 0 0 2px var(--navy); }
+  .oc-cpl { position: absolute; left: 50%; top: 50%; display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: var(--sky); box-shadow: inset 0 0 0 2.5px var(--navy), var(--sh-2); color: var(--navy); }
+  @media (max-width: 1023px) {
+    .oc { height: auto; padding: 0 0 56px; margin-top: 40px; }
+    .oc-in { grid-template-columns: 1fr; }
+    .oc-slot { order: -1; height: 200px; margin-top: -40px; }
+    .oc-half { padding: 0 26px; }
+    .oc-half .label { font-size: 9px; line-height: 13px; }
+    .oc-in :global(.shead) { margin-top: 32px; }
+  }
+</style>

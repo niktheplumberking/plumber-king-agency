@@ -1,0 +1,58 @@
+---
+// O6 The fleet (Figma O6): sky field, navy text; three framed fleet photos in a loose row (tilted, varied heights) with
+// caption plates and the seal on the middle photo's corner; a van-stripe swoosh crosses the bottom join into the reviews.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Seal from '../ui/Seal.astro';
+import Swoosh from '../ui/Swoosh.astro';
+const ph = [
+  { n: 'fleet-aerial-van-jobsite', alt: 'Drone view of a Plumbing By Paul van at a waterfront home under construction', cap: 'From above, on a waterfront job.', cls: 'f0' },
+  { n: 'fleet-box-truck-rear-three-quarter', alt: 'The Plumbing By Paul box truck wrapped with the Paul cartoon', cap: 'The box truck.', cls: 'f1' },
+  { n: 'fleet-van-street-4284px', alt: 'A Plumbing By Paul van parked on a residential street', cap: 'Out on the road.', cls: 'f2' },
+];
+---
+<section class="of" aria-labelledby="of-h" data-m-section>
+  <div class="wrap">
+    <div class="of-head">
+      <SectionHead eyebrow="Spot us on the road" l1="White trucks, blue stripes," l2="one very familiar face" id="of-h" class="of-sh" />
+      <p class="of-p" data-t="3">If you've driven through Pinellas, you've been stuck behind Paul at a light. Wave next time.</p>
+    </div>
+    <ul role="list" class="of-row" data-t="4" data-stagger tabindex="0" aria-label="Our trucks and crew photos">
+      {ph.map((p) => (
+        <li class:list={['of-i', p.cls]} data-fx="frame">
+          <figure class="of-f frame"><Img name={p.n} alt={p.alt} sizes="(min-width: 1024px) 393px, 75vw" widths={[400, 800]} focus="50% 50%" /><figcaption><Caption class="of-cap" small>{p.cap}</Caption></figcaption></figure>
+        </li>
+      ))}
+      <li class="of-seal" aria-hidden="true"><Seal d={102} deg={-8} /></li>
+    </ul>
+  </div>
+  <Swoosh class="of-sw" below="#FFFFFF" />
+</section>
+<style>
+  .of { position: relative; background: var(--sky); padding: 96px 0 0; overflow-x: clip; }
+  .of-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
+  .of-head :global(.of-sh .l2) { color: var(--navy); }
+  .of-p { max-width: 420px; margin-top: 38px; font-size: 16px; line-height: 26px; color: var(--navy); }
+  .of-row { position: relative; height: 393px; margin: 63px 0 0; padding: 0; list-style: none; z-index: 2; }
+  .of-i { position: absolute; }
+  .of-f { width: 100%; height: 100%; margin: 0; border-radius: var(--r-xl); box-shadow: 0 0 0 7px var(--white), var(--sh-3); }
+  .of-f :global(img) { display: block; }
+  .of-f :global(.of-cap) { position: absolute; left: 16px; bottom: 16px; z-index: 2; }
+  .f0 { left: 0; top: 14px; width: 365px; height: 365px; transform: rotate(-3deg); }
+  .f1 { left: 420px; top: 46px; width: 360px; height: 284px; transform: rotate(2deg); }
+  .f2 { left: 836px; top: 0; width: 365px; height: 365px; transform: rotate(3deg); }
+  .of-seal { position: absolute; left: 754px; top: -8px; z-index: 3; }
+  .of :global(.of-sw) { position: relative; z-index: 1; margin-top: -100px; margin-bottom: -1px; }
+  @media (max-width: 1199px) { .of-row { transform: scale(.82); transform-origin: left top; height: 330px; } }
+  @media (max-width: 1023px) {
+    .of { padding-top: 56px; }
+    .of-head { display: block; }
+    .of-p { margin-top: 14px; font-size: 15px; line-height: 24px; }
+    .of-row { display: flex; gap: 16px; height: auto; margin: 28px calc(-1 * var(--gutter)) 0; padding: 14px var(--gutter) 24px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; transform: none; }
+    .of-row::-webkit-scrollbar { display: none; }
+    .of-i { position: relative; left: auto !important; top: auto !important; flex: 0 0 260px; height: 260px !important; width: auto !important; transform: none; scroll-snap-align: start; }
+    .of-seal { display: none; }
+    .of :global(.of-sw) { margin-top: -20px; height: 60px; }
+  }
+</style>

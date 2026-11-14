@@ -1,0 +1,33 @@
+---
+// 05 Emergency plumbing (PAGES.md 05, Figma desktop 433:2340 / mobile 436:3509). This URL ranks #2 on Google for
+// "emergency plumber st petersburg fl": keep the path, the H1 and the phone above everything. One job: the call.
+import Base from '../layouts/Base.astro';
+import EHero from '../components/emergency/EHero.astro';
+import FirstFive from '../components/emergency/FirstFive.astro';
+import WhatsHappening from '../components/emergency/WhatsHappening.astro';
+import Spotlight from '../components/emergency/Spotlight.astro';
+import WhenYouCall from '../components/emergency/WhenYouCall.astro';
+import Storms from '../components/emergency/Storms.astro';
+import Hours from '../components/emergency/Hours.astro';
+import EFaq from '../components/emergency/EFaq.astro';
+import PhoneCTA from '../components/emergency/PhoneCTA.astro';
+import { serviceSchema } from '../lib/schema';
+---
+<Base
+  title="Emergency Plumber St. Petersburg FL · Plumbing By Paul"
+  description="Burst pipe or sewer backup in St. Petersburg? Shut off the water and call Plumbing By Paul at (727) 709-2552. Licensed, family-owned, 4.9 on Google."
+  path="/emergency-plumbing"
+  og="fleet-van-street-4284px"
+  ogAlt="The Plumbing By Paul van on a St. Petersburg street"
+  jsonld={[serviceSchema({ name: 'Emergency plumbing', serviceType: 'Emergency plumber', path: '/emergency-plumbing', description: 'Burst pipes, sewer backups, water heater failures, blocked drains, toilet overflows and failed shower or sink valves in St. Petersburg and Pinellas County. Shut off the water at the main valve, then call (727) 709-2552.' })]}
+>
+  <EHero />
+  <FirstFive />
+  <WhatsHappening />
+  <Spotlight />
+  <WhenYouCall />
+  <Storms />
+  <Hours />
+  <EFaq />
+  <PhoneCTA />
+</Base>

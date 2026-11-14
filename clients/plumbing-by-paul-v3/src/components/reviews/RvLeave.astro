@@ -1,0 +1,48 @@
+---
+// R9 Leave a review (Figma 443:3485). Navy card band with faint flow lines; a white plate of five big stars overlaps its top.
+// The button opens Google's write-a-review page for our listing in a new tab.
+import Stars from '../ui/Stars.astro';
+import Button from '../ui/Button.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import { SITE } from '../../data/site';
+---
+<section class="rvl" aria-labelledby="rvl-h" data-m-section>
+  <div class="wrap">
+    <div class="rvl-card on-navy">
+      <FlowLines variant="cta" class="rvl-fl" />
+      <span class="rvl-stars" data-t="5" data-fx="pop" aria-hidden="true"><Stars size={40} /></span>
+      <div class="rvl-copy">
+        <h2 class="h2 rvl-h" id="rvl-h" data-t="2"><span class="l1">Did we treat you right?</span> <span class="l2">Tell the neighbors.</span></h2>
+        <p class="rvl-p" data-t="3">It takes a minute and it's how the next family finds us.</p>
+      </div>
+      <div class="rvl-act" data-t="3">
+        <Button href={SITE.google.writeReviewUrl} v="priN" arrow h64 external class="rvl-btn">Write a Google review</Button>
+        <p class="rvl-note"><GoogleG size={16} />Opens Google in a new tab</p>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .rvl { position: relative; background: var(--white); padding: 96px 0 104px; }
+  .rvl-card { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 32px; min-height: 248px; padding: 72px 56px 48px; border-radius: 32px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .rvl-card :global(.rvl-fl) { border-radius: 32px; }
+  .rvl-stars { position: absolute; left: 56px; top: -38px; display: grid; place-items: center; height: 76px; padding: 0 26px; border-radius: 20px; background: var(--white); box-shadow: var(--sh-sticker); transform: rotate(2deg); }
+  .rvl-copy { position: relative; }
+  .rvl-h { font-size: 38px; line-height: 46px; letter-spacing: -0.025em; }
+  .rvl-h .l1, .rvl-h .l2 { display: block; }
+  .rvl-p { margin-top: 14px; font-weight: 500; font-size: 17px; line-height: 26px; color: var(--tint); }
+  .rvl-act { position: relative; display: grid; justify-items: center; gap: 14px; }
+  .rvl-act :global(.rvl-btn) { padding: 0 32px; font-size: 17px; }
+  .rvl-note { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px; line-height: 18px; color: var(--soft); }
+  @media (max-width: 1023px) {
+    .rvl { padding: 64px 0 56px; }
+    .rvl-card { display: grid; justify-content: stretch; gap: 20px; padding: 52px 20px 24px; border-radius: 24px; }
+    .rvl-stars { left: 20px; top: -28px; height: 56px; padding: 0 16px; border-radius: 14px; }
+    .rvl-stars :global(.stars) { --star-size: 26px !important; }
+    .rvl-h { font-size: 24px; line-height: 30px; }
+    .rvl-p { font-size: 15px; line-height: 22px; margin-top: 8px; }
+    .rvl-act :global(.rvl-btn) { width: 100%; padding: 0 20px; }
+    .rvl-note { display: none; }
+  }
+</style>

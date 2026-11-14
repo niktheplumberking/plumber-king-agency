@@ -1,0 +1,174 @@
+---
+// R3 All reviews (Figma 443:2836). Filter bar (by job, by plumber as mini patches; sticky on desktop), then a 3-column
+// masonry of full reviews, word for word. Twelve show first (the Figma set); "Show more reviews" reveals the rest; any
+// filter shows every match. DOM order = reading order; the masonry is CSS grid row spans measured by the script below.
+// Without JS: every card shows in a plain grid and the filter bar is hidden (it needs JS).
+// STICKY 5: crew names on patches need Paul's approval. Paul to pull more quotes so every filter has at least four.
+import SectionHead from '../ui/SectionHead.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import ReviewCard from '../ui/ReviewCard.astro';
+import Icon from '../ui/Icon.astro';
+import TextLink from '../ui/TextLink.astro';
+import { SITE } from '../../data/site';
+import { ALL, JOBS, PLUMBERS, named } from './data';
+const FIRST = 12;
+const variant = (i: number): 'white' | 'navy' | 'tint' => (i % 3 === 2 ? (i % 6 === 2 ? 'tint' : 'navy') : i === 4 ? 'tint' : 'white');
+---
+<section class="rva" id="all-reviews" aria-labelledby="rva-h" data-m-section data-rv>
+  <div class="wrap">
+    <div class="rva-head">
+      <SectionHead eyebrow="Read them all" l1="Pick a job." l2="Or pick a plumber." id="rva-h" />
+      <div class="rva-pill" data-t="3"><RatingPill /></div>
+    </div>
+    <div class="fbar" role="group" aria-label="Filter the reviews" data-t="3" data-rv-bar>
+      <div class="frow">
+        <span class="flabel label" id="f-job">Job</span>
+        <div class="fscroll" role="group" aria-labelledby="f-job">
+          {JOBS.map((j) => <button type="button" class="fchip" aria-pressed={j.k === 'all' ? 'true' : 'false'} data-job={j.k}>{j.label}</button>)}
+        </div>
+      </div>
+      <div class="frow frow-p">
+        <span class="flabel label" id="f-who">Plumber</span>
+        <div class="fscroll" role="group" aria-labelledby="f-who">
+          {PLUMBERS.map((p) => <button type="button" class="fpatch" aria-pressed="false" data-who={p}><span class="sr-only">Reviews that name </span>{p}</button>)}
+        </div>
+      </div>
+    </div>
+    <p class="rva-count" role="status" aria-live="polite" data-rv-count></p>
+    <ul role="list" class="rv-grid" data-rv-grid>
+      {ALL.map((r, i) => (
+        <li class:list={['rv-item', i >= FIRST && 'is-more']} data-jobs={r.jobs.join(' ')} data-who={named(r).join(' ')} data-t="4">
+          <ReviewCard r={r} v={variant(i)} t={false} />
+        </li>
+      ))}
+    </ul>
+    <p class="rv-empty" data-rv-empty hidden>No reviews on this page match both filters yet. <a href={SITE.google.reviewsUrl} target="_blank" rel="noopener">See all {SITE.rating.count} on Google<span class="sr-only"> (opens in a new tab)</span></a>.</p>
+    <div class="rva-more" data-t="3">
+      <button type="button" class="btn btn-sec more-btn" data-rv-more aria-controls="all-reviews"><Icon name="plus" size={20} /><span>Show more reviews</span></button>
+      <TextLink href={SITE.google.reviewsUrl} icon="external" external>See all {SITE.rating.count} on Google</TextLink>
+    </div>
+  </div>
+</section>
+<script>
+  // Filters + show more + masonry (grid row spans). Plain DOM; no motion dependency.
+  const root = document.querySelector<HTMLElement>('[data-rv]');
+  if (root) {
+    root.classList.add('rv-js');
+    const grid = root.querySelector<HTMLElement>('[data-rv-grid]')!;
+    const items = [...grid.querySelectorAll<HTMLElement>('.rv-item')];
+    const jobBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-job]')];
+    const whoBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-who]')].filter((b) => b.tagName === 'BUTTON');
+    const more = root.querySelector<HTMLButtonElement>('[data-rv-more]');
+    const count = root.querySelector<HTMLElement>('[data-rv-count]');
+    const empty = root.querySelector<HTMLElement>('[data-rv-empty]');
+    let job = 'all', who = '', expanded = false;
+    const desk = window.matchMedia('(min-width: 1024px)');
+
+    const layout = () => {
+      const vis = items.filter((it) => !it.hidden);
+      vis.forEach((it, v) => it.classList.toggle('off', v === 1));
+      if (!desk.matches) { items.forEach((it) => (it.style.gridRowEnd = '')); return; }
+      vis.forEach((it) => {
+        const h = it.getBoundingClientRect().height + 40;
+        it.style.gridRowEnd = `span ${Math.ceil(h / 4)}`;
+      });
+    };
+    const apply = (fresh = false) => {
+      const filtered = job !== 'all' || !!who;
+      let shown = 0;
+      items.forEach((it, i) => {
+        const okJob = job === 'all' || (it.dataset.jobs ?? '').split(' ').includes(job);
+        const okWho = !who || (it.dataset.who ?? '').split(' ').includes(who);
+        const show = okJob && okWho && (filtered || expanded || !it.classList.contains('is-more'));
+        const was = !it.hidden;
+        it.hidden = !show;
+        it.classList.toggle('shown', show);
+        if (show) { shown++; if (!was && fresh) { it.classList.remove('rv-in'); void it.offsetWidth; it.classList.add('rv-in'); } }
+      });
+      const total = items.filter((it) => (job === 'all' || (it.dataset.jobs ?? '').split(' ').includes(job)) && (!who || (it.dataset.who ?? '').split(' ').includes(who))).length;
+      if (more) more.hidden = filtered || expanded;
+      if (empty) empty.hidden = shown > 0;
+      if (count) count.textContent = filtered ? `${shown} ${shown === 1 ? 'review matches' : 'reviews match'}.` : `Showing ${shown} of ${total} reviews.`;
+      layout();
+      if (fresh) window.dispatchEvent(new Event('resize'));
+    };
+    jobBtns.forEach((b) => b.addEventListener('click', () => {
+      job = b.dataset.job ?? 'all';
+      jobBtns.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      apply(true);
+    }));
+    whoBtns.forEach((b) => b.addEventListener('click', () => {
+      who = who === b.dataset.who ? '' : b.dataset.who ?? '';
+      whoBtns.forEach((o) => o.setAttribute('aria-pressed', String(o.dataset.who === who)));
+      apply(true);
+    }));
+    more?.addEventListener('click', () => {
+      expanded = true; apply(true);
+      const next = items.find((it) => it.classList.contains('is-more') && !it.hidden);
+      next?.querySelector<HTMLElement>('figure')?.setAttribute('tabindex', '-1');
+      next?.querySelector<HTMLElement>('figure')?.focus({ preventScroll: true });
+    });
+    apply();
+    new ResizeObserver(() => layout()).observe(grid);
+    desk.addEventListener('change', layout);
+    document.fonts?.ready.then(() => { layout(); window.dispatchEvent(new Event('resize')); });
+  }
+</script>
+<style>
+  .rva { position: relative; background: var(--white); padding: 104px 0; }
+  .rva-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+  .rva-pill { margin-bottom: 4px; }
+  .fbar { display: none; }
+  :global(html.js) .fbar { position: sticky; z-index: 40; top: calc(var(--header-h) + 12px); display: grid; gap: 12px; margin-top: 40px; padding: 16px 20px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); transition: top .45s var(--ease-out); }
+  :global(body:has(.hdr.is-hidden)) .fbar { top: 12px; }
+  .frow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .frow-p { padding-top: 12px; border-top: 1px solid var(--line); }
+  .flabel { flex: none; width: 70px; color: var(--press); }
+  .fscroll { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+  .fchip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 12px; background: var(--tint); color: var(--navy); font-weight: 700; font-size: 14px; line-height: 20px; white-space: nowrap; transition: background var(--dur-2), color var(--dur-2), box-shadow var(--dur-2); }
+  .fchip:hover { box-shadow: inset 0 0 0 1.5px var(--blue); }
+  .fchip[aria-pressed='true'] { background: var(--navy); color: var(--white); box-shadow: none; }
+  .frow-p .fscroll { gap: 2px; }
+  .fpatch { position: relative; display: inline-grid; place-items: center; width: 76px; height: 44px; flex: none; font-family: var(--f-script); font-size: 18px; line-height: 1; color: var(--navy); }
+  .fpatch::before { content: ''; position: absolute; left: 0; right: 0; top: 7px; height: 30px; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 2px var(--navy); z-index: -1; transition: background var(--dur-2), transform .4s var(--ease-back); }
+  .fpatch::after { content: ''; position: absolute; left: 3px; right: 3px; top: 10px; height: 24px; border-radius: 999px; border: 1.5px dashed var(--sky); pointer-events: none; }
+  .fpatch { isolation: isolate; }
+  .fpatch:hover::before { transform: rotate(-3deg) scale(1.04); }
+  .fpatch[aria-pressed='true'] { color: var(--navy); }
+  .fpatch[aria-pressed='true']::before { background: var(--sky); }
+  .fpatch[aria-pressed='true']::after { border-color: var(--white); }
+  .rva-count { margin-top: 20px; font-weight: 600; font-size: 13px; line-height: 18px; color: var(--slate-2); }
+  .rva-count:empty { display: none; }
+  .rv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; margin: 40px 0 0; padding: 0; }
+  .rv-js .rv-grid { grid-auto-rows: 4px; row-gap: 0; align-items: start; }
+  .rv-item { padding-top: 26px; }
+  .rv-js .rv-item.off { padding-top: 54px; }
+  .rv-item[hidden], :global(html.js) .rv-item.is-more:not(.shown) { display: none; }
+  .rv-item :global(.q p) { white-space: pre-line; overflow-wrap: anywhere; }
+  .rv-item :global(.rcard.tint), .rv-item :global(.rcard.navy) { padding-bottom: 40px; }
+  .rv-item :global(.rcard.tint .m) { color: var(--slate); }
+  :global(html.motion) .rv-in { animation: rvIn .8s var(--ease-out) both; }
+  @keyframes rvIn { from { opacity: 0; transform: translateY(26px); } }
+  .rv-empty { margin-top: 24px; padding: 24px; border-radius: 20px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 500; color: var(--slate); }
+  .rv-empty a { color: var(--press); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .rva-more { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 28px; margin-top: 24px; }
+  .more-btn { min-width: 260px; }
+  .more-btn[hidden] { display: none; }
+  .more-btn :global(svg) { width: 20px; height: 20px; }
+  @media (max-width: 1199px) { .rv-grid { column-gap: 16px; } }
+  @media (max-width: 1023px) {
+    .rva { padding: 64px 0 72px; }
+    .rva-head { display: block; }
+    .rva-pill { display: none; }
+    :global(html.js) .fbar { position: static; margin: 24px calc(-1 * var(--gutter)) 0; padding: 0; gap: 10px; border-radius: 0; background: none; box-shadow: none; }
+    .frow, .frow-p { padding: 0; border: 0; }
+    .flabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .fscroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 2px var(--gutter); scroll-padding-inline: var(--gutter); }
+    .fscroll::-webkit-scrollbar { display: none; }
+    .rv-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 16px; }
+    .rv-js .rv-grid { grid-auto-rows: auto; row-gap: 20px; }
+    .rv-js .rv-item.off { padding-top: 26px; }
+    .rva-more { display: grid; justify-items: center; gap: 18px; margin-top: 28px; }
+    .more-btn { width: 100%; }
+  }
+</style>

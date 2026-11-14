@@ -1,0 +1,109 @@
+---
+// B1 About hero (Figma 432:3768 B1): mist wash + flow lines; copy with a thin three-row fact list left; a tall frame of
+// Paul and his son at the box truck on a sky offset block, a tilted kitchen snapshot over its bottom-left, the page's one
+// large seal on the frame's top-right corner and an "est. 2015" script note.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Underline from '../ui/Underline.astro';
+import CallButton from '../ui/CallButton.astro';
+import TextLink from '../ui/TextLink.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+const facts = [
+  { icon: 'calendar', k: 'Founded', v: `${SITE.founded}, St. Petersburg` },
+  { icon: 'heart', k: 'Owners', v: 'Paul and Alycia' },
+  { icon: 'badge', k: 'Licence', v: `Florida ${SITE.licence}` },
+];
+---
+<section class="bh" aria-labelledby="bh-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="bh-fl" />
+  <div class="wrap bh-in">
+    <div class="bh-copy">
+      <Breadcrumbs items={[{ label: 'About', href: '/about' }]} />
+      <Eyebrow text="About Plumbing By Paul" class="bh-eb" />
+      <h1 class="display bh-h1" id="bh-h" data-t="2">
+        <span class="hl">The family</span>
+        <span class="hl l2"><span class="ul-wrap">behind the trucks<Underline class="ul" w={520} /></span></span>
+      </h1>
+      <p class="lead bh-lead" data-t="3" data-fx="nudge">You've seen the vans. The cartoon on the side is a real person, and so is everyone else who works here.</p>
+      <dl class="bh-facts" data-t="3" data-stagger>
+        {facts.map((f) => <div class="bh-f"><dt class="label"><Icon name={f.icon} size={16} />{f.k}</dt><dd>{f.v}</dd></div>)}
+      </dl>
+      <div class="bh-btns" data-t="3">
+        <CallButton l1={`Call ${SITE.phone}`} />
+        <TextLink href="#crew" icon="down" class="bh-crew">Meet the crew</TextLink>
+      </div>
+    </div>
+    <div class="bh-media">
+      <span class="bh-off" aria-hidden="true"></span>
+      <div class="bh-frame frame frame-3" data-t="4" data-fx="frame" data-parallax-wrap>
+        <Img name="hero-03-paul-and-son-box-truck" alt="Paul and his son standing in front of the box truck with the Paul cartoon on its side" sizes="(min-width: 1024px) 480px, calc(100vw - 40px)" focus="62% 40%" priority widths={[400, 600, 800, 1000]} data-parallax="0.05" />
+      </div>
+      <Caption class="bh-cap">Paul and his son. St. Petersburg.</Caption>
+      <figure class="bh-snap snap" data-t="5" data-fx="toss">
+        <Img name="about-paul-alycia-kitchen" alt="Paul and Alycia smiling together in a kitchen" sizes="(min-width: 1024px) 220px, 34vw" focus="50% 35%" widths={[240, 440]} />
+      </figure>
+      <span class="bh-seal"><Seal d={181} deg={-8} /></span>
+      <p class="script bh-est" aria-hidden="true" data-t="5" data-fx="pop">est. 2015</p>
+    </div>
+  </div>
+  <Swoosh class="bh-sw" below="#FFFFFF" />
+</section>
+<style>
+  .bh { position: relative; background: linear-gradient(180deg, var(--mist), var(--mist) 70%, var(--white)); padding: 56px 0 0; overflow: clip; }
+  .bh-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 560fr) minmax(0, 640fr); align-items: start; }
+  .bh-copy { display: grid; justify-items: start; }
+  .bh-copy :global(.bh-eb) { margin-top: 50px; }
+  .bh-h1 { margin-top: 20px; line-height: 1.0667; }
+  .hl { display: block; } .hl.l2 { color: var(--blue); }
+  .ul-wrap { position: relative; display: inline-block; }
+  .ul-wrap :global(.ul) { position: absolute; left: 2px; bottom: -14px; width: 100%; height: 14px; }
+  .bh-lead { margin-top: 26px; max-width: 540px; }
+  .bh-facts { width: 100%; max-width: 540px; margin: 26px 0 0; border-bottom: 1px solid var(--line); }
+  .bh-f { display: grid; grid-template-columns: 140px 1fr; align-items: center; min-height: 51px; border-top: 1px solid var(--line); }
+  .bh-f dt { display: flex; align-items: center; gap: 10px; color: var(--press); }
+  .bh-f dt :global(svg) { color: var(--blue); }
+  .bh-f dd { margin: 0; font-weight: 600; font-size: 16px; color: var(--navy); }
+  .bh-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 24px; margin-top: 28px; }
+  .bh-media { position: relative; height: 620px; }
+  .bh-off { position: absolute; left: 136px; top: 48px; width: 480px; height: 560px; border-radius: var(--r-2xl); background: var(--sky); }
+  .bh-frame { position: absolute; left: 160px; top: 24px; width: 480px; height: 560px; border-radius: var(--r-2xl); }
+  .bh-media :global(.bh-cap) { position: absolute; left: 356px; top: 556px; z-index: 3; white-space: nowrap; }
+  .bh-snap { position: absolute; left: 47px; top: 376px; z-index: 3; width: 221px; height: 266px; margin: 0; transform: rotate(-5deg); }
+  .bh-seal { position: absolute; left: 564px; top: -54px; z-index: 4; }
+  .bh-est { position: absolute; left: 6px; top: 58px; font-size: 38px; line-height: 1; color: var(--blue); transform: rotate(-10deg); }
+  .bh :global(.bh-sw) { position: relative; z-index: 1; margin-top: 0; margin-bottom: -1px; }
+  @media (max-width: 1279px) {
+    .bh-media { transform: scale(.86); transform-origin: top left; height: 540px; }
+  }
+  @media (max-width: 1023px) {
+    .bh { padding-top: 32px; }
+    .bh :global(.bh-fl) { display: none; }
+    .bh-in { grid-template-columns: 1fr; }
+    .bh-copy { display: contents; }
+    .bh-copy :global(.bh-eb) { margin-top: 18px; }
+    .bh-h1 { font-size: 40px; line-height: 44px; }
+    .ul-wrap :global(.ul) { display: none; }
+    .bh-lead { margin-top: 16px; font-size: 16px; line-height: 26px; }
+    .bh-media { order: 3; width: 100%; height: auto; aspect-ratio: 350 / 380; margin-top: 28px; transform: none; }
+    .bh-off { display: none; }
+    .bh-frame { left: 0; top: 0; width: 100%; height: 100%; border-radius: var(--r-xl); }
+    .bh-media :global(.bh-cap) { left: auto; right: 10px; top: auto; bottom: 12px; font-size: 12px; padding: 6px 10px; }
+    .bh-snap { left: 8px; top: auto; bottom: -14px; width: 108px; height: 132px; }
+    .bh-seal { left: auto; right: -6px; top: -26px; }
+    .bh-seal :global(.seal) { --d: 76px !important; }
+    .bh-est { display: none; }
+    .bh-facts { order: 4; margin-top: 40px; }
+    .bh-f { grid-template-columns: 120px 1fr; min-height: 46px; }
+    .bh-f dd { font-size: 14px; }
+    .bh-btns { order: 5; width: 100%; margin-top: 24px; }
+    .bh-btns :global(.btn) { width: 100%; }
+    .bh-btns :global(.bh-crew) { display: none; }
+    .bh :global(.bh-sw) { margin-top: 32px; height: 60px; }
+  }
+</style>

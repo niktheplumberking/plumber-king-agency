@@ -1,0 +1,99 @@
+---
+// C1 Town hero (Figma 440:2395 / 440:3468): mist wash + flow lines, copy left, hero frame right with a corner swoosh,
+// a white route chip (seal + "St. Pete shop -> Town") over the photo's top-left. Caption never claims a place the photo was not taken.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Underline from '../ui/Underline.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import Chip from '../ui/Chip.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const h = t.hero;
+---
+<section class="th" aria-labelledby="th-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <div class="wrap th-in">
+    <div class="th-copy">
+      <Breadcrumbs items={[{ label: 'Service areas', href: '/service-areas' }, { label: t.name, href: t.path }]} />
+      <Eyebrow text={h.eyebrow} class="th-eb" />
+      <h1 class="display th-h1" id="th-h" data-t="2">
+        <span class="hl">{h.l1}</span>
+        <span class="hl l2"><span class="ul-wrap">{h.l2}<Underline class="ul" /></span></span>
+      </h1>
+      <p class="lead th-lead" data-t="3" data-fx="nudge">{h.lead}</p>
+      <div class="th-btns" data-t="3" data-stagger>
+        <CallButton />
+        <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+      </div>
+      <ul role="list" class="th-chips" data-t="5" data-stagger aria-label="Why people trust us" tabindex="0">
+        <li><Chip icon="badge" v="white">Lic. {SITE.licence}</Chip></li>
+        <li><Chip icon="house" v="white">Family-owned since {SITE.founded}</Chip></li>
+        <li><Chip icon="award" v="white">Best of the Bay 2026</Chip></li>
+      </ul>
+    </div>
+    <div class="th-media">
+      <div class="th-frame frame frame-3" data-t="4" data-fx="frame" data-parallax-wrap>
+        <Img name={h.photo} alt={h.alt} sizes="(min-width: 1024px) 560px, calc(100vw - 40px)" focus={h.focus} priority widths={[400, 600, 800, 1100, 1400]} data-parallax="0.05" />
+        <Swoosh class="th-corner" w={300} h={90} draw={false} />
+      </div>
+      <Caption class="th-cap">{h.cap}</Caption>
+      <p class="th-route" data-t="5" data-fx="pop">
+        <Seal d={36} t={false} />
+        <span><b>St. Pete shop <Icon name="arrow" size={14} /> {t.name}</b><small class="label">From 64th Way N</small></span>
+      </p>
+    </div>
+  </div>
+  <Swoosh class="th-sw" below="#FFFFFF" />
+</section>
+<style>
+  .th { position: relative; background: linear-gradient(180deg, var(--mist), var(--mist) 70%, var(--white)); padding: 52px 0 0; overflow: clip; }
+  .th-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 590fr) minmax(0, 560fr); column-gap: 50px; align-items: start; }
+  .th-copy { display: grid; justify-items: start; }
+  .th-copy :global(.th-eb) { margin-top: 18px; }
+  .th-h1 { margin-top: 18px; line-height: 1.0667; }
+  .hl { display: block; } .hl.l2 { color: var(--blue); }
+  .ul-wrap { position: relative; display: inline-block; }
+  .ul-wrap :global(.ul) { position: absolute; left: 0; bottom: -10px; width: calc(100% + 18px); }
+  .th-lead { margin-top: 30px; max-width: 540px; }
+  .th-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .th-chips { display: flex; flex-wrap: nowrap; width: max-content; gap: 8px; margin: 24px 0 0; padding: 0; }
+  .th-media { position: relative; margin-top: 38px; }
+  .th-frame { position: relative; aspect-ratio: 560 / 440; border-radius: var(--r-2xl); }
+  .th-frame :global(img) { transform: scale(1.06); }
+  .th-frame :global(.th-corner) { position: absolute; left: 0; bottom: 0; width: 34%; height: auto; z-index: 2; transform: scaleY(-1) scaleX(-1); transform-origin: center; }
+  .th-media :global(.th-cap) { position: absolute; left: 124px; bottom: -14px; z-index: 3; }
+  .th-route { position: absolute; z-index: 3; left: -36px; top: -24px; display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 10px; border-radius: 14px; background: var(--white); box-shadow: var(--sh-2); }
+  .th-route b { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 13px; line-height: 18px; }
+  .th-route b :global(svg) { color: var(--blue); }
+  .th-route small { display: block; font-size: 10px; color: var(--press); }
+  .th :global(.th-sw) { position: relative; z-index: 1; margin-top: 40px; margin-bottom: -1px; }
+  @media (max-width: 1279px) and (min-width: 1024px) { .th-chips { flex-wrap: wrap; width: auto; } }
+  @media (max-width: 1023px) {
+    .th { padding-top: 36px; }
+    .th :global(.fl-d) { display: none; }
+    .th-in { grid-template-columns: 1fr; }
+    .th-copy { display: contents; }
+    .th-copy > :global(*) { justify-self: start; }
+    .th-h1 { font-size: 40px; line-height: 44px; }
+    .th-lead { margin-top: 26px; font-size: 16px; line-height: 26px; }
+    .th-btns { display: grid; width: 100%; gap: 10px; margin-top: 24px; }
+    .th-btns :global(.btn) { width: 100%; }
+    .th-btns :global(.btn-sec) { min-height: 56px; }
+    .th-media { margin-top: 64px; }
+    .th-frame { aspect-ratio: 350 / 260; border-radius: var(--r-xl); }
+    .th-media :global(.th-cap) { left: auto; right: 10px; bottom: -12px; font-size: 12px; line-height: 18px; padding: 6px 10px; }
+    .th-route { left: 10px; top: -26px; }
+    .th-chips { order: 9; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; width: calc(100% + 2 * var(--gutter)); margin: 44px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); }
+    .th-chips::-webkit-scrollbar { display: none; }
+    .th :global(.th-sw) { margin-top: 32px; height: 60px; }
+  }
+</style>

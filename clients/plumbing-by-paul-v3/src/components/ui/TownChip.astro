@@ -1,0 +1,19 @@
+---
+// Town chip. With href: linked town (blue outline + arrow). Without: "on our route" (not a link, slate text).
+import Icon from './Icon.astro';
+interface Props { name: string; href?: string; h?: number; class?: string; }
+const { name, href, h = 40, class: cls } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+<Tag href={href} class:list={['town', href && 'linked', cls]} style={`min-height:${h}px`}>
+  <Icon name="pin" size={16} /><span>{name}</span>{href && <Icon name="arrow" size={14} class="ar" />}
+</Tag>
+<style>
+  .town { display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border-radius: var(--r-full); background: var(--white); box-shadow: inset 0 0 0 1px var(--line); color: var(--slate); font-weight: 600; font-size: 14px; line-height: 20px; white-space: nowrap; }
+  .town :global(svg) { color: var(--slate-2); flex: none; }
+  .linked { box-shadow: inset 0 0 0 1.5px var(--blue); color: var(--navy); transition: background var(--dur-2), transform var(--dur-2) var(--ease-out); }
+  .linked :global(svg) { color: var(--blue); }
+  .linked .ar { color: var(--press); transition: transform var(--dur-2) var(--ease-out); }
+  .linked:hover { background: var(--tint); }
+  .linked:hover .ar { transform: translateX(3px); }
+</style>

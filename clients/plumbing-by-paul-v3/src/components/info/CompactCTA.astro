@@ -1,0 +1,73 @@
+---
+// Compact waterline CTA, phone variant (Figma legal frames 443:7819 / 443:8551): navy, heading left, the big phone number in
+// the middle, seal right; mini facts and a call button on the water, then the swoosh into the footer. No form.
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import CallButton from '../ui/CallButton.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Water from '../ui/Water.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+const facts = [
+  { icon: 'clock', t: SITE.hours.line },
+  { icon: 'badge', t: `Lic. ${SITE.licence}` },
+  { icon: 'g', t: `${SITE.rating.value} from ${SITE.rating.count} Google reviews` },
+];
+---
+<section class="cc on-navy" aria-labelledby="cc-h" data-m-section>
+  <FlowLines variant="cta" />
+  <Water class="cc-water" />
+  <div class="wrap cc-in">
+    <div class="cc-copy">
+      <Eyebrow text="Ready when you are" dark />
+      <h2 class="h2 cc-h" id="cc-h" data-t="2"><span class="l1">Tell us what's going on.</span> <span class="l2">We'll take it from here.</span></h2>
+    </div>
+    <div class="cc-ph" data-t="3">
+      <a href={SITE.tel} class="cc-num num">{SITE.phone}</a>
+      <p class="cc-tap"><Icon name="phone" size={16} />Tap to call · a real person answers</p>
+    </div>
+    <Seal d={120} deg={8} class="cc-seal" />
+    <ul role="list" class="cc-facts" data-t="5" data-stagger>
+      {facts.map((f) => <li>{f.icon === 'g' ? <GoogleG size={18} /> : <Icon name={f.icon} size={18} />}<b>{f.t}</b></li>)}
+    </ul>
+    <div class="cc-call" data-t="3"><CallButton v="priN" class="cc-btn" /></div>
+  </div>
+  <Swoosh class="cc-sw" h={110} above="transparent" />
+</section>
+<style>
+  .cc { position: relative; overflow: hidden; background: linear-gradient(var(--navy) 0 0) top / 100% 300px no-repeat, var(--sky); color: var(--white); padding: 64px 0 0; }
+  .cc :global(.flow) { height: 300px; }
+  .cc :global(.cc-water) { top: 272px; }
+  .cc-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) auto 120px; grid-template-areas: 'copy ph seal' 'facts facts call'; column-gap: 48px; row-gap: 104px; align-items: center; }
+  .cc-copy { grid-area: copy; display: grid; gap: 14px; justify-items: start; }
+  .cc-h { font-size: 38px; line-height: 44px; }
+  .cc-h .l1, .cc-h .l2 { display: block; }
+  .cc-ph { grid-area: ph; }
+  .cc-num { display: block; font-size: 60px; line-height: 64px; color: var(--sky); text-decoration: none; transition: color var(--dur-2); }
+  .cc-num:hover { color: var(--soft); }
+  .cc-tap { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-weight: 600; font-size: 14px; }
+  .cc-in :global(.cc-seal) { grid-area: seal; justify-self: end; }
+  .cc-facts { grid-area: facts; display: flex; flex-wrap: wrap; gap: 12px; margin: 0; padding: 0; }
+  .cc-facts li { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: rgba(255,255,255,.92); color: var(--navy); font-size: 14px; }
+  .cc-facts li :global(svg) { color: var(--blue); }
+  .cc-call { grid-area: call; justify-self: end; }
+  .cc :global(.cc-btn) { --bg: var(--navy); --fg: var(--white); --fill: var(--navy-2); }
+  .cc :global(.cc-sw) { position: relative; z-index: 1; margin-top: 56px; }
+  @media (max-width: 1199px) { .cc-in { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'copy seal' 'ph ph' 'facts call'; row-gap: 32px; } .cc { background-size: 100% 380px; } .cc :global(.cc-water) { top: 352px; } .cc :global(.flow) { height: 380px; } }
+  @media (max-width: 1023px) {
+    .cc { padding-top: 56px; background: linear-gradient(var(--navy) 0 0) top / 100% 360px no-repeat, var(--sky); }
+    .cc :global(.cc-water) { top: 332px; } .cc :global(.flow) { height: 360px; }
+    .cc-in { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'copy' 'ph' 'call' 'facts'; row-gap: 18px; }
+    .cc-h { font-size: 28px; line-height: 34px; padding-right: 70px; }
+    .cc-num { font-size: 38px; line-height: 44px; }
+    .cc-tap { display: none; }
+    .cc-in :global(.cc-seal) { position: absolute; right: 0; top: 0; --d: 72px !important; }
+    .cc-call { justify-self: stretch; margin-bottom: 40px; }
+    .cc-call :global(.btn) { width: 100%; }
+    .cc :global(.cc-btn) { --bg: var(--sky); --fg: var(--navy); --fill: var(--soft); }
+    .cc-facts { display: grid; gap: 8px; }
+    .cc :global(.cc-sw) { margin-top: 40px; }
+  }
+</style>

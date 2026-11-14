@@ -1,0 +1,17 @@
+---
+// FAQ list: accordion items (exclusive open via the details `name` group) + FAQPage JSON-LD for exactly these items.
+// items: [{ idx, tag, q, a1, a2?, link? }]. First item opens by default (openFirst).
+import FaqItem from './FaqItem.astro';
+export interface FaqEntry { idx?: string; tag?: string; q: string; a1: string; a2?: string; link?: { text: string; href: string } }
+interface Props { items: FaqEntry[]; openFirst?: boolean; schema?: boolean; group?: string; class?: string; }
+const { items, openFirst = true, schema = true, group = 'faq', class: cls } = Astro.props;
+const ld = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: [i.a1, i.a2].filter(Boolean).join(' ') } })),
+};
+---
+<div class:list={['faqs', cls]} data-acc-group data-t="4" data-stagger>
+  {items.map((it, i) => <FaqItem idx={it.idx ?? String(i + 1).padStart(2, '0')} tag={it.tag} q={it.q} a1={it.a1} a2={it.a2} link={it.link} open={openFirst && i === 0} name={group} />)}
+</div>
+{schema && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+<style> .faqs { display: grid; gap: 12px; } </style>

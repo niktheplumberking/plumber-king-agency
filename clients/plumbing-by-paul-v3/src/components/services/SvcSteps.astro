@@ -1,0 +1,162 @@
+---
+// Process. Layout a (Figma 03 W6): head + four steps strung on a vertical pipe (navy discs, script numerals), photo
+// right on a sky backing with crew patches and a caption. Layout b (Figma 04 D5): head + call button left, four slightly
+// tilted cards in a 2x2 on a pipe run right, the seal with a DONE tag on the last card. Mobile: steps on a vertical pipe.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Patch from '../ui/Patch.astro';
+import Seal from '../ui/Seal.astro';
+import Chip from '../ui/Chip.astro';
+import CallButton from '../ui/CallButton.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { s: SvcPage['steps']; slug: string; layout: 'a' | 'b'; chip?: { icon: string; label: string } }
+const { s, slug, layout, chip } = Astro.props;
+const id = sid(slug, 'steps');
+const deg = [-1.2, 1.4, 0.8, -1.4];
+---
+{layout === 'a' ? (
+<section class:list={['st st-a', !s.photo && 'nophoto']} aria-labelledby={id} data-m-section>
+  <div class="wrap st-grid">
+    <div class="st-copy">
+      <SectionHead eyebrow={s.eyebrow} l1={s.l1} l2={s.l2} id={id} />
+      <ol class="st-list" role="list" data-t="4" data-stagger>
+        {s.items.map((it, i) => (
+          <li>
+            <span class="st-n script" aria-hidden="true">{i + 1}</span>
+            <div><h3 class="st-t"><span class="sr-only">Step {i + 1}: </span>{it.t}</h3><p class="st-d">{it.d}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+    {s.photo && (
+      <div class="st-media">
+        <span class="st-back" aria-hidden="true"></span>
+        <div class="st-ph frame" data-t="4" data-fx="frame">
+          <Img name={s.photo.name} alt={s.photo.alt} focus={s.photo.focus} sizes="(min-width: 1024px) 440px, calc(100vw - 40px)" widths={[400, 600, 880, 1100]} />
+          {s.caption && <Caption class="st-cap">{s.caption}</Caption>}
+        </div>
+        {s.patches && (
+          <div class="st-pats">{s.patches.slice(0, 2).map((n, i) => <Patch name={n} label="Crew" deg={i ? 4 : -5} />)}</div>
+        )}
+      </div>
+    )}
+  </div>
+</section>
+) : (
+<section class="st st-b" aria-labelledby={id} data-m-section>
+  <div class="wrap st-grid">
+    <div class="st-copy">
+      <SectionHead eyebrow={s.eyebrow} l1={s.l1} l2={s.l2} id={id} />
+      <div class="st-cta" data-t="3">
+        <CallButton />
+        {chip && <Chip icon={chip.icon}>{chip.label}</Chip>}
+      </div>
+    </div>
+    <div class="st-board">
+      <span class="pb-run" aria-hidden="true"><span class="pb-dl"></span><span class="pb-dr"></span></span>
+      <ol class="st-cards" role="list" data-t="4" data-stagger>
+        {s.items.map((it, i) => (
+          <li class="sc" style={`--deg:${deg[i % 4]}deg`}>
+            <span class="sc-dot" aria-hidden="true"></span>
+            {i % 2 === 1 && <span class="sc-coup" aria-hidden="true"></span>}
+            <div class="sc-top"><span class="sc-n script" aria-hidden="true">{i + 1}</span><span class="well well-round"><Icon name={it.icon} size={22} /></span></div>
+            <h3 class="sc-t"><span class="sr-only">Step {i + 1}: </span>{it.t}</h3>
+            <p class="sc-d">{it.d}</p>
+            {i === s.items.length - 1 && <span class="sc-done" aria-hidden="true"><Seal d={80} deg={6} t={false} /><span class="label">Done</span></span>}
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="st-cta st-cta-m"><CallButton block /></div>
+  </div>
+</section>
+)}
+<style>
+  .st { position: relative; background: var(--white); padding: 104px 0; }
+  .st-grid { display: grid; grid-template-columns: minmax(0, 600px) minmax(0, 460px); justify-content: space-between; column-gap: 60px; align-items: center; }
+  .nophoto .st-grid { grid-template-columns: minmax(0, 720px); }
+
+  /* a */
+  .st-list { position: relative; display: grid; gap: 30px; margin: 40px 0 0; padding: 0; }
+  .st-list::before { content: ''; position: absolute; left: 21px; top: 6px; bottom: 6px; width: 14px; border-radius: 7px; background: var(--sky); box-shadow: inset 0 0 0 3px var(--navy); }
+  .st-list li { position: relative; display: grid; grid-template-columns: 56px 1fr; column-gap: 24px; align-items: start; }
+  .st-n { position: relative; display: grid; place-items: center; width: 46px; height: 46px; margin: 4px 0 0 5px; border-radius: 50%; background: var(--navy); color: var(--sky); font-size: 28px; line-height: 1; box-shadow: 0 0 0 4px var(--white); padding-right: 3px; }
+  .st-t { font-weight: 700; font-size: 20px; line-height: 28px; }
+  .st-d { margin-top: 4px; font-size: 15px; line-height: 24px; color: var(--slate); max-width: 500px; }
+  .st-media { position: relative; height: 560px; }
+  .st-back { position: absolute; left: 30px; right: 0; top: 30px; bottom: 0; border-radius: var(--r-xl); background: var(--sky); }
+  .st-ph { position: absolute; left: 0; right: 24px; top: 0; bottom: 24px; border-radius: var(--r-xl); }
+  .st-ph :global(.st-cap) { position: absolute; right: 20px; bottom: 16px; z-index: 2; }
+  .st-pats { position: absolute; left: -64px; bottom: 60px; z-index: 3; display: grid; gap: 0; }
+  .st-pats :global(.patch + .patch) { margin: -8px 0 0 24px; }
+
+  /* b */
+  .st-b .st-grid { grid-template-columns: minmax(0, 420px) minmax(0, 740px); align-items: start; }
+  .st-cta { display: grid; justify-items: start; gap: 20px; margin-top: 32px; }
+  .st-cta-m { display: none; }
+  .st-board { position: relative; padding-top: 14px; }
+  .st-cards { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 40px 32px; margin: 0; padding: 0; }
+  .sc { position: relative; display: grid; align-content: start; gap: 8px; min-height: 200px; padding: 22px 26px 30px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); transform: rotate(var(--deg)); transition: transform .5s var(--ease-out); }
+  .sc:hover { transform: rotate(0deg) translateY(-4px); }
+  .sc-dot { position: absolute; left: 50%; top: -6px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--navy); }
+  .sc-coup { position: absolute; left: -32px; top: 84px; width: 32px; height: 22px; background:
+    linear-gradient(var(--navy), var(--navy)) 0 0 / 6px 100% no-repeat, linear-gradient(var(--navy), var(--navy)) 100% 0 / 6px 100% no-repeat,
+    linear-gradient(var(--navy), var(--navy)) 0 3px / 100% 16px no-repeat; }
+  .sc-coup::after { content: ''; position: absolute; left: 6px; right: 6px; top: 6px; height: 10px; background: var(--sky); }
+  .sc-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .sc-n { font-size: 54px; line-height: 56px; color: var(--blue); }
+  .sc-t { margin-top: 4px; font-weight: 800; font-size: 22px; line-height: 28px; }
+  .sc-d { font-size: 15px; line-height: 24px; color: var(--slate); }
+  .sc-done { position: absolute; right: -30px; bottom: -40px; display: grid; justify-items: center; }
+  .sc-done .label { margin-top: -18px; padding: 4px 10px; border-radius: 8px; background: var(--navy); color: var(--white); font-size: 11px; transform: rotate(-6deg); position: relative; z-index: 1; }
+  .pb-run { position: absolute; z-index: 0; left: 25%; right: 25%; top: calc(50% + 2px); height: 12px; border-radius: 6px; background: var(--sky); box-shadow: inset 0 0 0 3px var(--navy); }
+  .pb-dl, .pb-dr { position: absolute; top: -18px; width: 12px; height: 46px; border-radius: 6px; background: var(--sky); box-shadow: inset 0 0 0 3px var(--navy); }
+  .pb-dl { left: 0; } .pb-dr { right: 0; }
+
+  @media (max-width: 1199px) and (min-width: 1024px) {
+    .st-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 400px); column-gap: 40px; }
+    .st-b .st-grid { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); }
+    .st-pats { left: -30px; }
+  }
+  @media (max-width: 1023px) {
+    .st { padding: 64px 0; }
+    .st-grid, .st-b .st-grid { grid-template-columns: minmax(0, 1fr); row-gap: 36px; }
+    .st-a .st-copy { display: contents; }
+    .st-a .st-copy :global(.shead) { order: 1; }
+    .st-media { order: 2; height: 300px; margin-right: 6px; }
+    .st-list { order: 3; margin-top: 0; gap: 22px; }
+    .st-list li { grid-template-columns: 44px 1fr; column-gap: 14px; }
+    .st-list::before { left: 15px; width: 12px; }
+    .st-n { width: 40px; height: 40px; margin: 0 0 0 1px; font-size: 24px; }
+    .st-t { font-size: 18px; line-height: 24px; }
+    .st-d { font-size: 14px; line-height: 22px; }
+    .st-back { left: 16px; top: 16px; }
+    .st-ph { right: 12px; bottom: 12px; border-radius: 20px; }
+    .st-ph :global(.st-cap) { left: 12px; right: auto; bottom: 12px; font-size: 12px; }
+    .st-pats { left: auto; right: -6px; top: -14px; bottom: auto; }
+    .st-pats :global(.patch) { width: 104px; height: 40px; }
+    .st-pats :global(.patch .pn) { font-size: 22px; line-height: 22px; }
+    .st-pats :global(.patch .pl) { font-size: 7px; }
+    .st-pats :global(.patch + .patch) { margin: -4px 0 0 0; }
+
+    .st-b .st-cta:not(.st-cta-m) { display: none; }
+    .st-cta-m { display: block; margin-top: 4px; }
+    .st-board { padding: 0 0 0 40px; }
+    .st-board::before { content: ''; position: absolute; left: 0; top: 0; bottom: 30px; width: 12px; border-radius: 6px; background: var(--sky); box-shadow: inset 0 0 0 3px var(--navy); }
+    .pb-run, .sc-coup, .sc-dot { display: none; }
+    .st-cards { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .sc { min-height: 0; padding: 18px 20px 22px 66px; }
+    .sc::before { content: ''; position: absolute; left: -40px; top: 40px; width: 40px; height: 12px; background: var(--sky); box-shadow: inset 0 3px 0 var(--navy), inset 0 -3px 0 var(--navy); }
+    .sc-top { position: absolute; left: 18px; top: 16px; }
+    .sc-top .well { display: none; }
+    .sc-n { font-size: 42px; line-height: 44px; }
+    .sc-t { margin-top: 0; font-size: 18px; line-height: 24px; }
+    .sc-d { font-size: 14px; line-height: 22px; }
+    .sc-done { right: -10px; bottom: -30px; }
+    .sc-done :global(.seal) { --d: 60px !important; }
+    .sc-done .label { display: none; }
+  }
+</style>

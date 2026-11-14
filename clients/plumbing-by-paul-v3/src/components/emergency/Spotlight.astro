@@ -1,0 +1,70 @@
+---
+// E4 Spotlight review (Figma 433:9578 / 439:3464): navy quote card, the "JR" crew patch over its top edge, a tilted framed
+// photo overlapping its right edge. Quote is Robert Brooks's Google review WORD FOR WORD. STICKY 5: Paul to approve the JR patch.
+import Eyebrow from '../ui/Eyebrow.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Icon from '../ui/Icon.astro';
+import Patch from '../ui/Patch.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+---
+<section class="sp" aria-label="An after-hours review from a customer" data-m-section>
+  <div class="wrap sp-in">
+    <figure class="sp-card on-navy" data-t="4" data-fx="rise">
+      <span class="sp-q" aria-hidden="true"><Icon name="quote" size={200} /></span>
+      <span class="sp-pw"><Patch name="JR" dark deg={-4} /></span>
+      <Eyebrow text="After hours, in a customer's words" dark class="sp-ebd" t={false} />
+      <Eyebrow text="In a customer's words" dark class="sp-ebm" t={false} />
+      <p class="sp-meta"><Stars size={20} /><span>Google review · 5 months ago</span></p>
+      <blockquote class="sp-quote">
+        <p>Last min call, Sun going down and toilet water was rising, and <mark>to the rescue came Plumbing By Paul, and Mr JR</mark>.</p>
+        <p>You guys are so awesome!! Thank you for saving the night!!</p>
+      </blockquote>
+      <figcaption class="sp-by">
+        <span class="sp-av num" aria-hidden="true">R</span>
+        <span class="sp-nm"><b>Robert Brooks</b><small>Google review</small></span>
+        <GoogleG size={24} />
+      </figcaption>
+    </figure>
+    <div class="sp-photo" data-t="4" data-fx="toss">
+      <div class="snap sp-snap">
+        <Img name="fleet-box-truck-rear-three-quarter" alt="The Plumbing By Paul box truck, rear three-quarter view, with the mascot on the wrap" sizes="(min-width: 1024px) 260px, 300px" focus="50% 40%" widths={[300, 520, 780]} />
+      </div>
+      <Caption class="sp-cap">The box truck, wrapped like the vans.</Caption>
+    </div>
+  </div>
+</section>
+<style>
+  .sp { position: relative; background: var(--white); padding: 112px 0 104px; }
+  .sp-in { position: relative; }
+  .sp-card { position: relative; width: min(1000px, 100%); margin: 0; padding: 52px 56px; border-radius: var(--r-xl); background: var(--navy); color: var(--white); box-shadow: var(--sh-3); display: grid; gap: 24px; justify-items: start; }
+  .sp-q { position: absolute; right: 236px; top: 24px; color: var(--navy-2); opacity: .75; pointer-events: none; }
+  .sp-pw { position: absolute; left: 488px; top: -30px; z-index: 2; }
+  .sp-card :global(.sp-ebm) { display: none; }
+  .sp-meta { position: relative; display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 14px; color: var(--soft); }
+  .sp-quote { position: relative; max-width: 700px; margin: 0; display: grid; gap: 42px; font-weight: 600; font-size: clamp(22px, .76vw + 19px, 30px); line-height: 1.4; }
+  .sp-quote mark { background: none; color: inherit; text-decoration: underline; text-decoration-color: var(--blue); text-decoration-thickness: 6px; text-underline-offset: 2px; text-decoration-skip-ink: none; }
+  .sp-by { position: relative; display: flex; align-items: center; gap: 14px; width: min(700px, 100%); }
+  .sp-av { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--sky); color: var(--navy); font-size: 19px; flex: none; }
+  .sp-nm { flex: 1; display: grid; } .sp-nm b { font-weight: 700; font-size: 17px; line-height: 24px; } .sp-nm small { font-weight: 500; font-size: 13px; line-height: 18px; color: var(--soft); }
+  .sp-photo { position: absolute; right: 8px; top: 50%; width: 278px; transform: translateY(-46%); }
+  .sp-snap { width: 260px; height: 320px; margin-left: 10px; transform: rotate(4deg); }
+  .sp-photo :global(.sp-cap) { position: absolute; right: 0; bottom: -20px; z-index: 2; }
+  @media (max-width: 1279px) and (min-width: 1024px) { .sp-card { width: calc(100% - 180px); } .sp-q { right: 60px; } .sp-pw { left: 50%; } }
+  @media (max-width: 1023px) {
+    .sp { padding: 72px 0 64px; }
+    .sp-card { width: 100%; padding: 28px 22px 64px; gap: 16px; border-radius: 24px; }
+    .sp-q { display: none; }
+    .sp-pw { left: auto; right: 14px; top: -28px; transform: scale(.82); transform-origin: top right; }
+    .sp-card :global(.sp-ebd) { display: none; } .sp-card :global(.sp-ebm) { display: flex; }
+    .sp-meta { gap: 10px; font-size: 13px; }
+    .sp-meta :global(.stars svg) { width: 16px; height: 16px; }
+    .sp-quote { gap: 30px; font-size: 20px; line-height: 30px; }
+    .sp-av { width: 40px; height: 40px; font-size: 16px; }
+    .sp-nm b { font-size: 15px; line-height: 22px; }
+    .sp-photo { position: relative; right: auto; top: auto; width: auto; margin: -44px 20px 0 28px; transform: none; }
+    .sp-snap { width: 100%; height: 200px; margin: 0; transform: rotate(3deg); }
+    .sp-photo :global(.sp-cap) { left: 50%; right: auto; bottom: -18px; transform: translateX(-50%); white-space: nowrap; }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+// E7 Hours, honestly (Figma 433:9734 / 439:3600): job-ticket card (navy head, punch holes) overlapping the section top by
+// 24 px, the promise stamp on its corner, flow lines behind, a swoosh into the FAQ. STICKY 1 (the main one): Google says
+// open daily 8 AM to 5 PM; the "24/7 emergency line" chip stays only if Paul confirms it. STICKY 3: free estimates.
+import Tick from '../ui/Tick.astro';
+import Icon from '../ui/Icon.astro';
+import Stamp from '../ui/Stamp.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+const a = SITE.address;
+const rows = [
+  { k: 'Office and scheduled visits', v: 'Every day, 8 AM to 5 PM', i: 'clock' },
+  { k: 'After-hours emergencies', v: `Call ${SITE.phone}`, i: 'siren', chip: SITE.hours.emergency, href: SITE.tel },
+  { k: 'Area', v: 'St. Petersburg and all of Pinellas County', i: 'pin' },
+  { k: 'Shop', v: `${a.street}, ${a.city}, ${a.region} ${a.zip}`, i: 'house', href: SITE.google.mapsUrl },
+];
+---
+<section class="hr" aria-labelledby="hr-h" data-m-section>
+  <FlowLines variant="navy" opacity={0.5} />
+  <div class="wrap hr-in">
+    <div class="hr-ticket" data-t="4" data-fx="rise">
+      <p class="hr-top"><Tick dark /><span class="label">Job ticket: when we're here</span></p>
+      <span class="punch p1" aria-hidden="true"></span><span class="punch p2" aria-hidden="true"></span>
+      <h2 class="hr-h" id="hr-h">Hours, <span class="script">honestly.</span></h2>
+      <dl class="hr-rows">
+        {rows.map((r) => (
+          <div class="hr-row">
+            <dt><span class="hr-i"><Icon name={r.i} size={18} /></span><span class="label">{r.k}</span></dt>
+            <dd>
+              {r.href ? <a href={r.href} target={r.href.startsWith('http') ? '_blank' : undefined} rel={r.href.startsWith('http') ? 'noopener' : undefined}>{r.v}{r.href.startsWith('http') && <span class="sr-only"> (opens Google Maps in a new tab)</span>}</a> : r.v}
+              {r.chip && <span class="chip hr-chip"><Icon name="clock" size={16} />{r.chip}</span>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <div class="hr-btns">
+        <CallButton />
+        <Button href="/contact" v="sec" icon="clipboard" magnetic={false}>Get a free estimate</Button>
+      </div>
+      <span class="hr-stw"><Stamp d={148} deg={8} text="PLUMBING BY PAUL · ST. PETERSBURG · " /></span>
+    </div>
+  </div>
+  <Swoosh class="hr-sw" flip h={110} below="#FFFFFF" />
+</section>
+<style>
+  .hr { position: relative; background: var(--tint); padding: 0 0 30px; overflow: clip; }
+  .hr :global(.flow) { opacity: 1; }
+  .hr-in { position: relative; z-index: 2; }
+  .hr-ticket { position: relative; width: min(800px, 100%); margin: -24px auto 0; padding: 0 32px 32px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }
+  .hr-top { display: flex; align-items: center; gap: 10px; height: 64px; margin: 0 -32px; padding: 0 32px; border-radius: 24px 24px 0 0; background: var(--navy); color: var(--white); }
+  .hr-top .label { font-size: 13px; }
+  .punch { position: absolute; top: 52px; width: 24px; height: 24px; border-radius: 50%; background: var(--tint); }
+  .p1 { left: -12px; } .p2 { right: -12px; }
+  .hr-h { margin-top: 24px; font-weight: 800; font-size: clamp(28px, .76vw + 25px, 36px); line-height: 44px; letter-spacing: -.02em; }
+  .hr-h .script { font-size: 1.28em; color: var(--blue); font-weight: 400; letter-spacing: 0; }
+  .hr-rows { margin: 16px 0 0; }
+  .hr-row { display: grid; grid-template-columns: 280px 1fr; align-items: center; gap: 12px; min-height: 68px; border-top: 1px solid var(--line); }
+  .hr-row dt { display: flex; align-items: center; gap: 14px; color: var(--press); }
+  .hr-row dt .label { font-size: 12px; }
+  .hr-i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--tint); color: var(--blue); flex: none; }
+  .hr-row dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 0; font-weight: 700; font-size: 16px; line-height: 24px; }
+  .hr-row dd a { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color var(--dur-2); }
+  .hr-row dd a:hover { text-decoration-color: currentColor; }
+  .hr-chip { font-weight: 600; }
+  .hr-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; padding-top: 12px; }
+  .hr-stw { position: absolute; right: -36px; top: -28px; transform-origin: top right; }
+  .hr :global(.hr-sw) { position: relative; z-index: 1; margin-top: 30px; }
+  @media (max-width: 1023px) {
+    .hr { padding: 0 0 8px; }
+    .hr-ticket { padding: 0 20px 20px; }
+    .hr-top { height: 52px; margin: 0 -20px; padding: 0 20px; }
+    .hr-top .label { font-size: 11px; }
+    .punch { top: 40px; }
+    .hr-h { margin-top: 18px; font-size: 26px; line-height: 34px; }
+    .hr-row { grid-template-columns: 36px 1fr; grid-template-areas: 'i k' 'i v'; gap: 4px 12px; align-items: start; padding: 14px 0; }
+    .hr-row dt { display: contents; }
+    .hr-i { grid-area: i; }
+    .hr-row dt .label { grid-area: k; font-size: 10px; padding-top: 2px; }
+    .hr-row dd { grid-area: v; font-size: 14px; line-height: 21px; }
+    .hr-btns { display: grid; gap: 10px; }
+    .hr-btns :global(.btn) { width: 100%; justify-content: center; }
+    .hr-stw { right: -10px; top: -8px; transform: scale(.62); }
+    .hr :global(.hr-sw) { margin-top: 24px; }
+  }
+</style>

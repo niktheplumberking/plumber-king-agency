@@ -1,0 +1,166 @@
+---
+// Footer: "the van's side panel". Sky field (the water continues from the Waterline CTA), white card, "by Paul" Yellowtail
+// wordmark behind the card, navy bottom bar. Mobile: link groups become accordions (Find us open) via ui.ts.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-plumbing-by-paul.png';
+import Icon from '../ui/Icon.astro';
+import Tick from '../ui/Tick.astro';
+import Stars from '../ui/Stars.astro';
+import Meter from '../ui/Meter.astro';
+import CallButton from '../ui/CallButton.astro';
+import TextLink from '../ui/TextLink.astro';
+import { FOOTER } from '../../data/nav';
+import { SITE } from '../../data/site';
+const a = SITE.address;
+---
+<footer class="ft" data-m-section>
+  <div class="wrap">
+    <div class="ft-card" data-t="4" data-fx="rise">
+      <div class="ft-top">
+        <a href="/" class="ft-logo" aria-label={`${SITE.name}, home`}><Image src={logo} alt="" width={236} height={253} /></a>
+        <p class="ft-line">Family-owned plumbing for St. Petersburg and all of Pinellas County. Since 2015.</p>
+        <a class="ft-meter" href={SITE.google.reviewsUrl} target="_blank" rel="noopener">
+          <Meter digits="947" label={`${SITE.rating.count} Google reviews`} cw={30} ch={40} gap={4} pad={5} />
+          <span class="fm-t"><b>Google reviews</b><span><span class="num">{SITE.rating.value}</span><Stars size={12} /></span></span>
+          <span class="sr-only"> (opens in a new tab)</span>
+        </a>
+        <CallButton class="ft-call" />
+      </div>
+      <div class="ft-cols">
+        <div class="fcol fcol-svc" data-fcol>
+          <h2 class="fh"><button type="button" class="fh-b" aria-expanded="true"><Tick /><span>Services</span><Icon name="plus" size={18} class="fh-i" /></button></h2>
+          <div class="fbody">
+            <ul role="list">{FOOTER.services[0].map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+            <ul role="list">{FOOTER.services[1].map((l) => <li><a href={l.href}>{l.label}</a></li>)}<li><TextLink href="/services" size={15}>All services</TextLink></li></ul>
+          </div>
+        </div>
+        <div class="fcol" data-fcol>
+          <h2 class="fh"><button type="button" class="fh-b" aria-expanded="true"><Tick /><span>Service areas</span><Icon name="plus" size={18} class="fh-i" /></button></h2>
+          <div class="fbody"><ul role="list">{FOOTER.areas.map((l) => <li><a href={l.href}>{l.label}</a></li>)}<li><TextLink href="/service-areas" size={15}>All of Pinellas</TextLink></li></ul></div>
+        </div>
+        <div class="fcol" data-fcol>
+          <h2 class="fh"><button type="button" class="fh-b" aria-expanded="true"><Tick /><span>Company</span><Icon name="plus" size={18} class="fh-i" /></button></h2>
+          <div class="fbody"><ul role="list">{FOOTER.company.map((l) => <li><a href={l.href} target={l.external ? '_blank' : undefined} rel={l.external ? 'noopener' : undefined}>{l.label}{l.external && <span class="sr-only"> (opens in a new tab)</span>}</a></li>)}</ul></div>
+        </div>
+        <div class="fcol fcol-find" data-fcol data-fcol-open>
+          <h2 class="fh"><button type="button" class="fh-b" aria-expanded="true"><Tick /><span>Find us</span><Icon name="plus" size={18} class="fh-i" /></button></h2>
+          <div class="fbody">
+            <address>
+              <b>{SITE.legalName}</b>
+              <a href={SITE.google.mapsUrl} target="_blank" rel="noopener" class="addr">{a.street}<br />{a.city}, {a.region} {a.zip}<span class="sr-only"> (map, opens in a new tab)</span></a>
+              <a href={SITE.tel} class="ftel num">{SITE.phone}</a>
+              <a href={`mailto:${SITE.email}`} class="mail">{SITE.email}</a>
+              <span>{SITE.hours.office}<br />{SITE.hours.emergency}</span>
+            </address>
+            <div class="soc">
+              <a href={SITE.social.facebook} target="_blank" rel="noopener" aria-label="Plumbing By Paul on Facebook (opens in a new tab)"><Icon name="fb" size={18} /></a>
+              <a href={SITE.social.instagram} target="_blank" rel="noopener" aria-label="Plumbing By Paul on Instagram (opens in a new tab)"><Icon name="ig" size={18} /></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul role="list" class="ft-proof">
+        <li><span class="pi pi-sky"><Icon name="award" size={22} /></span><span><b>{SITE.awards.name}</b><small>{SITE.awards.title} {SITE.awards.years.join(' · ')}</small></span></li>
+        <li><span class="pi"><Icon name="badge" size={22} /></span><span><b>{SITE.licenceLabel}</b><small class="num lic">{SITE.licence}</small></span></li>
+        <li><span class="pi"><Icon name="shield" size={22} /></span><span><b>{SITE.bbb}</b></span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-sea" aria-hidden="true">
+    <span class="wm script" data-wm="by Paul" aria-hidden="true"></span>
+    <span class="tag script">Plumbing Pinellas with Heart</span>
+  </div>
+  <div class="ft-bar">
+    <div class="wrap fb-in">
+      <p>© 2026 {SITE.legalName}<span class="lic-m"> · Lic. {SITE.licence}</span></p>
+      <ul role="list">
+        {FOOTER.legal.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        <li class="num fb-lic">Lic. {SITE.licence}</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<style>
+  .ft { position: relative; background: var(--sky); padding-top: 32px; overflow: hidden; }
+  .ft-card { position: relative; z-index: 2; padding: 56px; border-radius: var(--r-2xl); background: var(--white); box-shadow: var(--sh-3); }
+  .ft-top { display: grid; grid-template-columns: 118px minmax(0, 380px) 1fr auto; align-items: center; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .ft-logo { display: block; width: 118px; }
+  .ft-logo :global(img) { width: 100%; height: auto; transition: transform .5s var(--ease-back); }
+  .ft-logo:hover :global(img) { transform: rotate(-4deg); }
+  .ft-line { font-weight: 600; font-size: 18px; line-height: 28px; }
+  .ft-meter { justify-self: end; display: inline-flex; align-items: center; gap: 12px; }
+  .fm-t { display: grid; font-size: 14px; line-height: 20px; }
+  .fm-t > span { display: inline-flex; align-items: center; gap: 6px; }
+  .ft-cols { display: grid; grid-template-columns: minmax(max-content, 1.65fr) .8fr 1.05fr 1.05fr; gap: 32px; padding: 36px 0 32px; border-bottom: 1px solid var(--line); }
+  .fh { margin: 0 0 16px; }
+  .fh-b { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-num); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--navy); cursor: default; }
+  .fh-b :global(.fh-i) { display: none; }
+  .fbody ul { display: grid; gap: 10px; margin: 0; padding: 0; align-content: start; }
+  .fcol-svc .fbody { display: grid; grid-template-columns: max-content max-content; gap: 10px 24px; }
+  .fbody li { line-height: 20px; }
+  .fbody a:not(.tlink) { font-weight: 500; font-size: 15px; line-height: 20px; color: var(--slate); transition: color var(--dur-2); }
+  .fbody a:not(.tlink):hover { color: var(--press); text-decoration: underline; text-underline-offset: 3px; }
+  address { display: grid; gap: 10px; font-style: normal; font-weight: 500; font-size: 14px; line-height: 21px; color: var(--slate); }
+  address b { font-weight: 700; font-size: 15px; color: var(--navy); }
+  address .addr { font-size: 15px !important; line-height: 22px !important; }
+  address .ftel { font-size: 20px !important; line-height: 24px !important; color: var(--press) !important; }
+  .soc { display: flex; gap: 10px; margin-top: 14px; }
+  .soc a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--navy); transition: background var(--dur-2), transform var(--dur-2) var(--ease-out); }
+  .soc a:hover { background: var(--sky); transform: translateY(-2px); }
+  .ft-proof { display: grid; grid-template-columns: 1.1fr 1fr .8fr; gap: 24px; margin: 0; padding: 26px 0 0; }
+  .ft-proof li { display: flex; align-items: center; gap: 12px; }
+  .ft-proof b { display: block; font-weight: 700; font-size: 14px; line-height: 20px; }
+  .ft-proof li:first-child b { font-size: 17px; line-height: 24px; }
+  .ft-proof small { display: block; font-weight: 500; font-size: 13px; line-height: 20px; color: var(--navy); }
+  .ft-proof .lic { color: var(--press); font-size: 15px; }
+  .pi { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--blue); flex: none; }
+  .pi-sky { background: var(--sky); color: var(--navy); }
+  .ft-sea { position: relative; height: 200px; margin-top: -70px; }
+  .wm::before { content: attr(data-wm); }
+  .wm { position: absolute; right: max(var(--gutter), calc(50% - 600px)); bottom: -38px; font-size: 230px; line-height: 230px; color: rgba(255,255,255,.32); white-space: nowrap; }
+  .tag { position: absolute; left: max(var(--gutter), calc(50% - 600px)); bottom: 28px; font-size: 44px; line-height: 1.2; color: var(--navy); }
+  .ft-bar { position: relative; z-index: 2; background: var(--navy); color: var(--white); }
+  .fb-in { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; font-weight: 500; font-size: 13px; }
+  .fb-in ul { display: flex; align-items: center; gap: 28px; margin: 0; padding: 0; }
+  .fb-in a { color: var(--tint); text-decoration: underline; text-underline-offset: 3px; display: inline-flex; min-height: 44px; align-items: center; }
+  .fb-in a:hover { color: var(--sky); }
+  .fb-lic { font-size: 12px; letter-spacing: .06em; color: var(--sky); }
+  .lic-m { display: none; }
+  @media (max-width: 1199px) {
+    .ft-card { padding: 40px; }
+    .ft-top { grid-template-columns: 100px 1fr; }
+    .ft-meter { justify-self: start; }
+    .ft-cols { grid-template-columns: 1fr 1fr; }
+    .ft-proof { grid-template-columns: 1fr; gap: 14px; }
+  }
+  @media (max-width: 1023px) {
+    .ft { padding-bottom: calc(76px + env(safe-area-inset-bottom)); background: linear-gradient(var(--sky) 0 0) top / 100% calc(100% - 76px - env(safe-area-inset-bottom)) no-repeat, var(--navy); }
+  }
+  @media (max-width: 767px) {
+    .ft { padding-top: 24px; }
+    .ft-card { padding: 28px 20px 24px; border-radius: 28px; }
+    .ft-top { grid-template-columns: 80px 1fr; gap: 14px 16px; padding-bottom: 24px; }
+    .ft-logo { width: 80px; }
+    .ft-line { font-size: 15px; line-height: 22px; }
+    .ft-meter { grid-column: 1 / -1; }
+    .ft-top :global(.ft-call) { grid-column: 1 / -1; width: 100%; }
+    .ft-cols { grid-template-columns: 1fr; gap: 0; padding: 8px 0 16px; }
+    .fcol { border-bottom: 1px solid var(--line); }
+    .fcol-find { order: -1; }
+    .fh { margin: 0; }
+    .fh-b { width: 100%; min-height: 56px; justify-content: flex-start; cursor: pointer; }
+    .fh-b :global(.fh-i) { display: block; margin-left: auto; transition: transform .35s var(--ease-out); }
+    .fh-b[aria-expanded='true'] :global(.fh-i) { transform: rotate(45deg); }
+    .fbody { padding-bottom: 12px; }
+    .fbody ul { gap: 0; }
+    .fcol-svc .fbody { grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    .fbody a:not(.tlink) { display: flex; align-items: center; min-height: 44px; }
+    .fbody .tlink { min-height: 44px; }
+    .fcol.is-closed .fbody { display: none; }
+    .ft-sea { height: 120px; margin-top: -40px; }
+    .wm { font-size: 96px; line-height: 96px; bottom: 8px; right: 20px; }
+    .tag { font-size: 24px; bottom: 12px; left: 20px; }
+    .fb-in { flex-direction: column; align-items: flex-start; gap: 0; padding-block: 16px 12px; }
+    .fb-in ul { gap: 20px; } .fb-lic { display: none; } .lic-m { display: inline; }
+  }
+</style>

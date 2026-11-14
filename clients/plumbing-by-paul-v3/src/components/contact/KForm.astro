@@ -1,0 +1,165 @@
+---
+// K2 Form + what happens next (Figma 432:4882). Full estimate form card (sky top border, seal on its corner) left; right the
+// three steps on a vertical pipe and Daniel Herzog's review (the first five sentences of review #27, word for word).
+// Form: forms.ts ([data-estimate-form]). PUBLIC_FORM_ENDPOINT set = POST multipart there then /thank-you; unset = /thank-you.
+// STICKY 3: free estimates on every job type; step 2 needs a real callback time from Paul.
+import Icon from '../ui/Icon.astro';
+import Button from '../ui/Button.astro';
+import Seal from '../ui/Seal.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import ReviewCard from '../ui/ReviewCard.astro';
+import type { Review } from '../../data/reviews';
+import { PROBLEMS, SITE } from '../../data/site';
+import { FORM_ENDPOINT, THANK_YOU } from '../../lib/form';
+const steps = [
+  ['We read it.', 'A person at the shop, not a robot.'],
+  ['We call you back.', 'We ask a couple of questions and find a time that suits you.'],
+  ['We come out and give you a price.', 'Before any work starts.'],
+];
+const times = ['Morning', 'Afternoon', 'Any time'];
+const r: Review = { n: 27, name: 'Daniel Herzog', age: '8 months ago', full: false, tags: ['Toilet installation'], fixedBy: ['Joshua'],
+  hl: ['Office Staff were extremely pleasant and helpful'],
+  quote: 'Needed a new toilet installed. Office Staff were extremely pleasant and helpful when scheduling an appointment. We got a text the morning of install keeping us informed of the Techs arrival. When Joshua arrived he explained the process. He was extremely professional and hard working.' };
+---
+<section class="kf" aria-label="Request a free estimate" data-m-section>
+  <div class="wrap kf-in">
+    <div class="kf-formcol" data-t="4">
+      <form class="kform" id="request" action={FORM_ENDPOINT || THANK_YOU} method={FORM_ENDPOINT ? 'post' : 'get'} enctype={FORM_ENDPOINT ? 'multipart/form-data' : undefined}
+        data-estimate-form novalidate aria-labelledby="kf-h">
+        <div class="kf-head">
+          <h2 class="kf-t" id="kf-h">Request a free estimate</h2>
+          <p class="kf-s">The more you tell us, the better our first guess.</p>
+        </div>
+        <div class="kf-row">
+          <label class="field"><span>Your name</span><span class="iw"><input class="input" name="name" autocomplete="name" placeholder="Jane Smith" required /><Icon name="user" size={18} /></span></label>
+          <label class="field"><span>Phone</span><span class="iw"><input class="input" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(727) 000-0000" required /><Icon name="phone" size={18} /></span></label>
+        </div>
+        <div class="kf-row">
+          <label class="field"><span>Email (optional)</span><span class="iw"><input class="input" name="email" type="email" autocomplete="email" placeholder="you@email.com" /><Icon name="mail" size={18} /></span></label>
+          <label class="field"><span>Address or ZIP</span><span class="iw"><input class="input" name="address" autocomplete="street-address" placeholder="33709" /><Icon name="pin" size={18} /></span></label>
+        </div>
+        <fieldset class="kf-set">
+          <legend>What's going on?</legend>
+          <div class="kf-chips">
+            {PROBLEMS.map((p) => (
+              <label class="kchip"><input type="radio" name="problem" value={p} class="sr-only" data-problem={p} /><span><Icon name="check" size={15} class="ck" />{p}</span></label>
+            ))}
+          </div>
+        </fieldset>
+        <label class="field"><span>Tell us more</span><textarea class="input kf-ta" name="message" rows="4" placeholder="Example: kitchen sink drains slowly and gurgles"></textarea></label>
+        <div class="kf-row">
+          <div class="field">
+            <span id="kf-ph">Add a photo (optional)</span>
+            <label class="kf-up">
+              <input type="file" name="photo" accept="image/*" class="sr-only" data-photo aria-labelledby="kf-ph kf-phl" />
+              <Icon name="camera" size={20} /><span id="kf-phl" data-photo-label>It helps us quote faster.</span>
+            </label>
+          </div>
+          <fieldset class="kf-set">
+            <legend>Best time to call</legend>
+            <div class="kf-seg">
+              {times.map((t) => <label><input type="radio" name="best_time" value={t} class="sr-only" checked={t === 'Any time'} /><span>{t}</span></label>)}
+            </div>
+          </fieldset>
+        </div>
+        <p class="form-msg" role="alert" data-form-msg></p>
+        <Button type="submit" block arrow class="kf-btn">Send my request</Button>
+        <p class="kf-note"><Icon name="lock" size={13} />We call you back. No spam, ever.</p>
+        <p class="kf-em"><span class="em-i"><Icon name="siren" size={18} /></span><span><b>Emergency?</b> Don't use the form. <a href={SITE.tel}>Call {SITE.phone}.</a></span></p>
+      </form>
+      <Seal d={104} deg={8} class="kf-seal" />
+    </div>
+    <div class="kf-side">
+      <SectionHead eyebrow="After you send it" l1="What happens" l2="next" size="sm" />
+      <div class="kf-steps">
+        <div class="vpipe" aria-hidden="true" data-pipe><span class="vrun"><span class="vwater" data-pipe-fill-v></span></span></div>
+        <ol role="list" class="steps" data-t="4" data-stagger>
+          {steps.map(([t, d], i) => (
+            <li><span class="node num" aria-hidden="true">{i + 1}</span><div><h3 class="st-t"><span class="sr-only">Step {i + 1}: </span>{t}</h3><p class="st-d">{d}</p></div></li>
+          ))}
+        </ol>
+        <div class="kf-rev" data-t="4"><ReviewCard r={r} v="navy" t={false} /></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  // "Tell us about your project" (K4) and similar links: #request?problem=... is not used; links carry data-preselect.
+  document.querySelectorAll<HTMLAnchorElement>('a[data-preselect]').forEach((a) => a.addEventListener('click', () => {
+    const v = a.dataset.preselect;
+    const inp = document.querySelector<HTMLInputElement>(`#request input[data-problem="${v}"]`);
+    if (inp) inp.checked = true;
+  }));
+</script>
+<style>
+  .kf { position: relative; background: var(--white); padding: 160px 0 112px; }
+  .kf-in { display: grid; grid-template-columns: 690px minmax(0, 450px); justify-content: space-between; column-gap: 40px; align-items: start; }
+  .kf-formcol { position: relative; }
+  .kform { position: relative; display: grid; gap: 20px; padding: 36px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); color: var(--navy); }
+  .kform::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; border-radius: 20px 20px 0 0; background: var(--sky); }
+  .kf-formcol :global(.kf-seal) { position: absolute; right: -42px; top: -44px; z-index: 2; }
+  .kf-head { display: grid; gap: 6px; }
+  .kf-t { font-weight: 800; font-size: 30px; line-height: 36px; letter-spacing: -.01em; }
+  .kf-s { font-weight: 500; font-size: 16px; line-height: 24px; color: var(--slate); }
+  .kf-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+  .iw { position: relative; display: block; }
+  .iw .input { padding-right: 46px; }
+  .iw :global(svg) { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--blue); pointer-events: none; }
+  .kf-ta { min-height: 104px; padding: 14px 16px; resize: vertical; }
+  .kf-set { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .kf-set legend { padding: 0; margin-bottom: 8px; font-weight: 600; font-size: 14px; line-height: 20px; }
+  .kf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .kchip span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: var(--r-sm); box-shadow: inset 0 0 0 1.5px var(--line); background: var(--white); font-weight: 600; font-size: 14px; cursor: pointer; transition: background var(--dur-2), box-shadow var(--dur-2), color var(--dur-2); }
+  .kchip :global(.ck) { display: none; }
+  .kchip:hover span { box-shadow: inset 0 0 0 1.5px var(--blue); }
+  .kchip input:checked + span { background: var(--navy); color: var(--white); box-shadow: inset 0 0 0 1.5px var(--navy); }
+  .kchip input:checked + span :global(.ck) { display: block; }
+  .kchip input:focus-visible + span, .kf-seg input:focus-visible + span { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .kf-up { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 16px; border-radius: var(--r-sm); border: 2px dashed var(--sky); background: var(--mist); color: var(--slate); font-weight: 500; font-size: 14px; line-height: 18px; cursor: pointer; transition: background var(--dur-2); }
+  .kf-up :global(svg) { color: var(--blue); flex: none; }
+  .kf-up:hover { background: var(--tint); }
+  .kf-up:focus-within { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .kf-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; min-height: 56px; border-radius: var(--r-sm); background: var(--mist); box-shadow: inset 0 0 0 1.5px var(--line); }
+  .kf-seg label { display: grid; }
+  .kf-seg span { display: grid; place-items: center; min-height: 44px; border-radius: 7px; font-weight: 600; font-size: 14px; color: var(--slate); cursor: pointer; text-align: center; transition: background var(--dur-2), color var(--dur-2); }
+  .kf-seg input:checked + span { background: var(--white); color: var(--navy); font-weight: 700; box-shadow: var(--sh-1); }
+  .kform :global(.kf-btn) { margin-top: 4px; }
+  .kf-note { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: -6px; font-weight: 500; font-size: 13px; color: var(--slate); }
+  .kf-em { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 16px; border-radius: 12px; background: var(--tint); font-weight: 500; font-size: 15px; line-height: 22px; }
+  .em-i { display: grid; place-items: center; width: 36px; height: 36px; flex: none; border-radius: 50%; background: var(--white); color: var(--blue); }
+  .kf-em a { font-weight: 700; color: var(--press); text-decoration: none; }
+  .kf-em a:hover { text-decoration: underline; }
+
+  .kf-side { padding-top: 0; }
+  .kf-steps { position: relative; margin-top: 40px; }
+  .vpipe { position: absolute; left: 17px; top: 8px; bottom: 60px; width: 14px; }
+  .vrun { position: absolute; inset: 0; border-radius: 7px; background: var(--navy); overflow: hidden; }
+  .vwater { position: absolute; left: 2px; right: 2px; top: 2px; bottom: 2px; border-radius: 5px; background: var(--sky); transform-origin: center top; }
+  .steps { position: relative; display: grid; gap: 52px; margin: 0; padding: 0; }
+  .steps li { display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 24px; align-items: start; }
+  .node { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 2px var(--navy), var(--sh-sticker); font-size: 20px; color: var(--press); }
+  .st-t { padding-top: 2px; font-weight: 700; font-size: 19px; line-height: 26px; }
+  .st-d { margin-top: 4px; font-size: 15px; line-height: 23px; color: var(--slate); }
+  .kf-rev { position: relative; margin-top: 72px; }
+  .kf-rev :global(.rcard) { box-shadow: var(--sh-3); }
+
+  @media (max-width: 1279px) { .kf-in { grid-template-columns: minmax(0, 600px) minmax(0, 400px); } }
+  @media (max-width: 1023px) {
+    .kf { padding: 56px 0 64px; }
+    .kf-in { grid-template-columns: minmax(0, 1fr); row-gap: 56px; }
+    .kform { gap: 18px; padding: 28px 18px 20px; }
+    .kf-formcol :global(.kf-seal) { right: -6px; top: -26px; --d: 64px !important; }
+    .kf-t { font-size: 24px; line-height: 28px; padding-right: 50px; }
+    .kf-s { font-size: 14px; line-height: 20px; }
+    .kf-row { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .kf-em { font-size: 13px; line-height: 19px; align-items: flex-start; }
+    .kf-steps { margin-top: 28px; }
+    .vpipe { left: 11px; bottom: 40px; width: 12px; }
+    .steps { gap: 36px; }
+    .steps li { grid-template-columns: 36px minmax(0, 1fr); column-gap: 18px; }
+    .node { width: 36px; height: 36px; font-size: 16px; }
+    .st-t { padding-top: 0; font-size: 16px; line-height: 22px; }
+    .st-d { font-size: 13px; line-height: 20px; }
+    .kf-rev { margin-top: 48px; }
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+// First-visit-per-session loader (MOTION.md "Loader"). Shown only when <html> has .intro (set before paint in Base.astro).
+// Beats: 1 ring draws round the seal  2 the seal pops and settles  3 the three livery stripes slide in  4 the pipe fills
+// with water while the page loads (min 1.5 s, max 3.2 s)  5 the navy panel lifts with the van's swoosh as its trailing edge,
+// handing straight into the hero entrance. Click, tap or any key skips. The hero image loads underneath (LCP not blocked).
+import { Image } from 'astro:assets';
+import seal from '../../assets/brand/seal-mascot.png';
+import Swoosh from '../ui/Swoosh.astro';
+import FlowLines from '../ui/FlowLines.astro';
+---
+<div class="ld" data-loader aria-hidden="true">
+  <div class="ld-panel">
+    <FlowLines variant="navy" opacity={0.12} />
+    <div class="ld-core">
+      <div class="ld-mark">
+        <svg class="ld-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" pathLength="1" /></svg>
+        <span class="ld-seal"><Image src={seal} alt="" width={224} height={224} loading="eager" /></span>
+      </div>
+      <svg class="ld-stripes" viewBox="0 0 120 30">
+        <path class="s1" d="M14 0h96l-6 8H8z" fill="#61ADCB" /><path class="s2" d="M10 11h96l-6 8H4z" fill="#2A7FA8" /><path class="s3" d="M6 22h96l-6 8H0z" fill="#FFFFFF" />
+      </svg>
+      <p class="ld-word"><span class="w1">Plumbing Pinellas</span> <span class="w2 script">with Heart</span></p>
+      <div class="ld-pipe"><span class="ld-cap l"></span><span class="ld-tube"><span class="ld-water"></span></span><span class="ld-cap r"></span></div>
+    </div>
+    <Swoosh class="ld-edge" flip above="#111032" h={120} draw={false} />
+  </div>
+  <button type="button" class="ld-skip" data-loader-skip tabindex="-1">Skip intro</button>
+</div>
+<style>
+  .ld { display: none; }
+  :global(html.intro) .ld { display: block; position: fixed; inset: 0; z-index: var(--z-loader); }
+  .ld-panel { position: absolute; inset: 0 0 auto 0; height: 100%; background: var(--navy); will-change: transform; }
+  .ld-panel :global(.ld-edge) { position: absolute; left: 0; top: calc(100% - 2px); width: 100%; height: clamp(64px, 8.3vw, 120px); }
+  .ld-core { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 18px; color: var(--white); }
+  .ld-mark { position: relative; width: 132px; height: 132px; }
+  .ld-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ld-ring circle { fill: none; stroke: var(--sky); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: round; }
+  .ld-seal { position: absolute; inset: 10px; border-radius: 50%; background: var(--white); padding: 4px; transform: scale(0); }
+  .ld-seal :global(img) { width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 0 0 5px var(--navy); outline: 5px solid var(--navy); outline-offset: -5px; }
+  .ld-stripes { width: 120px; height: 30px; overflow: visible; }
+  .ld-stripes path { transform: translateX(-140%); opacity: 0; }
+  .ld-word { font-weight: 700; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--sky); opacity: 0; }
+  .ld-word .w2 { font-size: 26px; letter-spacing: 0; text-transform: none; color: var(--white); margin-left: 4px; }
+  .ld-pipe { display: flex; align-items: center; width: min(280px, 70vw); margin-top: 6px; opacity: 0; }
+  .ld-cap { width: 8px; height: 20px; border-radius: 3px; background: var(--navy-3); box-shadow: inset 0 0 0 2px var(--soft); flex: none; }
+  .ld-tube { position: relative; flex: 1; height: 12px; border-radius: 6px; background: var(--navy-2); box-shadow: inset 0 0 0 2px var(--navy-3); overflow: hidden; }
+  .ld-water { position: absolute; inset: 2px; border-radius: 5px; background: linear-gradient(90deg, var(--blue), var(--sky)); transform-origin: left center; transform: scaleX(0); }
+  .ld-water::after { content: ''; position: absolute; top: 2px; left: 6px; right: 6px; height: 2px; border-radius: 1px; background: rgba(255,255,255,.5); }
+  .ld-skip { position: absolute; right: 20px; bottom: 20px; min-height: 44px; padding: 0 16px; border-radius: 12px; color: var(--soft); font-weight: 600; font-size: 13px; opacity: .8; }
+  .ld-skip:hover { color: var(--white); }
+</style>

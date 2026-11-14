@@ -1,0 +1,88 @@
+---
+// 404 (no Figma frame; reviewed against the site design). Mist wash with flow lines, a big Russo "404" on a pipe with a
+// leak drip, the seal, a short plain-language message, a call button and the six most useful links as cards.
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import Button from '../ui/Button.astro';
+import CallButton from '../ui/CallButton.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Swoosh from '../ui/Swoosh.astro';
+const links = [
+  { href: '/services', t: 'All services', d: 'Leaks, drains, water heaters and more', i: 'wrench' },
+  { href: '/emergency-plumbing', t: 'Emergency plumbing', d: 'Water where it should not be', i: 'siren' },
+  { href: '/water-heaters', t: 'Water heaters', d: 'Repair, replace, tankless', i: 'heater' },
+  { href: '/service-areas', t: 'Service areas', d: 'All of Pinellas County', i: 'pin' },
+  { href: '/reviews', t: 'Reviews', d: 'What the neighbors say', i: 'star' },
+  { href: '/contact', t: 'Contact', d: 'Call, write or come by the shop', i: 'phone' },
+];
+---
+<section class="nf" aria-labelledby="nf-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="wrap nf-in">
+    <div class="nf-copy">
+      <Eyebrow text="Wrong turn" />
+      <h1 class="h1 nf-h" id="nf-h" data-t="2"><span class="l1">That page</span> <span class="l2">isn't here.</span></h1>
+      <p class="lead nf-lead" data-t="3" data-fx="nudge">It may have moved when we rebuilt the site. Try one of these, or call and a real person will point you the right way.</p>
+      <div class="nf-act" data-t="3" data-stagger>
+        <Button href="/" arrow h64 magnetic={false}>Back to the home page</Button>
+        <CallButton v="pri" class="nf-call" />
+      </div>
+    </div>
+    <div class="nf-art" aria-hidden="true" data-t="4" data-fx="nudge">
+      <span class="nf-num num">404</span>
+      <span class="nf-pipe"><i class="c0"></i><i class="c1"></i></span>
+      <span class="nf-drip"></span>
+      <Seal d={112} deg={-8} class="nf-seal" />
+    </div>
+  </div>
+  <div class="wrap">
+    <ul role="list" class="nf-links" data-t="4" data-stagger>
+      {links.map((l) => <li><a href={l.href}><span class="li-i" aria-hidden="true"><Icon name={l.i} size={20} /></span><span class="li-t"><b>{l.t}</b><small>{l.d}</small></span><Icon name="arrow" size={18} class="li-a" /></a></li>)}
+    </ul>
+  </div>
+  <div class="nf-band"><Swoosh h={110} above="transparent" /></div>
+</section>
+<style>
+  .nf { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 72px 0 0; }
+  .nf-band { position: relative; margin-top: 96px; padding-top: 40px; background: var(--sky); }
+  .nf-band :global(svg) { display: block; }
+  .nf :global(.fl-m) { display: none; }
+  .nf-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 48px; align-items: center; }
+  .nf-copy { display: grid; gap: 16px; justify-items: start; }
+  .nf-h { letter-spacing: -0.025em; line-height: 1.07; }
+  .nf-h .l1, .nf-h .l2 { display: block; }
+  .nf-lead { max-width: 520px; }
+  .nf-act { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+  .nf-art { position: relative; height: 300px; }
+  .nf-num { position: absolute; left: 0; right: 0; top: 10px; text-align: center; font-size: 168px; line-height: 1; color: var(--navy); letter-spacing: .02em; }
+  .nf-pipe { position: absolute; left: 10px; right: 10px; top: 196px; height: 18px; border-radius: 4px; background: var(--navy); }
+  .nf-pipe::after { content: ''; position: absolute; left: 3px; right: 3px; top: 3px; bottom: 3px; border-radius: 2px; background: var(--sky); }
+  .nf-pipe i { position: absolute; top: -7px; width: 14px; height: 32px; border-radius: 3px; background: var(--navy); }
+  .nf-pipe .c0 { left: 40%; } .nf-pipe .c1 { left: 70%; }
+  .nf-drip { position: absolute; left: calc(55% - 9px); top: 222px; width: 18px; height: 24px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: var(--sky); }
+  :global(html.motion) .nf-drip { animation: drip 2.4s var(--ease-out, ease-out) infinite; }
+  @keyframes drip { 0% { transform: translateY(-10px) scale(.4); opacity: 0; } 25% { opacity: 1; transform: translateY(0) scale(1); } 90% { transform: translateY(60px) scale(1); opacity: 0; } 100% { opacity: 0; } }
+  .nf-art :global(.nf-seal) { position: absolute; right: -10px; top: -30px; }
+  .nf-links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 56px 0 0; padding: 0; }
+  .nf-links a { display: flex; align-items: center; gap: 14px; min-height: 76px; padding: 14px 18px; border-radius: 16px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); color: var(--navy); text-decoration: none; transition: box-shadow var(--dur-2); }
+  .nf-links a:hover { box-shadow: inset 0 0 0 1.5px var(--blue), var(--sh-2); }
+  .li-i { display: grid; place-items: center; width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .li-t { flex: 1; display: grid; } .li-t b { font-weight: 700; font-size: 16px; line-height: 22px; } .li-t small { font-weight: 500; font-size: 13px; line-height: 18px; color: var(--slate); }
+  .nf-links :global(.li-a) { color: var(--press); flex: none; }
+  @media (max-width: 1023px) {
+    .nf { padding: 40px 0 0; }
+    .nf-band { margin-top: 56px; padding-top: 24px; }
+    .nf :global(.fl-d) { display: none; } .nf :global(.fl-m) { display: block; }
+    .nf-in { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .nf-art { order: -1; height: 170px; }
+    .nf-num { font-size: 96px; }
+    .nf-pipe { top: 112px; height: 14px; }
+    .nf-drip { top: 132px; width: 14px; height: 18px; }
+    .nf-art :global(.nf-seal) { --d: 64px !important; right: 0; top: -10px; }
+    .nf-act { display: grid; width: 100%; }
+    .nf-act :global(.btn) { width: 100%; }
+    .nf-links { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 36px; }
+  }
+</style>

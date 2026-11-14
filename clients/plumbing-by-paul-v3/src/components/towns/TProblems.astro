@@ -1,0 +1,91 @@
+---
+// C3 Local problems (Figma 440:2568 / 440:3616): four horizontal cards, photo (or a sky icon panel) left, a large Russo ghost
+// numeral cropped by the card edge, photo tags on the photo corners. PAUL TO CONFIRM these match what he sees in the town.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const p = t.problems;
+---
+<section class="tp" aria-labelledby="tp-h" data-m-section>
+  <div class="wrap">
+    <div class="tp-head">
+      <SectionHead eyebrow={p.eyebrow} l1={p.l1} l2={p.l2} id="tp-h" />
+      <p class="lead tp-lead" data-t="3">{p.lead}</p>
+    </div>
+    <ul role="list" class="tp-grid" data-t="4" data-stagger>
+      {p.items.map((it, i) => (
+        <li class="tp-card">
+          {it.photo ? (
+            <div class="tp-ph">
+              <Img name={it.photo} alt={it.alt!} sizes="(min-width: 1024px) 220px, calc(100vw - 40px)" focus={it.focus} widths={[240, 440, 700]} />
+              {it.tag && <PhotoTag class="tp-tag">{it.tag}</PhotoTag>}
+            </div>
+          ) : (
+            <div class="tp-ph tp-sky" aria-hidden="true">
+              <span class="tp-ghost-i"><Icon name={it.icon!} size={120} /></span>
+              <span class="tp-med"><Icon name={it.icon!} size={26} /></span>
+            </div>
+          )}
+          <div class="tp-body">
+            <h3 class="tp-t">{it.t}</h3>
+            <p class="tp-d">{it.d}</p>
+            <span class="num tp-n" aria-hidden="true" data-n={`0${i + 1}`}></span>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <p class="tp-link" data-t="3">{p.link} <a href={SITE.tel}><Icon name="phone" size={18} /><span>{SITE.phone}</span></a></p>
+  </div>
+</section>
+<style>
+  .tp { position: relative; background: var(--tint); padding: 104px 0 112px; }
+  .tp-head { display: grid; grid-template-columns: 1fr 380px; align-items: end; gap: 48px; }
+  .tp-lead { padding-bottom: 6px; font-size: 17px; line-height: 30px; }
+  .tp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin: 56px 0 0; padding: 0; }
+  .tp-card { position: relative; display: grid; grid-template-columns: 220px 1fr; min-height: 236px; overflow: hidden; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
+  .tp-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .tp-ph { position: relative; overflow: hidden; background: var(--tint); }
+  .tp-ph :global(img) { transition: transform 1s var(--ease-out); }
+  .tp-card:hover .tp-ph :global(img) { transform: scale(1.05); }
+  .tp-ph :global(.tp-tag) { position: absolute; left: 12px; top: 12px; z-index: 2; }
+  .tp-sky { display: grid; place-items: center; background: var(--sky); }
+  .tp-ghost-i { position: absolute; right: -18px; bottom: -22px; color: rgba(255,255,255,.28); }
+  .tp-med { position: relative; display: grid; place-items: center; width: 88px; height: 88px; border-radius: 50%; background: var(--white); color: var(--blue); box-shadow: var(--sh-sticker); }
+  .tp-body { position: relative; padding: 28px 32px 28px 32px; }
+  .tp-t { position: relative; z-index: 1; font-weight: 700; font-size: 20px; line-height: 26px; }
+  .tp-d { position: relative; z-index: 1; margin-top: 12px; font-size: 15px; line-height: 23px; color: var(--slate); }
+  .tp-n::before { content: attr(data-n); }
+  .tp-n { position: absolute; right: 18px; bottom: -26px; font-size: 120px; line-height: 1; color: var(--tint); opacity: .9; pointer-events: none; }
+  .tp-link { margin-top: 32px; font-weight: 700; font-size: 16px; line-height: 24px; color: var(--navy); }
+  .tp-link a { display: inline-flex; align-items: center; gap: 8px; margin-left: 6px; color: var(--press); }
+  .tp-link a span { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 1199px) { .tp-card { grid-template-columns: 180px 1fr; } }
+  @media (max-width: 1023px) {
+    .tp { padding: 64px 0 72px; }
+    .tp-head { grid-template-columns: 1fr; gap: 14px; }
+    .tp-lead { font-size: 16px; line-height: 26px; }
+    .tp-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+    .tp-card { grid-template-columns: 1fr; grid-template-rows: 160px auto; min-height: 0; }
+    .tp-sky { height: 82px; place-items: end start; padding: 0 0 0 20px; overflow: visible; }
+    .tp-med { width: 60px; height: 60px; margin-bottom: -30px; z-index: 2; }
+    .tp-med :global(svg) { width: 22px; height: 22px; }
+    .tp-ghost-i { right: 30px; bottom: -40px; }
+    .tp-ghost-i :global(svg) { width: 90px; height: 90px; }
+    .tp-card:has(.tp-sky) { grid-template-rows: 82px auto; overflow: visible; }
+    .tp-card:has(.tp-sky) .tp-sky { border-radius: var(--r-lg) var(--r-lg) 0 0; overflow: visible; }
+    .tp-card:has(.tp-sky) .tp-ghost-i { clip-path: inset(0 0 40px 0); }
+    .tp-card:has(.tp-sky) .tp-sky .tp-med { position: absolute; left: 20px; bottom: 0; transform: translateY(50%); margin: 0; }
+    .tp-body { padding: 26px 20px 22px; overflow: hidden; }
+    .tp-card:has(.tp-sky) .tp-body { padding-top: 46px; }
+    .tp-t { font-size: 18px; line-height: 24px; }
+    .tp-d { font-size: 14px; line-height: 22px; }
+    .tp-n { font-size: 80px; right: 8px; bottom: -14px; }
+    .tp-link { font-size: 15px; }
+    .tp-link a { display: flex; margin: 4px 0 0; }
+  }
+</style>

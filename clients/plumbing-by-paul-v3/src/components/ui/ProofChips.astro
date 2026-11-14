@@ -1,0 +1,17 @@
+---
+// The five proof chips (licence, family-owned, Best of the Bay, open 7 days, free estimates). `scroll` = one swipeable row.
+import Chip from './Chip.astro';
+import { PROOF } from '../../data/site';
+interface Props { v?: 'tint' | 'white' | 'dark'; scroll?: boolean; class?: string; t?: string; small?: boolean; }
+const { v = 'tint', scroll = false, class: cls, t = '5', small } = Astro.props;
+---
+<ul role="list" class:list={['proof', scroll && 'scroll', small && 'small', cls]} data-t={t} data-stagger aria-label="Why people trust us" tabindex={scroll ? 0 : undefined}>
+  {PROOF.map((p) => <li><Chip icon={p.icon} v={v}>{p.label}</Chip></li>)}
+</ul>
+<style>
+  .proof { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+  .small :global(.chip) { font-size: 13px; min-height: 32px; padding: 0 10px; }
+  .scroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter); }
+  .scroll::-webkit-scrollbar { display: none; }
+  @media (min-width: 768px) { .scroll { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding-inline: 0; } }
+</style>

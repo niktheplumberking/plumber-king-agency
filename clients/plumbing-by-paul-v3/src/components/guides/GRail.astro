@@ -1,0 +1,110 @@
+---
+// U5 More guides rail (Figma 439:2340), also used on the FAQ hub (F4) and the /guides hub. Cards with a Russo index number
+// on the top-left, over a tint band behind their lower third; the rail scrolls sideways (scroll-snap, arrow buttons).
+// A card with an href links to its guide; a card without one is a non-link "Coming soon" card, so nothing links to a 404.
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import type { GuideCard } from './data';
+interface Props { items: GuideCard[]; eyebrow?: string; l1?: string; l2?: string; id?: string; allLink?: boolean; bg?: 'white' | 'tint'; overlap?: boolean; }
+const { items, eyebrow = 'Keep reading', l1 = 'More plain answers', l2 = 'from the crew', id = 'gr-h', allLink = true, bg = 'white', overlap = false } = Astro.props;
+---
+<section class:list={['gr', `bg-${bg}`, overlap && 'ov']} aria-labelledby={id} data-m-section data-rail>
+  <div class="wrap gr-head">
+    <SectionHead eyebrow={eyebrow} l1={l1} l2={l2} id={id} />
+    <div class="gr-act" data-t="3">
+      {allLink && <TextLink href="/guides">All guides</TextLink>}
+      <span class="gr-arrows">
+        <button type="button" class="ga" data-rail-prev aria-label="Scroll guides left"><Icon name="left" size={18} /></button>
+        <button type="button" class="ga on" data-rail-next aria-label="Scroll guides right"><Icon name="right" size={18} /></button>
+      </span>
+    </div>
+  </div>
+  <div class="gr-stage">
+    <span class="gr-band" aria-hidden="true"></span>
+    <ul role="list" class="gr-track" data-rail-track data-t="4" data-stagger tabindex="0" aria-label="Guides, scrolls sideways">
+      {items.map((g, i) => (
+        <li class:list={['gc', !g.href && 'soon']}>
+          <span class="gc-n num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <span class="gc-i" aria-hidden="true"><Icon name={g.icon} size={22} /></span>
+          <p class="gc-c label">Guide · {g.cat}</p>
+          <h3 class="gc-t">{g.href ? <a href={g.href} class="gc-a">{g.title}</a> : g.title}</h3>
+          {g.href ? <span class="gc-l" aria-hidden="true"><span class="t">Read the guide</span><Icon name="arrow" size={16} /></span>
+            : <span class="gc-s"><Icon name="clock" size={14} />Coming soon</span>}
+        </li>
+      ))}
+    </ul>
+  </div>
+  {allLink && <div class="wrap gr-mlk"><TextLink href="/guides">All guides</TextLink></div>}
+  <p class="gr-count num" aria-hidden="true"><span data-rail-now>1</span> / {items.length}</p>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((sec) => {
+    const track = sec.querySelector<HTMLElement>('[data-rail-track]');
+    const prev = sec.querySelector<HTMLButtonElement>('[data-rail-prev]');
+    const next = sec.querySelector<HTMLButtonElement>('[data-rail-next]');
+    const now = sec.querySelector<HTMLElement>('[data-rail-now]');
+    if (!track) return;
+    const step = () => { const c = track.querySelector<HTMLElement>('.gc'); return c ? c.offsetWidth + parseFloat(getComputedStyle(track).columnGap || '24') : 300; };
+    const sync = () => {
+      const max = track.scrollWidth - track.clientWidth - 2;
+      if (prev) { prev.disabled = track.scrollLeft <= 2; prev.classList.toggle('on', !prev.disabled); }
+      if (next) { next.disabled = track.scrollLeft >= max; next.classList.toggle('on', !next.disabled); }
+      if (now) now.textContent = String(Math.min(track.children.length, Math.round(track.scrollLeft / step()) + 1));
+      const none = max <= 0; sec.classList.toggle('no-scroll', none);
+    };
+    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  });
+</script>
+<style>
+  .gr { position: relative; padding: 72px 0 72px; overflow: clip; }
+  .ov { padding-top: 136px; }
+  .bg-white { background: var(--white); } .bg-tint { background: var(--tint); }
+  .gr-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+  .gr-act { display: flex; align-items: center; gap: 24px; padding-bottom: 4px; }
+  .gr-arrows { display: flex; gap: 8px; }
+  .ga { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--navy); transition: background var(--dur-2), color var(--dur-2), opacity var(--dur-2); }
+  .ga.on { background: var(--navy); color: var(--white); }
+  .ga:disabled { opacity: .55; cursor: default; }
+  .no-scroll .gr-arrows, .no-scroll .gr-count { display: none; }
+  .gr-stage { position: relative; margin-top: 24px; }
+  .gr-band { position: absolute; left: 0; right: 0; top: 190px; height: 200px; background: var(--tint); }
+  .bg-tint .gr-band { background: var(--white); }
+  .gr-track { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 282px; column-gap: 24px; margin: 0; padding: 40px max(var(--gutter), calc((100% - var(--content)) / 2)) 24px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: max(var(--gutter), calc((100% - var(--content)) / 2)); scrollbar-width: none; }
+  .gr-track::-webkit-scrollbar { display: none; }
+  .gc { position: relative; display: flex; flex-direction: column; min-height: 260px; padding: 24px 24px 26px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); scroll-snap-align: start; }
+  .gc::after { content: ''; position: absolute; left: 24px; right: 24px; bottom: 0; height: 4px; border-radius: 4px 4px 0 0; background: var(--blue); }
+  .gc.soon::after { background: var(--line); }
+  .gc-n { position: absolute; left: 20px; top: -22px; display: grid; place-items: center; width: 60px; height: 50px; border-radius: 14px; background: var(--navy); color: var(--white); font-size: 22px; box-shadow: var(--sh-sticker); }
+  .gc.soon .gc-n { background: var(--slate); }
+  .gc-i { align-self: flex-end; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .gc-c { margin-top: 16px; font-size: 11px; color: var(--press); }
+  .gc-t { margin-top: 6px; font-weight: 700; font-size: 19px; line-height: 25px; color: var(--navy); }
+  .gc-a { color: inherit; text-decoration: none; }
+  .gc-a::after { content: ''; position: absolute; inset: 0; border-radius: 20px; }
+  .gc-a:focus-visible { outline: none; } .gc:has(.gc-a:focus-visible) { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .gc-l { display: inline-flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 18px; font-weight: 600; font-size: 14px; color: var(--press); }
+  .gc-l .t { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .gc:has(.gc-a):hover { box-shadow: inset 0 0 0 1.5px var(--blue), var(--sh-3); }
+  .gc-s { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin-top: auto; padding: 6px 10px; border-radius: 8px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 600; font-size: 12px; color: var(--slate); }
+  .gr-count, .gr-mlk { display: none; }
+  .gr-track:focus-visible { outline: 3px solid var(--blue); outline-offset: -3px; }
+  @media (max-width: 1023px) {
+    .gr { padding: 48px 0 40px; }
+    .ov { padding-top: 96px; }
+    .gr-head { display: block; }
+    .gr-act { display: none; }
+    .gr-stage { margin-top: 12px; }
+    .gr-band { top: 170px; height: 120px; }
+    .gr-track { grid-auto-columns: 264px; column-gap: 14px; padding: 40px var(--gutter) 16px; scroll-padding-inline: var(--gutter); }
+    .gc { min-height: 236px; }
+    .gc-t { font-size: 18px; }
+    .gr-mlk { display: block; }
+    .gr-count { display: block; position: absolute; right: var(--gutter); bottom: 50px; font-size: 13px; color: var(--press); }
+    .gr::after { content: none; }
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+// E5 What happens when you call (Figma 433:9617 / 439:3500): sky band, three white cards overlapping it top and bottom by 28 px,
+// a pipe run joining them. Fact strip = James Douglas's Google review word for word (one customer's experience, not a promise).
+// H2 is navy on sky (never white on sky). STICKY 1 applies to "Even at night".
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import TextLink from '../ui/TextLink.astro';
+const cards = [
+  { t: 'Someone picks up.', d: "You tell us what's happening and where you are.", i: 'phone', tag: 'On the phone', ti: 'phone' },
+  { t: 'We help you stop the damage.', d: 'Shut-off, towels, what not to touch. We stay honest about how soon a truck can reach you.', i: 'shield', tag: 'Still on the phone', ti: 'phone' },
+  { t: 'We fix it, and tell you the price first.', d: "Even at night. Even when it's urgent.", i: 'wrench', tag: 'At your door', ti: 'truck' },
+];
+const facts = [['answered on the', 'first ring'], ['here', 'within the hour'], ['fixed it in', 'under an hour']];
+---
+<section class="wc" aria-labelledby="wc-h" data-m-section>
+  <div class="wc-band" aria-hidden="true"></div>
+  <div class="wrap wc-in">
+    <div class="wc-head">
+      <Eyebrow text="No mystery" class="wc-eb" />
+      <h2 class="h2 sz-sm" id="wc-h" data-t="2"><span class="l1">What happens</span> <span class="l2">when you call</span></h2>
+    </div>
+    <div class="wc-stage">
+      <span class="wc-pipe" aria-hidden="true"><span></span></span>
+      <ol role="list" class="wc-cards" data-t="4" data-stagger>
+        {cards.map((c, i) => (
+          <li class="wc-card">
+            {i > 0 && <span class="wc-fl" aria-hidden="true"></span>}
+            <div class="wc-top"><span class="num wc-n" aria-hidden="true">0{i + 1}</span><span class="well well-round wc-ic"><Icon name={c.i} size={22} /></span></div>
+            <h3 class="wc-t">{c.t}</h3>
+            <p class="wc-d">{c.d}</p>
+            <span class="label wc-tag"><Icon name={c.ti} size={14} />{c.tag}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <figure class="wc-facts" data-t="4" data-fx="rise">
+      <figcaption class="wc-fc">
+        <span class="wc-g"><GoogleG size={22} /></span>
+        <span class="wc-fct"><b>One customer's experience, in his words.</b><TextLink href="/reviews" size={14} class="wc-rl">Read it on our reviews page</TextLink></span>
+      </figcaption>
+      <ul role="list" class="wc-q">
+        {facts.map(([a, b]) => <li><span class="wc-a">"{a} </span><b class="num">{b}"</b></li>)}
+      </ul>
+      <TextLink href="/reviews" size={14} class="wc-rlm">Read it on our reviews page</TextLink>
+    </figure>
+  </div>
+</section>
+<style>
+  .wc { position: relative; background: var(--white); padding: 40px 0 24px; }
+  .wc-band { position: absolute; left: 0; right: 0; top: 40px; height: 272px; background: var(--sky); }
+  .wc-in { position: relative; }
+  .wc-head { position: absolute; left: 0; top: 64px; width: 340px; display: grid; gap: 16px; }
+  .wc-head .h2 { letter-spacing: -.025em; }
+  .wc-head :global(.eyebrow) { color: var(--navy); }
+  .wc-head .h2 .l1, .wc-head .h2 .l2 { display: block; }
+  .wc-head .h2 .l2 { color: var(--navy); }
+  .wc-stage { position: relative; margin-left: 360px; margin-top: -28px; }
+  .wc-pipe { position: absolute; left: 12px; right: calc(-1 * max(var(--gutter), (100vw - 1200px) / 2)); top: 164px; height: 14px; border-radius: 7px; background: var(--navy); }
+  .wc-pipe span { position: absolute; inset: 2px; border-radius: 5px; background: var(--sky); }
+  .wc-pipe span::after { content: ''; position: absolute; left: 4px; right: 4px; top: 2px; height: 2px; border-radius: 1px; background: rgba(255,255,255,.55); }
+  .wc-cards { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 0; padding: 0; }
+  .wc-card { position: relative; display: flex; flex-direction: column; min-height: 328px; padding: 24px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .wc-fl { position: absolute; left: -18px; top: 136px; width: 12px; height: 26px; border-radius: 3px; background: var(--navy); }
+  .wc-fl::after { content: ''; position: absolute; inset: 2px; border-radius: 2px; background: var(--soft); }
+  .wc-top { display: flex; justify-content: space-between; align-items: center; }
+  .wc-n { font-size: 40px; line-height: 44px; color: var(--blue); }
+  .wc-t { margin-top: 24px; font-weight: 700; font-size: 20px; line-height: 26px; }
+  .wc-d { margin-top: 10px; font-size: 15px; line-height: 23px; color: var(--slate); }
+  .wc-tag { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin-top: auto; padding: 6px 10px; border-radius: 8px; background: var(--tint); color: var(--press); }
+  .wc-tag :global(svg) { color: var(--blue); }
+  .wc-facts { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin: 36px 0 0; padding: 16px 24px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); }
+  .wc-fc { display: flex; align-items: center; gap: 14px; }
+  .wc-g { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); flex: none; }
+  .wc-fct { display: grid; gap: 2px; justify-items: start; } .wc-fct b { font-weight: 700; font-size: 15px; line-height: 20px; }
+  .wc-q { display: flex; gap: 8px; margin: 0; padding: 0; }
+  .wc-q li { display: grid; width: 190px; padding: 12px 16px; border-radius: 12px; background: var(--tint); }
+  .wc-a { font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate); }
+  .wc-q b { font-size: 16px; line-height: 20px; color: var(--navy); font-weight: 400; }
+  .wc-facts :global(.wc-rlm) { display: none; }
+  @media (max-width: 1199px) { .wc-stage { margin-left: 340px; } .wc-head { width: 300px; } .wc-q li { width: auto; } }
+  @media (max-width: 1023px) {
+    .wc { padding: 0 0 24px; background: linear-gradient(var(--sky) 0 0) top / 100% 600px no-repeat, var(--white); }
+    .wc-band { display: none; }
+    .wc-head { position: static; width: auto; padding-top: 52px; gap: 14px; }
+    .wc-stage { margin: 28px 0 0; }
+    .wc-pipe { left: 26px; right: auto; top: 40px; bottom: 40px; width: 14px; height: auto; }
+    .wc-cards { grid-template-columns: 1fr; gap: 14px; }
+    .wc-card { min-height: 0; padding: 20px; }
+    .wc-fl { display: none; }
+    .wc-top { align-items: center; }
+    .wc-ic { display: none; }
+    .wc-n { font-size: 30px; line-height: 34px; }
+    .wc-tag { position: absolute; right: 20px; top: 24px; margin: 0; }
+    .wc-t { margin-top: 12px; font-size: 18px; line-height: 24px; }
+    .wc-d { margin-top: 8px; font-size: 14px; line-height: 21px; }
+    .wc-facts { display: grid; gap: 12px; margin-top: 24px; padding: 16px; align-items: start; }
+    .wc-fct :global(.wc-rl) { display: none; }
+    .wc-facts :global(.wc-rlm) { display: inline-flex; justify-self: start; }
+    .wc-q { display: grid; gap: 8px; }
+    .wc-q li { display: block; padding: 10px 12px; }
+    .wc-a { font-size: 14px; } .wc-q b { font-size: 14px; font-family: var(--f-sans); font-weight: 800; }
+  }
+</style>

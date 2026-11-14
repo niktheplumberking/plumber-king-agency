@@ -1,0 +1,73 @@
+---
+// H13 FAQ (Figma 427:3842). Sticky left column (head, navy help card with the seal over its top edge, proof chips);
+// six accordion items on the right, the first open, with FAQPage JSON-LD for exactly these six.
+// STICKY 1 (03 emergencies), STICKY 2 (05 warranty), STICKY 3 (01 free estimates; price ranges from Paul), STICKY 4 (02 bonded).
+import SectionHead from '../ui/SectionHead.astro';
+import Faq from '../ui/Faq.astro';
+import type { FaqEntry } from '../ui/Faq.astro';
+import Seal from '../ui/Seal.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import CallButton from '../ui/CallButton.astro';
+import ProofChips from '../ui/ProofChips.astro';
+import TextLink from '../ui/TextLink.astro';
+import { SITE } from '../../data/site';
+const items: FaqEntry[] = [
+  { tag: 'Pricing', q: 'How much does a plumber cost in St. Petersburg?', a1: 'It depends on the job, and we tell you the price before we start.', a2: `Estimates are free. Call ${SITE.phone}, describe what you see, and we'll give you an honest idea of what it involves.`, link: { text: `Call ${SITE.phone}`, href: SITE.tel } },
+  { tag: 'Trust', q: 'Are you licensed and insured?', a1: `Yes. Plumbing By Paul LLC is a Florida certified plumbing contractor, licence ${SITE.licence}, and has been in business since 2015.`, a2: 'You can check the licence yourself at myfloridalicense.com. We are also bonded and insured.' },
+  { tag: 'Emergency', q: 'Do you come out for emergencies?', a1: `Yes. For a burst pipe, a sewer backup or a failed water heater, call ${SITE.phone} right away.`, a2: 'Shut off the water at the main valve near your meter first if you can do it safely.' },
+  { tag: 'Area', q: 'Which areas do you cover?', a1: 'We work across Pinellas County from our shop in St. Petersburg, including Clearwater and Seminole.', a2: "If you're not sure whether we come to you, call and ask." },
+  { tag: 'Warranty', q: 'Do you guarantee your work?', a1: 'Yes. Our work comes with a 1-year workmanship warranty.', a2: "If something we fixed isn't right, call the office and we come back." },
+  { tag: 'Service', q: 'Do you work on businesses as well as homes?', a1: 'Yes. The trucks say "Commercial and Residential" for a reason.', a2: 'Recent jobs in our reviews include an office and a church hall.' },
+];
+---
+<section class="hfaq" aria-labelledby="hfaq-h" data-m-section>
+  <div class="wrap hf-grid">
+    <div class="hf-side">
+      <SectionHead eyebrow="Good questions" l1="Things people ask" l2="before they call" id="hfaq-h" lead="Straight answers. If yours isn't here, ask the office." leadWidth="380px" class="hf-head" />
+      <aside class="hf-help" aria-label="Ask a person" data-t="4" data-fx="rise">
+        <Seal d={112} deg={6} class="hf-seal" />
+        <div class="hf-card">
+          <p class="hf-t">Rather just ask a person?</p>
+          <p class="hf-d">The office is open every day, 8 AM to 5 PM.</p>
+          <CallButton v="priN" l1={`Call ${SITE.phone}`} l2="A real person picks up" class="hf-call" />
+          <Swoosh w={384} h={56} below="#111032" class="hf-sw" />
+        </div>
+      </aside>
+      <ProofChips class="hf-chips" />
+    </div>
+    <div class="hf-list">
+      <Faq items={items} group="home-faq" />
+      <TextLink href="/faq" class="hf-all" data-t="3">All plumbing FAQs</TextLink>
+    </div>
+  </div>
+</section>
+<style>
+  .hfaq { position: relative; background: var(--white); padding: 112px 0 104px; }
+  .hf-grid { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 690px); justify-content: space-between; column-gap: 64px; align-items: start; }
+  .hf-side { position: sticky; top: calc(var(--header-h) + 32px); }
+  .hf-help { position: relative; width: 384px; max-width: 100%; margin-top: 76px; }
+  .hf-help :global(.hf-seal) { position: absolute; right: -3px; top: -65px; z-index: 2; }
+  .hf-card { position: relative; overflow: hidden; padding: 44px 28px 64px; border-radius: 24px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .hf-t { max-width: 230px; margin: 0; font-weight: 700; font-size: 22px; line-height: 28px; }
+  .hf-d { margin: 12px 0 0; font-weight: 500; font-size: 14px; line-height: 21px; color: var(--soft); }
+  .hf-card :global(.hf-call) { position: relative; z-index: 1; margin-top: 28px; }
+  .hf-card :global(.hf-sw) { position: absolute; left: 0; right: 0; bottom: 0; }
+  .hf-side :global(.hf-chips) { margin-top: 28px; max-width: 384px; }
+  .hf-list { display: grid; gap: 24px; justify-items: start; }
+  .hf-list :global(.faqs) { width: 100%; }
+  @media (max-width: 1199px) { .hf-grid { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); column-gap: 48px; } }
+  @media (max-width: 1023px) {
+    .hfaq { padding: 64px 0 72px; }
+    .hf-grid { grid-template-columns: 1fr; }
+    .hf-side { position: static; display: contents; }
+    .hf-side :global(.hf-head) { order: 1; }
+    .hf-list { order: 2; margin-top: 32px; }
+    .hf-help { order: 3; width: 100%; margin-top: 84px; }
+    .hf-help :global(.hf-seal) { --d: 88px !important; right: 6px; top: -46px; }
+    .hf-card { padding: 34px 20px 58px; }
+    .hf-t { font-size: 20px; line-height: 26px; }
+    .hf-d { font-size: 13px; }
+    .hf-card :global(.hf-call) { width: 100%; margin-top: 18px; }
+    .hf-side :global(.hf-chips) { display: none; }
+  }
+</style>

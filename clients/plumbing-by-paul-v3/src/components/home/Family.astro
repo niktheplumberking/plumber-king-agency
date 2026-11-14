@@ -1,0 +1,84 @@
+---
+// H6 Family (Figma 427:2983): "We're not just plumbers. We're your neighbors." Framed couple photo on a sky offset block,
+// tilted snapshot of their son with the blue roll, OWNER patches. STICKY 6 (son photo permission).
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Patch from '../ui/Patch.astro';
+import Icon from '../ui/Icon.astro';
+import Tick from '../ui/Tick.astro';
+import Button from '../ui/Button.astro';
+import { SITE } from '../../data/site';
+const rows = [
+  { b: 'You talk to us, not a call center.', t: 'The office picks up, and they know the crew by name.', i: 'phone' },
+  { b: 'You know the price first.', t: 'We explain the job and the cost before a wrench comes out.', i: 'clipboard' },
+  { b: 'We clean up.', t: "Then we leave a small thank-you. You'll see.", i: 'heart' },
+];
+---
+<section class="fam" aria-labelledby="fam-h" data-m-section>
+  <div class="wrap fam-in">
+    <div class="fam-media">
+      <span class="fm-block" data-t="4" data-fx="slide"></span>
+      <div class="fm-photo frame" data-t="4" data-fx="frame">
+        <Img name="about-paul-alycia-couple-portrait" alt="Paul and Alycia, the owners of Plumbing By Paul" sizes="(min-width: 1024px) 440px, calc(100vw - 40px)" focus="50% 25%" widths={[360, 480, 720, 900]} />
+      </div>
+      <div class="fm-snap snap" data-t="4" data-fx="toss">
+        <Img name="about-son-with-gift-roll-truck" alt="Paul and Alycia's son holding a Plumbing By Paul blue roll in front of the truck" sizes="(min-width: 1024px) 196px, 124px" focus="50% 75%" widths={[240, 400]} />
+      </div>
+      <Patch name="Paul" label="OWNER" deg={-4} class="fm-p1" />
+      <Patch name="Alycia" label="OWNER" deg={3} class="fm-p2" />
+    </div>
+    <div class="fam-copy">
+      <SectionHead eyebrow="Family-owned since 2015" l1="We're not just plumbers." l2="We're your neighbors." id="fam-h" />
+      <p class="body fc-p" data-t="3">Plumbing By Paul is Paul and Alycia's company. It started in St. Petersburg in 2015 and it's still run from a shop on 64th Way North, a few minutes from where a lot of you live.</p>
+      <p class="body fc-p" data-t="3">Paul likes to say that people rarely tell their friends "they fixed my plumbing." They talk about how they were treated. So that's the part we work hardest on.</p>
+      <ul role="list" class="rows" data-t="4" data-stagger>
+        {rows.map((r) => <li><span class="well"><Icon name={r.i} size={22} /></span><p><b>{r.b}</b> {r.t}</p><Tick /></li>)}
+      </ul>
+      <p class="fam-script script" data-t="5" data-fx="write">The plumber you deserve</p>
+      <div class="fam-cta" data-t="3">
+        <Button href="/about" v="sec" arrow magnetic={false}>Meet the family and the crew</Button>
+        <a href={SITE.tel} class="tlink fc-call"><Icon name="phone" size={18} /><span class="t">Call {SITE.phone}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .fam { position: relative; z-index: 1; background: var(--tint); padding: 168px 0 70px; }
+  .fam-in { display: grid; grid-template-columns: 580px 1fr; gap: 0; align-items: start; }
+  .fam-media { position: relative; width: 464px; height: 610px; margin-top: 22px; }
+  .fm-block { position: absolute; left: -24px; top: 24px; width: 440px; height: 560px; border-radius: var(--r-xl); background: var(--sky); }
+  .fm-photo { position: absolute; left: 0; top: 0; width: 440px; height: 560px; }
+  .fm-snap { position: absolute; left: 350px; top: 383px; width: 196px; height: 250px; transform: rotate(-5deg); z-index: 2; }
+  .fam-media :global(.fm-p1) { position: absolute; left: 12px; top: 538px; z-index: 3; }
+  .fam-media :global(.fm-p2) { position: absolute; left: 146px; top: 546px; z-index: 3; }
+  .fam-copy { position: relative; display: grid; justify-items: start; max-width: 620px; }
+  .fc-p { margin-top: 24px; font-size: 17px; line-height: 28px; }
+  .fc-p + .fc-p { margin-top: 14px; }
+  .rows { width: 100%; margin: 28px 0 0; padding: 0; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-1); }
+  .rows li { display: flex; align-items: center; gap: 16px; padding: 16px 22px; }
+  .rows li + li { border-top: 1px solid var(--line); }
+  .rows p { flex: 1; font-size: 16px; line-height: 25px; color: var(--slate); }
+  .rows b { font-weight: 700; color: var(--navy); }
+  .fam-script { order: 9; justify-self: end; margin-top: 2px; font-size: 46px; line-height: 1; color: var(--blue); transform: rotate(-3deg); }
+  .fam-cta { display: flex; align-items: center; gap: 28px; margin-top: 34px; }
+  .fc-call { font-weight: 700; }
+  @media (max-width: 1199px) { .fam-in { grid-template-columns: 1fr 1fr; gap: 48px; } .fam-media { width: 100%; max-width: 440px; height: auto; aspect-ratio: 440 / 610; } .fm-block, .fm-photo { width: 100%; height: auto; aspect-ratio: 440/560; } .fm-snap { left: auto; right: -20px; top: auto; bottom: 0; width: 40%; height: auto; aspect-ratio: 196/250; } .fam-media :global(.fm-p1) { top: auto; bottom: 6%; } .fam-media :global(.fm-p2) { top: auto; bottom: 4%; left: 30%; } }
+  @media (max-width: 1023px) {
+    .fam { padding: 200px 0 64px; }
+    .fam-in { grid-template-columns: 1fr; gap: 0; }
+    .fam-media { max-width: 350px; margin: 0 0 40px; aspect-ratio: 350 / 412; width: 100%; }
+    .fm-block { left: -8px; top: 8px; width: 100%; height: auto; aspect-ratio: 350 / 398; }
+    .fm-photo { aspect-ratio: 350 / 398; }
+    .fm-snap { right: -4px; left: auto; bottom: -10px; width: 124px; }
+    .fam-media :global(.fm-p1) { --x: 0; left: 6px; bottom: 6px; width: 104px; height: 44px; }
+    .fam-media :global(.fm-p2) { left: 104px; bottom: 0; width: 104px; height: 44px; }
+    .fam-media :global(.fm-p1 .pn), .fam-media :global(.fm-p2 .pn) { font-size: 24px; line-height: 24px; }
+    .fam-media :global(.fm-p1 .pl), .fam-media :global(.fm-p2 .pl) { font-size: 8px; }
+    .fc-p { font-size: 15px; line-height: 26px; margin-top: 20px; }
+    .rows li { padding: 14px 16px; align-items: flex-start; } .rows li :global(.tick) { display: none; } .rows p { font-size: 14px; line-height: 21px; }
+    .rows :global(.well) { width: 40px; height: 40px; }
+    .fam-script { order: 0; justify-self: start; margin-top: 28px; font-size: 34px; }
+    .fam-cta { display: grid; width: 100%; gap: 16px; justify-items: center; margin-top: 20px; }
+    .fam-cta :global(.btn) { width: 100%; }
+  }
+</style>

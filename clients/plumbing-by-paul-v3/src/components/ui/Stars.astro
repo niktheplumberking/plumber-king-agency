@@ -1,0 +1,9 @@
+---
+// Five amber rating stars (the only use of --star). `size` in px. Hidden from AT: the rating is always in text next to it.
+interface Props { size?: number; class?: string; }
+const { size = 16, class: cls } = Astro.props;
+const d = 'M12 1.8l3.15 6.38 7.05 1.03-5.1 4.97 1.2 7.02L12 17.88 5.7 21.2l1.2-7.02-5.1-4.97 7.05-1.03z';
+---
+<span class:list={['stars', cls]} style={`--star-size:${size}px`} aria-hidden="true">
+  {[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 24 24" width={size} height={size}><path fill="currentColor" d={d} /></svg>)}
+</span>

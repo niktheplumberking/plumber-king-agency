@@ -1,0 +1,25 @@
+---
+// Breadcrumbs + BreadcrumbList JSON-LD. items: [{ label, href }] excluding Home (added). Last item = current page.
+import Icon from './Icon.astro';
+interface Props { items: { label: string; href: string }[]; dark?: boolean; class?: string; }
+const { items, dark, class: cls } = Astro.props;
+const all = [{ label: 'Home', href: '/' }, ...items];
+const site = (import.meta.env.SITE as string || 'https://plumbingbypaulllc.com').replace(/\/$/, '');
+const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: all.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: site + (c.href === '/' ? '' : c.href) })) };
+---
+<nav class:list={['crumbs', dark && 'dark', cls]} aria-label="Breadcrumb" data-t="1">
+  <ol role="list">
+    {all.map((c, i) => (
+      <li>{i < all.length - 1 ? <><a href={c.href}>{c.label}</a><Icon name="right" size={14} /></> : <span aria-current="page">{c.label}</span>}</li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+<style>
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; font-weight: 600; font-size: 13px; line-height: 20px; color: var(--slate-2); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 6px; }
+  .crumbs a { display: inline-block; padding: 2px 0; color: var(--press); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: transparent; transition: text-decoration-color var(--dur-2); }
+  .crumbs a:hover { text-decoration-color: currentColor; }
+  .crumbs [aria-current] { color: var(--navy); }
+  .dark ol { color: var(--soft); } .dark a { color: var(--sky); } .dark [aria-current] { color: var(--white); }
+</style>

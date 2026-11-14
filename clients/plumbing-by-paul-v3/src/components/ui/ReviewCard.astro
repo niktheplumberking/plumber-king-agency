@@ -1,0 +1,59 @@
+---
+// Google review card (word-for-word quote). v: white | navy | tint. `hl` phrases get the soft highlighter.
+// fixedBy names become sewn patches on the top edge. Pass `mob` for the narrower mobile layout.
+import Stars from './Stars.astro';
+import GoogleG from './GoogleG.astro';
+import Icon from './Icon.astro';
+import Patch from './Patch.astro';
+import type { Review } from '../../data/reviews';
+interface Props { r: Review; v?: 'white' | 'navy' | 'tint'; class?: string; patches?: boolean; t?: string | false; style?: string; }
+const { r, v = 'white', class: cls, patches = true, t = '4', style } = Astro.props;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+let q = esc(r.quote);
+for (const h of r.hl ?? []) q = q.replace(esc(h), `<mark>${esc(h)}</mark>`);
+const pats = (r.fixedBy ?? []).slice(0, 2);
+---
+<figure class:list={['rcard', v, cls, pats.length && patches && 'has-patch']} data-t={t === false ? undefined : t} style={style}>
+  {patches && pats.length > 0 && (
+    <div class="pats" aria-label={`Fixed by ${pats.join(' and ')}`}>
+      {pats.map((n, i) => <Patch name={n} dark={v === 'navy'} deg={i % 2 ? 4 : -3} style={i % 2 ? 'margin-top:-6px' : ''} />)}
+    </div>
+  )}
+  <Stars size={16} />
+  <blockquote class="q"><p set:html={q} /></blockquote>
+  {r.tags && r.tags.length > 0 && (
+    <ul role="list" class="tags" aria-label="Service">{r.tags.map((tg) => <li><Icon name="wrench" size={12} />{tg}</li>)}</ul>
+  )}
+  <figcaption class="by">
+    <span class="av num" aria-hidden="true">{r.name[0]}</span>
+    <span class="nm"><span class="n">{r.name}</span><span class="m">Google review · {r.age}</span></span>
+    <GoogleG size={20} />
+  </figcaption>
+</figure>
+<style>
+  .rcard { position: relative; display: grid; gap: 14px; padding: 28px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); color: var(--navy); transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
+  .rcard.has-patch { padding-top: 34px; }
+  .rcard:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .rcard:hover :global(.patch) { transform: rotate(calc(var(--deg) + 2deg)); }
+  .navy { background: var(--navy); color: var(--white); box-shadow: var(--sh-1); }
+  .navy:hover { box-shadow: var(--sh-2); }
+  .tint { background: var(--tint); box-shadow: var(--sh-1); }
+  .pats { position: absolute; top: -26px; right: 16px; display: flex; gap: 0; }
+  .pats :global(.patch + .patch) { margin-left: -28px; }
+  .q { margin: 0; font-size: 16px; line-height: 26px; }
+  .q :global(mark) { background: none; color: inherit; font-weight: 600; text-decoration: underline; text-decoration-color: var(--soft); text-decoration-thickness: 8px; text-underline-offset: -2px; text-decoration-skip-ink: none; }
+  .navy .q :global(mark) { text-decoration-color: var(--blue); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
+  .tags li { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 6px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); color: var(--slate); font-weight: 600; font-size: 12px; line-height: 16px; }
+  .navy .tags li { background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); color: var(--tint); }
+  .navy .tags li :global(svg) { color: var(--sky); }
+  .by { display: flex; align-items: center; gap: 12px; }
+  .av { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--tint); color: var(--press); font-size: 16px; flex: none; }
+  .navy .av { background: var(--sky); color: var(--navy); }
+  .tint .av { background: var(--white); }
+  .nm { flex: 1; display: grid; }
+  .n { font-weight: 600; font-size: 15px; line-height: 22px; }
+  .m { font-weight: 500; font-size: 12px; line-height: 18px; color: var(--slate-2); }
+  .navy .m { color: var(--soft); }
+  @media (max-width: 767px) { .rcard { padding: 22px; } .rcard.has-patch { padding-top: 30px; } .q { font-size: 15px; line-height: 25px; } }
+</style>

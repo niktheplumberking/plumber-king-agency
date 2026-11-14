@@ -1,0 +1,277 @@
+---
+// U3 Article body (Figma 439:2340). Left: sticky contents card (in-bar on the current section, reading progress) and a navy
+// "Rather just ask a person?" card. Centre: the article at 18/30. Right (desktop): three margin facts.
+// Mobile: contents collapse into an accordion at the top; margin facts and the help card are dropped (the article and the
+// CTA card carry the same facts and phone number).
+// VERIFY BEFORE LAUNCH: the permit rule (pinellas.gov Express Permits), the water source and "hard" wording (Pinellas County
+// Utilities water quality report). Lifespans, repair list and "2 to 3 hours" are from Paul's current site. STICKY 10 tankless.
+// Pull quote: Carrington Cox (review #29), lines 2-3 word for word, emoji as written.
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import ReviewCard from '../ui/ReviewCard.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import type { Review } from '../../data/reviews';
+import { WH_CONTENTS } from './data';
+import { SITE } from '../../data/site';
+const life = [
+  { i: 'flame', k: 'Gas tank', v: '8 to 12 years', a: 8, b: 12 },
+  { i: 'zap', k: 'Electric tank', v: '10 to 15 years', a: 10, b: 15 },
+  { i: 'heater', k: 'Tankless', v: '20 years or more', a: 20, b: 24, open: true },
+];
+const signs = [
+  ['droplets', 'Rusty, discolored or smelly hot water:', 'the tank is corroding inside.'],
+  ['waves', 'Popping, rumbling or banging:', 'sediment has built up at the bottom.'],
+  ['alert', 'Water pooling around the base:', 'the tank may have failed. Turn off its water supply and call.'],
+  ['clock', "It's simply old,", 'and the hot water runs out sooner than it used to.'],
+];
+const cox: Review = { n: 29, name: 'Carrington Cox', age: 'a year ago', full: false, fixedBy: ['Brian'], hl: ['Brian deserves a medal'],
+  quote: 'Ever had a nightmare where your hot water was accidentally hooked up to the cold and your cold is to the hot? Showers were only ever warm for 30 seconds or less? Water heater almost ready to start highschool aged?\nThat was us until Plumbing by Paul pulled us from the wreckage of whoever did the original install, Brian deserves a medal 🏅' };
+const n = (i: number) => String(i).padStart(2, '0');
+---
+<section class="gb" aria-label="The guide" data-m-section>
+  <div class="wrap gb-in">
+    <aside class="gb-side" aria-label="In this guide">
+      <nav class="toc" aria-labelledby="toc-h" data-toc>
+        <p class="toc-h label" id="toc-h"><Icon name="clipboard" size={16} />In this guide</p>
+        <ol role="list">
+          {WH_CONTENTS.map(([id, t], i) => <li><a href={`#${id}`} data-toc-link={id}><span class="tn num">{i + 1}</span><span>{t}</span></a></li>)}
+        </ol>
+        <div class="toc-p"><span class="bar" aria-hidden="true"><i data-toc-progress></i></span><span>5 minute read</span></div>
+      </nav>
+      <div class="help on-navy">
+        <p class="help-t">Rather just ask a person?</p>
+        <p class="help-d">The office is open every day, 8 AM to 5 PM.</p>
+        <CallButton v="priN" l2="A real person picks up" class="help-btn" />
+        <Swoosh class="help-sw" w={282} h={44} draw={false} />
+        <Seal d={72} deg={8} class="help-seal" />
+      </div>
+    </aside>
+
+    <details class="toc-m">
+      <summary><span class="tm-i" aria-hidden="true"><Icon name="clipboard" size={18} /></span><span class="tm-t"><b class="label">In this guide</b><small>8 sections · 5 minute read</small></span><span class="tm-pm" aria-hidden="true"><Icon name="plus" size={18} /></span></summary>
+      <ol role="list">{WH_CONTENTS.map(([id, t], i) => <li><a href={`#${id}`}><span class="tn num">{i + 1}</span>{t}</a></li>)}</ol>
+    </details>
+
+    <article class="art">
+      <h2 class="ah" id="questions"><span class="an num">{n(1)}</span>The three questions we ask</h2>
+      <p>When we look at a water heater, we're answering three things. <b>How old is it?</b> <b>Is the tank itself leaking?</b> And <b>how often has it needed us lately?</b> If it's young, dry and this is the first call, we repair it. If it's old, or wet at the base, or we've been out twice this year, a new one costs you less in the end.</p>
+
+      <h2 class="ah" id="lifespan"><span class="an num">{n(2)}</span>How long does a water heater last?</h2>
+      <div class="lt" data-t="4">
+        <span class="perf" aria-hidden="true"></span>
+        <table>
+          <caption class="label">Job ticket: expected life</caption>
+          <thead class="sr-only"><tr><th scope="col">Type</th><th scope="col">Expected life</th></tr></thead>
+          <tbody>
+            {life.map((r) => (
+              <tr>
+                <th scope="row"><span class="lt-i" aria-hidden="true"><Icon name={r.i} size={18} /></span>{r.k}</th>
+                <td class="lt-bar" aria-hidden="true"><span class:list={['rng', r.open && 'open']} style={`--a:${(r.a / 24) * 100}%;--b:${(r.b / 24) * 100}%`}></span></td>
+                <td class="lt-v num">{r.v}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <Seal d={64} deg={8} class="lt-seal" />
+      </div>
+      <p>These are averages. Hard water and skipped maintenance pull them down. The serial number on the label tells you when yours was made. Call us with it and we'll decode it for you.</p>
+
+      <h2 class="ah" id="signs"><span class="an num">{n(3)}</span>Signs it's nearly done</h2>
+      <ul role="list" class="signs" data-t="4" data-stagger>
+        {signs.map(([i, a, b]) => <li><span class="sg-i" aria-hidden="true"><Icon name={i} size={20} /></span><p><b>{a}</b> {b}</p></li>)}
+      </ul>
+
+      <h2 class="ah" id="repairs"><span class="an num">{n(4)}</span>What can usually be repaired</h2>
+      <p><b>A lot.</b> A failed thermostat, a burned-out heating element, a pilot or ignition problem and a worn valve are all repairs, not replacements. So is flushing out sediment. We always try the repair first, and if we recommend a new heater we'll tell you exactly why.</p>
+
+      <div class="mid" data-t="4">
+        <p class="mid-t">Want a straight answer on yours?</p>
+        <p class="mid-d">We'll look at it and give you a free estimate either way.</p>
+        <div class="mid-b">
+          <CallButton l1={`Call ${SITE.phone}`} />
+          <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+        </div>
+        <Seal d={112} deg={8} class="mid-seal" />
+      </div>
+
+      <h2 class="ah" id="water"><span class="an num">{n(5)}</span>What our water does to a tank</h2>
+      <p>Pinellas County's water comes from the Floridan Aquifer, and it's hard. The minerals in it settle at the bottom of a tank as sediment. That layer makes the heater work harder, causes the popping sound and shortens its life. A yearly flush and an anode rod check slow that down. A water softener slows it down more.</p>
+      <div class="pq" data-t="4"><ReviewCard r={cox} v="navy" t={false} /></div>
+
+      <h2 class="ah" id="permits"><span class="an num">{n(6)}</span>Do you need a permit to replace a water heater in Pinellas County?</h2>
+      <p><b>Yes.</b> Replacing a water heater here requires a permit. It's a simple one, and we pull it as part of the job. The inspection that follows is your proof the work was done to code, which matters when you sell or when an insurer asks.</p>
+
+      <h2 class="ah" id="types"><span class="an num">{n(7)}</span>If you replace: tank, tankless or hybrid?</h2>
+      <p>A <b>tank</b> heater costs the least up front and is the simplest swap. A <b>tankless</b> heater costs more to install, takes up less room, heats water as you use it and typically lasts 20 years or more. A <b>hybrid</b> adds a heat pump to a tank and uses the least electricity of the three. Which is right depends on your household, your budget and whether you have gas. We install all three.</p>
+      <figure class="ph">
+        <span class="ph-blk" aria-hidden="true"></span>
+        <div class="ph-f" data-t="4" data-fx="frame">
+          <Img name="service-trutankless-unit" alt="A truTankless electric tankless water heater mounted on a block wall" sizes="(min-width: 1024px) 690px, calc(100vw - 50px)" focus="50% 55%" widths={[400, 690, 1000, 1380]} />
+        </div>
+        <PhotoTag class="ph-tag">Tankless</PhotoTag>
+        <figcaption><Caption>A tankless unit mounted on a block wall.</Caption></figcaption>
+      </figure>
+
+      <h2 class="ah" id="replacement"><span class="an num">{n(8)}</span>What a replacement involves</h2>
+      <p>For a standard tank: we drain and disconnect the old one, set the new one, connect and test it, and haul the old heater away. <b>Most take 2 to 3 hours.</b> Tankless installs can take longer because of gas or electrical work. You get a walkthrough before we leave.</p>
+    </article>
+
+    <ul role="list" class="facts" aria-label="Expected life at a glance">
+      <li><b class="num">8 to 12</b><span>years, gas tank</span></li>
+      <li><b class="num">10 to 15</b><span>years, electric tank</span></li>
+      <li><b class="num">20+</b><span>years, tankless</span></li>
+    </ul>
+  </div>
+</section>
+<script>
+  // Scroll-spy for the contents card: the section whose heading last passed 30% of the viewport is current; the bar tracks
+  // how far through the article the reader is. Read-only (no layout writes in the scroll handler beyond one width).
+  const toc = document.querySelector<HTMLElement>('[data-toc]');
+  const art = document.querySelector<HTMLElement>('.art');
+  if (toc && art) {
+    const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+    const heads = links.map((a) => document.getElementById(a.dataset.tocLink!)).filter(Boolean) as HTMLElement[];
+    const bar = toc.querySelector<HTMLElement>('[data-toc-progress]');
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const line = window.innerHeight * 0.3;
+      let cur = 0;
+      heads.forEach((h, i) => { if (h.getBoundingClientRect().top <= line) cur = i; });
+      links.forEach((a, i) => { if (i === cur) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+      const r = art.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (line - r.top) / Math.max(1, r.height - line)));
+      if (bar) bar.style.width = `${Math.max(8, p * 100)}%`;
+    };
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    update();
+  }
+  // Mobile contents: close after a jump so the article is in view.
+  document.querySelectorAll<HTMLAnchorElement>('.toc-m a').forEach((a) => a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')));
+</script>
+<style>
+  .gb { position: relative; background: var(--white); padding: 40px 0 110px; }
+  .gb-in { display: grid; grid-template-columns: 282px minmax(0, 690px) 170px; justify-content: space-between; column-gap: 24px; align-items: start; }
+  .gb-side { position: sticky; top: calc(var(--header-h) + 24px); display: grid; gap: 20px; transition: top .45s var(--ease-out); }
+  :global(body:has(.hdr.is-hidden)) .gb-side { top: 24px; }
+  .toc { padding: 18px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .toc-h { display: flex; align-items: center; gap: 8px; padding: 0 6px 10px; font-size: 12px; color: var(--navy); }
+  .toc-h :global(svg) { color: var(--blue); }
+  .toc ol { display: grid; gap: 2px; margin: 0; padding: 0; }
+  .toc a { position: relative; display: flex; gap: 10px; padding: 9px 12px; border-radius: 8px; font-weight: 500; font-size: 14px; line-height: 20px; color: var(--slate); text-decoration: none; overflow: hidden; transition: background var(--dur-2), color var(--dur-2); }
+  .toc a:hover { background: var(--mist); color: var(--navy); }
+  .toc a[aria-current] { background: var(--tint); color: var(--navy); font-weight: 700; }
+  .toc a[aria-current]::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--blue); }
+  .tn { flex: none; width: 12px; font-size: 13px; color: var(--blue); }
+  .toc-p { display: grid; gap: 6px; padding: 12px 6px 0; font-weight: 500; font-size: 12px; color: var(--slate); }
+  .bar { display: block; height: 6px; border-radius: 3px; background: var(--tint); overflow: hidden; }
+  .bar i { display: block; width: 8%; height: 100%; border-radius: 3px; background: var(--blue); transition: width .2s linear; }
+  .help { position: relative; min-height: 264px; padding: 32px 22px 70px; border-radius: 20px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .help :global(.help-sw) { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; border-radius: 0 0 20px 20px; overflow: hidden; }
+  .help-t { max-width: 190px; font-weight: 800; font-size: 19px; line-height: 25px; }
+  .help-d { margin-top: 10px; font-weight: 500; font-size: 13px; line-height: 19px; color: var(--tint); }
+  .help :global(.help-btn) { position: relative; z-index: 1; margin-top: 18px; }
+  .help :global(.help-seal) { position: absolute; right: -14px; top: -20px; }
+  .toc-m { display: none; }
+
+  .art { min-width: 0; font-size: 18px; line-height: 30px; color: var(--slate); }
+  .art > * + * { margin-top: 20px; }
+  .art b { font-weight: 700; color: var(--navy); }
+  .ah { display: grid; gap: 6px; margin-top: 44px; font-weight: 800; font-size: 30px; line-height: 38px; letter-spacing: -.015em; color: var(--navy); scroll-margin-top: calc(var(--header-h) + 24px); }
+  .art > .ah { margin-top: 48px; }
+  .art > .ah:first-child { margin-top: 0; }
+  .an { font-size: 14px; line-height: 18px; letter-spacing: .08em; color: var(--press); }
+
+  .lt { position: relative; padding: 28px 8px 12px; border-radius: 20px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .perf { position: absolute; left: 14px; right: 14px; top: -6px; height: 12px; background: radial-gradient(circle at 6px 6px, var(--white) 5.5px, transparent 6px) 0 0 / 24px 12px repeat-x; }
+  .lt table { width: 100%; border-collapse: separate; border-spacing: 0 6px; }
+  .lt caption { padding: 0 20px 8px; text-align: left; font-size: 12px; color: var(--press); }
+  .lt th, .lt td { padding: 0; background: var(--white); }
+  .lt th { display: flex; align-items: center; gap: 12px; height: 58px; padding-left: 20px; border-radius: 10px 0 0 10px; font-weight: 700; font-size: 17px; color: var(--navy); text-align: left; }
+  .lt-i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .lt-bar { width: 230px; }
+  .rng { position: relative; display: block; height: 8px; border-radius: 4px; background: var(--tint); }
+  .rng::after { content: ''; position: absolute; left: var(--a); width: calc(var(--b) - var(--a)); top: 0; bottom: 0; border-radius: 4px; background: var(--blue); }
+  .rng.open::after { background: var(--navy); border-radius: 4px 0 0 4px; }
+  .lt-v { padding-right: 20px !important; border-radius: 0 10px 10px 0; font-size: 19px; color: var(--press); text-align: right; white-space: nowrap; }
+  .lt :global(.lt-seal) { position: absolute; right: -12px; top: -14px; }
+
+  .signs { display: grid; gap: 12px; margin-bottom: 0; padding: 0; }
+  .signs li { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-radius: 14px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); }
+  .sg-i { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 50%; background: var(--white); color: var(--blue); box-shadow: var(--sh-1); }
+  .signs p { font-size: 17px; line-height: 26px; }
+
+  .mid { position: relative; margin: 36px 0 24px !important; padding: 36px 32px 32px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .mid::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; border-radius: 20px 20px 0 0; background: var(--sky); }
+  .mid-t { max-width: 460px; font-weight: 800; font-size: 24px; line-height: 30px; color: var(--navy); }
+  .mid-d { margin-top: 8px; font-weight: 500; font-size: 16px; line-height: 24px; }
+  .mid-b { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+  .mid :global(.mid-seal) { position: absolute; right: 22px; top: 28px; }
+
+  .pq { margin: 32px -60px 12px 0 !important; }
+  .pq :global(.rcard) { padding: 36px; box-shadow: var(--sh-3); }
+  .pq :global(.q p) { white-space: pre-line; font-size: 19px; line-height: 31px; }
+
+  .ph { position: relative; margin: 30px 0 40px !important; }
+  .ph-blk { position: absolute; inset: 18px -18px -18px 18px; border-radius: 28px; background: var(--sky); }
+  .ph-f { position: relative; height: 380px; border-radius: 28px; overflow: hidden; }
+  .ph :global(.ph-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .ph figcaption { position: absolute; left: 20px; bottom: 20px; z-index: 2; }
+
+  .facts { display: grid; gap: 12px; margin: 0; padding: 0; position: sticky; top: calc(var(--header-h) + 24px); }
+  .facts li { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); }
+  .facts b { font-size: 22px; line-height: 26px; color: var(--press); }
+  .facts span { font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate); }
+
+  @media (max-width: 1279px) { .gb-in { grid-template-columns: 260px minmax(0, 1fr); column-gap: 40px; } .facts { display: none; } .pq { margin-right: 0 !important; } }
+  @media (max-width: 1023px) {
+    .gb { padding: 8px 0 64px; }
+    .gb-in { grid-template-columns: minmax(0, 1fr); }
+    .gb-side { display: none; }
+    .toc-m { display: block; margin-bottom: 32px; border-radius: 14px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); }
+    .toc-m summary { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 14px; list-style: none; cursor: pointer; }
+    .toc-m summary::-webkit-details-marker { display: none; }
+    .tm-i { color: var(--blue); display: grid; }
+    .tm-t { flex: 1; display: grid; } .tm-t b { font-size: 11px; color: var(--navy); } .tm-t small { font-weight: 500; font-size: 11px; color: var(--slate); }
+    .tm-pm { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--white); color: var(--navy); transition: transform var(--dur-2); }
+    .toc-m[open] .tm-pm { transform: rotate(45deg); }
+    .toc-m ol { display: grid; gap: 2px; margin: 0; padding: 0 8px 12px; }
+    .toc-m a { display: flex; gap: 10px; min-height: 44px; align-items: center; padding: 0 8px; border-radius: 8px; font-weight: 500; font-size: 14px; color: var(--navy); text-decoration: none; }
+    .art { font-size: 15px; line-height: 25px; }
+    .art > * + * { margin-top: 16px; }
+    .art > .ah { margin-top: 36px; }
+    .art > .ah:first-child { margin-top: 0; }
+    .ah { font-size: 21px; line-height: 27px; gap: 4px; }
+    .an { font-size: 12px; }
+    .lt { padding: 22px 4px 8px; }
+    .lt caption { padding: 0 12px 6px; font-size: 10px; }
+    .lt tr { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: 'k v' 'b b'; margin-bottom: 6px; border-radius: 10px; background: var(--white); padding: 8px 10px 12px; }
+    .lt th, .lt td { background: none; }
+    .lt th { grid-area: k; height: auto; padding: 0; gap: 10px; font-size: 14px; border-radius: 0; }
+    .lt-i { width: 30px; height: 30px; }
+    .lt-v { grid-area: v; align-self: center; padding: 0 !important; font-size: 14px; border-radius: 0; }
+    .lt-bar { grid-area: b; width: auto; padding: 8px 0 0 40px !important; }
+    .lt :global(.lt-seal) { --d: 46px !important; right: -6px; top: -16px; }
+    .signs li { align-items: flex-start; gap: 12px; padding: 12px 14px; }
+    .signs p { font-size: 14px; line-height: 21px; }
+    .mid { padding: 26px 18px 20px; margin: 28px 0 20px !important; }
+    .mid-t { max-width: calc(100% - 80px); font-size: 19px; line-height: 25px; }
+    .mid-d { font-size: 13px; line-height: 20px; }
+    .mid-b { display: grid; gap: 10px; }
+    .mid-b :global(.btn) { width: 100%; }
+    .mid :global(.mid-seal) { --d: 64px !important; right: 12px; top: 14px; }
+    .pq { margin: 28px 0 8px !important; }
+    .pq :global(.rcard) { padding: 24px 18px; }
+    .pq :global(.q p) { font-size: 15px; line-height: 24px; }
+    .ph { margin: 24px 10px 28px 0 !important; }
+    .ph-blk { inset: 12px -10px -12px 12px; border-radius: 22px; }
+    .ph-f { height: 230px; border-radius: 22px; }
+    .ph :global(.ph-tag) { left: 12px; top: 12px; }
+    .ph figcaption { left: 12px; bottom: 12px; }
+  }
+</style>

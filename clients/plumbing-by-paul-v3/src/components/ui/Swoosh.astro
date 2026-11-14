@@ -1,0 +1,29 @@
+---
+// Swoosh edge: the van's three ribbons (sky / blue / navy on a white band). Generated with the Figma prelude's formula
+// so it matches 1:1. Put it at the bottom of a section (absolute, bottom 0) with `below` = the next section's colour.
+// flip mirrors it. h = height in px at 1440 (it scales with width). draw = stripes draw in on scroll (motion tier 4).
+interface Props { flip?: boolean; below?: string; above?: string; h?: number; w?: number; class?: string; style?: string; draw?: boolean; }
+const { flip = false, below, above, h = 120, w = 1440, class: cls, style, draw = true } = Astro.props;
+const k = h / 120;
+const X = (v: number) => (flip ? w - v : v);
+const L = [76, 84, 90, 98, 104, 112].map((v) => v * k);
+const R = [4, 34, 40, 70, 76, 106].map((v) => v * k);
+const cur = (i: number, rev = false) => {
+  const a = [0, L[i]], b = [w * 0.42, L[i] + 16 * k], c = [w * 0.6, R[i] - 4 * k], d = [w, R[i]];
+  return rev
+    ? `L${X(d[0])} ${d[1]} C${X(c[0])} ${c[1]} ${X(b[0])} ${b[1]} ${X(a[0])} ${a[1]}`
+    : `M${X(a[0])} ${a[1]} C${X(b[0])} ${b[1]} ${X(c[0])} ${c[1]} ${X(d[0])} ${d[1]}`;
+};
+const band = (i: number, j: number) => `${cur(i)} ${cur(j, true)}Z`;
+---
+<svg class:list={['swoosh', cls]} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" aria-hidden="true" style={style} data-swoosh={draw ? '' : undefined}>
+  {below && <path fill={below} d={`${cur(5)} L${X(w)} ${h} L${X(0)} ${h}Z`} />}
+  {above && <path fill={above} d={`${cur(0)} L${X(w)} 0 L${X(0)} 0Z`} />}
+  <path fill="#FFFFFF" d={band(0, 5)} />
+  <path class="sw-b" fill="#61ADCB" d={band(0, 1)} />
+  <path class="sw-b" fill="#2A7FA8" d={band(2, 3)} />
+  <path class="sw-b" fill="#111032" d={band(4, 5)} />
+</svg>
+<style>
+  .swoosh { display: block; width: 100%; height: auto; pointer-events: none; }
+</style>

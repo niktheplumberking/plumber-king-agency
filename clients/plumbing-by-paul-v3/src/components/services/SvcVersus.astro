@@ -1,0 +1,79 @@
+---
+// Do it yourself or call (Figma 04 D4): navy band; head + a white "try it" card left, a tall photo that breaks out of
+// the band's bottom edge in the middle, a sky "call the plumber" card + sky call button right.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import CallButton from '../ui/CallButton.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { v: NonNullable<SvcPage['versus']>; slug: string; }
+const { v, slug } = Astro.props;
+const id = sid(slug, 'versus');
+---
+<section class="vs" aria-labelledby={id} data-m-section>
+  <div class="vs-band on-navy"><FlowLines variant="navy" class="vs-fl" /></div>
+  <div class="wrap vs-grid">
+    <div class="vs-left on-navy">
+      <SectionHead eyebrow={v.eyebrow} l1={v.l1} l2={v.l2} dark id={id} />
+      <div class="vs-card vs-try" data-t="4" data-fx="rise">
+        <h3 class="vs-t">{v.left.t}</h3>
+        <ul role="list">{v.left.items.map((x) => <li><span class="ck"><Icon name="check" size={14} stroke={2.4} /></span>{x}</li>)}</ul>
+      </div>
+    </div>
+    <div class="vs-mid" data-t="4" data-fx="frame">
+      <span class="vs-back" aria-hidden="true"></span>
+      <div class="vs-ph frame">
+        <Img name={v.photo.name} alt={v.photo.alt} focus={v.photo.focus} sizes="(min-width: 1024px) 300px, calc(100vw - 40px)" widths={[320, 480, 640, 900]} />
+        <Caption class="vs-cap">{v.caption}</Caption>
+      </div>
+    </div>
+    <span class="vs-or script" aria-hidden="true">or</span>
+    <div class="vs-right">
+      <div class="vs-card vs-call" data-t="4" data-fx="rise">
+        <h3 class="vs-t">{v.right.t}</h3>
+        <ul role="list">{v.right.items.map((x) => <li><span class="ph"><Icon name="phone" size={13} stroke={2.2} /></span>{x}</li>)}</ul>
+      </div>
+      <CallButton v="priN" l2={v.call} block class="vs-btn" />
+    </div>
+  </div>
+</section>
+<style>
+  .vs { position: relative; background: var(--white); padding: 104px 0 72px; }
+  .vs-band { position: absolute; left: 0; right: 0; top: 0; bottom: 72px; background: var(--navy); overflow: hidden; }
+  .vs-band :global(.vs-fl) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .vs-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 420px) 310px minmax(0, 420px); justify-content: space-between; column-gap: 24px; align-items: start; }
+  .vs-left { display: grid; gap: 40px; }
+  .vs-card { padding: 30px 28px 32px; border-radius: 22px; }
+  .vs-t { font-weight: 700; font-size: 22px; line-height: 28px; }
+  .vs-card ul { display: grid; gap: 14px; margin: 18px 0 0; padding: 0; }
+  .vs-card li { display: flex; align-items: flex-start; gap: 12px; font-weight: 600; font-size: 15px; line-height: 24px; }
+  .vs-try { background: var(--white); color: var(--navy); }
+  .ck { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .vs-call { background: var(--sky); color: var(--navy); }
+  .ph { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: var(--white); }
+  .vs-mid { position: relative; height: 640px; margin-top: -122px; }
+  .vs-back { position: absolute; left: 26px; right: -16px; top: 20px; bottom: -16px; border-radius: var(--r-xl); background: var(--blue); opacity: .75; }
+  .vs-ph { position: absolute; inset: 0; border-radius: var(--r-xl); }
+  .vs-ph :global(.vs-cap) { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; }
+  .vs-or { display: none; }
+  .vs-right { display: grid; gap: 20px; padding-top: 0; }
+  .vs-right :global(.vs-btn) { justify-content: center; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .vs-grid { grid-template-columns: minmax(0, 1fr) 240px minmax(0, 1fr); } .vs-mid { height: 560px; } }
+  @media (max-width: 1023px) {
+    .vs { padding: 64px 0 64px; background: var(--navy); }
+    .vs-band { bottom: 0; }
+    .vs-grid { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+    .vs-left { display: contents; }
+    .vs-left :global(.shead) { order: 1; }
+    .vs-mid { order: 2; height: 360px; margin: 36px 10px 0 0; }
+    .vs-back { left: 14px; right: -10px; top: 14px; bottom: -10px; }
+    .vs-try { order: 3; margin-top: 40px; }
+    .vs-or { order: 4; display: grid; place-items: center; justify-self: end; position: relative; z-index: 2; width: 60px; height: 60px; margin: -26px 20px -26px 0; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 26px; box-shadow: 0 0 0 4px var(--white); padding-bottom: 6px; }
+    .vs-right { order: 5; gap: 16px; }
+    .vs-card { padding: 24px 22px 26px; }
+    .vs-t { font-size: 20px; }
+  }
+</style>

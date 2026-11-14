@@ -1,0 +1,75 @@
+---
+// H2 Router (Figma 427:2496): the estimate bar straddles the hero edge, then "What's going on at your place?" + four tiles.
+import EstimateBar from '../global/EstimateBar.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import Icon from '../ui/Icon.astro';
+import ArrowDot from '../ui/ArrowDot.astro';
+const tiles = [
+  { t: "Something's leaking", d: 'Pipes, faucets, toilets, the water meter.', dm: 'Pipes, faucets, toilets, the meter.', i: 'droplets', href: '/leak-detection' },
+  { t: 'No hot water', d: "Repair it or replace it, we'll tell you straight.", dm: "Repair or replace, we'll tell you straight.", i: 'heater', href: '/water-heaters' },
+  { t: 'Clog or backup', d: 'One slow drain or the whole house.', i: 'waves', href: '/drain-cleaning' },
+  { t: 'Planning a project', d: 'Repipes, remodels, new fixtures, gas lines.', dm: 'Repipes, remodels, fixtures, gas.', i: 'ruler', href: '/services' },
+];
+---
+<section class="router" aria-labelledby="router-h" data-m-section>
+  <div class="wrap">
+    <div class="rt-bar" data-t="4" data-fx="rise"><EstimateBar /></div>
+    <div class="rt-head">
+      <SectionHead eyebrow="Start here" l1="What's going on" l2="at your place?" id="router-h" class="rt-sh" inline />
+      <TextLink href="/services" class="rt-all" data-t="3">See all services</TextLink>
+    </div>
+    <ul role="list" class="tiles" data-t="4" data-stagger>
+      {tiles.map((x, i) => (
+        <li>
+          <a href={x.href} class="tile">
+            <span class="ti-ic"><Icon name={x.i} size={26} /></span>
+            <span class="ti-n num" aria-hidden="true">0{i + 1}</span>
+            <span class="ti-t">{x.t}</span>
+            <span class="ti-d"><span class="dd">{x.d}</span><span class="dm">{x.dm ?? x.d}</span></span>
+            <ArrowDot d={40} class="ti-a" />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <TextLink href="/services" class="rt-all-m" size={15}>See all services</TextLink>
+  </div>
+</section>
+<style>
+  .router { position: relative; z-index: 3; background: var(--white); padding-bottom: 110px; }
+  .rt-bar { position: relative; z-index: 2; margin-top: -58px; }
+  .rt-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-top: 74px; }
+  .rt-head :global(.rt-all) { margin-bottom: 6px; }
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 44px 0 0; padding: 0; }
+  .tile { position: relative; display: grid; align-content: start; height: 176px; padding: 24px 24px 0; border-radius: var(--r-lg); background: var(--tint); transition: background .45s var(--ease-out), transform .45s var(--ease-out), box-shadow .45s var(--ease-out); }
+  .ti-ic { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--white); color: var(--blue); box-shadow: var(--sh-1); transition: transform .5s var(--ease-back); }
+  .ti-n { position: absolute; right: 54px; top: 28px; font-size: 13px; letter-spacing: .08em; color: var(--press); }
+  .ti-t { margin-top: 16px; font-weight: 700; font-size: 20px; line-height: 26px; color: var(--navy); }
+  .ti-d { margin-top: 4px; max-width: 214px; font-size: 14px; line-height: 21px; color: var(--slate); }
+  .dm { display: none; }
+  .tile :global(.ti-a) { position: absolute; right: -6px; bottom: -6px; }
+  .tile:hover { background: var(--white); box-shadow: inset 0 0 0 1.5px var(--sky), var(--sh-2); transform: translateY(-4px); }
+  .tile:hover .ti-ic { transform: rotate(-8deg) scale(1.08); }
+  .tile:hover :global(.ti-a) { transform: translateX(4px); background: var(--press); }
+  @media (max-width: 1199px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 1023px) {
+    .router { padding-bottom: 64px; }
+    .rt-bar { margin-top: -56px; }
+    .rt-head { margin-top: 56px; display: grid; justify-items: start; }
+    .rt-head :global(.rt-all) { order: 3; }
+  }
+  @media (max-width: 767px) {
+    .rt-head { display: block; }
+    .rt-head :global(.rt-all) { display: none; }
+    .tiles { gap: 16px; margin-top: 24px; }
+    .tile { height: 160px; padding: 14px 14px 0; border-radius: 18px; }
+    .ti-ic { width: 42px; height: 42px; } .ti-ic :global(svg) { width: 22px; height: 22px; }
+    .ti-n { right: 16px; top: 18px; font-size: 11px; }
+    .ti-t { margin-top: 10px; font-size: 15px; line-height: 19px; }
+    .ti-d { font-size: 12px; line-height: 17px; max-width: 118px; }
+    .dd { display: none; } .dm { display: inline; }
+    .tile :global(.ti-a) { --d: 34px !important; right: -6px; bottom: -6px; }
+  }
+  .router :global(.rt-all-m) { display: none; }
+  @media (max-width: 767px) { .router :global(.rt-all-m) { display: inline-flex; margin-top: 28px; } }
+</style>

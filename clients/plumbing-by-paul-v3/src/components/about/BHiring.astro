@@ -1,0 +1,59 @@
+---
+// B10 Hiring (Figma B10): a navy band card on tint; the photo of three crew at the van fills its right side under a navy
+// scrim; a sky "NOW HIRING / Crew" patch overlaps the card's top edge. Paul to confirm he is hiring at launch.
+import Eyebrow from '../ui/Eyebrow.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import Img from '../ui/Img.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Patch from '../ui/Patch.astro';
+import { SITE } from '../../data/site';
+---
+<section class="bhr" aria-labelledby="bhr-h" data-m-section>
+  <div class="wrap">
+    <div class="bhr-card on-navy" data-t="4" data-fx="rise">
+      <div class="bhr-ph">
+        <Img name="crew-three-techs-at-van" alt="Three Plumbing By Paul techs smiling at the open back of a work van" sizes="(min-width: 1024px) 700px, calc(100vw - 40px)" widths={[400, 700, 1000, 1400]} focus="60% 40%" />
+        <PhotoTag class="bhr-tag">Three of the crew</PhotoTag>
+      </div>
+      <div class="bhr-copy">
+        <Eyebrow text="Join the family" dark />
+        <h2 class="h2 bhr-h" id="bhr-h" data-t="2"><span class="l1">Good plumber?</span> <span class="l2">Help us plumb Pinellas with heart.</span></h2>
+        <p class="bhr-p" data-t="3">We're hiring skilled plumbers who take pride in their work and like the people they do it for.</p>
+        <div class="bhr-btns" data-t="3" data-stagger>
+          <CallButton v="priN" l1={`Call ${SITE.phone}`} l2="" class="bhr-call" />
+          <Button href={`mailto:${SITE.email}`} v="secN" icon="mail" magnetic={false}><span class="bhr-el">Email </span>{SITE.email}</Button>
+        </div>
+      </div>
+      <span class="bhr-pw"><Patch name="Crew" label="Now hiring" dark deg={6} /></span>
+    </div>
+  </div>
+</section>
+<style>
+  .bhr { position: relative; background: var(--tint); padding: 64px 0 88px; }
+  .bhr-card { position: relative; display: grid; grid-template-columns: 1fr; min-height: 406px; border-radius: var(--r-2xl); background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .bhr-ph { position: absolute; top: 0; right: 0; bottom: 0; width: 58%; overflow: hidden; border-radius: 0 var(--r-2xl) var(--r-2xl) 0; }
+  .bhr-ph :global(img) { display: block; }
+  .bhr-ph::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, var(--navy) 0%, rgba(17,16,50,.55) 25%, rgba(17,16,50,0) 50%); }
+  .bhr-ph :global(.bhr-tag) { position: absolute; right: 20px; bottom: 20px; z-index: 2; }
+  .bhr-copy { position: relative; z-index: 2; max-width: 660px; padding: 52px 0 52px 56px; }
+  .bhr-h { margin-top: 14px; font-size: 34px; line-height: 38px; color: var(--white); }
+  .bhr-h .l1 { display: block; }
+  .bhr-h .l2 { color: var(--sky); }
+  .bhr-p { margin-top: 14px; max-width: 440px; font-size: 16px; line-height: 26px; color: rgba(255,255,255,.9); }
+  .bhr-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .bhr-pw { position: absolute; right: 80px; top: -34px; z-index: 3; }
+  @media (max-width: 1023px) {
+    .bhr { padding: 56px 0 64px; }
+    .bhr-card { min-height: 0; border-radius: var(--r-xl); }
+    .bhr-ph { position: relative; width: 100%; height: 240px; border-radius: var(--r-xl) var(--r-xl) 0 0; }
+    .bhr-ph::before { background: linear-gradient(0deg, var(--navy) 0%, rgba(17,16,50,0) 45%); }
+    .bhr-ph :global(.bhr-tag) { display: none; }
+    .bhr-copy { padding: 0 18px 28px; margin-top: -16px; }
+    .bhr-h { font-size: 28px; line-height: 32px; }
+    .bhr-btns { display: grid; gap: 10px; }
+    .bhr-btns :global(.btn) { width: 100%; }
+    .bhr-el { display: none; }
+    .bhr-pw { right: 18px; top: -26px; transform: scale(.82); transform-origin: top right; }
+  }
+</style>

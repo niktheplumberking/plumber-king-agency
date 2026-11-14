@@ -1,0 +1,14 @@
+---
+// Faint sky flow lines (hero, trust bento, waterline). Pure SVG, decorative. variant picks the Figma formula.
+interface Props { variant?: 'hero' | 'heroM' | 'navy' | 'cta'; class?: string; opacity?: number; }
+const { variant = 'hero', class: cls, opacity } = Astro.props;
+let w = 1440, h = 800, d: string[] = [], op = 0.22;
+if (variant === 'hero') { for (let i = 0; i < 14; i++) { const o = i * 34; d.push(`M${-80 + o * 0.6} ${820 + o * 0.2} C ${300 + o} ${700 - o * 0.5}, ${760 + o * 0.7} ${560 - o}, 1500 ${60 + o * 1.6 - 140}`); } }
+if (variant === 'heroM') { w = 390; h = 900; for (let i = 0; i < 10; i++) { const o = i * 26; d.push(`M-40 ${640 + o} C 80 ${520 + o * 0.5}, 250 ${470 - o}, 430 ${120 + o * 1.5}`); } }
+if (variant === 'navy') { h = 940; op = 0.1; for (let i = 0; i < 9; i++) { const o = i * 46; d.push(`M-40 ${520 + o * 0.9} C 380 ${420 + o}, 900 ${760 - o * 0.4}, 1480 ${180 + o * 1.1}`); } }
+if (variant === 'cta') { h = 480; op = 0.1; for (let i = 0; i < 8; i++) { const o = i * 40; d.push(`M-40 ${300 + o} C 300 ${200 + o}, 700 ${420 - o * 0.3}, 1480 ${40 + o}`); } }
+---
+<svg class:list={['flow', cls]} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true" data-flow>
+  {d.map((p) => <path d={p} stroke="#61ADCB" stroke-opacity={opacity ?? op} stroke-width="1" fill="none" vector-effect="non-scaling-stroke" />)}
+</svg>
+<style> .flow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; } </style>

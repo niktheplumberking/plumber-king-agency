@@ -1,0 +1,52 @@
+---
+// K6 FAQ (Figma 432:4882). Tint panel: head, call button and proof chips left; three accordion items right; seal on the
+// panel's top-right corner. Answer 02 is a placeholder until Paul gives a callback time, so it is left out of the FAQPage
+// JSON-LD (only 01 and 03 are marked up). STICKY 1 (hours) and STICKY 3 (free estimates): Paul to confirm.
+import SectionHead from '../ui/SectionHead.astro';
+import CallButton from '../ui/CallButton.astro';
+import Chip from '../ui/Chip.astro';
+import Faq from '../ui/Faq.astro';
+import Seal from '../ui/Seal.astro';
+import { SITE, PROOF } from '../../data/site';
+const items = [
+  { idx: '01', q: 'When are you open?', a1: 'Every day, 8 AM to 5 PM.', a2: `For an emergency outside those hours, call ${SITE.phone}.` },
+  { idx: '02', q: 'How soon will you call me back?', a1: '[Paul to supply.', a2: 'The answer must start with a time.]' },
+  { idx: '03', q: 'Do you charge for estimates?', a1: 'No.', a2: 'Estimates are free, and you hear the price before any work starts.' },
+];
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: items.filter((i) => i.idx !== '02').map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: `${i.a1} ${i.a2}` } })) };
+const chips = [PROOF[3], PROOF[4], PROOF[0]];
+---
+<section class="kq" aria-labelledby="kq-h" data-m-section>
+  <div class="wrap">
+    <div class="kq-pn">
+      <div class="kq-l">
+        <SectionHead eyebrow="Before you call" l1="Three quick" l2="answers" size="sm" id="kq-h" lead="Short ones. For anything else, the office picks up every day, 8 AM to 5 PM." />
+        <div data-t="3" class="kq-call"><CallButton l2="A real person picks up" /></div>
+        <ul role="list" class="kq-chips" data-t="5" data-stagger>{chips.map((c) => <li><Chip icon={c.icon} v="white">{c.label}</Chip></li>)}</ul>
+      </div>
+      <Faq items={items} schema={false} group="kfaq" class="kq-acc" />
+      <Seal d={112} deg={8} class="kq-seal" />
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</section>
+<style>
+  .kq { position: relative; background: var(--white); padding: 84px 0 120px; }
+  .kq-pn { position: relative; display: grid; grid-template-columns: 372px minmax(0, 660px); justify-content: space-between; gap: 40px; padding: 56px 64px; border-radius: 40px; background: var(--tint); }
+  .kq-l { padding-top: 16px; }
+  .kq-l :global(.lead) { font-size: 16px; line-height: 26px; }
+  .kq-call { margin-top: 28px; }
+  .kq-chips { display: flex; flex-wrap: wrap; gap: 8px; max-width: 380px; margin: 28px 0 0; padding: 0; }
+  .kq-pn :global(.kq-acc .faq), .kq-pn :global(.kq-acc details) { background: var(--white); }
+  .kq-pn :global(.kq-seal) { position: absolute; right: -30px; top: -42px; }
+  @media (max-width: 1199px) { .kq-pn { grid-template-columns: 300px minmax(0, 1fr); padding: 48px 40px; } }
+  @media (max-width: 1023px) {
+    .kq { padding: 56px 0 72px; }
+    .kq-pn { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0; background: none; border-radius: 0; }
+    .kq-l { padding-top: 0; }
+    .kq-l :global(.lead), .kq-call, .kq-chips { display: none; }
+    .kq-pn :global(.kq-seal) { right: 0; top: -10px; --d: 68px !important; }
+    .kq-pn :global(.kq-acc details) { box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); }
+  }
+</style>

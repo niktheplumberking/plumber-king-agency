@@ -1,0 +1,78 @@
+---
+// C6 Jobs (Figma 450:2340): heading, lead, "See more of our work", a dashed SLOT card for town jobs Paul supplies;
+// right, a photo cluster (one tall frame + two small) over a tint offset block, each with a caption plate.
+// Captions say only what the photo shows; none claims the job was in this town.
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const j = t.jobs;
+const [a, b, c] = j.photos;
+---
+<section class="tj" aria-labelledby="tj-h" data-m-section>
+  <div class="wrap tj-in">
+    <div class="tj-copy">
+      <SectionHead eyebrow={j.eyebrow} l1={j.l1} l2={j.l2} lead={j.lead} id="tj-h" />
+      <TextLink href="/our-work" class="tj-more" data-t="3">See more of our work</TextLink>
+      <div class="tj-slot" data-t="5">
+        <span class="tj-si" aria-hidden="true"><Icon name="camera" size={20} /></span>
+        <div><p class="label tj-sl">Slot · job tickets</p><p class="tj-st">{j.slotTitle}</p><p class="tj-sb">{j.slotBody}</p></div>
+      </div>
+    </div>
+    <div class="tj-media" data-t="4" data-stagger>
+      <span class="tj-off" aria-hidden="true"></span>
+      <figure class="tj-f tj-big frame frame-3" data-fx="frame">
+        <Img name={a.photo} alt={a.alt} focus={a.focus} sizes="(min-width: 1024px) 432px, calc(100vw - 40px)" widths={[400, 700, 900]} />
+        <PhotoTag class="tj-tag">On the job</PhotoTag>
+        <figcaption><Caption class="tj-cap">{a.cap}</Caption></figcaption>
+      </figure>
+      {[b, c].map((p, i) => (
+        <figure class:list={['tj-f tj-sm frame-3', `s${i + 1}`]} data-fx="frame">
+          <Img name={p.photo} alt={p.alt} focus={p.focus} sizes="(min-width: 1024px) 248px, 50vw" widths={[260, 500]} />
+          <figcaption><Caption class="tj-cap" small>{p.cap}</Caption></figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .tj { position: relative; background: var(--white); padding: 104px 0 120px; }
+  .tj-in { display: grid; grid-template-columns: minmax(0, 440fr) minmax(0, 704fr); column-gap: 56px; align-items: start; }
+  .tj-copy :global(.tj-more) { margin-top: 24px; }
+  .tj-slot { display: flex; gap: 16px; margin-top: 36px; padding: 20px 24px; border-radius: 16px; border: 1.5px dashed var(--blue); background: var(--mist); }
+  .tj-si { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--press); }
+  .tj-sl { color: var(--press); }
+  .tj-st { margin-top: 4px; font-weight: 700; font-size: 18px; line-height: 24px; }
+  .tj-sb { margin-top: 4px; font-size: 14px; line-height: 20px; color: var(--slate); }
+  .tj-media { position: relative; display: grid; grid-template-columns: 432fr 248fr; grid-template-rows: 200px 200px; gap: 24px; padding-right: 28px; }
+  .tj-off { position: absolute; left: 28px; top: 28px; right: 0; bottom: -28px; border-radius: 28px; background: var(--tint); }
+  .tj-f { position: relative; margin: 0; }
+  .tj-f :global(img) { display: block; border-radius: var(--r-lg); }
+  .tj-big :global(img) { border-radius: var(--r-xl); }
+  .tj-big { grid-row: 1 / 3; border-radius: var(--r-xl); }
+  .tj-sm { border-radius: var(--r-lg); overflow: visible; }
+  .tj-f :global(.tj-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .tj-big :global(.tj-cap) { position: absolute; left: 20px; bottom: 20px; z-index: 2; }
+  .tj-sm :global(.tj-cap) { position: absolute; left: 14px; bottom: -18px; z-index: 2; white-space: nowrap; }
+  @media (max-width: 1023px) {
+    .tj { padding: 64px 0 72px; }
+    .tj-in { display: flex; flex-direction: column; }
+    .tj-copy { display: contents; }
+    .tj-media { order: 2; width: 100%; margin-top: 18px; grid-template-columns: 1fr 1fr; grid-template-rows: 240px 160px; gap: 12px; padding: 0; }
+    .tj-off { display: none; }
+    .tj-big { grid-column: 1 / 3; grid-row: 1; border-radius: var(--r-lg); }
+    .tj-sm { grid-row: 2; border-radius: var(--r-md); }
+    .tj-big :global(img) { border-radius: var(--r-lg); }
+    .tj-sm :global(img) { border-radius: var(--r-md); }
+    .tj-sm figcaption { position: absolute; top: calc(100% + 8px); left: 0; right: 0; }
+    .tj-sm :global(.tj-cap) { position: static; padding: 0; background: none; box-shadow: none; white-space: normal; font-size: 12px; line-height: 17px; color: var(--slate); }
+    .tj-slot { order: 3; margin-top: 60px; padding: 16px 14px; gap: 12px; }
+    .tj-st { font-size: 15px; line-height: 21px; }
+    .tj-copy :global(.tj-more) { order: 4; margin-top: 28px; }
+  }
+</style>

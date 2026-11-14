@@ -1,0 +1,110 @@
+---
+// Base layout: full SEO head, site-wide Plumber JSON-LD, per-page JSON-LD slot, noindex switch, skip link,
+// loader + page curtain, header, footer, sticky mobile call bar, motion module. Every page uses it:
+//   <Base title="..." description="..." path="/water-heaters" og="hero-05-tech-toilet-repair-pro" jsonld={[...]}>
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { SITE } from '../data/site';
+import { plumberSchema, abs } from '../lib/schema';
+import logo from '../assets/brand/logo-plumbing-by-paul.png';
+import UtilityBar from '../components/global/UtilityBar.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import MobileCallBar from '../components/global/MobileCallBar.astro';
+import Loader from '../components/global/Loader.astro';
+import Curtain from '../components/global/Curtain.astro';
+
+interface Props {
+  title: string; description: string; path: string; og?: string; ogAlt?: string; jsonld?: object[];
+  noindex?: boolean; bodyClass?: string; loader?: boolean; type?: 'website' | 'article';
+}
+const { title, description, path, og = 'hero-01-family-house-yard-signs-truck', ogAlt, jsonld = [], noindex, bodyClass, loader = true, type = 'website' } = Astro.props;
+
+// Preview builds are noindex unless PUBLIC_NOINDEX is exactly "false" (launch build only).
+const envNoindex = String(import.meta.env.PUBLIC_NOINDEX ?? 'true').toLowerCase() !== 'false';
+const robots = noindex || envNoindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const canonical = abs(path);
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('/src/assets/photos/*.jpg', { eager: true });
+const ogSrc = photos[`/src/assets/photos/${og}.jpg`]?.default;
+if (!ogSrc) throw new Error(`Base: og photo "${og}" not found`);
+const ogImg = await getImage({ src: ogSrc, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 78 });
+const ogUrl = new URL(ogImg.src, Astro.site).href;
+const logoImg = await getImage({ src: logo, width: 512, format: 'png' });
+const logoUrl = new URL(logoImg.src, Astro.site).href;
+
+const gtm = import.meta.env.PUBLIC_GTM_ID as string | undefined;
+const ga = import.meta.env.PUBLIC_GA_ID as string | undefined;
+const ld = [plumberSchema(logoUrl, ogUrl), ...jsonld];
+---
+<!doctype html>
+<html lang="en-US" data-loader={loader ? undefined : 'off'}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content={robots} />
+  <meta name="theme-color" content="#111032" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="preload" href="/fonts/montserrat-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/yellowtail-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/russo-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <meta property="og:type" content={type} />
+  <meta property="og:site_name" content={SITE.name} />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={ogAlt ?? `${SITE.name}, family plumber in St. Petersburg, FL`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogUrl} />
+  <meta name="geo.region" content="US-FL" />
+  <meta name="geo.placename" content="St. Petersburg" />
+  <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
+  <script is:inline>
+    // Decide before first paint (MOTION.md): motion on? loader this visit? curtain lift after an in-site click?
+    (function () {
+      var d = document.documentElement; d.classList.add('js');
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) { d.classList.add('no-motion'); return; }
+      d.classList.add('motion');
+      var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      var hist = nav && nav.type === 'back_forward';
+      var seen = false, internal = false;
+      try { seen = sessionStorage.getItem('pbp-intro') === '1'; internal = sessionStorage.getItem('pbp-nav') === '1'; sessionStorage.removeItem('pbp-nav'); } catch (e) {}
+      if (!seen && !hist && d.getAttribute('data-loader') !== 'off') d.classList.add('intro');
+      else if (internal && !hist) d.classList.add('pt-in');
+      // Safety: if the motion module never boots, show everything.
+      setTimeout(function () { if (!window.__pbpMotion) d.classList.remove('motion', 'intro', 'pt-in'); }, 3500);
+    })();
+  </script>
+  {gtm && <script is:inline define:vars={{ gtm }}>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);</script>}
+  {!gtm && ga && <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga}`}></script>}
+  {!gtm && ga && <script is:inline define:vars={{ ga }}>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',ga);</script>}
+  {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+  <slot name="head" />
+</head>
+<body class={bodyClass}>
+  {gtm && <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${gtm}`} height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>}
+  <a href="#main" class="skip">Skip to content</a>
+  {loader && <Loader />}
+  <Curtain />
+  <UtilityBar />
+  <Header path={path} />
+  <main id="main" tabindex="-1"><slot /></main>
+  <Footer />
+  <MobileCallBar />
+  <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion';</script>
+</body>
+</html>

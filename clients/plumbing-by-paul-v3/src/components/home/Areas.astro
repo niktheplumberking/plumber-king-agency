@@ -1,0 +1,74 @@
+---
+// H12 Areas (Figma 427:3685). The county map card overlaps the section top by 40 px; the seal is the pin on our shop;
+// a tilted aerial photo overlaps the card's bottom-right corner. Right column: head, linked town chips (real pages only),
+// "on our route" chips (not links, STICKY 8), the ask row, the hub button and the phone.
+import SectionHead from '../ui/SectionHead.astro';
+import PinellasMap from '../ui/PinellasMap.astro';
+import TownChip from '../ui/TownChip.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Button from '../ui/Button.astro';
+import TextLink from '../ui/TextLink.astro';
+import Icon from '../ui/Icon.astro';
+import { TOWNS_LINKED, TOWNS_ROUTE } from '../../data/towns';
+import { SITE } from '../../data/site';
+---
+<section class="areas" aria-labelledby="areas-h" data-m-section>
+  <div class="wrap ar-grid">
+    <div class="ar-map">
+      <div data-t="4" data-fx="rise"><PinellasMap /></div>
+      <figure class="ar-photo" data-t="5" data-fx="toss">
+        <div class="snap ar-snap"><Img name="fleet-aerial-van-jobsite" alt="Aerial view of a Plumbing By Paul van at a waterfront home job" sizes="(min-width: 1024px) 280px, 140px" focus="50% 60%" widths={[280, 420, 560]} /></div>
+        <Caption class="ar-cap">One of ours, on a waterfront job.</Caption>
+      </figure>
+    </div>
+    <div class="ar-copy">
+      <SectionHead eyebrow="Where we work" l1="Based in St. Pete." l2="Out all over Pinellas." id="areas-h" lead="Our shop is at 5565 64th Way North in St. Petersburg. From there the trucks cover the county, from the beaches to the bay." />
+      <ul role="list" class="ar-linked" data-t="3" data-stagger aria-label="Towns with their own page">
+        {TOWNS_LINKED.map((t) => <li><TownChip name={t.name} href={t.page} h={44} /></li>)}
+      </ul>
+      <p class="label ar-also" data-t="3">Also on our route</p>
+      <ul role="list" class="ar-route" data-t="3" data-stagger>
+        {TOWNS_ROUTE.map((t) => <li><TownChip name={t.name} h={36} /></li>)}
+      </ul>
+      <p class="ar-ask" data-t="3"><span class="ar-ai"><Icon name="pin" size={22} /></span>Not sure if we come to you? Call and ask. The answer is usually yes.</p>
+      <div class="ar-act" data-t="3">
+        <Button href="/service-areas" v="sec" arrow class="ar-btn">See all service areas</Button>
+        <TextLink href={SITE.tel} icon={false} lead="phone" class="ar-tel">{SITE.phone}</TextLink>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .areas { position: relative; z-index: 1; background: var(--tint); padding: 96px 0 104px; }
+  .ar-grid { display: grid; grid-template-columns: minmax(0, 588px) minmax(0, 540px); justify-content: space-between; column-gap: 72px; align-items: start; }
+  .ar-map { position: relative; margin-top: -136px; }
+  .ar-photo { position: absolute; left: calc(349 / 588 * 100%); top: calc(511 / 600 * 100%); width: 280px; margin: 0; z-index: 2; }
+  .ar-snap { height: 190px; transform: rotate(4deg); }
+  .ar-photo :global(.ar-cap) { position: absolute; left: 1px; top: 179px; z-index: 3; white-space: nowrap; }
+  .ar-copy :global(.h2) { max-width: 540px; }
+  .ar-linked, .ar-route { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+  .ar-linked { margin-top: 28px; }
+  .ar-also { margin: 18px 0 11px; color: var(--press); font-size: 12px; }
+  .ar-ask { display: flex; align-items: center; gap: 14px; margin: 24px 0 0; padding: 14px 18px; border-radius: var(--r-lg); background: var(--white); box-shadow: var(--sh-1); font-weight: 500; font-size: 15px; line-height: 22px; color: var(--navy); }
+  .ar-ai { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--blue); flex: none; }
+  .ar-act { display: flex; align-items: center; gap: 20px; margin-top: 24px; }
+  .ar-act :global(.ar-tel) { min-height: 44px; }
+  @media (max-width: 1199px) { .ar-grid { column-gap: 48px; } }
+  @media (max-width: 1023px) {
+    .areas { padding: 64px 0 72px; }
+    .ar-grid { grid-template-columns: 1fr; }
+    .ar-map { order: 2; margin: 32px 0 0; max-width: 350px; }
+    .ar-copy { display: contents; }
+    .ar-copy :global(.shead) { order: 1; }
+    .ar-linked { order: 3; margin-top: 36px; } .ar-also { order: 4; } .ar-route { order: 5; }
+    .ar-ask { order: 6; padding: 12px 14px; font-size: 13px; line-height: 19px; }
+    .ar-act { order: 7; }
+    .ar-photo { left: auto; right: -12px; top: auto; bottom: -28px; width: 136px; }
+    .ar-snap { height: 92px; box-shadow: 0 0 0 4px var(--white), var(--sh-2); }
+    .ar-photo :global(.ar-cap) { display: none; }
+    .ar-act { display: block; }
+    .ar-act :global(.ar-btn) { width: 100%; }
+    .ar-act :global(.ar-tel) { display: none; }
+  }
+</style>

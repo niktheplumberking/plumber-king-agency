@@ -1,0 +1,11 @@
+---
+// Underlined text link with a trailing arrow (or `icon`). dark = sky on navy.
+import Icon from './Icon.astro';
+interface Props { href: string; icon?: string | false; dark?: boolean; size?: number; class?: string; external?: boolean; lead?: string; [k: string]: any; }
+const { href, icon = 'arrow', dark, size, class: cls, external, lead, ...rest } = Astro.props;
+const ext = external ? { target: '_blank', rel: 'noopener' } : {};
+---
+<a href={href} class:list={['tlink', dark && 'on-dark', cls]} style={size ? `font-size:${size}px` : undefined} {...ext} {...rest}>
+  {lead && <Icon name={lead} size={18} />}<span class="t"><slot /></span>{icon && <Icon name={icon} size={18} />}
+  {external && <span class="sr-only"> (opens in a new tab)</span>}
+</a>

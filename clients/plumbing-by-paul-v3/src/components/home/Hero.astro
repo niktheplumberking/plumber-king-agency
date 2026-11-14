@@ -1,0 +1,103 @@
+---
+// H1 Hero (Figma 427:2394 desktop / mobile). Split collage: copy left, hero frame + tilted snapshot right.
+// Motion: data-m-hero = played by the loader / curtain handoff, in tier order (MOTION.md).
+import RatingPill from '../ui/RatingPill.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Underline from '../ui/Underline.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import ProofChips from '../ui/ProofChips.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Icon from '../ui/Icon.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+---
+<section class="hero" aria-labelledby="hero-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <div data-t="1"><RatingPill /></div>
+      <Eyebrow text="Plumbing Pinellas" script="with Heart" as="p" />
+      <h1 class="display" id="hero-h" data-t="2">
+        <span class="hl">St. Pete's</span>
+        <span class="hl"><span class="ul-wrap">family plumber<Underline class="ul" /></span>,</span>
+        <span class="hl l2">for every pipe</span>
+        <span class="hl l2">in the house</span>
+      </h1>
+      <p class="lead hero-lead" data-t="3" data-fx="nudge">Leaks, water heaters, drains and everything in between. A licensed, family-owned crew from right here in St. Petersburg, and a real person on the phone when you call.</p>
+      <div class="hero-btns" data-t="3" data-stagger>
+        <CallButton />
+        <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+      </div>
+      <ProofChips v="white" scroll class="hero-chips" />
+    </div>
+    <div class="hero-media">
+      <div class="hf frame-3" data-t="4" data-fx="frame" data-parallax-wrap>
+        <Img name="hero-01-family-house-yard-signs-truck" alt="Paul, Alycia and their son in front of a St. Petersburg home, with Plumbing By Paul yard signs and the wrapped truck" sizes="(min-width: 1440px) 572px, (min-width: 1024px) 40vw, calc(100vw - 40px)" focus="100% 60%" priority widths={[400, 600, 800, 1000, 1200, 1500]} data-parallax="0.06" />
+        <Caption class="hf-cap">Paul, Alycia and their son.<span class="cap-d"> St. Petersburg.</span></Caption>
+      </div>
+      <div class="sn snap" data-t="4" data-fx="toss">
+        <Img name="service-tech-kitchen-sink-smiling" alt="A Plumbing By Paul tech smiling while working under a sink" sizes="(min-width: 1024px) 206px, 124px" focus="70% 45%" widths={[260, 420, 620]} />
+      </div>
+      <p class="bob-chip" data-t="5" data-fx="pop">
+        <Icon name="award" size={20} />
+        <span><b>{SITE.awards.name}</b><small class="bc-years">{SITE.awards.years.join(' · ')}</small><small class="bc-m"> 2026</small></span>
+      </p>
+    </div>
+  </div>
+  <Swoosh class="hero-sw" below="#FFFFFF" />
+</section>
+<style>
+  .hero { position: relative; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 60px 0 76px; overflow: clip; }
+  .hero :global(.fl-m) { display: none; }
+  .hero-in { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, 590fr) minmax(0, 572fr); column-gap: 38px; }
+  .hero-copy { display: grid; justify-items: start; align-content: start; }
+  .hero-copy :global(.eyebrow) { margin-top: 28px; }
+  .display { margin-top: 18px; font-size: var(--fz-display); line-height: 1.0667; letter-spacing: -0.025em; }
+  .hl { display: block; }
+  .hl.l2 { color: var(--blue); }
+  .ul-wrap { position: relative; display: inline-block; }
+  .ul-wrap :global(.ul) { position: absolute; left: 2px; right: -6px; bottom: -8px; width: calc(100% + 4px); }
+  .hero-lead { margin-top: 26px; max-width: 548px; font-size: var(--fz-lead); line-height: 1.667; }
+  .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .hero-btns :global(.btn-sec) { padding: 0 28px; }
+  .hero-copy :global(.hero-chips) { margin-top: 24px; max-width: 590px; }
+  .hero-media { position: relative; margin-top: 4px; }
+  .hf { position: relative; aspect-ratio: 572 / 476; border-radius: var(--r-2xl); }
+  .hf :global(img) { transform: scale(1.06); }
+  .hf :global(.hf-cap) { position: absolute; left: 24px; bottom: 20px; z-index: 2; }
+  .sn { position: absolute; right: -45px; top: 371px; width: 206px; height: 250px; transform: rotate(5deg); z-index: 3; }
+  .bob-chip { position: absolute; right: 0; top: -24px; z-index: 3; display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 14px; border-radius: 14px; background: var(--white); box-shadow: var(--sh-2); color: var(--blue); }
+  .bob-chip b { display: block; font-weight: 700; font-size: 13px; line-height: 16px; color: var(--navy); }
+  .bob-chip small { font-family: var(--f-num); font-size: 10px; line-height: 14px; letter-spacing: .04em; color: var(--press); }
+  .bc-m { display: none; }
+  .hero :global(.hero-sw) { position: absolute; left: 0; bottom: 0; z-index: 1; }
+  @media (max-width: 1279px) and (min-width: 1024px) { .sn { right: -12px; width: 180px; height: 218px; top: auto; bottom: -96px; } }
+  @media (max-width: 1023px) {
+    .hero { padding: 44px 0 116px; }
+    .hero :global(.fl-d) { display: none; } .hero :global(.fl-m) { display: block; }
+    .hero-in { grid-template-columns: 1fr; }
+    .hero-copy { display: contents; }
+    .hero-copy > :global(*) { justify-self: start; }
+    .hero-copy :global(.eyebrow) { margin-top: 20px; }
+    .display { margin-top: 12px; }
+    .ul-wrap :global(.ul) { bottom: -6px; }
+    .hero-lead { margin-top: 20px; }
+    .hero-btns { display: grid; width: 100%; gap: 10px; margin-top: 22px; }
+    .hero-btns :global(.btn) { width: 100%; }
+    .hero-btns :global(.btn-sec) { min-height: 56px; }
+    .hero-media { margin-top: 48px; }
+    .hf { aspect-ratio: 350 / 300; border-radius: var(--r-xl); }
+    .hf :global(.hf-cap) { left: 10px; bottom: 22px; font-size: 12px; line-height: 18px; padding: 6px 10px; }
+    .cap-d { display: none; }
+    .sn { right: -2px; top: auto; bottom: -46px; width: 124px; height: 150px; border-radius: 16px; box-shadow: 0 0 0 6px var(--white), var(--sh-3); }
+    .bob-chip { left: 12px; right: auto; top: -14px; height: 38px; padding: 0 10px; border-radius: 12px; gap: 6px; }
+    .bob-chip :global(svg) { width: 16px; height: 16px; }
+    .bob-chip b { display: inline; font-size: 12px; } .bc-years { display: none; } .bc-m { display: inline; font-family: var(--f-sans); font-weight: 700; font-size: 12px; letter-spacing: 0; color: var(--navy); }
+    .hero-copy :global(.hero-chips) { order: 9; margin-top: 56px; max-width: none; justify-self: stretch; }
+  }
+  @media (min-width: 640px) and (max-width: 1023px) { .hf { aspect-ratio: 16 / 10; } .sn { width: 160px; height: 194px; } }
+</style>

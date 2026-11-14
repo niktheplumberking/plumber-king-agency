@@ -1,0 +1,17 @@
+---
+// The seal: the mascot roundel from Paul's real logo art, as a sticker (white ring, navy rim, sticker shadow).
+// d = diameter in px (48 / 56 / 72 / 92 / 104 / 112 / 120 / 160). deg = rotation. Motion: tier 5 (pop + settle).
+import { Image } from 'astro:assets';
+import seal from '../../assets/brand/seal-mascot.png';
+interface Props { d?: number; deg?: number; class?: string; style?: string; flat?: boolean; t?: string | false; eager?: boolean; }
+const { d = 72, deg = 0, class: cls, style = '', flat, t = '5', eager } = Astro.props;
+const px = Math.min(512, Math.round(d * 2));
+---
+<span class:list={['seal', flat && 'flat', cls]} style={`--d:${d}px;--deg:${deg}deg;${style}`} data-t={t === false ? undefined : t} data-fx="pop" aria-hidden="true">
+  <Image src={seal} alt="" width={px} height={px} loading={eager ? 'eager' : 'lazy'} />
+</span>
+<style>
+  .seal { display: block; width: var(--d); height: var(--d); border-radius: 50%; background: var(--white); padding: max(2px, calc(var(--d) * .04)); transform: rotate(var(--deg)); box-shadow: var(--sh-sticker); flex: none; }
+  .seal.flat { box-shadow: none; }
+  .seal :global(img) { width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--navy); outline: max(2px, calc(var(--d) * .06)) solid var(--navy); outline-offset: calc(-1 * max(2px, calc(var(--d) * .06))); object-fit: cover; }
+</style>

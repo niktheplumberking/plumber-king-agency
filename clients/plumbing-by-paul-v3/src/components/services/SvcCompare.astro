@@ -1,0 +1,70 @@
+---
+// Repair or replace (Figma 03 W4): centred head, two cards with a navy "or" disc between (the right card carries the
+// stripe shadow), and a tint strip pointing to the long-form guide.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import ArrowDot from '../ui/ArrowDot.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { c: NonNullable<SvcPage['compare']>; slug: string; }
+const { c, slug } = Astro.props;
+const id = sid(slug, 'compare');
+---
+<section class="cp" aria-labelledby={id} data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow={c.eyebrow} l1={c.l1} l2={c.l2} center id={id} />
+    <div class="cp-grid" data-t="4" data-stagger>
+      <div class="cp-card l">
+        <div class="cp-top"><span class="well cp-w"><Icon name={c.left.icon} size={24} /></span><div><p class="label cp-l">If this sounds like yours</p><h3 class="cp-t">{c.left.t}</h3></div></div>
+        <ul role="list" class="cp-list">{c.left.items.map((x) => <li><span class="ck"><Icon name="check" size={14} stroke={2.4} /></span>{x}</li>)}</ul>
+      </div>
+      <span class="cp-or script" aria-hidden="true">or</span>
+      <div class="cp-card r">
+        <div class="cp-top"><span class="well cp-w dk"><Icon name={c.right.icon} size={24} /></span><div><p class="label cp-l">If this sounds like yours</p><h3 class="cp-t">{c.right.t}</h3></div></div>
+        <ul role="list" class="cp-list">{c.right.items.map((x) => <li><span class="ck"><Icon name="arrow" size={14} stroke={2.4} /></span>{x}</li>)}</ul>
+      </div>
+    </div>
+    {c.strip && (
+      <a href={c.strip.href} class="cp-strip" data-t="3">
+        <span class="cp-sw"><Icon name="search" size={20} /></span>
+        <span class="cp-st">{c.strip.text} <b>{c.strip.link}</b></span>
+        <ArrowDot d={40} class="cp-ad" />
+      </a>
+    )}
+  </div>
+</section>
+<style>
+  .cp { position: relative; background: var(--white); padding: 104px 0; }
+  .cp-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 64px; align-items: stretch; }
+  .cp-card { display: grid; align-content: start; gap: 28px; padding: 34px 36px 40px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+  .cp-card.r { box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .cp-top { display: flex; align-items: center; gap: 16px; }
+  .cp-w { width: 56px; height: 56px; }
+  .cp-w.dk { background: var(--navy); color: var(--white); }
+  .cp-l { color: var(--press); font-size: 11px; }
+  .cp-t { margin-top: 2px; font-weight: 700; font-size: 26px; line-height: 32px; }
+  .cp-list { display: grid; gap: 14px; margin: 0; padding: 0; }
+  .cp-list li { display: flex; align-items: center; gap: 14px; font-weight: 600; font-size: 16px; line-height: 24px; color: var(--navy); }
+  .ck { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .cp-or { position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 72px; height: 72px; margin: -36px 0 0 -36px; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 30px; line-height: 1; box-shadow: 0 0 0 5px var(--white), var(--sh-2); padding-bottom: 6px; }
+  .cp-strip { display: flex; align-items: center; gap: 16px; margin-top: 40px; padding: 14px 28px 14px 28px; border-radius: var(--r-lg); background: var(--tint); color: var(--navy); font-weight: 500; font-size: 17px; line-height: 26px; transition: background var(--dur-2); }
+  .cp-strip:hover { background: #DCEDF5; }
+  .cp-sw { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--white); color: var(--blue); }
+  .cp-st { flex: 1; }
+  .cp-st b { color: var(--press); font-weight: 700; }
+  .cp-strip:hover b { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 1023px) {
+    .cp { padding: 64px 0; }
+    .cp :global(.shead) { justify-items: start; text-align: left; }
+    .cp-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; margin-top: 36px; }
+    .cp-card { gap: 20px; padding: 24px 22px 28px; border-radius: 20px; }
+    .cp-w { width: 46px; height: 46px; }
+    .cp-l { display: none; }
+    .cp-t { font-size: 21px; line-height: 26px; }
+    .cp-list li { font-size: 15px; line-height: 22px; align-items: flex-start; }
+    .cp-or { width: 60px; height: 60px; margin: -30px 0 0 -30px; font-size: 26px; }
+    .cp-strip { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 44px; padding: 20px 18px; font-size: 15px; line-height: 23px; }
+    .cp-sw { display: none; }
+    .cp-strip :global(.cp-ad) { width: 32px; height: 32px; }
+  }
+</style>

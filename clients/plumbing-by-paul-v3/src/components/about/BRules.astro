@@ -1,0 +1,83 @@
+---
+// B7 House rules (Figma B7): heading + lead + round stamp left; four rule cards fanned right (each 12 px further right,
+// overlapping the one before), a Yellowtail numeral over each card's top-left and a word-for-word Google line on a tint foot.
+import SectionHead from '../ui/SectionHead.astro';
+import Stamp from '../ui/Stamp.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+const rules = [
+  { t: 'Show up prepared.', s: "The right parts on the truck, so there's no second trip.", q: 'Kris & Steven showed up at my home, ON TIME, they were very professional and polite.', by: 'Cher R' },
+  { t: 'Explain before you touch anything.', s: "What's wrong, what we'd do, what it costs.", q: 'Brian was very educational and explained how everything worked, how filters get replaced and when to put more salt in the system.', by: 'Brendan Berry' },
+  { t: 'Leave it cleaner than you found it.', q: 'Removed old unit and left installation immaculate.', by: 'Patty Przywara' },
+  { t: 'Treat every house like your mother lives there.', q: 'Phil came out and done an awesome job, neat, clean and professional in every manner.', by: 'Melissa Robinson' },
+];
+---
+<section class="br" aria-labelledby="br-h" data-m-section>
+  <div class="wrap br-in">
+    <div class="br-side">
+      <SectionHead eyebrow="House rules" l1="Four rules" l2="on every job" lead="Simple enough to remember. Hard enough that most don't." id="br-h" />
+      <div class="br-stw"><span class="br-sts"><Stamp d={150} deg={-10} text="HOUSE RULES · ON EVERY JOB · PLUMBING BY PAUL · " /></span></div>
+      <p class="script br-sc" aria-hidden="true" data-t="5" data-fx="pop">no exceptions</p>
+    </div>
+    <ol class="br-stack" data-t="4" data-stagger>
+      {rules.map((r, i) => (
+        <li class="br-card" style={`--i:${i}`}>
+          <div class="br-top">
+            <span class="script br-num" aria-hidden="true">{i + 1}</span>
+            <h3 class="br-t">{r.t}</h3>
+            {r.s && <p class="br-s">{r.s}</p>}
+            <span class="br-tick" aria-hidden="true"></span>
+          </div>
+          <figure class="br-foot">
+            <blockquote><p>"{r.q}"</p></blockquote>
+            <figcaption><Stars size={12} /><span>{r.by} · Google review</span></figcaption>
+            <GoogleG size={18} class="br-g" />
+          </figure>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .br { position: relative; background: var(--white); padding: 112px 0 112px; overflow-x: clip; }
+  .br-in { display: grid; grid-template-columns: minmax(0, 384px) minmax(0, 756px); justify-content: space-between; column-gap: 60px; }
+  .br-side { position: relative; }
+  .br-stw { margin-top: 70px; margin-left: 3px; width: 215px; height: 215px; }
+  .br-sts { display: block; width: 150px; transform: scale(1.43); transform-origin: left top; }
+  .br-sc { position: absolute; left: 197px; top: 439px; font-size: 34px; color: var(--blue); transform: rotate(-8deg); }
+  .br-stack { position: relative; margin: 0; padding: 0; list-style: none; }
+  .br-card { position: relative; width: 720px; margin-left: calc(var(--i) * 12px); border-radius: 18px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); overflow: visible; }
+  .br-card { display: flex; flex-direction: column; min-height: 228px; }
+  .br-card:nth-child(n+3) { min-height: 174px; }
+  .br-foot { flex: 1; }
+  .br-card + .br-card { margin-top: -22px; }
+  .br-card:nth-child(4) { margin-top: -22px; }
+  .br-top { position: relative; padding: 24px 80px 20px 86px; }
+  .br-num { position: absolute; left: 22px; top: -14px; font-size: 72px; line-height: 1; color: var(--blue); }
+  .br-t { font-weight: 800; font-size: 22px; line-height: 28px; }
+  .br-s { margin-top: 6px; font-size: 15px; line-height: 22px; color: var(--slate); }
+  .br-tick { position: absolute; right: 28px; top: 30px; width: 24px; height: 13px; background: linear-gradient(var(--sky) 0 3px, transparent 3px 5px, var(--blue) 5px 8px, transparent 8px 10px, var(--navy) 10px 13px); transform: skewX(-20deg); }
+  .br-foot { position: relative; margin: 0; padding: 18px 70px 20px 86px; border-radius: 0 0 18px 18px; background: var(--mist); box-shadow: inset 0 1px 0 var(--line); }
+  .br-foot blockquote { margin: 0; font-style: italic; font-weight: 500; font-size: 14px; line-height: 21px; color: var(--navy); }
+  .br-foot figcaption { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 12px; color: var(--slate-2); }
+  .br-foot :global(.br-g) { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); }
+  @media (max-width: 1279px) { .br-in { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); } .br-card { width: calc(100% - 36px); } .br-sc { left: 120px; } }
+  @media (max-width: 1023px) {
+    .br { padding: 56px 0 64px; }
+    .br-in { grid-template-columns: 1fr; row-gap: 32px; }
+    .br-stw { position: absolute; right: -6px; top: 26px; margin: 0; width: 90px; height: 90px; }
+    .br-sts { transform: scale(.6); }
+    .br-side :global(.shead) { padding-right: 96px; }
+    .br-sc { display: none; }
+    .br-stack { display: grid; gap: 28px; }
+    .br-card, .br-card + .br-card { width: auto; min-height: 0 !important; margin: 0 !important; }
+    .br-top { padding: 20px 18px 16px 64px; }
+    .br-num { left: 14px; top: -10px; font-size: 56px; }
+    .br-t { font-size: 17px; line-height: 22px; }
+    .br-s { font-size: 13px; line-height: 19px; }
+    .br-tick { display: none; }
+    .br-foot { padding: 14px 18px 16px; }
+    .br-foot blockquote { font-size: 13px; line-height: 20px; }
+    .br-foot :global(.br-g) { display: none; }
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+// B9 The paperwork (Figma B9): a credentials job ticket (every credential in crawlable text, with a way to verify it) and a
+// framed van photo whose wrap shows the licence number, circled with a 2 px blue ring and a leader line to a label.
+// BBB is text only, never the accredited seal.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Icon from '../ui/Icon.astro';
+import Stamp from '../ui/Stamp.astro';
+import { SITE } from '../../data/site';
+const rows: { k: string; v: string; s?: string; link?: boolean }[] = [
+  { k: 'Company', v: 'Plumbing By Paul LLC', s: 'Florida LLC, formed June 2015' },
+  { k: 'Licence', v: `Florida Certified Plumbing Contractor ${SITE.licence}`, s: 'Current and active', link: true },
+  { k: 'Awards', v: 'Best of the Bay, Best Plumbing Company', s: "2022, 2023, 2024, 2026 · Creative Loafing Tampa Bay readers' pick" },
+  { k: 'Google', v: `${SITE.rating.value} from ${SITE.rating.count} reviews`, s: `Checked ${SITE.rating.checked}` },
+  { k: 'BBB', v: 'A+ rating' },
+  { k: 'Insurance', v: 'Bonded and insured' },
+  { k: 'Warranty', v: '1-year workmanship warranty' },
+];
+---
+<section class="bp" aria-labelledby="bp-h" data-m-section>
+  <div class="wrap bp-in">
+    <div class="bp-left">
+      <SectionHead eyebrow="The boring part, which matters" l1="Check us out." l2="Please." lead="Every credential in plain text, with the way to verify it yourself." id="bp-h" />
+      <div class="bp-tk" data-t="4" data-fx="rise">
+        <p class="bp-tkh"><Icon name="clipboard" size={16} /><span class="label">Job ticket: credentials</span></p>
+        <dl class="bp-rows">
+          {rows.map((r) => (
+            <div class="bp-r">
+              <dt class="label">{r.k}</dt>
+              <dd><b>{r.v}</b>{r.s && <span class="bp-s">{r.s}</span>}{r.link && <a class="bp-v" href={SITE.licenceLookup} target="_blank" rel="noopener">Verify at myfloridalicense.com<Icon name="external" size={15} /><span class="sr-only"> (opens in a new tab)</span></a>}</dd>
+              <span class="bp-ok" aria-hidden="true"><Icon name="check" size={13} /></span>
+            </div>
+          ))}
+        </dl>
+        <span class="bp-stw"><Stamp d={150} deg={8} text="LICENSED · FLORIDA · CFC1430367 · " /></span>
+      </div>
+    </div>
+    <div class="bp-media">
+      <span class="bp-off" aria-hidden="true"></span>
+      <figure class="bp-frame frame frame-3" data-t="4" data-fx="frame">
+        <Img name="about-family-at-van-license-visible" alt="Paul's family beside a wrapped van showing the licence number CFC-1430367" sizes="(min-width: 1024px) 384px, calc(100vw - 40px)" widths={[400, 700, 900]} focus="50% 50%" />
+        <span class="bp-ring" aria-hidden="true"></span>
+      </figure>
+      <svg class="bp-lead" viewBox="0 0 120 110" aria-hidden="true"><path d="M118 2 C80 20 60 70 2 108" fill="none" stroke="#2A7FA8" stroke-width="2" stroke-dasharray="4 4" /></svg>
+      <p class="bp-call" aria-hidden="true"><Icon name="badge" size={15} /><span class="num">{SITE.licence}</span></p>
+      <Caption class="bp-cap">It's on every truck. Go ahead and look it up.</Caption>
+    </div>
+  </div>
+</section>
+<style>
+  .bp { position: relative; background: var(--white); padding: 104px 0 112px; }
+  .bp-in { display: grid; grid-template-columns: minmax(0, 690fr) minmax(0, 408fr); justify-content: space-between; column-gap: 102px; align-items: start; }
+  .bp-tk { position: relative; margin-top: 44px; border-radius: 18px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .bp-tkh { display: flex; align-items: center; gap: 10px; padding: 16px 28px; border-radius: 18px 18px 0 0; background: var(--navy); color: var(--white); }
+  .bp-tkh :global(svg) { color: var(--sky); }
+  .bp-tkh .label { color: var(--white); }
+  .bp-rows { margin: 0; }
+  .bp-r { position: relative; display: grid; grid-template-columns: 160px 1fr 30px; align-items: start; padding: 16px 28px; border-top: 1px dashed var(--line); }
+  .bp-r:nth-child(even) { background: var(--mist); }
+  .bp-r:first-child { border-top: 0; }
+  .bp-r:last-child { border-radius: 0 0 18px 18px; }
+  .bp-r dt { padding-top: 4px; color: var(--press); font-size: 10px; }
+  .bp-r dd { margin: 0; font-size: 13px; line-height: 20px; color: var(--slate); }
+  .bp-r dd b { display: block; font-weight: 700; font-size: 16px; line-height: 23px; color: var(--navy); }
+  .bp-s { display: block; margin-top: 2px; }
+  .bp-v { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-weight: 600; color: var(--press); text-decoration: underline; text-underline-offset: 3px; }
+  .bp-ok { display: grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%; background: var(--tint); color: var(--press); }
+  .bp-stw { position: absolute; right: -89px; top: -99px; transform: scale(1.16); transform-origin: top right; }
+  .bp-media { position: relative; margin-top: 222px; padding: 0 24px 24px 0; }
+  .bp-off { position: absolute; left: 24px; top: 24px; right: 0; bottom: 0; border-radius: var(--r-xl); background: var(--tint); }
+  .bp-frame { position: relative; height: 500px; margin: 0; }
+  .bp-frame :global(img) { display: block; }
+  .bp-ring { position: absolute; left: 278px; top: 258px; width: 92px; height: 48px; border-radius: 50%; box-shadow: 0 0 0 2px var(--blue), 0 0 0 6px rgba(255,255,255,.55); }
+  .bp-lead { position: absolute; left: 200px; top: 300px; width: 120px; height: 110px; overflow: visible; }
+  .bp-call { position: absolute; left: -70px; top: 394px; z-index: 3; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 12px; background: var(--navy); color: var(--white); box-shadow: var(--sh-2); font-size: 15px; }
+  .bp-call :global(svg) { color: var(--sky); }
+  .bp-media :global(.bp-cap) { position: absolute; left: 61px; top: 478px; z-index: 3; white-space: nowrap; }
+  @media (max-width: 1279px) { .bp-in { column-gap: 56px; } .bp-r { grid-template-columns: 120px 1fr 30px; } }
+  @media (max-width: 1023px) {
+    .bp { padding: 56px 0 64px; }
+    .bp-in { grid-template-columns: 1fr; row-gap: 48px; }
+    .bp-tk { margin-top: 28px; }
+    .bp-tkh { padding: 14px 18px; }
+    .bp-r { grid-template-columns: 1fr 26px; padding: 14px 18px; }
+    .bp-r dt { grid-column: 1; padding: 0; }
+    .bp-r dd { grid-column: 1; margin-top: 4px; }
+    .bp-ok { grid-column: 2; grid-row: 1 / 3; }
+    .bp-r dd b { font-size: 15px; line-height: 21px; }
+    .bp-stw { right: -14px; top: -46px; transform: scale(.55); }
+    .bp-media { margin-top: 0; padding: 0 10px 10px 0; }
+    .bp-off { left: 10px; top: 10px; }
+    .bp-frame { height: 330px; border-radius: var(--r-xl); }
+    .bp-ring, .bp-lead { display: none; }
+    .bp-call { left: auto; right: 24px; top: 190px; height: 36px; font-size: 13px; }
+    .bp-media :global(.bp-cap) { left: 10px; top: auto; bottom: -6px; font-size: 12px; padding: 6px 10px; }
+  }
+</style>

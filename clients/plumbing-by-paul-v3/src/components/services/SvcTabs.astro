@@ -1,0 +1,118 @@
+---
+// Which one is it (Figma 04 D3): centred head, a vertical tab list left (active = navy with a sky icon well, a short pipe
+// into the panel), the panel right ("01 / 06", title, text, call line) with a tilted photo and caption.
+// ARIA tabs with arrow keys; without JS the first panel shows. Mobile: the tabs become a swipe row above the panel.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import TextLink from '../ui/TextLink.astro';
+import { SITE } from '../../data/site';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { t: NonNullable<SvcPage['tabs']>; slug: string; }
+const { t, slug } = Astro.props;
+const id = sid(slug, 'tabs');
+const n = t.items.length;
+const pad = (x: number) => String(x).padStart(2, '0');
+---
+<section class="tb" aria-labelledby={id} data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow={t.eyebrow} l1={t.l1} l2={t.l2} center id={id} class="tb-head" />
+    <div class="tb-grid" data-tabs>
+      <div class="tb-list" role="tablist" aria-labelledby={id} aria-orientation="vertical" data-t="4" data-stagger>
+        {t.items.map((it, i) => (
+          <button type="button" class="tb-tab" role="tab" id={`${id}-t${i}`} aria-controls={`${id}-p${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab>
+            <span class="tb-w"><Icon name={it.icon} size={20} /></span><span class="tb-l">{it.label}</span><Icon name="right" size={18} class="tb-ch" />
+          </button>
+        ))}
+      </div>
+      <div class="tb-panelwrap" data-t="4" data-fx="rise">
+        <span class="tb-pipe" aria-hidden="true"></span>
+        <div class="tb-ph frame">
+          <Img name={t.photo.name} alt={t.photo.alt} focus={t.photo.focus} sizes="(min-width: 1024px) 270px, 150px" widths={[300, 540, 720]} />
+        </div>
+        <Caption class="tb-cap">{t.caption}</Caption>
+        {t.items.map((it, i) => (
+          <div class="tb-panel" role="tabpanel" id={`${id}-p${i}`} aria-labelledby={`${id}-t${i}`} tabindex="0" hidden={i !== 0} data-panel>
+            <p class="num tb-n">{pad(i + 1)} / {pad(n)}</p>
+            <h3 class="tb-t">{it.label}</h3>
+            <p class="tb-x">{it.text}</p>
+            {it.href && <TextLink href={it.href} class="tb-more">{it.hrefText ?? 'Read more'}</TextLink>}
+            <a href={SITE.tel} class="tb-call"><Icon name="phone" size={18} />{t.foot}: {SITE.phone}</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    const show = (i: number, focus = false) => {
+      tabs.forEach((t, j) => { const on = j === i; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      panels.forEach((p, j) => { p.hidden = j !== i; });
+      if (focus) tabs[i].focus();
+      tabs[i].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      t.addEventListener('keydown', (e) => {
+        const k = e.key; let j = -1;
+        if (k === 'ArrowDown' || k === 'ArrowRight') j = (i + 1) % tabs.length;
+        else if (k === 'ArrowUp' || k === 'ArrowLeft') j = (i - 1 + tabs.length) % tabs.length;
+        else if (k === 'Home') j = 0; else if (k === 'End') j = tabs.length - 1;
+        if (j >= 0) { e.preventDefault(); show(j, true); }
+      });
+    });
+  });
+</script>
+<style>
+  .tb { position: relative; background: var(--white); padding: 104px 0; }
+  .tb-grid { display: grid; grid-template-columns: 360px minmax(0, 776px); justify-content: space-between; column-gap: 64px; align-items: start; margin-top: 64px; }
+  .tb-list { display: grid; gap: 10px; }
+  .tb-tab { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 0 20px 0 16px; border: 0; border-radius: 14px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); color: var(--navy); font: inherit; font-weight: 700; font-size: 17px; line-height: 22px; text-align: left; cursor: pointer; transition: background var(--dur-2), box-shadow var(--dur-2), color var(--dur-2); }
+  .tb-tab:hover { box-shadow: inset 0 0 0 1px var(--sky), var(--sh-1); }
+  .tb-w { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--tint); color: var(--blue); transition: background var(--dur-2), color var(--dur-2); }
+  .tb-l { flex: 1; }
+  .tb-tab :global(.tb-ch) { color: var(--blue); flex: none; }
+  .tb-tab[aria-selected='true'] { background: var(--navy); color: var(--white); box-shadow: var(--sh-2); }
+  .tb-tab[aria-selected='true'] .tb-w { background: var(--sky); color: var(--navy); }
+  .tb-tab[aria-selected='true'] :global(.tb-ch) { color: var(--sky); }
+  .tb-panelwrap { position: relative; min-height: 444px; padding: 44px 330px 40px 44px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .tb-pipe { position: absolute; left: -64px; top: 24px; width: 64px; height: 14px; border-radius: 3px; background: var(--sky); box-shadow: inset 0 0 0 3px var(--navy); }
+  .tb-pipe::before, .tb-pipe::after { content: ''; position: absolute; top: -5px; width: 8px; height: 24px; border-radius: 2px; background: var(--sky); box-shadow: inset 0 0 0 3px var(--navy); }
+  .tb-pipe::before { left: 0; } .tb-pipe::after { right: 0; }
+  .tb-ph { position: absolute; right: 18px; top: 36px; width: 270px; height: 320px; border-radius: 20px; transform: rotate(3deg); }
+  .tb-panelwrap :global(.tb-cap) { position: absolute; right: 14px; top: 346px; z-index: 2; }
+  .tb-panel { display: grid; justify-items: start; align-content: start; min-height: 360px; }
+  .tb-panel[hidden] { display: none; }
+  .tb-panel:focus-visible { outline: 2px solid var(--blue); outline-offset: 8px; border-radius: 8px; }
+  .tb-n { color: var(--press); font-size: 13px; letter-spacing: .08em; }
+  .tb-t { margin-top: 14px; font-weight: 800; font-size: 32px; line-height: 40px; }
+  .tb-x { margin-top: 18px; font-weight: 500; font-size: 18px; line-height: 30px; color: var(--slate); max-width: 400px; }
+  .tb-panel :global(.tb-more) { margin-top: 16px; }
+  .tb-call { display: inline-flex; align-items: center; gap: 8px; align-self: end; width: 100%; margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--line); color: var(--press); font-weight: 700; font-size: 16px; line-height: 24px; }
+  .tb-call:hover { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .tb-grid { grid-template-columns: 300px minmax(0, 1fr); column-gap: 48px; } .tb-pipe { left: -48px; width: 48px; } .tb-panelwrap { padding-right: 280px; } .tb-ph { width: 230px; height: 280px; } .tb-panelwrap :global(.tb-cap) { top: 306px; } }
+  @media (max-width: 1023px) {
+    .tb { padding: 64px 0; }
+    .tb :global(.tb-head) { justify-items: start; text-align: left; }
+    .tb-grid { grid-template-columns: minmax(0, 1fr); margin-top: 32px; row-gap: 20px; }
+    .tb-list { display: flex; gap: 8px; margin: 0 calc(-1 * var(--gutter)); padding: 4px var(--gutter); overflow-x: auto; scrollbar-width: none; }
+    .tb-list::-webkit-scrollbar { display: none; }
+    .tb-tab { flex: none; width: auto; min-height: 44px; padding: 0 14px 0 10px; gap: 8px; font-size: 14px; background: var(--tint); box-shadow: none; }
+    .tb-w { width: 24px; height: 24px; background: none; }
+    .tb-tab[aria-selected='true'] .tb-w { background: none; color: var(--sky); }
+    .tb-tab :global(.tb-ch) { display: none; }
+    .tb-pipe { display: none; }
+    .tb-panelwrap { min-height: 0; padding: 24px 22px 26px; }
+    .tb-ph { right: 14px; top: 16px; width: 150px; height: 170px; border-radius: 16px; }
+    .tb-panelwrap :global(.tb-cap) { display: none; }
+    .tb-panel { min-height: 0; }
+    .tb-t { margin-top: 10px; padding-right: 160px; min-height: 120px; font-size: 24px; line-height: 30px; }
+    .tb-x { margin-top: 26px; font-size: 15px; line-height: 25px; }
+    .tb-call { margin-top: 18px; padding-top: 0; border-top: 0; font-size: 14px; }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+// O5 Kitchens and baths (Figma O5): four finished-room photos (one large, two small stacked, one tall) with caption
+// plates; a white note card about the sister company overlaps the large photo's corner (STICKY 9: only if Paul wants it).
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import TextLink from '../ui/TextLink.astro';
+import { SITE } from '../../data/site';
+---
+<section class="orm" aria-labelledby="orm-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="The pretty part" l1="When the plumbing's done," l2="it looks like this" id="orm-h" />
+    <div class="orm-grid" data-t="4" data-stagger>
+      <figure class="orm-f orm-big frame" data-fx="frame"><Img name="remodel-finished-vanity-2048" alt="A finished bathroom with a wood vanity, white counter and new faucet" sizes="(min-width: 1024px) 588px, calc(100vw - 40px)" widths={[400, 600, 900, 1200]} focus="50% 50%" /><figcaption><Caption class="orm-cap" small>New vanity and counter.</Caption></figcaption></figure>
+      <figure class="orm-f orm-s1 frame" data-fx="frame"><Img name="remodel-finished-double-vanity" alt="A finished double vanity with arched mirrors and brass fixtures" sizes="(min-width: 1024px) 282px, 45vw" widths={[300, 560]} focus="50% 50%" /><figcaption><Caption class="orm-cap" small>Double vanity, brass fixtures.</Caption></figcaption></figure>
+      <figure class="orm-f orm-s2 frame" data-fx="frame"><Img name="remodel-finished-shower-gold-fixtures" alt="A finished glass shower with brass fixtures" sizes="(min-width: 1024px) 282px, 45vw" widths={[300, 560]} focus="50% 50%" /><figcaption><Caption class="orm-cap" small>Shower, brass fixtures.</Caption></figcaption></figure>
+      <figure class="orm-f orm-tall frame" data-fx="frame"><Img name="remodel-teal-tile-tub" alt="A tub surround in bright teal tile with a recessed niche" sizes="(min-width: 1024px) 282px, 45vw" widths={[300, 560]} focus="50% 50%" /><figcaption><Caption class="orm-cap" small>Tub and tile.</Caption></figcaption></figure>
+      <div class="orm-note" data-t="5" data-fx="rise">
+        <Eyebrow text="Sister company" t={false} />
+        <p>Remodels and new builds are handled with our sister company, PBP Construction Services. Same family, same phone number.</p>
+        <TextLink href={SITE.tel} lead="phone" icon={false} size={14}>{SITE.phone}</TextLink>
+      </div>
+      <p class="script orm-sc" aria-hidden="true">the pretty part</p>
+    </div>
+  </div>
+</section>
+<style>
+  .orm { position: relative; background: var(--white); padding: 104px 0 248px; }
+  .orm-grid { position: relative; display: grid; grid-template-columns: 588fr 282fr 282fr; grid-template-rows: 188px 188px; gap: 24px; margin-top: 48px; }
+  .orm-f { position: relative; margin: 0; border-radius: var(--r-lg); }
+  .orm-f :global(img) { display: block; }
+  .orm-big { grid-row: 1 / 3; border-radius: var(--r-xl); }
+  .orm-s1 { grid-column: 2; grid-row: 1; }
+  .orm-s2 { grid-column: 2; grid-row: 2; }
+  .orm-tall { grid-column: 3; grid-row: 1 / 3; }
+  .orm-f :global(.orm-cap) { position: absolute; left: 12px; bottom: 12px; z-index: 2; }
+  .orm-note { position: absolute; left: 245px; top: 339px; z-index: 3; width: 387px; padding: 22px 26px 22px; border-radius: 18px; background: var(--white); box-shadow: var(--sh-3); transform: rotate(-2deg); }
+  .orm-note p { margin-top: 10px; font-weight: 500; font-size: 15px; line-height: 23px; color: var(--navy); }
+  .orm-note :global(.tlink) { margin-top: 10px; }
+  .orm-sc { position: absolute; left: 966px; top: 429px; font-size: 36px; color: var(--blue); transform: rotate(-6deg); }
+  @media (max-width: 1279px) { .orm-sc { left: auto; right: 0; } }
+  @media (max-width: 1023px) {
+    .orm { padding: 56px 0 64px; }
+    .orm-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 230px 150px 150px auto; gap: 10px; margin-top: 28px; }
+    .orm-big { grid-column: 1 / 3; grid-row: 1; border-radius: var(--r-lg); }
+    .orm-s1 { grid-column: 2; grid-row: 2; border-radius: var(--r-md); }
+    .orm-s2 { grid-column: 2; grid-row: 3; border-radius: var(--r-md); }
+    .orm-tall { grid-column: 1; grid-row: 2 / 4; border-radius: var(--r-md); }
+    .orm-f :global(.orm-cap) { left: 8px; bottom: 8px; font-size: 11px; line-height: 15px; padding: 4px 8px; }
+    .orm-note { position: relative; left: auto; top: auto; grid-column: 1 / 3; grid-row: 4; width: auto; margin: 8px 6px 0; transform: none; padding: 18px; }
+    .orm-sc { display: none; }
+  }
+</style>

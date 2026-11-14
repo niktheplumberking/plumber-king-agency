@@ -1,0 +1,75 @@
+---
+// E8 FAQ (Figma 433:9858 / 439:3716): sticky column (head, navy help card with the seal, proof chips) + five accordion items.
+// 04 has no answer yet: it shows a labelled stand-in and is left OUT of the FAQPage JSON-LD (Paul to supply the after-hours
+// policy; the answer must start with yes or no). 03 quotes a customer, no promised time. STICKY 1 applies.
+import SectionHead from '../ui/SectionHead.astro';
+import Faq from '../ui/Faq.astro';
+import type { FaqEntry } from '../ui/Faq.astro';
+import Seal from '../ui/Seal.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import CallButton from '../ui/CallButton.astro';
+import ProofChips from '../ui/ProofChips.astro';
+import TextLink from '../ui/TextLink.astro';
+import { SITE } from '../../data/site';
+const items: FaqEntry[] = [
+  { q: 'What counts as a plumbing emergency?', a1: 'Anything that is causing damage or a health risk right now: a burst pipe, sewage backing up, a leaking water heater, or no water at all.', a2: "If you're not sure, call and describe it.", link: { text: `Call ${SITE.phone}`, href: SITE.tel } },
+  { q: 'How do I shut off the water to my house?', a1: 'Find the main shut-off valve, usually outside near the water meter, and turn it clockwise until it stops.', a2: 'Make sure everyone in the house knows where it is before you ever need it.' },
+  { q: 'How fast can you get here?', a1: "It depends on where our trucks are when you call, and we'll tell you honestly on the phone.", a2: 'One customer wrote that Phil "was here within the hour".' },
+  { q: 'Do you charge more after hours?', a1: 'Stand-in: Paul to supply the after-hours policy.', a2: `The answer will start with yes or no. Until then, ask when you call ${SITE.phone}.` },
+  { q: 'Is a clogged drain an emergency?', a1: "It is if water or sewage is coming back up into the house or it's your only toilet.", a2: "If it's one slow sink, it can wait for a regular visit." },
+];
+const answered = items.filter((_, i) => i !== 3);
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: answered.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: [i.a1, i.a2].filter(Boolean).join(' ') } })) };
+---
+<section class="ef" id="em-faq" aria-labelledby="ef-h" data-m-section>
+  <div class="wrap ef-grid">
+    <div class="ef-side">
+      <SectionHead eyebrow="Emergency questions" l1="Fast answers" l2="for a bad moment" id="ef-h" size="sm" class="ef-head" />
+      <aside class="ef-help" aria-label="Ask a person" data-t="4" data-fx="rise">
+        <Seal d={104} deg={8} class="ef-seal" />
+        <div class="ef-card">
+          <p class="ef-t">Not sure it's an emergency?</p>
+          <p class="ef-d">Call and describe it. We'll tell you straight.</p>
+          <CallButton v="priN" l1={`Call ${SITE.phone}`} l2="A real person answers" class="ef-call" />
+          <Swoosh w={384} h={56} below="#111032" class="ef-sw" />
+        </div>
+      </aside>
+      <ProofChips class="ef-chips" />
+    </div>
+    <div class="ef-list">
+      <Faq items={items} group="em-faq" schema={false} />
+      <TextLink href="/faq" class="ef-all" data-t="3">All plumbing FAQs</TextLink>
+    </div>
+  </div>
+</section>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+<style>
+  .ef { position: relative; background: var(--white); padding: 104px 0 104px; }
+  .ef-grid { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 690px); justify-content: space-between; column-gap: 64px; align-items: start; }
+  .ef-side { position: sticky; top: calc(var(--header-h) + 32px); }
+  .ef-help { position: relative; width: 384px; max-width: 100%; margin-top: 64px; }
+  .ef-help :global(.ef-seal) { position: absolute; right: 12px; top: -56px; z-index: 2; }
+  .ef-card { position: relative; overflow: hidden; padding: 40px 28px 68px; border-radius: 24px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .ef-t { max-width: 240px; font-weight: 800; font-size: 22px; line-height: 28px; }
+  .ef-d { margin-top: 14px; font-weight: 500; font-size: 14px; line-height: 21px; color: var(--tint); }
+  .ef-card :global(.ef-call) { position: relative; z-index: 1; margin-top: 30px; }
+  .ef-card :global(.ef-sw) { position: absolute; left: 0; right: 0; bottom: 0; }
+  .ef-side :global(.ef-chips) { margin-top: 28px; max-width: 384px; }
+  .ef-list { display: grid; gap: 24px; justify-items: start; }
+  .ef-list :global(.faqs) { width: 100%; }
+  @media (max-width: 1199px) { .ef-grid { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); column-gap: 48px; } }
+  @media (max-width: 1023px) {
+    .ef { padding: 56px 0 72px; }
+    .ef-grid { grid-template-columns: 1fr; }
+    .ef-side { position: static; display: contents; }
+    .ef-side :global(.ef-head) { order: 1; }
+    .ef-list { order: 2; margin-top: 32px; }
+    .ef-help { order: 3; width: 100%; margin-top: 76px; }
+    .ef-help :global(.ef-seal) { --d: 72px !important; right: 6px; top: -40px; }
+    .ef-card { padding: 34px 20px 58px; }
+    .ef-t { font-size: 20px; line-height: 26px; }
+    .ef-d { font-size: 13px; }
+    .ef-card :global(.ef-call) { width: 100%; margin-top: 18px; }
+    .ef-side :global(.ef-chips) { display: none; }
+  }
+</style>

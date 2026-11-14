@@ -1,0 +1,112 @@
+---
+// S3 Symptom picker (Figma 02): centred head, six symptom tabs in a row, the panel card below with the stripe shadow
+// ("01 / 06", medallion + label | "What it usually is" | "Where to go next" links + call). ARIA tabs, arrow keys.
+import SectionHead from '../../ui/SectionHead.astro';
+import Icon from '../../ui/Icon.astro';
+import { SITE } from '../../../data/site';
+import { SYMPTOMS, HREF } from './hub';
+const pad = (x: number) => String(x).padStart(2, '0');
+const n = SYMPTOMS.length;
+---
+<section class="sy" aria-labelledby="sy-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow="Not sure what it's called?" l1="Tell us what you see." l2="We'll know." center id="sy-h" />
+    <div class="sy-box" data-tabs>
+      <div class="sy-tabs" role="tablist" aria-labelledby="sy-h" data-t="4" data-stagger>
+        {SYMPTOMS.map((s, i) => (
+          <button type="button" class="sy-tab" role="tab" id={`sy-t${i}`} aria-controls={`sy-p${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-tab>
+            <Icon name={s.icon} size={18} />{s.label}
+          </button>
+        ))}
+      </div>
+      <div class="sy-card" data-t="4" data-fx="rise">
+        {SYMPTOMS.map((s, i) => (
+          <div class="sy-panel" role="tabpanel" id={`sy-p${i}`} aria-labelledby={`sy-t${i}`} tabindex="0" hidden={i !== 0} data-panel>
+            <div class="sy-a">
+              <p class="num sy-n">{pad(i + 1)} / {pad(n)}</p>
+              <span class="sy-med"><Icon name={s.icon} size={26} /></span>
+              <h3 class="sy-t">{s.label}</h3>
+            </div>
+            <div class="sy-b">
+              <p class="label sy-l">What it usually is</p>
+              <ul role="list">{s.lines.map((l) => <li><span class="ck"><Icon name="check" size={14} stroke={2.4} /></span>{l}</li>)}</ul>
+            </div>
+            <div class="sy-c">
+              <p class="label sy-l">Where to go next</p>
+              {s.links.map((l) => <a href={HREF[l]} class="sy-link">{l}<Icon name="arrow" size={18} /></a>)}
+              <a href={SITE.tel} class="sy-call"><Icon name="phone" size={18} /><span>Or just call: <b>{SITE.phone}</b></span></a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  document.querySelectorAll<HTMLElement>('.sy [data-tabs]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-panel]'));
+    const show = (i: number, focus = false) => {
+      tabs.forEach((t, j) => { const on = j === i; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      panels.forEach((p, j) => { p.hidden = j !== i; });
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      t.addEventListener('keydown', (e) => {
+        const k = e.key; let j = -1;
+        if (k === 'ArrowRight' || k === 'ArrowDown') j = (i + 1) % tabs.length;
+        else if (k === 'ArrowLeft' || k === 'ArrowUp') j = (i - 1 + tabs.length) % tabs.length;
+        else if (k === 'Home') j = 0; else if (k === 'End') j = tabs.length - 1;
+        if (j >= 0) { e.preventDefault(); show(j, true); }
+      });
+    });
+  });
+</script>
+<style>
+  .sy { position: relative; background: var(--white); padding: 104px 0; }
+  .sy-box { margin-top: 48px; }
+  .sy-tabs { position: relative; z-index: 1; display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; width: fit-content; max-width: 100%; margin: 0 auto -12px; padding: 6px; border-radius: 16px; background: var(--tint); }
+  .sy-tab { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 10px; background: var(--white); color: var(--navy); font: inherit; font-weight: 600; font-size: 15px; line-height: 20px; cursor: pointer; transition: background var(--dur-2), color var(--dur-2); }
+  .sy-tab :global(svg) { display: none; color: var(--sky); }
+  .sy-tab:hover { background: var(--mist); }
+  .sy-tab[aria-selected='true'] { background: var(--navy); color: var(--white); }
+  .sy-tab[aria-selected='true'] :global(svg) { display: block; }
+  .sy-card { position: relative; padding: 36px 40px 40px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .sy-panel { display: grid; grid-template-columns: 330px minmax(0, 1fr) 324px; column-gap: 32px; }
+  .sy-panel[hidden] { display: none; }
+  .sy-panel:focus-visible { outline: 2px solid var(--blue); outline-offset: 8px; border-radius: 8px; }
+  .sy-a { padding-right: 24px; border-right: 1px solid var(--line); }
+  .sy-n { color: var(--press); font-size: 13px; letter-spacing: .08em; }
+  .sy-med { display: grid; place-items: center; width: 64px; height: 64px; margin-top: 30px; border-radius: 50%; background: var(--sky); color: var(--navy); box-shadow: 0 0 0 4px var(--white), var(--sh-2); }
+  .sy-t { margin-top: 16px; font-weight: 800; font-size: 28px; line-height: 34px; }
+  .sy-l { color: var(--press); font-size: 12px; }
+  .sy-b ul { display: grid; gap: 14px; margin: 18px 0 0; padding: 0; }
+  .sy-b li { display: flex; align-items: flex-start; gap: 12px; font-weight: 500; font-size: 17px; line-height: 26px; color: var(--navy); }
+  .ck { display: grid; place-items: center; flex: none; width: 26px; height: 26px; margin-top: 0; border-radius: 50%; background: var(--tint); color: var(--blue); }
+  .sy-c { display: grid; align-content: start; gap: 10px; padding: 22px 24px 24px; border-radius: 20px; background: var(--tint); }
+  .sy-link { display: flex; justify-content: space-between; align-items: center; min-height: 48px; padding: 0 16px; border-radius: 12px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); color: var(--navy); font-weight: 700; font-size: 15px; transition: box-shadow var(--dur-2); }
+  .sy-link :global(svg) { color: var(--blue); transition: transform var(--dur-2) var(--ease-out); }
+  .sy-link:hover { box-shadow: inset 0 0 0 1px var(--blue); }
+  .sy-link:hover :global(svg) { transform: translateX(3px); }
+  .sy-call { display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; color: var(--navy); font-weight: 600; font-size: 15px; }
+  .sy-call :global(svg) { color: var(--blue); } .sy-call b { color: var(--press); }
+  .sy-call:hover b { text-decoration: underline; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .sy-panel { grid-template-columns: 260px minmax(0, 1fr) 280px; } }
+  @media (max-width: 1023px) {
+    .sy { padding: 64px 0; }
+    .sy :global(.shead) { justify-items: start; text-align: left; }
+    .sy-box { margin-top: 28px; }
+    .sy-tabs { flex-wrap: nowrap; justify-content: flex-start; width: auto; margin: 0 calc(-1 * var(--gutter)) 16px; padding: 4px var(--gutter); border-radius: 0; background: none; overflow-x: auto; scrollbar-width: none; }
+    .sy-tabs::-webkit-scrollbar { display: none; }
+    .sy-tab { flex: none; background: var(--tint); font-size: 14px; }
+    .sy-card { padding: 24px 20px 24px; }
+    .sy-panel { grid-template-columns: minmax(0, 1fr); row-gap: 22px; }
+    .sy-a { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 14px; padding: 0; border: 0; }
+    .sy-n { grid-column: 1 / -1; }
+    .sy-med { width: 48px; height: 48px; margin-top: 14px; }
+    .sy-t { margin-top: 14px; font-size: 22px; line-height: 28px; }
+    .sy-b li { font-size: 15px; line-height: 23px; }
+    .sy-c { padding: 18px 16px; }
+  }
+</style>

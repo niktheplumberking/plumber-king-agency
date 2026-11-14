@@ -1,0 +1,142 @@
+---
+// H3 Trust bento (Figma 427:2594): navy, "947 neighbors can't all be wrong." Meter cell, Best of the Bay, licence,
+// family-owned, a review quote, and Paul's promise strip with the stamp. STICKY 2 (warranty) + STICKY 5 (crew names).
+import SectionHead from '../ui/SectionHead.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Meter from '../ui/Meter.astro';
+import Stars from '../ui/Stars.astro';
+import TextLink from '../ui/TextLink.astro';
+import Icon from '../ui/Icon.astro';
+import Patch from '../ui/Patch.astro';
+import Stamp from '../ui/Stamp.astro';
+import CallButton from '../ui/CallButton.astro';
+import Img from '../ui/Img.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import { SITE } from '../../data/site';
+import { REVIEWS } from '../../data/reviews';
+---
+<section class="trust on-navy" aria-labelledby="trust-h" data-m-section>
+  <FlowLines variant="navy" />
+  <div class="wrap tr-in">
+    <SectionHead eyebrow="Why Pinellas calls Paul" l1="947 neighbors can't all be wrong." l2="Well, 4.9 stars' worth." dark center id="trust-h" class="tr-head" />
+    <div class="bento" data-t="4" data-stagger>
+      <div class="c c-a">
+        <div class="ca-top"><span class="ca-g"><GoogleG size={24} /><b>Google reviews</b></span><span class="ca-chk">checked {SITE.rating.checked}</span></div>
+        <Meter digits="00947" label={`${SITE.rating.count} reviews on Google`} cw={72} ch={96} gap={8} pad={10} class="ca-m" />
+        <p class="ca-cap">reviews on Google, and counting</p>
+        <p class="ca-chk-m">checked {SITE.rating.checked}</p>
+        <div class="ca-bot">
+          <p class="ca-big num" aria-label={`Rated ${SITE.rating.value} out of 5`}><span data-count={SITE.rating.value} data-decimals="1">{SITE.rating.value}</span></p>
+          <div class="ca-r">
+            <Stars size={26} />
+            <p class="ca-out">out of 5 stars</p>
+            <TextLink href="/reviews" size={15}>Read them all</TextLink>
+          </div>
+        </div>
+      </div>
+      <div class="c c-b">
+        <div class="cb-h"><span class="cb-i"><Icon name="award" size={26} /></span><span><b>{SITE.awards.name}</b><small>{SITE.awards.title}</small></span></div>
+        <ul role="list" class="cb-y">{SITE.awards.years.map((y) => <li class="num">{y}</li>)}</ul>
+        <p class="cb-by">Voted by {SITE.awards.by}</p>
+      </div>
+      <a class="c c-c" href={SITE.licenceLookup} target="_blank" rel="noopener">
+        <span class="cc-h"><Icon name="badge" size={28} /><span class="label">Florida certified<br />plumbing contractor</span></span>
+        <span class="cc-n num">{SITE.licence}</span>
+        <span class="cc-d">Look us up at myfloridalicense.com. We'll wait.</span>
+        <span class="sr-only"> (opens the state licence lookup in a new tab)</span>
+      </a>
+      <div class="c c-d">
+        <div class="cd-ph"><Img name="about-paul-uniform-at-truck-1080" alt="Paul in his uniform shirt at a Plumbing By Paul truck" sizes="150px" focus="62% 20%" widths={[200, 320, 480]} /></div>
+        <div class="cd-t">
+          <Icon name="house" size={22} />
+          <p class="cd-h">Family-owned<br />since 2015</p>
+          <p class="cd-d">Paul and Alycia run it. Their crew wears the blue shirts.</p>
+        </div>
+      </div>
+      <figure class="c c-e">
+        <Patch name="Phil" dark deg={4} size="sm" class="ce-p" />
+        <Stars size={13} />
+        <blockquote><p>“{REVIEWS.melissa.quote}”</p></blockquote>
+        <figcaption><b>{REVIEWS.melissa.name}</b> <span>Google review</span></figcaption>
+      </figure>
+      <div class="c c-f">
+        <Stamp d={150} deg={-8} class="cf-st" />
+        <p class="cf-t"><strong>Paul's promise:</strong> you hear the price before we start, and our work is covered by a 1-year workmanship warranty.</p>
+        <CallButton l2="Free estimates · Open 7 days" class="cf-cb" />
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .trust { position: relative; background: var(--navy); color: var(--white); padding: 96px 0 100px; overflow: hidden; }
+  .tr-in { position: relative; z-index: 1; }
+  .bento { display: grid; grid-template-columns: 486fr 384fr 282fr; grid-template-rows: 200px 200px auto; gap: 24px; margin-top: 48px; }
+  .c { position: relative; border-radius: var(--r-xl); color: var(--navy); }
+  .c-a { grid-row: 1 / 3; background: var(--white); padding: 30px 32px; }
+  .ca-top { display: flex; justify-content: space-between; align-items: center; }
+  .ca-g { display: inline-flex; align-items: center; gap: 10px; } .ca-g b { font-size: 17px; }
+  .ca-chk { padding: 5px 10px; border-radius: 99px; background: var(--tint); font-weight: 600; font-size: 12px; color: var(--slate); }
+  .ca-chk-m { display: none; }
+  .c-a :global(.ca-m) { margin-top: 20px; }
+  .ca-cap { margin-top: 10px; font-weight: 500; font-size: 13px; color: var(--slate); padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .ca-bot { display: flex; align-items: center; gap: 40px; margin-top: 20px; }
+  .ca-big { font-size: 96px; line-height: 96px; letter-spacing: -.01em; }
+  .c-a :global(.tlink) { color: var(--press); }
+  .ca-r { display: grid; gap: 6px; justify-items: start; }
+  .ca-out { font-weight: 600; font-size: 16px; }
+  .c-b { background: var(--sky); padding: 28px; }
+  .cb-h { display: flex; gap: 16px; align-items: center; }
+  .cb-i { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--navy); color: var(--sky); flex: none; }
+  .cb-h b { display: block; font-weight: 800; font-size: 24px; line-height: 28px; }
+  .cb-h small { display: block; font-weight: 600; font-size: 15px; line-height: 22px; }
+  .cb-y { display: flex; gap: 8px; margin: 18px 0 0; padding: 0; }
+  .cb-y li { padding: 6px 12px; border-radius: 8px; background: var(--navy); color: var(--white); font-size: 15px; line-height: 20px; }
+  .cb-by { margin-top: 18px; font-weight: 500; font-size: 13px; line-height: 18px; }
+  .c-c { display: grid; align-content: start; background: var(--tint); padding: 24px; transition: transform .45s var(--ease-out), box-shadow .45s; }
+  .c-c:hover { transform: translateY(-4px); box-shadow: 0 0 0 2px var(--sky); }
+  .cc-h { display: flex; gap: 10px; align-items: center; color: var(--blue); }
+  .cc-h .label { color: var(--press); font-size: 11px; line-height: 15px; }
+  .cc-n { margin-top: 24px; font-size: 30px; line-height: 34px; }
+  .cc-d { margin-top: 14px; font-weight: 500; font-size: 13px; line-height: 19px; color: var(--slate); }
+  .c-d { display: grid; grid-template-columns: 150px 1fr; overflow: hidden; background: var(--white); }
+  .cd-ph { position: relative; overflow: hidden; }
+  .cd-t { padding: 28px 24px; color: var(--blue); }
+  .cd-h { margin-top: 10px; font-weight: 700; font-size: 20px; line-height: 25px; color: var(--navy); }
+  .cd-d { margin-top: 8px; font-size: 14px; line-height: 21px; color: var(--slate); }
+  .c-e { margin: 0; padding: 24px 22px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--sky); color: var(--white); display: grid; align-content: start; gap: 10px; }
+  .c-e :global(.ce-p) { position: absolute; right: -16px; top: -20px; }
+  .c-e blockquote { margin: 0; font-weight: 500; font-size: 14px; line-height: 21px; }
+  .c-e figcaption { margin-top: auto; font-size: 13px; } .c-e figcaption span { margin-left: 8px; font-weight: 500; font-size: 12px; color: var(--soft); }
+  .c-f { grid-column: 1 / -1; display: flex; align-items: center; gap: 24px; min-height: 96px; padding: 18px 18px 18px 176px; border-radius: 24px; background: var(--tint); }
+  .c-f :global(.cf-st) { position: absolute; left: 9px; top: -45px; }
+  .cf-t { flex: 1; max-width: 700px; font-weight: 500; font-size: 17px; line-height: 26px; }
+  .cf-t strong { font-weight: 800; }
+  .c-f :global(.cf-cb) { margin-left: auto; min-height: 60px; }
+  @media (max-width: 1199px) {
+    .bento { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
+    .c-a { grid-row: auto; grid-column: 1 / -1; }
+    .c-d { grid-template-columns: 130px 1fr; }
+  }
+  @media (max-width: 767px) {
+    .trust { padding: 64px 0; }
+    .bento { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+    .c { border-radius: 24px; }
+    .c-a { padding: 20px; display: grid; justify-items: center; }
+    .ca-top { justify-self: stretch; } .ca-chk { display: none; }
+    .c-a :global(.ca-m) { --cw: 52px !important; --ch: 68px !important; --z: 41px !important; margin-top: 18px; }
+    .ca-cap { display: none; }
+    .ca-chk-m { display: block; justify-self: stretch; text-align: center; margin-top: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--line); font-weight: 500; font-size: 12px; color: var(--slate); }
+    .ca-bot { justify-self: stretch; gap: 24px; }
+    .ca-big { font-size: 64px; line-height: 64px; }
+    .c-b { order: 1; padding: 20px; } .cb-h b { font-size: 20px; line-height: 24px; } .cb-h small { font-size: 13px; } .cb-i { width: 46px; height: 46px; }
+    .cb-y { gap: 6px; } .cb-y li { padding: 6px 10px; font-size: 14px; }
+    .c-e { order: 2; margin-top: 10px; padding: 20px; } .c-e blockquote { font-size: 15px; line-height: 23px; }
+    .c-c { order: 3; padding: 20px; } .cc-n { font-size: 28px; margin-top: 18px; }
+    .c-d { order: 4; grid-template-columns: 120px 1fr; min-height: 150px; } .cd-t { padding: 20px 16px; } .cd-t > :global(svg) { display: none; } .cd-h { margin-top: 0; font-size: 17px; line-height: 21px; } .cd-d { font-size: 13px; line-height: 19px; }
+    .c-f { order: 5; display: grid; padding: 56px 20px 20px; margin-top: 40px; gap: 14px; }
+    .c-f :global(.cf-st) { --d: 104px !important; left: 18px; top: -52px; }
+    .c-f :global(.cf-st .core) { left: 26px; top: 26px; --d: 52px !important; }
+    .cf-t { font-size: 15px; line-height: 23px; }
+    .c-f :global(.cf-cb) { margin-left: 0; width: 100%; }
+  }
+</style>

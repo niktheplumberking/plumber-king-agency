@@ -1,0 +1,97 @@
+---
+// Service FAQ (direct answer first, FAQPage JSON-LD from Faq.astro for exactly these items).
+// Layout a (Figma 03 W10): like Home H13, a sticky side with the head, the navy help card and proof chips; the list right.
+// Layout b (Figma 04 D10): tint band, centred head and list, the seal beside the first item, "Not on the list?" line.
+import SectionHead from '../ui/SectionHead.astro';
+import Faq from '../ui/Faq.astro';
+import Seal from '../ui/Seal.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import CallButton from '../ui/CallButton.astro';
+import ProofChips from '../ui/ProofChips.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { f: SvcPage['faq']; slug: string; layout: 'a' | 'b'; }
+const { f, slug, layout } = Astro.props;
+const id = sid(slug, 'faq');
+// FaqItem drops the space between a1 and a2 (an Astro fragment trims it), so the space travels inside a2 here and the
+// FAQPage JSON-LD is emitted below from the clean text instead of by Faq.astro.
+const items = f.items.map((i) => ({ ...i, a2: i.a2 ? ` ${i.a2}` : undefined }));
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: f.items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: [i.a1, i.a2].filter(Boolean).join(' ') } })) };
+---
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+{layout === 'a' ? (
+<section class="fq fq-a" aria-labelledby={id} data-m-section>
+  <div class="wrap fq-grid">
+    <div class="fq-side">
+      <SectionHead eyebrow={f.eyebrow} l1={f.l1} l2={f.l2} id={id} class="fq-head" />
+      <aside class="fq-help" aria-label="Ask a person" data-t="4" data-fx="rise">
+        <Seal d={104} deg={6} class="fq-seal" />
+        <div class="fq-card">
+          <p class="fq-t">Rather just ask a person?</p>
+          <p class="fq-d">The office is open every day, 8 AM to 5 PM.</p>
+          <CallButton v="priN" l1={`Call ${SITE.phone}`} l2="A real person picks up" class="fq-call" />
+          <Swoosh w={384} h={56} below="#111032" class="fq-sw" />
+        </div>
+      </aside>
+      <ProofChips class="fq-chips" />
+    </div>
+    <div class="fq-list"><Faq items={items} group={`${slug}-faq`} schema={false} /></div>
+  </div>
+</section>
+) : (
+<section class="fq fq-b" aria-labelledby={id} data-m-section>
+  <div class="wrap fq-bin">
+    <SectionHead eyebrow={f.eyebrow} l1={f.l1} l2={f.l2} center id={id} class="fq-bhead" />
+    <div class="fq-blist">
+      <Seal d={80} deg={-6} class="fq-bseal" />
+      <Faq items={items} group={`${slug}-faq`} schema={false} />
+    </div>
+    <p class="fq-more" data-t="3"><span>Not on the list?</span> <a href={SITE.tel}><Icon name="phone" size={18} />Ask the office: {SITE.phone}</a></p>
+  </div>
+</section>
+)}
+<style>
+  .fq { position: relative; padding: 104px 0; }
+  .fq-a { background: var(--white); }
+  .fq-grid { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 690px); justify-content: space-between; column-gap: 64px; align-items: start; }
+  .fq-side { position: sticky; top: calc(var(--header-h) + 32px); }
+  .fq-help { position: relative; width: 384px; max-width: 100%; margin-top: 76px; }
+  .fq-help :global(.fq-seal) { position: absolute; right: 16px; top: -58px; z-index: 2; }
+  .fq-card { position: relative; overflow: hidden; padding: 44px 28px 64px; border-radius: 24px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .fq-t { max-width: 230px; margin: 0; font-weight: 700; font-size: 22px; line-height: 28px; }
+  .fq-d { margin: 12px 0 0; font-weight: 500; font-size: 14px; line-height: 21px; color: var(--soft); }
+  .fq-card :global(.fq-call) { position: relative; z-index: 1; margin-top: 28px; }
+  .fq-card :global(.fq-sw) { position: absolute; left: 0; right: 0; bottom: 0; }
+  .fq-side :global(.fq-chips) { margin-top: 28px; max-width: 384px; }
+  .fq-list :global(.faqs) { width: 100%; }
+
+  .fq-b { background: var(--tint); }
+  .fq-bin { display: grid; justify-items: center; }
+  .fq-blist { position: relative; width: min(800px, 100%); margin-top: 56px; }
+  .fq-blist :global(.fq-bseal) { position: absolute; right: -40px; top: -48px; z-index: 2; }
+  .fq-blist :global(.faqs) { width: 100%; }
+  .fq-more { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 20px; margin-top: 40px; font-weight: 700; font-size: 17px; line-height: 24px; color: var(--navy); }
+  .fq-more a { display: inline-flex; align-items: center; gap: 8px; color: var(--press); }
+  .fq-more a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 1199px) { .fq-grid { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); column-gap: 48px; } }
+  @media (max-width: 1023px) {
+    .fq { padding: 64px 0 72px; }
+    .fq-grid { grid-template-columns: minmax(0, 1fr); }
+    .fq-side { position: static; display: contents; }
+    .fq-side :global(.fq-head) { order: 1; }
+    .fq-list { order: 2; margin-top: 32px; }
+    .fq-help { order: 3; width: 100%; margin-top: 84px; }
+    .fq-help :global(.fq-seal) { --d: 88px !important; right: 6px; top: -46px; }
+    .fq-card { padding: 34px 20px 58px; }
+    .fq-t { font-size: 20px; line-height: 26px; }
+    .fq-card :global(.fq-call) { width: 100%; margin-top: 18px; }
+    .fq-side :global(.fq-chips) { display: none; }
+    .fq-bin :global(.fq-bhead) { justify-items: start; text-align: left; justify-self: start; }
+    .fq-blist { margin-top: 32px; }
+    .fq-blist :global(.fq-bseal) { --d: 60px !important; right: -4px; top: -64px; }
+    .fq-more { justify-content: flex-start; margin-top: 28px; font-size: 15px; }
+    .fq-more > span { display: none; }
+  }
+</style>

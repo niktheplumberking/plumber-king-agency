@@ -1,0 +1,119 @@
+---
+// H11 Our work (Figma 427:3605). The spotlight review card (James Douglas) rises over the emergency band's bottom edge;
+// then "Real jobs, real Pinellas homes": five real job photos and the Instagram stat tile. STICKY 9 (remodel photos / PBP
+// Construction) + Instagram count read 13 Nov 2026.
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Patch from '../ui/Patch.astro';
+import Icon from '../ui/Icon.astro';
+import Tick from '../ui/Tick.astro';
+import { REVIEWS } from '../../data/reviews';
+import { SITE } from '../../data/site';
+const r = REVIEWS.james;
+let q = r.quote;
+for (const h of r.hl ?? []) q = q.replace(h, `<mark>${h}</mark>`);
+const facts = [['answered on the', 'first ring'], ['here', 'within the hour'], ['fixed it in', 'under an hour']];
+---
+<section class="work" aria-labelledby="work-h" data-m-section>
+  <div class="wrap">
+    <figure class="spot" data-t="4" data-fx="rise">
+      <Patch name="Phil" deg={4} class="sp-p" />
+      <div class="sp-top"><Stars size={18} /><span>Google review · {r.age}</span></div>
+      <blockquote class="sp-q"><p set:html={q} /></blockquote>
+      <ul role="list" class="sp-facts" aria-label="In his words">
+        {facts.map(([a, b]) => <li><span>{a}</span><b class="num">{b}</b></li>)}
+      </ul>
+      <figcaption class="sp-by">
+        <span class="av num" aria-hidden="true">J</span>
+        <span class="nm"><b>{r.name}</b><small>{r.service}</small><small class="sp-age"> · Google review · {r.age}</small></span>
+        <GoogleG size={22} />
+      </figcaption>
+    </figure>
+    <div class="wk-head">
+      <SectionHead eyebrow="Lately" l1="Real jobs," l2="real Pinellas homes" id="work-h" />
+      <TextLink href="/our-work" class="wk-all" data-t="3">See more of our work</TextLink>
+    </div>
+    <div class="wk-grid" data-t="4" data-stagger>
+      <figure class="cell c-v frame"><Img name="remodel-finished-vanity-2048" alt="A new bathroom vanity, plumbed and finished" sizes="(min-width: 1024px) 384px, 50vw" focus="50% 60%" widths={[320, 480, 768]} /><Caption class="wk-cap">New vanity, plumbed and finished.</Caption></figure>
+      <figure class="cell c-t frame"><Img name="service-two-techs-vanity-install" alt="Two Plumbing By Paul techs installing a vanity" sizes="(min-width: 1024px) 384px, 50vw" focus="50% 50%" widths={[320, 480, 768]} /><Caption class="wk-cap">Two of the crew on a vanity install.</Caption></figure>
+      <figure class="cell c-d frame-3 frame"><Img name="service-tech-digging-with-van" alt="A tech digging for a line repair with the Plumbing By Paul van out front" sizes="(min-width: 1024px) 384px, 50vw" focus="50% 50%" widths={[320, 480, 768, 1000]} /><PhotoTag class="wk-tag">On the job</PhotoTag><Caption class="wk-cap">Digging for a line repair, truck out front.</Caption></figure>
+      <figure class="cell c-b frame"><Img name="remodel-teal-tile-tub" alt="A finished tub surround in teal tile" sizes="(min-width: 1024px) 384px, 50vw" focus="50% 75%" widths={[320, 480, 768]} /><Caption class="wk-cap">Tub and tile, finished.</Caption></figure>
+      <div class="cell c-ig">
+        <Icon name="ig" size={26} class="ig-i" />
+        <Tick scale={1.4} class="ig-t" />
+        <p class="ig-n num"><span data-count={SITE.social.instagramPosts}>{SITE.social.instagramPosts}</span></p>
+        <p class="ig-d">posts on our Instagram.<br />We show our work.</p>
+        <a href={SITE.social.instagram} target="_blank" rel="noopener" class="tlink ig-l"><span class="t">{SITE.social.instagramHandle}</span><Icon name="external" size={18} /><span class="sr-only"> (opens in a new tab)</span></a>
+      </div>
+    </div>
+    <TextLink href="/our-work" class="wk-all-m" size={15}>See more of our work</TextLink>
+  </div>
+</section>
+<style>
+  .work { position: relative; z-index: 2; background: var(--white); padding: 128px 0 150px; }
+  .work .wrap { position: relative; }
+  /* Figma: the card sits 318 px (top: -446 = -318 - 128 padding) up into the emergency band and only 64 px into this section (out of flow on desktop). */
+  .spot { position: absolute; right: 0; top: -446px; z-index: 3; width: 540px; margin: 0; display: grid; gap: 16px; padding: 30px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }
+  .spot :global(.sp-p) { position: absolute; right: 16px; top: -32px; }
+  .sp-top { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 13px; color: var(--slate-2); }
+  .sp-q { margin: 0; font-weight: 500; font-size: 19px; line-height: 30px; }
+  .sp-q :global(mark) { background: none; color: inherit; font-weight: 700; text-decoration: underline; text-decoration-color: var(--soft); text-decoration-thickness: 8px; text-underline-offset: -2px; text-decoration-skip-ink: none; }
+  .sp-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; padding: 0; }
+  .sp-facts li { display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px; background: var(--tint); }
+  .sp-facts span { font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate); }
+  .sp-facts b { font-weight: 400; font-size: 15px; line-height: 20px; }
+  .sp-by { display: flex; align-items: center; gap: 12px; }
+  .av { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--press); font-size: 17px; flex: none; }
+  .nm { flex: 1; display: grid; } .nm b { font-size: 16px; line-height: 22px; } .nm small { font-weight: 500; font-size: 13px; line-height: 18px; color: var(--slate-2); }
+  .sp-age { display: none; }
+  .wk-head { display: flex; justify-content: space-between; align-items: flex-end; }
+  .wk-head :global(.wk-all) { margin-bottom: 6px; }
+  .wk-head :global(.h2) { max-width: 620px; }
+  .wk-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 228px 228px; gap: 24px; margin-top: 96px; }
+  .cell { position: relative; margin: 0; }
+  .frame.cell { border-radius: var(--r-xl); box-shadow: var(--sh-2); }
+  .frame.c-d { box-shadow: var(--sh-3); }
+  .c-v { grid-column: 1; grid-row: 1; } .c-t { grid-column: 1; grid-row: 2; }
+  .c-d { grid-column: 2; grid-row: 1 / 3; margin-top: -40px; }
+  .c-b { grid-column: 3; grid-row: 1; } .c-ig { grid-column: 3; grid-row: 2; }
+  .cell :global(img) { transition: transform 1s var(--ease-out); }
+  .cell:hover :global(img) { transform: scale(1.05); }
+  .cell :global(.wk-cap) { position: absolute; left: 16px; bottom: 16px; z-index: 2; }
+  .cell :global(.wk-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .c-ig { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr auto; column-gap: 24px; padding: 28px 30px; border-radius: var(--r-xl); background: var(--sky); color: var(--navy); }
+  .c-ig :global(.ig-i) { grid-column: 1; }
+  .c-ig :global(.ig-t) { grid-column: 2; justify-self: end; }
+  .ig-n { grid-column: 1; align-self: center; font-size: 64px; line-height: 64px; }
+  .ig-d { grid-column: 2; align-self: center; font-weight: 600; font-size: 15px; line-height: 22px; }
+  .ig-l { grid-column: 1 / -1; color: var(--navy) !important; }
+  .work :global(.wk-all-m) { display: none; }
+  @media (max-width: 1023px) {
+    .work { padding: 0 0 64px; }
+    .spot { position: relative; top: auto; right: auto; width: 100%; margin: -170px 0 0; padding: 20px; gap: 12px; }
+    .spot :global(.sp-p) { right: 10px; top: -28px; --x: 0; }
+    .sp-top span { display: none; }
+    .sp-q { font-size: 15px; line-height: 25px; }
+    .sp-facts { display: none; }
+    .nm small:not(.sp-age) { display: none; } .sp-age { display: inline; }
+    .wk-head { display: block; margin-top: 56px; }
+    .wk-head :global(.wk-all) { display: none; }
+    /* Figma mobile: two independent masonry columns (vanity + techs | tall dig + tub), Instagram tile full width below. */
+    .wk-grid { display: block; columns: 2; column-gap: 16px; margin-top: 28px; }
+    .cell { break-inside: avoid; margin: 0 0 16px; }
+    .frame.cell, .c-ig { border-radius: 16px; box-shadow: none; }
+    .frame.cell { overflow: visible; background: none; }
+    .cell :global(img) { height: auto; aspect-ratio: 1; border-radius: 16px; box-shadow: 0 0 0 4px var(--white), var(--sh-1); }
+    .c-d :global(img) { aspect-ratio: 165 / 245; }
+    .c-d { margin-top: 0; }
+    .cell :global(.wk-tag) { display: none; }
+    .c-ig { column-span: all; padding: 20px 24px; margin: 8px 0 0; }
+    .ig-n { font-size: 48px; line-height: 48px; }
+    .cell :global(.wk-cap) { position: static; display: block; margin-top: 8px; padding: 0; background: none; box-shadow: none; font-size: 12px; line-height: 17px; color: var(--slate); }
+    .work :global(.wk-all-m) { display: inline-flex; margin-top: 24px; }
+  }
+</style>

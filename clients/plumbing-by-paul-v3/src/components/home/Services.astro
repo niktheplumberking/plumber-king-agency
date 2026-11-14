@@ -1,0 +1,132 @@
+---
+// H5 Services (Figma 427:2825) + the navy "More we do" panel that hangs over the join into H6.
+// Mobile: the six cards become a swipe rail (scroll-snap, dots, "1 of 6 · swipe"). STICKY 10 (tankless) + STICKY 7 (offer slot).
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Medal from '../ui/Medal.astro';
+import Icon from '../ui/Icon.astro';
+import ArrowDot from '../ui/ArrowDot.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import { SITE } from '../../data/site';
+const cards = [
+  { t: 'Water heaters', d: 'No hot water, rusty water or a puddle under the tank. We repair first and replace when it makes sense.', call: 'Call about a water heater', see: 'See water heaters', href: '/water-heaters', img: 'service-tankless-water-heater-install', alt: 'A tankless water heater installed on a garage wall with new copper lines', focus: '55% 30%', i: 'heater' },
+  { t: 'Drain cleaning', d: 'Kitchen sinks, showers, toilets and main lines. Cleared, then checked so it stays clear.', call: 'Call about a drain', see: 'See drain cleaning', href: '/drain-cleaning', img: 'service-tech-at-cleanout', alt: 'A tech running a drain line through a yard cleanout', focus: '50% 20%', i: 'waves' },
+  { t: 'Sewer service', d: 'Backups, root trouble and broken lines, with a camera to show you what we see.', call: 'Call about a sewer line', see: 'See sewer service', href: '/sewer-service', img: 'service-sewer-line-trench-pvc', alt: 'New PVC sewer pipe in an open trench', focus: '50% 62%', i: 'pipe' },
+  { t: 'Leaks and pipe repair', d: 'From a drip under the vanity to a leak at the meter box. Found and fixed.', call: 'Call about a leak', see: 'See leak detection', href: '/leak-detection', img: 'service-tech-under-bath-vanity', alt: 'A tech lying on a bathroom floor working on pipes under a vanity', focus: '50% 55%', i: 'droplets' },
+  { t: 'Toilets and fixtures', d: 'Running, rocking, clogging or just old. Repairs and new installs.', call: 'Call about a toilet', see: 'See toilet repair', href: '/toilet-repair', img: 'hero-05-tech-toilet-repair-pro', alt: 'A Plumbing By Paul tech repairing a toilet', focus: '70% 40%', i: 'toilet' },
+  { t: 'Emergency plumbing', d: 'Burst pipe or sewage coming up? Shut the water off and call us.', call: 'Call now', see: 'See emergency plumbing', href: '/emergency-plumbing', img: 'fleet-box-truck-rear-three-quarter', alt: 'The Plumbing By Paul box truck with the mascot wrap', focus: '50% 30%', i: 'siren' },
+];
+const more = [
+  ['Repiping', '/repiping'], ['Clogged drain', '/clogged-drain'], ['Drain camera inspection', '/drain-camera'], ['Garbage disposal', '/garbage-disposal'],
+  ['Gas lines', '/gas-lines'], ['Water softeners and filtration', '/water-softeners'], ['Commercial plumbing', '/commercial-plumbing'], ['General plumbing', '/plumbing'],
+];
+---
+<section class="svc" aria-labelledby="svc-h" data-m-section>
+  <div class="wrap">
+    <div class="sv-head">
+      <SectionHead eyebrow="What we fix" l1="Every pipe in the house." l2="And the ones under the yard." id="svc-h" />
+      <p class="lead sv-lead" data-t="3">Homes and businesses across Pinellas. If water or gas runs through it, we work on it.</p>
+    </div>
+    <div class="sv-rail" data-carousel>
+      <ul role="list" class="sv-grid" data-track data-t="4" data-stagger aria-label="Services">
+        {cards.map((c, i) => (
+          <li class:list={['scard', i === 0 && 'feat']} data-slide>
+            <div class="sc-ph">
+              <Img name={c.img} alt={c.alt} sizes="(min-width: 1024px) 384px, 300px" focus={c.focus} widths={[320, 480, 640, 800]} />
+              {i === 0 && <PhotoTag class="sc-tag">Tankless install</PhotoTag>}
+              {i === 5 && <PhotoTag class="sc-tag" live>Answering now</PhotoTag>}
+            </div>
+            <Medal icon={c.i} class="sc-md" />
+            <div class="sc-b">
+              <h3 class="sc-t">{c.t}{i === 0 && <span class="most label">Most asked</span>}</h3>
+              <p class="sc-d">{c.d}</p>
+              <div class="sc-l">
+                <a href={SITE.tel} class="sc-call"><Icon name="phone" size={16} />{c.call}</a>
+                <a href={c.href} class="sc-see"><span>{c.see}</span><Icon name="arrow" size={15} /><ArrowDot d={40} v={i === 0 ? 'press' : 'tint'} class="sc-dot" /></a>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div class="sv-dots" aria-hidden="true"><span class="dots">{cards.map((_, i) => <i data-dot class:list={[i === 0 && 'on']}></i>)}</span><span class="cnt"><span data-count-now>1</span> of 6 · swipe</span></div>
+      <p class="sv-also">Also: Sewer service · Leaks and pipe repair · Toilets and fixtures · Emergency plumbing</p>
+    </div>
+    <div class="more on-navy" data-t="4" data-fx="rise">
+      <div class="mo-l">
+        <p class="label mo-h">More we do</p>
+        <ul role="list" class="mo-chips" data-stagger>
+          {more.map(([t, h]) => <li><a href={h}>{t}<Icon name="arrow" size={14} /></a></li>)}
+        </ul>
+      </div>
+      <aside class="offer" aria-label="Offer placeholder">
+        <p class="label">Paul's offer goes here</p>
+        <p>Financing, a first-visit offer or a maintenance plan. Paul to decide.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+<style>
+  .svc { position: relative; z-index: 2; background: var(--white); padding: 104px 0 0; }
+  .sv-head { display: grid; grid-template-columns: 760px 1fr; gap: 56px; align-items: end; }
+  .sv-lead { max-width: 384px; justify-self: end; }
+  .sv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 24px; margin: 56px 0 0; padding: 0; }
+  .scard { position: relative; display: grid; grid-template-rows: 208px 1fr; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
+  .scard.feat { box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .scard:hover { transform: translateY(-6px); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .scard.feat:hover { box-shadow: inset 0 0 0 1px var(--line), var(--sh-stripe); }
+  .sc-ph { position: relative; overflow: hidden; border-radius: 20px 20px 0 0; background: var(--tint); }
+  .sc-ph :global(img) { transition: transform 1s var(--ease-out); }
+  .scard:hover .sc-ph :global(img) { transform: scale(1.05); }
+  .sc-ph :global(.sc-tag) { position: absolute; left: 16px; top: 16px; }
+  .scard :global(.sc-md) { position: absolute; left: 28px; top: 176px; z-index: 2; transition: transform .5s var(--ease-back); }
+  .scard:hover :global(.sc-md) { transform: rotate(-10deg) scale(1.06); }
+  .sc-b { display: grid; grid-template-rows: auto 1fr auto; padding: 46px 28px 24px; }
+  .sc-t { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; font-size: var(--fz-h3s); line-height: 30px; }
+  .most { padding: 5px 10px; border-radius: 6px; background: var(--navy); color: var(--white); font-size: 10px; line-height: 12px; }
+  .sc-d { margin-top: 8px; font-size: 15px; line-height: 23px; color: var(--slate); }
+  .sc-l { position: relative; display: grid; gap: 6px; justify-items: start; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .sc-call { display: inline-flex; align-items: center; gap: 8px; min-height: 22px; font-weight: 700; font-size: 14px; line-height: 20px; color: var(--press); }
+  .sc-call:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .sc-see { display: inline-flex; align-items: center; gap: 6px; min-height: 22px; font-weight: 600; font-size: 14px; line-height: 20px; color: var(--navy); }
+  .sc-see:hover span { text-decoration: underline; text-underline-offset: 3px; }
+  .sc-see :global(.sc-dot) { position: absolute; right: 0; top: 50%; margin-top: -13px; }
+  .sc-see:hover :global(.sc-dot) { transform: translateX(4px); background: var(--press); color: var(--white); }
+  .sv-dots, .sv-also { display: none; }
+  .more { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr 318px; gap: 32px; margin: 64px 0 -126px; padding: 30px 32px 30px 36px; border-radius: var(--r-xl); background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .mo-h { color: var(--sky); font-size: 13px; }
+  .mo-chips { display: flex; flex-wrap: wrap; gap: 10px 8px; margin: 12px 0 0; padding: 0; max-width: 780px; }
+  .mo-chips a { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 10px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); font-weight: 600; font-size: 14px; color: var(--white); transition: background var(--dur-2), box-shadow var(--dur-2); }
+  .mo-chips a :global(svg) { color: var(--sky); transition: transform var(--dur-2) var(--ease-out); }
+  .mo-chips a:hover { background: var(--navy-3); box-shadow: inset 0 0 0 1px var(--sky); }
+  .mo-chips a:hover :global(svg) { transform: translateX(3px); }
+  .offer { display: grid; align-content: start; gap: 10px; padding: 22px; border-radius: 16px; background: var(--navy-2); border: 2px dashed var(--sky); }
+  .offer .label { color: var(--sky); font-size: 12px; }
+  .offer p:last-child { font-weight: 500; font-size: 13px; line-height: 19px; color: var(--tint); }
+  @media (max-width: 1199px) {
+    .sv-head { grid-template-columns: 1fr; gap: 20px; } .sv-lead { justify-self: start; max-width: 640px; }
+    .sv-grid { grid-template-columns: repeat(2, 1fr); }
+    .more { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 767px) {
+    .svc { padding-top: 64px; }
+    .sv-rail { margin-top: 28px; }
+    .sv-grid { display: flex; gap: 16px; margin: 0 calc(-1 * var(--gutter)); padding: 10px var(--gutter) 24px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+    .sv-grid::-webkit-scrollbar { display: none; }
+    .scard { flex: 0 0 300px; scroll-snap-align: start; grid-template-rows: 180px 1fr; }
+    .scard :global(.sc-md) { --d: 56px !important; left: 22px; top: 152px; }
+    .sc-b { padding: 40px 22px 20px; }
+    .sc-t { font-size: 21px; line-height: 26px; } .most { display: none; }
+    .sc-d { font-size: 14px; line-height: 21px; }
+    .sc-see :global(.sc-dot) { display: none; }
+    .sv-dots { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+    .dots { display: flex; gap: 6px; }
+    .dots i { width: 8px; height: 8px; border-radius: 4px; background: var(--line); transition: width .4s var(--ease-out), background .4s; }
+    .dots i:global(.on) { width: 22px; background: var(--press); }
+    .cnt { font-weight: 500; font-size: 12px; color: var(--slate-2); }
+    .sv-also { display: block; margin-top: 20px; font-weight: 500; font-size: 13px; line-height: 20px; color: var(--slate); }
+    .more { margin: 40px 0 -150px; padding: 20px; gap: 16px; border-radius: 24px; }
+    .mo-chips a { position: relative; font-size: 13px; min-height: 40px; padding: 0 12px; }
+    .mo-chips a::after { content: ""; position: absolute; inset: -2px 0; }
+    .offer { padding: 14px 16px; }
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+// B2 The story (Figma B2): editorial text left; framed photo (Paul at the office mascot wall) on a tint offset right; the
+// "Plumbing Pinellas with Heart" pull quote plate crosses from the text column into the photo; the shop address card below.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+const a = SITE.address;
+---
+<section class="bs" aria-labelledby="bs-h" data-m-section>
+  <div class="wrap bs-in">
+    <div class="bs-copy">
+      <SectionHead eyebrow="Our story" l1="900 reviews isn't" l2="a trophy on a shelf" id="bs-h" />
+      <div class="bs-text" data-t="3">
+        <p>Plumbing By Paul started in 2015 with a simple idea: show up prepared, do it right, and treat people the way you'd want a plumber to treat your own family. <strong>No second trips. No excuses.</strong></p>
+        <p>Eleven years on, the company is still family-owned. Paul runs the work. Alycia runs the business with him. The crew has grown, the trucks have multiplied, and the shop on 64th Way North is where every one of them starts the day.</p>
+        <p>Somewhere along the way the reviews passed 900. We're proud of that, but not because of the number. People rarely say "they fixed my plumbing." They talk about how they were treated. Every one of those reviews is a kitchen, a bathroom or a bad morning that ended better than it started.</p>
+        <p><strong>We're not just plumbers. We're your neighbors.</strong> You'll see us at the school, at the ball field and in line at Publix. That keeps us honest.</p>
+      </div>
+    </div>
+    <div class="bs-media">
+      <span class="bs-off" aria-hidden="true"></span>
+      <figure class="bs-frame frame frame-3" data-t="4" data-fx="frame">
+        <Img name="about-paul-office-mascot-wall-50th" alt="Paul with his arms crossed in front of the Plumbing By Paul mascot logo on the office wall" sizes="(min-width: 1024px) 384px, calc(100vw - 40px)" focus="40% 50%" widths={[400, 600, 800]} />
+        <PhotoTag class="bs-tag">The shop · 64th Way N</PhotoTag>
+      </figure>
+      <p class="bs-pull" data-t="5" data-fx="rise"><span class="bs-tick" aria-hidden="true"></span><span class="script">Plumbing Pinellas with Heart</span></p>
+      <div class="bs-shop" data-t="5">
+        <span class="bs-si" aria-hidden="true"><Icon name="pin" size={20} /></span>
+        <p><span class="label">Where every truck starts the day</span><span class="bs-addr">{a.street.replace(' Suite', ', Suite')}<br />{a.city}, {a.region} {a.zip}</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .bs { position: relative; background: var(--white); padding: 96px 0 100px; }
+  .bs-in { display: grid; grid-template-columns: minmax(0, 600fr) minmax(0, 384fr); justify-content: space-between; column-gap: 216px; align-items: start; }
+  .bs-text { display: grid; gap: 16px; margin-top: 28px; font-size: 17px; line-height: 29px; color: var(--slate); }
+  .bs-text strong { font-weight: 700; color: var(--navy); }
+  .bs-media { position: relative; padding-top: 24px; }
+  .bs-off { position: absolute; left: 24px; top: 0; width: 100%; height: 520px; border-radius: var(--r-xl); background: var(--tint); }
+  .bs-frame { position: relative; width: 100%; height: 520px; margin: 0; }
+  .bs-frame :global(.bs-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .bs-pull { position: absolute; z-index: 3; right: -35px; top: 428px; display: flex; align-items: center; gap: 0; width: 605px; height: 112px; padding: 0 36px 0 40px; border-radius: 18px; background: var(--white); box-shadow: var(--sh-3); transform: rotate(-3deg); }
+  .bs-tick { position: absolute; left: 24px; top: 16px; width: 26px; height: 12px; background: linear-gradient(var(--sky) 0 3px, transparent 3px 4.5px, var(--blue) 4.5px 7.5px, transparent 7.5px 9px, var(--navy) 9px 12px); transform: skewX(-20deg); }
+  .bs-pull .script { font-size: 44px; line-height: 1; color: var(--blue); white-space: nowrap; }
+  .bs-shop { position: relative; display: flex; align-items: center; gap: 18px; margin-top: 60px; padding: 22px 24px; border-radius: 18px; background: var(--tint); }
+  .bs-si { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--press); }
+  .bs-shop .label { display: block; color: var(--press); }
+  .bs-addr { display: block; margin-top: 8px; font-weight: 600; font-size: 16px; line-height: 23px; color: var(--navy); }
+  @media (max-width: 1279px) { .bs-in { column-gap: 72px; } .bs-pull { width: 520px; } .bs-pull .script { font-size: 38px; } }
+  @media (max-width: 1023px) {
+    .bs { padding: 56px 0 64px; }
+    .bs-in { grid-template-columns: 1fr; row-gap: 40px; }
+    .bs-text { gap: 14px; margin-top: 20px; font-size: 15px; line-height: 26px; }
+    .bs-media { padding-top: 0; }
+    .bs-off { display: none; }
+    .bs-frame { height: 380px; border-radius: var(--r-xl); }
+    .bs-pull { position: relative; right: auto; top: auto; width: auto; height: 64px; margin: -40px 10px 0; padding: 0 16px 0 22px; border-radius: 14px; }
+    .bs-tick { left: 12px; top: 10px; width: 18px; height: 9px; }
+    .bs-pull .script { font-size: 24px; }
+    .bs-shop { display: none; }
+  }
+</style>

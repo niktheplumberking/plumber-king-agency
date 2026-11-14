@@ -1,0 +1,82 @@
+---
+// What it costs. No prices are published until Paul supplies them: the card keeps Figma's labelled stand-in
+// ("from $__" + "Paul to supply..."). Layout a (Figma 03 W7): tint band, copy left, tilted dashed card right.
+// Layout b (Figma 04 D8): sky band under a wave, one-line statement left, dashed card with three tiles right.
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Wave from './Wave.astro';
+import { SITE } from '../../data/site';
+import type { SvcPage } from '../../data/service-pages';
+import { sid } from './fmt';
+interface Props { p: SvcPage['price']; slug: string; layout: 'a' | 'b'; }
+const { p, slug, layout } = Astro.props;
+const id = sid(slug, 'price');
+const STAND = 'Paul to supply. No numbers are published until he does.';
+---
+<section class:list={['pr', `pr-${layout}`]} aria-labelledby={id} data-m-section>
+  {layout === 'b' && <Wave />}
+  <div class="wrap pr-grid">
+    <div class="pr-copy">
+      <Eyebrow text={p.eyebrow ?? 'What it costs'} />
+      {layout === 'a' ? (
+        <h2 class="h2" id={id} data-t="2"><span class="l1">{p.l1}</span> <span class="l2">{p.l2}</span></h2>
+      ) : (
+        <h2 class="pr-st" id={id} data-t="2">{p.l1} <b>{p.l2}</b></h2>
+      )}
+      {p.p && <p class="lead pr-p" data-t="3">{p.p}</p>}
+      <a href={SITE.tel} class="pr-call" data-t="3"><Icon name="phone" size={18} />Get your price: {SITE.phone}</a>
+    </div>
+    <div class="pr-card" data-t="4" data-fx="toss">
+      <p class="label pr-l">Prices from Paul</p>
+      <ul role="list" class="pr-rows">
+        {p.rows.map((r) => (
+          <li><span class="pr-k">{r}</span><span class="pr-v"><small>from</small><span class="num" aria-hidden="true">$__</span><span class="sr-only">price not published yet</span></span></li>
+        ))}
+      </ul>
+      <p class="pr-note">{STAND}</p>
+    </div>
+  </div>
+</section>
+<style>
+  .pr { position: relative; }
+  .pr-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 700px) minmax(0, 420px); justify-content: space-between; column-gap: 60px; align-items: center; }
+  .pr-copy { display: grid; justify-items: start; gap: 16px; }
+  .pr .h2 .l1, .pr .h2 .l2 { display: block; }
+  .pr-p { max-width: 590px; margin-top: 4px; }
+  .pr-call { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--press); font-weight: 700; font-size: 16px; line-height: 24px; }
+  .pr-call:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .pr-card { position: relative; padding: 26px 28px 24px; border-radius: 22px; background: var(--white); border: 2px dashed var(--blue); box-shadow: var(--sh-3); transform: rotate(2deg); }
+  .pr-l { color: var(--press); font-size: 12px; }
+  .pr-rows { display: grid; margin: 10px 0 0; padding: 0; }
+  .pr-rows li { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 16px 0 14px; border-bottom: 1px solid var(--line); }
+  .pr-k { font-weight: 700; font-size: 16px; line-height: 22px; color: var(--navy); }
+  .pr-v { display: inline-flex; align-items: baseline; gap: 6px; flex: none; }
+  .pr-v small { font-weight: 500; font-size: 13px; color: var(--slate); }
+  .pr-v .num { font-size: 24px; line-height: 24px; color: var(--blue); }
+  .pr-note { margin-top: 14px; font-weight: 500; font-size: 13px; line-height: 19px; color: var(--slate); }
+
+  .pr-a { background: var(--tint); padding: 104px 0; }
+  .pr-b { background: var(--sky); padding: 120px 0 96px; margin-top: 24px; }
+  .pr-b .pr-grid { grid-template-columns: minmax(0, 580px) minmax(0, 500px); }
+  .pr-b .pr-copy :global(.eyebrow) { color: var(--navy); }
+  .pr-st { font-weight: 600; font-size: 28px; line-height: 36px; color: var(--navy); letter-spacing: -0.005em; }
+  .pr-st b { font-weight: 800; }
+  .pr-b .pr-call { color: var(--navy); }
+  .pr-b .pr-card { margin-top: -140px; transform: rotate(-1.5deg); border-color: var(--press); }
+  .pr-b .pr-rows { grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .pr-b .pr-rows li { display: grid; align-content: space-between; gap: 10px; padding: 14px 14px 12px; border: 0; border-radius: 14px; background: var(--tint); }
+  .pr-b .pr-v { justify-self: start; }
+  @media (max-width: 1023px) {
+    .pr-grid, .pr-b .pr-grid { grid-template-columns: minmax(0, 1fr); row-gap: 40px; }
+    .pr-a { padding: 64px 0; }
+    .pr-a .pr-card { order: -1; margin: 0 6px; }
+    .pr-b { padding: 72px 0 64px; margin-top: 0; }
+    .pr-b .pr-card { order: -1; margin: 0 6px; transform: rotate(-1.5deg); }
+    .pr-b .pr-rows { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .pr-b .pr-rows li { display: flex; padding: 10px 12px; }
+    .pr-st { font-size: 22px; line-height: 30px; }
+    .pr-card { padding: 20px 18px 18px; }
+    .pr-k { font-size: 15px; }
+    .pr-call { font-size: 15px; }
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+// E6 When the storms come through (Figma 433:9698 / 439:3565): split collage. Framed photo on a sky offset block, a tilted
+// snapshot overlapping it, caption plates that only describe what the photos show. PAUL TO CONFIRM the story and the advice line.
+import SectionHead from '../ui/SectionHead.astro';
+import Img from '../ui/Img.astro';
+import Caption from '../ui/Caption.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import Icon from '../ui/Icon.astro';
+import CallButton from '../ui/CallButton.astro';
+import { SITE } from '../../data/site';
+---
+<section class="st" aria-labelledby="st-h" data-m-section>
+  <div class="wrap st-in">
+    <div class="st-media">
+      <span class="st-block" aria-hidden="true" data-t="4" data-fx="fade"></span>
+      <div class="frame st-main" data-t="4" data-fx="frame">
+        <Img name="community-hurricane-cleanup-crew" alt="The Plumbing By Paul crew standing with a homeowner outside a house after hurricane clean-up" sizes="(min-width: 1024px) 440px, calc(100vw - 72px)" focus="50% 62%" widths={[360, 540, 720, 900]} />
+        <PhotoTag class="st-tag">After the storm</PhotoTag>
+      </div>
+      <Caption class="st-cap1">The crew with a homeowner after hurricane clean-up.</Caption>
+      <div class="snap st-snap" data-t="4" data-fx="toss">
+        <Img name="fleet-van-at-coastal-stilt-house" alt="A Plumbing By Paul van parked at a raised coastal home" sizes="(min-width: 1024px) 248px, 150px" focus="45% 60%" widths={[300, 500, 700]} />
+      </div>
+      <Caption class="st-cap2">One of our vans at a raised coastal home.</Caption>
+    </div>
+    <div class="st-copy">
+      <SectionHead eyebrow="Pinellas, rain or shine" l1="We live here too." l2="Hurricanes included." id="st-h"
+        lead="When a storm floods the neighborhood, our own streets flood with it. The crew has spent hurricane seasons clearing out and rebuilding alongside the people we work for." />
+      <p class="st-adv" data-t="3"><span class="st-ai"><Icon name="heater" size={22} /></span><span>After a flood, call us before you turn the water heater or the gas back on.</span></p>
+      <div class="st-btn" data-t="3"><CallButton l1={`Call ${SITE.phone}`} l2="A real person answers" /></div>
+    </div>
+  </div>
+</section>
+<style>
+  .st { position: relative; background: var(--white); padding: 104px 0 112px; overflow: clip; }
+  .st-in { display: grid; grid-template-columns: 640px minmax(0, 500px); justify-content: space-between; align-items: start; }
+  .st-media { position: relative; height: 540px; }
+  .st-block { position: absolute; left: 0; top: 40px; width: 440px; height: 500px; border-radius: var(--r-xl); background: var(--sky); }
+  .st-main { position: absolute; left: 32px; top: 0; width: 440px; height: 500px; }
+  .st-main :global(.st-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .st-media :global(.st-cap1) { position: absolute; left: 16px; top: 466px; z-index: 3; }
+  .st-snap { position: absolute; left: 368px; top: 30px; width: 248px; height: 186px; transform: rotate(5deg); z-index: 2; }
+  .st-media :global(.st-cap2) { position: absolute; left: 380px; top: 236px; z-index: 3; white-space: nowrap; }
+  .st-copy { padding-top: 24px; }
+  .st-copy :global(.lead) { font-size: 17px; line-height: 29px; }
+  .st-adv { position: relative; display: flex; align-items: center; gap: 14px; margin-top: 24px; padding: 16px 18px; border-radius: 16px; background: var(--tint); box-shadow: var(--in-bar); font-weight: 600; font-size: 15px; line-height: 23px; }
+  .st-ai { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--white); color: var(--blue); flex: none; }
+  .st-btn { margin-top: 28px; }
+  @media (max-width: 1279px) and (min-width: 1024px) { .st-in { grid-template-columns: 560px minmax(0, 1fr); gap: 40px; } .st-snap { left: 330px; } .st-media :global(.st-cap2) { left: 300px; } }
+  @media (max-width: 1023px) {
+    .st { padding: 48px 0 64px; }
+    .st-in { grid-template-columns: 1fr; }
+    .st-media { height: auto; aspect-ratio: auto; padding: 0 0 0 26px; }
+    .st-block { left: 0; top: 36px; width: 60%; height: 320px; border-radius: 22px; }
+    .st-main { position: relative; left: 0; width: 100%; height: 340px; border-radius: 22px; }
+    .st-media :global(.st-cap1) { position: absolute; left: 0; top: 318px; max-width: 166px; font-size: 12px; line-height: 17px; padding: 6px 10px; }
+    .st-snap { position: relative; left: auto; top: auto; display: block; width: 150px; height: 112px; margin: -40px 6px 0 auto; transform: rotate(5deg); }
+    .st-media :global(.st-cap2) { position: relative; left: auto; top: auto; display: table; margin: 18px 0 0 auto; font-size: 12px; line-height: 17px; padding: 6px 10px; }
+    .st-copy { padding-top: 40px; }
+    .st-copy :global(.lead) { font-size: 16px; line-height: 26px; }
+    .st-adv { font-size: 14px; line-height: 21px; }
+    .st-btn :global(.btn) { width: 100%; justify-content: center; }
+  }
+</style>

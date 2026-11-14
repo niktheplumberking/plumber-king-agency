@@ -1,0 +1,104 @@
+---
+// U1 Article hero + U2 Quick answer (Figma 439:2340 / mobile 439:10591). Mist wash, centred editorial header with a byline
+// pill; the wide hero photo (sky offset block, "PLAIN ANSWERS / Guide" patch, TANKLESS INSTALL tag) overlaps into the white
+// section below, and the quick-answer box (58 words, answer first) overlaps the photo's bottom edge.
+// STICKY 10: Paul to confirm he installs and services tankless (the hero photo and section 7 depend on it).
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Seal from '../ui/Seal.astro';
+import Icon from '../ui/Icon.astro';
+import Img from '../ui/Img.astro';
+import Patch from '../ui/Patch.astro';
+import PhotoTag from '../ui/PhotoTag.astro';
+import TextLink from '../ui/TextLink.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import { SITE } from '../../data/site';
+---
+<section class="gh" aria-labelledby="gh-h" data-m-section data-m-hero>
+  <FlowLines variant="hero" class="fl-d" />
+  <FlowLines variant="heroM" class="fl-m" />
+  <div class="wrap gh-in">
+    <Breadcrumbs items={[{ label: 'Guides', href: '/guides' }, { label: 'Water heaters', href: '/guides/water-heater-repair-or-replace' }]} />
+    <Eyebrow text="Guide · Water heaters" class="gh-eb" />
+    <h1 class="h1 gh-h" id="gh-h" data-t="2"><span class="l1">Repair or replace</span> <span class="l2">your water heater?</span></h1>
+    <p class="lead gh-lead" data-t="3" data-fx="nudge">The honest answer from people who do both every week in Pinellas County.</p>
+    <div class="gh-by" data-t="3">
+      <Seal d={48} flat t={false} class="by-seal" />
+      <div class="by-t">
+        <p class="by-1">By the Plumbing By Paul crew · {SITE.licenceLabel} {SITE.licence}</p>
+        <p class="by-2"><Icon name="calendar" size={13} /><time datetime="2026-11">Updated November 2026</time><span class="sep" aria-hidden="true">·</span><Icon name="clock" size={13} />5 minute read</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="gq" aria-label="Quick answer" data-m-section>
+  <div class="wrap gq-in">
+    <div class="gq-media">
+      <span class="gq-blk" aria-hidden="true"></span>
+      <div class="gq-frame frame" data-t="4" data-fx="frame">
+        <Img name="service-tankless-water-heater-install" alt="A tankless water heater installed on a garage wall with copper and gas lines" sizes="(min-width: 1280px) 1200px, calc(100vw - 40px)" focus="50% 62%" priority widths={[600, 900, 1200, 1600]} />
+      </div>
+      <Patch name="Guide" label="PLAIN ANSWERS" deg={-5} class="gq-patch" />
+      <PhotoTag class="gq-tag">Tankless install</PhotoTag>
+    </div>
+    <aside class="gq-box" aria-labelledby="gq-l" data-t="3">
+      <p class="gq-l label" id="gq-l"><Icon name="drop" size={18} />Quick answer</p>
+      <p class="gq-a"><strong>Repair your water heater</strong> if it is within its expected life, the tank is not leaking and this is its first real problem. <strong>Replace it</strong> if the tank itself leaks, it is past its expected life (about 8 to 12 years for gas, 10 to 15 for electric), or repairs keep coming. In Pinellas County a replacement <strong>needs a permit</strong>.</p>
+      <p class="gq-f"><span>Not sure which you have?</span> <TextLink href={SITE.tel} icon="phone" size={15}>Call {SITE.phone}</TextLink></p>
+      <Seal d={96} deg={8} class="gq-seal" />
+    </aside>
+  </div>
+</section>
+<style>
+  .gh { position: relative; overflow: clip; background: linear-gradient(180deg, var(--mist), var(--white)); padding: 40px 0 304px; }
+  .gh :global(.fl-m) { display: none; }
+  .gh-in { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
+  .gh-in :global(.crumbs ol) { justify-content: center; }
+  .gh :global(.gh-eb) { margin-top: 16px; }
+  .gh-h { margin-top: 14px; font-size: var(--fz-h1); line-height: 1.1; letter-spacing: -0.025em; }
+  .gh-h .l1, .gh-h .l2 { display: block; }
+  .gh-lead { margin-top: 18px; max-width: 640px; font-size: 18px; line-height: 30px; }
+  .gh-by { display: flex; align-items: center; gap: 14px; margin-top: 26px; padding: 10px 22px 10px 10px; border-radius: 999px; background: var(--white); box-shadow: var(--sh-2); text-align: left; }
+  .by-1 { font-weight: 600; font-size: 13px; line-height: 18px; color: var(--navy); }
+  .by-2 { display: flex; align-items: center; gap: 6px; margin-top: 1px; font-weight: 500; font-size: 12px; line-height: 16px; color: var(--slate); }
+  .by-2 :global(svg) { color: var(--blue); }
+  .sep { margin: 0 2px; color: var(--sky); }
+
+  .gq { position: relative; background: var(--white); padding: 0 0 56px; }
+  .gq-in { position: relative; display: grid; justify-items: center; }
+  .gq-media { position: relative; width: 100%; height: 360px; margin-top: -240px; }
+  .gq-blk { position: absolute; inset: 26px -26px -26px 26px; border-radius: 40px; background: var(--sky); }
+  .gq-frame { position: absolute; inset: 0; border-radius: 40px; box-shadow: 0 0 0 6px var(--white), var(--sh-3); }
+  .gq-media :global(.gq-patch) { position: absolute; left: 40px; top: -18px; z-index: 2; }
+  .gq-media :global(.gq-tag) { position: absolute; right: 22px; top: 22px; z-index: 2; }
+  .gq-box { position: relative; z-index: 2; width: min(792px, 100%); margin-top: -40px; display: grid; gap: 16px; padding: 32px 32px 28px 37px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); overflow: visible; }
+  .gq-box::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; border-radius: 20px 0 0 20px; background: var(--blue); }
+  .gq-l { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--press); }
+  .gq-l :global(svg) { color: var(--blue); }
+  .gq-a { font-weight: 500; font-size: 20px; line-height: 32px; color: var(--navy); }
+  .gq-a strong { font-weight: 700; }
+  .gq-f { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding-top: 16px; border-top: 1px solid var(--line); font-weight: 500; font-size: 15px; line-height: 22px; color: var(--slate); }
+  .gq-box :global(.gq-seal) { position: absolute; right: -40px; top: -42px; }
+  @media (max-width: 1023px) {
+    .gh { padding: 20px 0 210px; }
+    .gh :global(.fl-d) { display: none; } .gh :global(.fl-m) { display: block; }
+    .gh-in { justify-items: start; text-align: left; }
+    .gh-in :global(.crumbs ol) { justify-content: flex-start; }
+    .gh :global(.gh-eb) { margin-top: 12px; }
+    .gh-h { margin-top: 10px; }
+    .gh-lead { margin-top: 14px; font-size: 15px; line-height: 24px; }
+    .gh-by { align-items: flex-start; margin-top: 20px; padding: 14px 16px 14px 12px; border-radius: 16px; }
+    .by-1 { font-size: 11px; line-height: 15px; }
+    .by-2 { flex-wrap: wrap; font-size: 11px; color: var(--press); }
+    .gq { padding-bottom: 40px; }
+    .gq-media { height: 200px; margin-top: -170px; width: calc(100% - 14px); justify-self: start; }
+    .gq-blk { inset: 14px -14px -14px 14px; border-radius: 24px; }
+    .gq-frame { border-radius: 24px; }
+    .gq-media :global(.gq-patch) { left: 8px; top: -20px; zoom: .74; }
+    .gq-media :global(.gq-tag) { display: none; }
+    .gq-box { margin-top: -10px; padding: 22px 18px 20px 22px; gap: 12px; }
+    .gq-a { font-size: 16px; line-height: 26px; }
+    .gq-f { font-size: 13px; display: grid; justify-items: start; }
+    .gq-box :global(.gq-seal) { right: -8px; top: -26px; --d: 52px !important; }
+  }
+</style>

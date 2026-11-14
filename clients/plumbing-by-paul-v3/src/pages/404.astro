@@ -1,0 +1,8 @@
+---
+// 404. noindex always; excluded from the sitemap (astro.config filter). No loader on an error page.
+import Base from '../layouts/Base.astro';
+import NotFound from '../components/info/NotFound.astro';
+---
+<Base title="Page not found · Plumbing By Paul" description="That page isn't here. Head back home or call (727) 709-2552." path="/404" noindex loader={false}>
+  <NotFound />
+</Base>

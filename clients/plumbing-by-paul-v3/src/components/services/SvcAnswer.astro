@@ -1,0 +1,89 @@
+---
+// Quick answer + job ticket (the facts table). Layout a (Figma 03 W2): answer card, buttons and proof chips left,
+// ticket right with the seal on its corner. Layout b (Figma 04 D2): on the tint band under the hero swoosh, the ticket
+// tilts left, the answer sits in a white card right, buttons and chips under it.
+import QuickAnswer from '../ui/QuickAnswer.astro';
+import JobTicket from '../ui/JobTicket.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import ProofChips from '../ui/ProofChips.astro';
+import Seal from '../ui/Seal.astro';
+import { SITE } from '../../data/site';
+import type { SvcPage } from '../../data/service-pages';
+import { rich, sid } from './fmt';
+interface Props { d: SvcPage; slug: string; }
+const { d, slug } = Astro.props;
+const a = d.answer;
+const b = d.layout === 'b';
+---
+<section class:list={['sa', b ? 'sa-b' : 'sa-a']} aria-label="Quick answer and job facts" id={sid(slug, 'answer')} data-m-section>
+  <div class="wrap sa-grid">
+    <div class="sa-main">
+      <QuickAnswer class="sa-qa"><p set:html={rich(a.text)} /></QuickAnswer>
+      <div class="sa-btns" data-t="3" data-stagger>
+        <CallButton />
+        <Button href="#estimate" v="sec" icon="clipboard" h64 magnetic={false}>Get a free estimate</Button>
+      </div>
+      <ProofChips v={b ? 'white' : 'tint'} class="sa-chips" />
+    </div>
+    <div class="sa-tk">
+      <JobTicket title={a.ticket} no={`Lic. ${SITE.licence}`} rows={a.rows} class="sa-ticket" />
+      <Seal d={120} deg={8} class="sa-seal" />
+    </div>
+  </div>
+</section>
+<style>
+  .sa { position: relative; }
+  .sa-grid { display: grid; grid-template-columns: minmax(0, 640px) minmax(0, 500px); justify-content: space-between; column-gap: 60px; align-items: start; }
+  .sa-main { display: grid; justify-items: start; }
+  .sa-main :global(.sa-qa) { width: 100%; padding: 32px 40px 32px 40px; border-radius: 24px; }
+  .sa-main :global(.sa-qa .qb) { font-size: 19px; line-height: 32px; }
+  .sa-main :global(.sa-qa .qb strong) { font-weight: 700; }
+  .sa-main :global(.tel) { color: var(--press); font-weight: 700; white-space: nowrap; }
+  .sa-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .sa-btns :global(.btn-sec) { padding: 0 28px; }
+  .sa-main :global(.sa-chips) { margin-top: 24px; max-width: 620px; }
+  .sa-tk { position: relative; padding-top: 12px; }
+  /* perforated top edge (Figma ticket) */
+  .sa-tk::before { content: ''; position: absolute; z-index: 2; left: 18px; right: 18px; top: 6px; height: 12px; background: radial-gradient(circle, var(--white) 4.5px, transparent 5px) 0 0 / 28px 12px repeat-x; pointer-events: none; }
+  .sa-tk :global(.sa-ticket) { border-radius: 22px; }
+  .sa-tk :global(.sa-ticket header) { height: 64px; padding: 0 28px; }
+  .sa-tk :global(.sa-ticket::before) { top: 64px; border-top: 0; }
+  .sa-tk :global(.sa-ticket dl) { padding: 0; }
+  .sa-tk :global(.sa-ticket .row) { padding: 14px 28px; border-bottom: 0; }
+  .sa-tk :global(.sa-ticket .row:nth-child(even)) { background: var(--mist); }
+  .sa-tk :global(.sa-ticket dt) { font-family: var(--f-sans); font-weight: 700; font-size: 15px; line-height: 22px; letter-spacing: 0; text-transform: none; color: var(--navy); padding-top: 0; }
+  .sa-tk :global(.sa-ticket dd) { font-weight: 500; color: var(--slate); }
+  .sa-tk :global(.sa-ticket .stand dd) { color: var(--slate-2); }
+  .sa-tk :global(.sa-seal) { position: absolute; right: -40px; bottom: -44px; z-index: 3; }
+
+  .sa-a { background: var(--white); padding: 24px 0 104px; }
+  .sa-b { background: var(--tint); padding: 8px 0 104px; }
+  .sa-b .sa-grid { grid-template-columns: minmax(0, 500px) minmax(0, 620px); }
+  .sa-b .sa-main { order: 2; }
+  .sa-b .sa-tk { order: 1; margin-top: -120px; transform: rotate(-2deg); z-index: 3; }
+  .sa-b .sa-main { margin-top: -100px; position: relative; z-index: 3; }
+  .sa-b .sa-main :global(.sa-qa) { background: var(--white); box-shadow: inset 0 6px 0 var(--sky), var(--sh-2); }
+  @media (max-width: 1199px) and (min-width: 1024px) { .sa-grid, .sa-b .sa-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); column-gap: 40px; } }
+  @media (max-width: 1023px) {
+    .sa-grid, .sa-b .sa-grid { grid-template-columns: minmax(0, 1fr); row-gap: 44px; }
+    .sa-a { padding: 8px 0 72px; }
+    .sa-b { padding: 0 0 72px; }
+    .sa-b .sa-tk { margin-top: 0; transform: none; }
+    .sa-b .sa-main { margin-top: 0; }
+    .sa-a .sa-tk { order: 2; }
+    .sa-main :global(.sa-qa) { padding: 24px 22px 24px 26px; border-radius: 20px; }
+    .sa-main :global(.sa-qa .qb) { font-size: 17px; line-height: 28px; }
+    .sa-btns { display: grid; width: 100%; gap: 10px; margin-top: 22px; }
+    .sa-btns :global(.btn) { width: 100%; }
+    .sa-btns :global(.btn-sec) { min-height: 56px; }
+    .sa-a .sa-btns, .sa-a .sa-main :global(.sa-chips) { display: none; }
+    .sa-b .sa-main :global(.sa-chips) { display: none; }
+    .sa-b .sa-btns { display: none; }
+    .sa-tk :global(.sa-ticket header) { padding: 0 20px; }
+    .sa-tk :global(.sa-ticket .row) { padding: 12px 18px; grid-template-columns: 40% 1fr; }
+    .sa-tk :global(.sa-ticket dt), .sa-tk :global(.sa-ticket dd) { font-size: 14px; line-height: 21px; }
+    .sa-tk :global(.sa-ticket .no) { display: none; }
+    .sa-tk :global(.sa-seal) { --d: 88px !important; right: -6px; bottom: -40px; }
+  }
+</style>

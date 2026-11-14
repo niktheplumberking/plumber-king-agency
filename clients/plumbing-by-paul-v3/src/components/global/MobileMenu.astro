@@ -1,0 +1,74 @@
+---
+// Mobile / tablet menu (below 1200 px): full-screen navy sheet revealed from the menu button (clip-path circle).
+// Focus is trapped inside while open; Escape and the close button close it and return focus (ui.ts).
+import Icon from '../ui/Icon.astro';
+import CallButton from '../ui/CallButton.astro';
+import Button from '../ui/Button.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import Tick from '../ui/Tick.astro';
+import { NAV } from '../../data/nav';
+import { SERVICES, EMERGENCY } from '../../data/services';
+import { TOWNS_LINKED } from '../../data/towns';
+import { SITE } from '../../data/site';
+interface Props { path: string; }
+const { path } = Astro.props;
+---
+<div class="mnav on-navy" id="mnav" role="dialog" aria-modal="true" aria-label="Menu" data-mnav hidden>
+  <div class="mn-top">
+    <span class="mn-brand"><Tick dark /><span class="label">Plumbing By Paul</span></span>
+    <button type="button" class="mn-close" data-menu-close><Icon name="x" size={22} /><span class="sr-only">Close menu</span></button>
+  </div>
+  <nav class="mn-body" aria-label="Mobile">
+    <ul role="list" class="mn-list">
+      {NAV.map((n) => (
+        <li data-mn-item>
+          {n.menu ? (
+            <details class="mn-d">
+              <summary><span>{n.label}</span><Icon name="down" size={20} /></summary>
+              <ul role="list" class="mn-sub">
+                {n.menu === 'services'
+                  ? [...SERVICES, EMERGENCY].map((s) => <li><a href={s.href}>{s.name}</a></li>)
+                  : TOWNS_LINKED.map((t) => <li><a href={t.page}>{t.name}</a></li>)}
+                <li><a href={n.href} class="mn-all">{n.menu === 'services' ? 'All services' : 'All of Pinellas County'}<Icon name="arrow" size={16} /></a></li>
+              </ul>
+            </details>
+          ) : (
+            <a href={n.href} class="mn-a" aria-current={path === n.href ? 'page' : undefined}>{n.label}<Icon name="arrow" size={20} /></a>
+          )}
+        </li>
+      ))}
+    </ul>
+    <div class="mn-cta" data-mn-item>
+      <CallButton v="priN" block />
+      <Button href="#estimate" v="secN" block data-menu-close-link>Get a free estimate</Button>
+    </div>
+    <div class="mn-meta" data-mn-item>
+      <RatingPill dark small />
+      <p>{SITE.hours.line}<br />Lic. {SITE.licence}</p>
+    </div>
+  </nav>
+  <Swoosh class="mn-sw" h={64} w={390} draw={false} />
+</div>
+<style>
+  .mnav { position: fixed; inset: 0; z-index: var(--z-menu); display: flex; flex-direction: column; background: var(--navy); color: var(--white); overflow-y: auto; overscroll-behavior: contain; padding-bottom: 72px; }
+  .mnav[hidden] { display: none; }
+  .mn-top { display: flex; align-items: center; justify-content: space-between; padding: 14px var(--gutter); }
+  .mn-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--sky); }
+  .mn-close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); }
+  .mn-body { display: grid; gap: 28px; padding: 8px var(--gutter) 24px; }
+  .mn-list { margin: 0; padding: 0; }
+  .mn-list > li { border-bottom: 1px solid var(--navy-3); }
+  .mn-a, .mn-d summary { display: flex; align-items: center; justify-content: space-between; min-height: 60px; font-weight: 800; font-size: 24px; letter-spacing: -.01em; list-style: none; cursor: pointer; }
+  .mn-d summary::-webkit-details-marker { display: none; }
+  .mn-a :global(svg), .mn-d summary :global(svg) { color: var(--sky); transition: transform .35s var(--ease-out); }
+  .mn-d[open] summary :global(svg) { transform: rotate(180deg); }
+  .mn-a[aria-current='page'] { color: var(--sky); }
+  .mn-sub { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; margin: 0 0 16px; padding: 0; }
+  .mn-sub a { display: flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 600; font-size: 15px; color: var(--tint); }
+  .mn-sub .mn-all { color: var(--sky); text-decoration: underline; text-underline-offset: 4px; }
+  .mn-cta { display: grid; gap: 10px; }
+  .mn-meta { display: grid; gap: 12px; justify-items: start; font-size: 14px; line-height: 22px; color: var(--soft); }
+  .mnav :global(.mn-sw) { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; }
+  @media (min-width: 640px) { .mn-body { max-width: 560px; } }
+</style>

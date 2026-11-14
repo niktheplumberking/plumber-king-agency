@@ -1,0 +1,90 @@
+---
+// C5 Town review (Figma 440:2717): navy section, heading + rating pill + "Read all reviews" left; a white spotlight card
+// rides up over the section's top edge with a sky place tag, and a dashed SLOT card peeks out below it.
+// Quotes are word for word. With no town-named review on file (Seminole) the right column is labelled slots only.
+import SectionHead from '../ui/SectionHead.astro';
+import RatingPill from '../ui/RatingPill.astro';
+import TextLink from '../ui/TextLink.astro';
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Icon from '../ui/Icon.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const r = t.review;
+const q = r.quote;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const paras = q ? q.paras.map((p) => esc(p).replace(esc(q.hl), `<mark>${esc(q.hl)}</mark>`)) : [];
+---
+<section class:list={['tr on-navy', !q && 'no-q']} aria-labelledby="tr-h" data-m-section>
+  <FlowLines variant="navy" class="tr-fl" />
+  <div class="wrap tr-in">
+    <div class="tr-copy">
+      <SectionHead eyebrow={r.eyebrow} l1={r.l1} l2={r.l2} id="tr-h" dark />
+      <div class="tr-pill" data-t="3"><RatingPill dark /></div>
+      <TextLink href="/reviews" dark class="tr-all" data-t="3">Read all reviews</TextLink>
+    </div>
+    <div class="tr-side">
+      {q && (
+        <figure class="tr-card" data-t="4" data-fx="rise">
+          <p class="tr-place"><Icon name="pin" size={16} />{q.place}</p>
+          <p class="tr-meta"><Stars size={16} /><span>Google review · {q.age}</span></p>
+          <blockquote class="tr-q">{paras.map((p) => <p set:html={p} />)}</blockquote>
+          <p class="tr-svc"><Icon name="wrench" size={13} />{q.service}</p>
+          <figcaption class="tr-by">
+            <span class="tr-av" aria-hidden="true">{q.name.charAt(0)}</span>
+            <span><b>{q.name}</b><small>Google review</small></span>
+            <GoogleG size={22} class="tr-g" />
+          </figcaption>
+        </figure>
+      )}
+      {r.slots.map((s, i) => (
+        <p class:list={['tr-slot', q ? 'peek' : 'solo']} data-t="5"><GoogleG size={14} /><span>{s}</span></p>
+      ))}
+      {r.slotNote && <p class="tr-note" data-t="5"><Icon name="alert" size={16} /><span>{r.slotNote}</span></p>}
+    </div>
+  </div>
+</section>
+<style>
+  .tr { position: relative; background: var(--navy); color: var(--white); padding: 112px 0 96px; overflow: visible; }
+  .tr :global(.tr-fl) { position: absolute; inset: 0; overflow: hidden; }
+  .tr-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 440fr) minmax(0, 620fr); column-gap: 140px; align-items: start; }
+  .tr-pill { margin-top: 28px; }
+  .tr-copy :global(.tr-all) { margin-top: 24px; }
+  .tr-side { position: relative; margin-top: -152px; }
+  .no-q .tr-side { margin-top: 0; display: grid; gap: 14px; }
+  .tr-card { position: relative; z-index: 2; margin: 0; padding: 48px 40px 30px; border-radius: 24px; background: var(--white); color: var(--navy); box-shadow: var(--sh-3); }
+  .tr-place { position: absolute; left: 28px; top: -18px; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: var(--r-full); background: var(--sky); color: var(--navy); font-weight: 700; font-size: 13px; box-shadow: 0 0 0 4px var(--white), var(--sh-1); }
+  .tr-meta { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--slate-2); }
+  .tr-q { margin: 18px 0 0; font-weight: 500; font-size: 18px; line-height: 31px; }
+  .tr-q p + p { margin-top: 31px; }
+  .tr-q :global(mark) { background: none; color: var(--navy); font-weight: 700; text-decoration: underline; text-decoration-color: var(--soft); text-decoration-thickness: 5px; text-underline-offset: 3px; text-decoration-skip-ink: none; }
+  .tr-svc { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; padding: 4px 10px; border-radius: 6px; background: var(--mist); box-shadow: inset 0 0 0 1px var(--line); font-weight: 500; font-size: 13px; color: var(--navy); }
+  .tr-by { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+  .tr-av { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--tint); color: var(--press); font-weight: 700; }
+  .tr-by b { display: block; font-weight: 700; font-size: 16px; line-height: 20px; }
+  .tr-by small { display: block; font-size: 13px; color: var(--slate-2); }
+  .tr-by :global(.tr-g) { margin-left: auto; }
+  .tr-slot { display: flex; align-items: center; gap: 8px; border: 1.5px dashed var(--sky); color: var(--sky); font-family: var(--f-num); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  .tr-slot.peek { position: relative; z-index: 1; margin: -8px 22px 0; padding: 22px 18px 14px; border-top: 0; border-radius: 0 0 18px 18px; background: rgba(42,127,168,.12); }
+  .tr-slot.solo { min-height: 120px; padding: 20px 24px; border-radius: 20px; background: rgba(42,127,168,.12); justify-content: center; text-align: center; }
+  .tr-note { display: flex; gap: 10px; margin-top: 4px; font-size: 14px; line-height: 22px; color: var(--soft); }
+  .tr-note :global(svg) { flex: none; margin-top: 3px; }
+  @media (max-width: 1023px) {
+    .tr { padding: 56px 0 56px; }
+    .tr-in { display: flex; flex-direction: column; }
+    .tr-copy { display: contents; }
+    .tr-pill { order: 3; margin-top: 0; display: none; }
+    .tr-copy :global(.tr-all) { order: 4; margin-top: 40px; }
+    .tr-side { order: 2; margin-top: 40px; width: 100%; }
+    .tr-card { padding: 28px 20px 20px; border-radius: 20px; }
+    .tr-q { margin-top: 14px; }
+    .tr-svc, .tr-by { margin-top: 16px; }
+    .tr-place { left: 16px; }
+    .tr-meta { gap: 8px; font-size: 12px; }
+    .tr-q { font-size: 16px; line-height: 26px; }
+    .tr-q p + p { margin-top: 26px; }
+    .tr-slot.peek { margin: -8px 10px 0; font-size: 8.5px; letter-spacing: .03em; padding: 20px 10px 12px; white-space: nowrap; }
+  }
+</style>

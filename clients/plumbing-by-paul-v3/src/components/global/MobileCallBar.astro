@@ -1,0 +1,20 @@
+---
+// Sticky mobile call bar (below 1024 px): appears after the hero, pinned to the viewport bottom. Two actions only.
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+---
+<nav class="mbar" data-mbar aria-label="Call or get an estimate">
+  <a href={SITE.tel} class="mb-call"><span class="ph"><Icon name="phone" size={18} /></span><span><b>{SITE.phone}</b><small>Tap to call</small></span></a>
+  <a href="#estimate" class="mb-est">Free estimate</a>
+</nav>
+<style>
+  .mbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-callbar); display: none; gap: 10px; padding: 10px 20px calc(10px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.96); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 -8px 24px rgba(17,16,50,.14); transform: translateY(110%); transition: transform .5s var(--ease-out); }
+  .mbar.is-on { transform: none; }
+  .mb-call { flex: 1; display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border-radius: var(--r-md); background: var(--press); color: var(--white); }
+  .mb-call .ph { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.18); flex: none; }
+  .mb-call b { display: block; font-size: 16px; line-height: 20px; }
+  .mb-call small { display: block; font-weight: 500; font-size: 12px; line-height: 16px; }
+  .mb-est { display: grid; place-items: center; min-height: 52px; padding: 0 16px; border-radius: var(--r-md); box-shadow: inset 0 0 0 2px var(--navy); font-weight: 700; font-size: 15px; color: var(--navy); background: var(--white); white-space: nowrap; }
+  @media (max-width: 1023px) { .mbar { display: flex; } }
+  :global(html.no-js) .mbar, :global(html:not(.js)) .mbar { transform: none; }
+</style>

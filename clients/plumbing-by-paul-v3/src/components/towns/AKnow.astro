@@ -1,0 +1,68 @@
+---
+// A4 Local knowledge (Figma A4): four text-only cards with a Russo index and a "Guide" tag, staggered up and down over a
+// sky band behind their lower half. The guide articles are not written yet, so each card links to the service page that
+// covers the topic today (labelled as that service); "All guides" goes to the planned /guides hub.
+import SectionHead from '../ui/SectionHead.astro';
+import TextLink from '../ui/TextLink.astro';
+const cards = [
+  { t: 'Old St. Pete homes, cast iron drains.', d: 'Many homes built before the mid-1970s still drain through cast iron. It rusts from the inside. A camera tells you how yours is doing.', link: 'Drain camera inspection', href: '/drain-camera' },
+  { t: "St. Pete's sewer lateral program.", d: 'The pipe from your house to the city main is yours. The City of St. Petersburg runs a rebate program for fixing leaky ones.', link: 'Sewer line service', href: '/sewer-service' },
+  { t: 'Hard water, countywide.', d: "Our water comes from the Floridan Aquifer. It's hard on heaters and fixtures.", link: 'Water softeners', href: '/water-softeners' },
+  { t: '4-point inspections.', d: 'Insurers ask about your pipes. Galvanized and polybutylene raise flags.', link: 'Repiping', href: '/repiping' },
+];
+---
+<section class="ak" aria-labelledby="ak-h" data-m-section>
+  <span class="ak-band" aria-hidden="true"></span>
+  <div class="wrap ak-in">
+    <div class="ak-head">
+      <SectionHead eyebrow="Things a local plumber knows" l1="Pinellas has its own" l2="plumbing quirks" id="ak-h" />
+      <TextLink href="/guides" class="ak-all">All guides</TextLink>
+    </div>
+    <div class="ak-rail" data-carousel>
+      <ul role="list" class="ak-cards" data-track tabindex="0" aria-label="Local plumbing facts, scroll sideways for more" data-t="4" data-stagger>
+        {cards.map((c, i) => (
+          <li class="ak-card" data-slide>
+            <p class="ak-top"><span class="num ak-n">0{i + 1}</span><span class="label ak-tag">Guide</span></p>
+            <h3 class="ak-t">{c.t}</h3>
+            <p class="ak-d">{c.d}</p>
+            <TextLink href={c.href} class="ak-l" size={14}>{c.link}</TextLink>
+          </li>
+        ))}
+      </ul>
+      <div class="ak-dots" aria-hidden="true">{cards.map((_, i) => <i data-dot class:list={[i === 0 && 'on']}></i>)}<span><span data-count-now>1</span> of 4 · swipe</span></div>
+    </div>
+  </div>
+</section>
+<style>
+  .ak { position: relative; background: var(--white); padding: 136px 0 84px; }
+  .ak-band { position: absolute; left: 0; right: 0; bottom: 0; height: 260px; background: var(--sky); }
+  .ak-in { position: relative; z-index: 1; }
+  .ak-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .ak-head :global(.ak-all) { margin-bottom: 6px; }
+  .ak-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin: 56px 0 0; padding: 0 0 20px; }
+  .ak-card { display: flex; flex-direction: column; min-height: 352px; padding: 24px 22px 22px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); transition: transform .45s var(--ease-out); }
+  .ak-card:nth-child(even) { margin-top: 20px; margin-bottom: -20px; }
+  .ak-card:hover { transform: translateY(-4px); }
+  .ak-top { display: flex; align-items: center; justify-content: space-between; }
+  .ak-n { font-size: 34px; line-height: 1; color: var(--blue); }
+  .ak-tag { padding: 4px 8px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--line); background: var(--mist); color: var(--slate-2); font-size: 10px; }
+  .ak-t { margin-top: 22px; font-weight: 700; font-size: 19px; line-height: 25px; }
+  .ak-d { margin-top: 12px; font-size: 14px; line-height: 22px; color: var(--slate); }
+  .ak-card :global(.ak-l) { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); width: 100%; }
+  .ak-dots { display: none; }
+  @media (max-width: 1023px) {
+    .ak { padding: 56px 0 48px; }
+    .ak-band { height: 150px; }
+    .ak-head { display: block; }
+    .ak-head :global(.ak-all) { display: none; }
+    .ak-cards { display: flex; gap: 12px; margin: 28px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); scrollbar-width: none; }
+    .ak-cards::-webkit-scrollbar { display: none; }
+    .ak-card { flex: 0 0 280px; min-height: 300px; scroll-snap-align: start; }
+    .ak-card:nth-child(even) { margin: 0; }
+    .ak-t { font-size: 17px; line-height: 23px; }
+    .ak-dots { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: var(--navy); }
+    .ak-dots i { width: 6px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.7); transition: width .4s var(--ease-out), background .4s; }
+    .ak-dots i:global(.on) { width: 22px; background: var(--navy); }
+    .ak-dots span { margin-left: 6px; }
+  }
+</style>

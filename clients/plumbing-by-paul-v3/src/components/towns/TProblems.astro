@@ -22,7 +22,7 @@ const p = t.problems;
         <li class="tp-card">
           {it.photo ? (
             <div class="tp-ph">
-              <Img name={it.photo} alt={it.alt!} sizes="(min-width: 1024px) 220px, calc(100vw - 40px)" focus={it.focus} widths={[240, 440, 700, 1260]} />
+              <Img name={it.photo} alt={it.alt!} sizes="(min-width: 1024px) 220px, calc(100vw - 40px)" focus={it.focus} widths={[240, 440, 700, 1260]} box={0.93} />
               {it.tag && <PhotoTag class="tp-tag">{it.tag}</PhotoTag>}
             </div>
           ) : (

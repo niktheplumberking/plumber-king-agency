@@ -5,7 +5,9 @@ import { Image } from 'astro:assets';
 import seal from '../../assets/brand/seal-mascot.png';
 interface Props { d?: number; deg?: number; class?: string; style?: string; flat?: boolean; t?: string | false; eager?: boolean; }
 const { d = 72, deg = 0, class: cls, style = '', flat, t = '5', eager } = Astro.props;
-const px = Math.min(512, Math.round(d * 2));
+// 3x the prop: pages resize seals with CSS (--d overrides, stamps) and the wide-screen zoom scales them up to 1.78x; at 2x
+// the file was 1.2-1.5x short of the rendered size on retina (measured round 2).
+const px = Math.min(512, Math.round(d * 3));
 ---
 <span class:list={['seal', flat && 'flat', cls]} style={`--d:${d}px;--deg:${deg}deg;${style}`} data-t={t === false ? undefined : t} data-fx="pop" aria-hidden="true">
   <Image src={seal} alt="" width={px} height={px} loading={eager ? 'eager' : 'lazy'} />

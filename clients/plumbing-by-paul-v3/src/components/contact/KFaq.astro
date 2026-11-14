@@ -25,7 +25,7 @@ const chips = [PROOF[3], PROOF[4], PROOF[0]];
         <div data-t="3" class="kq-call"><CallButton l2="A real person picks up" /></div>
         <ul role="list" class="kq-chips" data-t="5" data-stagger>{chips.map((c) => <li><Chip icon={c.icon} v="white">{c.label}</Chip></li>)}</ul>
       </div>
-      <Faq items={items} schema={false} group="kfaq" class="kq-acc" />
+      <Faq items={items} schema={false} group="kfaq" class="kq-acc" multi open={3} />
       <Seal d={112} deg={8} class="kq-seal" />
     </div>
   </div>

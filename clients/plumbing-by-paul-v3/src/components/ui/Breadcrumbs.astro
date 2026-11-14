@@ -1,6 +1,6 @@
 ---
 // Breadcrumbs + BreadcrumbList JSON-LD. items: [{ label, href }] excluding Home (added). Last item = current page.
-import Icon from './Icon.astro';
+// Figma (contact 435:2409, guide 439:9750): underlined links, a "/" separator 8 px either side, current page bold navy.
 interface Props { items: { label: string; href: string }[]; dark?: boolean; class?: string; }
 const { items, dark, class: cls } = Astro.props;
 const all = [{ label: 'Home', href: '/' }, ...items];
@@ -10,18 +10,19 @@ const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemLi
 <nav class:list={['crumbs', dark && 'dark', cls]} aria-label="Breadcrumb" data-t="1">
   <ol role="list">
     {all.map((c, i) => (
-      <li>{i < all.length - 1 ? <><a href={c.href}>{c.label}</a><Icon name="right" size={14} /></> : <span aria-current="page">{c.label}</span>}</li>
+      <li>{i < all.length - 1 ? <><a href={c.href}>{c.label}</a><span class="sep" aria-hidden="true">/</span></> : <span aria-current="page">{c.label}</span>}</li>
     ))}
   </ol>
 </nav>
 <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 <style>
-  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; font-weight: 600; font-size: 13px; line-height: 20px; color: var(--slate-2); }
-  .crumbs li { display: inline-flex; align-items: center; gap: 6px; }
-  .crumbs a { display: inline-block; padding: 2px 0; color: var(--press); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: transparent; transition: text-decoration-color var(--dur-2); }
-  .crumbs a:hover { text-decoration-color: currentColor; }
-  .crumbs [aria-current] { color: var(--navy); }
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 0; font-weight: 600; font-size: 14px; line-height: 18px; color: var(--slate-2); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 8px; }
+  .crumbs a { display: inline-block; padding: 2px 0; color: var(--press); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color var(--dur-2); }
+  .crumbs a:hover { color: var(--navy); }
+  .crumbs .sep { font-weight: 400; font-size: 13px; line-height: 16px; color: var(--slate-2); }
+  .crumbs [aria-current] { font-weight: 700; color: var(--navy); }
   /* below 1024 the logo tab hangs to y=120, where some heroes start: keep the crumbs clear of it (no overlap, full tap area) */
-  @media (max-width: 1023px) { .crumbs { padding-top: 8px; } }
-  .dark ol { color: var(--soft); } .dark a { color: var(--sky); } .dark [aria-current] { color: var(--white); }
+  @media (max-width: 1023px) { .crumbs { position: relative; z-index: 2; padding-top: 8px; } }
+  .dark ol, .dark .sep { color: var(--soft); } .dark a { color: var(--sky); } .dark a:hover { color: var(--white); } .dark [aria-current] { color: var(--white); }
 </style>

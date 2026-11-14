@@ -18,7 +18,7 @@ const pad = (x: number) => String(x).padStart(2, '0');
     <div class="fm-row" data-acc-row data-t="4" data-stagger>
       {FAMILIES.map((f, i) => (
         <article class="fm-p" data-open={i === 0 ? 'true' : 'false'} aria-labelledby={`fm-t${i}`}>
-          <div class="fm-ph"><Img name={f.photo.name} alt={f.photo.alt} focus={f.photo.focus} sizes="(min-width: 1024px) 588px, calc(100vw - 40px)" widths={[400, 600, 900, 1200]} /></div>
+          <div class="fm-ph"><Img name={f.photo.name} alt={f.photo.alt} focus={f.photo.focus} sizes="(min-width: 1024px) 588px, calc(100vw - 40px)" widths={[400, 600, 900, 1200, 1600, 2000]} box={0.72} /></div>
           <span class="fm-shade" aria-hidden="true"></span>
           <p class="label fm-tag"><span class="fm-no">{pad(i + 1)}</span><span class="fm-st"> · Open</span></p>
           <button type="button" class="fm-btn" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`fm-c${i}`} data-acc-btn>

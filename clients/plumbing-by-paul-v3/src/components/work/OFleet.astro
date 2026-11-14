@@ -7,9 +7,10 @@ import Caption from '../ui/Caption.astro';
 import Seal from '../ui/Seal.astro';
 import Swoosh from '../ui/Swoosh.astro';
 const ph = [
-  { n: 'fleet-aerial-van-jobsite', alt: 'Drone view of a Plumbing By Paul van at a waterfront home under construction', cap: 'From above, on a waterfront job.', cls: 'f0' },
-  { n: 'fleet-box-truck-rear-three-quarter', alt: 'The Plumbing By Paul box truck wrapped with the Paul cartoon', cap: 'The box truck.', cls: 'f1' },
-  { n: 'fleet-van-street-4284px', alt: 'A Plumbing By Paul van parked on a residential street', cap: 'Out on the road.', cls: 'f2' },
+  // sizes: the desktop crops below draw the photo 2.22x / 1x / 1.7x the frame width; on mobile the frame is 220 x 240
+  { n: 'fleet-aerial-van-jobsite', alt: 'Drone view of a Plumbing By Paul van at a waterfront home under construction', cap: 'From above, on a waterfront job.', cls: 'f0', sz: '(min-width: 1024px) 845px, 440px' },
+  { n: 'fleet-box-truck-rear-three-quarter', alt: 'The Plumbing By Paul box truck wrapped with the Paul cartoon', cap: 'The box truck.', cls: 'f1', sz: '(min-width: 1024px) 380px, 220px' },
+  { n: 'fleet-van-street-4284px', alt: 'A Plumbing By Paul van parked on a residential street', cap: 'Out on the road.', cls: 'f2', sz: '(min-width: 1024px) 646px, 220px' },
 ];
 ---
 <section class="of" aria-labelledby="of-h" data-m-section>
@@ -21,7 +22,7 @@ const ph = [
     <ul role="list" class="of-row" data-t="4" data-stagger tabindex="0" aria-label="Our trucks and crew photos">
       {ph.map((p) => (
         <li class:list={['of-i', p.cls]} data-fx="frame">
-          <figure class="of-f frame"><Img name={p.n} alt={p.alt} sizes="(min-width: 1024px) 380px, 75vw" widths={[400, 800, 1440]} focus="50% 50%" /><figcaption><Caption class="of-cap" small>{p.cap}</Caption></figcaption></figure>
+          <figure class="of-f frame"><Img name={p.n} alt={p.alt} sizes={p.sz} widths={[400, 800, 1440, 1700]} focus="50% 50%" /><figcaption><Caption class="of-cap" small>{p.cap}</Caption></figcaption></figure>
         </li>
       ))}
       <li class="of-seal" aria-hidden="true"><Seal d={88} deg={10} /></li>
@@ -34,7 +35,7 @@ const ph = [
   .of-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
   .of-head :global(.of-sh .l2) { color: var(--navy); }
   .of-p { flex: 0 1 420px; margin-top: 38px; font-weight: 500; font-size: 18px; line-height: 30px; color: var(--navy); }
-  .of-row { position: relative; height: 393px; margin: 49px 0 0; padding: 0; list-style: none; z-index: 2; }
+  .of-row { position: relative; height: 393px; margin: 49px 0 0; padding: 0; list-style: none; z-index: 3; pointer-events: none; } .of-row > * { pointer-events: auto; } /* z 3 (QA r2): the box-truck frame hangs past the swoosh into the reviews (z 2), which cut it flat; only the row is lifted, the reviews card that rises into the swoosh stays on top of it; the empty part of the row box lets clicks through */
   .of-i { position: absolute; }
   .of-f { width: 100%; height: 100%; margin: 0; border: 8px solid var(--white); border-radius: 24px; box-shadow: 0 28px 56px rgba(17, 16, 50, .22); }
   /* Figma crops (image box relative to the photo inside the 8 px border) */

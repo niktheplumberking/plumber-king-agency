@@ -21,8 +21,22 @@ export function zoomSizes(input: string): { sizes: string; slot: number } {
 /** The srcset widths plus, when needed, one that covers the 1440 slot at 2560 (never above the original). */
 export function zoomWidths(widths: number[], slot: number, srcWidth: number): number[] {
   const w = widths.filter((x) => x <= srcWidth);
-  if (!w.length) w.push(srcWidth);
+  // a requested width above the original is served by the original itself (was dropped: e.g. 1500 picked where 1800 exists)
+  if (!w.length || widths.some((x) => x > srcWidth)) w.push(srcWidth);
   const wide = Math.min(srcWidth, Math.ceil((slot * 1.78) / 40) * 40);
   if (slot && wide > Math.max(...w)) w.push(wide);
   return w;
+}
+
+/** Multiplies the slots of a sizes list for an object-fit cover crop (Img.astro `box`/`boxM`): slots under a min-width
+ *  condition by `fD` (desktop), the others (the fallback, max-width) by `fM` (mobile). Media conditions stay. */
+export function cropSizes(input: string, fD: number, fM: number): string {
+  return input.split(/,(?![^(]*\))/).map((x) => x.trim()).filter(Boolean).map((part) => {
+    const m = part.match(/^(\([^)]*\))?\s*(.+)$/)!;
+    const f = m[1] && /min-width/.test(m[1]) ? fD : fM;
+    if (f <= 1.02) return part;
+    const px = m[2].match(/^(\d+(?:\.\d+)?)(px|vw)$/);
+    const v = px ? `${(+px[1] * f).toFixed(px[2] === 'px' ? 0 : 3)}${px[2]}` : `calc((${m[2].replace(/^calc/, '')}) * ${f.toFixed(3)})`;
+    return (m[1] ? m[1] + ' ' : '') + v;
+  }).join(', ');
 }

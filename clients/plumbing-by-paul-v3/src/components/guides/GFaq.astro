@@ -13,7 +13,7 @@ import { WH_FAQ } from './data';
     <SectionHead eyebrow="Short answers" l1="The questions" l2="behind the question" center id="gf-h" />
     <div class="gf-acc">
       <span class="gf-pipe" aria-hidden="true">{WH_FAQ.map((_, i) => <i style={`top:${8 + i * 21}%`}></i>)}</span>
-      <Faq items={WH_FAQ} schema={false} group="gfaq" />
+      <Faq items={WH_FAQ} schema={false} group="gfaq" multi open={2} />
       <Seal d={96} deg={8} class="gf-seal" />
     </div>
   </div>

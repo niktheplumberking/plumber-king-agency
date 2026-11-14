@@ -72,7 +72,7 @@ const rows = [
   @media (max-width: 1023px) {
     .os { padding: 64px 0 98px; }
     .os-list { gap: 36px; margin-top: 36px; }
-    .os-row, .os-row.flip { grid-template-columns: 1fr; row-gap: 52px; }
+    .os-row, .os-row.flip { grid-template-columns: minmax(0, 1fr); row-gap: 52px; }
     .os-media { width: 340px; max-width: calc(100% - 10px); }
     .os-row.flip .os-media { order: 0; }
     .os-off { display: none; }

@@ -180,7 +180,10 @@ const a = SITE.address;
     .fcol-find .addr { line-height: 21px; }
     .fcol-find .mail { line-height: 16px; }
     .fcol-find .soc { margin-top: 10px; }
-    .fcol-find .soc a { width: 40px; height: 40px; min-height: 40px; }
+    .fcol-find .soc a { width: 44px; height: 44px; min-height: 44px; }
+    /* phone and email: 24 px rows, invisible 44 px tap area (QA r2) */
+    .fcol-find a.ftel, .fcol-find a.mail { position: relative; }
+    .fcol-find a.ftel::after, .fcol-find a.mail::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 44px; margin-top: -22px; }
     .ft-sea { height: 144px; }
   }
 </style>

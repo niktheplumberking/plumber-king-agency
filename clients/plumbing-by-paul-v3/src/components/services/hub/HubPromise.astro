@@ -89,7 +89,7 @@ for (const h of RENEE.hl ?? []) q = q.replace(esc(h), `<mark>${esc(h)}</mark>`);
     .pm { padding: 316px 0 178px; }
     .pm-band { display: block; height: 330px; margin-top: 44px; padding: 34px 0 0 18px; }
     .pm-band :global(.pm-seal) { --d: 104px !important; left: auto; right: -12px; top: -45px; }
-    .pm-cells { grid-template-columns: 166px 166px; row-gap: 32px; margin-right: 0; }
+    .pm-cells { grid-template-columns: minmax(0, 166fr) minmax(0, 166fr); row-gap: 32px; margin-right: 0; } /* 166/166 at 390, scales below (was 10 px sideways scroll at 360) */
     .pm-cells li { min-height: 0; padding: 0 12px 0 0; margin: 0; border: 0; }
     .pm-w :global(svg) { padding: 9px; }
     .pm-cells h3 { margin-top: 10px; font-size: 17px; line-height: 22px; }

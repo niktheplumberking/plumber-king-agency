@@ -25,7 +25,7 @@ const id = sid(slug, 'feature');
         <div class="ft-slot" data-t="4" data-fx="fade"><Icon name="camera" size={26} /><p class="label">{f.placeholder}</p></div>
       )}
       <div class="ft-ph frame" data-t="4" data-fx="frame">
-        <Img name={f.photo.name} alt={f.photo.alt} focus={f.photo.focus} sizes={f.placeholder ? '(min-width: 1024px) 300px, 180px' : '(min-width: 1024px) 380px, calc(100vw - 40px)'} widths={[320, 480, 640, 800]} />
+        <Img name={f.photo.name} alt={f.photo.alt} focus={f.photo.focus} sizes={f.placeholder ? '(min-width: 1024px) 300px, 180px' : '(min-width: 1024px) 380px, calc(100vw - 40px)'} widths={[320, 480, 640, 800]} box={f.placeholder ? 0.75 : 0.95} boxM={0.75} />
         <PhotoTag class="ft-tag">{f.tag}</PhotoTag>
       </div>
       <ReviewCard r={f.review.r} class="ft-rv" t="5" />
@@ -76,7 +76,7 @@ const id = sid(slug, 'feature');
     .ft :global(.shead .lead) { font-size: 16px; line-height: 25px; }
     .ft-grid { row-gap: 62px; }
     .ft-links { gap: 8px; margin-top: 20px; }
-    .ft-media { grid-template-columns: 158px 180px; }
+    .ft-media { grid-template-columns: minmax(0, 158fr) minmax(0, 180fr); } /* 158/180 at 390; scales down (was 10 px sideways scroll at 360) */
     .ft-media :global(.ft-rv) { width: 330px; max-width: 100%; margin-top: -20px; }
   }
 </style>

@@ -46,7 +46,7 @@ const rows = [
   <Swoosh class="hr-sw" flip h={110} below="#FFFFFF" />
 </section>
 <style>
-  .hr { position: relative; background: var(--tint); padding: 0 0 30px; overflow: clip; }
+  .hr { position: relative; background: var(--tint); padding: 0 0 30px; overflow-x: clip; } /* x only: the ticket (-24) and its stamp hang over the section above and were cut flat */
   .hr :global(.flow) { opacity: 1; }
   .hr-in { position: relative; z-index: 2; }
   .hr-ticket { position: relative; width: min(800px, 100%); margin: -24px auto 0; padding: 0 32px 32px; border-radius: 24px; background: var(--white); box-shadow: var(--sh-3); }

@@ -63,6 +63,19 @@ function mega() {
     }
     b.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown') { e.preventDefault(); open(k); $<HTMLElement>('a', panel(k)!)?.focus(); }
+      // The panel sits elsewhere in the DOM: Tab from an open button goes into it, as in the disclosure pattern (QA r2).
+      else if (e.key === 'Tab' && !e.shiftKey && openKey === k) { const a = $<HTMLElement>('a', panel(k)!); if (a) { e.preventDefault(); a.focus(); } }
+    });
+    // Leaving the panel by Tab continues after its button; Shift+Tab from the first link goes back to the button.
+    panel(k)?.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const links = $$<HTMLElement>('a[href], button', panel(k)!).filter((x) => x.getClientRects().length);
+      if (e.shiftKey && document.activeElement === links[0]) { e.preventDefault(); b.focus(); }
+      else if (!e.shiftKey && document.activeElement === links[links.length - 1]) {
+        const nav = $$<HTMLElement>('a[href], button', li.parentElement!).filter((x) => !panel(k)!.contains(x) && x.getClientRects().length);
+        const next = nav[nav.indexOf(b) + 1];
+        if (next) { e.preventDefault(); close(k); next.focus(); }
+      }
     });
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openKey) close(openKey, true); });

@@ -35,7 +35,7 @@ const deg = [-1.2, 1.4, 0.8, -1.4];
       <div class="st-media">
         <span class="st-back" aria-hidden="true"></span>
         <div class="st-ph frame" data-t="4" data-fx="frame">
-          <Img name={s.photo.name} alt={s.photo.alt} focus={s.photo.focus} sizes="(min-width: 1024px) 440px, calc(100vw - 40px)" widths={[400, 600, 880, 1100]} />
+          <Img name={s.photo.name} alt={s.photo.alt} focus={s.photo.focus} sizes="(min-width: 1024px) 440px, calc(100vw - 40px)" widths={[400, 600, 880, 1100]} box={0.81} />
           {s.caption && <Caption class="st-cap">{s.caption}</Caption>}
         </div>
         {s.patches && (

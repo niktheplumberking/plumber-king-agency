@@ -135,4 +135,9 @@ const facts = [['answered on the', 'first ring'], ['here', 'within the hour'], [
     .ig-l { grid-column: 2; grid-row: 3; }
     .work :global(.wk-all-m) { margin-top: 20px; }
   }
+  /* below 381 px the handle no longer fits beside the count (it ran 28 px past the tile at 360): own row, full width */
+  @media (max-width: 380px) {
+    .c-ig { grid-template-rows: 22px 42px 24px auto; }
+    .ig-l { grid-column: 1 / -1; grid-row: 4; margin-top: 10px; }
+  }
 </style>

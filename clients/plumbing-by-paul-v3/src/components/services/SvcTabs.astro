@@ -30,7 +30,7 @@ const pad = (x: number) => String(x).padStart(2, '0');
       <div class="tb-panelwrap" data-t="4" data-fx="rise">
         <span class="tb-pipe" aria-hidden="true"></span>
         <div class="tb-ph frame">
-          <Img name={t.photo.name} alt={t.photo.alt} focus={t.photo.focus} sizes="(min-width: 1024px) 270px, 150px" widths={[300, 540, 720]} />
+          <Img name={t.photo.name} alt={t.photo.alt} focus={t.photo.focus} sizes="(min-width: 1024px) 270px, 150px" widths={[300, 540, 720]} box={0.83} boxM={0.85} />
         </div>
         <Caption class="tb-cap">{t.caption}</Caption>
         {t.items.map((it, i) => (

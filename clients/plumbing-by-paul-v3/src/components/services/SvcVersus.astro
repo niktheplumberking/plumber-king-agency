@@ -26,7 +26,7 @@ const id = sid(slug, 'versus');
     <div class="vs-mid" data-t="4" data-fx="frame">
       <span class="vs-back" aria-hidden="true"></span>
       <div class="vs-ph frame">
-        <Img name={v.photo.name} alt={v.photo.alt} focus={v.photo.focus} sizes="(min-width: 1024px) 300px, calc(100vw - 40px)" widths={[320, 480, 640, 900]} />
+        <Img name={v.photo.name} alt={v.photo.alt} focus={v.photo.focus} sizes="(min-width: 1024px) 300px, calc(100vw - 40px)" widths={[320, 480, 640, 900]} box={0.46} />
         <Caption class="vs-cap">{v.caption}</Caption>
       </div>
     </div>

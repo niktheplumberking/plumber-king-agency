@@ -40,7 +40,7 @@ import { SITE } from '../../data/site';
       </div>
       <Caption class="hf-cap" data-t="5" data-fx="pop">Paul, Alycia and their son.<span class="cap-d"> St. Petersburg.</span></Caption>
       <div class="sn snap" data-t="4" data-fx="toss">
-        <Img name="service-tech-kitchen-sink-smiling" alt="A Plumbing By Paul tech smiling while working under a sink" sizes="(min-width: 1024px) 206px, 124px" focus="70% 45%" widths={[260, 420, 620]} />
+        <Img name="service-tech-kitchen-sink-smiling" alt="A Plumbing By Paul tech smiling while working under a sink" sizes="(min-width: 1024px) 228px, 124px" focus="70% 45%" widths={[260, 460, 620]} />
       </div>
       <p class="bob-chip" data-t="5" data-fx="pop">
         <Icon name="award" size={20} />
@@ -76,7 +76,7 @@ import { SITE } from '../../data/site';
   .bob-chip small { font-family: var(--f-num); font-size: 10px; line-height: 14px; letter-spacing: .04em; color: var(--press); }
   .bc-m { display: none; }
   .hero :global(.hero-sw) { position: absolute; left: 0; bottom: 0; z-index: 1; }
-  @media (max-width: 1279px) and (min-width: 1024px) { .sn { right: -12px; width: 180px; height: 218px; top: auto; bottom: -96px; } }
+  @media (max-width: 1279px) and (min-width: 1024px) { .sn { right: -12px; width: 180px; height: 218px; top: auto; bottom: -64px; } } /* -96 ran 23 px past the clipped hero edge and was cut */
   @media (max-width: 1023px) {
     .hero { padding: 44px 0 110px; }
     /* Figma mobile pill 426:4293: 281 x 36 (G 16, 4.9 at 16, stars 12, 13 px label) */

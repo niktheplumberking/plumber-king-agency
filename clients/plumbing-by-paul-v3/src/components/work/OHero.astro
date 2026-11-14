@@ -34,7 +34,7 @@ const fan = [
   <ul role="list" class="oh-fan" data-t="4" data-stagger aria-label="Four job photos">
     {fan.map((p, i) => (
       <li class:list={['oh-p', `p${i}`]} style={`--deg:${p.deg}deg`} data-fx="frame">
-        <div class="oh-ph frame"><Img name={p.n} alt={p.alt} focus={p.f} priority={i === 1} sizes="(min-width: 1024px) 298px, 44vw" widths={[300, 600, 1080]} /></div>
+        <div class="oh-ph frame"><Img name={p.n} alt={p.alt} focus={p.f} priority={i === 1} sizes="(min-width: 1024px) 298px, 44vw" widths={[300, 600, 1080]} box={0.82} /></div>
       </li>
     ))}
     <li class="oh-seal" aria-hidden="true"><Seal d={96} deg={10} /></li>

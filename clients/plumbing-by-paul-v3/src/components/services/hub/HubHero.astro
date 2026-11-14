@@ -35,7 +35,7 @@ import { SITE } from '../../../data/site';
     </div>
     <div class="hh-media">
       <div class="hh-ph frame frame-3" data-t="4" data-fx="frame">
-        <Img name="hero-05-tech-toilet-repair-pro" alt="A Plumbing By Paul technician repairing a toilet in a bathroom" sizes="(min-width: 1024px) 560px, calc(100vw - 40px)" focus="85% 50%" priority widths={[400, 600, 800, 1120]} />
+        <Img name="hero-05-tech-toilet-repair-pro" alt="A Plumbing By Paul technician repairing a toilet in a bathroom" sizes="(min-width: 1024px) 560px, calc(100vw - 40px)" focus="85% 50%" priority widths={[400, 600, 800, 1120]} box={1.27} />
         <svg class="hh-stripes" viewBox="0 0 120 120" fill="none" aria-hidden="true"><g transform="rotate(180 60 60)"><path d="M-12.5 42.5C37.5 50 62.5 87.5 70 137.5" stroke-width="25" stroke="#fff"/><path d="M-12.5 42.5C37.5 50 62.5 87.5 70 137.5" stroke-width="17.5" stroke="#61ADCB"/><path d="M-12.5 70C37.5 77.5 79 87.5 97.5 137.5" stroke-width="25" stroke="#fff"/><path d="M-12.5 70C37.5 77.5 79 87.5 97.5 137.5" stroke-width="17.5" stroke="#2A7FA8"/><path d="M-12.5 97.5C37.5 105 95.5 87.5 125 137.5" stroke-width="25" stroke="#fff"/><path d="M-12.5 97.5C37.5 105 95.5 87.5 125 137.5" stroke-width="17.5" stroke="#111032"/></g></svg>
       </div>
       <Caption class="hh-cap">On the job: a toilet repair.</Caption>
@@ -117,9 +117,11 @@ import { SITE } from '../../../data/site';
     .em-in { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 12px; row-gap: 0; min-height: 0; padding: 22px 0 24px; }
     .em-in :global(.em-seal) { --d: 62px !important; left: auto; right: 15px; top: -29px; }
     .em-i { width: 40px; height: 40px; }
-    .em-t { display: contents; font-size: 14px; line-height: 21px; }
-    .em-t b { max-width: 220px; font-size: 18px; line-height: 22px; }
-    .em-t span { grid-column: 1 / -1; margin-top: 8px; }
+    /* a real box (subgrid, not display:contents) so its data-t entrance can animate: title beside the icon, line below */
+    .em-i { grid-column: 1; grid-row: 1; }
+    .em-t { display: grid; grid-column: 1 / -1; grid-row: 1 / span 2; grid-template-columns: subgrid; grid-template-rows: subgrid; align-items: center; font-size: 14px; line-height: 21px; }
+    .em-t b { grid-column: 2; grid-row: 1; max-width: 220px; font-size: 18px; line-height: 22px; }
+    .em-t span { grid-column: 1 / -1; grid-row: 2; margin-top: 8px; }
     .em-in :global(.em-btn) { grid-column: 1 / -1; width: 100%; min-height: 52px; margin-top: 14px; }
   }
 </style>

@@ -52,16 +52,16 @@ const [p0, p1, p2] = h.photos;
     </div>
     <div class="sh-col">
       <div class="c-big frame frame-3" data-t="4" data-fx="frame">
-        <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 310px, calc(100vw - 40px)" priority widths={[360, 540, 720, 960]} />
+        <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 310px, calc(100vw - 40px)" priority widths={[360, 540, 720, 960]} box={0.59} />
         {h.tag && <PhotoTag class="c-tag">{h.tag}</PhotoTag>}
       </div>
       <div class="c-pill" data-t="5" data-fx="pop"><RatingPill /></div>
       <div class="c-side" aria-hidden="false">
         <span class="c-panel" aria-hidden="true"></span>
-        {p1 && <div class="c-sm c1 frame" data-t="4" data-fx="rise"><Img name={p1.name} alt={p1.alt} focus={p1.focus} sizes="(min-width: 1024px) 240px, 50vw" widths={[300, 480, 640]} /></div>}
+        {p1 && <div class="c-sm c1 frame" data-t="4" data-fx="rise"><Img name={p1.name} alt={p1.alt} focus={p1.focus} sizes="(min-width: 1024px) 240px, 50vw" widths={[300, 480, 640]} box={1.04} /></div>}
         {p2 && (
           <div class="c-sm c2 frame" data-t="4" data-fx="rise">
-            <Img name={p2.name} alt={p2.alt} focus={p2.focus} sizes="(min-width: 1024px) 240px, 50vw" widths={[300, 480, 640]} />
+            <Img name={p2.name} alt={p2.alt} focus={p2.focus} sizes="(min-width: 1024px) 240px, 50vw" widths={[300, 480, 640]} box={1.04} />
             {h.caption && <Caption class="c-cap">{h.caption}</Caption>}
           </div>
         )}
@@ -73,7 +73,7 @@ const [p0, p1, p2] = h.photos;
 ) : (
 <section class="sh sh-b" aria-labelledby={id} data-m-section data-m-hero>
   <div class="b-ph" data-t="4" data-fx="frame">
-    <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 50vw, 100vw" priority widths={[480, 720, 960, 1280, 1600]} />
+    <Img name={p0.name} alt={p0.alt} focus={p0.focus} sizes="(min-width: 1024px) 50vw, 100vw" priority widths={[480, 720, 960, 1280, 1600, 2000, 2400]} box={0.93} />
     {h.tag && <PhotoTag class="b-tag">{h.tag}</PhotoTag>}
   </div>
   <div class="wrap sh-in">

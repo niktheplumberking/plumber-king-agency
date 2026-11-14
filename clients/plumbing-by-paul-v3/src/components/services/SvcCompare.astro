@@ -68,7 +68,8 @@ const id = sid(slug, 'compare');
     .cp-t { font-size: 21px; line-height: 26px; letter-spacing: -0.015em; }
     .cp-list li { gap: 12px; font-size: 15px; line-height: 26px; align-items: flex-start; }
     .cp-top { gap: 12px; }
-    .cp-or { width: 60px; height: 60px; margin: -30px 0 0 -30px; font-size: 26px; }
+    /* in the flow between the stacked cards (QA r2): centred on the grid it sat on the taller card's last line */
+    .cp-or { position: relative; left: auto; top: auto; justify-self: center; width: 60px; height: 60px; margin: -47px 0; font-size: 26px; }
     .cp-strip { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 40px; padding: 18px; font-size: 15px; line-height: 23px; }
     .cp-sw { display: none; }
     .cp-strip :global(.cp-ad) { width: 32px; height: 32px; }

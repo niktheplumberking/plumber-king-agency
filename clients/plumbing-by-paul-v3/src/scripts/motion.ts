@@ -141,6 +141,7 @@ const STEP_ORDER = ['1', '2', '3', '3c', '4', '5'];
  *  after another (overlap <= OVERLAP); siblings of the same step follow at a gap that scales with their size. */
 function choreograph(els: HTMLElement[]): gsap.core.Timeline {
   const tl = gsap.timeline({ paused: true });
+  built.push(tl);
   const ordered = els.map((el, i) => ({ el, i, s: STEP_ORDER.indexOf(stepOf(el)) })).sort((a, b) => a.s - b.s || a.i - b.i);
   let step = -1, stepEnd = 0, prevStart = 0, prevDur = 0, prevGroup = false;
   ordered.forEach(({ el, s }) => {
@@ -154,7 +155,44 @@ function choreograph(els: HTMLElement[]): gsap.core.Timeline {
     prevStart = at; prevDur = d; prevGroup = el.hasAttribute('data-stagger');
     stepEnd = Math.max(stepEnd, at + d * (1 - OVERLAP));
   });
+  tl.data = stepEnd; // when a following sequence may start (queuePlay)
   return tl;
+}
+
+/* One thing at a time across the page, not only inside a band: a band that becomes ready while the band before it (the
+ * band above in a long section, the section above, the hero) is still running AND still on screen waits until that one is
+ * ~70 % into its last step, the same rule as steps inside a section, at most MAX_WAIT. Measured in round 2: at 1440 the
+ * two bands of Home's family section played on top of each other, patches popping while the body text rose. A band whose
+ * predecessor has left the screen (a fast scroll, phones) never waits, so content is never held back while it passes.
+ * The band above in the same section is waited for in full (up to 3 s): the lower band is the rest of that sequence. */
+let busy: { el: Element; sec: Element | null; until: number } | null = null;
+
+/* Keyboard users get the finished page (QA round 2). Pre-hidden content is opacity 0 but focusable: Tab focused an
+ * invisible link, the scroll fired its band, the entrance set visibility: hidden and focus fell to <body> (5 times in the
+ * first 45 Tabs on /water-heaters; tabs, forms and FAQs were skipped). The first Tab, or focus landing on content that is
+ * not revealed yet, ends every entrance at once and stops the rest, so nothing focusable is ever hidden again. */
+const built: gsap.core.Timeline[] = [];
+const bandSTs: ScrollTrigger[] = [];
+let kbd = false;
+function keyboardRelease() {
+  if (kbd) return; kbd = true;
+  bandSTs.forEach((st) => st.kill());
+  built.forEach((tl) => tl.progress(1));
+  $$('[data-m-section] [data-t]').forEach((el) => el.classList.add('m-built'));
+  gsap.set($$('[data-m-section] [data-fx="frame"]'), { autoAlpha: 1 });
+}
+const MAX_WAIT = 0.6;       // after a band of another section
+const MAX_WAIT_SAME = 3;    // after the band above in the same section: it continues that section's sequence
+function queuePlay(tl: gsap.core.Timeline, el: Element, startIn = 0) {
+  const now = gsap.ticker.time + startIn;
+  const sec = el.closest('[data-m-section]');
+  let wait = 0;
+  if (busy && busy.until > now) {
+    const r = busy.el.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < window.innerHeight) wait = Math.min(busy.until - now, busy.sec === sec ? MAX_WAIT_SAME : MAX_WAIT);
+  }
+  busy = { el, sec, until: now + wait + ((typeof tl.data === 'number' ? tl.data : tl.duration()) / tl.timeScale()) };
+  if (startIn + wait > 0.02) gsap.delayedCall(startIn + wait, () => { tl.play(); }); else tl.play();
 }
 
 const pageTop = (el: Element) => el.getBoundingClientRect().top + window.scrollY;
@@ -187,6 +225,7 @@ function sections(only: 'hero' | 'rest', heroPlay: (tl: gsap.core.Timeline) => v
       sw.forEach((svg) => { svg.dataset.mDone = '1'; tl.add(swooshIn(svg), '>-0.3'); });
       // The hero carries the most steps of any section; it runs 1.2x so the whole sequence lands in ~3.8 s (ratios kept).
       tl.timeScale(1.2);
+      tl.data = Math.max(tl.data as number, tl.duration() - 0.5); // the page waits for the hero's accents too (queuePlay)
       heroPlay(tl);
       return;
     }
@@ -208,18 +247,19 @@ function sections(only: 'hero' | 'rest', heroPlay: (tl: gsap.core.Timeline) => v
       // Hide this band's frames now (they are below the fold): built tweens re-apply the same start state.
       live.filter((el) => frames.includes(el)).forEach((f) => gsap.set(f.dataset.fx === 'frame' ? f : f.querySelectorAll(':scope > [data-fx="frame"]'), { autoAlpha: 0 }));
       const first = live.reduce((a, b) => (tops.get(a)! <= tops.get(b)! ? a : b));
-      ScrollTrigger.create({ trigger: first, start: 'top 88%', once: true, onEnter: () => {
+      bandSTs.push(ScrollTrigger.create({ trigger: first, start: 'top 88%', once: true, onEnter: () => {
         // Wait (briefly) for fonts and for this band's lazy photos to decode, so a photo never pops in mid-reveal.
         const imgs = live.flatMap((el) => $$<HTMLImageElement>('img', el)).filter((im) => !im.complete);
         const decoded = Promise.all(imgs.map((im) => im.decode().catch(() => {})));
         Promise.all([fontsIn(), Promise.race([decoded, new Promise((r) => setTimeout(r, 450))])]).then(() => {
+          if (kbd) return; // released for the keyboard while the photos decoded
           live.forEach((el) => el.classList.add('m-built'));
           const tl = choreograph(live);
           // Arrived late (an anchor jump or a fast fling put the band well up the screen): play it quicker, not slower.
           if (first.getBoundingClientRect().top < window.innerHeight * 0.35) tl.timeScale(2.2);
-          tl.play();
+          queuePlay(tl, first);
         });
-      } });
+      } }));
     });
     draws.forEach((p) => ScrollTrigger.create({ trigger: p.closest('svg') ?? p, start: 'top 85%', once: true, onEnter: () => gsap.to(p, { drawSVG: '100%', duration: 0.8, delay: 0.6, ease: 'power2.inOut' }) }));
   });
@@ -425,6 +465,11 @@ function curtainOut() {
 function boot() {
   if (!MOTION) return;
   window.__pbpMotion = true;
+  window.addEventListener('keydown', (e) => { if (e.key === 'Tab') keyboardRelease(); }, true);
+  document.addEventListener('focusin', (e) => {
+    const host = (e.target as Element).closest?.('[data-m-section] [data-t]');
+    if (host && (!host.classList.contains('m-built') || parseFloat(getComputedStyle(host).opacity) < 0.5)) keyboardRelease();
+  });
 
   // Lenis = United's live settings (lerp 0.1, wheelMultiplier 1, smooth wheel, native touch). Lenis lerp is frame-rate
   // independent (damp), so it feels the same at 60 and 120 Hz. One clock: Lenis is driven by the GSAP ticker and
@@ -468,7 +513,7 @@ function boot() {
     buildHero();
     chrome.play();
     // The header settles first; the hero sequence starts as it is ~40 % done (one thing at a time).
-    if (heroTl) chrome.duration() ? gsap.delayedCall(chrome.duration() * 0.4, () => heroTl!.play()) : heroTl.play();
+    if (heroTl) queuePlay(heroTl, document.querySelector('[data-m-hero]') ?? document.body, chrome.duration() * 0.4);
     window.dispatchEvent(new CustomEvent('pbp:handoff'));
   };
   if (!runCurtainIn(handoff, buildHero)) runLoader(handoff, buildHero);

@@ -27,13 +27,13 @@ const [a, b, c] = j.photos;
     <div class="tj-media" data-t="4" data-stagger>
       <span class="tj-off" aria-hidden="true"></span>
       <figure class="tj-f tj-big frame frame-3" data-fx="frame">
-        <Img name={a.photo} alt={a.alt} focus={a.focus} sizes="(min-width: 1024px) 432px, calc(100vw - 40px)" widths={[400, 700, 900, 1620]} />
+        <Img name={a.photo} alt={a.alt} focus={a.focus} sizes="(min-width: 1024px) 432px, calc(100vw - 40px)" widths={[400, 700, 900, 1620]} box={1.02} />
         <PhotoTag class="tj-tag">On the job</PhotoTag>
         <figcaption><Caption class="tj-cap">{a.cap}</Caption></figcaption>
       </figure>
       {[b, c].map((p, i) => (
         <figure class:list={['tj-f tj-sm frame-3', `s${i + 1}`]} data-fx="frame">
-          <Img name={p.photo} alt={p.alt} focus={p.focus} sizes="(min-width: 1024px) 248px, 50vw" widths={[260, 500, 900]} />
+          <Img name={p.photo} alt={p.alt} focus={p.focus} sizes="(min-width: 1024px) 248px, 50vw" widths={[260, 500, 900]} box={1.24} />
           <figcaption><Caption class="tj-cap" small>{p.cap}</Caption></figcaption>
         </figure>
       ))}

@@ -58,10 +58,12 @@ const pct = (x: number, y: number) => `left:${(x / 600) * 100}%;top:${(y / 700) 
     .hm-ic :global(svg) { width: 13px; height: 13px; }
     .hm-lab b { font-size: 12px; line-height: 16px; }
     .hm-lab small { font-size: 8px; line-height: 10px; }
-    .l-cw { left: auto !important; right: -4%; }
-    .l-sm { left: -4% !important; top: 47% !important; }
-    .l-sp { left: auto !important; right: -4%; top: 88% !important; }
+    /* Figma 443:14318 (map 400 x 466 at x 30): Clearwater x 218 y 96, Seminole x -10 y 286, St. Petersburg x 196 y 424; the
+       labels end 60 px inside the map's right edge, so all three sit on screen (they ran 16 px off it at 390) */
+    .l-cw { left: auto !important; right: 15%; top: 20.6% !important; }
+    .l-sm { left: -2.5% !important; top: 61.4% !important; }
+    .l-sp { left: auto !important; right: 15.25%; top: 91% !important; }
   }
   /* narrow phones: the labels stay inside the viewport */
-  @media (max-width: 389px) { .l-cw, .l-sp { right: 0; } .l-sm { left: 0 !important; } }
+  @media (max-width: 389px) { .l-cw, .l-sp { right: 18%; } .l-sm { left: 0 !important; } }
 </style>

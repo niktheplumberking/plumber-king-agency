@@ -46,4 +46,7 @@ import Img from '../ui/Img.astro';
     .rvp-sig { right: -88px; bottom: -4px; width: 128px; height: 64px; font-size: 48px; border-radius: 14px; }
     figcaption { margin-top: 18px; font-size: 15px; line-height: 22px; }
   }
+  @media (max-width: 380px) {
+    .rvp-sig { right: -78px; } /* stays inside the 360 px screen (was 1 px past it) */
+  }
 </style>

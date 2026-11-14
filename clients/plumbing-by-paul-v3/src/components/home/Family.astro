@@ -22,7 +22,7 @@ const rows = [
         <Img name="about-paul-alycia-couple-portrait" alt="Paul and Alycia, the owners of Plumbing By Paul" sizes="(min-width: 1024px) 440px, calc(100vw - 40px)" focus="50% 25%" widths={[360, 480, 720, 900]} />
       </div>
       <div class="fm-snap snap" data-t="4" data-fx="toss">
-        <Img name="about-son-with-gift-roll-truck" alt="Paul and Alycia's son holding a Plumbing By Paul blue roll in front of the truck" sizes="(min-width: 1024px) 196px, 124px" focus="50% 75%" widths={[240, 400]} />
+        <Img name="about-son-with-gift-roll-truck" alt="Paul and Alycia's son holding a Plumbing By Paul blue roll in front of the truck" sizes="(min-width: 1024px) 218px, 124px" focus="50% 75%" widths={[240, 440]} />
       </div>
       <Patch name="Paul" label="OWNER" deg={-4} class="fm-p1" />
       <Patch name="Alycia" label="OWNER" deg={3} class="fm-p2" />
@@ -44,7 +44,7 @@ const rows = [
 </section>
 <style>
   .fam { position: relative; z-index: 1; background: var(--tint); padding: 168px 0 24px; } /* Figma section 952: the tilted script line ends 14 px above the edge */
-  .fam-in { display: grid; grid-template-columns: 580px 1fr; gap: 0; align-items: start; }
+  .fam-in { display: grid; grid-template-columns: 580px minmax(0, 1fr); gap: 0; align-items: start; } /* minmax: 1200-1290 px the copy column is under its 540 px min-content (was 3 px sideways scroll) */
   .fam-media { position: relative; width: 464px; height: 610px; margin-top: 22px; }
   .fm-block { position: absolute; left: -24px; top: 24px; width: 440px; height: 560px; border-radius: var(--r-xl); background: var(--sky); }
   .fm-photo { position: absolute; left: 0; top: 0; width: 440px; height: 560px; }
@@ -60,7 +60,7 @@ const rows = [
   .rows p { flex: 1; font-size: 16px; line-height: 25px; color: var(--slate); }
   .rows b { font-weight: 700; color: var(--navy); }
   .fam-script { order: 9; justify-self: end; margin-top: 16px; font-size: 46px; line-height: 1; color: var(--blue); transform: rotate(-3deg); }
-  .fam-cta { display: flex; align-items: center; gap: 28px; margin-top: 34px; }
+  .fam-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 34px; }
   .fc-call { font-weight: 700; }
   @media (max-width: 1199px) { .fam-in { grid-template-columns: 1fr 1fr; gap: 48px; } .fam-media { width: 100%; max-width: 440px; height: auto; aspect-ratio: 440 / 610; } .fm-block, .fm-photo { width: 100%; height: auto; aspect-ratio: 440/560; } .fm-snap { left: auto; right: -20px; top: auto; bottom: 0; width: 40%; height: auto; aspect-ratio: 196/250; } .fam-media :global(.fm-p1) { top: auto; bottom: 6%; } .fam-media :global(.fm-p2) { top: auto; bottom: 4%; left: 30%; } }
   @media (max-width: 1023px) {

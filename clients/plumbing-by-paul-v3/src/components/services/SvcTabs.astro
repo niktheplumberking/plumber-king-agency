@@ -86,7 +86,7 @@ const pad = (x: number) => String(x).padStart(2, '0');
   .tb-pipe::before { left: 0; } .tb-pipe::after { right: 0; }
   .tb-ph { position: absolute; right: 18px; top: 36px; width: 270px; height: 320px; border-radius: 20px; transform: rotate(3deg); }
   .tb-panelwrap :global(.tb-cap) { position: absolute; right: 14px; top: 346px; z-index: 2; }
-  .tb-panel { display: grid; justify-items: start; align-content: start; min-height: 360px; }
+  .tb-panel { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; align-content: start; min-height: 360px; }
   .tb-panel[hidden] { display: none; }
   .tb-panel:focus-visible { outline: 2px solid var(--blue); outline-offset: 8px; border-radius: 8px; }
   .tb-n { color: var(--press); font-size: 13px; letter-spacing: .08em; }
@@ -115,4 +115,6 @@ const pad = (x: number) => String(x).padStart(2, '0');
     .tb-x { margin-top: 26px; font-size: 15px; line-height: 25px; }
     .tb-call { margin-top: 18px; padding-top: 0; border-top: 0; font-size: 14px; }
   }
+  /* very narrow phones: a smaller photo leaves room for the panel title */
+  @media (max-width: 359px) { .tb-ph { width: 112px; height: 136px; } .tb-t { padding-right: 118px; font-size: 22px; line-height: 28px; } }
 </style>

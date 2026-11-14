@@ -179,7 +179,9 @@ html.lenis, html.lenis body { height: auto; }
   .ft .fbody a:not(.tlink)::after, .ft a.mail::after, .ubar .pay::after, .ubar .ub-r::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 28px; margin-top: -14px; }
 }
 /* phones: the rating link fills the 36 px top bar (the bar itself is the limit; still above the 24 px WCAG minimum) */
-@media (max-width: 767px) { .ubar .ub-r { position: relative; } .ubar .ub-r::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 36px; margin-top: -18px; } }
+/* phones: the bar is 36 px. The link fills it; its hit area adds 8 px below the bar, to the right of the logo tab
+   (tab spans the first 84 px) and above the header controls (they start 10 px below the bar), so the target is 44 px tall. */
+@media (max-width: 767px) { .ubar .ub-r { position: relative; } .ubar .ub-r::after { content: ''; position: absolute; left: 92px; right: 0; top: 50%; margin-top: -18px; height: 44px; } .ubar .ub-r::before { content: ''; position: absolute; left: 0; width: 92px; top: 50%; margin-top: -18px; height: 36px; } }
 /* phone numbers never break in the middle */
 a[href^="tel:"] { white-space: nowrap; }
 /* long call links wrap their label; the number inside them sits in .nowrap */

@@ -50,4 +50,6 @@ const { t } = Astro.props;
     .tq-row :global(.tlink) { display: none; }
     .tq-from { font-size: 15px; }
   }
+  /* very narrow phones: the rating pill drops its stars so it fits the answer box */
+  @media (max-width: 359px) { .tq-row :global(.rpill) { gap: 6px; padding: 0 12px; } .tq-row :global(.rpill .stars) { display: none; } }
 </style>

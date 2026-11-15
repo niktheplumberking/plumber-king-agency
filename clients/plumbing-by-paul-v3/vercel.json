@@ -6,7 +6,8 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/home", "destination": "/", "permanent": true },
-    { "source": "/team", "destination": "/about", "permanent": true }
+    { "source": "/team", "destination": "/about", "permanent": true },
+    { "source": "/sitemap.xml", "destination": "/sitemap-index.xml", "permanent": true }
   ],
   "headers": [
     {

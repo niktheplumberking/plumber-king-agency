@@ -26,7 +26,7 @@ export const GROUPS: HubGroup[] = [
     { idx: '10', q: 'What should I do in a plumbing emergency?', a1: 'Shut off the water at the main valve, stay away from anything electrical near the water, and call ' + SITE.phone + '.', a2: "We'll talk you through the next steps." },
   ] },
   { id: 'working', cat: 'Working with us', icon: 'users', items: [
-    { idx: '11', open: true, q: 'Are you licensed?', a1: 'Yes.', a2: `${SITE.legalName} is a ${SITE.licenceLabel}, licence ${SITE.licence}. You can verify it at myfloridalicense.com.` },
+    { idx: '11', open: true, q: 'Are you licensed?', a1: 'Yes.', a2: `${SITE.legalName} is a ${SITE.licenceLabel}, license ${SITE.licence}. You can verify it at myfloridalicense.com.` },
     { idx: '12', q: 'Do you give free estimates?', a1: 'Yes.', a2: 'Estimates are free and you hear the price before work starts.' },
     { idx: '13', q: 'What areas do you serve?', a1: 'All of Pinellas County from our shop in St. Petersburg, including Clearwater and Seminole.' },
   ] },

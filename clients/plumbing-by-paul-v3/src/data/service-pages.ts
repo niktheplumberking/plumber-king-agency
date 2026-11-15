@@ -39,7 +39,7 @@ export interface SvcPage {
 
 const EST = { k: 'Estimate', v: 'Free, before any work starts.' };
 const WAR = { k: 'Workmanship warranty', v: '1 year.' };
-const LIC = { k: 'Licence', v: `Florida ${SITE.licence}.` };
+const LIC = { k: 'License', v: `Florida ${SITE.licence}.` };
 const STAND = 'Paul to supply. No numbers are published until he does.';
 
 /* ---- extra reviews (word for word; partial quotes are a contiguous run of the reviewer's own sentences) ---- */
@@ -662,7 +662,7 @@ export const SERVICE_PAGES: Record<string, SvcPage> = {
     faq: { eyebrow: 'Plumbing questions', l1: 'The everyday', l2: 'questions', items: [
       { q: 'Do you handle small plumbing jobs?', a1: 'Yes.', a2: 'Faucets, valves, supply lines and fixtures get the same care as a repipe. No job is too small to call about.' },
       { q: 'Why is the pressure low at one faucet?', a1: 'Often the aerator at the tip of the faucet is clogged with mineral deposits.', a2: 'Unscrew it, rinse it and refit it. If that does not help, there may be a problem in the line, and we can find it.' },
-      { q: 'Are you licensed?', a1: `Yes. Plumbing By Paul LLC is a Florida certified plumbing contractor, licence ${SITE.licence}.`, a2: 'You can check it yourself at myfloridalicense.com.' },
+      { q: 'Are you licensed?', a1: `Yes. Plumbing By Paul LLC is a Florida certified plumbing contractor, license ${SITE.licence}.`, a2: 'You can check it yourself at myfloridalicense.com.' },
       { q: 'Can you install fixtures I bought myself?', a1: 'Usually, yes.', a2: 'Tell us the make and model when you call so we bring the right parts.' },
       { q: 'Do you work on businesses too?', a1: 'Yes.', a2: 'Offices, shops and rentals get the same crew.', link: { text: 'Commercial plumbing', href: '/commercial-plumbing' } },
     ] },
@@ -921,7 +921,7 @@ export const SERVICE_PAGES: Record<string, SvcPage> = {
       { tag: 'Drains', q: 'Can you clear restaurant grease lines?', a1: 'Yes.', a2: 'We clear grease lines and commercial kitchen drains, and run a camera down a line that keeps blocking.' },
       { tag: 'Hours', q: 'Can you work around our opening hours?', a1: 'Yes, where the job allows it.', a2: 'Tell us when work disrupts you least and we plan around it.' },
       { tag: 'New builds', q: 'Do you take on new construction?', a1: 'Yes.', a2: 'Plumbing for new builds and renovations, for owners, builders and contractors.' },
-      { tag: 'Licence', q: 'Are you licensed?', a1: `Yes. Plumbing By Paul LLC is a Florida certified plumbing contractor, licence ${SITE.licence}.`, a2: 'You can check it yourself at myfloridalicense.com.' },
+      { tag: 'License', q: 'Are you licensed?', a1: `Yes. Plumbing By Paul LLC is a Florida certified plumbing contractor, license ${SITE.licence}.`, a2: 'You can check it yourself at myfloridalicense.com.' },
       { tag: 'Area', q: 'Which areas do you cover?', a1: 'All of Pinellas County, from our shop in St. Petersburg.', a2: 'Including Clearwater and Seminole.', link: { text: 'Service areas', href: '/service-areas' } },
     ] },
     cta: { l1: 'Plumbing holding up business?', l2: "Let's get you open." },

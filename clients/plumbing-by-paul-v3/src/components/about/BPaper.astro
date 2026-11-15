@@ -1,6 +1,6 @@
 ---
 // B9 The paperwork (Figma B9): a credentials job ticket (every credential in crawlable text, with a way to verify it) and a
-// framed van photo whose wrap shows the licence number, circled with a 2 px blue ring and a leader line to a label.
+// framed van photo whose wrap shows the license number, circled with a 2 px blue ring and a leader line to a label.
 // BBB is text only, never the accredited seal.
 import SectionHead from '../ui/SectionHead.astro';
 import Img from '../ui/Img.astro';
@@ -10,7 +10,7 @@ import Stamp from '../ui/Stamp.astro';
 import { SITE } from '../../data/site';
 const rows: { k: string; v: string; s?: string; link?: boolean }[] = [
   { k: 'Company', v: 'Plumbing By Paul LLC', s: 'Florida LLC, formed June 2015' },
-  { k: 'Licence', v: `Florida Certified Plumbing Contractor ${SITE.licence}`, s: 'Current and active', link: true },
+  { k: 'License', v: `Florida Certified Plumbing Contractor ${SITE.licence}`, s: 'Current and active', link: true },
   { k: 'Awards', v: 'Best of the Bay, Best Plumbing Company', s: "2022, 2023, 2024, 2026 · Creative Loafing Tampa Bay readers' pick" },
   { k: 'Google', v: `${SITE.rating.value} from ${SITE.rating.count} reviews`, s: `Checked ${SITE.rating.checked}` },
   { k: 'BBB', v: 'A+ rating' },
@@ -39,7 +39,7 @@ const rows: { k: string; v: string; s?: string; link?: boolean }[] = [
     <div class="bp-media">
       <span class="bp-off" aria-hidden="true"></span>
       <figure class="bp-frame frame frame-3" data-t="4" data-fx="frame">
-        <Img name="about-family-at-van-license-visible" alt="Paul's family beside a wrapped van showing the licence number CFC-1430367" sizes="(min-width: 1024px) 384px, calc(100vw - 40px)" widths={[400, 700, 900, 1620]} focus="50% 50%" />
+        <Img name="about-family-at-van-license-visible" alt="Paul's family beside a wrapped van showing the license number CFC1430367" sizes="(min-width: 1024px) 384px, calc(100vw - 40px)" widths={[400, 700, 900, 1620]} focus="50% 50%" />
         <span class="bp-ring" aria-hidden="true"></span>
       </figure>
       <svg class="bp-lead" viewBox="0 0 120 110" aria-hidden="true"><path d="M118 2 C80 20 60 70 2 108" fill="none" stroke="#2A7FA8" stroke-width="2" stroke-dasharray="4 4" /></svg>

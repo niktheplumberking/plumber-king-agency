@@ -4,10 +4,15 @@
 import Base from '../../layouts/Base.astro';
 import GHub from '../../components/guides/GHub.astro';
 import WaterlineCTA from '../../components/global/WaterlineCTA.astro';
+import { BUILT } from '../../components/guides/data';
+import { abs } from '../../lib/schema';
+// The hub is a collection of the built guides only (Coming-soon titles are not links, so they are not listed).
+const hub = { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Plumbing guides',
+  mainEntity: { '@type': 'ItemList', itemListElement: BUILT.filter((g) => g.href).map((g, i) => ({ '@type': 'ListItem', position: i + 1, url: abs(g.href!), name: g.title })) } };
 ---
 <Base title="Plumbing Guides · Plumbing By Paul St. Pete"
   description="Plain answers from a licensed St. Petersburg plumber: water heaters, repairs and Pinellas County permits, written by the Plumbing By Paul crew."
-  path="/guides" og="service-trutankless-unit" ogAlt="A tankless water heater mounted on a block wall">
+  path="/guides" og="service-trutankless-unit" ogAlt="A tankless water heater mounted on a block wall" jsonld={[hub]}>
   <GHub />
   <WaterlineCTA />
 </Base>

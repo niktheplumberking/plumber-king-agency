@@ -20,9 +20,13 @@ npm run check:links  # every internal link in dist must resolve (lists pages not
 | `PUBLIC_FORM_ENDPOINT` | empty | where estimate forms POST (multipart, includes the photo). Empty = preview behaviour, below |
 | `PUBLIC_GTM_ID` | empty | Google Tag Manager container. None was found on Paul's current site |
 | `PUBLIC_GA_ID` | empty | GA4 ID, used only when there is no GTM ID |
+| `SITEMAP_LASTMOD` | build day | `<lastmod>` in the sitemap (YYYY-MM-DD). Set it only when page content really changed |
 
 Vercel also sends `X-Robots-Tag: noindex, nofollow` on any `*.vercel.app` host, so previews stay out of Google
-even if `PUBLIC_NOINDEX` is wrong. Live hosting is decided by the agency, not this repo.
+even if `PUBLIC_NOINDEX` is wrong. Live hosting is decided by the agency, not this repo. For Hostinger (agency hosting law:
+Hostinger live, Vercel previews), `public/.htaccess` ships in `dist/` and does what `vercel.json` does on Vercel: https +
+no-www in one 301, `/home` → `/`, `/team` → `/about`, `/sitemap.xml` → `/sitemap-index.xml`, clean URLs without `.html`
+or a trailing slash, the 404 page, cache headers. Upload the hidden `.htaccess` too.
 
 ## Launch checklist (production build)
 
@@ -66,7 +70,7 @@ JSON-LD (`noSchema` on the FAQ item), so structured data states verified facts o
 14. **Payment link.** Until he gives the real link (`SITE.paymentUrl`, empty now), every pay link (top bar, footer, the
     /contact card) is a `tel:` link labelled "Call to pay an invoice" (`PAY` in `src/data/site.ts`). Setting the URL switches them all to "Make a payment".
 15. **Process step 2** heads-up text ("We tell you who's coming"): confirm that is how the office works.
-16. **Geo pin.** Latitude/longitude came from the v2 build (approximate). Check against the Google Business Profile pin.
+16. **Geo pin.** Done 15 Nov 2026: now the centre of the GBP plus code R7CF+RG (27.82206, -82.72619). Re-check only if the GBP pin moves.
 17. **Counts to refresh at launch.** Google rating 4.9 from 947 reviews and the Instagram post count (740) were read on
     13 Nov 2026 (`SITE.rating`, `SITE.social.instagramPosts`). The crew review counts are from the 170 most relevant reviews.
 18. **Service page prices.** Every service page (`src/data/service-pages.ts`) shows price rows as "from $__" stand-ins labelled "Paul to supply" (screen readers hear "price not published yet"). Real "from" prices per job?

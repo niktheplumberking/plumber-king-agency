@@ -6,7 +6,7 @@ import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { SITE } from '../data/site';
-import { plumberSchema, abs } from '../lib/schema';
+import { plumberSchema, websiteSchema, webPageSchema, isPageNode, abs } from '../lib/schema';
 import { zoomSizes, zoomWidths } from '../components/ui/zoomSizes';
 import logo from '../assets/brand/logo-plumbing-by-paul.png';
 import UtilityBar from '../components/global/UtilityBar.astro';
@@ -53,8 +53,12 @@ const gtm = import.meta.env.PUBLIC_GTM_ID as string | undefined;
 const ga = import.meta.env.PUBLIC_GA_ID as string | undefined;
 // The site-wide Plumber entity carries the same image on every page (entity data stays constant).
 const entityImg = await getImage({ src: photos['/src/assets/photos/hero-01-family-house-yard-signs-truck.jpg'].default, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 78 });
-const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), ...jsonld];
 const is404 = path === '/404';
+// Graph on every page: the business, the site, and this page (isPartOf the site, about the business). A page type the page
+// sends itself (AboutPage, ContactPage, CollectionPage) becomes the page node; noindex pages get no page node.
+const ownPage = jsonld.find(isPageNode);
+const pageNode = noindex || is404 ? [] : [webPageSchema({ path, title, description, image: ogUrl, existing: ownPage })];
+const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), websiteSchema(), ...pageNode, ...jsonld.filter((o) => o !== ownPage)];
 ---
 <!doctype html>
 <html lang="en-US" data-loader={loader ? undefined : 'off'}>

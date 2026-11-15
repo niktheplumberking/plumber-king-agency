@@ -19,8 +19,8 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 <header class="hdr" data-header>
   <div class="hdr-bar">
     <div class="wrap hdr-in">
-      <a href="/" class="tab" aria-label={`${SITE.name}, home`} data-intro="brand">
-        <Image src={logo} alt="" width={180} height={193} loading="eager" class="tab-logo" />
+      <a href="/" class="tab" data-intro="brand">
+        <Image src={logo} alt={`${SITE.name} logo, home page`} width={180} height={193} loading="eager" class="tab-logo" />
       </a>
       <nav class="nav" aria-label="Main">
         <ul role="list" class="nav-list">

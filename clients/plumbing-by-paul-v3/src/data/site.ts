@@ -18,8 +18,10 @@ export const SITE = {
     zip: '33709',
     country: 'US',
   },
-  // Geo from the v2 build (approximate; confirm against the Google Business Profile pin before launch).
-  geo: { lat: 27.8225, lng: -82.7247 },
+  // Geo = the centre of the Google Business Profile plus code R7CF+RG (full code 76VVR7CF+RG, read on GBP 13 Nov 2026,
+  // research/brand/FACTS-CHECK.md), decoded to 5 decimals. The v2 build's approximate pin (27.8225, -82.7247) was ~150 m off.
+  geo: { lat: 27.82206, lng: -82.72619 },
+  plusCode: '76VVR7CF+RG',
   licence: 'CFC1430367',
   licenceLabel: 'Florida Certified Plumbing Contractor',
   licenceLookup: 'https://www.myfloridalicense.com/wl11.asp',
@@ -43,6 +45,10 @@ export const SITE = {
     instagram: 'https://www.instagram.com/plumbingbypaulllc',
     instagramHandle: '@plumbingbypaulllc',
     instagramPosts: 740, // read 13 Nov 2026; refresh at build (STICKY 9 note)
+    // Third-party profiles of this same business, for schema sameAs only (never shown as badges). BBB: found by BBB's own
+    // search 15 Nov 2026 (Plumbing By Paul LLC, (727) 709-2552, A+, not accredited). Yelp: claimed page, research/reviews/REVIEWS.md.
+    bbb: 'https://www.bbb.org/us/fl/seminole/profile/plumber/plumbing-by-paul-llc-0653-90308753',
+    yelp: 'https://www.yelp.com/biz/plumbing-by-paul-seminole-2',
   },
   google: {
     placeId: 'ChIJ__-LnAz8wogRZE-DlVtycL8',

@@ -14,8 +14,9 @@ import { abs, BUSINESS_ID } from '../lib/schema';
 const towns = ['St. Petersburg', 'Clearwater', 'Seminole', 'Largo', 'Pinellas Park', 'Gulfport', 'Kenneth City', 'South Pasadena', 'St. Pete Beach', 'Treasure Island', 'Madeira Beach', 'Dunedin', 'Palm Harbor', 'Safety Harbor', 'Tarpon Springs', 'Oldsmar'];
 const ld = {
   '@context': 'https://schema.org', '@type': 'Service', name: 'Plumbing in Pinellas County, FL', serviceType: 'Plumber', url: abs('/service-areas'),
+  description: 'Residential and commercial plumbing across Pinellas County, FL, from one family-owned shop in St. Petersburg: water heaters, drains, leaks, sewer lines and repiping.',
   provider: { '@id': BUSINESS_ID() },
-  areaServed: [{ '@type': 'AdministrativeArea', name: 'Pinellas County, FL' }, ...towns.map((name) => ({ '@type': 'City', name }))],
+  areaServed: [{ '@type': 'AdministrativeArea', name: 'Pinellas County, FL' }, ...towns.map((name) => ({ '@type': 'City', name: `${name}, FL` }))],
 };
 ---
 <Base

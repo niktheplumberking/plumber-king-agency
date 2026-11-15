@@ -15,6 +15,9 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => !/\/(thank-you|404)$/.test(page.replace(/\/$/, '')),
+      // lastmod = the content date of this build: SITEMAP_LASTMOD (YYYY-MM-DD) when set, else the build day. At launch every
+      // page is new, so the build day is true; later, set SITEMAP_LASTMOD only when page content really changed.
+      lastmod: new Date(process.env.SITEMAP_LASTMOD || new Date().toISOString().slice(0, 10)),
     }),
   ],
   image: { responsiveStyles: false },

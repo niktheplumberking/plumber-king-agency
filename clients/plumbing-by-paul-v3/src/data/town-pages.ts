@@ -93,7 +93,7 @@ export const TOWN_PAGES: Record<string, TownPageData> = {
       items: [
         { q: 'Do you serve Clearwater?', a1: 'Yes.', a2: 'Clearwater is part of our regular Pinellas County service area, covered from our shop in St. Petersburg.' },
         { q: 'Do you charge extra to come to Clearwater?', a1: 'Stand-in: Paul to confirm.', a2: 'The answer will start with yes or no. Until then, ask when you call (727) 709-2552.', standIn: true },
-        { q: 'Are you licensed to work in Clearwater?', a1: 'Yes.', a2: 'Plumbing By Paul LLC holds Florida certified plumbing contractor licence CFC1430367, which is valid statewide.' },
+        { q: 'Are you licensed to work in Clearwater?', a1: 'Yes.', a2: 'Plumbing By Paul LLC holds Florida certified plumbing contractor license CFC1430367, which is valid statewide.' },
         { q: 'Can you help after storm or flood damage?', a1: 'Yes.', a2: "We've worked on raised and rebuilt homes along the coast. Call us before turning the water heater or gas back on after a flood." },
       ],
     },
@@ -166,7 +166,7 @@ export const TOWN_PAGES: Record<string, TownPageData> = {
         { q: 'Do you serve Seminole?', a1: 'Yes.', a2: 'Seminole is next door to our shop at 5565 64th Way N in St. Petersburg, and it is part of our everyday Pinellas County area.' },
         { q: 'Do you charge extra to come to Seminole?', a1: 'Stand-in: Paul to confirm.', a2: 'The answer will start with yes or no. Until then, ask when you call (727) 709-2552.', standIn: true },
         { q: 'Do I need a permit for plumbing work in Seminole?', a1: 'Some jobs do, a repipe for example.', a2: 'Who issues it depends on whether the home is inside city limits (City of Seminole) or in unincorporated Pinellas County. When a permit is needed, we pull it.' },
-        { q: 'Are you licensed for work in Seminole?', a1: 'Yes.', a2: 'Plumbing By Paul LLC holds Florida certified plumbing contractor licence CFC1430367. A certified licence covers the whole state.' },
+        { q: 'Are you licensed for work in Seminole?', a1: 'Yes.', a2: 'Plumbing By Paul LLC holds Florida certified plumbing contractor license CFC1430367. A certified license covers the whole state.' },
       ],
     },
     nearby: [{ name: 'St. Petersburg', href: '/service-areas' }, { name: 'Clearwater', href: '/service-areas/clearwater-fl' }, { name: 'Largo' }, { name: 'Pinellas Park' }, { name: 'Madeira Beach' }],

@@ -87,7 +87,74 @@ The inline script in `Base.astro` sets classes on `<html>` before first paint:
 - If the module never boots, a 3.5 s safety in `Base.astro` removes `motion`, so nothing stays hidden.
 - Back/forward navigation never shows the loader or the curtain.
 
-## 2. Sections, tiers and the three groups
+## 1b. Round 4 (15 Nov 2026): United's scroll UX on Paul's UI (current model)
+
+Nick on round 3: reveals were so fast they never visibly happened (the "Who shows up?" crew chips never animated), the site
+felt preloaded. Ask: copy United Plumbing's scroll UX onto Paul's UI; keep his 3 priority groups as small delays; keep the
+UI and the round-3 parallax; no element may flash before its entrance. Plan: `designs/plumbing-by-paul/ROUND4-MOTION-PLAN.md`
+(+ second-review corrections). Proof: `designs/plumbing-by-paul/v3-build/r4/README.md`.
+
+**Removed** (round 3): the band model (one trigger per 0.7-viewport band), `START 'top 105%'`, the 2.5x speed-up for late
+bands, the Lenis-velocity speed-up (up to 5x), the fling instant-finish (>= 45 px/frame) and the counter speed-up.
+Markup is unchanged: the round-3 `data-t` / `data-fx` / `data-stagger` / `data-g` attributes are classified centrally in
+motion.ts (`fxOf()` = effect, `groupOf()` = group). No component was edited.
+
+**Model** (United's `initReveals`): every element has its OWN `once` ScrollTrigger and plays when it reaches it, never
+faster, never skipped. Exceptions: a **section head** (the headline's `.shead`, else the headline's parent: eyebrow,
+headline, and the lead/buttons starting within half a viewport of it) shares ONE trigger, ordered inside by group (Nick
+round 3: controlled, not everything moving); an element whose box is already **above** the viewport when its tween is built
+is set to its end state (anchor jump, reload mid-page); anything on screen or below animates.
+
+| Trigger (United) | Used for |
+|---|---|
+| `top 88%` | single elements, section heads, split headlines |
+| `top 85%` | `data-stagger` groups (rails, grids, lists) |
+| `top 92%` | `data-draw` underlines, swoosh edges |
+| `top 90%` | counters, the water meter |
+
+**Effects (United's table, `fromTo` with explicit end values, `immediateRender: true`):**
+
+| Effect | From -> to | Duration, ease | Paul elements (mapping in `fxOf()`) |
+|---|---|---|---|
+| `lines` | each line `yPercent 110, rotate 2` -> 0, in a mask | 0.9 s, 0.1 s/line, `back.out(1.4)` (hero 0.85 s, 0.12 s/line) | every `data-t="2"` headline |
+| `up` | `y 60`, opacity 0 | 1.0 s `power3.out` (hero 0.9) | eyebrows (t1), leads/body/buttons (t3), small cards, `rise`, stagger lists/grids |
+| `left` / `right` | `x -80` / `x 80` (phones +-40) | 1.0 s `power3.out` | t4 cards/panels that are a side column (< 60 % of the section wide, centre left of 45 % / right of 55 %); `slide` |
+| `scale` | `scale 0.92`, opacity 0 | 1.0 s `power3.out` | big centred t4 blocks (>= 200 px tall), `frame` photos inside a stagger grid |
+| `clip` | `clip-path inset(-5% -5% 100% -5%)` -> `inset(-5%)`, + 0.3 s fade-in | 1.2 s `power3.inOut` (hero 1.1) | every `frame` photo: the frame opens top to bottom as one piece; negative insets keep the white ring and shadow; clip removed at the end; the photo itself is never transformed |
+| `pop` | `scale 0.6, y 20`, opacity 0 | 0.6 s `back.out(2.2)` | t5 chips, patches, pills, seals; `pop` |
+| stagger children | the group's effect, children 0.09 s apart | 0.9 s each | `data-stagger` (crew chips: `pop`, 6 chips over 0.45 s) |
+| `toss` | `y 60`, CSS tilt +-4 deg | 1.0 s `power3.out` | tilted snapshots |
+| `spin` / `write` / `fade` | as before, United durations | 0.9 / 0.9 / 1.0 s | stamp ring / script word / backgrounds |
+| `nudge` | `y 24` (plain load: never hidden, LCP) | 0.9 s | the hero lead only; outside a hero it is `up` |
+
+**Nick's groups = small delays on top of each element's own trigger** (`G_DELAY`): **G1 +0** (headline, lead/body,
+main photo, big cards), **G2 +0.15 s** (eyebrow, pills, buttons, chips, captions, patches, small cards, lists),
+**G3 +0.3 s** (seals, stamps, script flourishes, underlines, swooshes, counters, meters). Inside a section head, items of
+one group start 0.1 s apart in DOM order (max +0.2 s). `groupOf()` is unchanged from round 3; `data-g` still overrides.
+
+**Hero** (United `heroTimeline`): one ordered timeline at the handoff: items in group order, 0.12 s apart, a split
+headline holds the next item for 0.12 s per line, each new group adds 0.15 s, G3 (stripe underline 0.8 s, swoosh 0.9 s)
+last. Under the loader or curtain the header settles first (top bar fade 0.5 s; logo tab, nav items and header buttons
+drop `y -24`, 0.6 s, 0.05 s apart); the hero starts 0.25 s in. On in-site navigation both run **1.5x**. On a plain load
+there is no header beat (it would flash) and the LCP photo is not animated.
+
+**Build**: the hero at the handoff; everything else right after it, in idle slices of ~12 ms (tweens and SplitText line
+splits up front, like United, so no layout work happens mid-scroll), then signatures, then the parallax in its own slice.
+Pre-hide: CSS `opacity 0` on every `[data-t]` until `.m-built` (a stagger group hides its children through its own
+opacity); `.m-built` is added in the same task that applies the tween's start state, so nothing flashes. Exceptions (LCP):
+`frame` and `nudge` are not CSS-hidden; below the fold their start state is applied when built; a frame on screen at build
+time is left exactly as it is. Every tween and trigger is registered, so the first Tab finishes them all.
+A trigger nested inside another animated element (a patch on a review card) subtracts its hosts' current `y` at every
+refresh, so a host still at its y 60 start offset does not push the nested trigger point 60 px down.
+
+**Curtain**: lifts at once on in-site navigation (it no longer waits for fonts); the hero is hidden while the panel still
+covers it and its timeline is built when the fonts are in (max 0.7 s, normally cached).
+
+**Lenis**: United exactly, `lerp 0.1` (round 3 had 0.085); no velocity listener.
+**Parallax**: unchanged from round 3 (section 4b), except the toggling `will-change: transform` was dropped.
+Entrances never touch `yPercent` (the parallax channel on `[data-px]` elements) and never clear `transform` on them.
+
+## 2. Sections, tiers and the three groups (markup API; the timing below is round 3 history, see 1b)
 
 Mark every content section with `data-m-section`. Inside it, give each animated element a tier (it picks the default
 effect and, with the element's role, its priority group):
@@ -117,11 +184,11 @@ effect and, with the element's role, its priority group):
 - One ease: `power3.out` for every entrance, `power2.out` for pure fades, `back.out(1.3)` only for G3 seals/stamps.
   Distances are small (16-28 px). No bouncing text, no loops.
 - `SectionHead` already wires eyebrow t1 (G2), H2 t2 (G1) and lead t3 (G1). `Seal` is t5 (G3; `t={false}` turns it off).
-- Long sections: an element more than 0.7 viewport below the section top gets its own band and trigger, so a photo at
+- Long sections (round 3, removed in round 4): an element more than 0.7 viewport below the section top gets its own band and trigger, so a photo at
   the bottom of a tall section reveals as *it* enters.
-- **Triggers**: a band plays when its first element's top reaches **105 % of the viewport height** (i.e. as it enters,
+- **Triggers (round 3, removed in round 4)**: a band plays when its first element's top reaches **105 % of the viewport height** (i.e. as it enters,
   a few px early), immediately: it never waits for another band and never waits for photos to decode.
-- **Fast scrolling never shows empty space** (three guards in motion.ts): a band that triggers when it is already above
+- **Fast scrolling (round 3, removed in round 4)** (three guards in motion.ts): a band that triggers when it is already above
   55 % of the viewport plays 2.5x faster; one that has already left the viewport is set to its end state at once; while
   bands are playing, the Lenis velocity speeds them up (up to 5x above 20 px/frame), and a fling (>= 45 px/frame,
   ~2700 px/s) finishes running bands at once and shows bands that trigger during it already finished.
@@ -182,9 +249,8 @@ You never call either one. Use `Base.astro`; `loader={false}` turns the loader o
 
 ## 3b. Lenis and ScrollTrigger
 
-- `new Lenis({ lerp: 0.085, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 } })`: United's
-  live settings with a slightly softer glide (lerp 0.085 vs 0.1; Nick round 3: "softer scroll"). The Lenis velocity
-  also feeds the fast-scroll guard (section 2). Lenis' lerp is frame-rate independent (it damps by elapsed time), so it feels the same at 60 and 120 Hz.
+- `new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 } })`: United's
+  live settings exactly (round 4; round 3 used lerp 0.085 and a velocity-driven fast-scroll guard, both removed). Lenis' lerp is frame-rate independent (it damps by elapsed time), so it feels the same at 60 and 120 Hz.
   Touch stays native (iOS momentum), like United.
 - One clock: `gsap.ticker` drives `lenis.raf`, `lenis.on('scroll', ScrollTrigger.update)`, `lagSmoothing(0)`. Lenis
   scrolls the real window, so no `scrollerProxy` is needed.

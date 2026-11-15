@@ -1,5 +1,6 @@
 // Motion system (read MOTION.md first). One grammar for every page:
-//   loader -> hero handoff, page curtain, 3-group section entrances, parallax depth, signature moments, Lenis smooth scroll.
+//   loader -> hero handoff, page curtain, United-style per-element scroll reveals with Nick's 3 group delays (round 4),
+//   parallax depth, signature moments, Lenis smooth scroll.
 // Everything here is progressive: without JS, or with prefers-reduced-motion, the page is complete and static.
 // <html> classes are decided before first paint in Base.astro: .motion (animate) | .no-motion, .intro (loader this visit),
 // .pt-in (curtain is covering the page after an in-site click).
@@ -14,44 +15,71 @@ declare global { interface Window { __pbpMotion?: boolean; __pbpLenis?: Lenis } 
 const html = document.documentElement;
 const MOTION = html.classList.contains('motion');
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-/* Timing grammar, round 3 (MOTION.md section 2). A section is revealed in THREE PRIORITY GROUPS, not one thing at a time:
- *   G1 headline + lead/body + main photo / main card      (starts at 0)
- *   G2 eyebrow, pills, buttons, chips, captions, patches, small cards, list rows, snapshots   (starts GROUP_GAP later)
- *   G3 seals, stamps, script flourishes, underlines, swooshes, counters, decorative shapes   (GROUP_GAP after G2)
- * Items of one group move together (DOM order, ITEM_GAP apart, capped); lists/grids inside a group stagger by at most
- * SIB_GAP. A band is fully revealed ~0.9-1.1 s after it triggers, and it triggers as it ENTERS the viewport. */
-const EASE = 'power3.out';          // every entrance
-const SOFT = 'power2.out';          // opacity-only fades
-const ACCENT = 'back.out(1.3)';     // G3 seals/stamps only: a small settle, never a bounce
-const GROUP_GAP = 0.18;             // G1 -> G2 -> G3 start offsets (hero: HERO_GAP)
-const HERO_GAP = 0.24;
-const ITEM_GAP = 0.05;              // items of one group, DOM order
-const ITEM_SPAN = 0.15;             // ...never more than this in total
-const LINE_GAP = 0.06;              // headline lines
-const SIB_GAP = 0.05;               // children of one data-stagger group (cards, chips, rows)
-const SIB_SPAN = 0.25;              // a group's whole stagger never spans longer than this
-const DUR = { slide: 0.55, lines: 0.7, rise: 0.6, media: 0.75, nudge: 0.7, fade: 0.6, frame: 0.85, toss: 0.65, pop: 0.5, spin: 0.6, write: 0.6 };
-const DEFAULT_FX: Record<string, string> = { '1': 'slide', '2': 'lines', '3': 'rise', '4': 'rise', '5': 'pop' };
-const START = 'top 105%';           // a band plays as its first element reaches the viewport edge (5 % early: MOTION.md 2)
+/* Round 4 (MOTION.md section 2): United Plumbing's scroll UX on Paul's UI. Every element reveals on its OWN trigger as it
+ * comes into view (United's per-element model), with United's effects, durations and easing. Nick's three priority groups
+ * are small delays on top of that trigger, so when several things enter together the message leads:
+ *   G1 headline, lead/body, main photo, big cards        +0
+ *   G2 eyebrow, pills, buttons, chips, captions, patches  +0.15 s
+ *   G3 seals, stamps, underlines, swooshes, counters      +0.3 s
+ * A section head (eyebrow + headline + lead + buttons) shares ONE trigger and is ordered inside by its groups; photos,
+ * rails, grids and cards keep their own triggers. No fast-scroll speed-ups, no instant finishes: an element only skips
+ * its entrance when it is already above the viewport when its tween is built (anchor jump, reload mid-page). */
+const EASE = 'power3.out';          // loader, curtain mark, header bits
+const SOFT = 'power2.out';          // header top-bar fade
+const ACCENT = 'back.out(1.3)';     // loader seal
+const G_DELAY = [0, 0.15, 0.3];     // G1 / G2 / G3
+const HEAD_STEP = 0.1;              // items of one group inside a section head, DOM order
+const START = { one: 'top 88%', group: 'top 85%', draw: 'top 92%', count: 'top 90%' }; // United's trigger points
+const KID_GAP = 0.09;               // children of a data-stagger group (United)
+const LINE_GAP = 0.1;               // headline lines on scroll (United data-split); hero 0.12
+const HERO_STEP = 0.12;             // hero items (United heroTimeline)
+type Fx = 'up' | 'left' | 'right' | 'scale' | 'fade' | 'clip' | 'pop' | 'lines' | 'toss' | 'spin' | 'write' | 'nudge';
+/** United's effect table. `d` = duration on scroll, `h` = duration in the hero. */
+const FX: Record<string, { d: number; h: number; ease: string }> = {
+  up: { d: 1, h: 0.9, ease: 'power3.out' }, left: { d: 1, h: 0.9, ease: 'power3.out' }, right: { d: 1, h: 0.9, ease: 'power3.out' },
+  scale: { d: 1, h: 0.9, ease: 'power3.out' }, fade: { d: 1, h: 0.9, ease: 'power3.out' }, nudge: { d: 0.9, h: 0.9, ease: 'power3.out' },
+  clip: { d: 1.2, h: 1.1, ease: 'power3.inOut' }, pop: { d: 0.6, h: 0.6, ease: 'back.out(2.2)' },
+  lines: { d: 0.9, h: 0.85, ease: 'back.out(1.4)' }, toss: { d: 1, h: 0.9, ease: 'power3.out' },
+  spin: { d: 0.9, h: 0.9, ease: 'power3.out' }, write: { d: 0.9, h: 0.9, ease: 'power2.inOut' },
+};
+const KID_DUR = 0.9;                // United stagger children
+const DRAW_DUR = 1.2;               // underlines (United 1.6 for long drawings; ours are short)
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 
 const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel) as NodeListOf<any>) as T[];
 const shown = (el: Element) => el.getClientRects().length > 0 || getComputedStyle(el).display === 'contents';
+const phone = () => window.innerWidth < 640;
 
 /* ------------------------------------------------------------------ entrances */
 
 /** True on a plain load (no loader, no curtain): the hero paints uncovered, so its photo must not be hidden (LCP). */
 let heroUncovered = false;
 
-/** One effect on one target. Every tween is a from()/immediateRender so the start state is applied the moment it is built.
- *  Effects write transform/opacity/clip-path only (never the CSS `translate` property: that one belongs to parallax) and
- *  always end exactly on the element's resting CSS state, so clearing the inline values afterwards changes nothing. */
-function effect(t: HTMLElement, fx: string, tier: string, i = 0): gsap.core.Timeline {
+/** Everything built, so the first Tab can finish it all (QA round 2): timelines and their triggers. */
+const built: gsap.core.Timeline[] = [];
+const triggers: ScrollTrigger[] = [];
+
+/** Resting state after an entrance: inline values removed, so hover transitions and CSS transforms are untouched.
+ *  An element that drifts with the parallax ([data-px], GSAP yPercent on itself) keeps its transform. */
+function settle(els: Element[]) {
+  els.forEach((e) => gsap.set(e, { clearProps: e.hasAttribute('data-px') ? 'opacity,visibility,clipPath,transition' : 'transform,opacity,visibility,clipPath,transition' }));
+}
+
+/** One effect on one target, as fromTo with explicit end values and immediateRender, so the start state is applied the
+ *  moment it is built (United). Effects write transform (x/y/scale/rotation, never yPercent: that is the parallax's),
+ *  opacity and clip-path only; photos are never transformed (a frame is clipped as a whole, ring and shadow included). */
+function effect(t: HTMLElement, fx: Fx, hero: boolean, i = 0, dur?: number): gsap.core.Timeline {
   const tl = gsap.timeline();
+  const spec = FX[fx] ?? FX.up;
+  const d = dur ?? (hero ? spec.h : spec.d);
+  const ease = spec.ease;
+  const x = phone() ? 40 : 80;
+  const go = (from: gsap.TweenVars, to: gsap.TweenVars) => tl.fromTo(t, from, { ...to, duration: d, ease, immediateRender: true }, 0);
   switch (fx) {
     case 'lines': {
       const hl = $$('.hl', t);
+      const gap = hero ? 0.12 : LINE_GAP;
       if (hl.length) {
         // The hero headline has explicit line spans: mask each, then unwrap so underlines and descenders are free.
         const inner = hl.map((line) => {
@@ -62,81 +90,47 @@ function effect(t: HTMLElement, fx: string, tier: string, i = 0): gsap.core.Time
           return s;
         });
         tl.set(t, { autoAlpha: 1 });
-        tl.from(inner, { yPercent: 105, duration: DUR.lines, ease: EASE, stagger: LINE_GAP, immediateRender: true }, 0);
+        tl.fromTo(inner, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: d, ease, stagger: gap, immediateRender: true }, 0);
         tl.add(() => hl.forEach((line, k) => { line.classList.remove('m-line'); while (inner[k].firstChild) line.insertBefore(inner[k].firstChild!, inner[k]); inner[k].remove(); }));
       } else {
-        // Split now (fonts are in before a band builds, so these are the real lines); revert when done.
         const split = SplitText.create(t, { type: 'lines', mask: 'lines', linesClass: 'm-l' });
         tl.set(t, { autoAlpha: 1 });
-        tl.from(split.lines, { yPercent: 105, duration: DUR.lines, ease: EASE, stagger: LINE_GAP, immediateRender: true }, 0);
+        tl.fromTo(split.lines, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: d, ease, stagger: gap, immediateRender: true }, 0);
         tl.add(() => split.revert());
       }
       break;
     }
-    case 'slide': tl.from(t, { x: -16, autoAlpha: 0, duration: DUR.slide, ease: EASE, immediateRender: true }); break;
+    case 'left': go({ x: -x, autoAlpha: 0 }, { x: 0, autoAlpha: 1 }); break;
+    case 'right': go({ x, autoAlpha: 0 }, { x: 0, autoAlpha: 1 }); break;
+    case 'scale': go({ scale: 0.92, autoAlpha: 0 }, { scale: 1, autoAlpha: 1 }); break;
+    case 'fade': go({ autoAlpha: 0 }, { autoAlpha: 1 }); break;
+    case 'pop': go({ scale: 0.6, y: 20, autoAlpha: 0 }, { scale: 1, y: 0, autoAlpha: 1 }); break;
     // LCP-safe on a plain load: moves but never hides (the hero's biggest text block must paint early). Under the loader or
-    // the curtain it has already painted (LCP is taken), so it fades in with its group.
-    case 'nudge': tl.from(t, { y: 16, ...(heroUncovered ? {} : { autoAlpha: 0 }), duration: DUR.nudge, ease: EASE, immediateRender: true }); break;
-    case 'fade': tl.from(t, { autoAlpha: 0, duration: DUR.fade, ease: SOFT, immediateRender: true }); break;
-    case 'frame': {
-      // The frame (border ring, shadow, tint) rises in while its photo opens from a rounded inset and settles from 1.04.
-      // The photo is written through the individual CSS `scale` property (by hand: GSAP's `scale` would rewrite `transform`
-      // and wipe a CSS transform on the img), so it multiplies with, never replaces, the img's own CSS. It ends at scale 1
-      // and clip inset(0) on the img itself, both "no change", so removing them afterwards moves nothing.
-      const img = t.querySelector('img');
-      if (heroUncovered && t.closest('[data-m-hero]')) { tl.set(t, { autoAlpha: 1 }); break; } // plain load: the LCP photo stays put
-      // fromTo: a below-the-fold frame is pre-hidden inline (sections()), so a from() would tween 0 -> 0.
-      tl.fromTo(t, { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: DUR.media * 0.8, ease: EASE, immediateRender: true, clearProps: t.hasAttribute('data-px') ? 'opacity,visibility' : 'transform,opacity,visibility' }, 0);
-      if (img) {
-        const p = { k: 0 };
-        const paint = () => {
-          const k = p.k, i = 6 * (1 - k), r = 20 * (1 - k);
-          img.style.clipPath = `inset(${i.toFixed(3)}% round ${r.toFixed(2)}px)`;
-          img.style.scale = String(1 + 0.04 * (1 - k));
-        };
-        paint();
-        tl.to(p, { k: 1, duration: DUR.frame, ease: EASE, onUpdate: paint, onComplete: () => { img.style.clipPath = ''; img.style.scale = ''; } }, 0);
-      }
+    // the curtain it has already painted (LCP is taken), so it fades in on its turn.
+    case 'nudge': go({ y: 24, autoAlpha: heroUncovered ? 1 : 0 }, { y: 0, autoAlpha: 1 }); break;
+    case 'clip': {
+      // United's clip (opens top to bottom), with negative insets so the frame's white ring and shadow (drawn outside the
+      // box) are inside the clip at the end; the clip is removed afterwards. A quick fade hides the -5 % sliver at the start.
+      if (hero && heroUncovered) { tl.set(t, { autoAlpha: 1 }); break; } // plain load: the LCP photo stays put
+      tl.fromTo(t, { clipPath: 'inset(-5% -5% 100% -5%)' }, { clipPath: 'inset(-5% -5% -5% -5%)', duration: d, ease, immediateRender: true }, 0);
+      tl.fromTo(t, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: 'power1.out', immediateRender: true }, 0);
       break;
     }
     case 'toss': {
-      // Tilted snapshots: settle into their CSS tilt from a few degrees off, alternating sides. No overshoot.
-      tl.from(t, { y: 24, rotation: i % 2 ? '-=4' : '+=4', autoAlpha: 0, duration: DUR.toss, ease: EASE, immediateRender: true });
+      // Tilted snapshots: rise and settle into their CSS tilt from 4 degrees off, alternating sides. No overshoot.
+      const r = Number(gsap.getProperty(t, 'rotation')) || 0;
+      go({ y: 60, rotation: r + (i % 2 ? -4 : 4), autoAlpha: 0 }, { y: 0, rotation: r, autoAlpha: 1 });
       break;
     }
-    case 'pop': tl.from(t, { scale: 0.75, rotation: '-=6', autoAlpha: 0, duration: DUR.pop, ease: ACCENT, immediateRender: true }); break;
-    case 'spin': tl.from(t, { scale: 0.8, rotation: '-=60', autoAlpha: 0, duration: DUR.spin, ease: EASE, immediateRender: true }); break;
-    case 'write': tl.fromTo(t, { clipPath: 'inset(-20% 100% -20% -5%)', autoAlpha: 1 }, { clipPath: 'inset(-20% -5% -20% -5%)', duration: DUR.write, ease: 'power2.inOut', immediateRender: true, clearProps: 'clipPath' }); break;
-    case 'float': // retired: no loops in the eye line. Behaves like rise.
-    case 'rise':
-    default: {
-      const media = tier === '4';
-      tl.from(t, { y: media ? 28 : 20, autoAlpha: 0, duration: media ? DUR.media : DUR.rise, ease: EASE, immediateRender: true });
-    }
+    case 'spin': { const r = Number(gsap.getProperty(t, 'rotation')) || 0; go({ scale: 0.6, rotation: r - 60, autoAlpha: 0 }, { scale: 1, rotation: r, autoAlpha: 1 }); break; }
+    case 'write': go({ clipPath: 'inset(-20% 100% -20% -5%)', autoAlpha: 1 }, { clipPath: 'inset(-20% -5% -20% -5%)' }); break;
+    case 'up':
+    default: go({ y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1 });
   }
   return tl;
 }
 
-/** Build the entrance of one [data-t] element (or of its children, with data-stagger). Returns a timeline positioned at 0. */
-function entrance(el: HTMLElement): gsap.core.Timeline {
-  const tl = gsap.timeline();
-  const tier = el.dataset.t || '3';
-  const fx = el.dataset.fx || DEFAULT_FX[tier];
-  const stagger = el.hasAttribute('data-stagger');
-  // Staggered groups animate their rendered children; a child with its own data-t keeps its own tier (skipped here),
-  // a child with its own data-fx (a frame photo in a bento) uses that effect inside the group's stagger.
-  const kids = stagger ? (Array.from(el.children) as HTMLElement[]).filter((c) => !c.hasAttribute('data-t') && shown(c)) : [el];
-  if (stagger) gsap.set(el, { autoAlpha: 1 });
-  // A CSS `transition: transform` (buttons, patches, cards) fights GSAP's per-frame writes: off while the entrance runs.
-  const moved = Array.from(new Set<Element>([el, ...kids]));
-  gsap.set(moved, { transition: 'none' });
-  const gap = kids.length > 1 ? Math.min(SIB_GAP, SIB_SPAN / (kids.length - 1)) : 0;
-  kids.forEach((k, i) => tl.add(effect(k, (stagger && k.dataset.fx) || fx, tier, i), i * gap));
-  tl.add(() => { gsap.set(moved, { clearProps: 'transition' }); });
-  return tl;
-}
-
-/* ------------------------------------------------------------------ the three priority groups */
+/* ------------------------------------------------------------------ mapping: markup -> United effect + Nick's group */
 
 /** Seals, stamps, medals, number stickers: decorative accents (G3). */
 const ACCENT_SEL = '.seal, .stamp, .medal, .nst';
@@ -145,13 +139,14 @@ const isShape = (el: HTMLElement) => !el.textContent?.trim() && !el.querySelecto
 /** A caption / footnote block (small print under a photo or a grid), not body copy. */
 const isCaption = (el: HTMLElement) => el.matches('.caption, .label, figcaption') || (!!el.querySelector(':scope > .caption') && !el.querySelector('p.body, p.lead, h2, h3'));
 const isCta = (el: HTMLElement) => el.classList.contains('btn') || (!!el.querySelector('.btn') && !el.matches('p, h1, h2, h3, h4'));
+const kidsOf = (el: HTMLElement) => (Array.from(el.children) as HTMLElement[]).filter((c) => !c.hasAttribute('data-t') && shown(c));
 
 /** Which priority group an element belongs to (1, 2 or 3). `data-g="1|2|3"` on the element overrides the mapping. */
 function groupOf(el: HTMLElement): 1 | 2 | 3 {
   const g = el.dataset.g;
   if (g === '1' || g === '2' || g === '3') return Number(g) as 1 | 2 | 3;
   const t = el.dataset.t || '3';
-  const fx = el.dataset.fx || DEFAULT_FX[t];
+  const fx = el.dataset.fx;
   const stagger = el.hasAttribute('data-stagger');
   if (fx === 'spin' || fx === 'write' || el.matches(ACCENT_SEL) || isShape(el)) return 3;
   if (t === '5') return el.matches('.script') && !stagger ? 3 : 2;   // script flourish = G3; chips, captions, patches, pills = G2
@@ -161,149 +156,188 @@ function groupOf(el: HTMLElement): 1 | 2 | 3 {
   // Tier 4: the main photo / main card is G1; secondary snapshots and small cards/rows are G2.
   if (fx === 'toss') return 2;
   if (stagger) {
-    const kids = (Array.from(el.children) as HTMLElement[]).filter((c) => !c.hasAttribute('data-t') && shown(c));
+    const kids = kidsOf(el);
     const avg = kids.reduce((s, c) => s + c.getBoundingClientRect().height, 0) / Math.max(1, kids.length);
     return avg >= 160 || kids.some((c) => c.dataset.fx === 'frame') ? 1 : 2;
   }
   return el.getBoundingClientRect().height >= 120 ? 1 : 2;
 }
 
-/** A band's elements as one timeline: three groups, each starting `gap` after the previous non-empty group started.
- *  Inside a group items start ITEM_GAP apart in DOM order (capped at ITEM_SPAN). `extra` adds G3 tweens (underlines). */
-function choreograph(els: HTMLElement[], gap = GROUP_GAP, extra: (tl: gsap.core.Timeline, at: number) => void = () => {}): gsap.core.Timeline {
-  const tl = gsap.timeline({ paused: true });
-  built.push(tl);
-  const groups: HTMLElement[][] = [[], [], []];
-  els.forEach((el) => groups[groupOf(el) - 1].push(el));
-  let at = 0, started = false;
-  groups.forEach((g, gi) => {
-    const hasExtra = gi === 2;
-    if (!g.length && !hasExtra) return;
-    if (started) at += gap;
-    started = started || g.length > 0;
-    const step = g.length > 1 ? Math.min(ITEM_GAP, ITEM_SPAN / (g.length - 1)) : 0;
-    g.forEach((el, k) => tl.add(entrance(el), at + k * step));
-    if (hasExtra) extra(tl, at);
+/** A side column (a card or panel in the left or right part of its section): United's left/right slide. */
+function sideOf(el: HTMLElement, sec: HTMLElement): 'left' | 'right' | null {
+  const r = el.getBoundingClientRect(), s = sec.getBoundingClientRect();
+  if (!s.width || r.width > s.width * 0.6) return null;
+  const c = (r.left + r.width / 2 - s.left) / s.width;
+  return c < 0.45 ? 'left' : c > 0.55 ? 'right' : null;
+}
+
+/** The United effect for an existing `data-t` / `data-fx` (MOTION.md section 2, mapping table). `kid` = inside a stagger. */
+function fxOf(el: HTMLElement, sec: HTMLElement, hero: boolean, kid = false): Fx {
+  const t = el.dataset.t || '3';
+  const f = el.dataset.fx;
+  if (f === 'frame') return kid ? 'scale' : 'clip';                 // photos: the frame clips open (in a grid: scales in)
+  if (f === 'nudge') return hero ? 'nudge' : 'up';
+  if (f === 'lines' || (!f && t === '2')) return 'lines';           // headlines: masked lines, back.out(1.4)
+  if (f === 'toss' || f === 'spin' || f === 'write' || f === 'pop' || f === 'fade') return f;
+  if (f === 'slide') return 'left';
+  if (t === '5') return 'pop';                                      // chips, patches, pills, seals
+  if (t === '4' && !hero && !kid && !el.hasAttribute('data-stagger')) {
+    const s = sideOf(el, sec);
+    if (s) return s;                                                // side columns slide in from their side
+    return el.getBoundingClientRect().height >= 200 ? 'scale' : 'up'; // big centred cards/maps settle in scale
+  }
+  return 'up';                                                      // eyebrows, leads, body, buttons, lists, small cards
+}
+
+/** The entrance of one [data-t] element (or of its children, with data-stagger), positioned at 0. */
+function entrance(el: HTMLElement, sec: HTMLElement, hero = false, pre?: Fx | null): gsap.core.Timeline {
+  const tl = gsap.timeline();
+  const stagger = el.hasAttribute('data-stagger');
+  const kids = stagger ? kidsOf(el) : [el];
+  if (stagger) gsap.set(el, { autoAlpha: 1 });
+  // A CSS `transition: transform` (buttons, patches, chips, cards) fights GSAP's per-frame writes: off while it runs.
+  const moved = Array.from(new Set<Element>([el, ...kids]));
+  gsap.set(moved, { transition: 'none' });
+  const own = stagger ? fxOf(el, sec, hero) : null;
+  kids.forEach((k, i) => {
+    const fx = stagger ? (k.dataset.fx ? fxOf(k, sec, hero, true) : own!) : (pre ?? fxOf(el, sec, hero));
+    tl.add(effect(k, fx, hero, i, stagger && fx !== 'lines' ? KID_DUR : undefined), i * (stagger ? KID_GAP : 0));
   });
+  tl.add(() => settle(moved));
   return tl;
 }
 
-/* Keyboard users get the finished page (QA round 2). Pre-hidden content is opacity 0 but focusable: Tab focused an
- * invisible link, the scroll fired its band, the entrance set visibility: hidden and focus fell to <body>. The first Tab,
- * or focus landing on content that is not revealed yet, ends every entrance at once and stops the rest. */
-const built: gsap.core.Timeline[] = [];
-const bandSTs: ScrollTrigger[] = [];
+/* Keyboard users get the finished page (QA round 2). Pre-hidden content is opacity 0 but focusable: the first Tab, or focus
+ * landing on content that is not revealed yet, ends every entrance at once and stops the rest. */
 let kbd = false;
 function keyboardRelease() {
   if (kbd) return; kbd = true;
-  bandSTs.forEach((st) => st.kill());
+  triggers.forEach((st) => st.kill());
   built.forEach((tl) => tl.progress(1));
   $$('[data-m-section] [data-t]').forEach((el) => el.classList.add('m-built'));
-  gsap.set($$('[data-m-section] [data-fx="frame"]'), { autoAlpha: 1 });
+  settle($$('[data-m-section] [data-t], [data-m-section] [data-stagger] > *').filter((e) => parseFloat(getComputedStyle(e).opacity) < 1 || getComputedStyle(e).visibility === 'hidden'));
 }
 
-/* Fast scrolling never shows empty space (round 3). Three guards:
- * 1. a band plays the moment it enters (START), never waits for another band, never waits for photos to decode;
- * 2. a band that only triggers when it is already well up the screen or past it (anchor jump, fling, a reload mid-page)
- *    plays 2.5-5x faster, or is set to its end state at once if it has already left the viewport;
- * 3. while bands are playing, a fast scroll (Lenis velocity) speeds every running band up to 5x; a fling (>= FLING px per
- *    frame) finishes them at once, and a band that triggers during a fling appears finished. */
-const playing = new Set<gsap.core.Timeline>();
-let scrollV = 0; // |Lenis velocity| in px per frame, updated on every Lenis scroll
-const FLING = 45; // px per frame (~2700 px/s at 60 Hz): a fling, not reading
-const boostFor = (v: number) => (v > 20 ? Math.min(5, v / 10) : 1);
-function playBand(tl: gsap.core.Timeline, first: Element, last: Element) {
-  const vh = window.innerHeight;
-  const top = first.getBoundingClientRect().top;
-  if (last.getBoundingClientRect().bottom < 0) { tl.progress(1); return; } // already passed: show it finished
-  if (scrollV >= FLING) { tl.progress(1); return; }                     // a fling: no animation, just the content
-  let speed = boostFor(scrollV);
-  if (top < vh * 0.55) speed = Math.max(speed, 2.5);
-  tl.timeScale(speed);
-  playing.add(tl);
-  tl.eventCallback('onComplete', () => { playing.delete(tl); });
-  tl.play();
-}
-function onScrollVelocity(v: number) {
-  scrollV = Math.abs(v);
-  const b = boostFor(scrollV);
-  if (scrollV >= FLING) { playing.forEach((tl) => tl.progress(1)); return; }
-  if (b > 1) playing.forEach((tl) => { if (tl.timeScale() < b) tl.timeScale(b); });
-}
-
-const pageTop = (el: Element) => el.getBoundingClientRect().top + window.scrollY;
 const fontsIn = () => (document.fonts && document.fonts.status !== 'loaded'
   ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 700))]) : Promise.resolve());
 
-/** Build section entrances. `only` = 'hero' (the handoff section, built at once) or 'rest' (wired when the main thread is idle).
- *  Elements stay pre-hidden by CSS until they get .m-built; a band's tweens are built only when it scrolls in (cheap setup),
- *  and .m-built is added in the same task as the tweens, so nothing flashes. */
-function sections(only: 'hero' | 'rest', heroPlay: (tl: gsap.core.Timeline) => void = () => {}) {
+/** A built entrance on its own scroll trigger. An element whose box is already ABOVE the viewport when it is built is set
+ *  to its end state; anything on screen or below plays when its trigger point is reached (United). */
+function onScroll(tl: gsap.core.Timeline, trigger: Element, start: string, above: boolean) {
+  built.push(tl);
+  if (above) { tl.progress(1); return; }
+  tl.pause();
+  // An element nested inside another animated element (a patch on a review card) is measured while its host still sits at
+  // its start offset (y 60), which would push its trigger point down and leave it waiting while visible. The hosts' current
+  // y is subtracted at every refresh (0 once they have played).
+  const [edge, at] = start.split(' ');
+  const hostY = () => { let d = 0; for (let a = trigger.parentElement; a && a !== document.body; a = a.parentElement) d += Number(gsap.getProperty(a, 'y')) || 0; return d; };
+  triggers.push(ScrollTrigger.create({ trigger, start: () => { const d = Math.round(hostY()); return d ? `${edge}${d > 0 ? '-=' : '+='}${Math.abs(d)} ${at}` : start; }, once: true, onEnter: () => { tl.play(); } }));
+}
+
+/** Plan one section: the head block (one trigger), and every other element on its own trigger. Read phase only. */
+function planSection(sec: HTMLElement) {
   const vh = window.innerHeight;
-  // Read phase first (all measurements), then the write phase: no layout thrash on slow phones.
-  const plans = $$('[data-m-section]').filter((sec) => sec.hasAttribute('data-m-hero') === (only === 'hero')).map((sec) => {
-    const els = $$('[data-t]', sec).filter(shown);
-    const tops = new Map<HTMLElement, number>(els.map((el) => [el, pageTop(el)]));
-    const frames = els.filter((el) => el.dataset.fx === 'frame' || (el.hasAttribute('data-stagger') && el.querySelector(':scope > [data-fx="frame"]')));
-    const inView = new Set(frames.filter((el) => el.getBoundingClientRect().top < vh));
-    return { sec, els, tops, top: pageTop(sec), draws: $$<SVGPathElement>('[data-draw]', sec), frames, inView };
-  });
-  plans.forEach(({ sec, els, tops, top, draws, frames, inView }) => {
-    // Elements not rendered right now (other breakpoint) are released at once: they never animate.
-    $$('[data-t]', sec).forEach((el) => { if (!tops.has(el)) el.classList.add('m-built'); });
-    if (draws.length) gsap.set(draws, { drawSVG: '0%' });
-    if (sec.hasAttribute('data-m-hero')) {
-      els.forEach((el) => el.classList.add('m-built'));
-      // G3 of the hero: the stripe underline draws and the swoosh ribbons run along the bottom edge, with the seals.
-      const sw = $$<SVGElement>('svg[data-swoosh]', sec);
-      const tl = choreograph(els, HERO_GAP, (t, at) => {
-        if (draws.length) t.to(draws, { drawSVG: '100%', duration: 0.7, ease: 'power2.inOut', stagger: 0.06 }, at);
-        sw.forEach((svg) => { svg.dataset.mDone = '1'; t.add(swooshIn(svg, 0.8), at + 0.05); });
-      });
-      heroPlay(tl);
-      return;
-    }
-    // Frames are not pre-hidden by CSS (LCP rule). One already on screen when we wire (a reload mid-page) is left as it is;
-    // the rest take their start state now, while they are still below the fold, so nothing flashes when they play.
-    frames.forEach((f) => { if (inView.has(f)) f.dataset.mStatic = '1'; });
-    // Long sections: elements more than ~0.7 viewport below the section top get their own band and trigger, so a photo at
-    // the bottom of a tall section reveals as IT enters, not while it is still off screen.
-    const bands = new Map<number, HTMLElement[]>();
+  const els = $$('[data-t]', sec).filter(shown);
+  const draws = $$<SVGPathElement>('[data-draw]', sec);
+  // Frames are not pre-hidden by CSS (LCP rule): one already on screen when we build is left exactly as it is.
+  const isFrameLike = (el: HTMLElement) => el.dataset.fx === 'frame' || el.dataset.fx === 'nudge' || (el.hasAttribute('data-stagger') && !!el.querySelector(':scope > [data-fx="frame"]'));
+  const still = new Set(els.filter((el) => { if (!isFrameLike(el)) return false; const r = el.getBoundingClientRect(); return r.top < vh && r.bottom > 0; }));
+  // The section head: the headline's text block (its .shead, else its parent) = eyebrow, headline, and the lead/buttons
+  // that start within half a viewport of the headline. One trigger for all of them.
+  const head = new Set<HTMLElement>();
+  const h = els.find((el) => (el.dataset.t === '2'));
+  if (h) {
+    const box = h.closest<HTMLElement>('.shead') ?? h.parentElement!;
+    const hTop = h.getBoundingClientRect().top;
     els.forEach((el) => {
-      const b = Math.max(0, Math.floor((tops.get(el)! - top) / (vh * 0.7)));
-      if (!bands.has(b)) bands.set(b, []);
-      bands.get(b)!.push(el);
+      const t = el.dataset.t;
+      if (still.has(el) || !box.contains(el) || !(t === '1' || t === '2' || t === '3')) return;
+      if (t === '3' && el.getBoundingClientRect().top - hTop > vh * 0.5) return;
+      head.add(el);
     });
-    const bandList = [...bands.entries()].sort((a, b) => a[0] - b[0]);
-    bandList.forEach(([, group], bi) => {
-      const live = group.filter((el) => !el.dataset.mStatic);
-      group.forEach((el) => { if (el.dataset.mStatic) el.classList.add('m-built'); });
-      if (!live.length) return;
-      // Hide this band's frames now (they are below the fold): built tweens re-apply the same start state.
-      live.filter((el) => frames.includes(el)).forEach((f) => gsap.set(f.dataset.fx === 'frame' ? f : f.querySelectorAll(':scope > [data-fx="frame"]'), { autoAlpha: 0 }));
-      const first = live.reduce((a, b) => (tops.get(a)! <= tops.get(b)! ? a : b));
-      const last = live.reduce((a, b) => (tops.get(a)! + a.offsetHeight >= tops.get(b)! + b.offsetHeight ? a : b));
-      // The section's underlines draw with the first band's G3.
-      const bandDraws = bi === 0 ? draws : [];
-      bandSTs.push(ScrollTrigger.create({ trigger: first, start: START, once: true, onEnter: () => {
-        const go = () => {
-          if (kbd) return; // released for the keyboard meanwhile
-          live.forEach((el) => el.classList.add('m-built'));
-          const tl = choreograph(live, GROUP_GAP, (t, at) => { if (bandDraws.length) t.to(bandDraws, { drawSVG: '100%', duration: 0.7, ease: 'power2.inOut', stagger: 0.06 }, at); });
-          playBand(tl, first, last);
-        };
-        // Fonts are virtually always in by now; if not, wait for them (max 0.7 s) so a split headline gets its real lines.
-        if (!document.fonts || document.fonts.status === 'loaded') go(); else fontsIn().then(go);
-      } }));
+  }
+  const groups = new Map(els.map((el) => [el, groupOf(el)]));
+  const fxs = new Map(els.map((el) => [el, el.hasAttribute('data-stagger') ? null : fxOf(el, sec, false)]));
+  const above = new Set<Element>([...els, ...draws.map((d) => d.closest('svg') ?? d)].filter((el) => el.getBoundingClientRect().bottom < 0));
+  const headFirst = [...head].sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)[0];
+  return { sec, els, draws, still, head: [...head].sort((a, b) => groups.get(a)! - groups.get(b)!), headFirst, groups, fxs, above };
+}
+
+/** Build one planned section (write phase): tweens with their start states, then .m-built in the same task (no flash). */
+function buildSection(p: ReturnType<typeof planSection>) {
+  const { sec, els, draws, still, head, headFirst, groups, fxs, above } = p;
+  $$('[data-t]', sec).forEach((el) => { if (!els.includes(el)) el.classList.add('m-built'); }); // other breakpoint
+  still.forEach((el) => el.classList.add('m-built'));
+  if (kbd) { els.forEach((el) => el.classList.add('m-built')); return; }
+  if (head.length) {
+    const tl = gsap.timeline();
+    const count = [0, 0, 0];
+    head.forEach((el) => {
+      const g = groups.get(el)! - 1;
+      tl.add(entrance(el, sec, false, fxs.get(el)), G_DELAY[g] + Math.min(0.2, HEAD_STEP * count[g]++));
+      el.classList.add('m-built');
     });
-    // Underlines outside the first band of their section draw on their own as they enter.
-    draws.forEach((p) => {
-      const svg = p.closest('svg') ?? p;
-      if (pageTop(svg) - top < vh * 0.7) return;
-      ScrollTrigger.create({ trigger: svg, start: START, once: true, onEnter: () => gsap.to(p, { drawSVG: '100%', duration: 0.7, delay: 0.3, ease: 'power2.inOut' }) });
-    });
+    onScroll(tl, headFirst!, START.one, head.every((el) => above.has(el)));
+  }
+  els.forEach((el) => {
+    if (still.has(el) || head.includes(el)) return;
+    const tl = gsap.timeline();
+    tl.add(entrance(el, sec, false, fxs.get(el)), G_DELAY[groups.get(el)! - 1]);
+    el.classList.add('m-built');
+    onScroll(tl, el, el.hasAttribute('data-stagger') ? START.group : START.one, above.has(el));
+  });
+  // Underlines draw on their own trigger (G3 delay).
+  draws.forEach((pth) => {
+    const tl = gsap.timeline();
+    tl.fromTo(pth, { drawSVG: '0%' }, { drawSVG: '100%', duration: DRAW_DUR, ease: 'power2.inOut', immediateRender: true }, G_DELAY[2]);
+    onScroll(tl, pth.closest('svg') ?? pth, START.draw, above.has(pth.closest('svg') ?? pth));
   });
 }
+
+/** Build every section below the hero in idle slices (United builds all tweens and splits up front, so no layout work
+ *  happens mid-scroll; slicing keeps each task short for TBT). `done` runs after the last one. */
+function buildRest(done: () => void) {
+  const secs = $$('[data-m-section]').filter((s) => !s.hasAttribute('data-m-hero'));
+  const idle = (f: (d?: IdleDeadline) => void) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout: 300 }) : setTimeout(f, 50));
+  const step = (dl?: IdleDeadline) => {
+    const t0 = performance.now();
+    while (secs.length && (performance.now() - t0 < 12 || (dl && dl.timeRemaining() > 8))) {
+      const batch = secs.splice(0, 3).map(planSection); // read phase for a few sections, then their writes
+      batch.forEach(buildSection);
+    }
+    if (secs.length) idle(step); else done();
+  };
+  idle(step);
+}
+
+/** The hero: one ordered timeline played at the handoff (United heroTimeline). Items in group order (G1, G2, G3), DOM
+ *  order inside a group, HERO_STEP apart; a split headline holds the next item until its lines have started; each new
+ *  group adds a 0.15 s beat. The stripe underline and the swoosh ribbons run with G3. */
+function buildHeroTl(): gsap.core.Timeline | null {
+  const sec = document.querySelector<HTMLElement>('[data-m-section][data-m-hero]');
+  if (!sec) return null;
+  const els = $$('[data-t]', sec).filter(shown);
+  $$('[data-t]', sec).forEach((el) => el.classList.add('m-built'));
+  const draws = $$<SVGPathElement>('[data-draw]', sec);
+  const sw = $$<SVGElement>('svg[data-swoosh]', sec);
+  const order = els.map((el) => ({ el, g: groupOf(el) })).sort((a, b) => a.g - b.g); // stable: DOM order inside a group
+  const tl = gsap.timeline({ paused: true });
+  built.push(tl);
+  let t = 0, last = 1;
+  order.forEach(({ el, g }) => {
+    if (g !== last) { t += G_DELAY[1]; last = g; }
+    const e = entrance(el, sec, true);
+    tl.add(e, t);
+    const n = el.dataset.t === '2' && !el.dataset.fx ? Math.max(1, $$('.hl', el).length || 2) : 0;
+    t += n ? HERO_STEP * n + 0.08 : HERO_STEP;
+  });
+  if (last !== 3) t += G_DELAY[1];
+  if (draws.length) tl.fromTo(draws, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut', stagger: 0.06, immediateRender: true }, t);
+  sw.forEach((svg) => { svg.dataset.mDone = '1'; tl.add(swooshIn(svg, 0.9), t + 0.05); });
+  return tl;
+}
+
 
 /** Swoosh edge: the three ribbons run in from the leading side, one after another. */
 function swooshIn(svg: SVGElement, dur = 0.9): gsap.core.Timeline {
@@ -423,11 +457,10 @@ function parallax() {
       paint();
       gsap.fromTo(o, { v: a }, { v: b, ease: 'none', onUpdate: paint, scrollTrigger: {
         trigger: out ? el.closest('[data-m-section]') ?? el : el, start: out ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.5,
-        onToggle: (st) => { el.style.willChange = st.isActive ? 'transform' : ''; },
       } });
     });
     pxItems.push(...items);
-    return () => { items.forEach((it) => { it.clear?.(); it.el.style.willChange = ''; it.el.removeAttribute('data-px'); pxItems.splice(pxItems.indexOf(it), 1); }); };
+    return () => { items.forEach((it) => { it.clear?.(); it.el.removeAttribute('data-px'); pxItems.splice(pxItems.indexOf(it), 1); }); };
   });
   // Triggers are measured without the drift (it would shift every start point by up to the range), then repainted.
   ScrollTrigger.addEventListener('refreshInit', () => pxItems.forEach((it) => it.clear?.()));
@@ -437,32 +470,31 @@ function parallax() {
 /* ------------------------------------------------------------------ signature moments */
 
 function signatures() {
-  // Counters (G3): count up from zero once, as they enter. A counter already past (fast scroll) shows its value at once.
+  // Counters (G3): count up from zero once, as they enter (United: top 90 %, 1.8 s power2.out). One already above the
+  // viewport when wired keeps its value.
   $$('[data-count]').forEach((el) => {
     const end = parseFloat(el.dataset.count || '0');
     const dec = parseInt(el.dataset.decimals || '0', 10);
+    if (el.getBoundingClientRect().bottom < 0) return;
     const o = { v: 0 };
     el.textContent = (0).toFixed(dec);
-    ScrollTrigger.create({ trigger: el, start: START, once: true, onEnter: () => {
-      if (el.getBoundingClientRect().bottom < 0) { el.textContent = end.toFixed(dec); return; }
-      const tw = gsap.to(o, { v: end, duration: 1.2, delay: 0.35, ease: 'expo.out', onUpdate: () => { el.textContent = o.v.toFixed(dec); } });
-      if (boostFor(scrollV) > 1) tw.timeScale(boostFor(scrollV));
-    } });
+    const tl = gsap.timeline().to(o, { v: end, duration: 1.8, ease: 'power2.out', onUpdate: () => { el.textContent = o.v.toFixed(dec); } }, G_DELAY[2]);
+    onScroll(tl, el, START.count, false);
   });
   // Water meter (G3): each drum rolls up to its digit, last drum longest (it spins past 9 once).
   $$('[data-meter]').forEach((m) => {
     const reels = $$('.reel', m);
     reels.forEach((r) => r.style.setProperty('--n', '0'));
-    ScrollTrigger.create({ trigger: m, start: START, once: true, onEnter: () => reels.forEach((r, i) => {
+    ScrollTrigger.create({ trigger: m, start: START.count, once: true, onEnter: () => reels.forEach((r, i) => {
       const o = { n: 0 }; const d = parseInt(r.dataset.digit || '0', 10);
-      gsap.to(o, { n: d, duration: 0.9 + i * 0.15, ease: 'power3.out', delay: 0.3, onUpdate: () => r.style.setProperty('--n', String(o.n)) });
+      gsap.to(o, { n: d, duration: 1.2 + i * 0.15, ease: 'power3.out', delay: G_DELAY[2], onUpdate: () => r.style.setProperty('--n', String(o.n)) });
     }) });
   });
   // Swoosh edges (outside the hero, which runs its own as G3): ribbons run in once, as they enter.
   $$<SVGElement>('svg[data-swoosh]').forEach((svg) => {
     if (svg.dataset.mDone) return;
-    const tl = swooshIn(svg).pause();
-    ScrollTrigger.create({ trigger: svg, start: START, once: true, onEnter: () => { if (svg.getBoundingClientRect().bottom < 0) tl.progress(1); else tl.play(); } });
+    const tl = gsap.timeline().add(swooshIn(svg), G_DELAY[2]);
+    onScroll(tl, svg, START.draw, svg.getBoundingClientRect().bottom < 0);
   });
   // Flow lines stay static in themselves (the old endless dash drift was retired); they take part in the parallax.
   // Map: the county outline draws, the truck route flows.
@@ -527,11 +559,17 @@ function pointer() {
 
 /* ------------------------------------------------------------------ loader, curtain, handoff */
 
+/** The header settles first (United heroTimeline): top bar fades in, the logo tab, nav items and header buttons drop in
+ *  (y -24, 0.6 s, 0.05 s apart). Only built when a cover (loader or curtain) hides the page, so nothing flashes. */
 function introChrome(tl: gsap.core.Timeline) {
   const bar = document.querySelector('[data-intro="topbar"]');
-  const brand = document.querySelector('[data-intro="brand"]');
-  if (bar) tl.from(bar, { autoAlpha: 0, duration: 0.5, ease: SOFT }, 0);
-  if (brand) tl.from(brand, { yPercent: -100, duration: 0.7, ease: EASE }, 0.1);
+  const bits = $$('[data-intro="brand"], .hdr .nav-list > li, .hdr .cta > *').filter(shown);
+  if (bar) tl.fromTo(bar, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: SOFT, immediateRender: true, clearProps: 'opacity,visibility' }, 0);
+  if (bits.length) {
+    gsap.set(bits, { transition: 'none' });
+    tl.fromTo(bits, { y: -24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: EASE, stagger: 0.05, immediateRender: true }, 0.08);
+    tl.add(() => settle(bits));
+  }
 }
 
 function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
@@ -586,15 +624,13 @@ function runCurtainIn(onHandoff: () => void, onLift: () => void = () => {}) {
   if (!pt || !html.classList.contains('pt-in')) return false;
   const panel = pt.querySelector<HTMLElement>('.pt-panel')!;
   const edge = pt.querySelector<SVGElement>('.pt-edge');
-  // The fonts are cached from the previous page; wait for them (max 0.7 s) so the hero headline splits on its real lines.
-  fontsIn().then(() => {
-    onLift();
-    const h = panel.offsetHeight + ((edge as any)?.clientHeight || 120) + 8; // layout px (see runLoader)
-    gsap.timeline({ delay: 0.05, onComplete: () => { html.classList.remove('pt-in'); gsap.set(panel, { clearProps: 'transform' }); } })
-      .to(pt.querySelector('.pt-mark'), { autoAlpha: 0, y: 20, duration: 0.3, ease: 'power2.in' })
-      .to(panel, { y: h, duration: 0.9, ease: 'power3.inOut' }, 0.1)
-      .add(onHandoff, 0.38);
-  });
+  // The curtain lifts at once; only the hero waits for the fonts (handoff -> play). onLift hides the hero first, unseen.
+  onLift();
+  const h = panel.offsetHeight + ((edge as any)?.clientHeight || 120) + 8; // layout px (see runLoader)
+  gsap.timeline({ delay: 0.05, onComplete: () => { html.classList.remove('pt-in'); gsap.set(panel, { clearProps: 'transform' }); } })
+    .to(pt.querySelector('.pt-mark'), { autoAlpha: 0, y: 20, duration: 0.3, ease: 'power2.in' })
+    .to(panel, { y: h, duration: 0.9, ease: 'power3.inOut' }, 0.1)
+    .add(onHandoff, 0.38);
   return true;
 }
 
@@ -633,14 +669,12 @@ function boot() {
     if (host && (!host.classList.contains('m-built') || parseFloat(getComputedStyle(host).opacity) < 0.5)) keyboardRelease();
   });
 
-  // Lenis = United's settings with a slightly softer glide (lerp 0.085 vs United's 0.1, Nick round 3: "softer scroll"),
-  // wheelMultiplier 1, smooth wheel, native touch. Lenis lerp is frame-rate independent (damp), so it feels the same at
-  // 60 and 120 Hz. One clock: Lenis is driven by the GSAP ticker and
+  // Lenis = United's settings exactly (lerp 0.1, wheelMultiplier 1, smooth wheel, native touch). Lenis lerp is frame-rate
+  // independent (damp), so it feels the same at 60 and 120 Hz. One clock: Lenis is driven by the GSAP ticker and
   // ScrollTrigger updates on every Lenis scroll, so no scrollerProxy is needed (Lenis scrolls the real window).
-  const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 * (parseFloat(document.documentElement.style.zoom) || 1) }, autoRaf: false });
+  const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 * (parseFloat(document.documentElement.style.zoom) || 1) }, autoRaf: false });
   window.__pbpLenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
-  lenis.on('scroll', (l: Lenis) => onScrollVelocity(l.velocity));
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
   // Re-measure when the page geometry changes without a window resize: the wide-screen zoom on <html> (Base.astro sets
@@ -652,24 +686,25 @@ function boot() {
   if ('ResizeObserver' in window) new ResizeObserver(() => { const h = document.body.scrollHeight; if (Math.abs(h - lastH) > 2) { lastH = h; remeasure(); } }).observe(document.body);
 
   let heroTl: gsap.core.Timeline | null = null;
-  const chrome = gsap.timeline({ paused: true });
   const intro = html.classList.contains('intro');
-  if (intro) introChrome(chrome);
-  heroUncovered = !intro && !html.classList.contains('pt-in');
+  const ptIn = html.classList.contains('pt-in');
+  heroUncovered = !intro && !ptIn;
+  // The header beat only runs under a cover (loader or curtain): built now, while the cover hides it.
+  const chrome = gsap.timeline({ paused: true });
+  if (intro || ptIn) introChrome(chrome);
 
-  // Under the loader or the curtain the hero stays visible (CSS) so its photo and text paint early for LCP;
-  // its pre-states are applied only when the cover starts to lift, while the panel still hides the page.
+  // Under the loader or the curtain the hero stays painted (CSS) so its photo and text count for LCP; its start states are
+  // applied when the cover starts to lift, while the panel still hides the page.
   let heroBuilt = false;
-  const buildHero = () => { if (heroBuilt) return; heroBuilt = true; sections('hero', (tl) => { heroTl = tl; }); };
+  const buildHero = () => { if (heroBuilt) return; heroBuilt = true; heroTl = buildHeroTl(); };
+  // Curtain: hide the hero at once (the panel lifts without waiting for fonts); the timeline is built at the handoff.
+  const hideHero = () => {
+    const sec = document.querySelector('[data-m-section][data-m-hero]');
+    if (sec) gsap.set($$('[data-t]', sec).filter(shown), { autoAlpha: 0 });
+  };
   curtainOut();
-  // Everything below the fold is wired when the main thread is free, so it does not compete with the first paint.
-  // Parallax is wired in its own idle slice after that, so neither setup is one long task (Lighthouse TBT).
-  const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));
-  const rest = () => { sections('rest'); signatures(); pointer(); ScrollTrigger.refresh(); idle(() => { parallax(); ScrollTrigger.refresh(); }, 600); };
-  idle(rest, 600);
 
   let handed = false;
-  // A plain load builds the hero here, once the fonts are in (max 0.7 s), so a split headline gets its real lines.
   const handoff = () => {
     if (handed) return; handed = true;
     if (!heroBuilt) { fontsIn().then(play); return; }
@@ -677,13 +712,19 @@ function boot() {
   };
   const play = () => {
     buildHero();
+    // In-site navigation plays the header and hero 1.5x (United).
+    if (ptIn) { chrome.timeScale(1.5); heroTl?.timeScale(1.5); }
     chrome.play();
-    // The header settles first; the hero groups start as it is ~40 % done (whole hero ~1.5 s after the handoff).
     const hero = heroTl;
-    if (hero) { const d = chrome.duration() * 0.4; if (d > 0.02) gsap.delayedCall(d, () => { hero.play(); }); else hero.play(); }
+    // The header leads; the hero starts 0.25 s in (United: hero items from 0.25 s).
+    if (hero) { if (chrome.duration() > 0.02) gsap.delayedCall(ptIn ? 0.17 : 0.25, () => { hero.play(); }); else hero.play(); }
     window.dispatchEvent(new CustomEvent('pbp:handoff'));
+    // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front, as
+    // United does, so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
+    const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));
+    buildRest(() => { signatures(); pointer(); ScrollTrigger.refresh(); idle(() => { parallax(); ScrollTrigger.refresh(); }, 600); });
   };
-  if (!runCurtainIn(handoff, buildHero)) runLoader(handoff, buildHero);
+  if (!runCurtainIn(handoff, hideHero)) runLoader(handoff, buildHero);
   // Fonts change line breaks: re-measure triggers once they are in.
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
 }

@@ -1,10 +1,12 @@
 # Motion grammar (Plumbing By Paul v3)
 
 One grammar for every page. You do not write animation code: you put data attributes on markup, and
-`src/scripts/motion.ts` does the rest. The goal is the opposite of a busy site: **controlled, choreographed,
-hierarchical, one thing at a time**. Every section enters in the same order (eyebrow, headline, body, CTAs, media,
-accents), each step starting only when the previous one is mostly done, with one calm ease, so the whole site feels
-like one hand made it.
+`src/scripts/motion.ts` does the rest. The goal is the opposite of a busy site: **controlled, quick, hierarchical**.
+Since round 3 every section reveals in **three priority groups** (G1 the message: headline, lead, main photo; G2 the
+support: eyebrow, buttons, chips, captions, patches, small cards; G3 the flourishes: seals, underlines, swooshes,
+counters), each group a beat after the previous one, the whole section done in about a second, as it enters the
+viewport. One calm ease, so the whole site feels like one hand made it. Photos and heads add depth with a gentle
+United-style parallax.
 
 Code: `src/scripts/motion.ts` (entrances, loader, curtain, signature moments, Lenis), `src/scripts/ui.ts`
 (menus, accordions, carousels; works without motion), `src/scripts/forms.ts`. Pre-states: the end of
@@ -31,7 +33,7 @@ Code: `src/scripts/motion.ts` (entrances, loader, curtain, signature moments, Le
   triggers `top 88%` (single) and `top 85%` (staggers). Hero items start `0.12 s` apart (heavily overlapped).
 - Wide screens: `html.style.zoom = w/1440` above 1440 px.
 
-**What we took, and what we deliberately did not:** United's Lenis exactly; two26's line gap (0.12 s), clip-open media
+**What we took in round 2 (the strict one-step-at-a-time rule below was replaced in round 3 by the three groups):** United's Lenis exactly; two26's line gap (0.12 s), clip-open media
 and trigger points; neither site's overshoot (`back.out`) on text, because Nick asked for calm easing; and a stricter
 rule than both (steps overlap at most 30 %) because Nick asked for one thing at a time and our sections hold more
 elements than two26's.
@@ -46,6 +48,24 @@ elements than two26's.
   (frame strips: `designs/plumbing-by-paul/v3-build/r2/motion/glitch-before-1440.png`, `-after-`). The next scroll
   would have re-applied the parallax and jumped again. Same pattern on every page whose hero photo had CSS pre-scale +
   parallax + `frame` (services hub/service heroes, town heroes, about hero, emergency hero, home crew).
+
+**Round 3 (15 Nov 2026), Nick's verdict on round 2:** "entrances happen too many times and too slowly; scroll faster
+and you skip them and see empty sections; United had smoother entrances and a softer scroll."
+- Measured on the round-2 build (Playwright, a per-frame sampler that flags content >= 50 % inside the viewport at
+  opacity < 0.2): at reading pace content sat invisible in view for up to **2.2-2.95 s** (Home 1440: 1953 of 2221 frames
+  had some), and after a fast wheel scroll **5-36 elements were still hidden** when the scroll stopped. Causes: one
+  step at a time (a section took 3-4 s), bands waiting for the band above (`queuePlay`, up to 3 s), a 0.45 s wait for
+  lazy photos to decode, and triggers at 88 %.
+- United live (`united-plumbing-pomona.vercel.app`, Playwright, inline transforms sampled while scrolling) and its
+  source (`git show origin/claude/project-thread-lela0k:clients/united-plumbing-site/src/scripts/motion.ts`):
+  every cover photo in a clipped frame drifts inside its frame `translate 0 -5% -> 5%` (img pre-scaled `1.14`, scrub
+  0.6); every section H2 drifts `y +40 -> -20 px` (scrub 0.8); the hero photo carries `data-parallax` (`yPercent`
+  +-6 %). Lenis `lerp 0.1`, wheel 1.
+- What we took: United's amount of depth (most photos and every section head move) and its scrub feel; NOT its
+  photo-inside-frame drift (that needs a CSS pre-scale on the photo, the round-2 glitch; our photos never move inside
+  their frame: the whole media column drifts instead).
+- Result after the rewrite (same sampler, Home / water-heaters / about / reviews / emergency at 1440 and 390): see
+  `designs/plumbing-by-paul/v3-build/r3/README.md`.
 
 ## 1. Safety first: how motion switches on
 
@@ -67,61 +87,72 @@ The inline script in `Base.astro` sets classes on `<html>` before first paint:
 - If the module never boots, a 3.5 s safety in `Base.astro` removes `motion`, so nothing stays hidden.
 - Back/forward navigation never shows the loader or the curtain.
 
-## 2. Sections, tiers and steps
+## 2. Sections, tiers and the three groups
 
-Mark every content section with `data-m-section`. Inside it, give each animated element a tier:
+Mark every content section with `data-m-section`. Inside it, give each animated element a tier (it picks the default
+effect and, with the element's role, its priority group):
 
 | Tier | `data-t` | What | Default effect |
 |---|---|---|---|
-| 1 | `data-t="1"` | eyebrow, rating pill, breadcrumbs | `slide` (x -16, fade, 0.6 s) |
-| 2 | `data-t="2"` | the headline | `lines` (each line rises out of a mask, 0.8 s, 0.12 s apart) |
-| 3 | `data-t="3"` | lead, body, then buttons (CTAs get their own step) | `rise` (y 24, fade, 0.7 s) |
-| 4 | `data-t="4"` | photos, cards, grids, maps | `rise` (y 40, fade, 0.9 s) |
-| 5 | `data-t="5"` | seals, stickers, patches, chips | `pop` (scale from 0.72, -8 deg, 0.55 s, tiny settle) |
+| 1 | `data-t="1"` | eyebrow, rating pill, breadcrumbs | `slide` (x -16, fade, 0.55 s) |
+| 2 | `data-t="2"` | the headline | `lines` (each line rises out of a mask, 0.7 s, 0.06 s apart) |
+| 3 | `data-t="3"` | lead, body, buttons, captions | `rise` (y 20, fade, 0.6 s) |
+| 4 | `data-t="4"` | photos, cards, grids, maps | `rise` (y 28, fade, 0.75 s) |
+| 5 | `data-t="5"` | seals, stickers, patches, chips | `pop` (scale from 0.75, -6 deg, 0.5 s, tiny settle) |
 
-**The sequence (the core rule).** `choreograph()` sorts a section's elements into steps: tier 1, tier 2, tier 3 text,
-tier 3 CTAs (anything holding a `.btn`), tier 4, tier 5, and DOM order inside a step. Then:
-- A new step starts when the previous step is **70 % through its duration** (`OVERLAP = 0.3`). With `power3.out` that
-  is ~97 % of the way there visually, so the eye has already left it. Never two steps moving together.
-- Several elements of the same step follow at a gap that scales with their size (0.12 s for small bits, up to 0.4 s for a
-  big photo), and the element after a whole `data-stagger` group waits for that group like a new step.
-- Timings are not hand-written per section: the sequence is computed from the real durations, so adding an element
-  just lengthens the sequence, it never makes things collide.
-- One ease: `power3.out` for every entrance, `power2.out` for pure fades, `back.out(1.3)` only for tier-5 accents.
-  Distances are modest (16-40 px). No bouncing text, no loops.
-- `SectionHead` already wires eyebrow t1, H2 t2 and lead t3. `Seal` is t5 by default (`t={false}` turns it off).
-- Long sections: an element more than about 0.8 viewport below the section top gets its own band and trigger, so a photo
-  at the bottom of a tall section plays when *it* scrolls in, still in step order with its neighbours.
-- Each band plays once, when its first element reaches **88 % of the viewport height** (United's point), after fonts are
-  in and its lazy photos have decoded (max 0.45 s wait, so a photo never pops in mid-reveal). A band that only triggers
-  when it is already high on screen (anchor jump, fast fling) plays 2.2x faster instead of making the reader wait.
+**The three priority groups (the core rule, round 3).** `groupOf()` in motion.ts sorts a band's elements:
+
+| Group | Starts | Gets |
+|---|---|---|
+| G1 the message | 0 | headline (t2), lead and body text (t3 without buttons), the main photo (`frame`, `fade`, any t4 taller than 120 px), card grids whose cards are >= 160 px tall or hold a frame |
+| G2 the support | +0.18 s (hero +0.24 s) | eyebrow/rating pill (t1), buttons (t3 holding a `.btn`), t3 lists (`data-stagger`), captions/footnotes (`.caption`, `.label`, `figcaption`), snapshots (`toss`), small t4 (< 120 px) and grids of small cards/rows, t5 chips, captions, pills, name patches, chip rails |
+| G3 the flourishes | +0.18 s after G2 | seals/stamps/medals/number stickers (`.seal .stamp .medal .nst`), `spin`, `write` and t5 `.script` flourishes, empty decorative shapes (a colour block), the section's `data-draw` underlines; the hero's swoosh; counters and meters start 0.3-0.35 s after they enter |
+
+- A later group starts after the previous non-empty group; a band with only G2 items starts them at 0.
+- Inside a group items start 0.05 s apart in DOM order (never more than 0.15 s in total); the children of a
+  `data-stagger` group 0.05 s apart (the whole list never more than 0.25 s).
+- Result: a band is fully revealed **~0.9-1.05 s** after it triggers (worst case: G3 at 0.36 s + 0.15 s + 0.5 s pop).
+  The hero, after the loader/curtain, measures **~1.3 s** from the handoff (1.6 s including the header beat).
+- `data-g="1|2|3"` on an element overrides the mapping (no page needed it at round 3).
+- One ease: `power3.out` for every entrance, `power2.out` for pure fades, `back.out(1.3)` only for G3 seals/stamps.
+  Distances are small (16-28 px). No bouncing text, no loops.
+- `SectionHead` already wires eyebrow t1 (G2), H2 t2 (G1) and lead t3 (G1). `Seal` is t5 (G3; `t={false}` turns it off).
+- Long sections: an element more than 0.7 viewport below the section top gets its own band and trigger, so a photo at
+  the bottom of a tall section reveals as *it* enters.
+- **Triggers**: a band plays when its first element's top reaches **105 % of the viewport height** (i.e. as it enters,
+  a few px early), immediately: it never waits for another band and never waits for photos to decode.
+- **Fast scrolling never shows empty space** (three guards in motion.ts): a band that triggers when it is already above
+  55 % of the viewport plays 2.5x faster; one that has already left the viewport is set to its end state at once; while
+  bands are playing, the Lenis velocity speeds them up (up to 5x above 20 px/frame), and a fling (>= 45 px/frame,
+  ~2700 px/s) finishes running bands at once and shows bands that trigger during it already finished.
 
 ### `data-fx`: override the default effect
 
 | Value | Use for | What it does |
 |---|---|---|
-| `lines` | headlines | split into lines (real lines, fonts loaded), each line rises out of a mask; reverts afterwards |
+| `lines` | headlines | split into lines (real lines, fonts loaded), each line rises out of a mask (0.06 s apart); reverts afterwards |
 | `slide` | small labels | x -16 and fade |
 | `rise` | text, cards | y offset and fade |
 | `nudge` | the largest text block in a hero | plain load: y 16 only, never hidden (LCP); under the loader/curtain it also fades in on its turn |
 | `fade` | backgrounds, big photos behind text | opacity only |
-| `frame` | the main photo of a section | the frame (ring, shadow, tint) rises in while the photo opens from a rounded `inset(9%)` and settles from 1.06; see below |
-| `toss` | tilted snapshots, the roll card | rises in and settles into its CSS tilt from 5 degrees off (alternating), no overshoot |
-| `pop` | seals, stickers | scales up from 0.72 with a small twist (tiny `back.out(1.3)` settle) |
-| `spin` | the stamp ring | turns in from -90 degrees |
+| `frame` | the main photo of a section | the frame (ring, shadow, tint) rises 24 px in while the photo opens from a rounded `inset(6%)` and settles from 1.04 (0.85 s); see below |
+| `toss` | tilted snapshots, the roll card | rises in and settles into its CSS tilt from 4 degrees off (alternating), no overshoot |
+| `pop` | seals, stickers | scales up from 0.75 with a small twist (tiny `back.out(1.3)` settle) |
+| `spin` | the stamp ring | turns in from -60 degrees |
 | `write` | a script word | wipes in left to right |
 | `float` | retired (was an endless bob) | now behaves like `rise`: nothing loops in the eye line |
 
 **`frame` and still photos.** The photo is animated only through the individual CSS `scale` property and its own
 `clip-path`, both written by hand, never through `transform`, so it multiplies with (never replaces) any CSS transform
 the component gives the img. It ends at `scale 1` and `inset(0)` = no change, so removing them afterwards moves nothing.
-After its reveal **a photo never moves again**: no parallax, no settle, no loop. On a plain load (no loader, no curtain)
-the hero's frame photo is not animated at all, because it is the LCP element.
+After its reveal **a photo never moves inside its frame**: no settle, no loop, no in-frame drift. The parallax moves the
+whole media column around it (section 4b). On a plain load (no loader, no curtain) the hero's frame photo is not
+animated at all, because it is the LCP element.
 
 ### `data-stagger`
 
-On a container with a tier: the container's rendered **children** animate one after another (0.12 s apart, the whole
-group never longer than 0.84 s) with the container's effect. A child with its own `data-t` keeps its own tier (skipped by
+On a container with a tier: the container's rendered **children** animate one after another (0.05 s apart, the whole
+group never longer than 0.25 s) with the container's effect. A child with its own `data-t` keeps its own tier (skipped by
 the stagger); a child with its own `data-fx` (a `frame` photo in a bento) uses that effect inside the stagger. Use it for
 chip rows, card grids, FAQ lists, rails.
 
@@ -129,10 +160,10 @@ chip rows, card grids, FAQ lists, rails.
 
 Add `data-m-hero` next to `data-m-section` on the first section of a page. Its sequence is built at once and played at
 the **handoff**: when the loader lifts (first visit), when the curtain lifts (in-site navigation), or immediately on a
-plain load. The header settles first (top bar fade, logo tab slides down, 0.7 s `power3.out`), the hero sequence starts
-when it is 40 % done. Stripe underlines (`data-draw`) and the hero's swoosh run last, as accents. The hero has the most
-steps of any section, so its sequence runs at 1.2x (ratios kept): about 3.8 s from the first eyebrow to the last chip.
-Only one hero per page.
+plain load. The header settles first (top bar fade, logo tab slides down, 0.7 s `power3.out`), the hero groups start
+when it is 40 % done: G1 (H1 lines, lead, photo), G2 0.24 s later (rating pill, buttons, caption, snapshot, chips),
+G3 0.24 s after that (seals, the stripe underline `data-draw` 0.7 s, the swoosh 0.8 s). Measured: hero settled 1.27 s
+after the handoff on a plain load or curtain, 1.6 s after the loader handoff (header beat included). Only one hero per page.
 
 ## 3. Loader and curtain (the handoff)
 
@@ -151,8 +182,9 @@ You never call either one. Use `Base.astro`; `loader={false}` turns the loader o
 
 ## 3b. Lenis and ScrollTrigger
 
-- `new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 } })`: United's
-  live settings. Lenis' lerp is frame-rate independent (it damps by elapsed time), so it feels the same at 60 and 120 Hz.
+- `new Lenis({ lerp: 0.085, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 } })`: United's
+  live settings with a slightly softer glide (lerp 0.085 vs 0.1; Nick round 3: "softer scroll"). The Lenis velocity
+  also feeds the fast-scroll guard (section 2). Lenis' lerp is frame-rate independent (it damps by elapsed time), so it feels the same at 60 and 120 Hz.
   Touch stays native (iOS momentum), like United.
 - One clock: `gsap.ticker` drives `lenis.raf`, `lenis.on('scroll', ScrollTrigger.update)`, `lagSmoothing(0)`. Lenis
   scrolls the real window, so no `scrollerProxy` is needed.
@@ -169,18 +201,48 @@ You never call either one. Use `Base.astro`; `loader={false}` turns the loader o
 
 | Attribute | Where | Behaviour |
 |---|---|---|
-| `data-count="947"` (+ `data-decimals="1"`) | a number | counts up from 0 once in view |
-| `data-meter` | `Meter.astro` | the drums roll up to their digits, the last drum longest |
-| `data-draw` | SVG paths (`Underline.astro`) | strokes draw in (DrawSVG) |
-| `data-swoosh` | `Swoosh.astro` (on by default; `draw={false}` off) | the three ribbons run in from the leading side, once (in the hero: as the last accent) |
-| `data-flow` | `FlowLines.astro` | static (the endless dash drift behind the photos was retired) |
+| `data-count="947"` (+ `data-decimals="1"`) | a number | G3: counts up from 0 as it enters (1.2 s `expo.out`, 0.35 s in); already passed = final value at once |
+| `data-meter` | `Meter.astro` | G3: the drums roll up to their digits (0.9 s + 0.15 s per drum), the last drum longest |
+| `data-draw` | SVG paths (`Underline.astro`) | G3 of its band: strokes draw in (DrawSVG, 0.7 s) |
+| `data-swoosh` | `Swoosh.astro` (on by default; `draw={false}` off) | the three ribbons run in from the leading side, once, as it enters (in the hero: G3) |
+| `data-flow` | `FlowLines.astro` | no dash drift; the flow lines take part in the parallax (+-48 px) |
 | `data-water` | `Water.astro` | CSS drift of the two wave layers (no JS; an endless loop owned by Water.astro, see the round-2 notes) |
-| `data-parallax`, `data-parallax-wrap` | (retired) | ignored: photos sit still once revealed. Remove when you next touch the markup |
+| `data-parallax`, `data-parallax-wrap` | (retired) | ignored: parallax is automatic since round 3 (section 4b). Remove when you next touch the markup |
+| `data-no-px` | on a frame | keeps that photo's media column out of the parallax |
 | `data-pipe` + `data-pipe-fill` (+ `data-pipe-fill-v`) | Process pipe | water follows the scroll: across on desktop, down the left on mobile |
 | `data-marquee` | `TownBand.astro` | endless loop at 38 px/s; scroll speed nudges it faster, then it eases back |
 | `data-draw-map`, `data-route` | `PinellasMap.astro` | the county outline draws; the dashed truck route then flows once and rests |
 | `data-magnetic` | primary buttons (default on `pri`/`priN`) | the button leans toward the pointer (fine pointers only) |
 | (every `.btn`) | buttons | the hover fill grows from where the pointer entered |
+
+## 4b. Parallax (round 3, automatic)
+
+`parallax()` in motion.ts picks the targets itself, per section, at idle time (desktop >= 1024 px full range, tablet
+0.6x, phones < 640 px 0.45x, reduced motion: off with the rest of motion). Each target is scrubbed over its pass through
+the viewport (`top bottom` -> `bottom top`, `scrub 0.5`, driven by the same Lenis/ScrollTrigger clock):
+
+| Target | Desktop range | Direction |
+|---|---|---|
+| Media column: the highest ancestor of a `frame` that holds only media (the frame + its caption, patches, snapshots, stickers; stops at text, at a second frame, at `data-stagger`/carousels, at 1.3 viewports tall) | +-36 px | lags (moves with the page, slower) |
+| Accents riding on that column (`.seal .stamp .medal .nst`, `toss`, `pop`) | +-14 px against it | leads: depth inside the column |
+| Hero media column | 0 -> +64 px as the hero scrolls away (starts at 0: nothing moves at load, LCP/CLS untouched); its accents 0 -> -28 px | lags |
+| `.shead` (eyebrow + headline + lead as one block) | +24 -> -24 px | leads (United: H2 +40 -> -20) |
+| Seals/stamps/medals not on a photo | +-28 px | leads |
+| `img[data-flow]` flow lines | +-48 px | lags the most |
+| Empty decorative blocks with a tier (colour block behind a photo) | +-30 px | lags |
+
+- **Room cap**: every range is capped by the free space above and below the target (to text, buttons and `[data-t]`
+  content that overlaps it horizontally, and to the section's edges when the section does not clip), minus 8 px;
+  under 8 px of room the target stays still. So nothing drifts into its neighbours (e.g. Home medals stay still).
+- **One writer per property** (rule 7): a target that has no entrance (a wrapper, a `.shead`, a flow line) moves through
+  the CSS `translate` property; a target that also has an entrance (a seal, a snapshot) moves through GSAP's own
+  `yPercent` component, which entrances (y, rotation, scale) never touch (it gets `data-px`, and its `frame` entrance then
+  does not `clearProps: transform`). Photos are never targets: they ride inside their column.
+- **Crisp photos**: every value is snapped to whole device pixels (`devicePixelRatio x html zoom`), so the photo is never
+  resampled at a sub-pixel offset; `will-change: transform` is set only while the target is in view.
+- Triggers are measured without the drift (`refreshInit` clears it, `refresh` repaints), so band start points never move.
+- Measured (frame-strip probe, Home/about 1440, water-heaters 390): 0 off-grid samples, photo offset inside its frame
+  constant (1 value per column across the whole scroll), no inline transform on any img, no step jump.
 
 ## 5. Interface attributes (`ui.ts`, work with or without motion)
 
@@ -204,8 +266,11 @@ You never call either one. Use `Base.astro`; `loader={false}` turns the loader o
 3. One `frame` photo per section at most; secondary photos `rise` or `toss`.
 4. Tier 5 is for accents only. If everything pops, nothing does.
 5. No new easing curves, no new durations, no scroll-jacking, no pinning, no infinite loops in the eye line (CSS or JS).
-   Ask before adding a new `data-fx`.
+   Ask before adding a new `data-fx`. Never make a band wait for another band, and never add a wait before a band plays.
 6. Never hide the largest element in the first viewport: use `frame` (photo) or `nudge` (text) there.
-7. Never put a CSS `transform` (zoom, pre-scale) on a photo to make room for motion: photos do not move. A frame that
-   holds a photo must clip it (`overflow: hidden` + `border-radius`, the `.frame` class does both).
+7. Never put a CSS `transform` (zoom, pre-scale) on a photo to make room for motion: photos do not move inside their
+   frame. A frame that holds a photo must clip it (`overflow: hidden` + `border-radius`, the `.frame` class does both).
+   One writer per property per element: entrances own `transform`/opacity/clip, parallax owns `translate` (or GSAP
+   `yPercent` on an element that also has an entrance), the frame reveal owns the img's `scale`/`clip-path`. Do not
+   set the CSS `translate` property on anything inside a `data-m-section`.
 8. Test with reduced motion on (DevTools > Rendering): the page must be complete and readable.

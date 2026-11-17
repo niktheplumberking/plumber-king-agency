@@ -1,0 +1,7 @@
+---
+// Proof chip: icon + label, 36 high, r10. v: tint (default) | white (with hairline) | dark (on navy).
+import Icon from './Icon.astro';
+interface Props { icon?: string; v?: 'tint' | 'white' | 'dark'; class?: string; [k: string]: any; }
+const { icon, v = 'tint', class: cls, ...rest } = Astro.props;
+---
+<span class:list={['chip', v !== 'tint' && `chip-${v}`, cls]} {...rest}>{icon && <Icon name={icon} size={16} />}<slot /></span>

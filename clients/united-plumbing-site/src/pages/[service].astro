@@ -1,0 +1,30 @@
+---
+// All 13 service pages from one template. Only the 13 service slugs are generated here
+// (town pages live in a separate route owned by the town builder).
+import Base from '../layouts/Base.astro';
+import ServicePage from '../components/services/ServicePage.astro';
+import { SERVICES, type Service } from '../data/services';
+import { TOWNS } from '../data/towns';
+import { CONTENT, type ServiceContent } from '../data/service-content';
+
+export function getStaticPaths() {
+  return SERVICES.map((s) => ({ params: { service: s.slug }, props: { s, c: CONTENT[s.slug] } }));
+}
+interface Props { s: Service; c: ServiceContent }
+const { s, c } = Astro.props;
+if (!c) throw new Error(`Missing page content for service "${s.slug}" in src/data/service-content.ts`);
+const site = Astro.site!.toString().replace(/\/$/, '');
+const plain = (h: string) => h.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const schema = [
+  {
+    '@context': 'https://schema.org', '@type': 'Service', name: `${s.name} in Pomona, CA`, serviceType: s.name,
+    url: `${site}/${s.slug}/`, description: s.description, provider: { '@id': `${site}/#business` },
+    areaServed: [{ '@type': 'City', name: 'Pomona, CA' }, ...TOWNS.filter((t) => t.phase === 1).map((t) => ({ '@type': 'City', name: `${t.name}, CA` }))],
+  },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: c.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: plain(f.a) } })) },
+];
+const og = c.why.photo.real ? c.why.photo.src : undefined;
+---
+<Base title={s.title} description={s.description} crumbs={[{ name: 'Services', href: '/services/' }, { name: s.name, href: `/${s.slug}/` }]} schema={schema} ogImage={og}>
+  <ServicePage c={c} />
+</Base>

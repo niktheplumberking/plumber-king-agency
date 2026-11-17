@@ -1,0 +1,46 @@
+---
+// Swoosh edge: the van's three ribbons (sky / blue / navy on a white band). Generated with the Figma prelude's formula
+// so it matches 1:1. Put it at the bottom of a section (absolute, bottom 0) with `below` = the next section's colour.
+// flip mirrors it. h = height in px at 1440 (it scales with width). draw = stripes draw in on scroll (motion tier 4).
+interface Props { flip?: boolean; below?: string; above?: string; h?: number; w?: number; class?: string; style?: string; draw?: boolean; }
+const { flip = false, below, above, h = 120, w, class: cls, style, draw = true } = Astro.props;
+// The prelude draws the swoosh in px for the frame it sits in: 1440 x 120 on desktop, 390 x 64 on the mobile frames
+// (h = w > 500 ? 120 : 64). The curve is not a scaled copy, so without an explicit `w` both are emitted and CSS shows
+// the mobile one up to 767 px (fixed height, stretched across the width), the desktop one above.
+const geo = (W: number, H: number) => {
+  const k = H / 120;
+  const X = (v: number) => (flip ? W - v : v);
+  const L = [76, 84, 90, 98, 104, 112].map((v) => v * k);
+  const R = [4, 34, 40, 70, 76, 106].map((v) => v * k);
+  const cur = (i: number, rev = false) => {
+    const a = [0, L[i]], b = [W * 0.42, L[i] + 16 * k], c = [W * 0.6, R[i] - 4 * k], d = [W, R[i]];
+    return rev
+      ? `L${X(d[0])} ${d[1]} C${X(c[0])} ${c[1]} ${X(b[0])} ${b[1]} ${X(a[0])} ${a[1]}`
+      : `M${X(a[0])} ${a[1]} C${X(b[0])} ${b[1]} ${X(c[0])} ${c[1]} ${X(d[0])} ${d[1]}`;
+  };
+  const band = (i: number, j: number) => `${cur(i)} ${cur(j, true)}Z`;
+  return {
+    W, H,
+    below: below ? `${cur(5)} L${X(W)} ${H} L${X(0)} ${H}Z` : '',
+    above: above ? `${cur(0)} L${X(W)} 0 L${X(0)} 0Z` : '',
+    bands: [band(0, 5), band(0, 1), band(2, 3), band(4, 5)],
+  };
+};
+const hm = Math.round((64 * h) / 120);
+const sets = w ? [{ g: geo(w, h), v: '' }] : [{ g: geo(1440, h), v: 'sw-d' }, { g: geo(390, hm), v: 'sw-m' }];
+---
+{sets.map(({ g, v }) => (
+  <svg class:list={['swoosh', v, cls]} viewBox={`0 0 ${g.W} ${g.H}`} preserveAspectRatio="none" aria-hidden="true" style={v === 'sw-m' ? `--swm:${g.H}px;${style ?? ''}` : style} data-swoosh={draw ? '' : undefined}>
+    {g.below && <path fill={below} d={g.below} />}
+    {g.above && <path fill={above} d={g.above} />}
+    <path fill="#FFFFFF" d={g.bands[0]} />
+    <path class="sw-b" fill="#61ADCB" d={g.bands[1]} />
+    <path class="sw-b" fill="#2A7FA8" d={g.bands[2]} />
+    <path class="sw-b" fill="#111032" d={g.bands[3]} />
+  </svg>
+))}
+<style>
+  .swoosh { display: block; width: 100%; height: auto; pointer-events: none; }
+  .sw-m { display: none; }
+  @media (max-width: 767px) { .sw-d { display: none; } .sw-m { display: block; height: var(--swm); } }
+</style>

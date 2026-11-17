@@ -1,0 +1,24 @@
+---
+// Button / link-button. v: pri (blue-press, on light) | sec (white, navy border) | priN (sky, on navy/water) | secN | navy | white
+// Renders <a> when href is given, else <button>. `icon` before the label, `arrow` after. Magnetic + pointer fill come from motion.ts
+// (data-magnetic is added to primary buttons by default on desktop only).
+import Icon from './Icon.astro';
+interface Props {
+  href?: string; v?: 'pri' | 'sec' | 'priN' | 'secN' | 'navy' | 'white'; icon?: string; arrow?: boolean; block?: boolean; h64?: boolean;
+  type?: 'button' | 'submit'; class?: string; external?: boolean; magnetic?: boolean; [k: string]: any;
+}
+const { href, v = 'pri', icon, arrow, block, h64, type = 'button', class: cls, external, magnetic, ...rest } = Astro.props;
+const classes = ['btn', v !== 'pri' && `btn-${v}`, block && 'btn-block', h64 && 'btn-64', cls];
+const mag = magnetic ?? (v === 'pri' || v === 'priN');
+const ext = external ? { target: '_blank', rel: 'noopener' } : {};
+---
+{href ? (
+  <a href={href} class:list={classes} data-magnetic={mag ? '' : undefined} {...ext} {...rest}>
+    {icon && <Icon name={icon} size={20} />}<span>{<slot />}</span>{arrow && <Icon name="arrow" size={18} class="arrow" />}
+    {external && <span class="sr-only"> (opens in a new tab)</span>}
+  </a>
+) : (
+  <button type={type} class:list={classes} data-magnetic={mag ? '' : undefined} {...rest}>
+    {icon && <Icon name={icon} size={20} />}<span>{<slot />}</span>{arrow && <Icon name="arrow" size={18} class="arrow" />}
+  </button>
+)}

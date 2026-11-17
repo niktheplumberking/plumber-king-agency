@@ -1,0 +1,45 @@
+---
+// 08 About (Figma 432:3768 / 433:6568). Title and meta from PAGES.md. JSON-LD: AboutPage about the business, with the two
+// owners as Person entries (names as on the page; Paul and Alycia to approve titles).
+import Base from '../layouts/Base.astro';
+import BHero from '../components/about/BHero.astro';
+import BStory from '../components/about/BStory.astro';
+import BStats from '../components/about/BStats.astro';
+import BTimeline from '../components/about/BTimeline.astro';
+import BOwners from '../components/about/BOwners.astro';
+import BCrew from '../components/about/BCrew.astro';
+import BRules from '../components/about/BRules.astro';
+import BCommunity from '../components/about/BCommunity.astro';
+import BPaper from '../components/about/BPaper.astro';
+import BHiring from '../components/about/BHiring.astro';
+import WaterlineCTA from '../components/global/WaterlineCTA.astro';
+import { abs, BUSINESS_ID } from '../lib/schema';
+const ld = {
+  '@context': 'https://schema.org', '@type': 'AboutPage', url: abs('/about'), name: 'About Plumbing By Paul',
+  about: { '@id': BUSINESS_ID() },
+  mainEntity: { '@id': BUSINESS_ID(), employee: [
+    { '@type': 'Person', name: 'Paul Alves', jobTitle: 'Owner' },
+    { '@type': 'Person', name: 'Alycia Hernandez Alves', jobTitle: 'Co-owner' },
+  ] },
+};
+---
+<Base
+  title="About Plumbing By Paul · Family-Owned Since 2015"
+  description="Meet Paul, Alycia and the crew in the blue shirts. Family-owned in St. Petersburg since 2015, licensed (CFC1430367), four-time Best of the Bay winner."
+  path="/about"
+  og="hero-03-paul-and-son-box-truck"
+  ogAlt="Paul and his son in front of the Plumbing By Paul box truck"
+  jsonld={[ld]}
+>
+  <BHero />
+  <BStory />
+  <BStats />
+  <BTimeline />
+  <BOwners />
+  <BCrew />
+  <BRules />
+  <BCommunity />
+  <BPaper />
+  <BHiring />
+  <WaterlineCTA l1="Now you know us." l2="Let's see about that leak." />
+</Base>

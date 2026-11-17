@@ -1,0 +1,22 @@
+---
+// The seal: the mascot roundel from Paul's real logo art, as a sticker (white ring, navy rim, sticker shadow).
+// d = diameter in px (48 / 56 / 72 / 92 / 104 / 112 / 120 / 160). deg = rotation. Motion: tier 5 (pop + settle).
+import { Image } from 'astro:assets';
+import seal from '../../assets/brand/seal-mascot.png';
+import { zoomSizes } from './zoomSizes';
+interface Props { d?: number; deg?: number; class?: string; style?: string; flat?: boolean; t?: string | false; eager?: boolean; slot?: number; }
+const { d = 72, deg = 0, class: cls, style = '', flat, t = '5', eager, slot } = Astro.props;
+// One shared set of files for every seal on the site (224 / 336 / 512 px; 224 is also the loader's seal), picked by
+// `sizes` = the rendered size (`slot`, default d; restated in vw above 1440 for the wide-screen zoom). Seals of any size
+// then reuse the same cached files: a page shows several, and per-size files were extra requests next to the hero photo
+// that cost Home mobile LCP ~0.15 s (QA round 2). Every seal renders at 1.00-1.03x its slot (measured).
+const z = zoomSizes(`${slot ?? d}px`);
+---
+<span class:list={['seal', flat && 'flat', cls]} style={`--d:${d}px;--deg:${deg}deg;${style}`} data-t={t === false ? undefined : t} data-fx="pop" aria-hidden="true">
+  <Image src={seal} alt="" width={224} height={224} widths={[224, 336, 512]} sizes={z.sizes} loading={eager ? 'eager' : 'lazy'} />
+</span>
+<style>
+  .seal { display: block; width: var(--d); height: var(--d); border-radius: 50%; background: var(--white); padding: max(2px, calc(var(--d) * .04)); transform: rotate(var(--deg)); box-shadow: var(--sh-sticker); flex: none; }
+  .seal.flat { box-shadow: none; }
+  .seal :global(img) { width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--navy); outline: max(2px, calc(var(--d) * .06)) solid var(--navy); outline-offset: calc(-1 * max(2px, calc(var(--d) * .06))); object-fit: cover; }
+</style>

@@ -1,0 +1,24 @@
+---
+// Job ticket: the "facts table" of a service page, styled as a work-order ticket (perforated edge, Russo labels).
+// rows: [{ k: 'Typical time on site', v: 'Paul to confirm' }]. Facts only: unconfirmed values must say so (stand-in).
+interface Props { title?: string; no?: string; rows: { k: string; v: string; standIn?: boolean }[]; class?: string; }
+const { title = 'Job ticket', no, rows, class: cls } = Astro.props;
+---
+<section class:list={['ticket', cls]} aria-label={title} data-t="4">
+  <header><span class="label">{title}</span>{no && <span class="num no">{no}</span>}</header>
+  <dl>
+    {rows.map((r) => <div class:list={['row', r.standIn && 'stand']}><dt class="label">{r.k}</dt><dd>{r.v}</dd></div>)}
+  </dl>
+</section>
+<style>
+  .ticket { position: relative; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); overflow: hidden; }
+  .ticket::before { content: ''; position: absolute; left: 0; right: 0; top: 52px; border-top: 2px dashed var(--line); }
+  header { display: flex; justify-content: space-between; align-items: center; height: 52px; padding: 0 24px; background: var(--navy); color: var(--white); }
+  .no { color: var(--sky); font-size: 14px; }
+  dl { margin: 0; padding: 8px 24px 16px; }
+  .row { display: grid; grid-template-columns: 44% 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  dt { color: var(--press); padding-top: 3px; }
+  dd { margin: 0; font-weight: 600; font-size: 15px; line-height: 22px; color: var(--navy); }
+  .stand dd { color: var(--slate-2); font-style: italic; font-weight: 500; }
+</style>

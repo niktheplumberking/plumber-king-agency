@@ -1,0 +1,74 @@
+---
+// E3 What's happening? (Figma 433:9480 / 439:3375): 3 x 2 icon card grid on tint (2 x 3 on mobile). Icon medallions overlap
+// the card tops; the urgent card (sewer) is navy, 12 px taller, with a "Don't wait" tag. Categories = Paul's current emergency page.
+import SectionHead from '../ui/SectionHead.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../data/site';
+const items = [
+  { t: 'Leaks and burst pipes', d: 'Quick action saves walls and floors.', l: 'Call about a burst pipe', i: 'droplets' },
+  { t: 'Sewer backups', d: 'Sewage coming up a drain will not settle down on its own.', l: 'Call about a backup', i: 'waves', nv: true },
+  { t: 'Water heater failures', d: 'A leaking tank or no hot water at all.', l: 'Call about a water heater', i: 'heater' },
+  { t: 'Blocked drains', d: 'Standing water with nowhere to go.', l: 'Call about a drain', i: 'pipe' },
+  { t: 'Toilet overflow', d: 'Turn the valve behind the toilet clockwise, then call.', l: 'Call about a toilet', i: 'toilet' },
+  { t: 'Shower and sink failures', d: "A valve that won't close, a supply line that let go.", l: 'Call about a fixture', i: 'shower' },
+];
+---
+<section class="wh" aria-labelledby="wh-h" data-m-section>
+  <div class="wrap">
+    <div class="wh-head">
+      <SectionHead eyebrow="We come out for" l1="If it can't wait," l2="it's an emergency" id="wh-h" />
+      <p class="wh-call wh-cd" data-t="3">Not on the list? Call <a href={SITE.tel}><Icon name="phone" size={18} /><span>{SITE.phone}</span></a></p>
+    </div>
+    <ul role="list" class="wh-grid" data-t="4" data-stagger>
+      {items.map((it, i) => (
+        <li class:list={['wh-card', it.nv && 'nv']}>
+          <span class="wh-med" aria-hidden="true"><Icon name={it.i} size={24} /></span>
+          {it.nv ? <span class="label wh-tag">Don't wait</span> : <span class="num wh-n" aria-hidden="true">0{i + 1}</span>}
+          <h3 class="wh-t">{it.t}</h3>
+          <p class="wh-d">{it.d}</p>
+          <a href={SITE.tel} class="wh-l"><span class="t"><span class="ld">{it.l}</span><span class="lm">Call about this</span></span><Icon name="phone" size={16} /><span class="sr-only"> ({it.t.toLowerCase()})</span></a>
+        </li>
+      ))}
+    </ul>
+    <p class="wh-call wh-cm" data-t="3">Not on the list? Call <a href={SITE.tel}><span>{SITE.phone}</span></a></p>
+  </div>
+</section>
+<style>
+  .wh { position: relative; background: var(--tint); padding: 104px 0 112px; }
+  .wh-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+  .wh-call { font-weight: 500; font-size: 16px; line-height: 24px; color: var(--slate); }
+  .wh-call a { display: inline-flex; align-items: center; gap: 8px; margin-left: 4px; color: var(--press); font-weight: 700; }
+  .wh-call a span { text-decoration: underline; text-underline-offset: 3px; }
+  .wh-cd { margin-bottom: 6px; }
+  .wh-cm { display: none; }
+  .wh-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px 24px; margin: 80px 0 0; padding: 0; align-items: start; }
+  .wh-card { position: relative; display: flex; flex-direction: column; min-height: 192px; padding: 56px 24px 24px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-1); transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out); }
+  .wh-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); }
+  .wh-card.nv { min-height: 204px; margin-top: -6px; margin-bottom: -6px; padding-top: 62px; background: var(--navy); color: var(--white); box-shadow: var(--sh-3); }
+  .wh-med { position: absolute; left: 20px; top: -28px; display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--white); color: var(--blue); box-shadow: 0 0 0 4px var(--white), var(--sh-sticker); }
+  .nv .wh-med { background: var(--sky); color: var(--navy); }
+  .wh-n { position: absolute; right: 24px; top: 24px; font-size: 13px; letter-spacing: .08em; color: var(--press); }
+  .wh-tag { position: absolute; right: 24px; top: 22px; padding: 5px 10px; border-radius: 6px; background: var(--sky); color: var(--navy); }
+  .wh-t { font-weight: 700; font-size: 20px; line-height: 26px; }
+  .wh-d { margin-top: 6px; font-size: 15px; line-height: 23px; color: var(--slate); }
+  .nv .wh-d { color: var(--tint); }
+  .wh-l { display: inline-flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 18px; color: var(--press); font-weight: 600; font-size: 15px; line-height: 24px; align-self: flex-start; }
+  .wh-l .t { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .nv .wh-l { color: var(--sky); }
+  .lm { display: none; }
+  @media (max-width: 1023px) {
+    .wh { padding: 64px 0 72px; }
+    .wh-head { display: block; }
+    .wh-cd { display: none; } .wh-cm { display: block; margin-top: 32px; font-size: 15px; }
+    .wh-cm a { margin-left: 2px; }
+    .wh-grid { grid-template-columns: repeat(2, 1fr); gap: 44px 12px; margin-top: 64px; }
+    .wh-card, .wh-card.nv { min-height: 204px; margin: 0; padding: 46px 14px 16px; }
+    .wh-med { left: 10px; top: -26px; width: 56px; height: 56px; }
+    .wh-med :global(svg) { width: 20px; height: 20px; }
+    .wh-n, .wh-tag { display: none; }
+    .wh-t { font-size: 15px; line-height: 20px; }
+    .wh-d { font-size: 12px; line-height: 17px; }
+    .wh-l { flex-direction: row-reverse; gap: 6px; font-size: 13px; line-height: 20px; min-height: 44px; padding-top: 12px; align-items: flex-end; }
+    .ld { display: none; } .lm { display: inline; }
+  }
+</style>

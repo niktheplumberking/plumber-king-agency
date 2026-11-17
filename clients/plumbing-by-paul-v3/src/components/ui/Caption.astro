@@ -1,0 +1,10 @@
+---
+// White caption plate on a photo (13 px, sh-1). Place it with the class/style you pass.
+interface Props { class?: string; small?: boolean; [k: string]: any; }
+const { class: cls, small, ...rest } = Astro.props;
+---
+<span class:list={['cap', small && 'sm', cls]} {...rest}><slot /></span>
+<style>
+  .cap { display: inline-block; padding: 8px 12px; border-radius: 10px; background: var(--white); box-shadow: var(--sh-1); color: var(--navy); font-weight: 500; font-size: 13px; line-height: 20px; }
+  .sm { font-size: 12px; line-height: 18px; padding: 6px 10px; }
+</style>

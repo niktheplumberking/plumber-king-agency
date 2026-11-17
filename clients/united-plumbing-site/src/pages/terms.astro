@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import LegalLayout from '../components/company/LegalLayout.astro';
+import { SITE } from '../data/site';
+---
+<Base title="Terms of Use | United Plumbing" description="The terms for using the United Plumbing website." crumbs={[{ name: 'Terms of use', href: '/terms/' }]}>
+  <LegalLayout doc="terms" line1="Terms of use" line2="in plain words.">
+    <div class="band">
+      <span class="band-ico"><Icon name="shield" size={24} /></span>
+      <div>
+        <h2 class="h-display band-h">Terms of use</h2>
+        <p class="band-m">/terms/ · Last updated: <em class="ph">[effective date]</em> · By using this website, you agree to these terms.</p>
+      </div>
+    </div>
+
+    <section class="lg-s" id="about">
+      <h3 class="h-display lg-h"><span class="led">01</span>About this website</h3>
+      <p>This website gives general information about United Plumbing and our services. It is not professional advice for your specific home. Every home is different. Call us to talk about your situation.</p>
+    </section>
+
+    <section class="lg-s" id="quotes">
+      <h3 class="h-display lg-h"><span class="led">02</span>Quotes and work</h3>
+      <p>Nothing on this website is a quote or a contract. Prices, timing and scope are agreed with you directly before any work starts. Arrival times are estimates and can change with traffic, weather and other calls.</p>
+    </section>
+
+    <section class="lg-s" id="safety">
+      <h3 class="h-display lg-h"><span class="led">03</span>Safety</h3>
+      <ul class="safe">
+        <li><span><Icon name="flame" size={20} /></span><p><strong>Smell gas?</strong> Leave the building and call SoCalGas or 911 from outside.</p></li>
+        <li><span><Icon name="zap" size={20} /></span><p><strong>Water near outlets or a panel?</strong> Stay away and call for help.</p></li>
+        <li><span><Icon name="phone" size={20} /></span><p><strong>Emergency?</strong> Don't wait for a website form. Call <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a>.</p></li>
+      </ul>
+    </section>
+
+    <section class="lg-s" id="content">
+      <h3 class="h-display lg-h"><span class="led">04</span>Photos, content and links</h3>
+      <ul>
+        <li><strong>Photos and content:</strong> the photos, text and logo on this site belong to United Plumbing or are used with permission. Please don't copy them without asking.</li>
+        <li><strong>Links:</strong> we may link to other sites, like Instagram or Google. We don't control those sites and aren't responsible for them.</li>
+      </ul>
+    </section>
+
+    <section class="lg-s" id="accuracy">
+      <h3 class="h-display lg-h"><span class="led">05</span>Website accuracy, California law</h3>
+      <p>We work to keep this website accurate, but we don't promise it is always complete, current or free of errors. We are not liable for losses from using this website. These terms follow California law.</p>
+      <p>United Plumbing · Pomona, CA 91767 · <a href={SITE.phoneHref}>{SITE.phoneDisplay}</a> · <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+      <p>See also our <a href="/privacy/">Privacy policy</a>, or <a href="/contact/">contact us</a>.</p>
+    </section>
+  </LegalLayout>
+</Base>
+
+<style>
+  .band { position: relative; display: flex; gap: 20px; align-items: flex-start; height: 128px; padding: 28px 32px 0; border-radius: 16px; background: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.3px) 0 0/12px 12px, var(--night); color: #fff; }
+  .band-ico { display: grid; place-items: center; flex: none; width: 52px; height: 52px; margin-top: 6px; border-radius: 12px; background: var(--yellow); color: var(--ink); }
+  .band-h { font-size: 40px; line-height: 48px; letter-spacing: 0; }
+  .band-m { max-width: 580px; margin-top: 6px; color: var(--cyan); font-size: 13px; font-weight: 600; word-spacing: .1em; }
+  .band-m .ph { font-style: normal; }
+  .safe { gap: 8px !important; margin-top: 14px !important; padding: 20px 20px 16px; border-radius: 14px; background: #fff8d6; border: 2px solid var(--yellow); }
+  .safe li { display: flex; gap: 16px; align-items: center; min-height: 40px; padding-left: 0 !important; }
+  .safe li::before { display: none; }
+  .safe span { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--ink); color: var(--yellow); }
+  .safe p { margin: 0 !important; color: var(--ink) !important; font-size: 16px !important; line-height: 1.5 !important; }
+  .safe strong { font-weight: 700 !important; }
+  .safe a { color: var(--cobalt); text-decoration: underline; }
+  #safety { padding-bottom: 32px !important; }
+  @media (max-width: 640px) {
+    .band { display: grid; grid-template-columns: 48px 1fr; gap: 0 16px; height: 142px; padding: 20px 20px 0; border-radius: 14px; }
+    .band > div { display: contents; }
+    .band-ico { width: 48px; height: 48px; margin-top: 2px; }
+    .band-h { align-self: start; font-size: 34px; line-height: 41px; margin-top: 2px; }
+    .band-m { grid-column: 1 / -1; margin-top: 14px; font-size: 12px; line-height: 18px; }
+    #safety { padding-bottom: 24px !important; }
+    .safe { gap: 14px !important; padding: 16px 16px 14px; border-radius: 12px; }
+    .safe li { align-items: flex-start; gap: 12px; }
+    .safe span { width: 36px; height: 36px; }
+    .safe span :global(.icon) { width: 18px; height: 18px; }
+    .safe p { font-size: 15px !important; line-height: 23px !important; margin-top: 4px !important; }
+  }
+</style>

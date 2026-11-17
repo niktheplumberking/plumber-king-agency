@@ -1,0 +1,79 @@
+---
+// E9 Waterline CTA, phone-first variant (Figma 433:9971 / 439:3802): no form card. Centred head, the phone in Russo at 120 px
+// floating on the waterline with the seal beside it, "Call now" + a text link for non-urgent estimates, three mini facts.
+// id="estimate" keeps the header's "Free estimate" target on this page. STICKY 1: 8 to 5 daily vs the 24/7 line.
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import FlowLines from '../ui/FlowLines.astro';
+import Water from '../ui/Water.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import { SITE } from '../../data/site';
+const facts = [
+  { icon: 'clock', a: 'Open 7 days', b: '8 AM to 5 PM', m: SITE.hours.line },
+  { icon: 'badge', a: 'Licensed', b: `Lic. ${SITE.licence}`, m: `Lic. ${SITE.licence}` },
+  { icon: 'g', a: `${SITE.rating.value} on Google`, b: `from ${SITE.rating.count} reviews`, m: `${SITE.rating.value} from ${SITE.rating.count} Google reviews` },
+];
+---
+<section class="pc on-navy" id="estimate" aria-labelledby="pc-h" data-m-section>
+  <FlowLines variant="cta" />
+  <Water class="pc-water" />
+  <div class="wrap pc-in">
+    <Eyebrow text="Emergency line" dark dot />
+    <h2 class="h2 sz-cta pc-h" id="pc-h" data-t="2"><span class="l1">Don't wait and see.</span> <span class="l2">Call {SITE.phone}.</span></h2>
+    <div class="pc-big" data-t="3" data-fx="nudge">
+      <a href={SITE.tel} class="num pc-ph"><span class="sr-only">Call </span>{SITE.phone}</a>
+      <Seal d={116} deg={10} class="pc-seal" />
+    </div>
+    <div class="pc-btns" data-t="3" data-stagger>
+      <a href={SITE.tel} class="btn btn-navy btn-64 pc-call"><Icon name="phone" size={20} /><span>Call now</span></a>
+      <a href="/contact" class="tlink pc-est"><span class="t">Not urgent? Request a free estimate</span><Icon name="arrow" size={18} /></a>
+    </div>
+    <ul role="list" class="pc-facts" data-t="5" data-stagger>
+      {facts.map((f) => (
+        <li><span class="fi">{f.icon === 'g' ? <GoogleG size={20} /> : <Icon name={f.icon} size={20} />}</span>
+          <span class="fd"><b>{f.a}</b><small>{f.b}</small></span><span class="fm">{f.m}</span></li>
+      ))}
+    </ul>
+  </div>
+  <Swoosh class="pc-sw" h={110} above="transparent" />
+</section>
+<style>
+  .pc { position: relative; overflow: hidden; background: linear-gradient(var(--navy) 0 0) top / 100% 390px no-repeat, var(--sky); color: var(--white); padding: 84px 0 0; }
+  .pc :global(.flow) { height: 420px; }
+  .pc :global(.pc-water) { top: 362px; }
+  .pc-in { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
+  .pc-h { margin-top: 16px; }
+  .pc-h .l1, .pc-h .l2 { display: block; }
+  .pc-big { position: relative; margin-top: 22px; }
+  .pc-ph { display: block; font-size: clamp(44px, 8.4vw, 120px); line-height: 1.03; color: var(--white); letter-spacing: -.01em; text-shadow: 0 8px 0 var(--navy), 0 22px 30px rgba(17,16,50,.3); white-space: nowrap; transition: color var(--dur-2); }
+  .pc-ph:hover { color: var(--tint); }
+  .pc-big :global(.pc-seal) { position: absolute; left: calc(100% + 8px); top: -64px; }
+  .pc-btns { display: flex; align-items: center; gap: 24px; margin-top: 70px; }
+  .pc-call { min-width: 220px; font-size: 18px; }
+  .pc-est { color: var(--navy) !important; }
+  .pc-facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 34px 0 0; padding: 0; text-align: left; }
+  .pc-facts li { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 14px; background: rgba(255,255,255,.92); color: var(--navy); }
+  .fi { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--tint); color: var(--blue); flex: none; }
+  .fd { display: grid; } .fd b { font-weight: 700; font-size: 15px; line-height: 20px; } .fd small { font-weight: 500; font-size: 13px; line-height: 18px; color: var(--slate); }
+  .fm { display: none; }
+  .pc :global(.pc-sw) { position: relative; z-index: 1; margin-top: 40px; }
+  @media (max-width: 1023px) {
+    .pc { padding-top: 52px; background: linear-gradient(var(--navy) 0 0) top / 100% 244px no-repeat, var(--sky); }
+    .pc :global(.flow) { height: 250px; }
+    .pc :global(.pc-water) { top: 222px; height: 60px; }
+    .pc-in { justify-items: start; text-align: left; }
+    .pc-h { margin-top: 12px; }
+    .pc-big { position: static; margin-top: 10px; }
+    .pc-ph { font-size: 40px; line-height: 48px; text-shadow: 0 4px 0 var(--navy); }
+    .pc-big :global(.pc-seal) { --d: 64px !important; left: auto; right: 0; top: -30px; }
+    .pc-btns { display: grid; width: 100%; gap: 20px; margin-top: 48px; justify-items: start; }
+    .pc-call { width: 100%; }
+    .pc-facts { display: grid; width: 100%; margin-top: 20px; gap: 8px; }
+    .pc-facts li { padding: 8px 12px; gap: 10px; border-radius: 10px; }
+    .pc-facts .fi { width: auto; height: auto; background: none; }
+    .fd { display: none; } .fm { display: block; font-weight: 700; font-size: 14px; }
+    .pc :global(.pc-sw) { margin-top: 32px; }
+  }
+</style>

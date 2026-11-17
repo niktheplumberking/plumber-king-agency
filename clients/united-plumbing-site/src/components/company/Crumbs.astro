@@ -1,0 +1,21 @@
+---
+// Visible breadcrumb for the company pages (the JSON-LD BreadcrumbList comes from Base).
+interface Props { items: { name: string; href: string }[] }
+const { items } = Astro.props;
+---
+<nav class="crumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    {items.map((c, i) => (
+      <li>{i === items.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={c.href}>{c.name}</a>}</li>
+    ))}
+  </ol>
+</nav>
+<style>
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; line-height: 18px; font-weight: 500; letter-spacing: .04em; color: #a3aec6; }
+  .crumbs li + li::before { content: '/'; margin-right: 12px; }
+  .crumbs a { display: inline-block; padding: 9px 0; transition: color .2s; }
+  .crumbs a:hover { color: #fff; }
+  .crumbs [aria-current] { display: inline-block; padding: 9px 0; color: var(--cyan); }
+  @media (max-width: 640px) { .crumbs ol { gap: 8px; font-size: 12px; line-height: 16px; letter-spacing: .04em; } .crumbs li + li::before { margin-right: 8px; } .crumbs a, .crumbs [aria-current] { padding: 10px 0; } }
+</style>

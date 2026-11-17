@@ -1,0 +1,26 @@
+---
+// Rating pill: G + 4.9 (Russo) + stars + "947 Google reviews". Links to the Google reviews. dark = on navy.
+import GoogleG from './GoogleG.astro';
+import Stars from './Stars.astro';
+import { SITE } from '../../data/site';
+interface Props { dark?: boolean; class?: string; href?: string | false; small?: boolean; [k: string]: any; }
+const { dark, class: cls, href = SITE.google.reviewsUrl, small, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+<Tag href={href || undefined} target={href ? '_blank' : undefined} rel={href ? 'noopener' : undefined}
+  class:list={['rpill', dark && 'dark', small && 'small', cls]} {...rest}>
+  <GoogleG size={small ? 16 : 18} />
+  <span class="v num">{SITE.rating.value}</span>
+  <Stars size={small ? 12 : 14} />
+  <span class="c">{SITE.rating.count} Google reviews</span>
+  {href && <span class="sr-only"> (rated {SITE.rating.value} out of 5 on Google, opens in a new tab)</span>}
+</Tag>
+<style>
+  .rpill { display: inline-flex; align-items: center; gap: 10px; height: 40px; padding: 0 16px; border-radius: var(--r-full); background: var(--white); box-shadow: var(--sh-1); color: var(--navy); white-space: nowrap; transition: box-shadow var(--dur-2), transform var(--dur-2) var(--ease-out); }
+  a.rpill:hover { box-shadow: var(--sh-2); transform: translateY(-1px); }
+  .v { font-size: 20px; line-height: 24px; }
+  .c { font-weight: 500; font-size: 14px; line-height: 20px; }
+  .dark { background: var(--navy); color: var(--white); box-shadow: inset 0 0 0 1px var(--sky); }
+  .small { height: 36px; padding: 0 12px; gap: 8px; }
+  .small .v { font-size: 16px; } .small .c { font-size: 13px; }
+</style>

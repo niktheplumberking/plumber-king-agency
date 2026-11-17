@@ -1,0 +1,38 @@
+---
+// C9 Town FAQ (Figma 440:3026): tint section, centred heading, one 800 px accordion column, the seal on its right edge.
+// FAQPage JSON-LD carries only the answered items: stand-in answers (Paul to confirm) stay out of the schema.
+import SectionHead from '../ui/SectionHead.astro';
+import Faq from '../ui/Faq.astro';
+import Seal from '../ui/Seal.astro';
+import type { TownPageData } from '../../data/town-pages';
+interface Props { t: TownPageData }
+const { t } = Astro.props;
+const f = t.faq;
+const items = f.items.map((i) => ({ q: i.q, a1: i.a1, a2: i.a2 }));
+const ld = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: f.items.filter((i) => !i.standIn).map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: [i.a1, i.a2].filter(Boolean).join(' ') } })),
+};
+---
+<section class="tf" aria-labelledby="tf-h" data-m-section>
+  <div class="wrap">
+    <SectionHead eyebrow={f.eyebrow} l1={f.l1} l2={f.l2} id="tf-h" center class="tf-head" />
+    <div class="tf-col">
+      <Faq items={items} schema={false} group={`faq-${t.slug}`} />
+      <span class="tf-seal"><Seal d={118} deg={-8} /></span>
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</section>
+<style>
+  .tf { position: relative; background: var(--tint); padding: 104px 0 112px; }
+  .tf-col { position: relative; max-width: 800px; margin: 48px auto 0; }
+  .tf-seal { position: absolute; right: -128px; bottom: -18px; }
+  @media (max-width: 1199px) { .tf-seal { right: -60px; } }
+  @media (max-width: 1023px) {
+    .tf { padding: 64px 0 72px; }
+    .tf :global(.tf-head) { justify-items: start; text-align: left; }
+    .tf-col { margin-top: 28px; }
+    .tf-seal { display: none; }
+  }
+</style>

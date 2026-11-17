@@ -1,0 +1,60 @@
+---
+// Services mega menu (PAGES.md G1). Four groups + navy emergency card (seal top-right, swoosh bottom) + tint foot row.
+// Opened by the "Services" nav button (hover with intent delay, click, keyboard). Tankless omitted: no page (brief).
+import Icon from '../ui/Icon.astro';
+import Seal from '../ui/Seal.astro';
+import Swoosh from '../ui/Swoosh.astro';
+import TextLink from '../ui/TextLink.astro';
+import Tick from '../ui/Tick.astro';
+import { SERVICES, SERVICE_GROUPS, EMERGENCY } from '../../data/services';
+import { SITE } from '../../data/site';
+---
+<div class="mega" id="mega-services" data-mega="services" hidden>
+  <div class="wrap">
+    <div class="mg-card">
+      <div class="mg-main">
+        <div class="mg-groups">
+          {SERVICE_GROUPS.map((g) => (
+            <div class="mg-g" data-mg-col>
+              <p class="mg-h"><Tick />{g.label}</p>
+              <ul role="list">
+                {SERVICES.filter((s) => s.group === g.key).map((s) => <li><a href={s.href}><span>{s.name}</span><Icon name="arrow" size={14} /></a></li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div class="mg-foot">
+          <p>Not sure what it's called? <strong>Tell us what you see. We'll know.</strong></p>
+          <TextLink href="/services" size={15}>All services</TextLink>
+        </div>
+      </div>
+      <aside class="mg-em on-navy" data-mg-col>
+        <Seal d={72} deg={8} class="mg-seal" t={false} />
+        <p class="mg-emh">Water where it shouldn't be?</p>
+        <a href={SITE.tel} class="mg-call"><Icon name="phone" size={18} />Call {SITE.phone}</a>
+        <TextLink href={EMERGENCY.href} dark size={15}>{EMERGENCY.name}</TextLink>
+        <Swoosh class="mg-sw" h={56} w={280} draw={false} />
+      </aside>
+    </div>
+  </div>
+</div>
+<style>
+  .mega { position: absolute; left: 0; right: 0; top: calc(100% - 4px); padding-top: 10px; }
+  .mg-card { display: grid; grid-template-columns: 1fr 280px; gap: 0; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); overflow: hidden; }
+  .mg-main { display: grid; grid-template-rows: 1fr auto; }
+  .mg-groups { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 32px 32px 24px 160px; }
+  .mg-h { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-family: var(--f-num); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--navy); }
+  .mg-g ul { display: grid; gap: 2px; margin: 0; padding: 0; }
+  .mg-g a { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; margin-inline: -10px; border-radius: 10px; font-weight: 600; font-size: 15px; line-height: 20px; color: var(--navy); transition: background var(--dur-2), color var(--dur-2); }
+  .mg-g a :global(svg) { color: var(--blue); opacity: 0; transform: translateX(-6px); transition: opacity var(--dur-2), transform var(--dur-2) var(--ease-out); }
+  .mg-g a:hover, .mg-g a:focus-visible { background: var(--tint); color: var(--press); }
+  .mg-g a:hover :global(svg), .mg-g a:focus-visible :global(svg) { opacity: 1; transform: none; }
+  .mg-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 32px 16px 160px; background: var(--tint); font-size: 15px; color: var(--slate); }
+  .mg-foot strong { color: var(--navy); font-weight: 600; }
+  .mg-em { position: relative; display: grid; align-content: start; gap: 14px; padding: 32px 28px 72px; background: var(--navy); color: var(--white); overflow: hidden; }
+  .mg-em :global(.mg-seal) { position: absolute; right: -12px; top: -12px; }
+  .mg-emh { max-width: 170px; font-weight: 800; font-size: 22px; line-height: 28px; }
+  .mg-call { display: inline-flex; align-items: center; gap: 10px; justify-self: start; min-height: 48px; padding: 0 16px; border-radius: var(--r-md); background: var(--sky); color: var(--navy); font-weight: 700; font-size: 16px; transition: background var(--dur-2); }
+  .mg-call:hover { background: var(--soft); }
+  .mg-em :global(.mg-sw) { position: absolute; left: 0; right: 0; bottom: 0; }
+</style>

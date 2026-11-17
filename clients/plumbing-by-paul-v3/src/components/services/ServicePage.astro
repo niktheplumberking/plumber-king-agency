@@ -1,0 +1,58 @@
+---
+// The service page template (Figma 03 water heaters = layout "a", Figma 04 drain cleaning = layout "b").
+// One data object per page (src/data/service-pages.ts). A section renders only when the page has real content for it.
+// JSON-LD: Service (here), BreadcrumbList (Breadcrumbs in the hero), FAQPage (Faq in the FAQ section).
+import Base from '../../layouts/Base.astro';
+import WaterlineCTA from '../global/WaterlineCTA.astro';
+import SvcHero from './SvcHero.astro';
+import SvcAnswer from './SvcAnswer.astro';
+import SvcSigns from './SvcSigns.astro';
+import SvcCompare from './SvcCompare.astro';
+import SvcTypes from './SvcTypes.astro';
+import SvcSteps from './SvcSteps.astro';
+import SvcPrice from './SvcPrice.astro';
+import SvcReviews from './SvcReviews.astro';
+import SvcLocal from './SvcLocal.astro';
+import SvcFaq from './SvcFaq.astro';
+import SvcRelated from './SvcRelated.astro';
+import SvcTabs from './SvcTabs.astro';
+import SvcVersus from './SvcVersus.astro';
+import SvcFeature from './SvcFeature.astro';
+import SvcTips from './SvcTips.astro';
+import { serviceSchema } from '../../lib/schema';
+import type { SvcPage } from '../../data/service-pages';
+import { plain } from './fmt';
+interface Props { data: SvcPage; }
+const { data: d } = Astro.props;
+const slug = d.path.slice(1);
+const ld = serviceSchema({ name: d.name, serviceType: d.serviceType, path: d.path, description: plain(d.answer.text) });
+---
+<Base title={d.title} description={d.meta} path={d.path} og={d.og} ogAlt={d.ogAlt} jsonld={[ld]}>
+  <SvcHero d={d} slug={slug} />
+  <SvcAnswer d={d} slug={slug} />
+  {d.layout === 'a' ? (
+    <>
+      {d.signs && <SvcSigns s={d.signs} slug={slug} />}
+      {d.compare && <SvcCompare c={d.compare} slug={slug} />}
+      {d.types && <SvcTypes t={d.types} slug={slug} />}
+      <SvcSteps s={d.steps} slug={slug} layout="a" />
+      <SvcPrice p={d.price} slug={slug} layout="a" />
+      {d.reviews && <SvcReviews r={d.reviews} slug={slug} layout="a" />}
+      {d.local && <SvcLocal l={d.local} slug={slug} />}
+      <SvcFaq f={d.faq} slug={slug} layout="a" />
+    </>
+  ) : (
+    <>
+      {d.tabs && <SvcTabs t={d.tabs} slug={slug} />}
+      {d.versus && <SvcVersus v={d.versus} slug={slug} />}
+      <SvcSteps s={d.steps} slug={slug} layout="b" chip={d.hero.chips?.at(-1)} />
+      {d.feature && <SvcFeature f={d.feature} slug={slug} />}
+      {d.reviews && <SvcReviews r={d.reviews} slug={slug} layout="b" />}
+      <SvcPrice p={d.price} slug={slug} layout="b" />
+      {d.tips && <SvcTips t={d.tips} slug={slug} />}
+      <SvcFaq f={d.faq} slug={slug} layout="b" />
+    </>
+  )}
+  {d.related && <SvcRelated r={d.related} slug={slug} />}
+  <WaterlineCTA l1={d.cta.l1} l2={d.cta.l2} lead={d.cta.lead} />
+</Base>

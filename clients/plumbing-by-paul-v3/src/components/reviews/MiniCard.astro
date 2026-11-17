@@ -1,0 +1,23 @@
+---
+// Mini review card for the R1 wall (Figma "Mini review card"): stars, the first sentence word for word, G + name, a mini
+// patch on the top-right corner. 170 wide on desktop, 13 / 19 text. navy = the every-fifth dark card.
+import Stars from '../ui/Stars.astro';
+import GoogleG from '../ui/GoogleG.astro';
+import Patch from '../ui/Patch.astro';
+interface Props { q: string; by: string; patch?: string; navy?: boolean; deg?: number; }
+const { q, by, patch, navy, deg = -4 } = Astro.props;
+---
+<div class:list={['mini', navy && 'nv']}>
+  <Stars size={11} />
+  <p class="mq">{q}</p>
+  <p class="mb"><GoogleG size={13} />{by}</p>
+  {patch && <Patch name={patch} size="mini" dark={navy} deg={deg} t={false} class="mp" />}
+</div>
+<style>
+  .mini { position: relative; display: grid; gap: 8px; padding: 14px; border-radius: 16px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-2); color: var(--navy); }
+  .nv { background: var(--navy); color: var(--white); box-shadow: var(--sh-2); }
+  .mq { font-weight: 500; font-size: 13px; line-height: 19px; }
+  .mb { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 11px; line-height: 14px; color: var(--slate); }
+  .nv .mb { color: var(--soft); }
+  .mini :global(.mp) { position: absolute; right: -10px; top: -12px; }
+</style>

@@ -1,0 +1,22 @@
+---
+// 13a FAQ hub (PAGES.md 13a F1-F5, Figma desktop 441:3483 / mobile 441:4314). FAQPage schema for exactly the 13 questions.
+import Base from '../layouts/Base.astro';
+import FaqHub from '../components/info/FaqHub.astro';
+import FaqHabits from '../components/info/FaqHabits.astro';
+import GRail from '../components/guides/GRail.astro';
+import WaterlineCTA from '../components/global/WaterlineCTA.astro';
+import { GROUPS } from '../components/info/faqData';
+import { BUILT, MORE } from '../components/guides/data';
+const faq = { '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: GROUPS.flatMap((g) => g.items).map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: [i.a1, i.a2].filter(Boolean).join(' ') } })) };
+// F4: the built guide links; the other three Figma titles are "Coming soon" cards (no 404 links).
+const rail = [...BUILT, MORE[0], MORE[1], MORE[6]];
+---
+<Base title="Plumbing FAQs · Plumbing By Paul St. Petersburg FL"
+  description="Straight answers from a St. Pete plumber: clogs, running toilets, low pressure, shut-off valves, emergencies, permits and prices. Call (727) 709-2552."
+  path="/faq" og="hero-05-tech-toilet-repair-pro" ogAlt="A Plumbing By Paul plumber repairing a toilet" jsonld={[faq]}>
+  <FaqHub />
+  <FaqHabits />
+  <GRail items={rail} eyebrow="Guides" l1="Longer answers" l2="when you need them." id="fg-h" bg="tint" />
+  <WaterlineCTA l1="Question not here?" l2="Ask a person." />
+</Base>

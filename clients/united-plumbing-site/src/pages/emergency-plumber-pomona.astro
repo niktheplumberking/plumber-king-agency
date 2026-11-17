@@ -1,0 +1,17 @@
+---
+// /emergency-plumber-pomona/ : no Figma frame, built from the service template (title + meta from 00-sitemap.md).
+import Base from '../layouts/Base.astro';
+import ServicePage from '../components/services/ServicePage.astro';
+import { EMERGENCY as c } from '../data/service-content';
+const site = Astro.site!.toString().replace(/\/$/, '');
+const plain = (h: string) => h.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: 'Emergency plumber in Pomona, CA', serviceType: 'Emergency plumbing', url: `${site}/emergency-plumber-pomona/`,
+    description: c.description, provider: { '@id': `${site}/#business` }, areaServed: { '@type': 'City', name: 'Pomona, CA' },
+    hoursAvailable: { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '00:00', closes: '23:59' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: c.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: plain(f.a) } })) },
+];
+---
+<Base title={c.title} description={c.description} crumbs={[{ name: 'Emergency plumber', href: '/emergency-plumber-pomona/' }]} schema={schema}>
+  <ServicePage c={c} crumbs={[{ name: 'Emergency plumber', href: '/emergency-plumber-pomona/' }]} />
+</Base>

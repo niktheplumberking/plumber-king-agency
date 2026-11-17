@@ -1,0 +1,20 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../data/site';
+---
+<div class="mbar" data-mbar>
+  <a href={SITE.phoneHref} class="mbar-call" data-btn><span class="btn-fill" aria-hidden="true"></span><Icon name="phone" size={22} /><span>Call now · 24/7</span></a>
+  <a href={SITE.smsHref} class="mbar-text" data-btn><span class="btn-fill" aria-hidden="true"></span><Icon name="message" size={20} /><span>Text</span></a>
+</div>
+<style>
+  .mbar { display: none; }
+  @media (max-width: 760px) {
+    /* Figma 236:736: full-width 84 px night bar, 56 px buttons, 16 px gaps */
+    .mbar { display: grid; grid-template-columns: 1fr 116px; gap: 16px; position: fixed; z-index: 55; left: 0; right: 0; bottom: 0; padding: 14px 16px max(14px, env(safe-area-inset-bottom)); background: var(--night); box-shadow: 0 -10px 30px -12px rgba(0,0,0,.6); transform: translateY(110%); transition: transform .5s var(--ease-out); }
+    .mbar.is-on { transform: none; }
+    .mbar a { position: relative; overflow: hidden; isolation: isolate; display: flex; align-items: center; justify-content: center; gap: 10px; height: 56px; border-radius: 8px; font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 24px; }
+    .mbar-call { background: var(--yellow); color: var(--ink); }
+    .mbar .mbar-text { padding: 0 16px; font-size: 22px; background: var(--night); color: var(--cyan); box-shadow: inset 0 0 0 2px var(--cyan); }
+    .mbar .btn-fill { position: absolute; z-index: -1; width: 40px; height: 40px; border-radius: 50%; transform: translate(-50%,-50%) scale(0); background: rgba(255,255,255,.35); }
+  }
+</style>

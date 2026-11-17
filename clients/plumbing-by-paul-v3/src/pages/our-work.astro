@@ -1,0 +1,33 @@
+---
+// 09 Our work (Figma 439:5903 / 439:6747). Title from PAGES.md; meta from PAGES.md plus "all of" (135 to 142 chars). JSON-LD: CollectionPage of the job photos.
+import Base from '../layouts/Base.astro';
+import OHero from '../components/work/OHero.astro';
+import OGallery from '../components/work/OGallery.astro';
+import OStories from '../components/work/OStories.astro';
+import OCompare from '../components/work/OCompare.astro';
+import ORooms from '../components/work/ORooms.astro';
+import OFleet from '../components/work/OFleet.astro';
+import OReviews from '../components/work/OReviews.astro';
+import OInsta from '../components/work/OInsta.astro';
+import WaterlineCTA from '../components/global/WaterlineCTA.astro';
+import { abs, BUSINESS_ID } from '../lib/schema';
+const ld = { '@context': 'https://schema.org', '@type': 'CollectionPage', url: abs('/our-work'), name: 'Recent plumbing jobs in Pinellas', about: { '@id': BUSINESS_ID() }, publisher: { '@id': BUSINESS_ID() } };
+---
+<Base
+  title="Recent Plumbing Jobs in Pinellas · Plumbing By Paul"
+  description="Real photos of real jobs: water heaters, sewer lines, repipes and remodel plumbing by the Plumbing By Paul crew across all of Pinellas County."
+  path="/our-work"
+  og="service-tech-logo-shirt-framing"
+  ogAlt="A Plumbing By Paul tech at work among new wall framing"
+  jsonld={[ld]}
+>
+  <OHero />
+  <OGallery />
+  <OStories />
+  <OCompare />
+  <ORooms />
+  <OFleet />
+  <OReviews />
+  <OInsta />
+  <WaterlineCTA l1="Your job could be" l2="the next photo." />
+</Base>

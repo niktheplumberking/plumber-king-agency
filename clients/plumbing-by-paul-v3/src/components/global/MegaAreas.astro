@@ -1,0 +1,40 @@
+---
+// Service areas menu: St. Petersburg (home base), Clearwater, Seminole, "All of Pinellas County" + a small map with the seal pin.
+import Icon from '../ui/Icon.astro';
+import TextLink from '../ui/TextLink.astro';
+import Tick from '../ui/Tick.astro';
+import PinellasMap from '../ui/PinellasMap.astro';
+import { TOWNS_LINKED, TOWNS_ROUTE } from '../../data/towns';
+---
+<div class="mega mega-areas" id="mega-areas" data-mega="areas" hidden>
+  <div class="wrap">
+    <div class="ma-card">
+      <div class="ma-l" data-mg-col>
+        <p class="mg-h"><Tick />Where we work</p>
+        <ul role="list" class="ma-towns">
+          {TOWNS_LINKED.map((t, i) => (
+            <li><a href={t.page}><span class="ti"><Icon name="pin" size={18} /></span><span><b>{t.name}</b>{i === 0 && <em> home base</em>}</span><Icon name="arrow" size={16} class="ar" /></a></li>
+          ))}
+        </ul>
+        <p class="ma-route">Also on our route: {TOWNS_ROUTE.map((t) => t.name).join(' · ')}</p>
+        <TextLink href="/service-areas" size={15}>All of Pinellas County</TextLink>
+      </div>
+      <div class="ma-map" data-mg-col><PinellasMap mini /></div>
+    </div>
+  </div>
+</div>
+<style>
+  .mega { position: absolute; left: 0; right: 0; top: calc(100% - 4px); padding-top: 10px; }
+  .ma-card { display: grid; grid-template-columns: 1fr 260px; gap: 32px; margin-left: auto; width: min(760px, 100%); margin-right: 200px; padding: 28px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line), var(--sh-3); }
+  .mg-h { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-family: var(--f-num); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .ma-l { display: grid; align-content: start; gap: 14px; justify-items: start; }
+  .ma-towns { display: grid; gap: 6px; width: 100%; margin: 0; padding: 0; }
+  .ma-towns a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); transition: background var(--dur-2), box-shadow var(--dur-2); }
+  .ma-towns a:hover { background: var(--tint); box-shadow: inset 0 0 0 1.5px var(--blue); }
+  .ti { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--tint); color: var(--blue); flex: none; }
+  .ma-towns b { font-weight: 700; font-size: 16px; }
+  .ma-towns em { font-style: normal; font-weight: 500; font-size: 13px; color: var(--slate-2); margin-left: 6px; }
+  .ma-towns .ar { margin-left: auto; color: var(--press); }
+  .ma-route { font-size: 13px; line-height: 20px; color: var(--slate); }
+  .ma-map { align-self: center; }
+</style>

@@ -1,0 +1,52 @@
+---
+// Stylised Pinellas County map (the Figma drawing, 588 x 600). STICKY 8: at a later pass, trace real municipality shapes
+// from OpenStreetMap / Census (ASSET-LIST section 2). Town pages live = sky fill; on our route = dot + name.
+// mini = compact version for the Service areas mega menu (no legend, no water labels).
+import Seal from './Seal.astro';
+interface Props { mini?: boolean; class?: string; }
+const { mini = false, class: cls } = Astro.props;
+const land = 'M196 44 L332 40 L372 70 L360 120 L326 150 L330 196 L366 236 L410 276 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L240 468 L222 420 L206 364 L192 304 L182 244 L172 186 L168 130 L176 80 Z';
+const dots: [string, number, number][] = [['Palm Harbor', 236, 60], ['Dunedin', 200, 118], ['Safety Harbor', 296, 134], ['Largo', 238, 236], ['Pinellas Park', 318, 272], ['Kenneth City', 300, 334], ['Gulfport', 306, 516]];
+const beaches: [string, number, number][] = [['Madeira Beach', 70, 356], ['Treasure Island', 84, 416], ['St. Pete Beach', 112, 494]];
+---
+<div class:list={['pmap', mini && 'mini', cls]}>
+  <svg viewBox="0 0 588 600" role="img" aria-label="Map of Pinellas County. Town pages for St. Petersburg, Clearwater and Seminole; we also work in Palm Harbor, Dunedin, Safety Harbor, Largo, Pinellas Park, Kenneth City, Gulfport and the beach towns." data-map>
+    <rect width="588" height="600" fill="#F4F9FC" />
+    <g fill="none" stroke="#C9DCE6" stroke-width="1"><path d="M0 120 C120 100 100 220 0 240"/><path d="M0 330 C90 320 120 430 40 600"/><path d="M588 150 C500 170 520 260 588 300"/><path d="M588 420 C520 430 500 520 540 600"/></g>
+    <path d={land} fill="#E8F3F8" stroke="#2A7FA8" stroke-width="1.5" stroke-linejoin="round" data-draw-map />
+    <path class="area" d="M240 372 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L246 462 Z" fill="#61ADCB" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
+    <path class="area" d="M170 150 L326 150 L330 196 L340 214 L176 214 Z" fill="#61ADCB" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
+    <path class="area" d="M190 300 L282 296 L286 352 L240 368 L204 360 Z" fill="#61ADCB" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
+    <g fill="none" stroke="#FFFFFF" stroke-width="1.5"><path d="M176 98 L366 96"/><path d="M178 258 L384 252"/><path d="M286 300 L428 300"/></g>
+    <path d="M140 110 C136 200 150 300 178 390 C196 440 222 486 262 520" fill="none" stroke="#A9D3E4" stroke-width="7" stroke-linecap="round" stroke-dasharray="46 10" data-route />
+    <g font-family="Russo One, sans-serif" fill="#111032" letter-spacing=".8">
+      <text x="276" y="480" font-size="13">ST. PETERSBURG</text><text x="206" y="186" font-size="12">CLEARWATER</text><text x="204" y="333" font-size="11">SEMINOLE</text>
+    </g>
+    {!mini && <g font-family="Montserrat, sans-serif" font-weight="600" font-size="12" fill="#454867">
+      {dots.map(([t, x, y]) => <g class="dot"><circle cx={x} cy={y} r="4" fill="#FFFFFF" stroke="#111032" stroke-width="2" /><text x={x + 9} y={y + 4}>{t}</text></g>)}
+      {beaches.map(([t, x, y]) => <text x={x} y={y + 12}>{t}</text>)}
+    </g>}
+    {mini && <g>{dots.map(([, x, y]) => <circle cx={x} cy={y} r="5" fill="#FFFFFF" stroke="#111032" stroke-width="2" />)}</g>}
+    {!mini && <g font-family="Montserrat, sans-serif" font-style="italic" font-weight="500" font-size="13" fill="#2A7FA8">
+      <text x="34" y="263">Gulf of Mexico</text><text x="448" y="163">Old Tampa Bay</text><text x="486" y="483">Tampa Bay</text>
+    </g>}
+    {!mini && <text x="24" y="36" font-family="Russo One, sans-serif" font-size="12" letter-spacing="1" fill="#236F94">PINELLAS COUNTY</text>}
+  </svg>
+  <span class="pin"><Seal d={mini ? 40 : 64} deg={-6} /></span>
+  {!mini && <span class="shop">Our shop · 64th Way N</span>}
+  {!mini && (
+    <span class="legend" aria-hidden="true"><i class="lv"></i>Town pages live<i class="lr"></i>On our route</span>
+  )}
+</div>
+<style>
+  .pmap { position: relative; aspect-ratio: 588 / 600; border-radius: var(--r-xl); overflow: hidden; background: var(--mist); box-shadow: var(--sh-3); container-type: inline-size; }
+  .pmap svg { width: 100%; height: 100%; }
+  .pin { position: absolute; left: calc(300 / 588 * 100%); top: calc(412 / 600 * 100%); transform: translate(-50%, -50%); }
+  .shop { position: absolute; left: calc(338 / 588 * 100%); top: calc(396 / 600 * 100%); padding: 6px 10px; border-radius: 10px; background: var(--white); box-shadow: var(--sh-1); font-weight: 500; font-size: clamp(10px, 2.2cqw, 13px); line-height: 1.5; white-space: nowrap; }
+  .legend { position: absolute; left: 4%; bottom: 3.5%; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 10px; background: var(--white); box-shadow: var(--sh-1); font-weight: 600; font-size: clamp(10px, 2cqw, 12px); }
+  .legend i { width: 14px; height: 14px; border-radius: 4px; flex: none; }
+  .lv { background: var(--sky); } .lr { background: var(--tint); box-shadow: inset 0 0 0 1px var(--blue); margin-left: 6px; }
+  .mini { border-radius: var(--r-lg); box-shadow: none; }
+  .mini .pin { left: calc(300 / 588 * 100%); top: calc(412 / 600 * 100%); }
+  @media (max-width: 480px) { .pin :global(.seal) { --d: 44px !important; } }
+</style>

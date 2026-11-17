@@ -1,0 +1,39 @@
+---
+// Map thumbnail for the town route card (Figma lib.js miniMap): the stylised Pinellas drawing, cropped to a window (vb),
+// the stripe-coloured route drawn from the shop seal to the town pin. Decorative drawing: the text beside it says the same.
+import Seal from '../ui/Seal.astro';
+// Without `route` it is a plain crop (the town cards on /service-areas): dest dot only, `shop` shows the seal, `water` the bay names.
+interface Props { route?: string; vb: [number, number, number, number]; dest?: [number, number]; destLabel?: string; shop?: boolean; water?: boolean; class?: string; }
+const { route, vb, dest, destLabel, shop = true, water = true, class: cls } = Astro.props;
+const LAND = 'M196 44 L332 40 L372 70 L360 120 L326 150 L330 196 L366 236 L410 276 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L240 468 L222 420 L206 364 L192 304 L182 244 L172 186 L168 130 L176 80 Z';
+const TOWN = ['M240 372 L446 322 L460 380 L452 440 L436 500 L404 540 L352 556 L300 536 L268 502 L246 462 Z', 'M170 150 L326 150 L330 196 L340 214 L176 214 Z', 'M190 300 L282 296 L286 352 L240 368 L204 360 Z'];
+const SHOP: [number, number] = [300, 412];
+const pct = (p: [number, number]) => `left:${((p[0] - vb[0]) / vb[2]) * 100}%;top:${((p[1] - vb[1]) / vb[3]) * 100}%`;
+---
+<div class:list={["rmap", cls]} style={`aspect-ratio:${vb[2]} / ${vb[3]}`} aria-hidden="true">
+  <svg viewBox={vb.join(' ')} preserveAspectRatio="xMidYMid slice">
+    <rect x={vb[0]} y={vb[1]} width={vb[2]} height={vb[3]} fill="#F4F9FC" />
+    <g fill="none" stroke="#C9DCE6" stroke-width="1"><path d="M0 120 C120 100 100 220 0 240"/><path d="M0 330 C90 320 120 430 40 600"/><path d="M588 150 C500 170 520 260 588 300"/><path d="M588 420 C520 430 500 520 540 600"/></g>
+    <path d={LAND} fill="#E8F3F8" stroke="#2A7FA8" stroke-width="1.5" stroke-linejoin="round" />
+    {TOWN.map((d) => <path d={d} fill="#61ADCB" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />)}
+    <g fill="none" stroke="#FFFFFF" stroke-width="1.5"><path d="M176 98 L366 96"/><path d="M178 258 L384 252"/><path d="M286 300 L428 300"/></g>
+    <path d="M140 110 C136 200 150 300 178 390 C196 440 222 486 262 520" fill="none" stroke="#A9D3E4" stroke-width="7" stroke-linecap="round" stroke-dasharray="46 10" />
+    {water && <text x={vb[0] + 10} y={vb[1] + vb[3] * .45} font-family="Montserrat, sans-serif" font-style="italic" font-weight="500" font-size="9" fill="#2A7FA8">Gulf of Mexico</text>}
+    {water && <text x={vb[0] + vb[2] - 58} y={vb[1] + vb[3] * .86} font-family="Montserrat, sans-serif" font-style="italic" font-weight="500" font-size="9" fill="#2A7FA8">Tampa Bay</text>}
+    {route && <path d={route} fill="none" stroke="#111032" stroke-width="7" stroke-linecap="round" />}
+    {route && <path d={route} fill="none" stroke="#2A7FA8" stroke-width="4.5" stroke-linecap="round" data-draw />}
+    {route && <path d={route} fill="none" stroke="#61ADCB" stroke-width="1.8" stroke-linecap="round" />}
+    {dest && <circle cx={dest[0]} cy={dest[1]} r="5" fill="#FFFFFF" stroke="#111032" stroke-width="2.6" />}
+  </svg>
+  {dest && destLabel && <span class="rm-lab rm-dest" style={pct(dest)}>{destLabel}</span>}
+  {shop && <span class="rm-seal" style={pct(SHOP)}><Seal d={32} t={false} /></span>}
+  {shop && route && <span class="rm-lab rm-shop" style={pct(SHOP)}>Our shop</span>}
+</div>
+<style>
+  .rmap { position: relative; overflow: hidden; border-radius: 16px; background: var(--mist); }
+  .rmap svg { display: block; width: 100%; height: 100%; }
+  .rm-lab { position: absolute; padding: 5px 10px; border-radius: 8px; background: var(--white); box-shadow: var(--sh-1); font-weight: 500; font-size: 11px; line-height: 16px; color: var(--navy); white-space: nowrap; }
+  .rm-dest { transform: translate(12px, -50%); }
+  .rm-shop { transform: translate(22px, -50%); }
+  .rm-seal { position: absolute; transform: translate(-50%, -50%); }
+</style>

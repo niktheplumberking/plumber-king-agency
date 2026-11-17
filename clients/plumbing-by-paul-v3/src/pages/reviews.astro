@@ -1,0 +1,33 @@
+---
+// 10 Reviews (PAGES.md R1-R10, Figma desktop 441:6010 / mobile 441:7513). No Review or AggregateRating schema on this page
+// (SEO plan section 6). Count, rating and topic counts were read 13 Nov 2026: refresh on launch day.
+import Base from '../layouts/Base.astro';
+import RvHero from '../components/reviews/RvHero.astro';
+import RvMention from '../components/reviews/RvMention.astro';
+import RvAll from '../components/reviews/RvAll.astro';
+import RvPaul from '../components/reviews/RvPaul.astro';
+import RvNames from '../components/reviews/RvNames.astro';
+import RvRoll from '../components/reviews/RvRoll.astro';
+import RvWeb from '../components/reviews/RvWeb.astro';
+import RvWrong from '../components/reviews/RvWrong.astro';
+import RvLeave from '../components/reviews/RvLeave.astro';
+import WaterlineCTA from '../components/global/WaterlineCTA.astro';
+---
+<Base
+  title="947 Google Reviews · Plumbing By Paul St. Pete"
+  description="4.9 stars from 947 Google reviews. Read what St. Petersburg and Pinellas neighbors say about Plumbing By Paul, by service and by technician."
+  path="/reviews"
+  og="crew-six-at-truck"
+  ogAlt="Six of the Plumbing By Paul crew in front of the wrapped box truck"
+>
+  <RvHero />
+  <RvMention />
+  <RvAll />
+  <RvPaul />
+  <RvNames />
+  <RvRoll />
+  <RvWeb />
+  <RvWrong />
+  <RvLeave />
+  <WaterlineCTA l1="Want to be" l2="review number 948?" />
+</Base>

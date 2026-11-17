@@ -1,0 +1,9 @@
+---
+// The stripe tick: three slanted livery bars (sky / blue / navy; on navy: white / sky / blue). Sits before every eyebrow.
+interface Props { dark?: boolean; scale?: number; class?: string; }
+const { dark = false, scale = 1, class: cls } = Astro.props;
+const c = dark ? ['#FFFFFF', '#61ADCB', '#2A7FA8'] : ['#61ADCB', '#2A7FA8', '#111032'];
+---
+<svg class:list={['tick', cls]} width={22 * scale} height={16 * scale} viewBox="0 0 22 16" aria-hidden="true" data-tick>
+  {c.map((col, i) => <path fill={col} d={`M${(2 - i) * 2.7 + 1.8} ${i * 6}h14l-1.8 4h-14z`} />)}
+</svg>

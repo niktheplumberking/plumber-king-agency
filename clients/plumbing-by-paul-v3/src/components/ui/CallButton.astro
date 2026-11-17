@@ -1,0 +1,16 @@
+---
+// Two-line call button: phone circle + "(727) 709-2552" / "Tap to call · Open 7 days". Always a tel: link.
+// v: pri (on light) | priN (sky, on navy or water). l1/l2 override the lines.
+import Icon from './Icon.astro';
+import { SITE } from '../../data/site';
+interface Props { v?: 'pri' | 'priN'; l1?: string; l2?: string; block?: boolean; class?: string; size?: 'md' | 'lg'; [k: string]: any; }
+const { v = 'pri', l1 = SITE.phone, l2 = 'Tap to call · Open 7 days', block, class: cls, size = 'md', ...rest } = Astro.props;
+---
+<a href={SITE.tel} class:list={['btn btn-call', v === 'priN' && 'btn-priN', block && 'btn-block', size === 'lg' && 'is-lg', cls]} data-magnetic {...rest}>
+  <span class="ph"><Icon name="phone" size={18} /></span>
+  <span class="lines"><span class="l1">{l1}</span><span class="l2">{l2}</span></span>
+</a>
+<style>
+  .is-lg { min-height: 68px; padding: 0 26px 0 20px; }
+  .is-lg .l1 { font-size: 20px; line-height: 24px; }
+</style>

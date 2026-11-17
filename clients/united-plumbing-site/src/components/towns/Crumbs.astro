@@ -1,0 +1,21 @@
+---
+// Visible breadcrumb trail for hero sections (the JSON-LD BreadcrumbList comes from Base).
+interface Crumb { name: string; href: string }
+interface Props { items: Crumb[] }
+const { items } = Astro.props;
+const all = [{ name: 'Home', href: '/' }, ...items];
+---
+<nav class="crumbs" aria-label="Breadcrumb" data-hero="1" data-hero-fx="fade">
+  <ol>
+    {all.map((c, i) => (
+      <li>{i < all.length - 1 ? <a href={c.href}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>
+    ))}
+  </ol>
+</nav>
+<style>
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0; font-size: 13px; color: var(--on-dark-2); }
+  .crumbs li + li::before { content: '/'; margin: 0 8px; opacity: .6; }
+  .crumbs a { display: inline-block; padding: 6px 0; transition: color .2s; }
+  .crumbs a:hover { color: #fff; }
+  .crumbs span { display: inline-block; padding: 6px 0; color: var(--cyan); }
+</style>

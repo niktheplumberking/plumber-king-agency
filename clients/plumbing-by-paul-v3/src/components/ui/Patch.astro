@@ -1,0 +1,26 @@
+---
+// Sewn name patch: white (or sky on navy) oval, navy rim, dashed stitch, Russo cap label + Yellowtail first name.
+// size: md 148x56 | sm 120x46 (mobile) | mini 84x28. Motion: tier 5 (pop with a 2-degree wobble on card hover).
+interface Props { name: string; label?: string; dark?: boolean; deg?: number; size?: 'md' | 'sm' | 'mini'; class?: string; style?: string; t?: string | false; active?: boolean; }
+const { name, label = 'FIXED BY', dark, deg = 0, size = 'md', class: cls, style = '', t = '5', active } = Astro.props;
+---
+<span class:list={['patch', size, dark && 'dark', active && 'active', cls]} style={`--deg:${deg}deg;${style}`} data-t={t === false ? undefined : t} data-fx="pop">
+  {size !== 'mini' && label && <span class="pl label">{label}</span>}
+  <span class="pn">{name}</span>
+</span>
+<style>
+  .patch { position: relative; display: inline-grid; place-content: center; justify-items: center; width: 148px; height: 56px; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 2px var(--navy), var(--sh-sticker); transform: rotate(var(--deg)); flex: none; text-align: center; color: var(--navy); transition: transform .5s var(--ease-back); }
+  .patch::before { content: ''; position: absolute; inset: 5px; border-radius: inherit; border: 1.5px dashed var(--sky); pointer-events: none; }
+  .dark { background: var(--sky); }
+  .dark::before { border-color: var(--white); }
+  .pl { font-size: 9px; line-height: 10px; letter-spacing: .08em; color: var(--press); margin-top: 2px; }
+  .dark .pl { color: var(--navy); }
+  .pn { font-family: var(--f-script); font-size: 30px; line-height: 30px; margin-top: -2px; }
+  .sm { width: 120px; height: 46px; }
+  .sm .pl { font-size: 8px; line-height: 9px; }
+  .sm .pn { font-size: 25px; line-height: 25px; }
+  .mini { width: 84px; height: 28px; }
+  .mini::before { inset: 3px; }
+  .mini .pn { font-size: 18px; line-height: 18px; margin: 0; }
+  .active { box-shadow: inset 0 0 0 3px var(--blue), var(--sh-sticker); }
+</style>

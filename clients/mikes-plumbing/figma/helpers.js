@@ -122,7 +122,7 @@ function MCONTACT(M,y){const S=F(M,'Mobile contact band + form 2',0,y,390,900,C.
 // owner avatar: circle crop of Mike's real IG photo (face), cream ring
 function AVATAR(parent,x,y,s,o={}){const g=figma.createFrame();g.name='owner avatar (Mike, real IG photo crop)';g.resize(s,s);g.fills=[];g.clipsContent=false;parent.appendChild(g);g.x=x;g.y=y;
  const ring=figma.createEllipse();ring.resize(s,s);ring.fills=[solid(o.ring||C.cream)];g.appendChild(ring);
- const e=figma.createEllipse();e.resize(s-8,s-8);e.x=4;e.y=4;e.fills=[{type:'IMAGE',imageHash:H.mike,scaleMode:'CROP',imageTransform:[[0.28,0,0.36],[0,0.157,0.27]]}];g.appendChild(e);return g;}
+ const e=figma.createEllipse();e.resize(s-8,s-8);e.x=4;e.y=4;e.fills=[{type:'IMAGE',imageHash:H.mike,scaleMode:'CROP',imageTransform:[[0.22,0,0.39],[0,0.124,0.30]]}];g.appendChild(e);return g;}
 // 3 flowing lines (grease/water wave) between sections
 function WAVE3(parent,x,y,w,c,o={}){const g=figma.createFrame();g.name='3-line wave (pattern breaker)';g.fills=[];g.clipsContent=false;g.resize(w,60);parent.appendChild(g);g.x=x;g.y=y;
  const amp=o.amp||12,seg=o.seg||360;for(let k=0;k<3;k++){const yb=16+k*13;let d=`M 0 ${yb}`;for(let sx=0;sx<w;sx+=seg){d+=` C ${sx+seg*0.25} ${yb-amp} ${sx+seg*0.25} ${yb-amp} ${sx+seg*0.5} ${yb} C ${sx+seg*0.75} ${yb+amp} ${sx+seg*0.75} ${yb+amp} ${sx+seg} ${yb}`;}
@@ -164,6 +164,6 @@ function TRUSTREVIEWS(D,y,rv,o={}){const S=F(D,'Reviews + trust (right after her
  [['shield','Insured'],['home','Family owned · Est. 2025']].forEach((t,i)=>{SVG(yc,IC[t[0]](C.tan),28+i*130,200,18);T(yc,t[1],52+i*130,199,{z:13,c:C.cream});});
  const lb=F(S,'licence box (Mike to confirm)',80,380,400,46,null);const lbh=HX(lb,0,0,400,46,{stroke:C.tanD,cut:14});lbh.dashPattern=[5,4];T(lb,'CSLB licence #: Mike to confirm',0,13,{z:14,s:'Medium',c:C.tanD,w:400,a:'CENTER'});
  EYE(S,o.eye||'What neighbors say',540,110,{c:C.tanD});const cw=rv.length>2?260:400;let last=null;
- rv.forEach((r,i)=>{const c=REVIEW(S,540+i*(cw+20),160+(i===rv.length-1?60:0),cw,r[0],r[1],r[2],r[3],{z:14});last=c;});
+ rv.forEach((r,i)=>{const c=REVIEW(S,540+i*(cw+20),160+(i===rv.length-1?150:0),cw,r[0],r[1],r[2],r[3],{z:14});last=c;});
  const mh=Math.max(...S.children.filter(n=>n.name.startsWith('review:')).slice(0,-1).map(n=>n.y+n.height),430);S.resize(1440,mh+90);
  const gy=S.y+last.y;D.appendChild(last);last.x=540+(rv.length-1)*(cw+20);last.y=gy;last.name+=' (crosses into next section: pattern breaker)';last.effects=[{type:'DROP_SHADOW',color:{r:0,g:0,b:0,a:0.22},offset:{x:0,y:16},radius:36,spread:0,visible:true,blendMode:'NORMAL'}];return S;}

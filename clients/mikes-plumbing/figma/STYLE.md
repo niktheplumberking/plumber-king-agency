@@ -11,3 +11,11 @@ Style: black/charcoal + cream/tan ONLY (his brand). Alternate dark (C.ink/C.char
 FACTS: only use research/FACTS-CHECK.md and research/SEO-PLAN.md. Reviews word for word from FACTS-CHECK (trim only with "…"), always labelled Yelp with name, town, date. NEVER: "licensed", licence numbers, prices, response-time promises, years other than Est. 2025 / 10+ years, warranties, Google ratings, AggregateRating. Hours are unconfirmed (Yelp 24h vs Nextdoor 7am-11pm): say "Emergency service" not "24/7" except where labelled "Mike to confirm".
 Photos: only H.* hashes (real IG/Yelp). Never the same photo twice on one page (hero bg + hero photo of the same image counts as one use; prefer photo2 different). Map = H.map (Google Maps screenshot 17 Nov 2026), label it.
 No text overlaps, nothing on faces (Mike's face is in H.mike upper-middle). After building each frame take ONE screenshot (frame.screenshot({scale:0.35})) and fix overlaps/clipped text before finishing.
+
+## ROUND 2 (Nick, 17 Nov 12:40 UTC) — applies to every page now
+- Pattern = United + Paul. Section right after the page hero is ALWAYS reviews + trust: use TRUSTREVIEWS(D,y,[[q,name,town,date],...]) (2-3 real Yelp reviews from FACTS-CHECK that fit the page). Re-append the crossing card (name contains 'crosses into') with D.appendChild at the very end.
+- NO full-width separator lines: delete every RULE() divider ('divider: badge rule') and every full-width 1-2px line between sections. Header bottom 1px line may stay.
+- Replace the old 'Contact band' + 'Footer' with CONTACT2(D,y,{prevColor}) + FOOTER2(D,y) (same as Home v2).
+- Each page gets 1-3 pattern breakers (don't overpopulate): TICKER (tilted band), a box straddling two sections, WAVE3 (3-line wave), a review/map/photo card crossing a section edge, SLANT edge.
+- Page hero: add the dashed 'CSLB lic. #: Mike to confirm' trust chip next to the hero trust row (legal up front).
+- Home v2 desktop 483:437 is the reference: screenshot it before you start.

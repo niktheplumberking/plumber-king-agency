@@ -1,0 +1,51 @@
+Raw Yelp review text for Mike's Plumbing Services, read live in Nick's Chrome 17 Nov 2026 (yelp.com/biz/mike-s-plumbing-services-riverside). Source of every quote in the design.
+
+
+---
+
+---
+
+---
+
+---
+
+---
+ Brandon A. Los Angeles, CA 3 3 1 Aug 20, 2026 Mike did a couple of jobs in my house! He's my first phone call when I need a plumber. Helpful 0 Thanks 0 Love this 0 Oh no 0
+---
+ Eleanor M. Los Angeles, CA 0 3 4 Jul 10, 2026 Highly recommend Mike for all your plumbing needs. We replaced 3 toilets and a pressure regulator. As requested, he coordinated his work with other repairs being done on the property. He's reasonably priced, detailed & patient. Call him! Helpful 0 Thanks 0 Love this 0 Oh no 0
+---
+ Bruce H. West Hollywood, CA 25 2 1 Aug 24, 2026 1 photo Mike did a great job replacing and installing our new upstairs toilet. He is an excellent communicator. His prices are fair and competitive. I will definitely use him again! I hired him because of his excellent Nextdoor app reviews and excellent communication skills. Thanks Mike! Installed toilet Helpful 0 Thanks 0 Love this 0 Oh no 0
+---
+ Sal C. Corona, CA 0 5 0 Jul 25, 2026 Mike was able helped me out with a[TRUNCATED]
+
+=====
+
+10
+ Sal C. Corona, CA 0 5 0 Jul 25, 2026 Mike was able helped me out with a slab leak on short notice, rerouted water lines and new showers valves installed. He was upfront and honest with me on pricing and reliable when setting up the appointments. I will definitely call him again for any future plumbing needs. 
+---
+ Jack D. Bonita, CA 57 23 0 May 7, 2026 Our garbage disposal began to malfunction soon after our move to Murrieta, so we called Mike. He arrived on time and installed it quickly. He communicated well, was polite and courteous, and his prices are quite reasonable. You can't go wrong with Mike's Plumbing! 
+
+=====
+
+ Tewolde T. Moreno Valley, CA 5 3 0 Jun 5, 2026 Water pressure regulate,shut off valve and automatic water shut off WIFI connected has a lot of respect and calls back to inquire how the work is going very professional and reasonable price 
+---
+ Stuart W. San Diego, CA 2 26 0 Jul 16, 2025 Ended up with a leak on our water service line. Farmed out for a couple estimates. Some got back to me with future appointments but Mike happened to call around 7pm the same day and offered to at least take a look and let me know where I stand. When he arrived he plugged in his equipment and began diagnosing. This was after explaining that I understood if he wanted to get home to his family and come back in the morning since it was late. He insisted that he could finish the diagnosis that night which I greatly appreciated! One thing of note, the entire time he was working he was extremely conscientious about my lawn and cleaning up any mess. This immediately built my trust so I asked him if he minded i[TRUNCATED]
+
+=====
+
+ Sydney H. Fort Worth, TX 277 414 200 Aug 7, 2025 I sent my request for quote from Yelp to several plumbers for a kitchen faucet replacement. Mike was fast with his response, replaced my faucet for a fair price and did a great job in a timely manner. Very clean, professional, and great communication skills. Highly recommend! 
+---
+ Erik N. Buena Park, CA 3 Home Improvement reviews Sep 4, 2025 Great service responded fast and did the work same day Would recommend and will use again for any plumbing service that I may need 
+
+=====
+
+Mike happened to call around 7pm the same day and offered to at least take a look and let me know where I stand. When he arrived he plugged in his equipment and began diagnosing. This was after explaining that I understood if he wanted to get home to his family and come back in the morning since it was late. He insisted that he could finish the diagnosis that night which I greatly appreciated! One thing of note, the entire t
+Mike happened to call around 7pm the same day and offered to at least take a look and let me know where I stand. When he arrived he plugged in his equipment and began diagnosing. This was after explaining that I understood if he wanted to get home to his family and come back in the morning since it was late. He insisted that he could finish the diagnosis that night which I greatly appreciated! One thing of note, the entire t
+Mike happened to call around 7pm the same day and offered to at least take a look and let me know where I stand. […] the entire time he was working he was extremely conscientious about my lawn and cleaning up any mess.',{f:'Archivo',s:'Medium',z:19,c:C.paper,x:100,y:40,w:580,lh:150});\nconst hs=q.characters.indexOf('extremely conscientious'); seg(q,hs,q.characters.length-1,{c:C.tan,f:'Archivo',s:'Bold'});\nT(sp,'STUART W. 
+a couple of jobs in my house! He's my first phone call when I need a plumber. Helpful 0 Thanks 0 Love this 0 Oh no 0\n---\n Eleanor M. Los Angeles, CA 0 3 4 Jul 10, 2026 Highly recommend Mike for all your plumbing ne
+a couple of jobs in my house! He's my first phone call when I need a plumber. Helpful 0 Thanks 0 Love this 0 Oh no 0\n---\n Eleanor M. Los Angeles, CA 0 3 4 Jul 10, 2026 Highly recommend Mike for all your plumbing ne
+tent":[{"type":"text","text":" Tewolde T. Moreno Valley, CA 5 3 0 Jun 5, 2026 Water pressure regulate,shut off valve and automatic water shut off WIFI connected has a lot of respect and calls back to inquire how the work is going very professional and reasonable price \n---\n Stuart W. San Diego, CA 2 26 0 Jul 16, 2025
+sult":[{"type":"text","text":" Tewolde T. Moreno Valley, CA 5 3 0 Jun 5, 2026 Water pressure regulate,shut off valve and automatic water shut off WIFI connected has a lot of respect and calls back to inquire how the work is going very professional and reasonable price \n---\n Stuart W. San Diego, CA 2 26 0 Jul 16, 2025
+. Los Angeles, CA 0 3 4 Jul 10, 2026 Highly recommend Mike for all your plumbing needs. We replaced 3 toilets and a pressure regulator. As requested, he coordinated his work with other repairs being done on the property. He's reasonably priced, detailed & pat
+. Los Angeles, CA 0 3 4 Jul 10, 2026 Highly recommend Mike for all your plumbing needs. We replaced 3 toilets and a pressure regulator. As requested, he coordinated his work with other repairs being done on the property. He's reasonably priced, detailed & pat
+Shell cwd was reset to /home/user

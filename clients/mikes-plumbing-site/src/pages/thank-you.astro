@@ -1,0 +1,13 @@
+---
+// /thank-you (PAGES-COPY section 13; Figma 670:8742 desktop, 670:8864 mobile). noindex, no loader (the form lands here).
+import Base from '../layouts/Base.astro';
+import TyHero from '../components/thank-you/TyHero.astro';
+import TyStrip from '../components/thank-you/TyStrip.astro';
+import TyWait from '../components/thank-you/TyWait.astro';
+---
+<Base title="Thanks, We Got Your Message | Mike's Plumbing" description="Thanks for contacting Mike's Plumbing Services." path="/thank-you" noindex loader={false}>
+  <TyHero />
+  <TyStrip />
+  <TyWait />
+</Base>
+<script>import '../components/kit-b4/scrub';</script>

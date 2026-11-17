@@ -1,0 +1,174 @@
+---
+// 11.2 Questions (Figma 670:3208 y 680-2959 / 670:5203 y 576-3048). Paper field. Desktop: sticky "On this page" rail (a
+// pipe with the 9 topics; the hex coupling marks where you are, plus "Still stuck?" call) beside the open Q&A list (hex
+// nuts 01-09, Abril questions, dashed rules; Q6/Q7 carry Mike's Instagram photos, Q7 the DM button). Phone: a sticky
+// topic bar ("01 / 09 Estimate", progress line, "All topics" menu) above the list.
+// Scroll moment (data-scrub on the section): water fills the rail pipe as you read; it reaches each topic exactly when
+// that question reaches the reading line, and the topic number swells and turns (phone: the bar's progress line fills).
+import { Image } from 'astro:assets';
+import { SITE } from '../../data/site';
+import Wave from '../kit-b4/Wave.astro';
+import { FAQS } from './faq';
+import valve from '../../assets/photos/water-heater-gas-valve-riverside.jpg';
+import copper from '../../assets/photos/corroded-copper-pipe-leak.jpg';
+const photos = {
+  valve: { src: valve, alt: 'The gas control valve on a 75-gallon gas water heater, from Mike\'s Instagram', cap: "The gas control valve · Mike's IG" },
+  copper: { src: copper, alt: 'Green buildup on a leaking copper pipe, from Mike\'s Instagram', cap: "Green buildup · Mike's IG" },
+};
+const nn = (i: number) => String(i + 1).padStart(2, '0');
+const nut = 'M7.46.7h38.48l6.76 20-6.76 20H7.46L.7 20.7z';
+---
+<section class="fl" aria-label="Questions and answers" data-m-section data-scrub data-start="top 45%" data-end="bottom 45%" data-start-m="top 30%" data-end-m="bottom 30%">
+  <Wave d={{ a: 18.64, L: 560.5 }} m={{ a: 12.32, L: 302.5, phi: -3.1 }} fill="#F3ECDD" above="#0E0D0B" />
+  <div class="fl-bar" data-fl-bar>
+    <p class="fl-cnt"><span data-fl-n>01</span> / {nn(FAQS.length - 1)}</p>
+    <p class="fl-cur" data-fl-t aria-live="off">{FAQS[0].topic}</p>
+    <details class="fl-all">
+      <summary>All topics <span aria-hidden="true">▾</span></summary>
+      <ul role="list">{FAQS.map((f, i) => <li><a href={`#${f.id}`}><span>{nn(i)}</span>{f.topic}</a></li>)}</ul>
+    </details>
+    <span class="fl-prog" aria-hidden="true"><i data-scrub-fill data-axis="x"></i></span>
+  </div>
+  <div class="wrap fl-in">
+    <nav class="fl-rail" aria-labelledby="fl-rh">
+      <p id="fl-rh" class="fl-rh">On this page</p>
+      <span class="fl-pipe" aria-hidden="true"><i data-scrub-fill data-axis="y"></i></span>
+      <svg class="fl-mark" viewBox="0 0 30 24" aria-hidden="true"><path d="M4.34.7h20.72l3.64 11-3.64 11H4.34L.7 11.7z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.4" stroke-linejoin="round" /></svg>
+      <ul class="fl-topics" role="list">
+        {FAQS.map((f, i) => (
+          <li><a class:list={['fl-t', i === 0 && 'is-on']} href={`#${f.id}`} data-stop data-at-el={`#${f.id}`} data-rot={i % 2 ? '-4' : '4'} data-scale="1.1"><span class="fl-n">{nn(i)}</span>{f.topic}</a></li>
+        ))}
+      </ul>
+      <a class="fl-call" href={SITE.tel}>Still stuck? {SITE.phone}</a>
+    </nav>
+    <ol class="fl-qs" role="list" data-scrub-track>
+      {FAQS.map((f, i) => (
+        <li class="fq" id={f.id}>
+          <span class:list={['fq-nut', i === 0 && 'is-first']} aria-hidden="true"><svg viewBox="0 0 54 42"><path d={nut} /></svg><span>{nn(i)}</span></span>
+          <h2 class="fq-q">{f.q}</h2>
+          <div class="fq-a"><p set:html={f.a} /></div>
+          {(f.photo || f.dm) && (
+            <div class="fq-x">
+              {f.photo && (
+                <figure class:list={['fq-ph', `fq-ph-${f.photo}`]}>
+                  <Image src={photos[f.photo].src} alt={photos[f.photo].alt} widths={[224, 448]} sizes="224px" loading="lazy" />
+                  <figcaption>{photos[f.photo].cap}</figcaption>
+                </figure>
+              )}
+              {f.dm && (
+                <a class="fq-dm" href={SITE.social.instagram} target="_blank" rel="noopener">
+                  <b>DM {SITE.social.instagramHandle}</b><span>Send Mike a picture on Instagram</span>
+                </a>
+              )}
+            </div>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<script>
+  // Which question you are reading: the rail marks it (coupling + bold topic); the phone bar shows its number and name.
+  document.querySelectorAll<HTMLElement>('.fl').forEach((sec) => {
+    const qs = Array.from(sec.querySelectorAll<HTMLElement>('.fq'));
+    const links = Array.from(sec.querySelectorAll<HTMLAnchorElement>('.fl-t'));
+    const mark = sec.querySelector<SVGElement>('.fl-mark');
+    const n = sec.querySelector<HTMLElement>('[data-fl-n]'); const t = sec.querySelector<HTMLElement>('[data-fl-t]');
+    const all = sec.querySelector<HTMLDetailsElement>('.fl-all');
+    let cur = 0;
+    const set = (i: number) => {
+      if (i === cur) return; cur = i;
+      links.forEach((l, j) => l.classList.toggle('is-on', j === i));
+      if (mark) mark.style.transform = `translateY(${i * 44}px)`;
+      if (n) n.textContent = String(i + 1).padStart(2, '0');
+      if (t) t.textContent = links[i]?.textContent?.replace(/^\d+/, '') ?? '';
+    };
+    const pick = () => {
+      const line = innerHeight * 0.45; let i = 0;
+      qs.forEach((q, j) => { if (q.getBoundingClientRect().top <= line) i = j; });
+      set(i);
+    };
+    addEventListener('scroll', pick, { passive: true }); addEventListener('resize', pick); pick();
+    all?.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) all.open = false; });
+  });
+</script>
+<style>
+  .fl { position: relative; background: var(--paper); color: var(--ink); padding: 110px 0 90px; overflow-x: clip; }
+  .fl-bar { display: none; }
+  .fl-in { display: grid; grid-template-columns: 300px 780px; column-gap: 100px; align-items: start; }
+  .fl-rail { position: sticky; top: 120px; height: 518px; }
+  .fl-rh { font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .16em; text-transform: uppercase; color: var(--tan-dark); }
+  .fl-pipe { position: absolute; left: 8px; top: 36px; width: 6px; height: 396px; border-radius: 3px; background: var(--tan-dark); overflow: hidden; }
+  .fl-pipe::after { content: ''; position: absolute; left: 2px; top: 0; bottom: 0; width: 2px; background: rgba(255, 255, 255, .3); }
+  .fl-pipe i { position: absolute; inset: 0; background: rgba(243, 236, 221, .55); transform-origin: 50% 0; }
+  html:not(.motion) .fl-pipe i, html:not(.motion) .fl-prog i { visibility: hidden; }
+  .fl-mark { position: absolute; z-index: 1; left: -4px; top: 41px; width: 30px; height: 24px; transition: transform .5s var(--ease-out); }
+  .fl-topics { margin: 14px 0 0; padding: 0; }
+  .fl-t { position: relative; display: flex; align-items: center; height: 44px; padding-left: 36px; font-weight: 500; font-size: 15px; line-height: 16px; color: var(--ink-2); transform-origin: 20px 50%; transition: color var(--dur-2); }
+  .fl-n { width: 30px; flex: none; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; color: var(--mute); transition: color var(--dur-2); }
+  .fl-t:hover { color: var(--ink); }
+  .fl-t.is-on { font-weight: 700; color: var(--ink); } .fl-t.is-on .fl-n { color: var(--ink); }
+  .fl-call { display: flex; align-items: center; width: 260px; height: 56px; margin-top: 34px; padding: 0 18px; border-radius: 6px; background: var(--ink); color: var(--tan);
+    font-family: var(--f-label); font-weight: 600; font-size: 16px; line-height: 24px; letter-spacing: .02em; transition: background-color var(--dur-2); }
+  .fl-call:hover { background: var(--coal); }
+  .fl-qs { margin: 0; padding: 0; }
+  .fq { display: grid; grid-template-columns: 52px 640px; column-gap: 24px; padding: 36px 0 44px;
+    background: repeating-linear-gradient(90deg, rgba(74, 68, 58, .3) 0 3px, transparent 3px 9px) 0 0 / 780px 1px no-repeat; }
+  .fq:first-child { padding-top: 0; background: none; }
+  .fq:last-child { padding-bottom: 0; }
+  .fq-nut { position: relative; display: grid; place-items: center; width: 52px; height: 40px; margin: 4px 0 -8px; font-family: var(--f-label); font-weight: 600; font-size: 15px; line-height: 22px; color: var(--ink); }
+  .fq-nut svg { position: absolute; left: -1px; top: -1px; width: 54px; height: 42px; }
+  .fq-nut path { fill: var(--paper); stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
+  .fq-nut span { position: relative; }
+  .fq-nut.is-first path { fill: var(--ink); } .fq-nut.is-first { color: var(--tan); }
+  .fq-q { grid-column: 2; width: 704px; font-family: var(--f-display); font-weight: 400; font-size: 32px; line-height: 35.84px; }
+  .fq-a, .fq-x { grid-column: 2; }
+  .fq-a { margin-top: 14px; font-size: 18px; line-height: 29px; color: var(--ink-2); }
+  .fq-a :global(b) { font-weight: 700; color: var(--ink); }
+  .fq-a :global(a) { color: inherit; } .fq-a :global(a:hover) { color: var(--ink); text-decoration: underline; }
+  .fq-a :global(a.u) { text-decoration: underline; text-underline-offset: 3px; }
+  .fq-x { display: flex; align-items: flex-start; gap: 34px; margin: 24px 0 26px; }
+  .fq-ph { flex: none; width: 240px; height: 180px; margin: 0; padding: 8px; background: var(--bone); box-shadow: 0 14px 26px -6px rgba(0, 0, 0, .3); transform-origin: 0 0; rotate: 3deg; }
+  .fq-ph-copper { rotate: -2deg; }
+  .fq-ph :global(img) { display: block; width: 224px; height: 140px; object-fit: cover; }
+  .fq-ph figcaption { margin: 8px 0 0 2px; font-family: var(--f-label); font-weight: 500; font-size: 9.5px; line-height: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+  .fq-dm { display: grid; align-content: start; gap: 6px; width: 300px; height: 64px; margin-top: 46px; padding: 13px 20px 0; border-radius: 6px; background: var(--tan); color: var(--ink); transition: background-color var(--dur-2); }
+  .fq-dm:hover { background: #C8BA98; }
+  .fq-dm b { font-size: 15px; line-height: 16px; } .fq-dm span { font-size: 12px; line-height: 13px; opacity: .8; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fl { padding: 96px 0 120px; }
+    .fl-in { grid-template-columns: 220px minmax(0, 1fr); column-gap: 48px; }
+    .fq { grid-template-columns: 52px minmax(0, 1fr); column-gap: 20px; background-size: 100% 1px; }
+    .fq-q { width: auto; font-size: clamp(26px, 3vw, 32px); line-height: 1.12; }
+    .fq-x { flex-wrap: wrap; }
+    .fq-dm { margin-top: 12px; }
+  }
+  @media (max-width: 767px) {
+    .fl { padding: 50px 0 64px; }
+    .fl-in { display: block; }
+    .fl-rail { display: none; }
+    .fl-bar { position: sticky; z-index: 20; top: 0; display: flex; align-items: center; height: 44px; padding: 0 20px; background: var(--bone); box-shadow: 0 6px 12px -4px rgba(0, 0, 0, .1); }
+    .fl-cnt { width: 56px; flex: none; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; }
+    .fl-cur { flex: 1; min-width: 0; font-weight: 700; font-size: 14px; line-height: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fl-all { position: relative; flex: none; }
+    .fl-all summary { list-style: none; cursor: pointer; padding: 12px 0; font-weight: 600; font-size: 13px; line-height: 14px; color: var(--tan-dark); }
+    .fl-all summary::-webkit-details-marker { display: none; }
+    .fl-all ul { position: absolute; right: -8px; top: 100%; z-index: 2; width: 220px; margin: 4px 0 0; padding: 8px 0; border-radius: 8px; background: var(--bone); box-shadow: 0 16px 30px -8px rgba(0, 0, 0, .3); }
+    .fl-all a { display: flex; gap: 12px; padding: 10px 16px; font-weight: 500; font-size: 15px; line-height: 20px; color: var(--ink); }
+    .fl-all a span { font-family: var(--f-label); font-weight: 600; font-size: 13px; color: var(--mute); }
+    .fl-prog { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--tan); }
+    .fl-prog i { position: absolute; inset: 0; background: var(--tan-dark); transform-origin: 0 50%; }
+    .fl-qs { margin-top: 40px; }
+    .fq { grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; row-gap: 0; padding: 28px 0 36px; background-size: 100% 1px; }
+    .fq-nut { width: 44px; height: 34px; margin: 2px 0 4px; font-size: 13px; line-height: 19px; }
+    .fq-nut svg { left: -0.5px; top: -0.5px; width: 45px; height: 35px; }
+    .fq-q { width: auto; font-size: 24px; line-height: 28px; }
+    .fq-a, .fq-x { grid-column: 1 / -1; }
+    .fq-a { margin-top: 10px; font-size: 16px; line-height: 25px; }
+    .fq-x { display: block; margin: 20px 0 0; }
+    .fq-ph { width: 210px; height: 160px; padding: 7px; box-shadow: 0 12px 22px -6px rgba(0, 0, 0, .3); margin-bottom: 20px; }
+    .fq-ph :global(img) { width: 196px; height: 122px; }
+    .fq-ph figcaption { margin-top: 9px; font-size: 8.5px; line-height: 13px; }
+    .fq-dm { width: 100%; height: 58px; margin: 0 0 12px; padding: 11px 18px 0; }
+  }
+</style>

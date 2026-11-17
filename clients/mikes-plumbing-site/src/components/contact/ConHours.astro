@@ -48,7 +48,7 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
   </div>
 </section>
 <style>
-  .hs { position: relative; height: 740px; background: var(--ink); color: var(--paper); }
+  .hs { position: relative; height: 740px; background: var(--ink); color: var(--paper); overflow-x: clip; }
   .hs-pipe { position: absolute; z-index: 2; left: 0; top: -60px; width: 1440px; height: 300px; pointer-events: none; overflow: visible; }
   .hs-water { stroke-dasharray: 1; stroke-dashoffset: 0; }
   html:not(.motion) .hs-water { visibility: hidden; }
@@ -92,8 +92,11 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
     .hs-bar { margin: 8px 3vw 0 0; font-size: clamp(44px, 5.4vw, 70px); line-height: 1.3; }
     .hs-rn { top: auto; bottom: -24px; font-size: 11px; }
     .hs-reg { padding-bottom: 28px; }
-    .hs-hang { position: relative; left: auto; top: auto; width: 100%; max-width: 480px; height: 190px; }
+    .hs-hang { position: relative; left: auto; top: auto; zoom: .66; }
+    .hs-sign::after { display: none; }
+    .hs-h2 { font-size: clamp(40px, 5.4vw, 62px); line-height: 1.35; }
   }
+  @media (min-width: 1024px) and (max-width: 1279px) { .hs-hang { zoom: .9; } }
   @media (max-width: 767px) {
     .hs { height: auto; padding: 153px 0 85px; }
     .hs-pipe { display: none; }

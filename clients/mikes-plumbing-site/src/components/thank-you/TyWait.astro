@@ -1,0 +1,101 @@
+---
+// 13.3 While you wait (Figma 670:8742 y 1045-1691 / 670:8864 y 1240-2222). Paper field; three hex-nut links threaded on a pipe
+// (See our work / Read reviews / Follow on Instagram) that ends at the hex photo of Mike's 3D mascot (captioned as his
+// mascot, a render from his Instagram). Scroll moment (data-scrub): water runs along the pipe (down it on phones); each
+// nut swells and turns as the water reaches it, then the mascot.
+import { Image } from 'astro:assets';
+import { SITE } from '../../data/site';
+import Eyebrow from '../kit-b4/Eyebrow.astro';
+import Wave from '../kit-b4/Wave.astro';
+import mascot from '../../assets/photos/mikes-plumbing-3d-mascot-saluting.jpg';
+const nuts = [
+  { href: '/our-work', t: 'See our work', s: "Mike's own job photos", ink: false, ext: false },
+  { href: '/reviews', t: 'Read reviews', s: `${SITE.rating.value} on Yelp · ${SITE.rating.count} reviews`, ink: true, ext: false },
+  { href: SITE.social.instagram, t: 'Follow', s: `${SITE.social.instagramHandle} on Instagram`, ink: false, ext: true },
+];
+---
+<section class="tyw" aria-labelledby="tyw-h" data-m-section data-scrub data-start="top 60%" data-end="bottom 85%" data-start-m="top 45%" data-end-m="bottom 75%">
+  <Wave d={{ a: 16.5, L: 480.5, clip: 6 }} m={{ a: 10.29, L: 301 }} fill="#F3ECDD" above="#0E0D0B" />
+  <div class="wrap tyw-in">
+    <Eyebrow text="While you wait" tone="deep" icon={false} class="tyw-eb" />
+    <h2 id="tyw-h" class="sr-only">While you wait</h2>
+    <svg class="tyw-pipe" viewBox="0 0 1060 22" aria-hidden="true" data-scrub-track>
+      <path d="M11 11H1049" stroke="#6B5C3E" stroke-width="22" stroke-linecap="round" />
+      <path class="tyw-water" d="M11 11H1049" pathLength="1" stroke="#F3ECDD" stroke-opacity=".45" stroke-width="8" stroke-linecap="round" data-scrub-fill />
+      <path d="M11 6H1049" stroke="#fff" stroke-opacity=".2" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    <span class="tyw-mpipe" aria-hidden="true"><i data-scrub-fill data-axis="y"></i></span>
+    <ul class="tyw-nuts" role="list">
+      {nuts.map((n, i) => (
+        <li>
+          <a class:list={['tyw-nut', n.ink && 'is-ink']} href={n.href} {...(n.ext ? { target: '_blank', rel: 'noopener' } : {})} data-stop data-rot={i % 2 ? '-3' : '3'} data-t="4">
+            <svg class="tyw-hex tyw-hex-d" viewBox="0 0 260 220" aria-hidden="true"><path d="M33.8 1h192.4L259 110l-32.8 109H33.8L1 110z" /><path class="tyw-in2" d="M50.58 18.5h159.84l28.08 92-28.08 92H50.58L22.5 110.5z" /><circle cx="130" cy="40" r="8.4" /></svg>
+            <svg class="tyw-hex tyw-hex-m" viewBox="0 0 220 170" aria-hidden="true"><path d="M28.6 1h162.8L219 85l-27.6 84H28.6L1 85z" /></svg>
+            <span class="tyw-t">{n.t}</span><span class="tyw-s">{n.s}</span><span class="tyw-ar" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <figure class="tyw-m" data-stop data-rot="-2" data-scale="1.05" data-t="5">
+      <span class="tyw-mi"><Image src={mascot} alt="Mike's Plumbing Services 3D mascot saluting, a render from Mike's Instagram" widths={[240, 480]} sizes="(max-width: 767px) 140px, 240px" loading="lazy" /></span>
+      <svg viewBox="0 0 242 322" preserveAspectRatio="none" aria-hidden="true"><path d="M121 1l120 70v180l-120 70L1 251V71z" /></svg>
+      <figcaption>Mike's mascot · 3D render from his Instagram</figcaption>
+    </figure>
+  </div>
+</section>
+<style>
+  .tyw { position: relative; height: 646px; background: var(--paper); color: var(--ink); overflow-x: clip; }
+  .tyw-in { position: relative; height: 100%; }
+  .tyw-in :global(.tyw-eb) { position: absolute; left: 0; top: 126px; letter-spacing: .14em; }
+  .tyw-pipe { position: absolute; left: -60px; top: 325px; width: 1060px; height: 22px; overflow: visible; }
+  .tyw-pipe path { fill: none; }
+  .tyw-water { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  html:not(.motion) .tyw-water, html:not(.motion) .tyw-mpipe i { visibility: hidden; }
+  .tyw-mpipe { display: none; }
+  .tyw-nuts { margin: 0; padding: 0; }
+  .tyw-nuts li { position: absolute; top: 226px; } .tyw-nuts li:nth-child(1) { left: 10px; } .tyw-nuts li:nth-child(2) { left: 340px; } .tyw-nuts li:nth-child(3) { left: 670px; }
+  .tyw-nut { position: relative; display: flex; flex-direction: column; align-items: center; width: 260px; height: 220px; padding-top: 78px; color: var(--ink); text-align: center; filter: drop-shadow(0 18px 13px rgba(0, 0, 0, .22)); }
+  .tyw-hex { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .tyw-hex path:first-child { fill: var(--bone); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; transition: fill var(--dur-2); }
+  .tyw-in2 { fill: none; stroke: rgba(107, 92, 62, .5); stroke-linejoin: round; }
+  .tyw-hex circle { fill: var(--paper); stroke: var(--ink-2); stroke-width: 1.2; }
+  .tyw-hex-m { display: none; }
+  .tyw-nut.is-ink { color: var(--paper); } .tyw-nut.is-ink .tyw-hex path:first-child { fill: var(--ink); } .tyw-nut.is-ink .tyw-in2 { stroke: rgba(210, 197, 166, .5); }
+  .tyw-nut:hover .tyw-hex path:first-child { fill: var(--tan); } .tyw-nut.is-ink:hover .tyw-hex path:first-child { fill: var(--coal); }
+  .tyw-t { position: relative; font-family: var(--f-display); font-size: 28px; line-height: 30.8px; }
+  .tyw-s { position: relative; width: 200px; margin-top: 8px; font-size: 13px; line-height: 14px; color: var(--ink-2); }
+  .is-ink .tyw-s, .is-ink .tyw-ar { color: var(--tan); }
+  .tyw-ar { position: absolute; left: 0; right: 0; top: 176px; font-weight: 700; font-size: 20px; line-height: 22px; transition: translate var(--dur-2) var(--ease-out); }
+  .tyw-nut:hover .tyw-ar { translate: 5px 0; }
+  .tyw-nut:focus-visible { outline: none; } .tyw-nut:focus-visible .tyw-hex path:first-child { stroke-width: 4; }
+  .tyw-m { position: absolute; left: 1010px; top: 176px; width: 240px; margin: 0; }
+  .tyw-mi { display: block; height: 320px; clip-path: polygon(50% 0, 100% 21.875%, 100% 78.125%, 50% 100%, 0 78.125%, 0 21.875%); }
+  .tyw-mi :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .tyw-m svg { position: absolute; left: -1px; top: -1px; width: 242px; height: 322px; } .tyw-m svg path { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .tyw-m figcaption { margin-top: 14px; font-size: 12px; line-height: 13px; color: var(--ink-2); text-align: center; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tyw { height: auto; padding: 120px 0 96px; }
+    .tyw-in :global(.tyw-eb) { position: static; }
+    .tyw-pipe { display: none; }
+    .tyw-nuts { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 40px; }
+    .tyw-nuts li { position: static; }
+    .tyw-m { position: relative; left: auto; top: auto; margin: 40px auto 0; }
+  }
+  @media (max-width: 767px) {
+    .tyw { height: 982px; }
+    .tyw-in :global(.tyw-eb) { top: 72px; }
+    .tyw-pipe { display: none; }
+    .tyw-mpipe { display: block; position: absolute; left: calc(50% - 8px); top: 112px; width: 16px; height: 620px; border-radius: 8px; background: #6B5C3E; overflow: hidden; box-shadow: inset 4px 0 0 -2px rgba(255, 255, 255, .2); }
+    .tyw-mpipe i { position: absolute; left: 4px; top: 0; width: 8px; height: 100%; border-radius: 4px; background: rgba(243, 236, 221, .45); transform-origin: 50% 0; }
+    .tyw-nuts li { left: calc(50% - 110px) !important; } .tyw-nuts li:nth-child(1) { top: 132px; } .tyw-nuts li:nth-child(2) { top: 332px; } .tyw-nuts li:nth-child(3) { top: 532px; }
+    .tyw-nut { width: 220px; height: 170px; padding-top: 44px; filter: drop-shadow(0 14px 10px rgba(0, 0, 0, .22)); }
+    .tyw-hex-d { display: none; } .tyw-hex-m { display: block; }
+    .tyw-t { font-size: 24px; line-height: 26.4px; }
+    .tyw-s { width: 172px; margin-top: 6px; font-size: 12px; line-height: 13px; }
+    .tyw-ar { top: 128px; font-size: 18px; line-height: 20px; }
+    .tyw-m { left: calc(50% - 70px); top: 722px; width: 140px; }
+    .tyw-mi { height: 186px; }
+    .tyw-m svg { width: 142px; height: 188px; }
+    .tyw-m figcaption { position: absolute; left: -105px; right: -105px; top: 196px; margin: 0; font-size: 11px; line-height: 12px; }
+  }
+</style>

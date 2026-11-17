@@ -1,0 +1,158 @@
+---
+// 12 Privacy / Terms (Figma privacy 670:7059 / 670:7187, terms 670:7272 / 670:7407). One calm layout for both: paper hero
+// (ink logo, eyebrow, H1, sub), bone body with a sticky "Contents" rail (desktop; a collapsible pill on phones) and numbered
+// hex sections split by dashed rules, then a tan strip with a question and the ink call button. No scroll scrub here on
+// purpose (Nick: keep legal pages calm); the rail marker simply follows the section you are reading.
+// The frame's "EFFECTIVE DATE: [CONFIRM]" line renders only once `effective` is given (Mike to confirm the date).
+import { SITE } from '../../data/site';
+import Eyebrow from '../kit-b4/Eyebrow.astro';
+import Wave from '../kit-b4/Wave.astro';
+import Logo from '../kit-b4/Logo.astro';
+interface Sec { id: string; t: string; nav: string; a: string }
+interface Props { title: string; sub: string; sections: Sec[]; cta: string; effective?: string }
+const { title, sub, sections, cta, effective } = Astro.props;
+const nn = (i: number) => String(i + 1).padStart(2, '0');
+const tel = `<a href="${SITE.tel}">${SITE.phone}</a>`;
+const html = (s: string) => s.replace(SITE.phone, tel);
+---
+<section class="lh" aria-labelledby="lh-h">
+  <div class="wrap lh-in">
+    <Logo w={132} class="lh-logo" />
+    <div class="lh-copy">
+      <Eyebrow text="Legal · Plain English" tone="deep" />
+      <h1 id="lh-h" class="lh-h1" data-t="2">{title}</h1>
+      <p class="lh-sub" data-t="3">{sub}</p>
+      {effective && <p class="lh-eff">Effective date: {effective}</p>}
+    </div>
+  </div>
+</section>
+<section class="lb" aria-label={`${title} sections`}>
+  <Wave d={{ a: 16.5, L: 480.5 }} m={{ a: 10.29, L: 301 }} fill="#FBF8F2" above="#F3ECDD" />
+  <div class="wrap lb-in">
+    <nav class="lb-rail" aria-labelledby="lb-rh">
+      <p id="lb-rh" class="lb-rh">Contents</p>
+      <span class="lb-bar" aria-hidden="true"></span>
+      <svg class="lb-mark" viewBox="0 0 26 20" aria-hidden="true"><path d="M3.72.6h17.76l3.12 9-3.12 9H3.72L.6 9.6z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.2" stroke-linejoin="round" /></svg>
+      <ul role="list">{sections.map((s, i) => <li><a class:list={['lb-t', i === 0 && 'is-on']} href={`#${s.id}`}><span>{nn(i)}</span>{s.nav}</a></li>)}</ul>
+    </nav>
+    <details class="lb-pill">
+      <summary><span class="lb-rh">Contents</span><span class="lb-n">{sections.length} sections <span aria-hidden="true">▾</span></span></summary>
+      <ul role="list">{sections.map((s, i) => <li><a href={`#${s.id}`}><span>{nn(i)}</span>{s.nav}</a></li>)}</ul>
+    </details>
+    <ol class="lb-list" role="list">
+      {sections.map((s, i) => (
+        <li class="ls" id={s.id}>
+          <span class="ls-nut" aria-hidden="true"><svg viewBox="0 0 50 38"><path d="M6.89.65h35.52l6.24 18-6.24 18H6.89L.65 18.65z" /></svg><span>{nn(i)}</span></span>
+          <h2 class="ls-t">{s.t}</h2>
+          <p class="ls-a" set:html={html(s.a)} />
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<section class="le" aria-labelledby="le-h">
+  <Wave d={{ a: 14.44, L: 420.5 }} m={{ a: 10.29, L: 301 }} fill="#D2C5A6" above="#FBF8F2" />
+  <div class="wrap le-in">
+    <h2 id="le-h" class="le-h" data-t="2">{cta}</h2>
+    <a class="le-btn" href={SITE.tel} data-t="3"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M3.79 0C1.34 0-.49 2.45.12 6.12 1.96 14.7 9.3 22.04 17.88 23.88 21.55 24.49 24 22.66 24 20.21v-3.06c0-1.23-.61-1.84-1.84-2.45l-4.28-1.84c-1.23-.61-2.45 0-3.07 1.22l-1.22 1.84c-3.68-1.22-5.51-3.67-6.74-6.74l1.84-1.22c1.22-.61 1.84-1.84 1.22-3.06L8.08 1.22C7.47 0 6.85 0 5.63 0z" fill="currentColor"/></svg>{SITE.phone}</a>
+  </div>
+</section>
+<script>
+  // The contents marker follows the section you are reading (desktop rail); the phone pill closes after a jump.
+  document.querySelectorAll<HTMLElement>('.lb').forEach((sec) => {
+    const items = Array.from(sec.querySelectorAll<HTMLElement>('.ls'));
+    const links = Array.from(sec.querySelectorAll<HTMLElement>('.lb-t'));
+    const mark = sec.querySelector<SVGElement>('.lb-mark');
+    const pill = sec.querySelector<HTMLDetailsElement>('.lb-pill');
+    let cur = 0;
+    const pick = () => {
+      let i = 0; const line = innerHeight * 0.4;
+      items.forEach((it, j) => { if (it.getBoundingClientRect().top <= line) i = j; });
+      if (i === cur) return; cur = i;
+      links.forEach((l, j) => l.classList.toggle('is-on', j === i));
+      if (mark) mark.style.transform = `translateY(${i * 42}px)`;
+    };
+    addEventListener('scroll', pick, { passive: true }); pick();
+    pill?.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) pill.open = false; });
+  });
+</script>
+<style>
+  .lh { position: relative; height: 402px; background: var(--paper); color: var(--ink); overflow-x: clip; }
+  .lh-in { position: relative; height: 100%; }
+  .lh-in :global(.lh-logo) { position: absolute; left: 9px; top: 70px; width: 132px; height: auto; }
+  .lh-copy { position: absolute; left: 360px; top: 81px; width: 680px; }
+  .lh-h1 { margin-top: 10px; font-family: var(--f-display); font-weight: 400; font-size: 76px; line-height: 103px; }
+  .lh-sub { margin-top: 1px; font-size: 20px; line-height: 30px; color: var(--ink-2); }
+  .lh-eff { margin-top: 22px; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .lb { position: relative; background: var(--bone); color: var(--ink); padding: 98px 0 68px; overflow-x: clip; }
+  .lb-in { display: grid; grid-template-columns: 280px 680px; column-gap: 80px; align-items: start; }
+  .lb-rail { position: sticky; top: 120px; }
+  .lb-rh { font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .16em; text-transform: uppercase; color: var(--tan-dark); }
+  .lb-bar { position: absolute; left: 6px; top: 34px; bottom: 0; width: 4px; border-radius: 2px; background: var(--tan); }
+  .lb-mark { position: absolute; z-index: 1; left: -5px; top: 38px; width: 26px; height: 20px; transition: transform .5s var(--ease-out); }
+  .lb-rail ul { margin: 9px 0 0; padding: 0; }
+  .lb-t { display: flex; align-items: center; height: 42px; padding-left: 32px; font-weight: 500; font-size: 15px; line-height: 16px; color: var(--ink-2); transition: color var(--dur-2); }
+  .lb-t span { width: 30px; flex: none; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; color: var(--mute); }
+  .lb-t:hover { color: var(--ink); }
+  .lb-t.is-on { font-weight: 700; color: var(--ink); } .lb-t.is-on span { color: var(--ink); }
+  .lb-pill { display: none; }
+  .lb-list { margin: 0; padding: 0; }
+  .ls { display: grid; grid-template-columns: 48px 610px; column-gap: 22px; padding: 30px 0 34px;
+    background: repeating-linear-gradient(90deg, rgba(74, 68, 58, .3) 0 3px, transparent 3px 9px) 0 0 / 100% 1px no-repeat; scroll-margin-top: 110px; }
+  .ls:first-child { padding-top: 10px; background: none; }
+  .ls:last-child { padding-bottom: 0; }
+  .ls-nut { position: relative; display: grid; place-items: center; width: 48px; height: 36px; margin: 2px 0 -2px; font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 21px; }
+  .ls-nut svg { position: absolute; left: -1px; top: -1px; width: 50px; height: 38px; }
+  .ls-nut path { fill: var(--paper); stroke: var(--ink); stroke-width: 1.3; stroke-linejoin: round; }
+  .ls-nut span { position: relative; }
+  .ls-t { font-family: var(--f-display); font-weight: 400; font-size: 28px; line-height: 38px; }
+  .ls-a { grid-column: 2; margin-top: 8px; font-size: 18px; line-height: 31px; color: var(--ink-2); }
+  .ls-a :global(a) { color: inherit; } .ls-a :global(a:hover) { color: var(--ink); text-decoration: underline; }
+  .le { position: relative; height: 216px; background: var(--tan); color: var(--ink); overflow-x: clip; }
+  .le-in { display: flex; align-items: center; justify-content: space-between; height: 100%; padding-bottom: 8px; }
+  .le-h { font-family: var(--f-display); font-weight: 400; font-size: 34px; line-height: 46px; }
+  .le-btn { display: flex; align-items: center; gap: 14px; width: 340px; height: 64px; padding: 0 20px; border-radius: 6px; background: var(--ink); color: var(--tan);
+    font-family: var(--f-label); font-weight: 600; font-size: 24px; line-height: 36px; letter-spacing: .02em; transition: background-color var(--dur-2); }
+  .le-btn:hover { background: var(--coal); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .lh { height: auto; padding: 64px 0 96px; }
+    .lh-in { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 40px; }
+    .lh-in :global(.lh-logo), .lh-copy { position: static; width: auto; }
+    .lh-h1 { font-size: clamp(56px, 6.4vw, 76px); line-height: 1.35; }
+    .lb-in { grid-template-columns: 220px minmax(0, 1fr); column-gap: 48px; }
+    .ls { grid-template-columns: 48px minmax(0, 1fr); }
+    .le { height: auto; padding: 72px 0 64px; }
+    .le-in { gap: 32px; } .le-h { font-size: clamp(26px, 3.2vw, 34px); line-height: 1.3; }
+  }
+  @media (max-width: 767px) {
+    .lh { height: 327px; }
+    .lh-in :global(.lh-logo) { left: 6px; top: 36px; width: 88px; }
+    .lh-copy { left: 0; top: 117px; width: 100%; }
+    .lh-h1 { margin-top: 7px; font-size: 44px; line-height: 59px; }
+    .lh-sub { margin-top: 7px; font-size: 16px; line-height: 24px; }
+    .lh-eff { margin-top: 14px; font-size: 12.5px; line-height: 19px; }
+    .lb { padding: 42px 0 40px; }
+    .lb-in { display: block; }
+    .lb-rail { display: none; }
+    .lb-pill { display: block; position: relative; }
+    .lb-pill summary { display: flex; align-items: center; justify-content: space-between; height: 50px; padding: 0 23px 0 22px; border-radius: 25px; background: var(--paper);
+      box-shadow: inset 0 0 0 1px rgba(14, 13, 11, .3); list-style: none; cursor: pointer; }
+    .lb-pill summary::-webkit-details-marker { display: none; }
+    .lb-n { font-weight: 600; font-size: 14px; line-height: 15px; }
+    .lb-pill ul { margin: 8px 0 0; padding: 8px 0; border-radius: 16px; background: var(--paper); box-shadow: inset 0 0 0 1px rgba(14, 13, 11, .3); }
+    .lb-pill a { display: flex; gap: 12px; padding: 10px 22px; font-weight: 500; font-size: 15px; line-height: 20px; color: var(--ink); }
+    .lb-pill a span { font-family: var(--f-label); font-weight: 600; font-size: 13px; color: var(--mute); }
+    .lb-list { margin-top: 41px; }
+    .ls { grid-template-columns: 40px minmax(0, 1fr); column-gap: 12px; padding: 27px 0 26px; scroll-margin-top: 80px; }
+    .ls:first-child { padding-top: 0; }
+    .ls:last-child { padding-bottom: 0; }
+    .ls-nut { width: 40px; height: 30px; margin: -1px 0 1px; font-size: 12px; line-height: 18px; }
+    .ls-nut svg { left: -0.6px; top: -0.6px; width: 41.2px; height: 31.2px; }
+    .ls-t { font-size: 22px; line-height: 30px; }
+    .ls-a { grid-column: 1 / -1; margin-top: 11px; font-size: 16px; line-height: 26px; }
+    .le { height: 232px; }
+    .le-in { display: block; padding-top: 56px; }
+    .le-h { font-size: 26px; line-height: 29.9px; }
+    .le-btn { width: 100%; height: 58px; margin-top: 26px; }
+  }
+</style>

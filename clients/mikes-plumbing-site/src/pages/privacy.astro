@@ -1,0 +1,22 @@
+---
+// /privacy (PAGES-COPY 12A; Figma 670:7059 desktop, 670:7187 mobile). Text copied from the frame. Needs a legal check (Mike).
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import Legal from '../components/legal/Legal.astro';
+const path = '/privacy';
+const sections = [
+  { id: 'who-we-are', nav: 'Who we are', t: 'Who we are.', a: "Mike's Plumbing Services is a plumbing business based in Riverside, California. Phone (951) 809-9533." },
+  { id: 'what-we-collect', nav: 'What we collect', t: 'What we collect.', a: 'When you fill in a form we get what you type: your name, phone, email if you add it, town or ZIP, the details of your plumbing problem, and any photo you attach. Like most websites, our site may also record basic visit data such as pages viewed and device type.' },
+  { id: 'why-we-use-it', nav: 'Why we use it', t: 'Why we use it.', a: "To reply to you, give you an estimate and do the job you ask for. That's it." },
+  { id: 'who-we-share-it-with', nav: 'Who we share it with', t: 'Who we share it with.', a: "We don't sell your information. We only share it with the services that run this website and deliver your message to us, or when the law requires it." },
+  { id: 'how-long-we-keep-it', nav: 'How long we keep it', t: 'How long we keep it.', a: 'As long as we need it to answer you and keep normal business records.' },
+  { id: 'your-choices', nav: 'Your choices', t: 'Your choices.', a: 'You can ask us to show you, correct or delete the information you sent. Call (951) 809-9533. California residents may have more rights under California law.' },
+  { id: 'children', nav: 'Children', t: 'Children.', a: "This website is not meant for children under 13 and we don't knowingly collect their information." },
+  { id: 'changes', nav: 'Changes', t: 'Changes.', a: "If we change this policy, we'll update the date at the top." },
+];
+---
+<Base title="Privacy Policy | Mike's Plumbing Services" description="How Mike's Plumbing Services uses the information you send through this website." path={path}
+  og="new-kitchen-faucet-install" ogAlt="A new kitchen faucet installed by Mike's Plumbing Services">
+  <Breadcrumbs items={[{ label: 'Privacy policy', href: path }]} class="sr-only" />
+  <Legal title="Privacy Policy" sub="How Mike's Plumbing Services uses the information you send through this website." sections={sections} cta="Want to see, fix or delete what you sent us?" />
+</Base>

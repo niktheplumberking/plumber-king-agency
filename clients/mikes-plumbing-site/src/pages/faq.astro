@@ -1,0 +1,21 @@
+---
+// /faq (PAGES-COPY section 11; Figma 670:3208 desktop, 670:5203 mobile). An open Q&A list (no accordion, as designed).
+// FAQPage JSON-LD carries exactly the 9 visible questions and answers (from the same data as the page).
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import FaqHero from '../components/faq/FaqHero.astro';
+import FaqList from '../components/faq/FaqList.astro';
+import FaqAsk from '../components/faq/FaqAsk.astro';
+import { faqSchema } from '../components/faq/faq';
+const path = '/faq';
+---
+<Base title="Plumbing FAQ | Mike's Plumbing Services, Riverside"
+  description="Straight answers about Mike's Plumbing Services: free estimates, hours, service areas, water heaters, drains, leaks and how to reach Mike."
+  path={path} og="water-heater-gas-valve-riverside" ogAlt="The gas control valve on a 75-gallon gas water heater"
+  jsonld={[faqSchema()]}>
+  <Breadcrumbs items={[{ label: 'FAQ', href: path }]} class="sr-only" />
+  <FaqHero />
+  <FaqList />
+  <FaqAsk />
+</Base>
+<script>import '../components/kit-b4/scrub';</script>

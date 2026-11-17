@@ -25,7 +25,7 @@ import Stamp from '../kit-b4/Stamp.astro';
   <Wave d={{ a: 16.5, L: 520 }} m={{ a: 10.95, L: 315.5 }} fill="var(--footer-bg, #151410)" above="#D2C5A6" class="rv-foot" />
 </section>
 <style>
-  .rv { position: relative; height: 578px; background: var(--tan); color: var(--ink); }
+  .rv { position: relative; height: 578px; background: var(--tan); color: var(--ink); overflow-x: clip; }
   .rv-in { position: relative; height: 100%; }
   .rv-h2 { position: absolute; left: 0; top: 167px; width: 760px; font-family: var(--f-display); font-weight: 400; font-size: 86px; line-height: 84px; }
   .dk { color: var(--tan-dark); }
@@ -47,7 +47,7 @@ import Stamp from '../kit-b4/Stamp.astro';
     .rv-h2 { position: static; width: auto; font-size: clamp(56px, 6.4vw, 86px); line-height: .98; }
     .rv-hex { position: relative; left: auto; top: auto; flex: none; width: 360px; height: 156px; }
     .rv-lab { font-size: 30px; }
-    .rv-in :global(.rv-stamp) { left: auto; right: -10px; top: -40px; }
+    .rv-in :global(.rv-stamp) { left: auto; right: 0; top: -110px; }
   }
   @media (max-width: 767px) {
     .rv { height: 502px; }

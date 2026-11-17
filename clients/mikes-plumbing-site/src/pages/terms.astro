@@ -1,0 +1,23 @@
+---
+// /terms (PAGES-COPY 12B; Figma 670:7272 desktop, 670:7407 mobile). Text copied from the frame. Needs a legal check (Mike).
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import Legal from '../components/legal/Legal.astro';
+const path = '/terms';
+const sections = [
+  { id: 'using-this-site', nav: 'Using this site', t: 'Using this site.', a: "This website tells you about Mike's Plumbing Services and lets you contact us. By using it, you agree to these terms." },
+  { id: 'information-only', nav: 'Information only', t: 'Information only.', a: "The content here is general information, not advice for your specific plumbing problem. Every job is different; we'll talk through yours in your estimate." },
+  { id: 'estimates-and-work', nav: 'Estimates and work', t: 'Estimates and work.', a: "Sending a form doesn't book a job. Prices and work are agreed with you directly before any work starts." },
+  { id: 'photos-and-reviews', nav: 'Photos and reviews', t: 'Photos and reviews.', a: 'Job photos are from our own work. Reviews are quoted word for word from Yelp and belong to the people who wrote them.' },
+  { id: 'our-name-and-logo', nav: 'Our name and logo', t: 'Our name and logo.', a: "The Mike's Plumbing Services name, logo and photos belong to us. Please don't copy them without asking." },
+  { id: 'links', nav: 'Links', t: 'Links.', a: "Links to Yelp, Instagram or other sites are for your convenience. We don't control those sites." },
+  { id: 'limits', nav: 'Limits', t: 'Limits.', a: "We do our best to keep this website accurate and working, but we can't promise it's always error-free or available." },
+  { id: 'california-law', nav: 'California law', t: 'California law.', a: 'These terms are governed by the laws of California.' },
+  { id: 'questions', nav: 'Questions', t: 'Questions.', a: 'Call (951) 809-9533.' },
+];
+---
+<Base title="Terms of Use | Mike's Plumbing Services" description="The terms for using the Mike's Plumbing Services website." path={path}
+  og="new-kitchen-faucet-install" ogAlt="A new kitchen faucet installed by Mike's Plumbing Services">
+  <Breadcrumbs items={[{ label: 'Terms of use', href: path }]} class="sr-only" />
+  <Legal title="Terms of Use" sub="The terms for using the Mike's Plumbing Services website." sections={sections} cta="Questions about these terms?" />
+</Base>

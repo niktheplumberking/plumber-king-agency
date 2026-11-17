@@ -33,9 +33,9 @@ const [pre, post] = ex.split(hl);
   </div>
 </section>
 <style>
-  .rs { position: relative; height: 920px; background: var(--paper); }
+  .rs { position: relative; height: 920px; background: var(--paper); overflow-x: clip; }
   .rs-in { position: relative; height: 100%; }
-  .rs-in :global(.rs-eb) { position: absolute; left: 60px; top: 78px; }
+  .rs-in :global(.rs-eb) { position: absolute; left: 60px; top: 77px; }
   .rs-sheet { position: absolute; left: 53px; top: 159px; width: 1080px; height: 680px; margin: 0; padding: 50px 0 0 68px; rotate: 1.2deg;
     background-color: var(--bone);
     background-image: linear-gradient(90deg, transparent 39px, rgba(217, 65, 43, .38) 39px 41px, transparent 41px),
@@ -61,7 +61,7 @@ const [pre, post] = ex.split(hl);
   @media (max-width: 767px) {
     .rs { height: 764px; }
     .rs-in { width: 100%; }
-    .rs-in :global(.rs-eb) { left: 20px; top: 77px; }
+    .rs-in :global(.rs-eb) { left: 20px; top: 71px; }
     .rs-sheet { left: 10.5px; top: 106px; width: 362px; height: 602px; padding: 23px 0 0 38px; rotate: 1.07deg;
       background-image: linear-gradient(90deg, transparent 21px, rgba(217, 65, 43, .38) 21px 23px, transparent 23px); background-size: 100% 100%; background-position: 0 0; }
     .rs-meta { font-size: 10px; line-height: 14px; } .rs-meta span { margin: 0 6px; } .rs-d { display: none; }

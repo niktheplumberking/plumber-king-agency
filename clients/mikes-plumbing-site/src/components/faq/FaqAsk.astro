@@ -1,0 +1,71 @@
+---
+// 11.3 Still asking (Figma 670:3208 y 2959-3499 / 670:5203 y 3048-3508). Split field: tan half = call (big number), ink half =
+// Instagram DM ("DM me a picture", his words). A riveted bone plate "Didn't see your question? Ask Mike." straddles the
+// seam. Each half is one link. Two half-width waves (tan / ink) bite into the paper above (desktop); one tan wave on phones.
+import { SITE } from '../../data/site';
+import Wave from '../kit-b4/Wave.astro';
+const rivet = 'M2.58.5h11.84l2.08 6-2.08 6H2.58L.5 6.5z';
+const arrowHex = 'M8.32 0h47.36L64 24l-8.32 24H8.32L0 24z';
+---
+<section class="fa" aria-labelledby="fa-h" data-m-section>
+  <Wave d={{ a: 18.52, L: 521, phi: -3.12, x0: 0, x1: 780 }} m={{ a: 12.35, L: 301 }} fill="#D2C5A6" above="#F3ECDD" class="fa-wl" />
+  <Wave d={{ a: 18.52, L: 521, phi: 0.77, x0: 720, x1: 1440 }} fill="#0E0D0B" above="#F3ECDD" class="fa-wr" />
+  <div class="fa-plate" data-t="2">
+    <h2 id="fa-h" class="fa-h">Didn't see your question? <span>Ask Mike.</span></h2>
+    {[0, 1, 2, 3].map((i) => <svg class={`fa-rv fa-rv${i}`} viewBox="0 0 17 13" aria-hidden="true"><path d={rivet} /></svg>)}
+  </div>
+  <a class="fa-half fa-call" href={SITE.tel} data-t="3">
+    <span class="fa-k">Call</span><span class="fa-num">{SITE.phone}</span><span class="fa-sub">Talk it through with Mike.</span>
+    <svg class="fa-ar" viewBox="0 0 64 48" aria-hidden="true"><path d={arrowHex} /><path class="fa-arr" d="M23 24h17m-6-6 6 6-6 6" /></svg>
+  </a>
+  <a class="fa-half fa-dm" href={SITE.social.instagram} target="_blank" rel="noopener" data-t="3">
+    <span class="fa-k">Instagram</span><span class="fa-big">DM {SITE.social.instagramHandle}</span><span class="fa-sub">“DM me a picture” <span aria-hidden="true">&nbsp;</span>Mike</span>
+    <svg class="fa-ar" viewBox="0 0 64 48" aria-hidden="true"><path d={arrowHex} /><path class="fa-arr" d="M23 24h17m-6-6 6 6-6 6" /></svg>
+  </a>
+</section>
+<style>
+  .fa { position: relative; display: grid; grid-template-columns: 1fr 1fr; height: 540px; background: linear-gradient(90deg, var(--tan) 50%, var(--ink) 50%); overflow-x: clip; }
+  .fa-plate { position: absolute; z-index: 3; left: calc(50% - 300px); top: 90px; display: grid; place-items: center; width: 600px; height: 120px; border-radius: 10px; background: var(--bone);
+    box-shadow: inset 0 0 0 2px var(--ink), 0 18px 36px -8px rgba(0, 0, 0, .4); }
+  .fa-h { font-family: var(--f-display); font-weight: 400; font-size: 34px; line-height: 46px; color: var(--ink); text-align: center; }
+  .fa-h span { color: var(--red); }
+  .fa-rv { position: absolute; width: 17px; height: 13px; } .fa-rv path { fill: var(--tan); stroke: var(--ink); stroke-linejoin: round; }
+  .fa-rv0 { left: 15.5px; top: 13.5px; } .fa-rv1 { right: 15.5px; top: 13.5px; } .fa-rv2 { left: 15.5px; bottom: 13.5px; } .fa-rv3 { right: 15.5px; bottom: 13.5px; }
+  .fa-half { position: relative; display: flex; flex-direction: column; padding: 270px 0 0 120px; }
+  .fa-call { color: var(--ink); } .fa-dm { color: var(--paper); }
+  .fa-k { font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .16em; text-transform: uppercase; }
+  .fa-dm .fa-k { color: var(--tan); }
+  .fa-num { margin-top: 3px; font-family: var(--f-label); font-weight: 600; font-size: 64px; line-height: 95px; letter-spacing: .02em; }
+  .fa-big { margin-top: 29px; font-family: var(--f-display); font-size: 30px; line-height: 34.5px; }
+  .fa-sub { margin-top: 11px; font-weight: 500; font-size: 16px; line-height: 17px; opacity: .8; }
+  .fa-dm .fa-sub { margin-top: 46px; font-style: italic; font-weight: 400; color: var(--tan); opacity: 1; }
+  .fa-ar { width: 64px; height: 48px; margin-top: 33px; transition: translate var(--dur-2) var(--ease-out); }
+  .fa-call .fa-ar path:first-child { fill: var(--ink); } .fa-dm .fa-ar path:first-child { fill: var(--tan); }
+  .fa-arr { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .fa-call .fa-arr { stroke: var(--tan); } .fa-dm .fa-arr { stroke: var(--ink); }
+  .fa-half:hover .fa-ar { translate: 8px 0; }
+  .fa-half:focus-visible { outline-offset: -8px; }
+  .fa :global(.fa-wr) { left: 50%; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fa-half { padding: 250px 32px 64px 40px; }
+    .fa { height: auto; }
+    .fa-plate { width: min(600px, calc(100% - 64px)); left: 50%; translate: -50% 0; }
+    .fa-num { font-size: clamp(40px, 5vw, 64px); line-height: 1.4; }
+    .fa-big { font-size: clamp(22px, 2.6vw, 30px); }
+  }
+  @media (max-width: 767px) {
+    .fa { display: block; height: auto; background: var(--tan); }
+    .fa :global(.fa-wr) { display: none; }
+    .fa-plate { left: 20px; top: -10px; width: calc(100% - 40px); height: 96px; box-shadow: inset 0 0 0 2px var(--ink), 0 14px 28px -8px rgba(0, 0, 0, .4); }
+    .fa-h { padding: 0 32px; font-size: 24px; line-height: 27.6px; }
+    .fa-rv { display: none; }
+    .fa-half { padding: 120px 20px 0; height: 260px; }
+    .fa-dm { height: 200px; padding-top: 50px; background: var(--ink); }
+    .fa-k { font-size: 12px; line-height: 18px; }
+    .fa-num { margin-top: 2px; font-size: 44px; line-height: 65px; }
+    .fa-sub { margin-top: 1px; font-size: 14px; line-height: 15px; }
+    .fa-big { margin-top: 4px; font-size: 24px; line-height: 32px; }
+    .fa-dm .fa-sub { margin-top: 8px; }
+    .fa-ar { display: none; }
+  }
+</style>

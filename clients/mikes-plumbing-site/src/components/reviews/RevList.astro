@@ -97,9 +97,9 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
   });
 </script>
 <style>
-  .rl { position: relative; background: var(--coal); color: var(--paper); padding: 138px 0 70px; }
+  .rl { position: relative; background: var(--coal); color: var(--paper); padding: 137px 0 70px; overflow-x: clip; }
   .rl-in { position: relative; }
-  .rl-h2 { margin-top: 10px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 60px; color: var(--paper); }
+  .rl-h2 { margin-top: 10px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 58.24px; color: var(--paper); }
   .tn { color: var(--tan); }
   .rl-chips { display: flex; gap: 10px; margin-top: 40px; }
   .rl-chip { position: relative; height: 40px; padding: 0 18px; border-radius: 20px; font-family: var(--f-sans); font-weight: 600; font-size: 15px; line-height: 20px; color: var(--paper);
@@ -147,7 +147,7 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
     .rc-W .rc-q p { columns: 1; }
   }
   @media (max-width: 767px) {
-    .rl { padding: 72px 0 64px; }
+    .rl { padding: 71px 0 64px; }
     .rl-in { width: 100%; padding-inline: 20px; }
     .rl-h2 { margin-top: 14px; font-size: 34px; line-height: 36px; }
     .rl-chips { margin: 16px -20px 0; padding: 0 20px; overflow-x: auto; scrollbar-width: none; gap: 8px; }

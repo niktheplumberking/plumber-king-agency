@@ -34,7 +34,7 @@ function build(root: HTMLElement, phone: boolean) {
   const r0 = f0?.getBoundingClientRect();
   const ax0 = f0 && !isPath(f0) ? axisOf(f0) : 'x';
   const along = (cx: number, cy: number) => {
-    const p = f0 as SVGPathElement; const m = p.getScreenCTM(); if (!m) return NaN;
+    const p = f0 as unknown as SVGPathElement; const m = p.getScreenCTM(); if (!m) return NaN;
     const L = p.getTotalLength(); let best = Infinity, at = 0;
     for (let k = 0; k <= 240; k++) {
       const q = p.getPointAtLength((L * k) / 240).matrixTransform(m);

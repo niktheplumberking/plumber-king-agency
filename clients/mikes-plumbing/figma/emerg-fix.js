@@ -1,0 +1,10 @@
+const page=await figma.getNodeByIdAsync('481:437');await figma.setCurrentPageAsync(page);
+const sec=await figma.getNodeByIdAsync('481:444');const D=await figma.getNodeByIdAsync('496:1354');
+const CS=D.children.find(n=>n.name==='07 Call strip');const oldH=CS.height;
+const hd=CS.children.find(n=>n.type==='TEXT'&&n.characters.startsWith('Water where'));const sub=CS.children.find(n=>n.type==='TEXT'&&n.characters.startsWith('You talk'));
+const rules=CS.children.filter(n=>n.name==='divider: badge rule');const btn=CS.children.find(n=>n.name.startsWith('button:'));
+hd.fontSize=50;hd.resize(860,hd.height);hd.textAutoResize='HEIGHT';hd.y=112;sub.y=hd.y+hd.height+20;btn.y=Math.round(hd.y+(hd.height-btn.height)/2);
+rules[1].y=sub.y+sub.height+40;const newH=rules[1].y+24+52;CS.resize(1440,newH);const dlt=newH-oldH;
+for(const n of D.children)if(n.y>CS.y&&n!==CS)n.y+=dlt;D.resize(1440,D.height+dlt);
+let mxb=0;for(const n of sec.children)mxb=Math.max(mxb,n.y+n.height);sec.resizeWithoutConstraints(2830,mxb+200);
+return {strip:[CS.height,hd.height,sub.y],D:D.height,sec:sec.height};

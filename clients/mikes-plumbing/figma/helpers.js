@@ -118,3 +118,52 @@ function MPAGEHERO(M,y,o){const S=F(M,'Mobile page hero',0,y,390,800,C.ink);cons
 function MCONTACT(M,y){const S=F(M,'Mobile contact band + form 2',0,y,390,900,C.ink);let b=HEAD(S,20,48,'Talk to Mike',[['Need a plumber in '],['Riverside?',1],[' Call Mike.']],'You talk to the owner. Free estimates, 15% off your first job.',{dark:true,w:350,z:36});
  const fm=F(S,'form 2',20,b+28,350,520,C.cream);T(fm,'Get your free estimate',20,24,{f:'Playfair Display',s:'Black',z:24,w:310});['Name','Phone','ZIP code'].forEach((l,i)=>FIELD(fm,20,80+i*64,310,l));FIELD(fm,20,272,310,'What’s going on?',{h:110});BTN(fm,20,398,'Send to Mike',{k:'ink',h:58,w:310,icon:'arrow'});T(fm,'Or call (951) 809-9533',20,470,{z:14,c:C.muteD});
  S.resize(390,b+28+520+48);return S;}
+// ===== v2 helpers (17 Nov round 2: pattern breakers, Nick's trust-first rules) =====
+// owner avatar: circle crop of Mike's real IG photo (face), cream ring
+function AVATAR(parent,x,y,s,o={}){const g=figma.createFrame();g.name='owner avatar (Mike, real IG photo crop)';g.resize(s,s);g.fills=[];g.clipsContent=false;parent.appendChild(g);g.x=x;g.y=y;
+ const ring=figma.createEllipse();ring.resize(s,s);ring.fills=[solid(o.ring||C.cream)];g.appendChild(ring);
+ const e=figma.createEllipse();e.resize(s-8,s-8);e.x=4;e.y=4;e.fills=[{type:'IMAGE',imageHash:H.mike,scaleMode:'CROP',imageTransform:[[0.28,0,0.36],[0,0.157,0.27]]}];g.appendChild(e);return g;}
+// 3 flowing lines (grease/water wave) between sections
+function WAVE3(parent,x,y,w,c,o={}){const g=figma.createFrame();g.name='3-line wave (pattern breaker)';g.fills=[];g.clipsContent=false;g.resize(w,60);parent.appendChild(g);g.x=x;g.y=y;
+ const amp=o.amp||12,seg=o.seg||360;for(let k=0;k<3;k++){const yb=16+k*13;let d=`M 0 ${yb}`;for(let sx=0;sx<w;sx+=seg){d+=` C ${sx+seg*0.25} ${yb-amp} ${sx+seg*0.25} ${yb-amp} ${sx+seg*0.5} ${yb} C ${sx+seg*0.75} ${yb+amp} ${sx+seg*0.75} ${yb+amp} ${sx+seg} ${yb}`;}
+ const v=figma.createVector();v.vectorPaths=[{windingRule:'NONE',data:d}];v.strokes=[solid(c,1-k*0.28)];v.strokeWeight=o.sw||3;v.fills=[];v.strokeCap='ROUND';g.appendChild(v);}return g;}
+// slanted section edge in the previous section's colour, drawn over the top of the next section
+function SLANT(D,y,c,h,dir){const v=figma.createVector();v.vectorPaths=[{windingRule:'NONZERO',data:dir>0?`M 0 0 L 1440 0 L 1440 ${h} Z`:`M 0 0 L 1440 0 L 0 ${h} Z`}];v.fills=[solid(c)];v.strokes=[];D.appendChild(v);v.x=0;v.y=y;v.name='slanted edge (pattern breaker)';return v;}
+// tilted ticker band with hex separators
+function TICKER(D,y,items,o={}){const W=o.w||1560;const g=F(D,'ticker band (pattern breaker)',-60,y,W,o.h||66,o.bg||C.tan);let x=30;
+ for(let k=0;k<3&&x<W;k++)for(const it of items){const t=T(g,it,x,(o.h||66)/2-14,{f:'Playfair Display',s:'Black',z:o.z||22,c:o.fg||C.ink,ls:6,u:true});x+=t.width+26;HX(g,x,(o.h||66)/2-8,26,16,{fill:o.fg||C.ink,cut:6});x+=52;if(x>W)break;}
+ g.rotation=o.rot===undefined?-1.6:o.rot;return g;}
+
+// ===== v2 GLOBAL BLOCKS (round 2, use on every page instead of CONTACTBAND/FOOTER) =====
+// big-phone contact section + form with Mike's avatar. prevColor = colour of the section above (slanted edge). returns frame
+function CONTACT2(D,y,o={}){const K=F(D,'11 Contact (big phone)',0,y,1440,820,C.ink);const kb=IMG(K,0,0,1440,820,'van');kb.fills=[{type:'IMAGE',imageHash:H.van,scaleMode:'FILL',filters:{exposure:-0.5,saturation:-0.9}}];R(K,0,0,1440,820,C.ink,0.9,'shade');
+EYE(K,'Ready when you are',80,150,{c:C.tan});TR(K,[['Tell Mike what’s going on.\n',{c:C.cream}],['He’ll take it from here.',{s:'Black Italic',c:C.tan}]],80,200,{f:'Playfair Display',s:'Black',z:50,lh:106,w:680,n:'H2'});
+T(K,'Call or text and you talk to the owner. Free estimates, and 15% off your first job as a new customer.',80,350,{z:18,c:C.mute,w:600,lh:155});
+const big=F(K,'big phone display',80,430,640,130,null);big.clipsContent=false;HX(big,0,0,640,130,{stroke:C.tan,cut:40,sw:2});T(big,'TAP TO CALL · MIKE ANSWERS',60,18,{z:12,s:'SemiBold',c:C.tan,ls:18});T(big,'(951) 809-9533',60,40,{f:'Playfair Display',s:'Black',z:64,c:C.cream});
+[['shield','Insured'],['star','5.0 on Yelp'],['pin','Riverside · IE · OC · LA']].forEach((c,i)=>{const g=F(K,'contact chip: '+c[1],80+i*214,600,200,56,C.char);g.strokes=[solid(C.line)];SVG(g,IC[c[0]](C.tan),18,17,22);T(g,c[1],50,17,{z:14,s:'Medium',c:C.cream});});
+const fm=F(K,'form 2',800,110,560,600,C.cream);fm.clipsContent=false;AVATAR(fm,470,-36,90,{ring:C.tan});T(fm,'Get a free estimate',40,40,{f:'Playfair Display',s:'Black',z:32});T(fm,'Mike calls you back. New customers get 15% off.',40,90,{z:16,c:C.muteD});
+FIELD(fm,40,136,232,'Name');FIELD(fm,288,136,232,'Phone');FIELD(fm,40,204,480,'ZIP code');
+T(fm,'What’s going on?',40,276,{z:14,s:'SemiBold'});let px=40;['Leak','Clog or backup','No hot water','Grease / commercial','Other'].forEach((p,i)=>{const t=figma.createText();t.fontName={family:'Jost',style:'Medium'};t.characters=p;t.fontSize=14;const w=Math.ceil(t.width)+36;t.remove();if(i===3)px=40;const yy=i>2?346:304;const g=F(fm,'pill: '+p,px,yy,w,34,i===0?C.ink:C.white);g.strokes=[solid('#CFC7AE')];T(g,p,18,7,{z:14,s:'Medium',c:i===0?C.cream:C.ink});px+=w+8;});
+const up=F(fm,'photo upload (optional)',40,396,480,60,null);const upr=R(up,0,0,480,60,null);upr.strokes=[solid(C.tanD)];upr.dashPattern=[6,5];SVG(up,IC.camera(C.tanD),18,18,24);T(up,'Add a photo of the problem (optional)',54,19,{z:15,c:C.muteD});
+BTN(fm,40,478,'Send to Mike',{k:'ink',h:62,w:480,icon:'arrow'});T(fm,'We call you back. No spam.',40,556,{z:13,c:C.muteD});
+K.resize(1440,820);if(o.prevColor)SLANT(D,y,o.prevColor,60,1);return K;}
+// floating cream footer card on ink + script watermark. returns frame
+function FOOTER2(D,y){const Ft=F(D,'12 Footer (floating card)',0,y,1440,640,C.ink);T(Ft,'Mike’s',700,400,{f:'Yellowtail',z:220,c:C.cream,o:0.06,n:'script watermark (cropped)'});
+const fc=F(Ft,'footer card',80,60,1280,440,C.cream);LOGO(fc,40,40,150);T(fc,'Family owned & operated plumbing for homes and businesses across Riverside, the Inland Empire, Orange County and LA. Est. 2025.',40,150,{z:14,c:C.muteD,w:320,lh:155});
+const cols=[['Services',['Drain cleaning & hydro jetting','Leak detection & slab leaks','Water heaters','Sewer lines & camera','Commercial & grease','Emergency plumbing']],['Company',['About Mike','Reviews','Our work','Service areas','Contact']],['Areas',['Riverside','Corona','Moreno Valley','Menifee','Murrieta','Fontana']]];
+cols.forEach((c,i)=>{const x=420+i*220;T(fc,c[0],x,44,{z:12,s:'SemiBold',c:C.tanD,u:true,ls:14});c[1].forEach((l,j)=>T(fc,l,x,76+j*30,{z:14,c:C.ink,w:210}));});
+T(fc,'CALL MIKE',1080,44,{z:12,s:'SemiBold',c:C.tanD,ls:14});T(fc,'(951) 809-9533',1080,70,{f:'Playfair Display',s:'Black',z:22,c:C.ink});T(fc,'mikesplumbingco25@gmail.com',1080,106,{z:13,c:C.muteD});
+['IG','Yelp','ND'].forEach((s,i)=>{HX(fc,1080+i*58,140,50,32,{stroke:C.ink,cut:9});T(fc,s,1080+i*58,147,{z:12,s:'SemiBold',c:C.ink,w:50,a:'CENTER'});});
+const tb=F(fc,'trust row',40,330,1200,70,C.paper);[['star','5.0 on Yelp · 20 reviews'],['shield','Insured'],['home','Family owned · Est. 2025'],['shield','CSLB lic. #: Mike to confirm']].forEach((t,i)=>{SVG(tb,IC[t[0]](C.tanD),24+i*300,24,22);T(tb,t[1],54+i*300,24,{z:14,s:'Medium',c:C.ink});});
+T(Ft,'© 2026 Mike’s Plumbing Services · Privacy · Terms',80,560,{z:13,c:C.mute});T(Ft,'Website by Plumber King Agency',1140,560,{z:13,c:C.mute,w:220,a:'RIGHT'});
+return Ft;}
+// reviews + trust strip for inner pages (right after the page hero). rv=[[quote,name,town,date],...] (2 or 3, Yelp word for word). returns frame; last card crosses into the next section (re-append it at the end: name contains 'crosses into')
+function TRUSTREVIEWS(D,y,rv,o={}){const S=F(D,'Reviews + trust (right after hero, Nick rule)',0,y,1440,700,o.bg||C.paper);
+ const yc=F(S,'Yelp score card (real, 17 Nov 2026)',80,110,400,250,C.ink);R(yc,28,28,36,36,C.yelp,1,'yelp mark');T(yc,'y',39,31,{s:'Bold',z:24,c:C.white});T(yc,'Mike on Yelp · checked 17 Nov 2026',76,36,{z:13,s:'SemiBold',c:C.cream});
+ T(yc,'5.0',28,90,{f:'Playfair Display',s:'Black',z:64,c:C.cream});STARS(yc,150,112,22,C.tan);T(yc,'20 reviews, all 5 stars',150,146,{z:14,c:C.mute});
+ [['shield','Insured'],['home','Family owned · Est. 2025']].forEach((t,i)=>{SVG(yc,IC[t[0]](C.tan),28+i*130,200,18);T(yc,t[1],52+i*130,199,{z:13,c:C.cream});});
+ const lb=F(S,'licence box (Mike to confirm)',80,380,400,46,null);const lbh=HX(lb,0,0,400,46,{stroke:C.tanD,cut:14});lbh.dashPattern=[5,4];T(lb,'CSLB licence #: Mike to confirm',0,13,{z:14,s:'Medium',c:C.tanD,w:400,a:'CENTER'});
+ EYE(S,o.eye||'What neighbors say',540,110,{c:C.tanD});const cw=rv.length>2?260:400;let last=null;
+ rv.forEach((r,i)=>{const c=REVIEW(S,540+i*(cw+20),160+(i===rv.length-1?60:0),cw,r[0],r[1],r[2],r[3],{z:14});last=c;});
+ const mh=Math.max(...S.children.filter(n=>n.name.startsWith('review:')).slice(0,-1).map(n=>n.y+n.height),430);S.resize(1440,mh+90);
+ const gy=S.y+last.y;D.appendChild(last);last.x=540+(rv.length-1)*(cw+20);last.y=gy;last.name+=' (crosses into next section: pattern breaker)';last.effects=[{type:'DROP_SHADOW',color:{r:0,g:0,b:0,a:0.22},offset:{x:0,y:16},radius:36,spread:0,visible:true,blendMode:'NORMAL'}];return S;}

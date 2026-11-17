@@ -37,9 +37,9 @@ const REG = [
 </section>
 <style>
   .sr { position: relative; height: 710px; padding-top: 100px; }
-  .sr-h { margin-top: 20px; font-family: var(--f-display); font-weight: 400; font-size: 58px; line-height: 60px; color: var(--paper); }
+  .sr-h { margin-top: 12px; font-family: var(--f-display); font-weight: 400; font-size: 58px; line-height: 78px; color: var(--paper); }
   .tone { color: var(--tan); }
-  .sr-cols { display: grid; grid-template-columns: 385px 410px 405px; margin-top: 51px; }
+  .sr-cols { display: grid; grid-template-columns: 385px 410px 405px; margin-top: 41px; }
   .sr-col { min-height: 398px; padding-top: 10px; }
   .sr-col + .sr-col { border-left: 1.5px solid #6B5C3E; padding-left: 24px; }
   .sr-head { display: flex; align-items: center; gap: 8px; margin: 0; }
@@ -59,16 +59,18 @@ const REG = [
     .sr-name { font-size: 32px; }
   }
   @media (max-width: 767px) {
-    .sr { height: auto; padding: 56px 0 26px; }
-    .sr-h { margin-top: 12px; font-size: 34px; line-height: 40px; }
-    .sr-cols { display: block; margin-top: 30px; }
-    .sr-col, .sr-col + .sr-col { min-height: 0; padding: 0 0 22px; border: 0; }
-    .sr-col + .sr-col { border-top: 1.5px solid #3A352C; padding-top: 30px; }
-    .sr-badge { width: 100px; height: 78px; margin-left: -6px; }
-    .sr-ab { font-size: 36px; line-height: 36px; margin-top: 0; }
+    .sr { height: auto; padding: 49px 0 40px; }
+    .sr-h { margin-top: 9px; font-size: 38px; line-height: 1.04; }
+    .sr-cols { display: block; margin-top: 37px; }
+    .sr-col, .sr-col + .sr-col { min-height: 0; padding: 0 0 15px; border: 0; }
+    .sr-col + .sr-col { border-top: 2px solid rgba(210, 197, 166, .5); padding-top: 32px; }
+    .sr-head { gap: 14px; }
+    .sr-badge { width: 100px; height: 76px; margin-left: -6px; }
+    .sr-ab { font-weight: 700; font-size: 36px; line-height: 36px; letter-spacing: .04em; margin-top: 0; }
     .sr-rn { display: none; }
-    .sr-name { font-size: 32px; }
-    .sr-list { margin-top: 18px; }
+    .sr-name { margin-top: 6px; font-size: 34px; line-height: 50px; }
+    .sr-list { margin-top: 21px; }
     .sr-list li { height: 38px; font-size: 18px; gap: 12px; }
+    .sr-home { font-size: 13px; }
   }
 </style>

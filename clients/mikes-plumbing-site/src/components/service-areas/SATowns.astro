@@ -24,7 +24,7 @@ import { TOWNS } from '../../data/towns';
 <style>
   .st { position: relative; height: 480px; padding-top: 92px; background: var(--tan); }
   .st-grid { display: grid; grid-template-columns: 440px 760px; }
-  .st-h { margin-top: 18px; font-family: var(--f-display); font-weight: 400; font-size: 58px; line-height: 60px; color: var(--ink); }
+  .st-h { margin-top: 8px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 76px; color: var(--ink); }
   .st-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 0; width: 760px; margin: 2px 0 0; padding: 0; list-style: none; }
   .st-tray li { margin: 0 -5px; }
   .st-nut { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 196px; height: 100px; color: var(--ink); filter: drop-shadow(0 12px 10px rgba(60, 48, 25, .3)); transition: transform var(--dur-2) var(--ease-out); }
@@ -46,13 +46,14 @@ import { TOWNS } from '../../data/towns';
     .st-tray { width: auto; justify-content: flex-start; }
   }
   @media (max-width: 767px) {
-    .st { height: auto; padding: 54px 0 50px; }
+    .st { height: auto; padding: 49px 0 56px; }
     .st-grid { grid-template-columns: 1fr; }
-    .st-h { margin-top: 12px; font-size: 38px; line-height: 44px; }
-    .st-tray { width: auto; margin: 28px -20px 0 -4px; justify-content: flex-start; gap: 4px 0; }
-    .st-tray li { margin: 0 -2px 0 0; }
+    .st-h { margin-top: 9px; font-size: 38px; line-height: 51px; }
+    .st-tray { width: auto; margin: 25px -20px 0 -4px; justify-content: flex-start; gap: 6px 8px; }
+    .st-tray li { margin: 0; }
     .st-tray li:nth-child(4n+3) { margin-left: 24px; }
-    .st-nut { width: 172px; height: 84px; }
-    .st-t { font-size: 18px; }
+    .st-nut { width: 170px; height: 82px; justify-content: flex-start; padding-top: 20px; }
+    .st-l { font-size: 9.5px; line-height: 14px; }
+    .st-t { font-size: 17px; line-height: 23px; }
   }
 </style>

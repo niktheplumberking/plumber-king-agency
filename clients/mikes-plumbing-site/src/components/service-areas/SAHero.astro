@@ -11,6 +11,11 @@ const at = (k: string) => [MAP_PTS[k][0] * S + OX, MAP_PTS[k][1] * S + OY];
 const [rx, ry] = at('riverside');
 const DOTS = ['los-angeles', 'buena-park', 'corona', 'moreno-valley'].map((k) => ({ k, p: at(k) }));
 const pc = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+// mobile crop (670:12833): the map is zoomed in further, Riverside pin at 294,62 of the 350 x 230 window
+const WM = 350, HM = 230, SM = 0.461, OXM = -82.6, OYM = -50;
+const atm = (k: string) => [MAP_PTS[k][0] * SM + OXM, MAP_PTS[k][1] * SM + OYM];
+const [rxm, rym] = atm('riverside');
+const xy = (k: string) => { const [x, y] = at(k), [xm, ym] = atm(k); return `--x:${pc(x, W)};--y:${pc(y, H)};--xm:${pc(xm, WM)};--ym:${pc(ym, HM)}`; };
 ---
 <section class="sh" aria-labelledby="sh-h1" data-m-section data-m-hero>
   <div class="wrap sh-grid">
@@ -31,14 +36,17 @@ const pc = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
     <figure class="sh-mapwrap" data-t="4" data-fx="nudge">
       <div class="sh-plate" aria-hidden="true"></div>
       <div class="sh-hex" data-b3-scrub data-b3-start="top 60%" data-b3-end="bottom 30%"><div class="sh-in">
-        <div class="sh-tiles" style={`left:${pc(OX, W)};top:${pc(OY, H)};width:${pc(1129 * S, W)};height:${pc(701 * S, H)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="Map of the Inland Empire, Orange County and Los Angeles with Mike's base in Riverside and the towns he serves" sizes="(min-width: 768px) 830px, 420px" widths={[420, 830, 1129]} priority /></div>
-        <svg class="sh-routes" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+        <div class="sh-tiles" style={`--x:${pc(OX, W)};--y:${pc(OY, H)};--w:${pc(1129 * S, W)};--h:${pc(701 * S, H)};--xm:${pc(OXM, WM)};--ym:${pc(OYM, HM)};--wm:${pc(1129 * SM, WM)};--hm:${pc(701 * SM, HM)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="Map of the Inland Empire, Orange County and Los Angeles with Mike's base in Riverside and the towns he serves" sizes="(min-width: 768px) 830px, 420px" widths={[420, 830, 1129]} priority /></div>
+        <svg class="sh-routes sh-routes--d" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
           {DOTS.map(({ p }) => <path d={`M${rx.toFixed(1)} ${ry.toFixed(1)} L${p[0].toFixed(1)} ${p[1].toFixed(1)}`} pathLength="1" data-b3-path />)}
         </svg>
-        {DOTS.map(({ p }, i) => <span class="sh-dot" style={`left:${pc(p[0], W)};top:${pc(p[1], H)}`} data-b3-stop={(0.25 + i * 0.2).toFixed(2)} aria-hidden="true"></span>)}
-        <span class="sh-pin" style={`left:${pc(rx, W)};top:${pc(ry, H)}`} aria-hidden="true"></span>
-        <span class="sh-tag" style={`left:${pc(rx - 69, W)};top:${pc(ry - 61, H)}`}>Riverside · Base</span>
+        <svg class="sh-routes sh-routes--m" viewBox={`0 0 ${WM} ${HM}`} preserveAspectRatio="none" aria-hidden="true">
+          {DOTS.map(({ k }) => { const q = atm(k); return <path d={`M${rxm.toFixed(1)} ${rym.toFixed(1)} L${q[0].toFixed(1)} ${q[1].toFixed(1)}`} pathLength="1" data-b3-path />; })}
+        </svg>
+        {DOTS.map(({ k }, i) => <span class="sh-dot" style={xy(k)} data-b3-stop={(0.25 + i * 0.2).toFixed(2)} aria-hidden="true"></span>)}
+        <span class="sh-pin" style={xy('riverside')} aria-hidden="true"></span>
       </div></div>
+      <span class="sh-tag" style={`left:calc(4px + ${((rx - 69) / W).toFixed(4)} * (100% - 8px));top:calc(3px + ${((ry - 61) / H).toFixed(4)} * (100% - 6px))`} aria-hidden="true">Riverside · Base</span>
       <figcaption class="sh-cap">Map © OpenStreetMap contributors</figcaption>
     </figure>
   </div>
@@ -58,7 +66,9 @@ const pc = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
   .sh-plate { position: absolute; inset: 0; transform: translate(22px, 24px); background: var(--tan-dark); clip-path: var(--hex); }
   .sh-hex { position: absolute; inset: 0; clip-path: var(--hex); background: var(--ink); }
   .sh-in { position: absolute; inset: 3px 4px; clip-path: var(--hex); overflow: hidden; background: #E3DAC6; }
-  .sh-tiles { position: absolute; }
+  .sh-tiles { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); }
+  .sh-dot, .sh-pin { left: var(--x); top: var(--y); }
+  .sh-routes--m { display: none; }
   .sh-tiles :global(img) { width: 100%; height: 100%; }
   .sh-routes { position: absolute; inset: 0; width: 100%; height: 100%; }
   .sh-routes path { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 0; opacity: .55; }
@@ -80,7 +90,7 @@ const pc = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
     .sh-cap { right: 0; bottom: -46px; }
   }
   @media (max-width: 767px) {
-    .sh { height: auto; padding: 39px 0 22px; }
+    .sh { height: auto; padding: 39px 0 50px; }
     .sh-grid { height: auto; }
     .sh-copy { position: static; width: auto; }
     .sh-h1 { margin-top: 9px; max-width: 330px; font-size: 38px; line-height: 40px; }
@@ -94,7 +104,11 @@ const pc = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
     .sh-plate { transform: translate(12px, 12px); }
     .sh-pin { width: 28px; height: 22px; margin: -11px 0 0 -14px; box-shadow: 0 0 0 6px rgba(217, 65, 43, .25); }
     .sh-dot { width: 8px; height: 8px; margin: -4px 0 0 -4px; border-width: 1px; }
-    .sh-tag { height: 22px; font-size: 10px; padding: 0 8px; }
+    /* 670:12859: the tag sits on the map's right edge, 18px down */
+    .sh-tiles { left: var(--xm); top: var(--ym); width: var(--wm); height: var(--hm); }
+    .sh-dot, .sh-pin { left: var(--xm); top: var(--ym); }
+    .sh-routes--d { display: none; } .sh-routes--m { display: block; }
+    .sh-tag { left: auto !important; right: 0; top: 18px !important; width: 112px; height: 24px; padding: 0; justify-content: center; font-size: 10px; letter-spacing: .1em; border-radius: 3px; }
     .sh-cap { left: 0; right: auto; bottom: -20px; font-size: 9px; line-height: 10px; }
     .sh-mapwrap { margin-bottom: 20px; }
   }

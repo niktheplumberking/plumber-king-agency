@@ -84,7 +84,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: i
     .tf-item:first-child { margin-top: 0; }
     .tf-sum { min-height: 57px; margin-top: 30px; padding: 18px 16px 16px 18px; }
     .tf-item[open] .tf-sum { padding-top: 18px; padding-bottom: 7px; }
-    .tf-tab { left: calc(var(--i) * 70px); top: -32px; width: 150px; height: 32px; padding: 11px 0 0 14px; font-size: 11px; clip-path: polygon(0 4px, 4px 0, 120px 0, 150px 32px, 0 32px); }
+    .tf-tab { left: calc(var(--i) * min(70px, (100% - 150px) / 3)); top: -32px; width: 150px; height: 32px; padding: 11px 0 0 14px; font-size: 11px; clip-path: polygon(0 4px, 4px 0, 120px 0, 150px 32px, 0 32px); }
     .tf-q, .tf-item[open] .tf-q { font-size: 20px; line-height: 23px; }
     .tf-pm { width: 30px; height: 30px; margin: -4px 0 -3px; }
     .tf-a { padding: 0 18px 30px; }

@@ -6,9 +6,10 @@
 // details, photo, town/ZIP, Home|Business, name, phone, email, submit. forms.ts validates and goes to /thank-you.
 import { SITE } from '../../data/site';
 import Eyebrow from '../kit-b4/Eyebrow.astro';
+import Wave from '../kit-b4/Wave.astro';
 const problems = ['Drain or sewer', 'Leak', 'Water heater', 'Toilet, sink or faucet', 'Garbage disposal', 'Water filtration', 'Emergency', 'Something else'];
 const steps = [['1', 'The problem'], ['2', 'The place'], ['3', 'You']];
-const hex = 'M7 1h26l6 16-6 16H7L1 17z';
+const hex = 'M6.16.7h31.08l5.46 16-5.46 16H6.16L.7 16.7z';
 ---
 <section class="ch on-ink" aria-labelledby="ch-h" data-m-section data-m-hero>
   <div class="wrap ch-in">
@@ -17,17 +18,19 @@ const hex = 'M7 1h26l6 16-6 16H7L1 17z';
       <h1 id="ch-h" class="ch-h1" data-t="2">Get a Free Plumbing Estimate <span class="tn">in Riverside, CA</span></h1>
       <p class="ch-script" data-t="3" data-fx="nudge">Call today for free estimate!</p>
       <a class="ch-tile" href={SITE.tel} data-t="4">
-        <span class="ch-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg></span>
+        <span class="ch-ico" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M6.32 0C2.24 0-.82 4.08.2 10.2 3.26 24.5 15.5 36.74 29.8 39.8 35.92 40.82 40 37.76 40 33.68v-5.1c0-2.04-1.02-3.06-3.06-4.09l-7.14-3.06c-2.04-1.02-4.09 0-5.11 2.04l-2.04 3.06C16.53 24.5 13.47 20.4 11.42 15.3l3.07-2.04c2.04-1.02 3.06-3.06 2.04-5.1L13.47 2.04C12.44 0 11.42 0 9.38 0z" fill="currentColor"/></svg></span>
         <span class="ch-tt"><span class="ch-who">Call {SITE.owner}</span><span class="ch-num">{SITE.phone}</span></span>
       </a>
-      <p class="ch-meta" data-t="3">{SITE.hoursYelp} <span aria-hidden="true">·</span> Free estimate <span aria-hidden="true">·</span> Family owned &amp; operated <span class="ch-off"><span aria-hidden="true">·</span> {SITE.offer}</span></p>
+      <p class="ch-meta" data-t="3">{SITE.hoursYelp} <span aria-hidden="true">·</span> Free estimate <span class="ch-fam"><span aria-hidden="true">·</span> Family owned &amp; operated</span> <span class="ch-off"><span aria-hidden="true">·</span> {SITE.offer}</span></p>
     </div>
+    <div class="ch-fw">
+    <Wave d={{ a: 12.4, L: 300.5, W: 390 }} fill="#F3ECDD" above="#0E0D0B" class="ch-mwave" />
     <form class="ch-form" data-estimate-form method="post" action="/thank-you" novalidate aria-labelledby="ch-fh" data-t="4" data-fx="up" enctype="multipart/form-data">
       <h2 id="ch-fh" class="ch-fh">Free estimate request</h2>
       <ol class="ch-steps" role="list" aria-label="Three short steps">
         {steps.map(([n, l], i) => (
           <li class:list={['ch-step', i === 0 && 'is-on']} data-step={n}>
-            <svg viewBox="0 0 40 34" aria-hidden="true"><path d={hex} /></svg><span class="ch-sn" aria-hidden="true">{n}</span><span class="ch-sl">{l}</span>
+            <svg viewBox="0 0 44 34" aria-hidden="true"><path d={hex} /></svg><span class="ch-sn" aria-hidden="true">{n}</span><span class="ch-sl">{l}</span>
           </li>
         ))}
       </ol>
@@ -39,8 +42,8 @@ const hex = 'M7 1h26l6 16-6 16H7L1 17z';
           ))}
         </div>
         <label class="ch-lab" for="ch-more">Tell us more (optional)</label>
-        <textarea id="ch-more" name="details" rows="3" placeholder="Where is it, how long has it been going on..."></textarea>
-        <label class="ch-photo"><input type="file" name="photo" accept="image/*" data-photo /><span data-photo-label><span aria-hidden="true">+</span> Add a photo (optional)</span></label>
+        <textarea id="ch-more" name="details" rows="3" placeholder="Where is it, how long has it been going on…"></textarea>
+        <label class="ch-photo"><svg class="ch-dash" aria-hidden="true"><rect /></svg><input type="file" name="photo" accept="image/*" data-photo /><span data-photo-label><span aria-hidden="true">＋&nbsp;</span> Add a photo (optional)</span></label>
       </fieldset>
       <fieldset class="ch-fs" data-part="2">
         <legend class="ch-q">2 · Where?</legend>
@@ -64,6 +67,7 @@ const hex = 'M7 1h26l6 16-6 16H7L1 17z';
       <p class="ch-msg" data-form-msg role="status" aria-live="polite"></p>
       <p class="ch-note">We'll use your details only to reply to you. <a href="/privacy">Privacy policy</a></p>
     </form>
+    </div>
   </div>
 </section>
 <script>
@@ -79,107 +83,123 @@ const hex = 'M7 1h26l6 16-6 16H7L1 17z';
 <style>
   .ch { position: relative; height: 858px; background: var(--ink); color: var(--paper); }
   .ch-in { position: relative; height: 100%; }
-  .ch-copy { position: absolute; left: 0; top: 84px; width: 560px; }
-  .ch-h1 { margin-top: 13px; width: 470px; font-family: var(--f-display); font-weight: 400; font-size: 70px; line-height: 73px; color: var(--paper); }
+  .ch-copy { position: absolute; left: 0; top: 83px; width: 560px; }
+  .ch-h1 { margin-top: 14px; width: 470px; font-family: var(--f-display); font-weight: 400; font-size: 70px; line-height: 72.8px; color: var(--paper); }
   .tn { color: var(--tan); }
-  .ch-script { margin-top: 18px; font-family: var(--f-script); font-size: 42px; line-height: 50px; color: var(--tan); }
-  .ch-tile { display: flex; align-items: center; gap: 24px; width: 540px; height: 150px; margin-top: 30px; padding: 0 24px; border-radius: 4px; background: var(--tan); color: var(--ink); transition: background-color var(--dur-2); }
+  .ch-script { margin-top: 19px; font-family: var(--f-script); font-size: 40px; line-height: 59px; color: var(--tan); }
+  .ch-tile { display: flex; align-items: center; gap: 24px; width: 540px; height: 150px; margin-top: 29px; padding: 0 24px; border-radius: 8px; background: var(--tan); color: var(--ink); transition: background-color var(--dur-2); }
   .ch-tile:hover { background: var(--paper); }
   .ch-tile:focus-visible { outline-color: var(--tan); }
-  .ch-ico { display: grid; place-items: center; flex: none; width: 96px; height: 96px; border-radius: 4px; background: var(--ink); color: var(--tan); }
-  .ch-ico svg { width: 44px; height: 44px; }
-  .ch-tt { display: grid; gap: 10px; }
-  .ch-who { font-weight: 600; font-size: 18px; line-height: 22px; }
-  .ch-num { font-family: var(--f-label); font-weight: 500; font-size: 60px; line-height: 56px; letter-spacing: .01em; white-space: nowrap; }
-  .ch-meta { margin-top: 31px; font-family: var(--f-label); font-weight: 400; font-size: 16px; line-height: 20px; letter-spacing: .04em; color: var(--mute); }
-  .ch-meta > span[aria-hidden] { margin: 0 6px; }
+  .ch-ico { display: grid; place-items: center; flex: none; width: 96px; height: 96px; border-radius: 8px; background: var(--ink); color: var(--tan); }
+  .ch-ico svg { width: 40px; height: 40px; }
+  .ch-tt { display: grid; gap: 6px; margin-top: 6px; }
+  .ch-who { font-weight: 700; font-size: 17px; line-height: 18px; }
+  .ch-num { font-family: var(--f-label); font-weight: 600; font-size: 50px; line-height: 74px; letter-spacing: .02em; white-space: nowrap; }
+  .ch-meta { margin-top: 26px; font-family: var(--f-label); font-weight: 400; font-size: 14px; line-height: 21px; letter-spacing: .08em; color: var(--mute); }
+  .ch-meta span[aria-hidden] { margin: 0 5px; }
   .ch-off { display: block; margin-top: 6px; }
   .ch-off > span { display: none; }
+  .ch-fw { display: contents; }
+  .ch-in :global(.ch-mwave) { display: none; }
 
-  .ch-form { position: absolute; z-index: 3; left: 660px; top: 60px; width: 540px; padding: 38px 40px 30px; border-radius: 12px; background: var(--bone); color: var(--ink);
-    box-shadow: 0 40px 60px -20px rgba(14, 13, 11, .45), 0 2px 8px rgba(14, 13, 11, .15); }
-  .ch-fh { font-family: var(--f-label); font-weight: 500; font-size: 15px; line-height: 20px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
-  .ch-steps { position: relative; display: flex; justify-content: space-between; margin: 13px -14px 0; padding: 0; }
-  .ch-steps::before { content: ''; position: absolute; left: 50px; right: 50px; top: 17px; border-top: 1.5px dashed #A9A190; }
-  .ch-step { position: relative; display: grid; justify-items: center; width: 70px; }
-  .ch-step svg { width: 40px; height: 34px; }
-  .ch-step path { fill: var(--bone); stroke: var(--ink); stroke-width: 1.5; transition: fill var(--dur-2); }
-  .ch-sn { position: absolute; top: 6px; font-family: var(--f-label); font-weight: 600; font-size: 16px; line-height: 22px; }
-  .ch-sl { margin-top: 8px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
-  .ch-step.is-on path { fill: var(--ink); } .ch-step.is-on .ch-sn { color: var(--tan); } .ch-step.is-on .ch-sl { color: var(--ink); font-weight: 600; }
+  .ch-form { position: absolute; z-index: 3; left: 660px; top: 60px; width: 540px; min-height: 960px; padding: 34px 40px 30px; border-radius: 10px; background: var(--bone); color: var(--ink);
+    box-shadow: 0 40px 70px -10px rgba(0, 0, 0, .6); }
+  .ch-fh { font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; letter-spacing: .16em; text-transform: uppercase; color: var(--tan-dark); }
+  .ch-steps { position: relative; display: grid; grid-template-columns: repeat(3, 100px); column-gap: 100px; margin: 19px 0 0 -28px; padding: 0; }
+  .ch-steps::before { content: ''; position: absolute; left: 50px; right: 50px; top: 15.4px; height: 1.2px; background: repeating-linear-gradient(90deg, var(--mute) 0 4px, transparent 4px 8px); }
+  .ch-step { position: relative; display: grid; justify-items: center; }
+  .ch-step svg { width: 44px; height: 34px; margin: -1px 0; overflow: visible; }
+  .ch-step path { fill: var(--bone); stroke: var(--ink); stroke-width: 1.4; transition: fill var(--dur-2); }
+  .ch-sn { position: absolute; top: 5px; font-family: var(--f-label); font-weight: 600; font-size: 15px; line-height: 22px; }
+  .ch-sl { margin-top: 7px; font-size: 12px; line-height: 13px; font-weight: 600; color: var(--ink-2); white-space: nowrap; }
+  .ch-step.is-on path { fill: var(--ink); } .ch-step.is-on .ch-sn { color: var(--tan); } .ch-step.is-on .ch-sl { color: var(--ink); }
   .ch-fs { border: 0; margin: 0; padding: 0; min-width: 0; }
-  .ch-q { padding: 0; margin-top: 34px; font-weight: 600; font-size: 16px; line-height: 20px; }
-  .ch-fs[data-part='1'] .ch-q { margin-top: 36px; }
-  .ch-chips { display: flex; flex-wrap: wrap; gap: 8px 8px; margin-top: 15px; }
+  .ch-q { float: left; width: 100%; padding: 0 0 16px; margin: 0; font-weight: 700; font-size: 15px; line-height: 16px; }
+  .ch-fs[data-part='1'] { padding-top: 35px; } .ch-fs[data-part='2'] { padding-top: 28px; } .ch-fs[data-part='3'] { padding-top: 32px; }
+  .ch-q + * { clear: both; margin-top: 0 !important; }
+  .ch-chips { display: flex; flex-wrap: wrap; gap: 10px 8px; margin-top: 16px; }
   .ch-chip { position: relative; cursor: pointer; }
   .ch-chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .ch-chip span { display: inline-flex; align-items: center; height: 38px; padding: 0 21px; font-weight: 600; font-size: 14px; line-height: 18px; color: var(--ink); background: #fff;
-    clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%);
-    box-shadow: inset 0 0 0 1px var(--ink); position: relative; }
-  .ch-chip span::before { content: ''; position: absolute; inset: 0; background: var(--ink); clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%, 1px 50%, 12.6px calc(100% - 1px), calc(100% - 12.6px) calc(100% - 1px), calc(100% - 1px) 50%, calc(100% - 12.6px) 1px, 12.6px 1px, 1px 50%, 0 50%); }
-  .ch-chip input:checked + span { background: var(--ink); color: var(--tan); }
-  .ch-chip input:focus-visible + span { outline: 3px solid var(--tan-dark); outline-offset: 2px; }
-  .ch-chip:hover span { background: var(--paper); } .ch-chip:hover input:checked + span { background: var(--coal); }
-  .ch-lab { display: block; margin-top: 19px; font-size: 13px; line-height: 18px; color: var(--ink-2); }
-  .ch-form textarea, .ch-in input { width: 100%; border: 1px solid #9C9893; border-radius: 3px; background: #fff; font-size: 15px; line-height: 20px; color: var(--ink); }
-  .ch-form textarea { display: block; height: 84px; margin-top: 8px; padding: 13px 15px; resize: vertical; }
-  .ch-form ::placeholder { color: #A39E96; opacity: 1; }
+  .ch-chip span { --cp: polygon(17px 0, calc(100% - 17px) 0, 100% 50%, calc(100% - 17px) 100%, 17px 100%, 0 50%);
+    position: relative; display: inline-flex; align-items: center; height: 36px; padding: 0 21.5px; font-weight: 600; font-size: 13.5px; line-height: 15px; color: var(--ink); background: rgba(74, 68, 58, .6); clip-path: var(--cp); }
+  .ch-chip span::before { content: ''; position: absolute; z-index: -1; inset: 1.1px; background: #fff; clip-path: polygon(16.6px 0, calc(100% - 16.6px) 0, 100% 50%, calc(100% - 16.6px) 100%, 16.6px 100%, 0 50%); transition: background-color var(--dur-2); }
+  .ch-chip span { isolation: isolate; }
+  .ch-chip input:checked + span { background: var(--ink); color: var(--tan); } .ch-chip input:checked + span::before { background: var(--ink); }
+  .ch-chip:has(input:focus-visible) { outline: 3px solid var(--tan-dark); outline-offset: 2px; border-radius: 4px; }
+  .ch-chip:hover span::before { background: var(--paper); } .ch-chip:hover input:checked + span::before { background: var(--coal); }
+  .ch-lab { display: block; margin-top: 20px; font-weight: 500; font-size: 13px; line-height: 14px; color: var(--ink-2); }
+  .ch-form textarea, .ch-in input { width: 100%; border: 1.2px solid rgba(74, 68, 58, .6); border-radius: 6px; background: #fff; font-size: 15px; line-height: 16px; color: var(--ink); }
+  .ch-form textarea { display: block; height: 84px; margin-top: 8px; padding: 14px 15px; resize: vertical; }
+  .ch-form ::placeholder { color: var(--mute); opacity: 1; }
   .ch-in input { height: 50px; padding: 0 15px; }
   .ch-form :is(textarea, input):focus-visible { outline: 3px solid var(--tan-dark); outline-offset: 1px; border-color: var(--ink); }
   .ch-in input[aria-invalid='true'] { border-color: var(--red); box-shadow: inset 0 0 0 1px var(--red); }
-  .ch-photo { position: relative; display: grid; place-items: center; height: 62px; margin-top: 16px; border: 1.5px dashed var(--tan-dark); border-radius: 3px; cursor: pointer;
-    font-weight: 500; font-size: 15px; color: var(--tan-dark); transition: background-color var(--dur-2); }
+  .ch-photo { position: relative; display: grid; place-items: center; height: 62px; margin-top: 16px; border-radius: 6px; cursor: pointer;
+    font-weight: 600; font-size: 14px; color: var(--tan-dark); transition: background-color var(--dur-2); }
+  .ch-dash { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .ch-dash rect { x: .65px; y: .65px; width: calc(100% - 1.3px); height: calc(100% - 1.3px); rx: 5.4px; fill: none; stroke: var(--tan-dark); stroke-width: 1.3; stroke-dasharray: 6 5; }
   .ch-photo:hover { background: rgba(210, 197, 166, .25); }
   .ch-photo input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .ch-photo:focus-within { outline: 3px solid var(--tan-dark); outline-offset: 2px; }
-  .ch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px; }
+  .ch-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 16px; }
   .ch-full { display: block; margin-top: 12px; }
-  .ch-fs[data-part='3'] .ch-row { margin-top: 18px; }
-  .ch-seg { display: grid; grid-template-columns: 1fr 1fr; height: 50px; padding: 3px; border: 1px solid #9C9893; border-radius: 3px; background: #fff; }
+  
+  .ch-seg { display: grid; grid-template-columns: 1fr 1fr; height: 50px; padding: 2.8px; border: 1.2px solid rgba(74, 68, 58, .6); border-radius: 6px; background: #fff; }
   .ch-seg label { position: relative; display: grid; cursor: pointer; }
   .ch-seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
-  .ch-seg span { display: grid; place-items: center; border-radius: 2px; font-weight: 600; font-size: 15px; color: var(--ink-2); transition: background-color var(--dur-2), color var(--dur-2); }
-  .ch-seg input:checked + span { background: var(--ink); color: var(--paper); }
+  .ch-seg span { display: grid; place-items: center; border-radius: 4px; font-weight: 600; font-size: 14px; color: var(--ink-2); transition: background-color var(--dur-2), color var(--dur-2); }
+  .ch-seg input:checked + span { background: var(--ink); color: var(--tan); font-weight: 700; }
   .ch-seg input:focus-visible + span { outline: 3px solid var(--tan-dark); outline-offset: 1px; }
-  .ch-go { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 62px; margin-top: 28px; padding: 0 18px 0 24px; border-radius: 4px; background: var(--tan); color: var(--ink);
-    font-weight: 600; font-size: 18px; transition: background-color var(--dur-2); }
+  .ch-go { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 62px; margin-top: 28px; padding: 0 19px 0 24px; border-radius: 6px; background: var(--tan); color: var(--ink);
+    font-weight: 700; font-size: 18px; transition: background-color var(--dur-2); }
   .ch-go:hover { background: #C8BA98; }
   .ch-c { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--paper); transition: rotate var(--dur-2) var(--ease-out); }
   .ch-go:hover .ch-c { rotate: -45deg; }
   .ch-msg:not(:empty) { margin-top: 12px; font-size: 14px; line-height: 20px; color: #A3301F; font-weight: 600; }
-  .ch-note { margin-top: 17px; font-size: 13px; line-height: 18px; color: var(--ink-2); }
-  .ch-note a { font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; margin-left: 3px; }
+  .ch-note { margin-top: 16px; font-size: 12.5px; line-height: 14px; color: var(--ink-2); }
+  .ch-note a { font-weight: 600; color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; margin-left: 4px; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .ch { height: auto; padding: 72px 0 0; }
     .ch-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
     .ch-copy, .ch-form { position: relative; left: auto; top: auto; width: auto; }
-    .ch-form { margin-bottom: -180px; padding: 32px 28px 28px; }
+    .ch-copy { padding-bottom: 120px; }
+    .ch-form { min-height: 0; margin-bottom: -200px; padding: 32px 28px 28px; }
     .ch-h1 { width: auto; font-size: clamp(48px, 5.4vw, 70px); line-height: 1.04; }
     .ch-tile { width: 100%; height: auto; padding: 18px; gap: 16px; }
-    .ch-ico { width: 72px; height: 72px; } .ch-num { font-size: clamp(34px, 4vw, 60px); line-height: 1; }
+    .ch-ico { width: 72px; height: 72px; } .ch-num { font-size: clamp(34px, 4vw, 50px); line-height: 1.3; }
+    .ch-steps { grid-template-columns: repeat(3, 1fr); column-gap: 0; margin-left: 0; } .ch-steps::before { left: 16.6%; right: 16.6%; }
     .ch-row { grid-template-columns: 1fr; gap: 12px; }
   }
+  /* Phone: the ticket sits below the copy and hangs past the wave: the wave and the paper field behind the ticket live in .ch-fw. */
   @media (max-width: 767px) {
-    .ch { height: auto; padding: 42px 0 0; }
+    .ch { height: auto; padding: 39px 0 0; overflow-x: clip; }
     .ch-copy, .ch-form { position: relative; left: auto; top: auto; width: auto; }
-    .ch-h1 { width: auto; margin-top: 15px; font-size: 42px; line-height: 42px; }
+    .ch-h1 { width: auto; margin-top: 13px; font-size: 40px; line-height: 41.6px; }
     .ch-h1 .tn { display: block; }
-    .ch-script { margin-top: 4px; font-size: 30px; line-height: 40px; }
-    .ch-tile { width: 100%; height: 96px; margin-top: 22px; padding: 0 16px; gap: 16px; }
-    .ch-ico { width: 64px; height: 64px; } .ch-ico svg { width: 30px; height: 30px; }
-    .ch-tt { gap: 6px; } .ch-who { font-size: 15px; line-height: 18px; } .ch-num { font-size: 38px; line-height: 38px; }
-    .ch-meta { margin-top: 24px; font-size: 13px; line-height: 16px; }
-    .ch-form { margin: 41px 0 0; padding: 26px 24px 26px; margin-bottom: -950px; }
-    .ch-steps { margin: 13px -10px 0; } .ch-steps::before { left: 46px; right: 46px; }
-    .ch-step { width: 62px; } .ch-sl { font-size: 11px; }
-    .ch-q, .ch-fs[data-part='1'] .ch-q { margin-top: 28px; font-size: 15px; }
-    .ch-chips { gap: 10px 8px; margin-top: 14px; }
-    .ch-chip span { font-size: 13px; padding: 0 18px; height: 36px; }
-    .ch-row { grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
-    .ch-in input, .ch-seg { height: 46px; }
+    .ch-script { margin-top: 10px; font-size: 28px; line-height: 41px; }
+    .ch-tile { width: 100%; height: 96px; margin-top: 19px; padding: 0 16px; gap: 16px; }
+    .ch-ico { width: 64px; height: 64px; } .ch-ico svg { width: 28px; height: 28px; }
+    .ch-tt { gap: 5px; margin-top: 0; } .ch-who { font-size: 14px; line-height: 15px; } .ch-num { font-size: 34px; line-height: 50px; }
+    .ch-meta { margin-top: 20px; font-size: 12px; line-height: 18px; } .ch-fam { display: none; } .ch-off { margin-top: 4px; }
+    .ch-fw { display: block; position: relative; margin-top: 20px; padding-bottom: 69px; }
+    .ch-fw::before { content: ''; position: absolute; top: 106px; bottom: 0; left: calc(50% - 50vw); width: 100vw; background: var(--paper); }
+    .ch-in :global(.ch-mwave) { display: block; top: 93.6px; left: calc(50% - 50vw); width: 100vw; }
+    .ch-form { z-index: 3; min-height: 0; margin: 0; padding: 24px 24px 28px; box-shadow: 0 30px 50px -10px rgba(0, 0, 0, .5); }
+    .ch-fh { font-size: 12px; line-height: 18px; letter-spacing: .14em; }
+    .ch-steps { grid-template-columns: repeat(3, 90px); column-gap: calc((100% - 251px) / 2); margin: 18px 0 0 -19px; }
+    .ch-steps::before { left: 45px; right: 45px; top: 13.4px; background: repeating-linear-gradient(90deg, var(--mute) 0 3px, transparent 3px 8px); }
+    .ch-step svg { width: 38px; height: 30px; } .ch-sn { top: 4px; font-size: 13px; line-height: 19px; } .ch-sl { margin-top: 5px; font-size: 11px; line-height: 12px; }
+    .ch-fs[data-part='1'] { padding-top: 28px; } .ch-fs[data-part='3'] { padding-top: 30px; }
+    .ch-q { padding-bottom: 14px; }
+    .ch-chips { gap: 8px; }
+    .ch-chip span { font-size: 13px; line-height: 14px; padding: 0 20px; }
+    .ch-lab { margin-top: 18px; }
+    .ch-photo { height: 58px; margin-top: 14px; }
+    .ch-row { grid-template-columns: 1fr; gap: 10px; }
+    .ch-in input, .ch-seg { height: 48px; } .ch-seg { padding: 2.8px; }
     .ch-full { margin-top: 10px; }
-    .ch-go { height: 58px; margin-top: 28px; padding: 0 14px 0 20px; font-size: 17px; }
-    .ch-note { font-size: 12px; }
+    .ch-go { height: 58px; margin-top: 26px; padding: 0 16px 0 20px; font-size: 17px; } .ch-c { width: 36px; height: 36px; }
+    .ch-note { margin-top: 14px; font-size: 12px; line-height: 16.8px; }
   }
 </style>

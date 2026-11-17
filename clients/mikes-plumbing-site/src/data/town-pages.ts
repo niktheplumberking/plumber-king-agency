@@ -49,7 +49,7 @@ const rev = (name: string) => {
 };
 const town = (slug: string) => TOWNS.find((t) => t.slug === slug)!;
 
-type Entry = Omit<TownPage, keyof Town | 'path' | 'job' | 'nearby' | 'map' | 'regionArea'> & { job: Job; nearby: string[] };
+type Entry = Omit<TownPage, keyof Town | 'path' | 'job' | 'nearby' | 'map' | 'mapM' | 'regionArea'> & { job: Job; nearby: string[] };
 const DATA: Record<string, Entry> = {
   corona: {
     title: "Plumber in Corona, CA | Mike's Plumbing Services",
@@ -63,7 +63,7 @@ const DATA: Record<string, Entry> = {
   },
   'moreno-valley': {
     title: "Plumber in Moreno Valley, CA | Mike's Plumbing Services",
-    description: 'Plumber serving Moreno Valley, CA from our base in Riverside. Pressure regulators, shut-off valves, leaks, drains. Family owned. Free estimate: (951) 809-9533.',
+    description: 'Plumber serving Moreno Valley, CA from our base in Riverside. Pressure regulators, shut-off valves, leaks. Family owned. Free estimate: (951) 809-9533.',
     county: 'Riverside County',
     geo: 'Moreno Valley is our neighbor to the east, both in Riverside County.',
     sameCounty: true,

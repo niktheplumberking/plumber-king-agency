@@ -1,0 +1,66 @@
+---
+// 11.1 Hero (Figma 670:3208 y 180-680 / 670:5203 y 164-576). Ink field, H1 (second half tan), Mike's tagline in script,
+// "Jump to" hex chips (links to the questions below; they scroll sideways on phones), a giant outlined "?" whose dot drips
+// into the paper section. Scroll moment: the two drips slide down a little as the hero scrolls away (data-scrub-y).
+import Eyebrow from '../kit-b4/Eyebrow.astro';
+import { FAQS } from './faq';
+---
+<section class="fh on-ink" aria-labelledby="fh-h" data-m-section data-m-hero data-scrub data-start="top top" data-end="bottom 20%">
+  <div class="wrap fh-in">
+    <span class="fh-q" aria-hidden="true">?</span>
+    <Eyebrow text="FAQ · Ask Mike" />
+    <h1 id="fh-h" class="fh-h1" data-t="2">Plumbing Questions, <span class="tn">Answered in Riverside, CA</span></h1>
+    <p class="fh-script" data-t="3" data-fx="nudge">Friendly. Transparent. Proficient.</p>
+    <nav class="fh-jump" aria-labelledby="fh-jl" data-t="4">
+      <p id="fh-jl" class="fh-jl">Jump to<span class="fh-sw" aria-hidden="true"> · Swipe</span></p>
+      <ul class="fh-chips" role="list">
+        {FAQS.map((f, i) => <li><a class:list={['fh-chip', i === 0 && 'is-on']} href={`#${f.id}`}>{f.topic}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+  <svg class="fh-drip fh-drip1" viewBox="0 0 24 34" aria-hidden="true" data-scrub-y="26"><path d="M12 0s12 15 12 22-5 12-12 12S0 29 0 22 12 0 12 0z" fill="#D2C5A6" /></svg>
+  <svg class="fh-drip fh-drip2" viewBox="0 0 24 34" aria-hidden="true" data-scrub-y="60"><path d="M12 0s12 15 12 22-5 12-12 12S0 29 0 22 12 0 12 0z" fill="#6B5C3E" /></svg>
+</section>
+<style>
+  .fh { position: relative; height: 500px; background: var(--ink); color: var(--paper); }
+  .fh-in { position: relative; height: 100%; padding-top: 95px; }
+  .fh-q { position: absolute; left: 990px; top: -40px; font-family: var(--f-display); font-size: 540px; line-height: 540px; color: transparent; -webkit-text-stroke: 3px rgba(210, 197, 166, .9); pointer-events: none; user-select: none; }
+  .fh-h1 { position: relative; margin-top: 14px; width: 860px; font-family: var(--f-display); font-weight: 400; font-size: 66px; line-height: 68.64px; color: var(--paper); }
+  .tn { color: var(--tan); }
+  .fh-script { margin-top: 14px; font-family: var(--f-script); font-size: 38px; line-height: 56px; color: var(--tan); }
+  .fh-jump { margin-top: 28px; }
+  .fh-jl { font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+  .fh-sw { display: none; }
+  .fh-chips { display: flex; gap: 8px; margin: 8px 0 0; padding: 0; }
+  .fh-chip { --cp: polygon(13px 0, calc(100% - 13px) 0, 100% 50%, calc(100% - 13px) 100%, 13px 100%, 0 50%);
+    position: relative; isolation: isolate; display: grid; place-items: center; height: 38px; padding: 0 22px; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 19px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
+    color: var(--tan); background: rgba(210, 197, 166, .7); clip-path: var(--cp); transition: color var(--dur-2); }
+  .fh-chip::before { content: ''; position: absolute; z-index: -1; inset: 1.2px; background: var(--ink); clip-path: polygon(12.6px 0, calc(100% - 12.6px) 0, 100% 50%, calc(100% - 12.6px) 100%, 12.6px 100%, 0 50%); transition: background-color var(--dur-2); }
+  .fh-chip:hover::before, .fh-chip.is-on::before { background: var(--tan); }
+  .fh-chip:hover, .fh-chip.is-on { color: var(--ink); }
+  .fh-chip.is-on { background: var(--tan); }
+  .fh-chip:focus-visible { outline: none; } .fh-chip:focus-visible::before { background: var(--paper); } .fh-chip:focus-visible { color: var(--ink); }
+  .fh-drip { position: absolute; z-index: 2; width: 24px; height: 34px; pointer-events: none; }
+  .fh-drip1 { left: calc(50% + 508px); top: 454px; } .fh-drip2 { left: calc(50% + 512px); top: 510px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fh { height: auto; padding-bottom: 96px; }
+    .fh-in { padding-top: 72px; }
+    .fh-q { left: auto; right: 0; top: -20px; font-size: 360px; line-height: 360px; opacity: .5; }
+    .fh-h1 { width: auto; max-width: 760px; font-size: clamp(48px, 5.6vw, 66px); line-height: 1.04; }
+    .fh-chips { flex-wrap: wrap; }
+    .fh-drip { display: none; }
+  }
+  @media (max-width: 767px) {
+    .fh { height: 412px; }
+    .fh-in { padding-top: 39px; }
+    .fh-q { left: auto; right: -66px; top: 10px; font-size: 250px; line-height: 337px; -webkit-text-stroke: 2px rgba(209, 196, 166, .4); }
+    .fh-h1 { width: 330px; max-width: 100%; margin-top: 13px; font-size: 38px; line-height: 39.52px; }
+    .fh-script { margin-top: 10px; font-size: 26px; line-height: 38px; }
+    .fh-jump { margin-top: 22px; }
+    .fh-jl { font-size: 11px; line-height: 16px; letter-spacing: .14em; } .fh-sw { display: inline; }
+    .fh-chips { gap: 6px; margin: 6px -20px 0; padding: 0 20px; overflow-x: auto; scrollbar-width: none; }
+    .fh-chips::-webkit-scrollbar { display: none; }
+    .fh-chip { height: 34px; padding: 0 19px; font-size: 12px; line-height: 18px; }
+    .fh-drip1 { left: calc(100% - 70px); top: 378px; } .fh-drip2 { display: none; }
+  }
+</style>

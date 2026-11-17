@@ -1,0 +1,22 @@
+---
+// /contact (PAGES-COPY section 10; Figma 669:438 desktop, 670:1594 mobile). ContactPage JSON-LD; the form is data-estimate-form.
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import ConHero from '../components/contact/ConHero.astro';
+import ConOther from '../components/contact/ConOther.astro';
+import ConHours from '../components/contact/ConHours.astro';
+import ConNext from '../components/contact/ConNext.astro';
+import { contactPageSchema } from '../lib/schema';
+const path = '/contact';
+---
+<Base title="Free Estimate | Contact Mike's Plumbing, Riverside CA"
+  description="Call (951) 809-9533 or send the form for a free plumbing estimate. Mike's Plumbing Services, Riverside, CA. Serving IE, OC and LA."
+  path={path} og="new-kitchen-faucet-install" ogAlt="A new kitchen faucet installed by Mike's Plumbing Services"
+  jsonld={[contactPageSchema(path)]} estimate="#ch-fh">
+  <Breadcrumbs items={[{ label: 'Contact', href: path }]} class="sr-only" />
+  <ConHero />
+  <ConOther />
+  <ConHours />
+  <ConNext />
+</Base>
+<script>import '../components/kit-b4/scrub';</script>

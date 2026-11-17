@@ -1,5 +1,94 @@
 ---
-// STUB: builder 1 replaces this.
+// Header (Figma Home 631:2037 y 40, 96 px; mobile 640:437 y 32, 72 px). Ink bar, hex-badge logo, nav with two mega menus
+// (Services, Areas: ui.ts data-mega-*), "Text Mike a photo" + call button. Sticky; compacts after 40 px and hides going
+// down (ui.ts data-header). Below 1200 px: Call button + menu button -> MobileMenu dialog.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-cream.png';
+import Btn from './Btn.astro';
+import Mega from './Mega.astro';
+import MobileMenu from './MobileMenu.astro';
+import { SITE } from '../../data/site';
 interface Props { path?: string; estimate?: string }
+const { path = '/', estimate = '#estimate' } = Astro.props;
+const NAV = [
+  { label: 'Services', href: '/services', menu: 'services' },
+  { label: 'Areas', href: '/service-areas', menu: 'areas' },
+  { label: 'About', href: '/about' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'Our work', href: '/our-work' },
+  { label: 'Contact', href: '/contact' },
+];
+const cur = (href: string) => path === href || path.startsWith(href + '/') || (href === '/service-areas' && path.startsWith('/plumber-')) || (href === '/services' && ['/drain-cleaning', '/water-heaters', '/emergency-plumber'].includes(path));
 ---
-<header></header>
+<header class="hdr" data-header>
+  <div class="hdr-bar">
+    <div class="hdr-in">
+      <a href="/" class="hdr-logo" data-intro="brand" aria-label={`${SITE.name}, home`}>
+        <Image src={logo} alt="" width={216} height={138} loading="eager" />
+      </a>
+      <nav class="nav" aria-label="Main">
+        <ul role="list" class="nav-list">
+          {NAV.map((n) => (
+            <li data-mega-item={n.menu}>
+              {n.menu ? (
+                <button type="button" class:list={['nl', cur(n.href) && 'is-cur']} aria-expanded="false" aria-controls={`mega-${n.menu}`} data-mega-btn={n.menu}>
+                  {n.label}<svg class="chev" viewBox="0 0 8 6" width="6" height="5" aria-hidden="true"><path d="M0 0h8L4 6z" fill="currentColor"/></svg>
+                </button>
+              ) : (
+                <a href={n.href} class="nl" aria-current={cur(n.href) ? 'page' : undefined}>{n.label}</a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="cta">
+        <Btn v="text" class="hb-text" sub="He'll tell you what it is" />
+        <Btn v="call" class="hb-call" sub="Tap to call · Free estimate" />
+        <a href={SITE.tel} class="m-call" aria-label={`Call ${SITE.phone}`}>Call</a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="mnav" data-menu-open>
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"/></svg><span class="sr-only">Menu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <Mega />
+</header>
+<MobileMenu path={path} estimate={estimate} />
+<style>
+  .hdr { position: sticky; top: 0; z-index: var(--z-header); transition: transform .5s var(--ease-out); }
+  .hdr.is-hidden { transform: translateY(calc(-100% - 4px)); }
+  .hdr-bar { position: relative; height: 96px; background: var(--ink); border-bottom: 1px solid var(--line-d); transition: height .45s var(--ease-out); }
+  .hdr-in { position: relative; display: flex; align-items: center; height: 100%; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; }
+  .hdr-logo { display: block; flex: none; width: 113px; margin-left: 0; transition: width .45s var(--ease-out); }
+  .hdr-logo :global(img) { width: 100%; height: auto; transition: transform .5s var(--ease-back); }
+  .hdr-logo:hover :global(img) { transform: rotate(-3deg); }
+  .nav { position: absolute; left: 186px; top: 0; height: 100%; display: flex; align-items: center; }
+  .nav-list { display: flex; align-items: center; gap: 0; margin: 0; padding: 0; }
+  .nav-list li + li { margin-left: 35px; }
+  .nav-list li[data-mega-item] + li { margin-left: 39px; }
+  .nl { position: relative; display: inline-flex; align-items: center; gap: 4px; height: 44px; font-family: var(--f-sans); font-weight: 500; font-size: 16px; line-height: 20px; color: var(--paper); white-space: nowrap; }
+  .nl::after { content: ''; position: absolute; left: 0; right: 0; bottom: 8px; height: 1.5px; background: var(--tan); transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease-out); }
+  .nl:hover::after, .nl[aria-current='page']::after, .nl.is-cur::after, .nl[aria-expanded='true']::after { transform: scaleX(1); transform-origin: left; }
+  .nl .chev { margin-top: 1px; transition: transform .3s var(--ease-out); }
+  .nl[aria-expanded='true'] .chev { transform: rotate(180deg); }
+  .cta { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .cta :global(.hb-text) { width: 194px; }
+  .cta :global(.hb-call) { width: 230px; }
+  .m-call, .menu-btn { display: none; }
+  .is-scrolled .hdr-bar { height: 80px; }
+  .is-scrolled .hdr-logo { width: 96px; }
+  @media (max-width: 1279px) { .nav { position: static; margin-left: 32px; } .nav-list li + li { margin-left: 22px; } .cta :global(.hb-text) { display: none; } }
+  @media (max-width: 1199px) {
+    .nav, .cta :global(.hb-call) { display: none; }
+    .m-call { display: grid; place-items: center; width: 96px; height: 44px; border-radius: 4px; background: var(--tan); color: var(--ink); font-family: var(--f-label); font-weight: 600; font-size: 20px; transition: background .3s; }
+    .m-call:hover { background: #DDD2B6; }
+    .menu-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 4px; color: var(--paper); box-shadow: inset 0 0 0 1.5px var(--paper); }
+    .cta { gap: 4px; }
+    .hdr-bar { height: 80px; }
+  }
+  @media (max-width: 767px) {
+    .hdr-bar, .is-scrolled .hdr-bar { height: 72px; }
+    .hdr-logo, .is-scrolled .hdr-logo { width: 82px; margin-left: 0; }
+    .cta { gap: 4px; }
+  }
+</style>

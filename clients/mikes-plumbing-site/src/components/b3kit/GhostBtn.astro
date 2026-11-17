@@ -1,0 +1,19 @@
+---
+// Outline button, two lines (Figma: 200 x 64, 1.5 px border, Archivo 16/600 + 12 sub). `dark` = on ink (tan border, paper
+// text), else on paper/tan (ink border). `plain` = one line. `w` = width in px (desktop).
+interface Props { href: string; label?: string; sub?: string | false; dark?: boolean; plain?: boolean; w?: number; class?: string; external?: boolean }
+const { href, label = 'Get a free estimate', sub = 'Send the form →', dark, plain, w = 200, class: cls, external } = Astro.props;
+---
+<a href={href} class:list={['gb', dark && 'gb--dark', plain && 'gb--plain', cls]} style={`--gb-w:${w}px`} data-t="3" {...(external ? { target: '_blank', rel: 'noopener' } : {})}>
+  <span class="gb-l">{label}</span>
+  {!plain && sub && <span class="gb-s">{sub}</span>}
+</a>
+<style>
+  .gb { display: flex; flex-direction: column; justify-content: center; width: var(--gb-w); max-width: 100%; height: 64px; padding: 0 20px; border: 1.5px solid var(--ink); border-radius: 4px; color: var(--ink); transition: background-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out); }
+  .gb--dark { border-color: var(--tan); color: var(--paper); }
+  .gb-l { font-family: var(--f-sans); font-weight: 600; font-size: 16px; line-height: 20px; white-space: nowrap; }
+  .gb-s { font-size: 12px; line-height: 14px; margin-top: 3px; opacity: .8; }
+  .gb:hover { background: var(--ink); color: var(--paper); }
+  .gb--dark:hover { background: var(--tan); color: var(--ink); }
+  @media (max-width: 767px) { .gb { width: 100%; align-items: center; } .gb-s { display: none; } }
+</style>

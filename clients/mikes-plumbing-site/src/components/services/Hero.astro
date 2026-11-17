@@ -1,0 +1,89 @@
+---
+// 1.1 Hero: his flyer blown up (Figma 669:539 "1.1 hero · flyer blown up", y 180 h 740; mobile 670:4039 y 164 h 810).
+// Double rule frame, hex badge, eyebrow, H1, hex-nut divider, script line, body, two buttons, three hex chips.
+// The pinned flyer (his, tilted 4 deg) + tape cross the seam into 1.2: positioned here, above the wave.
+import { Image } from 'astro:assets';
+import logoCream from '../../assets/brand/logo-cream.png';
+import Btn from './kit/Btn.astro';
+import Chip from './kit/Chip.astro';
+import Eyebrow from './kit/Eyebrow.astro';
+import Img from '../ui/Img.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import { ab } from './kit/ab';
+import { SITE } from '../../data/site';
+---
+<section class="hh sv-sec sv-ink sv-abs" style="--sh:740px" aria-labelledby="hh-h" data-m-section data-m-hero>
+  <span class="hh-o" aria-hidden="true"></span><span class="hh-i" aria-hidden="true"></span>
+  <Breadcrumbs items={[{ label: 'Services', href: '/services' }]} dark class="sr-only" />
+  <Image src={logoCream} alt="Mike's Plumbing Services hex badge logo, EST 2025" width={480} class="hh-logo" loading="eager" data-ab style={ab(600, 66, 240, 140)} />
+  <Eyebrow tone="tan" class="hh-eb" data-ab style={ab(599, 231)}>Our services · Riverside, CA</Eyebrow>
+  <h1 id="hh-h" class="hh-h1 f-abril" data-t="2" data-ab style={ab(120, 262, 1200, 94)}>Plumbing Services in Riverside, CA</h1>
+  <svg class="hh-hex" data-ab style={ab(705.2, 363.2, 30, 19)} viewBox="0 0 30 19" aria-hidden="true"><path d="M4.44.8h20.72l3.64 8.5-3.64 8.5H4.44L.8 9.3z" fill="none" stroke="#D2C5A6" stroke-width="1.6" stroke-linejoin="round" /></svg>
+  <i class="hh-ln" data-ab style={ab(420, 371.25, 250, 1.5)} aria-hidden="true"></i><i class="hh-ln" data-ab style={ab(770, 371.25, 250, 1.5)} aria-hidden="true"></i>
+  <p class="hh-script f-yest" data-t="3" data-ab style={ab(120, 394, 1200, 59)}>Got plumbing problems? Mike's got the fix!</p>
+  <p class="hh-body" data-t="3" data-ab style={ab(400, 462, 640, 54)}>Residential and commercial plumbing across the Inland Empire, Orange County and LA. Family owned and operated. Call for a free estimate.</p>
+  <div class="hh-btns" data-ab style={ab(432, 540, 576, 64)}>
+    <Btn v="tan" l1={`Call ${SITE.phone}`} l2="Free estimate" w={300} label={`Call ${SITE.phone} for a free estimate`} />
+    <Btn v="out" href="/contact" l1="Get a free estimate" l2="Tell us what's going on" w={260} />
+  </div>
+  <ul class="hh-chips" role="list" data-t="5" data-stagger data-ab style={ab(449.5, 622, 541, 34)}>
+    <li><Chip>Free estimate</Chip></li>
+    <li><Chip>Residential &amp; Commercial</Chip></li>
+    <li><Chip>Open 24 hours (Yelp)</Chip></li>
+  </ul>
+  <figure class="hh-flyer" data-ab style={ab(1080, 580, 230, 290, -4)}>
+    <Img name="mikes-plumbing-flyer-services-list" alt="Mike's own black and cream flyer listing his plumbing services and phone number" sizes="(min-width: 768px) 230px, 120px" widths={[240, 360, 480]} />
+  </figure>
+  <span class="hh-tape" data-ab style={ab(1150, 572, 96, 26, 6)} aria-hidden="true"></span>
+</section>
+
+<style>
+  .hh { position: relative; overflow: visible; }
+  .hh-o { position: absolute; left: 40px; top: 32px; width: 1360px; height: 676px; border: 1.5px solid rgba(210, 197, 166, .6); pointer-events: none; }
+  .hh-i { position: absolute; left: 52px; top: 44px; width: 1336px; height: 652px; border: 1px solid rgba(210, 197, 166, .3); pointer-events: none; }
+  .hh-logo { object-fit: contain; }
+  .hh-h1 { font-size: 70px; line-height: 94px; color: var(--paper); text-align: center; }
+  .hh-ln { display: block; background: rgba(210, 197, 166, .6); }
+  .hh-script { font-size: 40px; line-height: 59px; color: var(--tan); text-align: center; }
+  .hh-body { font-size: 18px; line-height: 27px; color: var(--mute); text-align: center; }
+  .hh-btns { display: flex; gap: 16px; }
+  .hh-chips { display: flex; gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .hh-flyer { z-index: 6; margin: 0; box-shadow: 0 24px 40px -8px rgba(0, 0, 0, .5); background: #000; }
+  .hh-flyer :global(img) { width: 100%; height: 100%; }
+  .hh-tape { z-index: 7; background: rgba(210, 197, 166, .9); }
+
+  /* < 1280: flow (phones = the 390 frame; tablet = the same structure, wider) */
+  @media (max-width: 1279px) {
+    .hh { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 810px; padding: 44px 30px 40px; }
+    .hh-o { left: 14px; top: 14px; right: 14px; bottom: 14px; width: auto; height: auto; border-width: 1.2px; }
+    .hh-i { left: 22px; top: 22px; right: 22px; bottom: 22px; width: auto; height: auto; }
+    .hh-logo { width: 160px; height: 94px; }
+    .hh :global(.hh-eb) { margin-top: 21px; font-size: 13px; line-height: 19px; }
+    .hh-h1 { margin-top: 8px; max-width: 330px; font-size: 40px; line-height: 1.06; }
+    .hh-ln { display: none; }
+    .hh-hex { width: 28px; height: 17px; padding: 0 91px; margin-top: 14px; box-sizing: content-box;
+      background: linear-gradient(rgba(210, 197, 166, .6), rgba(210, 197, 166, .6)) left center / 80px 1.2px no-repeat,
+        linear-gradient(rgba(210, 197, 166, .6), rgba(210, 197, 166, .6)) right center / 80px 1.2px no-repeat; }
+    .hh-script { margin-top: 13px; max-width: 330px; font-size: 28px; line-height: 1.15; }
+    .hh-body { margin-top: 12px; max-width: 318px; font-size: 15px; line-height: 1.5; }
+    .hh-btns { text-align: left; flex-direction: column; gap: 10px; margin-top: 20px; width: 100%; max-width: 318px; }
+    .hh-btns :global(.sv-btn) { width: 100%; }
+    .hh-chips { flex-wrap: wrap; justify-content: center; gap: 8px 8px; margin-top: 20px; max-width: 300px; }
+    .hh-chips :global(.sv-chip) { height: 30px; padding: 0 14px; font-size: 11.5px; letter-spacing: .08em; --cs: 1.1px; }
+    .hh-chips :global(.sv-chip-o svg) { width: 15px; }
+    .hh-flyer { position: absolute; right: 14px; bottom: -112px; width: 120px; height: 152px; rotate: 4deg; transform-origin: 0 0; }
+    .hh-tape { position: absolute; right: 48px; bottom: 30px; width: 56px; height: 18px; rotate: -6deg; transform-origin: 0 0; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .hh { padding: 64px 48px 90px; min-height: 0; }
+    .hh-logo { width: 210px; height: 124px; }
+    .hh-h1 { max-width: 900px; font-size: clamp(44px, 5.4vw, 64px); }
+    .hh-script { max-width: 900px; font-size: clamp(30px, 3.2vw, 38px); }
+    .hh-body { max-width: 640px; font-size: 17px; }
+    .hh-btns { flex-direction: row; justify-content: center; max-width: none; width: auto; }
+    .hh-btns :global(.sv-btn) { width: 280px; }
+    .hh-chips { max-width: none; }
+    .hh-flyer { right: 6%; bottom: -120px; width: 170px; height: 214px; }
+    .hh-tape { right: calc(6% + 50px); bottom: 84px; width: 80px; height: 22px; }
+  }
+</style>

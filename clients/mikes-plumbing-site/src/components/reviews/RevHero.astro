@@ -1,0 +1,99 @@
+---
+// 9.1 Reviews hero (Figma 670:11578 y 180-1022 / 671:1096 y 164-904). Ink field; eyebrow + two-tone H1 + rating line + two
+// buttons left; right, the hex-nut badge outline (740 x 480, double line) holding a giant "5.0" whose digits are filled with
+// the words customers used, five tan stars stamped underneath, "20 REVIEWS ON YELP".
+// The rating line is real text (SITE.rating); the "5.0" art is decorative (aria-hidden). No AggregateRating anywhere.
+import { SITE } from '../../data/site';
+import Eyebrow from '../kit-b4/Eyebrow.astro';
+import Btn from '../kit-b4/Btn.astro';
+const R = SITE.rating;
+// Phrases printed inside the digits: short words from the Yelp reviews (decorative, aria-hidden).
+const words = ['COMMUNICATOR', 'VERY CLEAN', 'UPFRONT AND HONEST', 'EXCELLENT', 'REASONABLY PRICED', 'ON TIME', 'SAME DAY', 'HIGHLY RECOMMEND', 'CALL HIM!', 'FAIR PRICE'];
+const row = (i: number) => { const s = [...words.slice(i % words.length), ...words.slice(0, i % words.length)]; return (s.join(' · ') + ' · ').repeat(3); };
+const rows = Array.from({ length: 20 }, (_, i) => i);
+const star = 'M12 1.6l3.1 7.1 7.7.7-5.8 5.1 1.7 7.6L12 18.1l-6.7 4 1.7-7.6-5.8-5.1 7.7-.7z';
+const stars = [-6, 4, -2, 5, -4];
+---
+<section class="rh on-ink" aria-labelledby="rh-h" data-m-section data-m-hero>
+  <div class="wrap rh-in">
+    <div class="rh-copy">
+      <Eyebrow text="Reviews · Yelp" />
+      <h1 id="rh-h" class="rh-h1" data-t="2">Mike's Plumbing <span class="nowrap">Services <span class="tn">Reviews</span></span></h1>
+      <p class="rh-sub" data-t="3" data-fx="nudge">{R.value} on {R.source} · {R.count} reviews. Checked {R.checked}.</p>
+    </div>
+    <div class="rh-art" aria-hidden="true" data-t="4" data-fx="scale">
+      <svg class="rh-svg rh-svg-d" viewBox="0 0 740 480" focusable="false">
+        <defs>
+          <clipPath id="rh-clip-d"><text x="364" y="327" text-anchor="middle" class="rh-num" font-size="390">5.0</text></clipPath>
+        </defs>
+        <path d="M95 1h550l94 239-94 239H95L1 240z" fill="none" stroke="#D2C5A6" stroke-width="2" />
+        <path d="M107 14h526l88 226-88 226H107L19 240z" fill="none" stroke="#D2C5A6" stroke-opacity=".2" stroke-width="1.5" />
+        <g clip-path="url(#rh-clip-d)">
+          <rect x="60" y="40" width="640" height="320" fill="#2E2B24" />
+          {rows.map((i) => <text x={-((i * 53) % 190)} y={73 + i * 15} class="rh-words">{row(i)}</text>)}
+        </g>
+        <text x="364" y="327" text-anchor="middle" class="rh-num" font-size="390" fill="none" stroke="#D2C5A6" stroke-width="2.5">5.0</text>
+      </svg>
+      <svg class="rh-svg rh-svg-m" viewBox="0 0 352 252" focusable="false">
+        <defs>
+          <clipPath id="rh-clip-m"><text x="174" y="169" text-anchor="middle" class="rh-num" font-size="196">5.0</text></clipPath>
+        </defs>
+        <path d="M44 1h264l43 125-43 125H44L1 126z" fill="none" stroke="#D2C5A6" stroke-width="1.5" />
+        <g clip-path="url(#rh-clip-m)">
+          <rect x="20" y="20" width="312" height="170" fill="#2E2B24" />
+          {rows.slice(0, 13).map((i) => <text x={-((i * 41) % 150)} y={36 + i * 11} class="rh-words rh-words-m">{row(i + 3)}</text>)}
+        </g>
+        <text x="174" y="169" text-anchor="middle" class="rh-num" font-size="196" fill="none" stroke="#D2C5A6" stroke-width="1.5">5.0</text>
+      </svg>
+      <div class="rh-stars">{stars.map((d) => <svg viewBox="0 0 24 24" style={`rotate:${d}deg`}><path d={star} fill="#D2C5A6" /></svg>)}</div>
+      <p class="rh-count">{R.count} reviews on {R.source}</p>
+    </div>
+    <div class="rh-btns" data-t="3">
+      <Btn href={SITE.social.yelp} external w={260} arrow>Read them on Yelp</Btn>
+      <Btn href="/contact" v="line" w={230}>Get a free estimate</Btn>
+    </div>
+  </div>
+</section>
+<style>
+  .rh { position: relative; height: 842px; background: var(--ink); overflow-x: clip; }
+  .rh-in { position: relative; height: 100%; }
+  .rh-copy { position: absolute; left: 0; top: 190px; width: 560px; z-index: 1; }
+  .rh-h1 { margin-top: 13px; font-family: var(--f-display); font-weight: 400; font-size: 68px; line-height: 70px; letter-spacing: 0; color: var(--paper); }
+  .tn { color: var(--tan); }
+  .rh-sub { margin-top: 21px; font-size: 18px; line-height: 28px; color: #CAC4B7; }
+  .rh-btns { position: absolute; left: 0; top: 458px; display: flex; gap: 16px; z-index: 1; }
+  .rh-art { position: absolute; left: 529px; top: 119px; width: 742px; }
+  .rh-svg { display: block; width: 742px; height: auto; overflow: visible; }
+  .rh-svg-m { display: none; }
+  .rh-num { font-family: var(--f-display); }
+  .rh-words { font-family: var(--f-label); font-weight: 500; font-size: 14px; letter-spacing: .03em; fill: #D2C5A6; }
+  .rh-words-m { font-size: 10px; }
+  .rh-stars { position: absolute; left: 0; right: 0; top: 500px; display: flex; justify-content: center; gap: 26px; padding-left: 6px; }
+  .rh-stars svg { width: 42px; height: 42px; }
+  .rh-count { position: absolute; left: 0; right: 0; top: 581px; text-align: center; font-family: var(--f-label); font-weight: 500; font-size: 16px; line-height: 20px; letter-spacing: .2em; text-transform: uppercase; color: var(--tan); padding-left: 6px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rh { height: auto; padding: 120px 0 150px; }
+    .rh-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: 'copy art' 'btns art'; column-gap: 32px; align-items: center; }
+    .rh-copy { grid-area: copy; align-self: end; } .rh-art { grid-area: art; } .rh-btns { grid-area: btns; align-self: start; margin-top: 40px; }
+    .rh-copy, .rh-art, .rh-btns { position: relative; left: auto; top: auto; width: auto; }
+    .rh-h1 { font-size: clamp(48px, 5.4vw, 68px); line-height: 1.03; }
+    .rh-svg { width: 100%; }
+    .rh-stars, .rh-count { position: static; margin-top: 16px; }
+    .rh-stars svg { width: 34px; height: 34px; }
+    .rh-btns { flex-wrap: wrap; }
+  }
+  @media (max-width: 767px) {
+    .rh { height: auto; padding: 48px 0 71px; }
+    .rh-copy, .rh-art, .rh-btns { position: relative; left: auto; top: auto; width: auto; }
+    .rh-h1 { margin-top: 13px; font-size: 42px; line-height: 44px; }
+    .rh-sub { margin-top: 11px; font-size: 15px; line-height: 20px; }
+    .rh-art { margin-top: 33px; }
+    .rh-svg-d { display: none; } .rh-svg-m { display: block; width: 100%; max-width: 352px; margin-inline: auto; }
+    .rh-stars { position: static; margin-top: 12px; gap: 8px; padding-left: 0; }
+    .rh-stars svg { width: 28px; height: 28px; }
+    .rh-count { display: none; }
+    .rh-btns { display: grid; gap: 12px; margin-top: 28px; }
+    .rh-btns :global(.bb) { width: 100%; justify-content: center; min-height: 58px; }
+    .rh-btns :global(.bb + .bb) { min-height: 54px; }
+  }
+</style>

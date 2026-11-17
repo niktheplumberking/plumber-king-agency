@@ -1,0 +1,137 @@
+---
+// 5.2 Close by (Figma 670:3403 y 1000-1700): OSM map crop with the pipe-run route from Riverside to the town (scroll moment:
+// the water runs down the pipe from Riverside as you scroll, the elbow nut and the town dot light up as it arrives), copy right.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import { MAP_PTS, type TownPage } from '../../data/town-pages';
+interface Props { t: TownPage }
+const { t } = Astro.props;
+// Positions in % of the map box, desktop (--x/--y) and mobile (--xm/--ym, its own closer crop): one markup, two crops.
+function geom(m: { s: number; ox: number; oy: number }, W: number, H: number) {
+  const at = (k: string) => { const [x, y] = MAP_PTS[k]; return [x * m.s + m.ox, y * m.s + m.oy]; };
+  const [rx, ry] = at('riverside'), [tx, ty] = at(t.slug);
+  const len = Math.abs(ty - ry) + Math.abs(tx - rx);
+  const pc = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+  return {
+    W, H, d: `M${rx.toFixed(1)} ${ry.toFixed(1)} V${ty.toFixed(1)} H${tx.toFixed(1)}`, elbow: Math.abs(ty - ry) / len,
+    tiles: [pc(m.ox, W), pc(m.oy, H), pc(1129 * m.s, W), pc(701 * m.s, H)],
+    r: [pc(rx, W), pc(ry, H)], c: [pc(rx, W), pc(ty, H)], t: [pc(tx, W), pc(ty, H)], flipT: tx > W * 0.78, flipR: rx > W * (W < 400 ? 0.6 : 0.75),
+  };
+}
+const D = geom(t.map, 672, 480), M = geom(t.mapM, 350, 256);
+const v = (k: 'r' | 'c' | 't') => `--x:${D[k][0]};--y:${D[k][1]};--xm:${M[k][0]};--ym:${M[k][1]}`;
+const up = t.name.toUpperCase();
+---
+<section class="tc" aria-labelledby="tc-h" data-m-section>
+  <Wave d="t1d" m="t1m" top={1000} topM={1466} />
+  <div class="wrap tc-grid">
+    <figure class="tc-mapwrap" data-t="4">
+      <div class="tc-map" data-b3-scrub data-no-px>
+        <div class="tc-tiles" style={`--l:${D.tiles[0]};--t:${D.tiles[1]};--w:${D.tiles[2]};--h:${D.tiles[3]};--lm:${M.tiles[0]};--tm:${M.tiles[1]};--wm:${M.tiles[2]};--hm:${M.tiles[3]}`}>
+          <Img name="map-inland-empire-orange-county-los-angeles" alt={`Map of the drive from Riverside to ${t.name}, ${t.county}`} sizes="(min-width: 768px) 1100px, 600px" widths={[600, 1129]} />
+        </div>
+        {[D, M].map((g, i) => (
+          <svg class:list={['tc-route', i ? 'tc-route--m' : 'tc-route--d']} viewBox={`0 0 ${g.W} ${g.H}`} preserveAspectRatio="none" aria-hidden="true">
+            <path d={g.d} class="tc-pipe-o" />
+            <path d={g.d} class="tc-pipe-i" />
+            <path d={g.d} class="tc-water" pathLength="1" data-b3-path />
+          </svg>
+        ))}
+        <span class="tc-dot tc-dot--base tc-pt" style={v('r')} aria-hidden="true"></span>
+        <span class="tc-nut tc-pt" style={v('c')} data-b3-stop={D.elbow.toFixed(3)} aria-hidden="true">
+          <svg viewBox="0 0 34 26"><path d="M8.5 1h17L33 13l-7.5 12h-17L1 13z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" /></svg>
+        </span>
+        <span class="tc-dot tc-dot--town tc-pt" style={v('t')} data-b3-stop="0.98" aria-hidden="true"></span>
+        <span class:list={['tc-tag tc-pt', D.flipR && 'is-flip', M.flipR && 'is-flip-m']} style={v('r')}>Riverside<span class="tc-base"> · Base</span></span>
+        <span class:list={['tc-tag tc-pt', D.flipT && 'is-flip', M.flipT && 'is-flip-m']} style={v('t')}>{up}</span>
+        <span class="tc-screw" style="left:13px;top:13px" aria-hidden="true"></span><span class="tc-screw" style="right:13px;top:13px" aria-hidden="true"></span>
+        <span class="tc-screw" style="left:13px;bottom:13px" aria-hidden="true"></span><span class="tc-screw" style="right:13px;bottom:13px" aria-hidden="true"></span>
+      </div>
+      <figcaption class="tc-cap">Map © OpenStreetMap contributors</figcaption>
+    </figure>
+    <div class="tc-copy">
+      <Eyebrow>Neighbors</Eyebrow>
+      <h2 id="tc-h" class="tc-h" data-t="2">Riverside to {t.name}. <span class="tone">{t.sameCounty ? 'Same county, same plumber.' : 'Same van, same plumber.'}</span></h2>
+      <p class="tc-body" data-t="3">{t.geo} We're a service-area business: we don't have a shop for you to visit, we bring the shop to you in the van.</p>
+      <blockquote class="tc-q" data-t="4">
+        <p>“The condition of your work van says a lot about the quality of your work.”</p>
+        <footer>Mike, on Instagram</footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+<style>
+  .tc { position: relative; height: 700px; background: var(--paper); }
+  .tc-grid { position: relative; height: 100%; }
+  .tc-mapwrap { position: absolute; left: 0; top: 90px; width: 672px; margin: 0; }
+  .tc-map { position: relative; aspect-ratio: 672 / 480; overflow: hidden; background: #E3DAC6; box-shadow: 0 24px 40px rgba(60, 48, 25, .22); }
+  .tc-tiles { position: absolute; left: var(--l); top: var(--t); width: var(--w); height: var(--h); }
+  .tc-pt { left: var(--x); top: var(--y); }
+  .tc-route--m { display: none; }
+  .tc-tiles :global(img) { width: 100%; height: 100%; }
+  .tc-route { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .tc-route path { fill: none; stroke-linejoin: miter; }
+  .tc-pipe-o { stroke: var(--tan-dark); stroke-width: 12; }
+  .tc-pipe-i { stroke: #8F7E59; stroke-width: 4; }
+  .tc-water { stroke: #9DB8C9; stroke-width: 4; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+  :global(html.motion) .tc-water { opacity: .95; }
+  .tc-dot { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 3px solid var(--paper); }
+  .tc-dot--base { background: var(--ink); width: 24px; height: 24px; margin: -12px 0 0 -12px; }
+  .tc-dot--town { background: var(--red); width: 26px; height: 26px; margin: -13px 0 0 -13px; transition: transform .45s var(--ease-back), box-shadow .45s; }
+  .tc-nut { position: absolute; width: 34px; height: 26px; margin: -13px 0 0 -17px; transition: transform .45s var(--ease-back); }
+  .tc-nut svg { width: 100%; height: 100%; }
+  .tc-tag { position: absolute; margin: -45px 0 0 21px; padding: 0 10px; height: 27px; display: flex; align-items: center; white-space: nowrap; background: var(--ink); color: var(--paper); font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; }
+  .tc-tag.is-flip { transform: translateX(calc(-100% - 42px)); }
+  .tc-screw { position: absolute; width: 18px; height: 14px; margin: -7px -9px; background: var(--tan); clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+  .tc-screw { background: var(--ink); }
+  .tc-screw::after { content: ''; position: absolute; inset: 1.5px; background: #CFC2A2; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+  .tc-cap { margin-top: 10px; font-size: 10px; line-height: 14px; color: var(--ink-2); }
+
+  /* scroll moment states (b3kit/scrub.ts): a stop lights up, grows to 1.08 and turns a little when the water reaches it */
+  .tc-nut.is-on { transform: scale(1.08) rotate(-6deg); }
+  .tc-dot--town.is-on { transform: scale(1.08); box-shadow: 0 0 0 7px rgba(217, 65, 43, .25); }
+
+  .tc-copy { position: absolute; left: 780px; top: 114px; width: 440px; }
+  .tc-h { width: 520px; margin-top: 6px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 54px; letter-spacing: 0; color: var(--ink); }
+  .tc-h .tone { display: block; max-width: 380px; }
+  .tone { color: var(--tan-dark); }
+  .tc-body { margin-top: 26px; width: 410px; font-size: 17px; line-height: 26px; color: var(--ink-2); }
+  .tc-q { position: absolute; top: 406px; left: 0; width: 420px; height: 120px; margin: 0; padding: 22px 24px; background: var(--ink); color: var(--paper); }
+  .tc-q p { font-family: var(--f-display); font-size: 20px; line-height: 25px; }
+  .tc-q footer { margin-top: 13px; font-family: var(--f-label); font-weight: 500; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tc { height: auto; padding: 96px 0 110px; }
+    .tc-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; height: auto; align-items: start; }
+    .tc-mapwrap, .tc-copy { position: static; width: auto; }
+    .tc-h { width: auto; font-size: clamp(42px, 4.6vw, 56px); line-height: 1; }
+    .tc-body { width: auto; }
+    .tc-q { position: static; width: auto; height: auto; margin-top: 32px; }
+  }
+  @media (max-width: 767px) {
+    .tc { height: auto; padding: 51px 0 40px; }
+    .tc-grid { display: flex; flex-direction: column; height: auto; }
+    .tc-copy { display: contents; }
+    .tc-copy > :global(.eb) { order: 1; }
+    .tc-h { order: 2; width: auto; margin-top: 12px; font-size: 34px; line-height: 36px; }
+    .tc-h .tone { display: inline; }
+    .tc-mapwrap { order: 3; position: static; width: 100%; margin-top: 18px; }
+    .tc-body { order: 4; width: auto; margin-top: 24px; font-size: 15px; line-height: 22px; }
+    .tc-q { order: 5; position: static; width: auto; height: auto; margin-top: 24px; padding: 20px 20px 18px; }
+    .tc-q p { font-size: 19px; line-height: 24px; }
+    .tc-tag { height: 22px; font-size: 10px; padding: 0 8px; margin: -36px 0 0 12px; }
+    .tc-tiles { left: var(--lm); top: var(--tm); width: var(--wm); height: var(--hm); }
+    .tc-pt { left: var(--xm); top: var(--ym); }
+    .tc-base { display: none; }
+    .tc-route--d { display: none; } .tc-route--m { display: block; }
+    .tc-tag.is-flip { transform: none; }
+    .tc-tag.is-flip-m { transform: translateX(calc(-100% - 24px)); }
+    .tc-map { aspect-ratio: 350 / 256; }
+    .tc-dot { width: 16px; height: 16px; margin: -8px 0 0 -8px; border-width: 2px; }
+    .tc-dot--base, .tc-dot--town { width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+    .tc-pipe-o { stroke-width: 9; }
+    .tc-nut { width: 24px; height: 18px; margin: -9px 0 0 -12px; }
+    .tc-screw { display: none; }
+  }
+</style>

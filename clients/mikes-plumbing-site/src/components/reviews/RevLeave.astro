@@ -1,0 +1,62 @@
+---
+// 9.5 Leave a review (Figma 670:11578 y 4656-5234 / 671:1096 y 4908-5398). Tan field; big two-tone H2 left; right, a black
+// hex-nut button (double outline, drop shadow) "★★★★★ Review us on Yelp →" with Mike's badge stamped in ink above it.
+// The footer's wave rises into the bottom of this section (footer colour #151410, Figma).
+import { SITE } from '../../data/site';
+import Wave from '../kit-b4/Wave.astro';
+import Stamp from '../kit-b4/Stamp.astro';
+---
+<section class="rv" aria-labelledby="rv-h" data-m-section>
+  <Wave d={{ a: 16.5, L: 540 }} m={{ a: 10.3, L: 300.5 }} fill="#D2C5A6" above="#1C1A16" />
+  <div class="wrap rv-in">
+    <h2 id="rv-h" class="rv-h2" data-t="2">Worked with Mike? <span class="dk">Tell people.</span></h2>
+    <a class="rv-hex" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="4" data-fx="scale">
+      <svg class="rv-shape rv-shape-d" viewBox="0 0 420 180" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+        <path d="M55 0h310l55 90-55 90H55L0 90z" fill="#0E0D0B" /><path d="M61 10h298l49 80-49 80H61L12 90z" fill="none" stroke="#585145" stroke-width="1.5" />
+      </svg>
+      <svg class="rv-shape rv-shape-m" viewBox="0 0 350 140" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+        <path d="M43 0h264l43 70-43 70H43L0 70z" fill="#0E0D0B" /><path d="M48 8h254l38 62-38 62H48L10 70z" fill="none" stroke="#585145" stroke-width="1.5" />
+      </svg>
+      <span class="rv-stars" aria-hidden="true">★★★★★</span>
+      <span class="rv-lab">Review us on Yelp <span aria-hidden="true">→</span></span>
+    </a>
+    <Stamp w={138} deg={-20} color="#36322A" class="rv-stamp" />
+  </div>
+  <Wave d={{ a: 16.5, L: 520 }} m={{ a: 10.95, L: 315.5 }} fill="var(--footer-bg, #151410)" above="#D2C5A6" class="rv-foot" />
+</section>
+<style>
+  .rv { position: relative; height: 578px; background: var(--tan); color: var(--ink); }
+  .rv-in { position: relative; height: 100%; }
+  .rv-h2 { position: absolute; left: 0; top: 167px; width: 760px; font-family: var(--f-display); font-weight: 400; font-size: 86px; line-height: 84px; }
+  .dk { color: var(--tan-dark); }
+  .rv-hex { position: absolute; left: 780px; top: 188px; width: 420px; height: 180px; display: grid; place-content: center; justify-items: center; gap: 10px; color: var(--paper);
+    filter: drop-shadow(0 22px 22px rgba(14, 13, 11, .3)); transition: translate var(--dur-2) var(--ease-out); padding-left: 0; }
+  .rv-hex:hover { translate: 0 -3px; }
+  .rv-hex:focus-visible { outline: none; }
+  .rv-hex:focus-visible .rv-shape path:first-child { stroke: var(--paper); stroke-width: 3px; }
+  .rv-shape { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .rv-shape-m { display: none; }
+  .rv-stars { position: relative; font-size: 18px; line-height: 20px; letter-spacing: .12em; color: var(--tan); margin-top: -6px; }
+  .rv-lab { position: relative; font-family: var(--f-label); font-weight: 500; font-size: 34px; line-height: 40px; letter-spacing: .01em; white-space: nowrap; }
+  .rv-lab span { margin-left: 12px; font-family: var(--f-sans); }
+  .rv-in :global(.rv-stamp) { position: absolute; left: 1127px; top: 91px; }
+  .rv :global(.rv-foot) { top: auto; bottom: -1px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rv { height: auto; padding: 150px 0 160px; }
+    .rv-in { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .rv-h2 { position: static; width: auto; font-size: clamp(56px, 6.4vw, 86px); line-height: .98; }
+    .rv-hex { position: relative; left: auto; top: auto; flex: none; width: 360px; height: 156px; }
+    .rv-lab { font-size: 30px; }
+    .rv-in :global(.rv-stamp) { left: auto; right: -10px; top: -40px; }
+  }
+  @media (max-width: 767px) {
+    .rv { height: 502px; }
+    .rv :global(.rv-foot) { bottom: -1.6px; }
+    .rv-h2 { top: 92px; width: 330px; font-size: 48px; line-height: 48px; }
+    .rv-hex { left: 0; top: 272px; width: 100%; max-width: 350px; height: 140px; gap: 8px; }
+    .rv-shape-d { display: none; } .rv-shape-m { display: block; }
+    .rv-stars { font-size: 14px; margin-top: 0; }
+    .rv-lab { font-size: 26px; line-height: 30px; }
+    .rv-in :global(.rv-stamp) { left: auto; right: 2px; top: 398px; width: 84px; rotate: -20deg; }
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+// 1.2 The flyer list (Figma 669:539 y 920 h 760, paper; mobile y 974 h 1108). Script label, two-tone H2, his flyer list word
+// for word in two columns of six (each row a jump link to its family), the siren "Emergency Services / And More!" tile and
+// the ink phone button under it. >= 1280: Figma x/y (kit/ab); below: the 390 flow (tablet = 2 columns).
+import Btn from './kit/Btn.astro';
+import Wave from './kit/Wave.astro';
+import Siren from './kit/Siren.astro';
+import { ab } from './kit/ab';
+import { FLYER_LIST } from '../../data/services';
+import { SITE } from '../../data/site';
+const target: Record<string, string> = {
+  'Drain Cleaning, Repair & New Installation': '#drains', 'Pressure washing': '#around-the-house', 'Sewer Lines': '#drains',
+  'Hydro Jetting': '#drains', 'Leak Detection': '#leaks', 'Leak Repair': '#leaks', 'Water Heater Install': '#water-heaters',
+  'Water Heater Repair': '#water-heaters', 'Toilets, Sinks & Faucets': '#around-the-house', 'Garbage Disposal': '#around-the-house',
+  'Water Filtration': '#around-the-house', 'Emergency Services': '#emergency',
+};
+const cols = [FLYER_LIST.slice(0, 6), FLYER_LIST.slice(6)];
+---
+<section class="fl sv-sec sv-paper sv-abs" style="--sh:760px" aria-labelledby="fl-h" data-m-section>
+  <Wave fill="var(--paper)" up top={-34} topM={-24} />
+  <div class="fl-in">
+    <p class="fl-script sv-script lh-yest" data-t="1" data-ab style={ab(120, 96)}>Our Services</p>
+    <h2 id="fl-h" class="sv-h fl-h" data-t="2" data-ab style={ab(120, 166, 1000, 60)}>Everything on the flyer. <em>And more.</em></h2>
+    {cols.map((c, ci) => (
+      <ul class="fl-list" role="list" data-t="3" data-stagger data-ab style={ab(ci ? 510 : 120, 318, 360)}>
+        {c.map((s) => (
+          <li><a href={target[s]} class:list={['fl-row', { 'is-long': s.length > 30 }]}>
+            <svg class="fl-check" viewBox="0 0 16 16" width="15" height="16" aria-hidden="true"><path d="M2 9.2l4 4.6L14.4 1.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            <span>{s}</span>
+            <svg class="fl-down" viewBox="0 0 8 14" width="8" height="14" aria-hidden="true"><path d="M4 0v12.5M.7 9.3 4 12.8l3.3-3.5" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>
+          </a></li>
+        ))}
+      </ul>
+    ))}
+    <a class="fl-tile" href="#emergency" data-t="4" data-ab style={ab(900, 326, 420, 250)}>
+      <Siren class="fl-siren" />
+      <span class="fl-tile-t">Emergency<br />Services</span>
+      <span class="fl-tile-s sv-script lh-yest">And More!</span>
+    </a>
+    <div class="fl-btn" data-ab style={ab(900, 598, 420, 64)}>
+      <Btn v="ink" l1={SITE.phone} l2="Call today for a free estimate" w={420} label={`Call ${SITE.phone}, call today for a free estimate`} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .fl { z-index: 0; }
+  .fl-in { position: relative; }
+  .fl-script { margin: 0; font-size: 52px; color: var(--tan-dark); }
+  .fl-h { margin: 0; font-size: 56px; line-height: 1.08; }
+  .fl-list { margin: 0; padding: 0; list-style: none; }
+  .fl-row { display: flex; align-items: center; gap: 15px; height: 54px; padding: 0 7px 0 0; text-decoration: none;
+    background: linear-gradient(to right, rgba(14, 13, 11, .18) 2px, transparent 2px) left bottom / 6px 1px repeat-x;
+    font-family: var(--f-sans); font-weight: 600; font-size: 17px; line-height: 18px; color: var(--ink); transition: background-color .25s; }
+  .fl-row.is-long { font-size: 16px; }
+  .fl-row span { flex: 1; min-width: 0; }
+  .fl-check { flex: none; color: var(--red); }
+  .fl-down { flex: none; color: rgba(107, 92, 62, .7); transition: transform .3s var(--ease-out); }
+  .fl-row:hover { background-color: rgba(210, 197, 166, .28); }
+  .fl-row:hover .fl-down { transform: translateY(3px); }
+  .fl-tile { position: relative; display: block; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 10px; background: var(--bone);
+    color: var(--ink); text-decoration: none; box-shadow: 0 14px 30px -10px rgba(0, 0, 0, .3); transition: transform .3s var(--ease-out), box-shadow .3s; }
+  .fl-tile:hover { transform: translateY(-3px); box-shadow: 0 20px 34px -10px rgba(0, 0, 0, .34); }
+  .fl-tile :global(.fl-siren) { position: absolute; left: 8px; top: 34px; width: 160px; height: 112px; }
+  .fl-tile-t { position: absolute; left: 178px; top: 48px; font-family: var(--f-label); font-weight: 700; font-size: 34px; line-height: 1; letter-spacing: .02em; text-transform: uppercase; }
+  .fl-tile-s { position: absolute; left: 178px; top: 148px; font-size: 44px; color: var(--red); }
+  .fl-btn :global(.sv-btn) { width: 100%; }
+
+  @media (max-width: 1279px) {
+    .fl-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fl { padding: 107px 0 110px; }
+    .fl-in { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+    .fl-script, .fl-h { grid-column: 1 / -1; }
+    .fl-h { font-size: clamp(40px, 4.6vw, 56px); }
+    .fl-list { margin-top: 48px; }
+    .fl-tile { margin-top: 48px; height: 250px; }
+    .fl-btn { margin-top: 48px; align-self: end; }
+  }
+  @media (max-width: 767px) {
+    .fl { padding: 70px 0 46px; }
+    .fl-script { font-size: 38px; }
+    .fl-h { margin-top: -8px; max-width: 240px; font-size: 34px; line-height: 1.06; text-wrap: wrap; }
+    .fl-list:first-of-type { margin-top: 17px; }
+    .fl-row { gap: 11px; height: 46px; padding-right: 9px; font-size: 15px; line-height: 16px; }
+    .fl-row.is-long { font-size: 15px; }
+    .fl-tile { margin-top: 37px; height: 150px; }
+    .fl-tile :global(.fl-siren) { left: 5.5px; top: 16.8px; width: 117px; height: 82px; }
+    .fl-tile :global(.sv-siren-rays) { display: none; }
+    .fl-tile-t { left: 134px; top: 22px; font-size: 26px; letter-spacing: 0; }
+    .fl-tile-s { left: 134px; top: 84px; font-size: 32px; }
+    .fl-btn { margin-top: 16px; }
+  }
+</style>

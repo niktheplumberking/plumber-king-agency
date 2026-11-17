@@ -1,0 +1,29 @@
+---
+// Wave seam (BUILD-BRIEF section 2): the exact traced Figma wave, absolutely positioned over the top edge of the section that
+// follows it (fill = that section's colour), at the Figma y. `d` / `m` = keys in waves.ts for desktop / mobile, `top` /
+// `topM` = the Figma y where the host section starts (desktop / mobile). `bottom` = draw it on the host's bottom edge instead
+// (used where the next block is the shared footer).
+import { WAVES } from './waves';
+interface Props { d: string; m: string; top?: number; topM?: number; bottom?: boolean }
+const { d, m, top = 0, topM = 0, bottom = false } = Astro.props;
+const D = WAVES[d], M = WAVES[m];
+if (!D || !M) throw new Error(`Wave: unknown key ${d}/${m}`);
+const st = bottom
+  ? `--wd-h:${D.h}px;--wm-h:${M.h}px`
+  : `--wd-t:${D.y - top}px;--wd-h:${D.h}px;--wm-t:${M.y - topM}px;--wm-h:${M.h}px`;
+---
+<div class:list={['wave', bottom && 'wave--bottom']} style={st} aria-hidden="true">
+  <svg class="wave-d" viewBox={`0 0 ${D.w} ${D.h}`} preserveAspectRatio="none"><path d={D.d} fill={D.fill} /></svg>
+  <svg class="wave-m" viewBox={`0 0 ${M.w} ${M.h}`} preserveAspectRatio="none"><path d={M.d} fill={M.fill} /></svg>
+</div>
+<style>
+  .wave { position: absolute; left: 0; right: 0; top: var(--wd-t); height: var(--wd-h); z-index: 3; pointer-events: none; }
+  .wave--bottom { top: auto; bottom: -1px; }
+  .wave svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .wave-m { display: none; }
+  @media (max-width: 767px) {
+    .wave { top: var(--wm-t); height: var(--wm-h); }
+    .wave--bottom { top: auto; }
+    .wave-d { display: none; } .wave-m { display: block; }
+  }
+</style>

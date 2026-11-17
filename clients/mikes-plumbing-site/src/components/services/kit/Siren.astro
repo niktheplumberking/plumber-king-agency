@@ -1,0 +1,12 @@
+---
+// The flyer's siren, exact Figma geometry (services 1.2 tile: dome 104 at 938,402, base 120x18 r3 at 930,454, light 20 at
+// 980,420 white@.6, five rays sw 4 round). viewBox origin = Figma (910, 362), so 160 x 112. `rays={false}` drops the rays.
+interface Props { class?: string; rays?: boolean; [k: string]: any }
+const { class: cls, rays = true, ...rest } = Astro.props;
+---
+<svg class:list={['sv-siren', cls]} viewBox="0 0 160 112" aria-hidden="true" {...rest}>
+  {rays && <g class="sv-siren-rays" stroke="#D9412B" stroke-width="4" stroke-linecap="round" fill="none"><path d="M22.8 59L5.5 49M47 34.8L37 17.5M80 26V6M113 34.8L123 17.5M137.2 59L154.5 49" /></g>}
+  <path d="M28 92a52 52 0 0 1 104 0z" fill="#D9412B" />
+  <circle cx="80" cy="68" r="10" fill="#fff" fill-opacity=".6" />
+  <rect x="20" y="92" width="120" height="18" rx="3" fill="#0E0D0B" />
+</svg>

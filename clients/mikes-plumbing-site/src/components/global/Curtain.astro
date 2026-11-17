@@ -1,3 +1,21 @@
 ---
-// STUB: builder 1 replaces this with the Figma design (handoff/paul-ref/global has Paul's version for behaviour).
+// Page-transition curtain for in-site links (MOTION.md section 3; motion.ts curtainOut / runCurtainIn): an ink panel with
+// a wave on its top edge rises over the page with Mike's hex badge; the next page lowers it away and plays its hero.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-cream.png';
 ---
+<div class="pt" data-pt aria-hidden="true">
+  <div class="pt-panel">
+    <svg class="pt-edge" viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 60h1440V38c-120 0-200-30-360-30S840 46 720 46 480 16 330 16 120 42 0 42z" fill="#0E0D0B" /></svg>
+    <span class="pt-mark"><Image src={logo} alt="" width={240} height={153} loading="lazy" /></span>
+  </div>
+</div>
+<style>
+  .pt { position: fixed; inset: 0; z-index: var(--z-curtain); pointer-events: none; visibility: hidden; }
+  .pt.is-on, :global(html.pt-in) .pt { visibility: visible; }
+  .pt-panel { position: absolute; inset: 0; background: var(--ink); transform: translateY(105%); will-change: transform; }
+  :global(html.pt-in) .pt-panel { transform: none; }
+  .pt-edge { position: absolute; left: 0; bottom: calc(100% - 1px); width: 100%; height: clamp(36px, 4.2vw, 60px); }
+  .pt-mark { position: absolute; left: 50%; top: 50%; width: 120px; translate: -50% -50%; }
+  .pt-mark :global(img) { width: 100%; height: auto; }
+</style>

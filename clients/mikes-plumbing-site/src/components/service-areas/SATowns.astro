@@ -1,0 +1,58 @@
+---
+// 6.3 Town links (Figma 670:10564 y 1610-2090): a tray of hex-nut buttons, each town inside a nut, wrapping on mobile.
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import { TOWNS } from '../../data/towns';
+---
+<section class="st" aria-labelledby="st-h" data-m-section>
+  <Wave d="s2d" m="s2m" top={1610} topM={1868} />
+  <div class="wrap st-grid">
+    <div>
+      <Eyebrow ink>Town pages</Eyebrow>
+      <h2 id="st-h" class="st-h" data-t="2">Find your town</h2>
+    </div>
+    <ul class="st-tray" role="list" data-t="4" data-stagger>
+      {TOWNS.map((t) => (
+        <li><a class:list={['st-nut', t.slug === 'corona' && 'st-nut--dark']} href={t.href}>
+          <svg viewBox="0 0 196 100" aria-hidden="true" preserveAspectRatio="none"><path class="o" d="M26 1h144l25 49-25 49H26L1 50z" /><path class="i" d="M34 11h128l20 39-20 39H34L14 50z" /></svg>
+          <span class="st-l">Plumber in</span><span class="st-t">{t.name}</span>
+        </a></li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .st { position: relative; height: 480px; padding-top: 92px; background: var(--tan); }
+  .st-grid { display: grid; grid-template-columns: 440px 760px; }
+  .st-h { margin-top: 18px; font-family: var(--f-display); font-weight: 400; font-size: 58px; line-height: 60px; color: var(--ink); }
+  .st-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 0; width: 760px; margin: 2px 0 0; padding: 0; list-style: none; }
+  .st-tray li { margin: 0 -5px; }
+  .st-nut { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 196px; height: 100px; color: var(--ink); filter: drop-shadow(0 12px 10px rgba(60, 48, 25, .3)); transition: transform var(--dur-2) var(--ease-out); }
+  .st-nut svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .st-nut .o { fill: var(--bone); stroke: var(--ink); stroke-width: 2; transition: fill var(--dur-2); }
+  .st-nut .i { fill: none; stroke: #A79D88; stroke-width: 1; }
+  .st-l, .st-t { position: relative; }
+  .st-l { font-family: var(--f-label); font-weight: 500; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+  .st-t { margin-top: 2px; font-family: var(--f-display); font-size: 21px; line-height: 26px; white-space: nowrap; }
+  .st-nut--dark { color: var(--paper); }
+  .st-nut--dark .o { fill: var(--ink); }
+  .st-nut--dark .i { stroke: #4A443A; }
+  .st-nut--dark .st-l { color: var(--tan); }
+  .st-nut:hover { transform: translateY(-4px); }
+  .st-nut:not(.st-nut--dark):hover .o { fill: #fff; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .st { height: auto; padding: 100px 0 110px; }
+    .st-grid { grid-template-columns: 1fr; gap: 32px; }
+    .st-tray { width: auto; justify-content: flex-start; }
+  }
+  @media (max-width: 767px) {
+    .st { height: auto; padding: 54px 0 50px; }
+    .st-grid { grid-template-columns: 1fr; }
+    .st-h { margin-top: 12px; font-size: 38px; line-height: 44px; }
+    .st-tray { width: auto; margin: 28px -20px 0 -4px; justify-content: flex-start; gap: 4px 0; }
+    .st-tray li { margin: 0 -2px 0 0; }
+    .st-tray li:nth-child(4n+3) { margin-left: 24px; }
+    .st-nut { width: 172px; height: 84px; }
+    .st-t { font-size: 18px; }
+  }
+</style>

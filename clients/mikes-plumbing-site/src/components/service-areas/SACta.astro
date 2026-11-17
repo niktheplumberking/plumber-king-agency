@@ -1,0 +1,40 @@
+---
+// 6.5 Final CTA (Figma 670:10564 y 3090-3650): "Not sure if we come to you? Just ask." with the red hex as the full stop.
+import Wave from '../b3kit/Wave.astro';
+import CallBtn from '../b3kit/CallBtn.astro';
+import GhostBtn from '../b3kit/GhostBtn.astro';
+---
+<section class="sx on-ink" aria-labelledby="sx-h" data-m-section>
+  <Wave d="s4d" m="s4m" top={3090} topM={3482} />
+  <div class="wrap">
+    <h2 id="sx-h" class="sx-h" data-t="2"><span class="sx-1">Not sure if we come to you?</span> <span class="sx-2">Just ask<span class="sx-dot" aria-hidden="true"></span><span class="sr-only">.</span></span></h2>
+    <div class="sx-row">
+      <CallBtn v="tan" />
+      <GhostBtn href="/contact" dark w={220} />
+      <p class="sx-note" data-t="3">Based in Riverside · Serving IE | OC | LA</p>
+    </div>
+  </div>
+</section>
+<style>
+  .sx { position: relative; height: 560px; padding-top: 100px; }
+  .sx-h { font-family: var(--f-display); font-weight: 400; color: var(--paper); }
+  .sx-1 { display: block; font-size: 44px; line-height: 50px; }
+  .sx-2 { display: block; margin: 4px 0 0 -6px; font-size: 209px; line-height: 186px; color: var(--tan); white-space: nowrap; }
+  .sx-dot { display: inline-block; width: 56px; height: 44px; margin-left: 14px; background: var(--red); clip-path: polygon(20% 0, 80% 0, 100% 50%, 80% 100%, 20% 100%, 0 50%); vertical-align: baseline; }
+  .sx-row { display: flex; align-items: center; gap: 16px; margin-top: 88px; }
+  .sx-note { margin-left: 48px; font-family: var(--f-label); font-weight: 500; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sx { height: auto; padding: 100px 0 110px; }
+    .sx-2 { font-size: clamp(120px, 15vw, 212px); line-height: 1; }
+    .sx-row { flex-wrap: wrap; } .sx-note { margin-left: 0; width: 100%; }
+  }
+  @media (max-width: 767px) {
+    .sx { height: auto; padding: 66px 0 34px; }
+    .sx-1 { font-size: 24px; line-height: 30px; }
+    .sx-2 { margin: 8px 0 0 -2px; font-size: 84px; line-height: 84px; }
+    .sx-dot { width: 26px; height: 22px; margin-left: 8px; }
+    .sx-row { flex-direction: column; align-items: stretch; gap: 14px; margin-top: 30px; }
+    .sx-row :global(.gb) { width: 100%; height: 56px; }
+    .sx-note { display: none; }
+  }
+</style>

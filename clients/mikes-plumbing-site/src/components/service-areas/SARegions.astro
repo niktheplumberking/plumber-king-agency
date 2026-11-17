@@ -1,0 +1,74 @@
+---
+// 6.2 The three regions (Figma 670:10564 y 900-1610): three flyer columns divided by rules, hex badge + script region
+// name, towns as check-mark lines. [CONFIRM] town list (Mike).
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import { TOWNS } from '../../data/towns';
+const REG = [
+  { ab: 'IE', name: 'Inland Empire', key: 'Inland Empire' },
+  { ab: 'OC', name: 'Orange County', key: 'Orange County' },
+  { ab: 'LA', name: 'Los Angeles', key: 'Los Angeles' },
+] as const;
+---
+<section class="sr on-ink" aria-labelledby="sr-h" data-m-section>
+  <Wave d="s1d" m="s1m" top={900} topM={964} />
+  <div class="wrap">
+    <Eyebrow dark>Where we work</Eyebrow>
+    <h2 id="sr-h" class="sr-h" data-t="2">Three regions. <span class="tone">One van.</span></h2>
+    <div class="sr-cols">
+      {REG.map((r, i) => (
+        <div class="sr-col">
+          <h3 class="sr-head" data-t="4">
+            <span class="sr-badge" aria-hidden="true">
+              <svg viewBox="0 0 152 118"><path d="M36 1.5h80l34 57.5-34 57.5H36L2 59z" fill="none" stroke="#D2C5A6" stroke-width="2.5" /><path d="M42 10h68l29 49-29 49H42L13 59z" fill="none" stroke="#6B5C3E" stroke-width="1.2" /></svg>
+              <span class="sr-ab">{r.ab}</span><span class="sr-rn">Region 0{i + 1}</span>
+            </span>
+            <span class="sr-name">{r.name}</span>
+          </h3>
+          <ul class="sr-list" role="list" data-t="3" data-stagger>
+            {TOWNS.filter((t) => t.region === r.key).map((t) => (
+              <li><span class="sr-ck" aria-hidden="true">✓</span>{t.name}{t.slug === 'riverside' && <span class="sr-home"> (home base)</span>}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .sr { position: relative; height: 710px; padding-top: 100px; }
+  .sr-h { margin-top: 20px; font-family: var(--f-display); font-weight: 400; font-size: 58px; line-height: 60px; color: var(--paper); }
+  .tone { color: var(--tan); }
+  .sr-cols { display: grid; grid-template-columns: 385px 410px 405px; margin-top: 51px; }
+  .sr-col { min-height: 398px; padding-top: 10px; }
+  .sr-col + .sr-col { border-left: 1.5px solid #6B5C3E; padding-left: 24px; }
+  .sr-head { display: flex; align-items: center; gap: 8px; margin: 0; }
+  .sr-badge { position: relative; width: 152px; height: 118px; flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--tan); }
+  .sr-badge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sr-ab { font-family: var(--f-label); font-weight: 600; font-size: 52px; line-height: 52px; letter-spacing: .02em; margin-top: 14px; }
+  .sr-rn { font-family: var(--f-label); font-weight: 500; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); margin-top: 2px; }
+  .sr-name { font-family: var(--f-script); font-weight: 400; font-size: 38px; line-height: 44px; color: var(--tan); white-space: nowrap; }
+  .sr-list { margin: 48px 0 0; padding: 0; list-style: none; }
+  .sr-list li { display: flex; align-items: baseline; gap: 14px; height: 50px; font-weight: 600; font-size: 21px; line-height: 30px; color: var(--paper); }
+  .sr-ck { color: var(--tan); font-size: 22px; width: 18px; }
+  .sr-home { margin-left: -4px; font-weight: 400; font-size: 14px; color: var(--mute); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sr { height: auto; padding: 100px 0 110px; }
+    .sr-cols { grid-template-columns: repeat(3, 1fr); }
+    .sr-head { flex-direction: column; align-items: flex-start; }
+    .sr-name { font-size: 32px; }
+  }
+  @media (max-width: 767px) {
+    .sr { height: auto; padding: 56px 0 26px; }
+    .sr-h { margin-top: 12px; font-size: 34px; line-height: 40px; }
+    .sr-cols { display: block; margin-top: 30px; }
+    .sr-col, .sr-col + .sr-col { min-height: 0; padding: 0 0 22px; border: 0; }
+    .sr-col + .sr-col { border-top: 1.5px solid #3A352C; padding-top: 30px; }
+    .sr-badge { width: 100px; height: 78px; margin-left: -6px; }
+    .sr-ab { font-size: 36px; line-height: 36px; margin-top: 0; }
+    .sr-rn { display: none; }
+    .sr-name { font-size: 32px; }
+    .sr-list { margin-top: 18px; }
+    .sr-list li { height: 38px; font-size: 18px; gap: 12px; }
+  }
+</style>

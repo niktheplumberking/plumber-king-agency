@@ -1,0 +1,10 @@
+---
+// Town pages: /plumber-<slug>-ca for every town in TOWN_PAGES (src/data/towns.ts), one template (components/town/TownPage).
+import TownPage from '../components/town/TownPage.astro';
+import { TOWN_PAGE_DATA } from '../data/town-pages';
+export function getStaticPaths() {
+  return TOWN_PAGE_DATA.map((t) => ({ params: { slug: t.slug }, props: { t } }));
+}
+const { t } = Astro.props;
+---
+<TownPage t={t} />

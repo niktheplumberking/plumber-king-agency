@@ -15,6 +15,7 @@ import Footer from '../components/global/Footer.astro';
 import MobileCallBar from '../components/global/MobileCallBar.astro';
 import Loader from '../components/global/Loader.astro';
 import Curtain from '../components/global/Curtain.astro';
+import EmergencyStrip from '../components/global/EmergencyStrip.astro';
 
 interface Props {
   title: string; description: string; path: string; og?: string; ogAlt?: string; jsonld?: object[];
@@ -148,6 +149,7 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
   <Curtain />
   <UtilityBar />
   <Header path={path} estimate={estimate} />
+  <EmergencyStrip />
   <main id="main" tabindex="-1"><slot /></main>
   <Footer />
   <MobileCallBar estimate={estimate} />

@@ -1,0 +1,11 @@
+---
+// Hex chip (Figma "chips" vectors): 34 px tall, pointed ends 17 px deep, outline tan @0.7, Oswald 500 13 caps +10 %.
+// tone: tan (on ink) | paper (paper text, tan outline: the water heater family) | dark (on paper).
+interface Props { tone?: 'tan' | 'dark' | 'paper'; href?: string; class?: string; [k: string]: any }
+const { tone = 'tan', href, class: cls, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+<Tag href={href} class:list={['sv-chip', `sv-chip--${tone}`, cls]} {...rest}>
+  <span class="sv-chip-o" aria-hidden="true"><svg viewBox="0 0 17 34" preserveAspectRatio="none"><path d="M17 .6H16.4L.6 17 16.4 33.4H17" fill="none" stroke="currentColor" stroke-linejoin="round" /></svg><i></i><svg viewBox="0 0 17 34" preserveAspectRatio="none"><path d="M0 .6H.6L16.4 17 .6 33.4H0" fill="none" stroke="currentColor" stroke-linejoin="round" /></svg></span>
+  <span class="sv-chip-t"><slot /></span>
+</Tag>

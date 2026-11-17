@@ -1,0 +1,212 @@
+---
+// Services (Figma 631:2037 y 1880-3040; mobile 640:437 y 2849-4116). Wave seam on top, the tilted tan band of review
+// words (slow marquee, pauses on hover), section head, six big rows (links). Desktop: hovering a row lights it and the
+// polaroid photo card follows the pointer. Mobile: the active row expands with its photo (tap a row to open it).
+import Img from '../ui/Img.astro';
+import Eyebrow from './Eyebrow.astro';
+import Wave from './Wave.astro';
+import Marquee from './Marquee.astro';
+import { SITE } from '../../data/site';
+const ROWS = [
+  { n: '01', t: 'Drain cleaning', tag: 'Sinks · main lines · hydro jetting', href: '/drain-cleaning', img: 'crawlspace-pipe-press-fittings-riverside', alt: 'Press tool on a supply line in a Riverside crawl space', cap: 'Drain job · Mike\'s Instagram', blurb: 'Sinks, main lines and hydro jetting.', call: 'Call about a drain' },
+  { n: '02', t: 'Water heaters', tag: 'Repair first · replace only if needed', href: '/water-heaters', img: 'water-heater-gas-valve-small', alt: 'Water heater gas control valve on a job by Mike\'s Plumbing Services', cap: 'Water heater job · Mike\'s Instagram', blurb: 'Repair first. Replace only when it makes sense.', call: 'Call about a water heater' },
+  { n: '03', t: 'Sewer lines', tag: 'Roots · backups · broken lines', href: '/services#drains', img: 'tree-roots-in-sewer-line', alt: 'Tree roots wrapped around an opened sewer line in a trench', cap: 'Sewer line job · Mike\'s Instagram', blurb: 'Roots, backups and broken lines.', call: 'Call about a sewer line' },
+  { n: '04', t: 'Leak detection', tag: 'Wet walls · slab leaks · repairs', href: '/services#leaks', img: 'leak-repair-wall-opened', alt: 'Exterior wall opened to reach a leaking water line', cap: 'Leak repair · Mike\'s Instagram', blurb: 'Wet walls, slab leaks and repairs.', call: 'Call about a leak' },
+  { n: '05', t: 'Toilets & faucets', tag: 'Running · dripping · rocking', href: '/services#around-the-house', img: 'new-kitchen-faucet-install', alt: 'Gloved hands with a red pipe wrench on a flush valve', cap: 'Toilet job · Mike\'s Instagram', blurb: 'Running, dripping or rocking.', call: 'Call about a toilet or faucet' },
+  { n: '06', t: 'Commercial', tag: 'Restaurants · interceptors · gas lines', href: '/services#commercial', img: 'commercial-plumbing-job-vans', alt: 'Mike\'s van and a pickup parked at a commercial plumbing job', cap: 'Commercial job · Mike\'s Instagram', blurb: 'Restaurants, interceptors and gas lines.', call: 'Call about a commercial job' },
+];
+const ALSO = ['Hydro jetting', 'Garbage disposals', 'Water filtration', 'Water heater install', 'Pressure washing', 'Emergency services'];
+const WORDS = ['Fair price', 'Same day', 'Excellent communicator', 'Very clean', 'Upfront and honest', 'Reasonably priced', 'Polite and courteous', 'Detailed & patient'];
+const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M12 1h26l11 17-11 17H12L1 18z"/><path class="ar" d="M18 18h14m-5-5 5 5-5 5"/></svg>';
+---
+<section class="sv on-ink" aria-labelledby="sv-h" data-m-section>
+  <Wave only="d" y={-45} h={55} c={26.5} a={15.5} p={560} m={140} top="#F3ECDD" bottom="#0E0D0B" />
+  <Wave only="m" y={-24} h={30} c={14} a={8} p={300} m={300} w={390} top="#F3ECDD" bottom="#0E0D0B" />
+  <Marquee class="sv-band" words={WORDS} star="#D9412B" />
+  <div class="sv-in">
+    <div class="sv-head">
+      <div class="shead">
+        <Eyebrow data-t="1">What Mike fixes</Eyebrow>
+        <h2 id="sv-h" class="h2" data-t="2">From a dripping faucet <span class="tn">to a 100-gallon heater.</span></h2>
+      </div>
+      <div class="sv-lead" data-t="3">
+        <p>Homes, ADUs and businesses across Riverside, the IE, OC and LA. <span class="d">Mike's rule, from his Instagram: “DIAGNOSIS MATTERS.”</span><span class="m">Every job starts with a proper diagnosis.</span></p>
+        <a class="tl" href="/services">See all services <svg viewBox="0 0 18 10" width="16" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+    <div class="sv-list" data-svc>
+      <ul role="list" class="rows" data-t="4" data-stagger>
+        {ROWS.map((r, i) => (
+          <li class:list={['row', i === 1 && 'is-on']} data-row={i}>
+            <a class="row-a" href={r.href}>
+              <span class="row-n">{r.n}</span>
+              <span class="row-t">{r.t}</span>
+              <span class="row-tag">{r.tag}</span>
+              <span class="row-go" set:html={arrow}></span>
+            </a>
+            <div class="row-x">
+              <div class="pol pol-m"><span class="pol-ph"><Img name={r.img} alt={r.alt} sizes="160px" widths={[240, 350]} /></span><span class="pol-c">{r.cap}</span></div>
+              <div class="row-xt"><p>{r.blurb}</p><a href={SITE.tel}>{r.call} <svg viewBox="0 0 18 10" width="14" height="9" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg></a></div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div class="pol-float" data-pol aria-hidden="true">
+        <div class="pol pol-d" data-pol-card>
+          <span class="tape"></span>
+          <span class="pol-ph">{ROWS.map((r, i) => <span class:list={['pp', i === 1 && 'on']} data-pol-img={i}><Img name={r.img} alt="" sizes="222px" widths={[240, 350]} /></span>)}</span>
+          <span class="pol-c" data-pol-cap>{ROWS[1].cap}</span>
+          <span class="view">View<svg viewBox="0 0 18 10" width="16" height="10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="also" data-t="3">
+      <p class="also-k">Also on Mike's flyer</p>
+      <p class="also-l">{ALSO.map((a, i) => <>{i > 0 && <i aria-hidden="true">·</i>}<span>{a}</span></>)}</p>
+      <a class="tl m" href="/services">See all services <svg viewBox="0 0 18 10" width="16" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg></a>
+    </div>
+  </div>
+</section>
+<script>
+  // Desktop: the hovered row lights up; the polaroid swaps its photo and follows the pointer (lerped, transform only).
+  // Mobile: tapping a closed row opens it (the arrow still navigates); an open row's title link navigates.
+  const caps: Record<string, string> = {};
+  document.querySelectorAll<HTMLElement>('[data-svc]').forEach((root) => {
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-row]'));
+    const card = root.querySelector<HTMLElement>('[data-pol-card]');
+    const imgs = Array.from(root.querySelectorAll<HTMLElement>('[data-pol-img]'));
+    const cap = root.querySelector<HTMLElement>('[data-pol-cap]');
+    rows.forEach((r) => { caps[r.dataset.row!] = r.querySelector('.row-x .pol-c')?.textContent || ''; });
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
+    const setOn = (i: number) => {
+      rows.forEach((r, k) => r.classList.toggle('is-on', k === i));
+      imgs.forEach((im, k) => im.classList.toggle('on', k === i));
+      if (cap) cap.textContent = caps[String(i)];
+    };
+    // pointer follow
+    let tx = 0, ty = 0, x = 0, y = 0, raf = 0, active = false;
+    const reduce = () => !document.documentElement.classList.contains('motion');
+    const tick = () => {
+      x += (tx - x) * 0.14; y += (ty - y) * 0.14;
+      if (card) card.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotate(${(4 + Math.max(-4, Math.min(4, (tx - x) * 0.03))).toFixed(2)}deg)`;
+      raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(tick) : 0;
+    };
+    const go = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    const home = () => { tx = 0; ty = 0; if (reduce()) { x = 0; y = 0; } go(); };
+    root.addEventListener('pointermove', (e) => {
+      if (!fine.matches || !card) return;
+      const row = (e.target as Element).closest<HTMLElement>('[data-row]');
+      if (row) setOn(+row.dataset.row!);
+      if (reduce()) return; // reduced motion: the card stays in place, only the photo swaps
+      const box = root.getBoundingClientRect();
+      const z = parseFloat(document.documentElement.style.zoom) || 1;
+      // the card rests at its Figma spot; it moves by the pointer's offset from that spot
+      const rest = card.parentElement!.getBoundingClientRect();
+      tx = (e.clientX - (rest.left + rest.width / 2)) / z;
+      ty = (e.clientY - (rest.top + rest.height / 2)) / z;
+      tx = Math.max(-560, Math.min(260, tx)); ty = Math.max(-260, Math.min(box.height / z - 260, ty));
+      active = true; go();
+    });
+    root.addEventListener('pointerleave', () => { if (active) { active = false; home(); } });
+    root.querySelectorAll<HTMLAnchorElement>('.row-a').forEach((a) => {
+      a.addEventListener('focus', () => setOn(+a.closest<HTMLElement>('[data-row]')!.dataset.row!));
+      a.addEventListener('click', (e) => {
+        if (window.matchMedia('(min-width: 768px)').matches) return;
+        const li = a.closest<HTMLElement>('[data-row]')!;
+        if ((e.target as Element).closest('.row-go') || li.classList.contains('is-on')) return;
+        e.preventDefault(); setOn(+li.dataset.row!);
+      });
+    });
+  });
+</script>
+<style>
+  .sv { position: relative; background: var(--ink); color: var(--paper); padding: 0 0 94px; overflow-x: clip; }
+  .sv :global(.sv-band) { position: absolute; left: -40px; right: -40px; top: 4px; z-index: 4; rotate: 1.62deg; }
+  .sv-in { position: relative; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding-top: 130px; }
+  .sv-head { display: grid; grid-template-columns: 1fr 420px; align-items: start; }
+  .h2 { margin-top: 20px; font-family: var(--f-display); font-weight: 400; font-size: 64px; line-height: 69px; color: var(--paper); }
+  .h2 .tn { display: block; color: var(--tan); }
+  .sv-lead { padding-top: 47px; }
+  .sv-lead p { font-size: 17px; line-height: 26px; color: #BDB5A4; }
+  .sv-lead .m, .also .m { display: none; }
+  .tl { display: inline-flex; align-items: center; gap: 6px; margin-top: 30px; font-weight: 600; font-size: 15px; color: var(--tan); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+  .tl:hover { color: var(--paper); }
+  .sv-list { position: relative; margin-top: 74px; }
+  .rows { margin: 0; padding: 0; border-top: 1.5px dashed #3A352C; }
+  .row { position: relative; border-bottom: 1.5px dashed #3A352C; }
+  .row::before { content: ''; position: absolute; top: 0; bottom: 0; left: calc(-1 * var(--gutter)); right: calc(-1 * var(--gutter)); background: #1C1A16; opacity: 0; transition: opacity .35s; }
+  .row.is-on::before { opacity: 1; }
+  .row-a { position: relative; display: grid; grid-template-columns: 77px 1fr 371px 50px; align-items: center; height: 105px; }
+  .row-n { font-family: var(--f-label); font-weight: 600; font-size: 16px; letter-spacing: .06em; color: var(--tan); transition: color .3s; }
+  .row-t { font-family: var(--f-display); font-size: 52px; line-height: 60px; color: var(--paper); transition: color .3s; }
+  .row-tag { font-family: var(--f-label); font-weight: 500; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #A79D88; transition: color .3s; }
+  .row-go :global(svg) { display: block; width: 50px; height: 36px; overflow: visible; }
+  .row-go :global(.hx) { fill: transparent; stroke: var(--tan); stroke-width: 1.5; transition: fill .3s; }
+  .row-go :global(.ar) { fill: none; stroke: var(--tan); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s; }
+  .row.is-on .row-n { color: var(--red); }
+  .row.is-on .row-t { color: var(--tan); }
+  .row.is-on .row-tag { color: var(--paper); }
+  .row.is-on .row-go :global(.hx), .row-go:hover :global(.hx) { fill: var(--tan); }
+  .row.is-on .row-go :global(.ar), .row-go:hover :global(.ar) { stroke: var(--ink); }
+  .row-x { display: none; }
+  /* the floating polaroid: rests beside row 02 (Figma), follows the pointer on hover */
+  .pol-float { position: absolute; left: 465px; top: -14px; width: 250px; height: 320px; pointer-events: none; z-index: 3; }
+  .pol { display: block; background: var(--bone); box-shadow: 0 24px 40px -14px rgba(0, 0, 0, .7); }
+  .pol-d { position: relative; width: 250px; height: 322px; padding: 13px 13px 0; transform: rotate(4deg); will-change: transform; }
+  .pol-ph { position: relative; display: block; width: 100%; height: 252px; overflow: hidden; background: #2A2620; }
+  .pp { position: absolute; inset: 0; opacity: 0; transition: opacity .3s; }
+  .pp.on { opacity: 1; }
+  .pol-c { display: block; padding: 17px 2px 0; font-family: var(--f-label); font-weight: 500; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .tape { position: absolute; left: 50%; top: -12px; z-index: 2; width: 90px; height: 24px; translate: -50% 0; background: rgba(210, 197, 166, .85); rotate: 1deg; }
+  .view { position: absolute; right: -32px; top: 52px; display: grid; place-content: center; justify-items: center; gap: 2px; width: 92px; height: 92px; border-radius: 50%; background: #D9412B; color: var(--paper); font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; rotate: -4deg; }
+  .also { display: flex; align-items: baseline; gap: 62px; margin-top: 30px; }
+  .also-k { font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); white-space: nowrap; }
+  .also-l { font-size: 15px; color: #CFC8B8; }
+  .also-l i { font-style: normal; margin: 0 9px; color: #A79D88; }
+
+  @media (hover: none), (max-width: 1023px) { .pol-float { display: none; } }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sv-in { padding-top: 120px; }
+    .sv-head { grid-template-columns: 1fr minmax(260px, 36%); gap: 40px; }
+    .h2 { font-size: clamp(44px, 5.2vw, 64px); line-height: 1.08; }
+    .row-a { grid-template-columns: 56px 1fr minmax(0, 32%) 50px; height: 92px; }
+    .row-t { font-size: clamp(32px, 4.2vw, 52px); }
+    .row-tag { font-size: 12px; }
+    .also { flex-wrap: wrap; gap: 12px 24px; }
+  }
+  @media (max-width: 767px) {
+    .sv { padding-bottom: 80px; }
+    .sv :global(.sv-band) { top: -18px; rotate: 1.62deg; }
+    .sv-in { padding-top: 73px; }
+    .sv-head { display: block; }
+    .h2 { margin-top: 18px; font-size: 38px; line-height: 40px; }
+    .h2 .tn { display: inline; }
+    .sv-lead { padding-top: 22px; }
+    .sv-lead p { font-size: 15px; line-height: 23px; }
+    .sv-lead .d { display: none; } .sv-lead .m { display: inline; }
+    .sv-lead .tl { display: none; }
+    .sv-list { margin-top: 34px; }
+    .rows { border-top: 0; }
+    .row { border-bottom-color: #3A352C; }
+    .row-a { grid-template-columns: 36px 1fr 46px; height: 76px; }
+    .row-tag { display: none; }
+    .row-n { font-size: 14px; }
+    .row-t { font-size: 28px; line-height: 34px; }
+    .row-go :global(svg) { width: 46px; height: 32px; }
+    .row.is-on .row-x { display: grid; }
+    .row.is-on .row-a { height: auto; padding-top: 22px; row-gap: 12px; }
+    .row.is-on .row-tag { display: block; grid-column: 2 / 4; grid-row: 2; font-size: 12px; color: var(--paper); }
+    .row-x { position: relative; grid-template-columns: 206px 1fr; gap: 20px; padding: 10px 0 24px; }
+    .pol-m { width: 172px; padding: 8px 8px 0; transform: rotate(3deg); margin: 0 0 0 30px; }
+    .pol-m .pol-ph { height: 160px; }
+    .pol-m .pol-c { padding: 10px 2px 8px; font-size: 9px; }
+    .row-xt { padding-top: 22px; }
+    .row-xt p { font-size: 14px; line-height: 20px; color: var(--paper); }
+    .row-xt a { display: inline-flex; align-items: center; gap: 6px; margin-top: 40px; font-weight: 600; font-size: 13px; line-height: 18px; color: var(--tan); }
+    .also { display: block; margin-top: 34px; }
+    .also-k { font-size: 12px; }
+    .also-l { margin-top: 10px; font-size: 14px; line-height: 22px; }
+    .also-l i { margin: 0 4px; }
+    .also .m { display: inline-flex; margin-top: 26px; }
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+// 5.6 Emergency band (Figma 670:3403 y 3760-3880): thin red-dot strip, the phone in Oswald.
+import { SITE } from '../../data/site';
+import type { TownPage } from '../../data/town-pages';
+interface Props { t: TownPage }
+const { t } = Astro.props;
+---
+<section class="te on-ink" aria-labelledby="te-h" data-m-section>
+  <div class="wrap te-row">
+    <span class="te-dot" aria-hidden="true"></span>
+    <h2 id="te-h" class="te-h" data-t="3">Plumbing emergency in {t.name}?</h2>
+    <p class="te-t" data-t="3">Open 24 hours (Yelp).</p>
+    <a class="te-ph" href={SITE.tel} data-t="3"><span class="sr-only">Call </span>{SITE.phone} <span class="te-ar" aria-hidden="true">→</span></a>
+  </div>
+</section>
+<style>
+  .te { height: 120px; }
+  .te-row { display: flex; align-items: center; height: 100%; }
+  .te-dot { position: relative; width: 32px; height: 32px; margin-left: -6px; border-radius: 50%; background: #4A1D15; flex: none; }
+  .te-dot::after { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: var(--red); }
+  .te-h { margin-left: 16px; font-family: var(--f-display); font-weight: 400; font-size: 30px; line-height: 36px; color: var(--paper); white-space: nowrap; }
+  .te-t { margin-left: 32px; font-size: 15px; color: #E6DECC; }
+  .te-ph { margin-left: auto; display: inline-flex; align-items: center; gap: 24px; font-family: var(--f-label); font-weight: 500; font-size: 41px; line-height: 1; color: var(--tan); }
+  .te-ar { font-family: var(--f-sans); font-size: 36px; transition: transform var(--dur-2) var(--ease-out); }
+  .te-ph:hover { color: var(--paper); } .te-ph:hover .te-ar { transform: translateX(5px); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .te { height: auto; padding: 28px 0; } .te-row { flex-wrap: wrap; gap: 8px 0; }
+    .te-h { font-size: 26px; white-space: normal; } .te-ph { font-size: 36px; }
+  }
+  @media (max-width: 767px) {
+    .te { height: 154px; }
+    .te-row { display: grid; grid-template-columns: 26px 1fr; column-gap: 6px; align-content: center; height: 100%; }
+    .te-dot { width: 24px; height: 24px; margin: 0 0 0 -6px; } .te-dot::after { inset: 6px; }
+    .te-h { margin: 0; font-size: 20px; line-height: 26px; white-space: normal; }
+    .te-t { grid-column: 2; margin: 0; font-size: 13px; line-height: 18px; }
+    .te-ph { grid-column: 1 / -1; margin: 12px 0 0 6px; font-size: 34px; gap: 18px; }
+    .te-ar { font-size: 26px; }
+  }
+</style>

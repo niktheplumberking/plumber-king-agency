@@ -1,0 +1,176 @@
+---
+// 9.4 All Yelp reviews (Figma 670:11578 y 2742-4656 / 671:1096 y 2494-4908). Coal field; eyebrow + two-tone H2, filter
+// chips (All / Communication / Fair price / Clean / Fast, real toggle buttons), then the bento of review cards.
+// Nick (17 Nov): show ALL 20 Yelp reviews, not the 8 in the frame. The frame's 8-card bento (rows: small+big, big+small,
+// three smalls, one full-width) repeats for reviews 9-16; 17-18 take a small+big row and the two longest reviews get
+// full-width two-column cards. Same card styling throughout. Phones: one column of slips, alternating 20/32 px from the
+// left, job tag on top (the 390 frame). Text comes from REVIEWS only (word for word). Job tags 1-8 are PAGES-COPY 9.4;
+// 9-20 are short labels written from each review's own words. Filters match words in the review text.
+import { REVIEWS, type Review } from '../../data/reviews';
+import { SITE } from '../../data/site';
+import Eyebrow from '../kit-b4/Eyebrow.astro';
+import Wave from '../kit-b4/Wave.astro';
+import { place, when, initials } from './fmt';
+type Size = 's' | 'L' | 'F' | 'W';
+type Tone = 'tan' | 'paper' | 'red' | 'coal';
+const LAYOUT: [string, Size, Tone, Tone, string][] = [
+  // name, desktop size, desktop tone, phone tone, job tag
+  ['Brandon A.', 's', 'tan', 'tan', 'Repeat customer'],
+  ['Eleanor M.', 'L', 'paper', 'paper', 'Toilets + pressure regulator'],
+  ['Bruce H.', 'L', 'red', 'red', 'Toilet install'],
+  ['Sal C.', 's', 'paper', 'paper', 'Slab leak'],
+  ['Jack D.', 's', 'paper', 'coal', 'Garbage disposal (Murrieta)'],
+  ['Tewolde T.', 's', 'coal', 'tan', 'Pressure regulator + shut-off'],
+  ['Sydney H.', 's', 'tan', 'paper', 'Kitchen faucet'],
+  ['Erik N.', 'F', 'paper', 'coal', 'General service'],
+  ['Isaiah C.', 's', 'tan', 'tan', 'Toilet + sink'],
+  ['Robert U.', 'L', 'paper', 'paper', 'Water main + water heater'],
+  ['Jared K.', 'L', 'red', 'red', 'Toilet repair'],
+  ['Pamela N.', 's', 'paper', 'paper', 'Hose pipe moved'],
+  ['Laura G.', 's', 'paper', 'coal', 'Toilet caulk + new toilet'],
+  ['Debbie H.', 's', 'coal', 'tan', 'Same-day repair'],
+  ['Suzi J.', 's', 'tan', 'paper', 'General service'],
+  ['Janeth H.', 'F', 'paper', 'coal', 'Garbage disposal repair'],
+  ['Martha B.', 's', 'tan', 'tan', 'Stop valve behind toilet'],
+  ['Julian T.', 'L', 'paper', 'paper', 'Service call'],
+  ['Jackie H.', 'W', 'red', 'red', 'Water leaks + new water lines'],
+  ['Stuart W.', 'W', 'coal', 'paper', 'Leak on the water service line'],
+];
+const FILTERS: [string, string, RegExp][] = [
+  ['all', 'All', /./],
+  ['comm', 'Communication', /communicat|explain|calls? back|called me|easy to talk/i],
+  ['price', 'Fair price', /pric|reasonabl|budget/i],
+  ['clean', 'Clean', /clean|spotless/i],
+  ['fast', 'Fast', /fast|quick|same day|short notice|on time|within two hours|timely|one afternoon|next day|responded/i],
+];
+const cards = LAYOUT.map(([name, size, tone, toneM, tag], i) => {
+  const r = REVIEWS.find((x) => x.name === name) as Review | undefined;
+  if (!r) throw new Error(`RevList: no review from ${name}`);
+  const cats = FILTERS.slice(1).filter(([, , re]) => re.test(r.text)).map(([k]) => k);
+  return { r, size, tone, toneM, tag, cats, alt: i % 2 === 1 };
+});
+if (cards.length !== REVIEWS.length || new Set(cards.map((c) => c.r.name)).size !== REVIEWS.length) throw new Error('RevList: every review must appear exactly once');
+const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c.cats.includes(k)).length);
+---
+<section class="rl" aria-labelledby="rl-h" data-m-section>
+  <Wave d={{ a: 16.5, L: 600.5 }} m={{ a: 10.3, L: 300.5 }} fill="#1C1A16" above="#F3ECDD" />
+  <div class="wrap rl-in">
+    <Eyebrow text={`All ${REVIEWS.length} Yelp reviews`} />
+    <h2 id="rl-h" class="rl-h2" data-t="2">Every review we <span class="tn">captured, word for word.</span></h2>
+    <div class="rl-chips" role="group" aria-label="Filter reviews by what customers mention" data-t="3" data-rl-filters>
+      {FILTERS.map(([k, label], i) => <button type="button" class="rl-chip" aria-pressed={i === 0 ? 'true' : 'false'} data-k={k}>{label}<span class="sr-only"> ({count(k)})</span></button>)}
+    </div>
+    <p class="sr-only" role="status" data-rl-status></p>
+    <ul class="rl-grid" role="list" data-t="4" data-stagger>
+      {cards.map((c) => (
+        <li class:list={['rc', `rc-${c.size}`, `t-${c.tone}`, `m-${c.toneM}`, c.alt && 'rc-alt']} data-cats={c.cats.join(' ')}>
+          <figure class="rc-fig">
+            <span class="rc-mark" aria-hidden="true">“</span>
+            <blockquote class="rc-q" cite={SITE.social.yelp}><p>“{c.r.text}”</p></blockquote>
+            <figcaption class="rc-by">
+              <span class="rc-hex" aria-hidden="true">{initials(c.r.name)}</span>
+              <span class="rc-who"><b>{c.r.name}</b><span>{place(c.r.town)} · {when(c.r.date)} · Yelp</span></span>
+            </figcaption>
+            <span class="rc-tag"><span class="sr-only">Job: </span>{c.tag}</span>
+          </figure>
+        </li>
+      ))}
+    </ul>
+    <p class="rl-tally" data-t="3">All {SITE.rating.count} of Mike's Yelp reviews are here, word for word (checked {SITE.rating.checked}). <a href={SITE.social.yelp} target="_blank" rel="noopener">Read them on Yelp <span aria-hidden="true">→</span></a></p>
+  </div>
+</section>
+<script>
+  // Filter chips: one pressed at a time; cards that do not mention the topic are hidden. Works without motion.
+  document.querySelectorAll<HTMLElement>('[data-rl-filters]').forEach((bar) => {
+    const sec = bar.closest('section')!;
+    const items = Array.from(sec.querySelectorAll<HTMLElement>('.rc'));
+    const status = sec.querySelector<HTMLElement>('[data-rl-status]');
+    bar.addEventListener('click', (e) => {
+      const b = (e.target as Element).closest<HTMLButtonElement>('button[data-k]');
+      if (!b) return;
+      const k = b.dataset.k!;
+      bar.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      let n = 0;
+      items.forEach((it) => { const on = k === 'all' || (it.dataset.cats || '').split(' ').includes(k); it.hidden = !on; if (on) { n++; it.style.opacity = ''; it.style.transform = ''; } });
+      if (status) status.textContent = `Showing ${n} review${n === 1 ? '' : 's'}`;
+    });
+  });
+</script>
+<style>
+  .rl { position: relative; background: var(--coal); color: var(--paper); padding: 138px 0 70px; }
+  .rl-in { position: relative; }
+  .rl-h2 { margin-top: 10px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 60px; color: var(--paper); }
+  .tn { color: var(--tan); }
+  .rl-chips { display: flex; gap: 10px; margin-top: 40px; }
+  .rl-chip { position: relative; height: 40px; padding: 0 18px; border-radius: 20px; font-family: var(--f-sans); font-weight: 600; font-size: 15px; line-height: 20px; color: var(--paper);
+    box-shadow: inset 0 0 0 1.5px rgba(243, 236, 221, .35); white-space: nowrap; transition: background-color var(--dur-2), color var(--dur-2), box-shadow var(--dur-2); }
+  .rl-chip:hover { box-shadow: inset 0 0 0 1.5px var(--tan); }
+  .rl-chip[aria-pressed='true'] { background: var(--tan); color: var(--ink); box-shadow: none; }
+  .rl-chip:focus-visible { outline-color: var(--tan); }
+  .rl-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 24px; margin: 40px 0 0; padding: 0; }
+  .rc { display: flex; min-width: 0; }
+  .rc[hidden] { display: none; }
+  .rc-L { grid-column: span 2; } .rc-F, .rc-W { grid-column: 1 / -1; }
+  .rc-fig { position: relative; display: flex; flex-direction: column; width: 100%; margin: 0; padding: 63px 26px 16px 32px; border-radius: 2px; }
+  .t-tan .rc-fig { background: var(--tan); --tag-c: var(--tan); --meta: #514C41; --mark: rgba(14, 13, 11, .22); }
+  .t-paper .rc-fig { background: var(--bone); --tag-c: var(--bone); --meta: #6B675E; --mark: rgba(14, 13, 11, .2); }
+  .t-red .rc-fig { background: var(--red); --tag-c: var(--red); --meta: #3A130C; --mark: rgba(14, 13, 11, .25); }
+  .t-coal .rc-fig { background: #2A2722; color: var(--paper); --tag-bg: var(--paper); --tag-c: var(--ink); --hex-bg: var(--paper); --hex-c: var(--ink); --meta: var(--mute); --mark: rgba(243, 236, 221, .22); }
+  .rc-fig { color: var(--ink); }
+  .rc-mark { position: absolute; left: 26px; top: -6px; font-family: var(--f-display); font-size: 84px; line-height: 1; color: var(--mark); pointer-events: none; }
+  .rc-q p { font-size: 17px; line-height: 25px; }
+  .rc-L .rc-q p, .rc-F .rc-q p { font-family: var(--f-display); font-size: 24px; line-height: 31px; padding-top: 1px; }
+  .rc-F .rc-q { max-width: 760px; }
+  .rc-W .rc-q p { columns: 2; column-gap: 56px; }
+  .rc-by { display: flex; align-items: flex-start; gap: 12px; margin-top: 25px; }
+  .rc-L .rc-by, .rc-F .rc-by { margin-top: 23px; }
+  .rc-hex { flex: none; display: grid; place-items: center; width: 40px; height: 33px; background: var(--hex-bg, var(--ink)); color: var(--hex-c, var(--tan));
+    clip-path: polygon(22% 0, 78% 0, 100% 50%, 78% 100%, 22% 100%, 0 50%); font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .04em; }
+  .t-paper .rc-hex { color: var(--paper); } .t-red .rc-hex { color: var(--red); }
+  .rc-who { display: grid; gap: 2px; padding-top: 0; }
+  .rc-who b { font-weight: 600; font-size: 16px; line-height: 20px; }
+  .rc-who span { font-size: 13px; line-height: 18px; color: var(--meta); }
+  .rc-tag { align-self: flex-start; margin-top: auto; padding: 0 12px; height: 26px; display: inline-flex; align-items: center; border-radius: 13px;
+    background: var(--tag-bg, var(--ink)); color: var(--tag-c); font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+  .rc-fig > .rc-by { margin-bottom: 24px; }
+  .rc-F .rc-fig, .rc-W .rc-fig { padding-bottom: 37px; }
+  .rc-F .rc-fig > .rc-by, .rc-W .rc-fig > .rc-by { margin-bottom: 0; }
+  .rc-F .rc-tag, .rc-W .rc-tag { position: absolute; right: 32px; top: 40px; margin: 0; }
+  .rl-tally { margin-top: 64px; font-size: 15px; line-height: 22px; color: #CAC4B7; }
+  .rl-tally a { margin-left: 4px; font-weight: 600; color: var(--tan); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+  .rl-tally a:hover { color: var(--paper); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rl-h2 { font-size: clamp(40px, 4.6vw, 56px); line-height: 1.07; }
+    .rl-grid { gap: 16px; }
+    .rc-fig { padding-left: 24px; padding-right: 24px; }
+    .rc-L .rc-q p, .rc-F .rc-q p { font-size: 21px; line-height: 28px; }
+    .rc-W .rc-q p { columns: 1; }
+  }
+  @media (max-width: 767px) {
+    .rl { padding: 72px 0 64px; }
+    .rl-in { width: 100%; padding-inline: 20px; }
+    .rl-h2 { margin-top: 14px; font-size: 34px; line-height: 36px; }
+    .rl-chips { margin: 16px -20px 0; padding: 0 20px; overflow-x: auto; scrollbar-width: none; gap: 8px; }
+    .rl-chips::-webkit-scrollbar { display: none; }
+    .rl-chip { height: 36px; flex: none; font-size: 14px; padding: 0 14px; }
+    .rl-grid { grid-template-columns: 1fr; gap: 17px; margin-top: 26px; }
+    .rc { width: 338px; max-width: calc(100% - 12px); }
+    .rc-alt { margin-left: 12px; }
+    .rc-L, .rc-F, .rc-W { grid-column: auto; }
+    .rc-fig { padding: 20px 20px 22px; }
+    .m-tan .rc-fig { background: var(--tan); --tag-bg: var(--ink); --tag-c: var(--tan); --hex-bg: var(--ink); --hex-c: var(--tan); --meta: #514C41; color: var(--ink); }
+    .m-paper .rc-fig { background: var(--bone); --tag-bg: var(--ink); --tag-c: var(--bone); --hex-bg: var(--ink); --hex-c: var(--bone); --meta: #6B675E; color: var(--ink); }
+    .m-red .rc-fig { background: var(--red); --tag-bg: var(--ink); --tag-c: var(--red); --hex-bg: var(--ink); --hex-c: var(--red); --meta: #3A130C; color: var(--ink); }
+    .m-coal .rc-fig { background: #2A2722; color: var(--paper); --tag-bg: var(--tan); --tag-c: var(--ink); --hex-bg: var(--paper); --hex-c: var(--ink); --meta: var(--mute); }
+    .rc .rc-hex { color: var(--hex-c); background: var(--hex-bg); width: 34px; height: 28px; font-size: 11px; }
+    .rc-mark { display: none; }
+    .rc-tag, .rc-F .rc-tag, .rc-W .rc-tag { order: -1; position: static; margin: 0 0 15px; height: 22px; padding: 0 10px; font-size: 11px; border-radius: 11px; }
+    .rc-q p, .rc-L .rc-q p, .rc-F .rc-q p { font-family: var(--f-sans); font-size: 14.5px; line-height: 22px; padding: 0; }
+    .rc-W .rc-q p { columns: 1; }
+    .rc-by, .rc-L .rc-by, .rc-F .rc-by { margin-top: 13px; gap: 10px; }
+    .rc-fig > .rc-by { margin-bottom: 0; }
+    .rc-who b { font-size: 14px; line-height: 18px; } .rc-who span { font-size: 11px; line-height: 14px; }
+    .rl-tally { margin-top: 40px; font-size: 13px; line-height: 20px; }
+    .rl-tally a { display: inline-block; margin: 4px 0 0; }
+  }
+</style>

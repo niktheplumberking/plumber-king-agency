@@ -1,0 +1,11 @@
+---
+// Eyebrow: the small hex-nut outline (20 x 14) + Oswald 500 14 px caps, +0.12 em. tone: tan (on ink) | dark (tan-dark on
+// paper) | ink | red. `dot` = the red live dot instead of the hex.
+interface Props { tone?: 'tan' | 'dark' | 'ink' | 'red' | 'paper'; dot?: boolean; class?: string; t?: string | false; as?: string; [k: string]: any }
+const { tone = 'dark', dot, class: cls, t = '1', as: Tag = 'p', ...rest } = Astro.props;
+---
+<Tag class:list={['sv-eb', `sv-eb--${tone}`, cls]} data-t={t || undefined} {...rest}>
+  {dot ? <span class="sv-eb-dot" aria-hidden="true" /> :
+  <svg class="sv-eb-hex" viewBox="0 0 20 15" width="20" height="15" aria-hidden="true"><path d="M3.14.8h13.32l2.34 6.5-2.34 6.5H3.14L.8 7.3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>}
+  <span><slot /></span>
+</Tag>

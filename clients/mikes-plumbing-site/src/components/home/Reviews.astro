@@ -1,0 +1,223 @@
+---
+// Reviews (Figma 631:2037 y 980-1880; mobile 640:437 y 1234-2849). Spotlight: one Yelp quote word for word with a red
+// highlight, giant outlined slide number behind, prev/next hex buttons (10 slides, each an exact excerpt of a review in
+// reviews.ts), a progress line; "what the reviews mention" tally; right: tilted 5.0 badge + four ticket cards.
+import Eyebrow from './Eyebrow.astro';
+import EstimateBar from './EstimateBar.astro';
+import { REVIEWS } from '../../data/reviews';
+import { SITE } from '../../data/site';
+
+// Excerpt = an exact substring of the review in reviews.ts (checked at build), hl = the phrase set in red.
+const SLIDES = [
+  { by: 'Stuart W.', tag: 'Water service line leak', ex: 'Mike happened to call around 7pm the same day and offered to at least take a look and let me know where I stand.', hl: '7pm the same day' },
+  { by: 'Jackie H.', tag: 'Water leaks + new water lines', ex: 'he stayed and completed everything the same day and didn\'t leave until the job was fully done', hl: 'didn\'t leave until the job was fully done' },
+  { by: 'Sal C.', tag: 'Slab leak, Corona', ex: 'He was upfront and honest with me on pricing and reliable when setting up the appointments.', hl: 'upfront and honest' },
+  { by: 'Martha B.', tag: 'Stop valve behind the toilet', ex: 'I called three plumbers and they couldn\'t come over until Monday. Mike actually called me instead of back and forth messaging.', hl: 'Mike actually called me' },
+  { by: 'Debbie H.', tag: 'A complicated job, Menifee', ex: 'Michael somehow made everything work and wasn\'t gonna leave until fixed.', hl: 'wasn\'t gonna leave until fixed' },
+  { by: 'Bruce H.', tag: 'Upstairs toilet install', ex: 'He is an excellent communicator. His prices are fair and competitive.', hl: 'excellent communicator' },
+  { by: 'Robert U.', tag: 'Water main + water heater', ex: 'repaired water main to my house and installed new water heater all in one afternoon.', hl: 'all in one afternoon' },
+  { by: 'Isaiah C.', tag: 'Toilet and sink, Riverside', ex: 'Owner Mike came himself and took care of issues I had with my toilet and sink.', hl: 'Owner Mike came himself' },
+  { by: 'Janeth H.', tag: 'Garbage disposal, Corona', ex: 'Needed my garbage disposal repaired, he was quick and efficient! I value a clean plumber.', hl: 'I value a clean plumber.' },
+  { by: 'Sydney H.', tag: 'Kitchen faucet', ex: 'Mike was fast with his response, replaced my faucet for a fair price and did a great job in a timely manner.', hl: 'for a fair price' },
+].map((s) => {
+  const r = REVIEWS.find((x) => x.name === s.by);
+  if (!r || !r.text.includes(s.ex) || !s.ex.includes(s.hl)) throw new Error(`Reviews: excerpt for ${s.by} is not word for word`);
+  const [m, d, y] = r.date.split(' ');
+  const [a, b] = s.ex.split(s.hl);
+  return { ...s, a, b, date: `${m} ${d}, ${y}`, ini: s.by.replace(/[^A-Z]/g, '').slice(0, 2) };
+});
+const TICKETS = [
+  { n: '02', q: '“He is an excellent communicator.”', by: 'Bruce H.', t: 'toilet install' },
+  { n: '03', q: '“Upfront and honest with me on pricing.”', by: 'Sal C.', t: 'slab leak, Corona' },
+  { n: '04', q: '“Reasonably priced, detailed & patient.”', by: 'Eleanor M.', t: '3 toilets + regulator', d: true },
+  { n: '05', q: '“He arrived on time and installed it quickly.”', by: 'Jack D.', t: 'garbage disposal, Murrieta' },
+];
+const TALLY = [
+  { n: 6, l: 'Fair price', red: true },
+  { n: 4, l: 'Communication' },
+  { n: 2, l: 'Clean work site' },
+  { n: 2, l: 'On time & reliable' },
+];
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="rv on-paper" aria-labelledby="rv-h" data-m-section>
+  <EstimateBar />
+  <div class="rv-in">
+    <span class="rv-ln" aria-hidden="true"></span><p class="rv-side" aria-hidden="true">Real Yelp reviews · 5.0 · 20 reviews</p>
+    <div class="rv-main" data-reviews>
+      <span class="rv-num" aria-hidden="true" data-rv-num>01</span>
+      <Eyebrow data-t="1" id="rv-h">Real Yelp reviews<span class="rv-wfw"> · word for word</span></Eyebrow>
+      <div class="rv-stage" aria-live="polite">
+        {SLIDES.map((s, i) => (
+          <figure class="rv-slide" data-rv-slide hidden={i > 0} aria-label={`Review ${i + 1} of ${SLIDES.length}`}>
+            <blockquote class="rv-q" data-t={i === 0 ? '2' : undefined}><p>“{s.a}<mark>{s.hl}</mark>{s.b}”</p></blockquote>
+            <figcaption class="rv-by" data-t={i === 0 ? '3' : undefined}>
+              <span class="rv-av" aria-hidden="true">{s.ini}</span>
+              <span><b>{s.by}</b><span class="rv-meta">{s.tag}<i>·</i>Yelp<i>·</i>{s.date}</span></span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <div class="rv-nav" data-t="3">
+        <p class="rv-count"><b data-rv-now>01</b> / {pad(SLIDES.length)}</p>
+        <button type="button" class="rv-btn" data-rv-prev aria-label="Previous review"><svg viewBox="0 0 48 36" aria-hidden="true"><path class="hx" d="M12 1h24l11 17-11 17H12L1 18z"/><path class="ar" d="M31 18H17m5-5-5 5 5 5"/></svg></button>
+        <button type="button" class="rv-btn on" data-rv-next aria-label="Next review"><svg viewBox="0 0 48 36" aria-hidden="true"><path class="hx" d="M12 1h24l11 17-11 17H12L1 18z"/><path class="ar" d="M17 18h14m-5-5 5 5-5 5"/></svg></button>
+      </div>
+      <div class="rv-prog" aria-hidden="true"><span data-rv-bar></span></div>
+      <p class="rv-tl" data-t="1">What the 9 reviews we captured mention</p>
+      <ul role="list" class="rv-tally" data-t="4" data-stagger>
+        {TALLY.map((t) => (
+          <li>
+            <p class="tn"><b data-count={t.n}>{t.n}</b><span>/9</span></p>
+            <span class="dots" aria-hidden="true">{Array.from({ length: 9 }, (_, i) => <i class:list={[i < t.n && (t.red ? 'r' : 'k')]}></i>)}</span>
+            <p class="tl">{t.l}<span class="sr-only">: {t.n} of 9 reviews</span></p>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <aside class="rv-aside" aria-label="More Yelp reviews">
+      <div class="rv-badge" data-t="5" aria-hidden="true">
+        <svg viewBox="0 0 216 156"><path d="M44 2h128l42 76-42 76H44L2 78z" fill="#0E0D0B"/><path d="M50 12h116l37 66-37 66H50L13 78z" fill="none" stroke="#6B5C3E" stroke-width="1.2"/></svg>
+        <span class="rb-in"><b>5.0</b><span class="st">★★★★★</span><span class="rb-l">20 reviews on Yelp</span></span>
+      </div>
+      <p class="rv-more" data-t="1">More in their words</p>
+      <ul role="list" class="tix" data-t="4" data-stagger>
+        {TICKETS.map((t, i) => (
+          <li class:list={['tk', i % 2 === 1 && 'off', t.d && 'dk']}>
+            <span class="tk-n">{t.n}</span>
+            <p class="tk-q">{t.q}</p>
+            <p class="tk-by">{t.by}<i>·</i>{t.t}</p>
+          </li>
+        ))}
+      </ul>
+      <a class="rv-all" href={SITE.social.yelp} target="_blank" rel="noopener">Read all 20 on Yelp <svg viewBox="0 0 18 10" width="16" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg><span class="sr-only"> (opens Yelp in a new tab)</span></a>
+    </aside>
+  </div>
+</section>
+<script>
+  // Spotlight carousel: prev/next swap the slide, the outlined number, the counter and the progress line.
+  document.querySelectorAll<HTMLElement>('[data-reviews]').forEach((root) => {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-rv-slide]'));
+    const num = root.querySelector('[data-rv-num]'); const now = root.querySelector('[data-rv-now]');
+    const bar = root.querySelector<HTMLElement>('[data-rv-bar]');
+    let i = 0;
+    const motion = () => document.documentElement.classList.contains('motion');
+    const show = (n: number) => {
+      const next = (n + slides.length) % slides.length;
+      if (next === i) return;
+      const from = slides[i], to = slides[next];
+      i = next;
+      const label = String(i + 1).padStart(2, '0');
+      if (num) num.textContent = label; if (now) now.textContent = label;
+      if (bar) bar.style.transform = `scaleX(${(i + 1) / slides.length})`;
+      from.hidden = true; to.hidden = false;
+      if (motion()) to.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.16,1,.3,1)' });
+    };
+    root.querySelector('[data-rv-prev]')?.addEventListener('click', () => show(i - 1));
+    root.querySelector('[data-rv-next]')?.addEventListener('click', () => show(i + 1));
+  });
+</script>
+<style>
+  .rv { position: relative; background: var(--paper); color: var(--ink); height: 900px; display: flow-root; }
+  @media (max-width: 1279px) { .rv { height: auto; padding-bottom: 96px; } }
+  .rv-in { position: relative; display: grid; grid-template-columns: 180px 600px 100px 320px; width: calc(100% - 2 * var(--gutter)); margin: 6px auto 0; }
+  .rv-ln { position: absolute; left: -46px; top: 84px; width: 1.5px; height: 60px; background: var(--tan-dark); }
+  .rv-side { position: absolute; left: -51px; top: 148px; writing-mode: vertical-rl; rotate: 180deg; font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--tan-dark); white-space: nowrap; }
+  .rv-main { position: relative; grid-column: 2; padding-top: 0; }
+  .rv-num { position: absolute; left: -205px; top: -62px; z-index: 0; font-family: var(--f-display); font-size: 392px; line-height: 1; color: transparent; -webkit-text-stroke: 2.5px var(--tan); pointer-events: none; user-select: none; }
+  .rv-main > :global(.eb) { position: relative; margin-top: 46px; font-size: 13px; letter-spacing: .14em; color: var(--tan-dark); }
+  .rv-stage { position: relative; min-height: 340px; }
+  .rv-q { margin: 30px 0 0; font-family: var(--f-display); font-size: 44px; line-height: 54px; color: var(--ink); width: 630px; }
+  .rv-q mark { background: none; color: var(--red); }
+  .rv-by { display: flex; align-items: center; gap: 16px; margin-top: 34px; width: 400px; }
+  .rv-av { display: grid; place-items: center; flex: none; width: 54px; height: 40px; background: var(--ink); color: var(--tan); clip-path: polygon(22% 0, 78% 0, 100% 50%, 78% 100%, 22% 100%, 0 50%); font-family: var(--f-label); font-weight: 600; font-size: 15px; letter-spacing: .04em; }
+  .rv-by b { display: block; font-weight: 600; font-size: 17px; line-height: 22px; }
+  .rv-meta { display: block; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .rv-meta i { font-style: normal; margin: 0 8px; }
+  .rv-nav { position: absolute; right: 0; top: 345px; display: flex; align-items: center; gap: 7px; }
+  .rv-count { margin-right: 23px; font-family: var(--f-label); font-size: 20px; color: #A79D88; }
+  .rv-count b { font-weight: 600; color: var(--ink); }
+  .rv-btn { width: 48px; height: 36px; }
+  .rv-btn svg { width: 100%; height: 100%; overflow: visible; }
+  .rv-btn .hx { fill: transparent; stroke: var(--ink); stroke-width: 1.5; transition: fill .25s; }
+  .rv-btn .ar { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .25s; }
+  .rv-btn.on .hx, .rv-btn:hover .hx { fill: var(--ink); }
+  .rv-btn.on .ar, .rv-btn:hover .ar { stroke: var(--tan); }
+  .rv-prog { position: relative; height: 3px; margin-top: 36px; background: var(--tan); }
+  .rv-prog span { position: absolute; inset: 0; background: var(--red); transform-origin: left; transform: scaleX(.1); transition: transform .6s var(--ease-out); }
+  .rv-tl { margin-top: 35px; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 16px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+  .rv-tally { display: grid; grid-template-columns: repeat(4, 156px); margin: 24px 0 0; padding: 0; }
+  .tn { display: flex; align-items: flex-end; gap: 6px; }
+  .tn b { font-family: var(--f-label); font-weight: 600; font-size: 58px; line-height: 56px; }
+  .tn span { margin-bottom: 9px; font-family: var(--f-label); font-size: 18px; color: #A79D88; }
+  .dots { display: flex; gap: 1.5px; margin-top: 13px; }
+  .dots i { width: 12px; height: 10px; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: #B9AE96; position: relative; }
+  .dots i::after { content: ''; position: absolute; inset: 1.2px; clip-path: inherit; background: var(--paper); }
+  .dots i.r { background: var(--red); } .dots i.k { background: var(--ink); }
+  .dots i.r::after, .dots i.k::after { display: none; }
+  .tl { margin-top: 12px; font-weight: 600; font-size: 14px; line-height: 18px; }
+  .rv-aside { grid-column: 4; position: relative; }
+  .rv-badge { position: relative; width: 216px; height: 156px; margin: 34px 0 0 90px; rotate: 9deg; filter: drop-shadow(0 18px 18px rgba(14, 13, 11, .3)); }
+  .rv-badge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .rb-in { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; color: var(--tan); }
+  .rb-in b { font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 56px; }
+  .rb-in .st { margin-top: 4px; font-size: 13px; letter-spacing: .2em; color: var(--paper); }
+  .rb-in .rb-l { margin-top: 8px; font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--paper); }
+  .rv-more { margin-top: 36px; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 16px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+  .tix { display: grid; gap: 12px; margin: 16px 0 0; padding: 0; }
+  .tk { position: relative; display: grid; grid-template-columns: 63px 1fr; align-content: center; min-height: 92px; width: 320px; padding: 14px 16px 12px 0; background: var(--bone); border-radius: 2px; box-shadow: 0 6px 16px -6px rgba(14, 13, 11, .25); }
+  .tk.off { margin-left: 18px; }
+  .tk::before { content: ''; position: absolute; left: 63px; top: 8px; bottom: 8px; border-left: 1.5px dashed #BDB29A; }
+  .tk::after { content: ''; position: absolute; left: 54px; top: -9px; width: 18px; height: calc(100% + 18px); background: radial-gradient(circle at 50% 9px, var(--paper) 8.5px, transparent 9px), radial-gradient(circle at 50% calc(100% - 9px), var(--paper) 8.5px, transparent 9px); pointer-events: none; }
+  .tk-n { grid-row: 1 / 3; align-self: center; text-align: center; font-family: var(--f-label); font-weight: 600; font-size: 24px; color: var(--tan-dark); }
+  .tk-q { padding-left: 17px; font-weight: 700; font-size: 15px; line-height: 19px; }
+  .tk-by { padding-left: 17px; margin-top: 10px; font-size: 12px; line-height: 15px; color: var(--ink-2); }
+  .tk-by i { font-style: normal; margin: 0 6px; }
+  .rv-all { display: inline-flex; align-items: center; gap: 6px; margin-top: 19px; font-weight: 600; font-size: 15px; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+  .rv-all:hover { color: var(--tan-dark); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rv-in { grid-template-columns: minmax(0, 1fr) minmax(260px, 34%); gap: 48px; }
+    .rv-side, .rv-ln { display: none; }
+    .rv-main { grid-column: 1; }
+    .rv-aside { grid-column: 2; }
+    .rv-num { left: -40px; font-size: 300px; }
+    .rv-q { width: auto; font-size: clamp(32px, 4vw, 44px); line-height: 1.22; }
+    .rv-by { width: auto; }
+    .rv-nav { position: static; margin-top: 24px; justify-content: flex-end; }
+    .rv-tally { grid-template-columns: repeat(2, 1fr); row-gap: 24px; }
+    .rv-badge { margin: 40px 0 0 20px; }
+    .tk { width: 100%; } .tk.off { margin-left: 0; }
+  }
+  @media (max-width: 767px) {
+    .rv { padding-bottom: 60px; }
+    .rv-in { display: block; margin-top: 50px; }
+    .rv { display: flow-root; }
+    .rv-side, .rv-ln { display: none; }
+    .rv-num { left: -8px; top: -12px; font-size: 230px; -webkit-text-stroke-width: 1.5px; }
+    .rv-main > :global(.eb) { margin-top: 0; font-size: 12px; }
+    .rv-wfw { display: none; }
+    .rv-stage { min-height: 0; }
+    .rv-q { width: auto; margin-top: 70px; font-size: 30px; line-height: 36px; }
+    .rv-by { margin-top: 26px; width: auto; gap: 14px; }
+    .rv-av { width: 46px; height: 34px; font-size: 13px; }
+    .rv-by b { font-size: 16px; }
+    .rv-meta { font-size: 12px; line-height: 16px; }
+    .rv-nav { position: static; margin-top: 30px; justify-content: space-between; }
+    .rv-count { margin-right: auto; }
+    .rv-prog { margin-top: 18px; }
+    .rv-tl { margin-top: 38px; font-size: 12px; }
+    .rv-tally { grid-template-columns: 1fr 1fr; row-gap: 26px; }
+    .tn b { font-size: 50px; line-height: 50px; }
+    .rv-aside { margin-top: 44px; }
+    .rv-aside { position: static; }
+    .rv-badge { position: absolute; right: -6px; top: -12px; width: 130px; height: 94px; margin: 0; }
+    .rb-in b { font-size: 34px; line-height: 34px; }
+    .rb-in .st { font-size: 9px; } .rb-in .rb-l { font-size: 9px; margin-top: 4px; }
+    .rv-more { margin-top: 0; font-size: 12px; }
+    .tk { width: 340px; max-width: calc(100% - 10px); }
+    .tk.off { margin-left: 10px; }
+    .tk.dk { display: none; }
+    .tk-q { font-size: 14px; }
+  }
+</style>

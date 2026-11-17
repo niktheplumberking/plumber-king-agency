@@ -1,0 +1,19 @@
+---
+// Mike's hex badge (his logo) as a stamp: optional ink fill behind the transparent logo, tilted. Decorative.
+import { Image } from 'astro:assets';
+import cream from '../../assets/brand/logo-cream.png';
+import ink from '../../assets/brand/logo-ink.png';
+interface Props { w: number; deg?: number; fill?: string | false; tone?: 'cream' | 'ink'; class?: string; [k: string]: any }
+const { w, deg = 0, fill = 'var(--ink)', tone = 'cream', class: cls, ...rest } = Astro.props;
+---
+<span class:list={['bdg', cls]} style={`--w:${w}px;--deg:${deg}deg;--fill:${fill || 'transparent'}`} aria-hidden="true" {...rest}>
+  <span class="bdg-in">
+    <Image src={tone === 'ink' ? ink : cream} alt="" width={Math.round(w * 2)} loading="lazy" />
+  </span>
+</span>
+<style>
+  .bdg { display: block; width: var(--w); pointer-events: none; }
+  .bdg-in { position: relative; display: block; rotate: var(--deg); }
+  .bdg-in::before { content: ''; position: absolute; inset: 3% 2%; background: var(--fill); clip-path: polygon(1% 52%, 8% 22%, 50% 4%, 92% 22%, 99% 52%, 92% 78%, 50% 96%, 8% 78%); }
+  .bdg-in :global(img) { position: relative; width: 100%; height: auto; }
+</style>

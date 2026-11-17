@@ -1,0 +1,72 @@
+---
+// 5.5 Why Mike (Figma 670:3403 y 3060-3760): the three words stacked big and turned upright down each column, proof on the
+// right. Scroll moment: as the section scrolls, stops 01, 02, 03 light up in order (number grows to 1.08 and turns a
+// little, the red rule runs out).
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+const COLS = [
+  { w: 'Friendly', q: '“He communicated well, was polite and courteous”', by: 'Jack D. (Yelp)' },
+  { w: 'Transparent', q: '“upfront and honest with me on pricing”', by: 'Sal C., Corona (Yelp)' },
+  { w: 'Proficient', q: '“DIAGNOSIS MATTERS.”', by: 'Mike, on Instagram' },
+];
+---
+<section class="tw" aria-labelledby="tw-h" data-m-section>
+  <Wave d="t4d" m="t4m" top={3060} topM={3793} />
+  <div class="wrap">
+    <Eyebrow ink>The way we work</Eyebrow>
+    <h2 id="tw-h" class="sr-only">Friendly. Transparent. Proficient.</h2>
+    <ol class="tw-cols" role="list" data-b3-scrub data-b3-start="top 80%" data-b3-end="bottom 70%">
+      {COLS.map((c, i) => (
+        <li class="tw-col" data-b3-stop={(0.12 + i * 0.36).toFixed(2)}>
+          <p class="tw-word" aria-hidden="true">{c.w}<span class="tw-dot">.</span></p>
+          <span class="tw-n">0{i + 1}</span>
+          <div class="tw-proof" data-t="3">
+            <span class="tw-rule" aria-hidden="true"></span>
+            <p class="tw-q"><span class="sr-only">{c.w}. </span>{c.q}</p>
+            <p class="tw-by">{c.by}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .tw { position: relative; height: 700px; padding-top: 98px; background: var(--tan); color: var(--ink); }
+  .tw-cols { display: grid; grid-template-columns: 381px 410px 409px; margin: 0; padding: 0; list-style: none; }
+  .tw-col { position: relative; height: 490px; margin-top: 24px; }
+  .tw-col + .tw-col { border-left: 1.5px solid #A79D88; }
+  .tw-col:nth-child(2) { padding-left: 0; }
+  .tw-word { position: absolute; left: 12px; bottom: 0; writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--f-display); font-size: 85px; line-height: 76px; white-space: nowrap; color: var(--ink); }
+  .tw-col:nth-child(n+2) .tw-word { left: 34px; }
+  .tw-dot { color: var(--red); }
+  .tw-n { position: absolute; left: 110px; top: 2px; font-family: var(--f-label); font-weight: 500; font-size: 14px; letter-spacing: .1em; color: var(--tan-dark); display: inline-block; transition: transform .5s var(--ease-back), color .3s; }
+  .tw-col:nth-child(n+2) .tw-n { left: 138px; }
+  .tw-proof { position: absolute; left: 110px; top: 328px; width: 248px; }
+  .tw-col:nth-child(n+2) .tw-proof { left: 138px; }
+  .tw-rule { display: block; width: 40px; height: 3px; background: var(--red); transform-origin: left; transition: transform .6s var(--ease-out); }
+  .tw-q { margin-top: 18px; font-weight: 600; font-size: 19px; line-height: 27px; }
+  .tw-by { margin-top: 12px; font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan-dark); }
+  /* scroll moment (b3kit/scrub.ts) */
+  :global(html.motion) .tw-col:not(.is-on) .tw-rule { transform: scaleX(.25); }
+  .tw-col.is-on .tw-n { color: var(--red); transform: scale(1.08) rotate(-4deg); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tw { height: auto; padding: 100px 0 110px; }
+    .tw-cols { grid-template-columns: repeat(3, 1fr); }
+    .tw-word { font-size: clamp(64px, 7vw, 92px); }
+    .tw-n, .tw-col:nth-child(n+2) .tw-n, .tw-proof, .tw-col:nth-child(n+2) .tw-proof { left: 104px; }
+    .tw-proof { width: auto; right: 12px; }
+  }
+  @media (max-width: 767px) {
+    .tw { height: auto; padding: 56px 0 30px; }
+    .tw-cols { display: block; margin-top: 6px; }
+    .tw-col, .tw-col + .tw-col { display: grid; grid-template-columns: 68px 1fr; grid-template-rows: auto 1fr; height: auto; margin: 0; padding: 20px 0 28px; border: 0; }
+    .tw-col + .tw-col { border-top: 1.5px solid #A79D88; }
+    .tw-word, .tw-col:nth-child(n+2) .tw-word { position: static; grid-row: 1 / 3; grid-column: 1; align-self: start; font-size: 50px; line-height: 46px; margin-left: -4px; }
+    .tw-n, .tw-col:nth-child(n+2) .tw-n { position: static; grid-column: 2; grid-row: 1; justify-self: start; margin-top: 4px; font-size: 13px; }
+    .tw-proof, .tw-col:nth-child(n+2) .tw-proof { position: static; grid-column: 2; grid-row: 2; align-self: end; width: auto; margin: 70px 0 30px; }
+    .tw-q { font-size: 16px; line-height: 22px; margin-top: 18px; }
+    .tw-by { font-size: 10.5px; margin-top: 10px; }
+  }
+</style>

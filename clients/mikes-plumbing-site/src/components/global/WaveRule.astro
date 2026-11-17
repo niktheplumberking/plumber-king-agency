@@ -1,0 +1,16 @@
+---
+// Flyer rule: a thin wavy line with a small hex nut in the middle (Figma: footer top, "Diagnosis matters" divider).
+// Colour = `color` (stroke); `bg` fills the nut so the line stops at its edges. Stretches to its box width (1200 at 1440).
+interface Props { color?: string; bg?: string; class?: string; nut?: number }
+const { color = '#6B6455', bg = 'var(--ink)', class: cls, nut = 50 } = Astro.props;
+const d = 'M0 8 Q33.5 -2 67 8 T134 8 T201 8 T268 8 T335 8 T402 8 T469 8 T536 8 T603 8 T670 8 T737 8 T804 8 T871 8 T938 8 T1005 8 T1072 8 T1139 8 T1206 8';
+---
+<div class:list={['wr', cls]} style={`--wr-c:${color};--wr-bg:${bg};--wr-n:${nut}%`} aria-hidden="true">
+  <svg class="wr-l" viewBox="0 0 1200 16" preserveAspectRatio="none"><path d={d} fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke" /></svg>
+  <svg class="wr-n" viewBox="0 0 36 20"><path d="M9 1h18l8 9-8 9H9L1 10z" fill="var(--wr-bg)" stroke="currentColor" stroke-width="1.5" /></svg>
+</div>
+<style>
+  .wr { position: relative; height: 16px; color: var(--wr-c); }
+  .wr-l { display: block; width: 100%; height: 16px; }
+  .wr-n { position: absolute; left: var(--wr-n); top: -2px; width: 36px; height: 20px; transform: translateX(-50%); }
+</style>

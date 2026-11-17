@@ -1,0 +1,43 @@
+---
+// Town page template (Figma 670:3403 desktop / 670:8484 mobile, PAGES-COPY section 5 + 5.9). One entry per town in
+// src/data/town-pages.ts. Sections 5.1-5.8; the waves between sections are the traced Figma seams (b3kit/Wave).
+import Base from '../../layouts/Base.astro';
+import THero from './THero.astro';
+import TClose from './TClose.astro';
+import TJob from './TJob.astro';
+import TServices from './TServices.astro';
+import TWhy from './TWhy.astro';
+import TEmergency from './TEmergency.astro';
+import TFaq from './TFaq.astro';
+import TCta from './TCta.astro';
+import { BUSINESS_ID, abs } from '../../lib/schema';
+import { SITE } from '../../data/site';
+import type { TownPage } from '../../data/town-pages';
+interface Props { t: TownPage }
+const { t } = Astro.props;
+// Dev (5, not on screen): LocalBusiness (Plumber), areaServed the town. No aggregateRating.
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Plumber', '@id': `${abs(t.path)}#local`, name: SITE.name, url: abs(t.path),
+  telephone: SITE.phoneE164, parentOrganization: { '@id': BUSINESS_ID() },
+  address: { '@type': 'PostalAddress', addressLocality: SITE.city, addressRegion: SITE.region, addressCountry: 'US' },
+  areaServed: { '@type': 'City', name: `${t.name}, CA`, containedInPlace: { '@type': 'AdministrativeArea', name: `${t.county}, CA` } },
+};
+const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/') },
+  { '@type': 'ListItem', position: 2, name: 'Service areas', item: abs('/service-areas') },
+  { '@type': 'ListItem', position: 3, name: `Plumber in ${t.name}, CA`, item: abs(t.path) },
+] };
+---
+<Base title={t.title} description={t.description} path={t.path} og="mike-navarro-loading-plumbing-van-riverside"
+  ogAlt={`Mike's Plumbing Services van, plumber serving ${t.name}, CA`} jsonld={[ld, crumbs]} estimate={`#est-${t.slug}`}
+  preload={{ name: 'mike-navarro-loading-plumbing-van-riverside', sizes: '(min-width: 1280px) 562px, (min-width: 768px) 46vw, 350px', widths: [360, 540, 720, 960, 1280] }}>
+  <THero t={t} />
+  <TClose t={t} />
+  <TJob t={t} />
+  <TServices t={t} />
+  <TWhy />
+  <TEmergency t={t} />
+  <TFaq t={t} />
+  <TCta t={t} />
+</Base>
+<script>import '../b3kit/scrub';</script>

@@ -1,4 +1,21 @@
 ---
-// STUB: builder 1 replaces this.
-interface Props { estimate?: string }
+// Sticky mobile call bar (below 1024 px): shows once the hero has scrolled away, steps aside over the estimate form
+// (ui.ts data-mbar). Mike's chrome: ink bar, tan call plate (Oswald number), outlined "Free estimate".
+import { SITE } from '../../data/site';
+const { estimate = '#estimate' } = Astro.props as { estimate?: string };
 ---
+<nav class="mbar" data-mbar aria-label="Call or get an estimate">
+  <a href={SITE.tel} class="mbr-call"><span><b>{SITE.phone}</b><small>Tap to call</small></span><span class="c" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h16"/><path d="m14 6 6 6-6 6"/></svg></span></a>
+  <a href={estimate} class="mb-est">Free estimate</a>
+</nav>
+<style>
+  .mbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-callbar); display: none; gap: 10px; padding: 10px 20px calc(10px + env(safe-area-inset-bottom)); background: rgba(14, 13, 11, .96); border-top: 1px solid var(--line-d); transform: translateY(110%); transition: transform .5s var(--ease-out); }
+  .mbar.is-on { transform: none; }
+  .mbr-call { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 0 10px 0 16px; border-radius: 4px; background: var(--tan); color: var(--ink); }
+  .mbr-call b { display: block; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 24px; }
+  .mbr-call small { display: block; font-size: 11px; line-height: 14px; color: var(--ink-2); }
+  .mbr-call .c { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--tan); flex: none; }
+  .mb-est { display: grid; place-items: center; min-height: 52px; padding: 0 16px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--tan); font-weight: 600; font-size: 15px; color: var(--paper); white-space: nowrap; }
+  @media (max-width: 1023px) { .mbar { display: flex; } }
+  @media (max-width: 380px) { .mbar { gap: 8px; padding-inline: 12px; } .mb-est { padding: 0 12px; font-size: 14px; } }
+</style>

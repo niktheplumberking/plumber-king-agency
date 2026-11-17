@@ -1,0 +1,91 @@
+---
+// 1.5 Water heaters (Figma 669:539 y 3320 h 800, coal; mobile y 4222 h 928). Manila case file teaser behind a hex-clipped photo
+// of his heater's gas control valve (double hex frame), eyebrow 03, H2, body, three paper chips, link to /water-heaters.
+import Wave from './kit/Wave.astro';
+import Eyebrow from './kit/Eyebrow.astro';
+import Chip from './kit/Chip.astro';
+import TLink from './kit/TLink.astro';
+import Img from '../ui/Img.astro';
+import { ab } from './kit/ab';
+---
+<section id="water-heaters" class="wh sv-sec sv-coal sv-abs" style="--sh:800px" aria-labelledby="wh-h" data-m-section>
+  <Wave fill="var(--coal)" top={-34} topM={-24} />
+  <div class="wh-in">
+    <div class="wh-vis" data-t="3">
+      <div class="wh-file" data-ab style={ab(40, 110, 380, 470, -8)} aria-hidden="true">
+        <svg class="wh-file-d" viewBox="0 0 380 470" preserveAspectRatio="none"><path d="M0 18C0 6 6 0 18 0H150C158 0 164 4 168 12L178 34H362C374 34 380 40 380 52V470H0Z" fill="#E3CF9E" /></svg>
+        <svg class="wh-file-m" viewBox="0 0 230 290" preserveAspectRatio="none"><path d="M0 12C0 4 4 0 12 0H100C105.3 0 109.3 2.7 112 8L120 24H218C226 24 230 28 230 36V290H0Z" fill="#E3CF9E" /></svg>
+        <span class="wh-file-t">Case file · 75-gal gas<span class="wh-d"> heater</span></span>
+      </div>
+      <div class="wh-hex" data-ab style={ab(120, 140, 560, 486)}>
+        <div class="wh-shadow"><div class="wh-photo sv-photo">
+          <Img name="water-heater-gas-valve-small" alt="Gas control valve on a water heater Mike worked on, with his logo stamp" sizes="(min-width: 768px) 560px, 350px" box={560 / 486} boxM={350 / 300} />
+        </div></div>
+        <svg class="wh-frame wh-d" viewBox="0 0 563 489" aria-hidden="true"><path d="M141.5 1.5H421.5L561.5 244.5L421.5 487.5H141.5L1.5 244.5Z" fill="none" stroke="#D2C5A6" stroke-width="3" stroke-linejoin="round" /></svg>
+        <svg class="wh-frame-i wh-d" viewBox="0 0 525 455" aria-hidden="true"><path d="M131.5.5H393.5L524.5 227.5L393.5 454.5H131.5L.5 227.5Z" fill="none" stroke="#D2C5A6" stroke-opacity=".5" stroke-linejoin="round" /></svg>
+        <svg class="wh-frame wh-m" viewBox="0 0 352.5 302.5" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M78.25 1.25H274.25L351.25 151.25L274.25 301.25H78.25L1.25 151.25Z" fill="none" stroke="#D2C5A6" stroke-width="2.5" stroke-linejoin="round" /></svg>
+      </div>
+    </div>
+    <Eyebrow tone="tan" class="wh-eb" data-ab style={ab(799.5, 149)}>03 · Water heaters</Eyebrow>
+    <h2 id="wh-h" class="sv-h wh-h" data-t="2" data-ab style={ab(800, 182, 520)}>Diagnosis matters. <em>Especially on a water heater.</em></h2>
+    <p class="wh-body" data-t="3" data-ab style={ab(800, 375, 520)}>Install and repair, home and commercial, from a household tank to a 100-gallon heater in a restaurant. We find out what's actually wrong before anyone talks about replacing it.</p>
+    <ul class="wh-chips" role="list" data-t="4" data-stagger data-ab style={ab(800, 482)}>
+      <li><Chip tone="paper">Water heater install</Chip></li>
+      <li><Chip tone="paper">Water heater repair</Chip></li>
+      <li><Chip tone="paper">Commercial water heaters</Chip></li>
+    </ul>
+    <TLink href="/water-heaters" tone="tan" class="wh-link" data-ab style={ab(800, 552)}>See the water heater page</TLink>
+  </div>
+</section>
+
+<style>
+  .wh-in { position: relative; }
+  .wh-m, .wh-file-m { display: none; }
+  .wh-file { filter: drop-shadow(0 14px 15px rgba(0, 0, 0, .5)); }
+  .wh-file svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .wh-file-t { position: absolute; left: 16px; top: 9px; font-family: var(--f-label); font-weight: 600; font-size: 12px; line-height: 18px; letter-spacing: .1em; text-transform: uppercase; color: #6b5c3e; white-space: nowrap; }
+  .wh-shadow { height: 100%; filter: drop-shadow(0 24px 25px rgba(0, 0, 0, .55)); }
+  .wh-photo { height: 100%; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+  .wh-frame { position: absolute; left: -1.5px; top: -1.5px; width: 563px; height: 489px; }
+  .wh-frame-i { position: absolute; left: 17.5px; top: 15.5px; width: 525px; height: 455px; }
+  .wh-h { margin: 0; font-size: 54px; line-height: 1.06; color: var(--paper); }
+  .wh-body { margin: 0; font-size: 17px; line-height: 1.6; color: var(--mute); }
+  .wh-chips { display: flex; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .wh-chips :global(.sv-chip) { height: 36px; padding: 0 18px; font-size: 14px; line-height: 21px; letter-spacing: .06em; --cs: 1.3px; }
+  .wh-chips :global(.sv-chip-o svg) { width: 18px; }
+
+  @media (max-width: 1279px) {
+    .wh-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .wh-vis { position: relative; width: 100%; }
+    .wh-file, .wh-hex { position: absolute; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .wh { padding: 110px 0 120px; }
+    .wh-vis { height: 520px; }
+    .wh-file { left: 0; top: 0; width: 380px; height: 470px; rotate: 8deg; transform-origin: 0 0; }
+    .wh-hex { left: 80px; top: 30px; width: 560px; height: 486px; }
+    .wh :global(.wh-eb) { margin-top: 60px; }
+    .wh-h { margin-top: 12px; max-width: 640px; font-size: clamp(40px, 4.6vw, 54px); }
+    .wh-body { margin-top: 22px; max-width: 560px; }
+    .wh-chips { margin-top: 28px; flex-wrap: wrap; }
+    .wh :global(.wh-link) { margin-top: 32px; }
+  }
+  @media (max-width: 767px) {
+    .wh { padding: 34px 0 64px; }
+    .wh-d, .wh-file-d { display: none; } .wh-m, .wh-file-m { display: block; }
+    .wh-vis { height: 356px; }
+    .wh-file { left: 104px; top: 0; width: 230px; height: 290px; rotate: 8deg; transform-origin: 0 0; filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .5)); }
+    .wh-file-t { left: 10px; top: 6px; font-size: 9.5px; line-height: 14px; letter-spacing: .08em; }
+    .wh-hex { left: 0; top: 56px; width: 100%; height: 300px; }
+    .wh-shadow { filter: drop-shadow(0 18px 18px rgba(0, 0, 0, .55)); }
+    .wh-photo { clip-path: polygon(22% 0, 78% 0, 100% 50%, 78% 100%, 22% 100%, 0 50%); }
+    .wh-frame { left: -1.25px; top: -1.25px; width: calc(100% + 2.5px); height: 302.5px; }
+    .wh :global(.wh-eb) { margin-top: 39px; }
+    .wh-h { margin-top: 10px; font-size: 34px; }
+    .wh-body { margin-top: 16px; font-size: 15px; line-height: 1.55; }
+    .wh-chips { flex-direction: column; align-items: flex-start; margin-top: 22px; }
+    .wh-chips :global(.sv-chip) { height: 34px; font-size: 13px; line-height: 19px; --cs: 1.2px; }
+    .wh-chips :global(.sv-chip-o svg) { width: 17px; }
+    .wh :global(.wh-link) { margin-top: 30px; font-size: 15px; }
+  }
+</style>

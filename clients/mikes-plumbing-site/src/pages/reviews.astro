@@ -1,0 +1,25 @@
+---
+// /reviews (PAGES-COPY section 9; Figma 670:11578 desktop, 671:1096 mobile). All 20 Yelp reviews from src/data/reviews.ts.
+// No AggregateRating (SEO plan). Breadcrumbs: JSON-LD + a visually hidden trail (the frame shows none).
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import RevHero from '../components/reviews/RevHero.astro';
+import RevPattern from '../components/reviews/RevPattern.astro';
+import RevSpotlight from '../components/reviews/RevSpotlight.astro';
+import RevList from '../components/reviews/RevList.astro';
+import RevLeave from '../components/reviews/RevLeave.astro';
+import { abs } from '../lib/schema';
+const path = '/reviews';
+---
+<Base title="Mike's Plumbing Services Reviews | 5.0 on Yelp"
+  description="5.0 stars on Yelp from 20 reviews (checked 17 Nov 2026). Read what customers in LA, Corona, Murrieta and beyond say about Mike's Plumbing Services."
+  path={path} og="new-kitchen-faucet-install" ogAlt="A new kitchen faucet installed by Mike's Plumbing Services"
+  jsonld={[{ '@context': 'https://schema.org', '@type': 'CollectionPage', url: abs(path), name: "Mike's Plumbing Services reviews" }]}>
+  <Breadcrumbs items={[{ label: 'Reviews', href: path }]} class="sr-only" />
+  <RevHero />
+  <RevPattern />
+  <RevSpotlight />
+  <RevList />
+  <RevLeave />
+</Base>
+<script>import '../components/kit-b4/scrub';</script>

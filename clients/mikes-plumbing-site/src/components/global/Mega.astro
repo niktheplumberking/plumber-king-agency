@@ -1,0 +1,81 @@
+---
+// The two mega menus under the header (no Figma frame: built from the Home chrome's parts, paper card on the ink header).
+// Services: the three service pages, the five families from his flyer, and an ink "water where it shouldn't be" card.
+// Areas: the towns by region (IE / OC / LA) and the service-area page. ui.ts opens them (data-mega / data-mg-col).
+import { SERVICE_PAGES, FAMILIES, FLYER_LIST } from '../../data/services';
+import { TOWNS } from '../../data/towns';
+import { SITE } from '../../data/site';
+const REGIONS = ['Inland Empire', 'Orange County', 'Los Angeles'] as const;
+const arrow = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16"/><path d="m14 6 6 6-6 6"/></svg>';
+---
+<div class="mega" id="mega-services" data-mega="services" hidden>
+  <div class="mg-card">
+    <div class="mg-col" data-mg-col>
+      <p class="mg-h">Service pages</p>
+      <ul role="list" class="mg-big">
+        {SERVICE_PAGES.map((s) => <li><a href={s.href}><span>{s.name}</span><Fragment set:html={arrow} /></a></li>)}
+      </ul>
+    </div>
+    <div class="mg-col" data-mg-col>
+      <p class="mg-h">By job</p>
+      <ul role="list" class="mg-list">
+        {FAMILIES.map((f) => <li><a href={f.href}><span>{f.name}</span><Fragment set:html={arrow} /></a></li>)}
+      </ul>
+    </div>
+    <div class="mg-col mg-flyer" data-mg-col>
+      <p class="mg-h">On Mike's flyer</p>
+      <p class="mg-fl">{FLYER_LIST.join(' · ')}</p>
+      <a class="mg-all" href="/services">See all services <Fragment set:html={arrow} /></a>
+    </div>
+    <aside class="mg-em" data-mg-col>
+      <p class="mg-emk"><span class="dot" aria-hidden="true"></span>Emergency</p>
+      <p class="mg-emh">Water where it shouldn't be?</p>
+      <a class="mg-call" href={SITE.tel}>{SITE.phone}</a>
+      <p class="mg-ems">{SITE.hoursYelp}</p>
+      <a class="mg-emlink" href="/emergency-plumber">What to do while you wait <Fragment set:html={arrow} /></a>
+    </aside>
+  </div>
+</div>
+<div class="mega" id="mega-areas" data-mega="areas" hidden>
+  <div class="mg-card mg-areas">
+    {REGIONS.map((r) => (
+      <div class="mg-col" data-mg-col>
+        <p class="mg-h">{r}</p>
+        <ul role="list" class="mg-list">
+          {TOWNS.filter((t) => t.region === r).map((t) => <li><a href={t.href}><span>{t.slug === 'riverside' ? 'Riverside (home base)' : t.name}</span><Fragment set:html={arrow} /></a></li>)}
+        </ul>
+      </div>
+    ))}
+    <aside class="mg-em" data-mg-col>
+      <p class="mg-emk">Based in Riverside</p>
+      <p class="mg-emh">Working the IE, OC and LA.</p>
+      <a class="mg-emlink" href="/service-areas">All service areas <Fragment set:html={arrow} /></a>
+      <p class="mg-ems">Not sure Mike covers you? Call or text {SITE.phone}.</p>
+    </aside>
+  </div>
+</div>
+<style>
+  .mega { position: absolute; left: 0; right: 0; top: 100%; padding: 0 var(--gutter); }
+  .mg-card { display: grid; grid-template-columns: 1.15fr 1fr 1fr 300px; background: var(--paper); color: var(--ink); border-radius: 0 0 4px 4px; box-shadow: 0 24px 48px -16px rgba(0, 0, 0, .55); overflow: hidden; }
+  .mg-areas { grid-template-columns: repeat(3, 1fr) 300px; }
+  .mg-col { padding: 32px 28px 32px; }
+  .mg-col + .mg-col { border-left: 1px dashed rgba(107, 92, 62, .35); }
+  .mg-h { margin-bottom: 14px; font-family: var(--f-label); font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+  .mg-list, .mg-big { margin: 0; padding: 0; display: grid; gap: 2px; }
+  .mg-list a, .mg-big a { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; margin-inline: -10px; border-radius: 4px; font-weight: 600; font-size: 15px; line-height: 20px; transition: background .25s, color .25s; }
+  .mg-big a { font-family: var(--f-display); font-weight: 400; font-size: 24px; line-height: 30px; }
+  .mg-list a :global(svg), .mg-big a :global(svg) { color: var(--tan-dark); opacity: 0; transform: translateX(-6px); transition: opacity .25s, transform .3s var(--ease-out); flex: none; }
+  .mg-list a:hover, .mg-big a:hover, .mg-list a:focus-visible, .mg-big a:focus-visible { background: rgba(210, 197, 166, .45); }
+  .mg-list a:hover :global(svg), .mg-big a:hover :global(svg), .mg-list a:focus-visible :global(svg), .mg-big a:focus-visible :global(svg) { opacity: 1; transform: none; }
+  .mg-fl { font-size: 14px; line-height: 24px; color: var(--ink-2); }
+  .mg-all, .mg-emlink { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-weight: 600; font-size: 14px; text-decoration: underline; text-underline-offset: 4px; }
+  .mg-em { display: grid; align-content: start; gap: 8px; padding: 32px 28px; background: var(--ink); color: var(--paper); }
+  .mg-emk { display: flex; align-items: center; gap: 8px; font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); }
+  .mg-emk .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); }
+  .mg-emh { font-family: var(--f-display); font-size: 26px; line-height: 30px; }
+  .mg-call { font-family: var(--f-label); font-weight: 600; font-size: 28px; line-height: 36px; color: var(--tan); }
+  .mg-call:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .mg-ems { font-size: 13px; line-height: 18px; color: var(--mute); }
+  .mg-em .mg-emlink { margin-top: 6px; color: var(--tan); }
+  @media (max-width: 1199px) { .mega { display: none; } }
+</style>

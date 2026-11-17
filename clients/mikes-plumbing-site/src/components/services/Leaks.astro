@@ -1,0 +1,120 @@
+---
+// 1.4 Leaks & water lines (Figma 669:539 y 2480 h 840, paper; mobile y 3090 h 1132). Two tilted polaroids from his IG, his
+// Instagram DM in his words (verbatim) with a red pin, eyebrow 02, H2, body, five hex bullets, DM + call buttons.
+import { Image } from 'astro:assets';
+import logoCream from '../../assets/brand/logo-cream.png';
+import Wave from './kit/Wave.astro';
+import Eyebrow from './kit/Eyebrow.astro';
+import Btn from './kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import { ab } from './kit/ab';
+import { SITE } from '../../data/site';
+const bullets = ['Leak detection', 'Leak repair, including slab leaks', 'Water service and main line leaks', 'Re-pipes and rerouted water lines', 'Pressure regulators and shut-off valves'];
+---
+<section id="leaks" class="lk sv-sec sv-paper sv-abs" style="--sh:840px" aria-labelledby="lk-h" data-m-section>
+  <Wave fill="var(--paper)" top={-34} topM={-24} />
+  <div class="lk-in">
+    <Eyebrow tone="dark" class="lk-eb" data-ab style={ab(779.5, 119)}>02 · Leaks &amp; water lines</Eyebrow>
+    <h2 id="lk-h" class="sv-h lk-h" data-t="2" data-ab style={ab(780, 152, 540, 114)}>Wet spot by the wall? <em>Send Mike a picture.</em></h2>
+
+    <div class="lk-pics" data-t="3" data-stagger>
+      <figure class="lk-pol lk-pol--a sv-polaroid" data-ab style={ab(110, 150, 330, 400, -6)}>
+        <div class="lk-ph sv-photo"><Img name="corroded-copper-pipe-leak" alt="Corroded copper pipe with green buildup around a leak" sizes="(min-width: 768px) 306px, 184px" box={306 / 330} boxM={184 / 198} /></div>
+        <figcaption class="sv-script lh-yest">green buildup</figcaption>
+      </figure>
+      <figure class="lk-pol lk-pol--b sv-polaroid" data-ab style={ab(360, 250, 320, 390, 5)}>
+        <div class="lk-ph sv-photo"><Img name="leak-repair-wall-opened" alt="Wall opened up to reach a leaking water line" sizes="(min-width: 768px) 296px, 184px" box={296 / 320} boxM={184 / 198} /></div>
+        <figcaption class="sv-script lh-yest"><span class="lk-d">wall opened to reach the leak</span><span class="lk-m">wall opened up</span></figcaption>
+      </figure>
+      <div class="lk-dm" data-ab style={ab(130, 668, 380)}>
+        <span class="lk-av" aria-hidden="true"><Image src={logoCream} alt="" width={80} /></span>
+        <p class="lk-who"><b>mikesplumbingservices</b><span>Instagram</span></p>
+        <blockquote class="lk-bub"><p>If your house has any leaks and you see green buildup or a wet spot by the wall - DM me a picture</p></blockquote>
+        <i class="lk-pin" aria-hidden="true"></i>
+      </div>
+    </div>
+
+    <p class="lk-body" data-t="3" data-ab style={ab(780, 288, 520)}>Leak detection and leak repair: slab leaks, water service lines, mainline leaks and re-pipes.</p>
+    <ul class="lk-list" role="list" data-t="3" data-stagger data-ab style={ab(780, 362)}>
+      {bullets.map((b) => (
+        <li><svg viewBox="0 0 16 12" width="16" height="12" aria-hidden="true"><path d="M2.08 0H13.92L16 6L13.92 12H2.08L0 6Z" fill="#6B5C3E" /></svg>{b}</li>
+      ))}
+    </ul>
+    <div class="lk-btns" data-ab style={ab(780, 572, 526, 64)}>
+      <Btn v="ink" href={SITE.social.instagram} external l1="DM a photo" l2={SITE.social.instagramHandle} w={270} label={`DM a photo to ${SITE.social.instagramHandle} on Instagram (opens in a new tab)`} />
+      <Btn v="outInk" l1={`Call ${SITE.phone}`} l2="Free estimate" w={240} label={`Call ${SITE.phone} for a free estimate`} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .lk-in { position: relative; }
+  .lk-h { margin: 0; font-size: 54px; line-height: 1.06; }
+  .lk-body { margin: 0; font-size: 17px; line-height: 1.55; color: var(--ink-2); }
+  .lk-m { display: none; }
+
+  .lk-pol { margin: 0; box-shadow: 0 16px 30px -8px rgba(0, 0, 0, .3); }
+  .lk-ph { position: absolute; left: 12px; top: 12px; right: 12px; }
+  .lk-pol--a .lk-ph { height: 330px; } .lk-pol--b .lk-ph { height: 320px; }
+  .lk-pol figcaption { position: absolute; left: 16px; font-size: 22px; color: #4a443a; white-space: nowrap; }
+  .lk-pol--a figcaption { top: 352px; } .lk-pol--b figcaption { top: 342px; }
+
+  .lk-dm { min-height: 145px; }
+  .lk-av { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--ink); }
+  .lk-av :global(img) { width: 34px; height: 22px; object-fit: contain; }
+  .lk-who { position: absolute; left: 54px; top: 4px; margin: 0; display: flex; flex-direction: column; gap: 4px; font-family: var(--f-sans); }
+  .lk-who b { font-size: 13px; line-height: 14px; font-weight: 700; color: var(--ink); }
+  .lk-who span { font-size: 11px; line-height: 12px; color: rgba(74, 68, 58, .8); }
+  .lk-bub { position: absolute; left: 54px; top: 48px; width: 326px; box-sizing: border-box; margin: 0; padding: 14px 18px; border-radius: 22px; background: #efede8; box-shadow: 0 10px 20px -6px rgba(0, 0, 0, .2); }
+  .lk-bub p { margin: 0; font-family: var(--f-sans); font-weight: 500; font-size: 16px; line-height: 1.45; color: var(--ink); }
+  .lk-pin { position: absolute; left: 209px; top: 38px; width: 16px; height: 16px; border-radius: 50%; background: var(--red); box-shadow: 0 2px 3px rgba(0, 0, 0, .25); }
+
+  .lk-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 21px; }
+  .lk-list li { display: flex; align-items: center; gap: 12px; font-family: var(--f-sans); font-weight: 600; font-size: 16px; line-height: 17px; color: var(--ink); }
+  .lk-list svg { flex: none; }
+  .lk-btns { display: flex; gap: 16px; }
+
+  @media (max-width: 1279px) {
+    .lk-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; }
+    .lk-pics { position: relative; order: 3; }
+    .lk-body { order: 4; } .lk-list { order: 5; } .lk-btns { order: 6; }
+    .lk-pol { position: absolute; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .lk { padding: 109px 0 120px; }
+    .lk-h { margin-top: 12px; max-width: 640px; font-size: clamp(40px, 4.6vw, 54px); }
+    .lk-pics { height: 700px; margin-top: 40px; }
+    .lk-pol--a { left: 0; top: 0; width: 330px; height: 400px; rotate: 6deg; transform-origin: 0 0; }
+    .lk-pol--b { left: 250px; top: 100px; width: 320px; height: 390px; rotate: -5deg; transform-origin: 0 0; }
+    .lk-dm { position: absolute; left: 20px; top: 518px; width: 380px; }
+    .lk-body { margin-top: 24px; max-width: 560px; }
+    .lk-list { margin-top: 24px; }
+    .lk-btns { margin-top: 36px; }
+  }
+  @media (max-width: 767px) {
+    .lk { padding: 69px 0 45px; }
+    .lk-h { margin-top: 10px; font-size: 34px; line-height: 1.06; }
+    .lk-d { display: none; } .lk-m { display: inline; }
+    .lk-pics { height: 462px; margin-top: 34px; }
+    .lk-pol--a { left: -4px; top: 0; width: 200px; height: 250px; rotate: 6deg; transform-origin: 0 0; }
+    .lk-pol--b { left: 150px; top: 50px; width: 200px; height: 250px; rotate: -5deg; transform-origin: 0 0; }
+    .lk-pol { box-shadow: 0 12px 24px -6px rgba(0, 0, 0, .3); }
+    .lk-ph { left: 8px; top: 8px; right: 8px; }
+    .lk-pol--a .lk-ph, .lk-pol--b .lk-ph { height: 198px; }
+    .lk-pol figcaption { left: 12px; top: 212px !important; font-size: 17px; }
+    .lk-dm { position: absolute; left: 0; top: 330px; width: 100%; min-height: 132px; }
+    .lk-av { width: 36px; height: 36px; }
+    .lk-av :global(img) { width: 28px; height: 18px; }
+    .lk-who { left: 46px; top: 2px; gap: 3px; }
+    .lk-who b { font-size: 12px; line-height: 13px; }
+    .lk-who span { font-size: 10px; line-height: 11px; }
+    .lk-bub { left: 46px; top: 42px; width: calc(100% - 46px); padding: 12px 16px; border-radius: 20px; box-shadow: none; }
+    .lk-bub p { font-size: 15px; }
+    .lk-pin { display: none; }
+    .lk-body { margin-top: 28px; font-size: 15px; }
+    .lk-list { margin-top: 18px; gap: 18px; }
+    .lk-list li { gap: 11px; font-size: 15px; line-height: 16px; }
+    .lk-list svg { width: 15px; height: 11px; }
+    .lk-btns { flex-direction: column; gap: 10px; margin-top: 38px; }
+  }
+</style>

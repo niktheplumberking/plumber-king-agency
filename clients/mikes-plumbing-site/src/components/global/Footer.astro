@@ -1,3 +1,91 @@
 ---
-// STUB: builder 1 replaces this with the Figma design (handoff/paul-ref/global has Paul's version for behaviour).
+// Footer (Figma Home 631:2037 y 10720, 440 px; mobile 640:437 y 13850, 588 px): flyer rule on top, logo + script
+// tagline + one line, three link columns, copyright bar. On phones the columns become dotted inline lists (Figma).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-cream.png';
+import WaveRule from './WaveRule.astro';
+import { SITE } from '../../data/site';
+const SERVICES = [
+  { label: 'Drain cleaning', href: '/drain-cleaning' },
+  { label: 'Water heaters', href: '/water-heaters' },
+  { label: 'Sewer lines', href: '/services#drains' },
+  { label: 'Leak detection', href: '/services#leaks' },
+  { label: 'Hydro jetting', href: '/drain-cleaning' },
+  { label: 'Commercial', href: '/services#commercial' },
+];
+const COMPANY = [
+  { label: 'About Mike', href: '/about' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'Our work', href: '/our-work' },
+  { label: 'Areas', href: '/service-areas' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Contact', href: '/contact' },
+];
+const year = new Date().getFullYear();
 ---
+<footer class="ft on-ink">
+  <div class="ft-in">
+    <WaveRule class="ft-rule" bg="#151410" />
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <a href="/" class="ft-logo" aria-label={`${SITE.name}, home`}><Image src={logo} alt="" width={288} height={184} loading="lazy" /></a>
+        <p class="ft-tag">Friendly. Transparent. Proficient.</p>
+        <p class="ft-p">Family-owned plumbing for homes and businesses. Riverside, CA. Serving the Inland Empire, Orange County and Los Angeles.</p>
+      </div>
+      <nav class="ft-col" aria-labelledby="ft-s"><h2 id="ft-s" class="ft-h">Services</h2>
+        <ul role="list">{SERVICES.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul></nav>
+      <nav class="ft-col" aria-labelledby="ft-c"><h2 id="ft-c" class="ft-h">Company</h2>
+        <ul role="list">{COMPANY.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul></nav>
+      <div class="ft-col"><h2 class="ft-h">Reach Mike</h2>
+        <ul role="list">
+          <li><a href={SITE.tel}>{SITE.phone}</a></li>
+          <li><span>{SITE.hoursYelp}</span></li>
+          <li><span>Riverside, CA</span></li>
+          <li><a href={SITE.social.instagram} target="_blank" rel="noopener">Instagram<span class="sr-only"> (opens in a new tab)</span></a></li>
+          <li><a href={SITE.social.yelp} target="_blank" rel="noopener">Yelp<span class="sr-only"> (opens in a new tab)</span></a></li>
+        </ul></div>
+    </div>
+  </div>
+  <div class="ft-bar">
+    <div class="ft-bar-in">
+      <p>© {year} {SITE.name} · Riverside, CA</p>
+      <p class="ft-legal"><a href="/privacy">Privacy</a> <span aria-hidden="true">·</span> <a href="/terms">Terms</a></p>
+    </div>
+  </div>
+</footer>
+<style>
+  .ft { background: #151410; color: #CFC8B8; }
+  .ft-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding: 8px 0 0; height: 380px; }
+  .ft :global(.ft-rule) { margin-top: 0; }
+  .ft-grid { display: grid; grid-template-columns: 440px 250px 250px 1fr; margin-top: 50px; }
+  .ft-logo { display: block; width: 150px; margin-left: 0; }
+  .ft-logo :global(img) { width: 100%; height: auto; }
+  .ft-tag { margin-top: 18px; font-family: var(--f-script); font-size: 26px; line-height: 34px; color: var(--tan); }
+  .ft-p { margin-top: 10px; max-width: 320px; font-size: 14px; line-height: 22px; color: #A9A293; }
+  .ft-h { margin: 6px 0 12px; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); }
+  .ft-col ul { margin: 0; padding: 0; display: grid; gap: 0; }
+  .ft-col li { font-size: 15px; line-height: 32px; }
+  .ft-col a { transition: color .25s; }
+  .ft-col a:hover, .ft-legal a:hover { color: var(--tan); text-decoration: underline; text-underline-offset: 4px; }
+  .ft-bar { background: var(--ink); }
+  .ft-bar-in { display: flex; align-items: center; justify-content: space-between; height: 60px; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; font-size: 13px; color: #A39B8A; }
+  .ft-legal { margin-right: 26px; }
+  .ft-legal span { margin: 0 4px; }
+  @media (max-width: 1279px) { .ft-in { height: auto; padding-bottom: 48px; } .ft-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 24px; } }
+  @media (max-width: 767px) {
+    .ft-in { padding: 0 0 36px; }
+    .ft :global(.ft-rule) { margin-top: 0; }
+    .ft-grid { display: block; margin-top: 30px; }
+    .ft-logo { width: 116px; }
+    .ft-tag { margin-top: 20px; font-size: 24px; }
+    .ft-p { margin-top: 10px; max-width: none; }
+    .ft-col { margin-top: 30px; }
+    .ft-h { margin: 0 0 6px; font-size: 12px; }
+    .ft-col ul { display: block; }
+    .ft-col li { display: inline; font-size: 14px; line-height: 22px; }
+    .ft-col li + li::before { content: ' · '; color: #A9A293; }
+    .ft-col a { display: inline-block; padding: 0; }
+    .ft-bar-in { height: 38px; font-size: 12px; }
+    .ft-legal { margin-right: 0; }
+  }
+</style>

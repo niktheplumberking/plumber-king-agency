@@ -1,3 +1,32 @@
 ---
-// STUB: builder 1 replaces this with the Figma design (handoff/paul-ref/global has Paul's version for behaviour).
+// Utility bar (Figma Home 631:2037 y 0, 40 px; mobile 640:437, 32 px): rating left, facts centre, hours + phone right.
+// Mobile shows the rating only (centred).
+import { SITE } from '../../data/site';
 ---
+<div class="ub" data-intro="topbar">
+  <div class="ub-in">
+    <a class="ub-rate" href={SITE.social.yelp} target="_blank" rel="noopener"><span class="ub-stars" aria-hidden="true">★★★★★</span> {SITE.rating.value} on Yelp · {SITE.rating.count} reviews<span class="sr-only"> (opens Yelp)</span></a>
+    <p class="ub-mid">Family owned &amp; operated <span aria-hidden="true">·</span> Residential &amp; commercial <span aria-hidden="true">·</span> Riverside · IE · OC · LA</p>
+    <p class="ub-right"><span class="ub-dot" aria-hidden="true"></span>{SITE.hoursYelp} <span aria-hidden="true">·</span> <a href={SITE.tel}>{SITE.phone}</a></p>
+  </div>
+</div>
+<style>
+  .ub { position: relative; z-index: calc(var(--z-header) + 1); height: 40px; background: #050504; color: var(--mute); font-size: 13px; line-height: 16px; }
+  .ub-in { position: relative; display: flex; align-items: center; height: 100%; padding: 0 42px 0 120px; }
+  .ub-rate { color: var(--tan); font-weight: 600; white-space: nowrap; }
+  .ub-stars { letter-spacing: 0; margin-right: 2px; }
+  .ub-mid { position: absolute; left: 400px; white-space: nowrap; }
+  .ub-mid span { margin: 0 6px; }
+  .ub-right { margin-left: auto; display: flex; align-items: center; gap: 0; color: var(--tan); font-weight: 600; white-space: nowrap; }
+  .ub-right > span:not(.ub-dot) { margin: 0 7px; }
+  .ub-right a { color: var(--tan); }
+  .ub a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .ub-dot { width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: #3DBE6A; }
+  @media (max-width: 1279px) { .ub-in { padding: 0 var(--gutter); } .ub-mid { display: none; } }
+  @media (max-width: 767px) {
+    .ub { height: 32px; font-size: 13px; }
+    .ub-in { justify-content: center; }
+    .ub-rate { color: var(--paper); font-weight: 500; }
+    .ub-right { display: none; }
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+// VFACT buttons on builder 4's pages. v: tan (ink text on tan), line (tan text, tan 1.5 px border, on ink),
+// lineInk (ink text + border, on paper/tan), ink (tan text on ink). `arrow` = trailing →, `circle` = the round ink arrow
+// tile of the header phone button. External links get target=_blank rel=noopener.
+interface Props { href: string; v?: 'tan' | 'line' | 'lineInk' | 'ink'; arrow?: boolean; circle?: boolean; w?: number; h?: number;
+  class?: string; external?: boolean; label?: string; t?: string | false; [k: string]: any }
+const { href, v = 'tan', arrow = false, circle = false, w, h = 64, class: cls, external = false, label, t, ...rest } = Astro.props;
+const ext = external ? { target: '_blank', rel: 'noopener' } : {};
+---
+<a href={href} class:list={['bb', `bb-${v}`, circle && 'bb-circ', cls]} style={`${w ? `--bw:${w}px;` : ''}--bh:${h}px`} aria-label={label} data-t={t || undefined} {...ext} {...rest}>
+  <span class="bb-t"><slot /></span>
+  {arrow && <span class="bb-ar" aria-hidden="true">→</span>}
+  {circle && <span class="bb-c" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>}
+</a>
+<style>
+  .bb { display: inline-flex; align-items: center; gap: 10px; width: var(--bw, auto); min-height: var(--bh); padding: 0 22px; border-radius: 4px;
+    font-family: var(--f-sans); font-weight: 600; font-size: 18px; line-height: 24px; text-decoration: none; position: relative;
+    transition: background-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out); }
+  .bb-ar { font-family: var(--f-sans); font-weight: 600; transition: translate var(--dur-2) var(--ease-out); }
+  .bb:hover .bb-ar, .bb:focus-visible .bb-ar { translate: 4px 0; }
+  .bb-tan { background: var(--tan); color: var(--ink); }
+  .bb-tan:hover { background: var(--paper); }
+  .bb-line { color: var(--tan); box-shadow: inset 0 0 0 1.5px var(--tan); }
+  .bb-line:hover { background: var(--tan); color: var(--ink); }
+  .bb-lineInk { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .bb-lineInk:hover { background: var(--ink); color: var(--tan); }
+  .bb-ink { background: var(--ink); color: var(--tan); }
+  .bb-ink:hover { background: var(--coal); color: var(--paper); }
+  .bb-circ { justify-content: space-between; padding-right: 16px; }
+  .bb-c { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--tan); display: grid; place-items: center; flex: none; transition: rotate var(--dur-2) var(--ease-out); }
+  .bb-ink .bb-c { background: var(--tan); color: var(--ink); }
+  .bb:hover .bb-c { rotate: -45deg; }
+  .on-ink .bb:focus-visible, .bb-line:focus-visible { outline-color: var(--tan); }
+  @media (max-width: 767px) { .bb { font-size: 16px; } }
+</style>

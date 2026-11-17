@@ -1,0 +1,137 @@
+---
+// Work wall "Every job gets the stamp" (Figma 631:2037 y 3920-4800; mobile 640:437 y 5209-6221). Text + IG card left,
+// a three-column masonry of his stamped job photos (chamfered tiles), a Yelp quote tile and a "Stamped by Mike" tile.
+// The pipe with the shut-off valve and the "Diagnose first." tag runs along the bottom seam into the next section.
+import Img from '../ui/Img.astro';
+import Eyebrow from './Eyebrow.astro';
+import Badge from './Badge.astro';
+import Wave from './Wave.astro';
+import { SITE } from '../../data/site';
+const arrow = '<svg viewBox="0 0 18 10" width="16" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg>';
+---
+<section class="wk on-ink" aria-labelledby="wk-h" data-m-section>
+  <Wave only="d" y={-36} h={46} c={20} a={14} p={480} m={120} top="#F3ECDD" bottom="#0E0D0B" />
+  <Wave only="m" y={-20} h={26} c={13} a={8} p={300} m={60} w={390} top="#F3ECDD" bottom="#0E0D0B" />
+  <div class="wk-in">
+    <div class="wk-txt">
+      <div class="shead">
+        <Eyebrow data-t="1">From Mike's Instagram</Eyebrow>
+        <h2 id="wk-h" class="h2" data-t="2">Every job <span class="tn">gets the stamp.</span></h2>
+      </div>
+      <p class="lead" data-t="3">Mike stamps his logo on every job he posts<span class="d">: corroded copper, crawl spaces, slab leaks, commercial kitchens</span>. Real jobs, real mess, real fixes.</p>
+      <div class="ig" data-t="4">
+        <p class="ig-h">{SITE.social.instagramHandle}</p>
+        <p class="ig-s">43 posts · 248 followers · checked 17 Nov 2026</p>
+        <a class="ig-b" href={SITE.social.instagram} target="_blank" rel="noopener">Follow the jobs <Fragment set:html={arrow} /><span class="sr-only"> (Instagram, opens in a new tab)</span></a>
+      </div>
+      <p class="want" data-t="3">Want yours stamped? Call <a href={SITE.tel}>{SITE.phone}</a></p>
+    </div>
+    <div class="wall" data-t="4" data-stagger>
+      <figure class="tile t1"><Img name="water-pressure-regulator-replacement" alt="Pressure regulator replaced on the supply pipes, stamped with Mike's logo" sizes="(min-width: 1024px) 240px, 170px" widths={[240, 351]} /></figure>
+      <figure class="tile t2"><Img name="bathroom-plumbing-rough-in" alt="Open framing with new drain and supply rough-in for a bathroom" sizes="(min-width: 1024px) 240px, 170px" widths={[240, 480]} focus="50% 60%" /></figure>
+      <figure class="tile t3"><Img name="drain-slime-job-stamp" alt="Utility room job with Mike's green slime stamp" sizes="(min-width: 1024px) 224px, 170px" widths={[240, 351]} /></figure>
+      <blockquote class="tile qt">
+        <span class="qm" aria-hidden="true">“</span>
+        <p><span class="d">Mike did a couple of jobs in my house! </span>He's my first phone call when I need a plumber.</p>
+        <footer>Brandon A. · Yelp<span class="d"> · Aug 20, 2026</span></footer>
+      </blockquote>
+      <figure class="tile t4"><Img name="corroded-copper-pipe-leak" alt="Copper water lines with green corrosion before the repair" sizes="(min-width: 1024px) 240px, 170px" widths={[240, 351]} focus="50% 12%" /></figure>
+      <div class="tile st" aria-label="Stamped by Mike, est. 2025">
+        <span class="st-hex"><svg viewBox="0 0 184 118" aria-hidden="true"><path d="M30 1h124l29 58-29 58H30L1 59z"/></svg><span class="st-a">Stamped</span><span class="st-b">by Mike</span></span>
+        <span class="st-e">Est 2025</span>
+      </div>
+      <Badge w={150} deg={-14} class="wk-badge" data-t="5" />
+    </div>
+  </div>
+  <!-- seam: pipe along the bottom edge, couplings, the shut-off valve dripping into the next section -->
+  <div class="valve-seam only-d" aria-hidden="true">
+    <svg viewBox="0 0 1440 150" class="vs-pipe"><path class="p-body" d="M0 50 H1360 Q1384 50 1384 74 V96" /><path class="p-fill" d="M0 50 H1360 Q1384 50 1384 74 V96" pathLength="1" data-pipe-water /><path class="p-hi" d="M0 46.5 H1336" /></svg>
+    <svg class="vs-nut" style="left:283px" viewBox="0 0 36 28"><path d="M8 1h20l7 13-7 13H8L1 14z"/></svg>
+    <svg class="vs-nut" style="left:803px" viewBox="0 0 36 28"><path d="M8 1h20l7 13-7 13H8L1 14z"/></svg>
+    <span class="vs-str" style="left:1009px"></span>
+    <span class="vs-tag"><span class="vs-hole"></span>Diagnose first.</span>
+    <svg class="vs-valve" viewBox="0 0 70 110"><path d="M17 4h34l6 14-6 14H17l-6-14z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5"/><rect x="18" y="30" width="32" height="26" fill="#D2C5A6"/><rect x="34" y="10" width="46" height="7" rx="3" fill="#D9412B"/><path class="drip d1" d="M35 64c-4 7-7 10-7 14a7 7 0 0 0 14 0c0-4-3-7-7-14z" fill="#6B5C3E"/><path class="drip d2" d="M35 94c-4 7-7 10-7 14a7 7 0 0 0 14 0c0-4-3-7-7-14z" fill="#BDB29A"/></svg>
+  </div>
+</section>
+<style>
+  .wk { position: relative; z-index: 3; background: var(--ink); color: var(--paper); height: 880px; }
+  .wk-in { position: relative; display: grid; grid-template-columns: 460px 1fr; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; }
+  .wk-txt { padding-top: 113px; }
+  .h2 { margin-top: 15px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 58px; color: var(--paper); }
+  .h2 .tn { display: block; color: var(--tan); }
+  .lead { margin-top: 42px; max-width: 400px; font-size: 17px; line-height: 26px; color: #CFC8B8; }
+  .ig { width: 400px; margin-top: 74px; padding: 23px 24px 24px; background: var(--tan); color: var(--ink); border-radius: 3px; }
+  .ig-h { font-family: var(--f-label); font-weight: 600; font-size: 24px; line-height: 30px; }
+  .ig-s { margin-top: 2px; font-size: 14px; line-height: 18px; color: var(--ink-2); }
+  .ig-b { display: inline-flex; align-items: center; gap: 8px; width: 220px; height: 46px; margin-top: 22px; padding: 0 20px; background: var(--ink); color: var(--paper); font-weight: 600; font-size: 15px; border-radius: 2px; transition: background .25s; }
+  .ig-b:hover { background: #2A2620; }
+  .want { margin-top: 30px; font-weight: 700; font-size: 15px; color: var(--tan); }
+  .want a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .wall { position: relative; display: grid; grid-template-columns: 240px 240px 224px; grid-template-rows: 250px 152px 18px 222px; column-gap: 18px; row-gap: 0; margin: 102px 0 0 0; justify-content: end; }
+  .tile { position: relative; margin: 0; overflow: hidden; background: #1C1A16; clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px, 100% calc(100% - 20px), calc(100% - 20px) 100%, 20px 100%, 0 calc(100% - 20px), 0 20px); }
+  .t1 { grid-column: 1; grid-row: 1 / 3; }
+  .t4 { grid-column: 1; grid-row: 4; margin-top: 0; }
+  .t2 { grid-column: 2; grid-row: 1; }
+  .qt { grid-column: 2; grid-row: 2 / 5; margin-top: 18px; display: flex; flex-direction: column; padding: 30px 24px 42px; background: var(--tan); color: var(--ink); clip-path: none; }
+  .t3 { grid-column: 3; grid-row: 1 / 3; height: 330px; }
+  .st { grid-column: 3; grid-row: 2 / 5; margin-top: 98px; display: grid; place-content: center; justify-items: center; gap: 30px; background: #1C1A16; clip-path: none; }
+  .wall { grid-template-rows: 250px 170px 18px 222px; }
+  .t1 { height: 420px; }
+  .qm { font-family: var(--f-display); font-size: 84px; line-height: 60px; height: 40px; }
+  .qt p { margin-top: 24px; font-family: var(--f-display); font-size: 24px; line-height: 28px; }
+  .qt footer { margin-top: auto; font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .08em; white-space: nowrap; text-transform: uppercase; color: var(--ink-2); }
+  .st-hex { position: relative; display: grid; place-content: center; justify-items: center; width: 184px; height: 118px; }
+  .st-hex svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--tan); stroke-width: 1.5; }
+  .st-a { font-family: var(--f-label); font-weight: 600; font-size: 30px; line-height: 32px; letter-spacing: .16em; text-transform: uppercase; color: var(--tan); }
+  .st-b { font-family: var(--f-script); font-size: 28px; line-height: 28px; color: var(--tan); }
+  .st-e { font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+  .wall :global(.wk-badge) { position: absolute; left: -36px; top: -54px; z-index: 2; }
+  .valve-seam { position: absolute; left: 0; right: 0; bottom: -138px; height: 200px; z-index: 6; pointer-events: none; }
+  .vs-pipe { position: absolute; left: 0; top: 0; width: 100%; height: 150px; overflow: visible; }
+  .p-body { fill: none; stroke: #6B5C3E; stroke-width: 14; }
+  .p-fill { fill: none; stroke: #8E7B55; stroke-width: 8; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .p-hi { fill: none; stroke: #8C8068; stroke-width: 2; }
+  .vs-nut { position: absolute; top: 36px; width: 36px; height: 28px; }
+  .vs-nut path { fill: var(--tan); stroke: #3F3A32; stroke-width: 1.2; }
+  .vs-valve { position: absolute; left: 1350px; top: 88px; width: 70px; height: 110px; overflow: visible; }
+  .d2 { opacity: .8; }
+  .vs-str { position: absolute; top: 57px; width: 1.5px; height: 44px; background: #CFC6B2; }
+  .vs-tag { position: absolute; left: 909px; top: 97px; width: 198px; height: 72px; padding: 22px 0 0 18px; background: var(--tan); border-radius: 3px; transform: rotate(3deg); transform-origin: 50% 0; box-shadow: 0 8px 14px rgba(14,13,11,.22); font-family: var(--f-script); font-size: 26px; line-height: 30px; color: var(--ink); }
+  .vs-hole { position: absolute; left: 50%; top: 11px; width: 9px; height: 9px; margin-left: -4px; border-radius: 50%; background: var(--ink); }
+
+  @media (max-width: 1279px) { .wk { height: auto; padding-bottom: 110px; } .valve-seam { display: none; } }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .wk-in { grid-template-columns: minmax(0, 36%) 1fr; gap: 40px; }
+    .ig { width: 100%; }
+    .h2 { font-size: clamp(40px, 4.6vw, 56px); line-height: 1.04; }
+    .wall { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 14px; }
+  }
+  @media (max-width: 1023px) and (min-width: 768px) { .wk-in { grid-template-columns: 1fr; } .wall { margin-top: 64px; } }
+  @media (max-width: 767px) {
+    .wk { padding-bottom: 70px; }
+    .wk-in { display: flex; flex-direction: column; }
+    .wk-txt { display: contents; }
+    .shead { order: 1; padding-top: 70px; }
+    .h2 { margin-top: 14px; font-size: 36px; line-height: 38px; }
+    .lead { order: 2; margin-top: 14px; font-size: 15px; line-height: 23px; }
+    .lead .d, .qt .d { display: none; }
+    .wall { order: 3; grid-template-columns: 170px 170px; grid-template-rows: 300px 100px 140px 102px; gap: 8px 10px; margin-top: 30px; justify-content: start; }
+    .t1 { grid-column: 1; grid-row: 1; height: auto; }
+    .t2 { grid-column: 2; grid-row: 1; height: 190px; }
+    .qt { grid-column: 2; grid-row: 1 / 3; margin-top: 198px; padding: 18px 14px 20px; }
+    .qt p { margin-top: 18px; font-size: 18px; line-height: 22px; }
+    .qm { font-size: 44px; line-height: 30px; height: 24px; }
+    .qt footer { font-size: 10px; }
+    .t3 { grid-column: 1; grid-row: 2 / 4; height: auto; }
+    .t4 { grid-column: 2; grid-row: 3 / 5; margin-top: 108px; height: 92px; }
+    .st { display: none; }
+    .t3, .t4 { margin-top: 0; }
+    .wall :global(.wk-badge) { display: none; }
+    .ig { order: 4; width: 100%; margin-top: 24px; padding: 18px 20px 20px; }
+    .ig-h { font-size: 22px; }
+    .ig-s { font-size: 12px; }
+    .ig-b { width: 200px; height: 44px; margin-top: 16px; }
+    .want { display: none; }
+    .tile { clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px); }
+  }
+</style>

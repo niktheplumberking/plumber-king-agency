@@ -1,0 +1,16 @@
+---
+// Eyebrow: hex-nut tick + Oswald caps (DESIGN-SYSTEM headline pattern). `dark` = on ink/coal (tan), else tan-dark on paper/tan.
+interface Props { dark?: boolean; class?: string; ink?: boolean; [k: string]: any }
+const { dark, ink, class: cls, ...rest } = Astro.props;
+---
+<p class:list={['eb', dark && 'eb--dark', ink && 'eb--ink', cls]} data-t="1" {...rest}>
+  <svg class="eb-hex" viewBox="0 0 20 16" aria-hidden="true"><path d="M5 1.5h10l3.6 6.5L15 14.5H5L1.4 8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
+  <span><slot /></span>
+</p>
+<style>
+  .eb { display: flex; align-items: center; gap: 9px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 20px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .eb-hex { width: 20px; height: 16px; flex: none; }
+  .eb--dark { color: var(--tan); }
+  .eb--ink { color: var(--ink); }
+  @media (max-width: 767px) { .eb { font-size: 14px; } }
+</style>

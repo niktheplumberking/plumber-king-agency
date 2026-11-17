@@ -1,0 +1,149 @@
+---
+// Family / about teaser (Figma 631:2037 y 3040-3920; mobile 640:437 y 4116-5209). Mascot photo in a chamfered frame with
+// hex bolts and a tan offset block, "Mike's mascot" label, his flyer pinned over the corner; text right; the pipe that
+// comes down out of Services (seam, fills with the scroll) turns under the text and three tags hang from it.
+import Img from '../ui/Img.astro';
+import Eyebrow from './Eyebrow.astro';
+import Wave from './Wave.astro';
+import { SITE } from '../../data/site';
+const TAGS = [
+  { n: '01', h: 'First phone call.', q: '“He\'s my first phone call when I need a plumber.” Brandon A., Yelp', deg: 3 },
+  { n: '02', h: 'Upfront on price.', q: '“upfront and honest with me on pricing” Sal C., Yelp', deg: -2, dark: true },
+  { n: '03', h: '“We don\'t cut corners, we clean them!”', q: 'Mike\'s own words.', deg: 2 },
+];
+const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5 8-4.5 8h-11L1 9z"/></svg>';
+---
+<section class="fm on-paper" aria-labelledby="fm-h" data-m-section>
+  <Wave only="d" y={-50} h={56} c={28} a={20} p={700} m={520} top="#0E0D0B" bottom="#F3ECDD" />
+  <Wave only="m" y={-26} h={32} c={16} a={10} p={390} m={250} w={390} top="#0E0D0B" bottom="#F3ECDD" />
+  <!-- pipe seam: from the Services footer down the right edge, under the text, to the tags -->
+  <svg class="pipe only-d" viewBox="0 0 640 656" aria-hidden="true" data-seam-pipe>
+    <path class="p-body" d="M620 0 V586 Q620 606 600 606 H40" />
+    <path class="p-fill" d="M620 0 V586 Q620 606 600 606 H40" pathLength="1" data-pipe-water />
+    <path class="p-hi" d="M616 0 V584 Q616 602 598 602 H40" />
+  </svg>
+  <span class="nut-d n1" aria-hidden="true" set:html={bolt}></span>
+  <span class="nut-d n2" aria-hidden="true" set:html={bolt}></span>
+  <span class="nut-d n3" aria-hidden="true" set:html={bolt}></span>
+  <div class="fm-in">
+    <figure class="fm-media">
+      <div class="fm-frame" data-t="4" data-fx="frame">
+        <div class="fm-clip"><Img name="mikes-plumbing-3d-mascot-saluting" alt="Mike's 3D mascot saluting with a pipe wrench, from his Instagram" sizes="(min-width: 1024px) 482px, 300px" widths={[247]} focus="50% 40%" /></div>
+        <svg class="fm-line" viewBox="0 0 482 652" preserveAspectRatio="none" aria-hidden="true"><path d="M48 1h386l47 47v556l-47 47H48L1 604V48z" vector-effect="non-scaling-stroke" /></svg>
+        <span class="bolt b1" set:html={bolt}></span><span class="bolt b2" set:html={bolt}></span><span class="bolt b3" set:html={bolt}></span>
+      </div>
+      <figcaption class="fm-lab" data-t="3"><span>Mike's mascot</span>His 3D self, from his Instagram</figcaption>
+      <div class="flyer" data-t="4" data-fx="toss">
+        <span class="tape" aria-hidden="true"></span>
+        <Img name="mikes-plumbing-flyer-services-list" alt="Mike's flyer: his services list, phone number and 'Call today for free estimate!'" sizes="(min-width: 1024px) 270px, 130px" widths={[300, 540]} focus="50% 50%" />
+      </div>
+    </figure>
+    <div class="fm-txt">
+      <div class="shead">
+        <Eyebrow data-t="1">Family owned &amp; operated · Est. 2025</Eyebrow>
+        <h2 id="fm-h" class="h2" data-t="2">An organized van <span class="tn">creates an organized mind.</span></h2>
+      </div>
+      <p class="lead" data-t="3">Mike's Plumbing Services is Mike Navarro's family business, started in Riverside in 2025. In his words: “professionalism starts before the first wrench is turned.”</p>
+      <ul role="list" class="tags" data-t="4" data-stagger>
+        {TAGS.map((t) => (
+          <li class:list={['tag', t.dark && 'dk']} style={`--deg:${t.deg}deg`}>
+            <span class="tag-in">
+              <span class="hole" aria-hidden="true"></span>
+              <span class="tag-n">{t.n}</span>
+              <span class="tag-h">{t.h}</span>
+              <span class="tag-q">{t.q}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="swipe" aria-hidden="true">← swipe →</p>
+      <p class="fm-links" data-t="3"><a class="tl" href="/about">Meet Mike <svg viewBox="0 0 18 10" width="16" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg></a><span class="or">or call <a href={SITE.tel}>{SITE.phone}</a></span></p>
+    </div>
+  </div>
+</section>
+<style>
+  .fm { position: relative; background: var(--paper); color: var(--ink); height: 880px; }
+  .only-d { display: block; }
+  .pipe { position: absolute; left: 680px; top: -106px; width: 640px; height: 656px; overflow: visible; z-index: 3; pointer-events: none; }
+  .p-body { fill: none; stroke: #6B5C3E; stroke-width: 14; }
+  .p-fill { fill: none; stroke: #8E7B55; stroke-width: 8; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .p-hi { fill: none; stroke: #8C8068; stroke-width: 2; opacity: .8; }
+  .nut-d { position: absolute; z-index: 4; width: 34px; height: 28px; pointer-events: none; }
+  .nut-d :global(svg), .bolt :global(svg) { display: block; width: 100%; height: 100%; }
+  .nut-d :global(path) { fill: var(--tan); stroke: #3F3A32; stroke-width: 1.2; }
+  .n1 { left: 1283px; top: -120px; } .n2 { left: 1283px; top: -14px; } .n3 { left: 703px; top: 486px; }
+  .fm-in { position: relative; display: grid; grid-template-columns: 600px 1fr; width: calc(100% - 2 * var(--gutter)); height: 100%; margin-inline: auto; }
+  .fm-media { position: relative; margin: 98px 0 0; }
+  .fm-frame { position: relative; width: 482px; height: 652px; }
+  .fm-frame::before { content: ''; position: absolute; left: 12px; top: 12px; width: 100%; height: 100%; background: var(--tan); clip-path: polygon(48px 0, calc(100% - 48px) 0, 100% 48px, 100% calc(100% - 48px), calc(100% - 48px) 100%, 48px 100%, 0 calc(100% - 48px), 0 48px); }
+  .fm-clip { position: absolute; inset: 0; clip-path: polygon(48px 0, calc(100% - 48px) 0, 100% 48px, 100% calc(100% - 48px), calc(100% - 48px) 100%, 48px 100%, 0 calc(100% - 48px), 0 48px); background: #5A4A38; }
+  .fm-line { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--ink); stroke-width: 2; overflow: visible; }
+  .bolt { position: absolute; width: 22px; height: 18px; }
+  .bolt :global(path) { fill: var(--tan); stroke: var(--ink); stroke-width: 1.2; }
+  .b1 { left: 23px; top: 26px; } .b2 { right: 23px; top: 26px; } .b3 { left: 23px; bottom: 26px; }
+  .fm-lab { position: absolute; left: -24px; top: 92px; z-index: 2; display: grid; gap: 4px; width: 230px; padding: 13px 18px 12px; background: var(--ink); color: var(--paper); font-size: 12px; line-height: 15px; box-shadow: 0 12px 24px -10px rgba(14, 13, 11, .6); }
+  .fm-lab span { font-family: var(--f-label); font-weight: 600; font-size: 16px; line-height: 20px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan); }
+  .flyer { position: absolute; left: 337px; top: 352px; z-index: 2; width: 250px; height: 306px; rotate: -4deg; background: var(--ink); box-shadow: 0 24px 40px -14px rgba(14, 13, 11, .55); }
+  .flyer :global(img) { width: 100%; height: 100%; }
+  .tape { position: absolute; left: 50%; top: -10px; z-index: 2; width: 40px; height: 24px; translate: -50% 0; background: rgba(210, 197, 166, .9); }
+  .fm-txt { position: relative; padding-top: 106px; }
+  .h2 { margin-top: 20px; font-family: var(--f-display); font-weight: 400; font-size: 58px; line-height: 60px; color: var(--ink); }
+  .h2 .tn { display: block; color: var(--tan-dark); }
+  .lead { margin-top: 30px; max-width: 540px; font-size: 17px; line-height: 26px; color: var(--ink-2); }
+  .tags { display: grid; grid-template-columns: 180px 170px 177px; gap: 0 12px; margin: 102px 0 0 8px; padding: 0; width: 570px; }
+  .tag { position: relative; rotate: var(--deg); }
+  .tag::before { content: ''; position: absolute; left: 50%; top: -46px; width: 1px; height: 46px; background: #6B6455; }
+  .tag-in { position: relative; display: grid; align-content: start; min-height: 182px; padding: 38px 16px 14px 14px; background: var(--ink); clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%, 0 22px); }
+  .tag-in::before { content: ''; position: absolute; inset: 1.5px; background: var(--bone); clip-path: polygon(21px 0, calc(100% - 21px) 0, 100% 21px, 100% 100%, 0 100%, 0 21px); }
+  .tag.dk .tag-in::before { background: var(--ink); }
+  .tag-in > * { position: relative; }
+  .hole { position: absolute; left: 50%; top: 14px; width: 11px; height: 11px; margin-left: -5px; border-radius: 50%; border: 1.5px solid #6B6455; background: var(--paper); }
+  .tag-n { font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .1em; color: var(--tan-dark); }
+  .tag-h { margin-top: 6px; font-weight: 700; font-size: 16px; line-height: 20px; color: var(--ink); }
+  .tag-q { margin-top: 10px; font-size: 13px; line-height: 18px; color: var(--ink-2); }
+  .tag.dk .tag-n { color: var(--tan); } .tag.dk .tag-h { color: var(--paper); } .tag.dk .tag-q { color: var(--tan); }
+  .swipe { display: none; }
+  .fm-links { display: flex; align-items: center; gap: 48px; margin-top: 66px; }
+  .tl { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+  .tl:hover { color: var(--tan-dark); }
+  .or { font-size: 16px; color: var(--ink-2); }
+  .or a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  @media (max-width: 1279px) {
+    .fm { height: auto; padding-bottom: 96px; }
+    .pipe, .nut-d { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fm-in { grid-template-columns: minmax(0, 44%) 1fr; gap: 48px; }
+    .fm-frame { width: 100%; height: auto; aspect-ratio: 482 / 652; }
+    .flyer { left: auto; right: -24px; top: auto; bottom: -40px; width: 46%; height: auto; aspect-ratio: 270 / 318; }
+    .fm-lab { left: -12px; }
+    .fm-txt { padding-top: 96px; }
+    .h2 { font-size: clamp(40px, 4.6vw, 58px); line-height: 1.04; }
+    .tags { width: auto; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 72px; }
+    .fm-links { flex-wrap: wrap; gap: 16px 32px; }
+  }
+  @media (max-width: 1023px) and (min-width: 768px) { .fm-in { grid-template-columns: 1fr; } .fm-media { max-width: 420px; } }
+  @media (max-width: 767px) {
+    .fm { padding-bottom: 60px; }
+    .fm-in { display: block; }
+    .fm-media { margin: 68px 0 0 20px; width: 300px; }
+    .fm-frame { width: 300px; height: 380px; }
+    .fm-frame::before { left: 10px; top: 10px; }
+    .fm-clip, .fm-frame::before { clip-path: polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px); }
+    .b1 { left: 14px; top: 16px; width: 18px; height: 15px; } .b2 { right: 14px; top: 16px; width: 18px; height: 15px; } .b3 { display: none; }
+    .fm-lab { left: -12px; top: 60px; width: 196px; padding: 10px 14px; font-size: 11px; }
+    .fm-lab span { font-size: 14px; }
+    .flyer { left: 178px; top: 240px; width: 130px; height: 172px; rotate: 5deg; }
+    .fm-txt { padding-top: 56px; }
+    .h2 { margin-top: 14px; font-size: 36px; line-height: 36px; }
+    .lead { margin-top: 20px; font-size: 15px; line-height: 23px; }
+    .tags { display: flex; gap: 18px; width: auto; margin: 70px calc(-1 * var(--gutter)) 0; padding: 50px var(--gutter) 20px; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 0; }
+    .tag { flex: 0 0 160px; scroll-snap-align: start; }
+    .tag::before { top: -50px; height: 50px; }
+    .tags { scrollbar-width: none; }
+    .swipe { display: block; margin-top: 18px; font-family: var(--f-label); font-size: 11px; letter-spacing: .14em; color: var(--mute); }
+    .fm-links { margin-top: 16px; }
+    .or { display: none; }
+  }
+</style>

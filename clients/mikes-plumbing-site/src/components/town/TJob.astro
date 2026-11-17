@@ -1,0 +1,110 @@
+---
+// 5.3 A town job in the customer's words (Figma 670:3403 y 1700-2460): the Yelp review word for word on a work-order
+// ticket with the town hex stamp; job items pulled out as check marks (only what the review says).
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import { SITE } from '../../data/site';
+import type { TownPage } from '../../data/town-pages';
+interface Props { t: TownPage }
+const { t } = Astro.props;
+const { r } = t.job;
+const date = r.date.replace(/^(\w+) (\d+) (\d+)$/, '$1 $2, $3');
+const first = r.name.split(' ')[0];
+const up = t.name.toUpperCase();
+---
+<section class="tj on-ink" aria-labelledby="tj-h" data-m-section>
+  <Wave d="t2d" m="t2m" top={1700} topM={2271} />
+  <div class="wrap tj-grid">
+    <div class="tj-copy">
+      <Eyebrow dark>{t.name} · On Yelp</Eyebrow>
+      <h2 id="tj-h" class="tj-h" data-t="2">{t.job.h1} <span class="tone">{t.job.h2}</span></h2>
+      <p class="tj-lede" data-t="3">One {t.name} customer, in {t.job.pronoun} own words. Word for word from Yelp.</p>
+      <a class="tj-link tj-link--d" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="3">Read {first}'s review on Yelp <span aria-hidden="true">→</span></a>
+    </div>
+    <article class="tj-card" data-t="4" aria-label={`Yelp review by ${r.name}`}>
+      <header class="tj-head"><span class="tj-title">Work order</span><span class="tj-src">Completed job · from Yelp</span></header>
+      <span class="tj-hole" style="top:98px" aria-hidden="true"></span><span class="tj-hole" style="top:270px" aria-hidden="true"></span><span class="tj-hole" style="top:440px" aria-hidden="true"></span>
+      <dl class="tj-fields">
+        <div><dt>Customer</dt><dd>{r.name}</dd></div>
+        <div><dt>Town</dt><dd>{t.job.townLabel}</dd></div>
+        <div><dt>Yelp review</dt><dd>{date}</dd></div>
+      </dl>
+      <p class="tj-lab">Work done</p>
+      <ul class="tj-done" role="list">
+        {t.job.items.map((i) => <li><span class="tj-box" aria-hidden="true"><svg viewBox="0 0 22 22"><path d="M5 11.5l4 4.5L18 3" fill="none" stroke="#D9412B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>{i}</li>)}
+      </ul>
+      <p class="tj-lab">Customer comments</p>
+      <blockquote class="tj-q"><p>“{r.text}”</p></blockquote>
+      <div class="tj-stamp" aria-hidden="true">
+        <svg viewBox="0 0 172 104"><path d="M30 3h112l27 49-27 49H30L3 52z" fill="none" stroke="#D9412B" stroke-width="3" /><path d="M36 12h100l22 40-22 40H36L14 52z" fill="none" stroke="#D9412B" stroke-width="1.5" /></svg>
+        <span class="tj-st-t" style={`--n:${up.length}`}>{up}</span><span class="tj-st-s">On Yelp</span>
+      </div>
+    </article>
+    <a class="tj-link tj-link--m" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="3">Read {first}'s review on Yelp <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+<style>
+  .tj { position: relative; height: 760px; }
+  .tj-grid { position: relative; height: 100%; }
+  .tj-copy { position: absolute; left: 0; top: 112px; width: 400px; }
+  .tj-h { margin-top: 13px; font-family: var(--f-display); font-weight: 400; font-size: 66px; line-height: 64px; letter-spacing: -.01em; color: var(--paper); }
+  .tj .tone { display: block; color: var(--tan); }
+  .tj-lede { margin-top: 30px; width: 340px; font-size: 17px; line-height: 26px; color: var(--mute); }
+  .tj-link { display: inline-flex; gap: 6px; margin-top: 52px; font-weight: 600; font-size: 15px; color: var(--tan); text-decoration: underline; text-underline-offset: 4px; }
+  .tj-link--d { margin-top: 48px; }
+  .tj-link:hover { color: var(--paper); }
+  .tj-link--m { display: none; }
+
+  .tj-card { position: absolute; left: 434px; top: 101px; width: 760px; height: 560px; background: var(--bone); color: var(--ink); transform: rotate(1.4deg); box-shadow: 0 30px 60px rgba(0,0,0,.45); }
+  .tj-head { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 50px; background: var(--tan); }
+  .tj-title { font-family: var(--f-label); font-weight: 700; font-size: 26px; letter-spacing: .2em; text-transform: uppercase; }
+  .tj-src { font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+  .tj-hole { position: absolute; left: 16px; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); }
+  .tj-fields { display: grid; grid-template-columns: repeat(3, 210px); gap: 20px; margin: 22px 0 0 50px; }
+  .tj-fields div { border-bottom: 1px solid #A79D88; padding-bottom: 4px; }
+  .tj-fields dt, .tj-lab { font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .tj-fields dd { margin: 2px 0 0; font-weight: 600; font-size: 16px; line-height: 22px; }
+  .tj-lab { margin: 20px 0 0 50px; }
+  .tj-done { display: grid; grid-template-columns: repeat(3, 230px); margin: 9px 0 0 50px; padding: 0; list-style: none; }
+  .tj-done li { display: flex; align-items: center; gap: 10px; font-size: 15px; line-height: 22px; }
+  .tj-box { width: 22px; height: 22px; flex: none; border: 1.5px solid var(--ink); border-radius: 2px; position: relative; }
+  .tj-box svg { position: absolute; left: 1px; top: -5px; width: 22px; height: 22px; }
+  .tj-q { margin: 20px 50px 0 46px; }
+  .tj-q p { font-size: 18.6px; line-height: 36px; background: repeating-linear-gradient(transparent 0 34px, #CFC7B5 34px 35px, transparent 35px 36px); padding-bottom: 72px; }
+  .tj-stamp { position: absolute; right: 36px; bottom: -14px; width: 172px; height: 104px; transform: rotate(14deg); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--red); }
+  .tj-stamp svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .tj-st-t { font-family: var(--f-label); font-weight: 600; font-size: min(32px, calc(190px / var(--n))); letter-spacing: .1em; line-height: 1; }
+  .tj-st-s { font-family: var(--f-label); font-weight: 500; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; margin-top: 3px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tj { height: auto; padding: 100px 0 120px; }
+    .tj-grid { height: auto; }
+    .tj-copy { position: static; width: auto; }
+    .tj-card { position: relative; left: auto; top: auto; width: 100%; height: auto; margin-top: 48px; padding-bottom: 30px; }
+    .tj-fields, .tj-done { grid-template-columns: repeat(3, 1fr); margin-right: 40px; }
+  }
+  @media (max-width: 767px) {
+    .tj { height: auto; padding: 48px 0 68px; }
+    .tj-grid { height: auto; }
+    .tj-copy { position: static; width: auto; }
+    .tj-h { margin-top: 13px; font-size: 40px; line-height: 40px; }
+    .tj .tone { display: inline; }
+    .tj-lede, .tj-link--d { display: none; }
+    .tj-link--m { display: inline-flex; margin-top: 22px; }
+    .tj-card { position: relative; left: auto; top: auto; width: auto; height: auto; margin: 26px -6px 0; transform: rotate(1.2deg); padding-bottom: 92px; }
+    .tj-head { height: 50px; padding: 0 20px; }
+    .tj-title { font-size: 20px; } .tj-src { display: none; }
+    .tj-hole { display: none; }
+    .tj-fields { grid-template-columns: 1fr 1fr; gap: 14px 24px; margin: 18px 20px 0; }
+    .tj-fields div { border: 0; padding: 0; }
+    .tj-fields dt, .tj-lab { font-size: 9.5px; }
+    .tj-fields dd { font-size: 15px; }
+    .tj-lab { margin: 20px 20px 0; }
+    .tj-done { grid-template-columns: 1fr; gap: 6px; margin: 6px 20px 0; }
+    .tj-done li { font-size: 14px; }
+    .tj-box { width: 18px; height: 18px; } .tj-box svg { width: 18px; height: 18px; }
+    .tj-q { margin: 10px 20px 0; }
+    .tj-q p { font-size: 15px; line-height: 24px; background: none; padding: 0; }
+    .tj-stamp { right: auto; left: 160px; bottom: -14px; width: 150px; height: 90px; }
+  }
+</style>

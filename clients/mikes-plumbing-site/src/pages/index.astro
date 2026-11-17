@@ -1,5 +1,19 @@
 ---
-// STUB: builder 1 builds Home here from Figma 631:2037 / 640:437.
+// Home (Figma 631:2037 desktop, 640:437 mobile). Sections top to bottom; each component holds its own section.
 import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import Reviews from '../components/home/Reviews.astro';
+import Services from '../components/home/Services.astro';
+import Family from '../components/home/Family.astro';
+import Work from '../components/home/Work.astro';
 ---
-<Base title="Plumber in Riverside, CA | Mike's Plumbing Services" description="Family-owned plumbing in Riverside, CA." path="/"><section data-m-section data-m-hero><h1>Plumber in Riverside, CA</h1></section></Base>
+<Base title="Plumber in Riverside, CA | Mike's Plumbing Services"
+  description="Family-owned plumbing for homes and businesses across the Inland Empire, Orange County and Los Angeles. Rated 5.0 on Yelp. Free estimates."
+  path="/" og="mike-navarro-loading-plumbing-van-riverside" ogAlt="Mike Navarro at the back of his plumbing van in Riverside, CA"
+  preload={{ name: 'mike-navarro-loading-plumbing-van-riverside', sizes: '(min-width: 1024px) 522px, 342px', widths: [360, 540, 720] }}>
+  <Hero />
+  <Reviews />
+  <Services />
+  <Family />
+  <Work />
+</Base>

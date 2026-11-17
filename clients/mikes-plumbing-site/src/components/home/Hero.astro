@@ -1,0 +1,114 @@
+---
+// Home hero (Figma 631:2037 y 180-980; mobile 640:437 y 164-1234). Split: eyebrow, two-tone H1, rule, lead, towns,
+// call + text buttons, four proof chips; right: Mike at his van in a chamfered hex frame, two big hex outlines behind,
+// his badge as a stamp, the owner caption card. The estimate bar that straddles the edge lives in EstimateBar.astro.
+import Img from '../ui/Img.astro';
+import Btn from '../global/Btn.astro';
+import Eyebrow from './Eyebrow.astro';
+import Badge from './Badge.astro';
+import { SITE } from '../../data/site';
+---
+<section class="hero on-ink" aria-labelledby="hero-h" data-m-section data-m-hero>
+  <svg class="hx-bg" viewBox="0 0 1440 800" aria-hidden="true" preserveAspectRatio="xMaxYMin slice">
+    <path d="M793 40h559l103 260-103 260H793L690 300z" />
+    <path d="M800 78h548l57 232-57 232H800l-60-232z" />
+  </svg>
+  <div class="hero-in">
+    <div class="hero-txt">
+      <Eyebrow data-t="1">{SITE.tagline}</Eyebrow>
+      <h1 id="hero-h" class="h1" data-t="2"><span class="l1">Plumber in</span> <span class="l2">Riverside, CA</span></h1>
+      <span class="rule" data-t="5" aria-hidden="true"></span>
+      <p class="lead" data-t="3" data-fx="nudge">Family-owned plumbing for homes and businesses across the Inland Empire, Orange County and Los Angeles. Rated 5.0 on Yelp.</p>
+      <p class="towns" data-t="3"><span class="d">Riverside · Corona · Moreno Valley · Murrieta · Orange County · Los Angeles</span><span class="m">Riverside · Corona · Moreno Valley · Murrieta · OC · LA</span></p>
+      <div class="btns" data-t="3">
+        <Btn v="call" class="b-call" sub="Tap to call · Free estimate" data-magnetic />
+        <Btn v="text" class="b-text" sub="Get an answer before he drives out" />
+      </div>
+      <ul role="list" class="chips" data-t="4" data-stagger>
+        <li><b><span aria-hidden="true">★ </span>5.0</b><span>Yelp · 20 reviews</span></li>
+        <li class="dk"><b>Free</b><span>estimates</span></li>
+        <li><b>Est.</b><span>2025<span class="dk"> · family owned</span></span></li>
+        <li class="dk"><b>Homes</b><span>+ businesses</span></li>
+      </ul>
+    </div>
+    <figure class="hero-media">
+      <div class="ph" data-t="4" data-fx="frame">
+        <div class="ph-clip"><Img name="mike-navarro-loading-plumbing-van-riverside" alt="Mike Navarro loading the back of his white plumbing van in Riverside, CA" sizes="(min-width: 1024px) 522px, 342px" widths={[360, 540, 720]} priority /></div>
+        <svg class="ph-line" viewBox="0 0 522 622" preserveAspectRatio="none" aria-hidden="true"><path d="M1 1h476l44 44v576H48L1 574z" vector-effect="non-scaling-stroke" /></svg>
+      </div>
+      <Badge w={188} deg={-9} class="ph-badge" data-t="5" />
+      <figcaption class="cap" data-t="3"><span class="cap-k">Mike Navarro · Owner</span><span class="cap-t">Riverside, CA · Est. 2025<span class="dk"> · homes and businesses</span></span></figcaption>
+    </figure>
+  </div>
+</section>
+<style>
+  .hero { position: relative; height: 800px; background: var(--ink); overflow: clip; }
+  .hx-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; fill: none; stroke: #2A2620; stroke-width: 1.2; pointer-events: none; }
+  .hero-in { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 522px; width: calc(100% - 2 * var(--gutter)); height: 100%; margin-inline: auto; }
+  .hero-txt { padding-top: 98px; }
+  .h1 { margin-top: 19px; font-family: var(--f-display); font-weight: 400; font-size: 84px; line-height: 87px; letter-spacing: 0; color: var(--paper); }
+  .h1 span { display: block; }
+  .h1 .l2 { color: var(--tan); }
+  .rule { display: block; width: 72px; height: 3px; margin-top: 18px; background: var(--tan); }
+  .lead { margin-top: 30px; max-width: 565px; font-size: 19px; line-height: 29px; color: #E2DACA; }
+  .towns { margin-top: 50px; font-weight: 600; font-size: 14px; line-height: 18px; color: var(--tan); }
+  .towns .m { display: none; }
+  .btns { display: flex; gap: 16px; margin-top: 27px; }
+  .btns :global(.b-call) { width: 288px; }
+  .btns :global(.b-text) { width: 256px; }
+  .chips { display: flex; gap: 10px; margin: 28px 0 0; padding: 0; }
+  .chips li { display: flex; align-items: flex-start; gap: 5px; height: 52px; padding: 13px 12px 0 13px; border: 2px solid #2A2620; }
+  .chips b { font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 26px; color: var(--tan); white-space: nowrap; }
+  .chips li > span { padding-top: 3px; font-size: 13px; line-height: 16px; color: #C9C1B0; white-space: nowrap; }
+  .hero-media { position: relative; margin: 63px 0 0; height: 622px; }
+  .ph { position: relative; width: 522px; height: 622px; }
+  .ph-clip { position: absolute; inset: 0; clip-path: polygon(0 0, 477px 0, 522px 45px, 522px 622px, 48px 622px, 0 574px); background: var(--coal); }
+  .ph-line { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--tan); stroke-width: 2; overflow: visible; pointer-events: none; }
+  .hero-media :global(.ph-badge) { position: absolute; left: -46px; top: -43px; z-index: 2; }
+  .cap { position: absolute; left: 219px; top: 557px; z-index: 2; display: grid; gap: 4px; width: 330px; min-height: 78px; padding: 15px 18px 12px; background: var(--paper); color: var(--ink); box-shadow: 0 16px 32px -12px rgba(0, 0, 0, .6); }
+  .cap-k { font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .cap-t { font-style: italic; font-size: 14px; line-height: 16px; }
+
+  /* tablet: same split, fluid */
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .hero { height: auto; padding-bottom: 120px; }
+    .hero-in { grid-template-columns: 1fr minmax(0, 40%); gap: 40px; }
+    .hero-txt { padding-top: 64px; }
+    .h1 { font-size: clamp(56px, 6.6vw, 84px); line-height: 1.04; }
+    .btns { flex-wrap: wrap; }
+    .chips { flex-wrap: wrap; }
+    .hero-media { height: auto; }
+    .ph { width: 100%; height: auto; aspect-ratio: 522 / 622; }
+    .ph-clip { clip-path: polygon(0 0, calc(100% - 45px) 0, 100% 45px, 100% 100%, 48px 100%, 0 calc(100% - 48px)); }
+    .cap { left: auto; right: -12px; top: auto; bottom: -40px; width: min(330px, 90%); }
+    .hero-media :global(.ph-badge) { left: -24px; width: 150px; }
+  }
+  @media (max-width: 1023px) and (min-width: 768px) { .hero-in { grid-template-columns: 1fr; } .hero-media { max-width: 460px; margin: 56px auto 0; } }
+  /* phone: the 390 frame */
+  @media (max-width: 767px) {
+    .hero { height: auto; padding-bottom: 50px; }
+    .hx-bg { display: none; }
+    .hero-in { display: block; }
+    .hero-txt { padding-top: 35px; }
+    .h1 { margin-top: 15px; font-size: 46px; line-height: 48px; }
+    .rule { width: 56px; margin-top: 13px; }
+    .lead { margin-top: 18px; font-size: 16px; line-height: 24px; }
+    .towns { margin-top: 61px; font-size: 13px; line-height: 16px; }
+    .towns .d { display: none; } .towns .m { display: inline; }
+    .btns { flex-direction: column; gap: 12px; margin-top: 21px; }
+    .btns :global(.b-call), .btns :global(.b-text) { width: 100%; }
+    .chips { gap: 8px; margin-top: 20px; }
+    .chips li { height: 44px; padding: 10px 12px 0 11px; border-width: 1.5px; }
+    .chips li.dk, .chips .dk { display: none; }
+    .chips b { font-size: 17px; line-height: 22px; }
+    .chips li > span { font-size: 12px; padding-top: 2px; }
+    .hero-media { margin: 31px 0 0 9px; width: calc(100% - 8px); height: auto; }
+    .ph { width: 100%; height: auto; aspect-ratio: 342 / 422; }
+    .ph-clip { clip-path: polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 34px 100%, 0 calc(100% - 34px)); }
+    .hero-media :global(.ph-badge) { left: -6px; top: -30px; width: 118px; }
+    .cap { left: auto; right: -9px; top: auto; bottom: 4px; width: 230px; min-height: 58px; padding: 10px 14px 9px; gap: 3px; }
+    .cap-k { font-size: 12px; line-height: 14px; }
+    .cap-t { font-size: 13px; line-height: 16px; }
+    .cap .dk { display: none; }
+  }
+</style>

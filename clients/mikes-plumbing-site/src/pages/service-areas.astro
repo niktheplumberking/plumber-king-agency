@@ -1,0 +1,29 @@
+---
+// Service areas (Figma 670:10564 desktop / 670:12818 mobile, PAGES-COPY section 6).
+import Base from '../layouts/Base.astro';
+import SAHero from '../components/service-areas/SAHero.astro';
+import SARegions from '../components/service-areas/SARegions.astro';
+import SATowns from '../components/service-areas/SATowns.astro';
+import SAProof from '../components/service-areas/SAProof.astro';
+import SACta from '../components/service-areas/SACta.astro';
+import { BUSINESS_ID, abs } from '../lib/schema';
+import { TOWNS } from '../data/towns';
+const path = '/service-areas';
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', url: abs(path), name: 'Service areas', about: { '@id': BUSINESS_ID() },
+    hasPart: TOWNS.map((t) => ({ '@type': 'WebPage', name: `Plumber in ${t.name}, CA`, url: abs(t.href) })) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/') },
+    { '@type': 'ListItem', position: 2, name: 'Service areas', item: abs(path) } ] },
+];
+---
+<Base title="Service Areas | Plumber in IE, OC & LA | Mike's"
+  description="Mike's Plumbing Services is based in Riverside, CA and serves the Inland Empire, Orange County and Los Angeles. Free estimate: (951) 809-9533."
+  path={path} og="map-inland-empire-orange-county-los-angeles" ogAlt="Map of the Inland Empire, Orange County and Los Angeles served by Mike's Plumbing Services" jsonld={ld} estimate="/contact">
+  <SAHero />
+  <SARegions />
+  <SATowns />
+  <SAProof />
+  <SACta />
+</Base>
+<script>import '../components/b3kit/scrub';</script>

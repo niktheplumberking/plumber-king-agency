@@ -1,0 +1,8 @@
+---
+// Underlined text link with an arrow (Figma: Archivo 600 16, underline 1 px, arrow 16 px, 8 px gap).
+interface Props { href: string; tone?: 'tan' | 'ink' | 'paper'; class?: string; external?: boolean; t?: string | false; [k: string]: any }
+const { href, tone = 'ink', class: cls, external, t = '3', ...rest } = Astro.props;
+---
+<a href={href} class:list={['sv-tl', `sv-tl--${tone}`, cls]} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined} data-t={t || undefined} {...rest}>
+  <span class="sv-tl-u"><slot /></span><svg viewBox="0 0 16 10" width="16" height="10" aria-hidden="true"><path d="M0 5h14.5M10.5 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+</a>

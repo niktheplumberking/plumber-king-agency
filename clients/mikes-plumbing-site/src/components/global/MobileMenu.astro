@@ -1,0 +1,79 @@
+---
+// Mobile / tablet menu dialog (below 1200 px): full-screen ink sheet, revealed from the menu button (ui.ts data-mnav:
+// circle reveal, focus trap, Escape, scroll lock). Big Abril links, the two sub lists as disclosures, call + text buttons.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-cream.png';
+import Btn from './Btn.astro';
+import { SERVICE_PAGES, FAMILIES } from '../../data/services';
+import { TOWNS } from '../../data/towns';
+import { SITE } from '../../data/site';
+interface Props { path: string; estimate?: string }
+const { path } = Astro.props;
+const LINKS = [
+  { label: 'About Mike', href: '/about' },
+  { label: 'Reviews', href: '/reviews' },
+  { label: 'Our work', href: '/our-work' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+<div class="mnav on-ink" id="mnav" role="dialog" aria-modal="true" aria-label="Menu" data-mnav hidden>
+  <div class="mn-top">
+    <a href="/" class="mn-logo" aria-label={`${SITE.name}, home`}><Image src={logo} alt="" width={156} height={100} loading="lazy" /></a>
+    <button type="button" class="mn-close" data-menu-close>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="sr-only">Close menu</span>
+    </button>
+  </div>
+  <nav class="mn-body" aria-label="Mobile">
+    <ul role="list" class="mn-list">
+      <li data-mn-item>
+        <details class="mn-d">
+          <summary>Services<span class="pm" aria-hidden="true"></span></summary>
+          <ul role="list" class="mn-sub">
+            {SERVICE_PAGES.map((s) => <li><a href={s.href}>{s.name}</a></li>)}
+            {FAMILIES.map((f) => <li><a href={f.href}>{f.name}</a></li>)}
+            <li><a href="/services" class="mn-all">All services →</a></li>
+          </ul>
+        </details>
+      </li>
+      <li data-mn-item>
+        <details class="mn-d">
+          <summary>Areas<span class="pm" aria-hidden="true"></span></summary>
+          <ul role="list" class="mn-sub">
+            {TOWNS.map((t) => <li><a href={t.href}>{t.slug === 'riverside' ? 'Riverside (home base)' : t.name}</a></li>)}
+            <li><a href="/service-areas" class="mn-all">All service areas →</a></li>
+          </ul>
+        </details>
+      </li>
+      {LINKS.map((l) => <li data-mn-item><a class="mn-a" href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a></li>)}
+    </ul>
+    <div class="mn-cta" data-mn-item>
+      <Btn v="call" sub="Tap to call · Free estimate" />
+      <Btn v="text" sub="He'll tell you what it is" />
+    </div>
+    <p class="mn-meta" data-mn-item>★ {SITE.rating.value} on Yelp · {SITE.rating.count} reviews<br />{SITE.hoursYelp} · {SITE.days}</p>
+  </nav>
+</div>
+<style>
+  .mnav { position: fixed; inset: 0; z-index: var(--z-menu); display: flex; flex-direction: column; background: var(--ink); color: var(--paper); overflow-y: auto; overscroll-behavior: contain; }
+  .mnav[hidden] { display: none; }
+  .mn-top { display: flex; align-items: center; justify-content: space-between; height: 72px; padding: 0 var(--gutter); border-bottom: 1px solid var(--line-d); flex: none; }
+  .mn-logo { width: 78px; }
+  .mn-logo :global(img) { width: 100%; height: auto; }
+  .mn-close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--paper); }
+  .mn-body { display: grid; gap: 28px; padding: 16px var(--gutter) 40px; }
+  .mn-list { margin: 0; padding: 0; }
+  .mn-list > li { border-bottom: 1px dashed var(--line-d); }
+  .mn-a, .mn-d summary { display: flex; align-items: center; justify-content: space-between; min-height: 60px; font-family: var(--f-display); font-size: 30px; line-height: 36px; cursor: pointer; list-style: none; }
+  .mn-d summary::-webkit-details-marker { display: none; }
+  .mn-a[aria-current='page'] { color: var(--tan); }
+  .pm { position: relative; width: 18px; height: 18px; }
+  .pm::before, .pm::after { content: ''; position: absolute; left: 0; top: 8px; width: 18px; height: 2px; background: var(--tan); transition: transform .3s var(--ease-out); }
+  .pm::after { transform: rotate(90deg); }
+  .mn-d[open] .pm::after { transform: rotate(0); }
+  .mn-sub { display: grid; gap: 0; margin: 0 0 14px; padding: 0; }
+  .mn-sub a { display: flex; align-items: center; min-height: 44px; font-size: 16px; color: var(--paper); }
+  .mn-sub .mn-all { color: var(--tan); font-weight: 600; }
+  .mn-cta { display: grid; gap: 12px; }
+  .mn-meta { font-size: 13px; line-height: 20px; color: var(--mute); }
+</style>

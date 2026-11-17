@@ -1,0 +1,39 @@
+---
+// Wave seam (builder 4 pages). Every VFACT wave is a pure sine, measured from the Figma PNGs (fit RMS < 0.6 px):
+//   edge y(x) = a * sin(2πx / L + phi), relative to the boundary line (the lower section's top), x in frame px.
+// The SVG sits on the TOP edge of the lower section and is filled with that section's colour, so it bites into the
+// section above; where the edge dips below the boundary, the trough is filled with `above` (the upper section's colour),
+// because the upper section itself stops at the boundary. `d` = desktop sine (1440 frame), `m` = mobile sine (390 frame). `clip` = the edge never goes below
+// this many px under the boundary (thank-you strip: the wave's troughs are cut flat by the strip's bottom).
+// `x0`/`x1` limit the wave to part of the frame (FAQ: two half-width waves of different colours).
+interface Sine { a: number; L: number; phi?: number; clip?: number; x0?: number; x1?: number; W?: number }
+interface Props { d: Sine; m?: Sine; fill: string; above: string; class?: string; }
+const { d, m, fill, above, class: cls } = Astro.props;
+const build = (s: Sine, W: number) => {
+  const phi = s.phi ?? -Math.PI;
+  const x0 = s.x0 ?? 0, x1 = s.x1 ?? (s.W ?? W);
+  const top = s.a;                         // svg y of the boundary line
+  const low = s.clip != null ? Math.min(s.a, s.clip) : s.a;
+  const H = Math.ceil(top + low + 2);
+  const pts: string[] = []; const up: string[] = [];
+  const step = (x1 - x0) / Math.ceil((x1 - x0) / (W > 600 ? 8 : 3));
+  for (let x = x0; x <= x1 + 0.01; x += step) {
+    let y = top + s.a * Math.sin((2 * Math.PI * x) / s.L + phi);
+    if (s.clip != null) y = Math.min(y, top + s.clip);
+    pts.push(`${(x - x0).toFixed(1)} ${y.toFixed(2)}`);
+    up.push(`${(x - x0).toFixed(1)} ${Math.max(y, top).toFixed(2)}`);
+  }
+  return { vb: `0 0 ${x1 - x0} ${H}`, path: `M0 ${H} L${pts.join(' L')} L${x1 - x0} ${H}Z`, upper: `M0 ${top - 1} L0 ${top} L${up.join(' L')} L${x1 - x0} ${top - 1}Z`, top, H, left: (x0 / W) * 100, width: ((x1 - x0) / W) * 100 };
+};
+const D = build(d, d.W ?? 1440);
+const M = m ? build(m, m.W ?? 390) : null;
+---
+<svg class:list={['wv', M && 'wv-d', cls]} viewBox={D.vb} preserveAspectRatio="none" aria-hidden="true" focusable="false"
+  style={`--t:${-D.top}px;--h:${D.H}px;--l:${D.left}%;--w:${D.width}%`}><path fill={above} d={D.upper} /><path fill={fill} d={D.path} /></svg>
+{M && <svg class:list={['wv', 'wv-m', cls]} viewBox={M.vb} preserveAspectRatio="none" aria-hidden="true" focusable="false"
+  style={`--t:${-M.top}px;--h:${M.H}px;--l:${M.left}%;--w:${M.width}%`}><path fill={above} d={M.upper} /><path fill={fill} d={M.path} /></svg>}
+<style>
+  .wv { position: absolute; z-index: 1; top: var(--t); left: var(--l); width: var(--w); height: var(--h); display: block; pointer-events: none; overflow: visible; }
+  .wv-m { display: none; }
+  @media (max-width: 767px) { .wv-d { display: none; } .wv-m { display: block; } }
+</style>

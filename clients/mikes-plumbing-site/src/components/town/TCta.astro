@@ -1,0 +1,86 @@
+---
+// 5.8 Final CTA (Figma 670:3403 y 4680-5320): the town road sign on two posts, headline, call + estimate, nearby towns.
+import Wave from '../b3kit/Wave.astro';
+import CallBtn from '../b3kit/CallBtn.astro';
+import GhostBtn from '../b3kit/GhostBtn.astro';
+import { SITE } from '../../data/site';
+import type { TownPage } from '../../data/town-pages';
+interface Props { t: TownPage }
+const { t } = Astro.props;
+const up = t.name.toUpperCase();
+---
+<section class="tx on-ink" aria-labelledby="tx-h" data-m-section>
+  <Wave d="t5d" m="t5m" top={4680} topM={5659} />
+  <div class="wrap tx-grid">
+    <div class="tx-signwrap" aria-hidden="true">
+      <span class="tx-post tx-post--a"></span><span class="tx-post tx-post--b"></span>
+      <div class="tx-sign" data-t="4">
+        <span class="tx-s1">Mike's Plumbing Services</span>
+        <span class="tx-s2" style={`--n:${up.length}`}>{up}</span>
+        <span class="tx-s3">Free estimate · {SITE.phone}</span>
+      </div>
+    </div>
+    <div class="tx-copy">
+      <h2 id="tx-h" class="tx-h" data-t="2">Need a plumber in {t.name}? <span class="tone">Mike's got the fix.</span></h2>
+      <div class="tx-btns">
+        <CallBtn v="tan" />
+        <GhostBtn href="/contact" dark w={240} />
+      </div>
+      <p class="tx-near-l" data-t="1">Also nearby</p>
+      <ul class="tx-near" role="list" data-t="5" data-stagger>
+        {t.nearby.map((n) => <li><a class="tx-tag" href={n.href}>{n.name}<span class="sr-only">{n.slug === 'riverside' ? ' (home base)' : ' plumber'}</span></a></li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+<style>
+  .tx { position: relative; height: 640px; overflow: hidden; }
+  .tx-grid { position: relative; height: 100%; }
+  .tx-signwrap { position: absolute; left: -18px; top: 121px; width: 526px; height: 519px; }
+  .tx-post { position: absolute; top: 240px; bottom: 0; width: 22px; background: #8C8478; }
+  .tx-post--a { left: 98px; } .tx-post--b { left: 418px; }
+  .tx-sign { position: absolute; left: 0; top: 0; width: 520px; height: 262px; padding: 34px 0 0; transform: rotate(2.4deg); background: var(--tan); border-radius: 10px; box-shadow: 0 24px 40px rgba(0,0,0,.5);
+    display: flex; flex-direction: column; align-items: center; color: var(--ink); }
+  .tx-sign::before { content: ''; position: absolute; inset: 10px; border: 3px solid var(--ink); border-radius: 6px; }
+  .tx-s1 { font-family: var(--f-label); font-weight: 500; font-size: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+  .tx-s2 { margin-top: 16px; font-family: var(--f-label); font-weight: 700; font-size: min(100px, calc(600px / var(--n))); line-height: 112px; height: 112px; display: flex; align-items: center; letter-spacing: .05em; }
+  .tx-s3 { margin-top: 10px; font-family: var(--f-label); font-weight: 600; font-size: 20px; letter-spacing: .08em; text-transform: uppercase; }
+  .tx-copy { position: absolute; left: 620px; top: 132px; width: 600px; }
+  .tx-h { font-family: var(--f-display); font-weight: 400; font-size: 47px; line-height: 50px; letter-spacing: 0; color: var(--paper); }
+  .tx .tone { display: block; color: var(--tan); }
+  .tx-btns { display: flex; gap: 16px; margin-top: 56px; }
+  .tx-near-l { margin-top: 58px; font-family: var(--f-label); font-weight: 500; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); }
+  .tx-near { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0 0; padding: 0; list-style: none; }
+  .tx-tag { display: inline-flex; align-items: center; height: 40px; padding: 0 30px 0 16px; background: var(--tan); color: var(--ink); clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+    font-family: var(--f-label); font-weight: 600; font-size: 16px; letter-spacing: .06em; text-transform: uppercase; transition: background-color var(--dur-2); }
+  .tx-tag:hover { background: var(--paper); }
+  .tx-tag:focus-visible { outline-offset: 0; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tx { height: auto; padding: 100px 0 0; }
+    .tx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; height: auto; }
+    .tx-signwrap { position: relative; left: 0; top: 0; width: 100%; height: 440px; }
+    .tx-sign { width: 100%; height: 220px; }
+    .tx-s2 { font-size: min(84px, calc(520px / var(--n))); }
+    .tx-copy { position: static; width: auto; padding-bottom: 80px; }
+    .tx-h { font-size: clamp(38px, 4.2vw, 50px); line-height: 1.05; }
+    .tx-btns { flex-wrap: wrap; }
+  }
+  @media (max-width: 767px) {
+    .tx { height: auto; padding: 60px 0 46px; }
+    .tx-grid { display: flex; flex-direction: column; height: auto; }
+    .tx-signwrap { position: relative; left: 0; top: 0; width: 100%; height: 300px; order: 0; margin-bottom: 0; }
+    .tx-sign { left: 6px; width: 334px; height: 172px; padding-top: 24px; transform: rotate(2.4deg); }
+    .tx-sign::before { inset: 7px; border-width: 2px; }
+    .tx-s1 { font-size: 11px; } .tx-s2 { margin-top: 6px; height: 74px; line-height: 74px; font-size: min(74px, calc(400px / var(--n))); } .tx-s3 { margin-top: 6px; font-size: 13px; }
+    .tx-post { top: 160px; width: 14px; } .tx-post--a { left: 76px; } .tx-post--b { left: 262px; }
+    .tx-copy { position: static; width: auto; margin-top: 40px; }
+    .tx-h { font-size: 34px; line-height: 37px; }
+    .tx .tone { display: inline; }
+    .tx-btns { flex-direction: column; gap: 14px; margin-top: 24px; }
+    .tx-btns :global(.gb) { height: 56px; width: 100%; }
+    .tx-near-l { margin-top: 28px; font-size: 12px; }
+    .tx-near { gap: 8px; margin-top: 10px; }
+    .tx-tag { height: 32px; font-size: 13px; padding: 0 22px 0 10px; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); }
+  }
+</style>

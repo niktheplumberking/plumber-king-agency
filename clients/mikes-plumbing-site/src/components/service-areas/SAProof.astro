@@ -1,0 +1,122 @@
+---
+// 6.4 Proof from around the map (Figma 670:10564 y 2090-3090 / 670:12818 y 2424-3482): paper quote tags pinned to a second,
+// cropped map with strings to each town. Quotes are excerpts taken from REVIEWS (checked to be word for word at build).
+// Scroll moment: desktop, the strings run out to each tag in order (01-05); mobile, the numbered pins and cards light in order.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import { REVIEWS } from '../../data/reviews';
+import { MAP_PTS } from '../../data/town-pages';
+const ex = (name: string, part: string) => {
+  const r = REVIEWS.find((x) => x.name === name);
+  if (!r || !r.text.includes(part)) throw new Error(`SAProof: "${part}" is not in ${name}'s review`);
+  return part;
+};
+// Order = the mobile numbering (west to east). tag = desktop tag box (x, y, rot) in the 1160 x 640 board; pin = string end on the tag.
+const P = [
+  { town: 'West Hollywood', k: 'west-hollywood', name: 'Bruce H.', q: ex('Bruce H.', 'He is an excellent communicator.'), tag: [36, 251, -2], pin: [165, 255] },
+  { town: 'Los Angeles', k: 'los-angeles', name: 'Brandon A.', q: ex('Brandon A.', "He's my first phone call when I need a plumber."), tag: [300, 33, -2], pin: [425, 46] },
+  { town: 'Buena Park', k: 'buena-park', name: 'Erik N.', q: ex('Erik N.', 'Would recommend and will use again'), tag: [248, 422, 1], pin: [375, 426] },
+  { town: 'Corona', k: 'corona', name: 'Sal C.', q: ex('Sal C.', 'upfront and honest with me on pricing'), tag: [640, 406, -1.5], pin: [765, 416] },
+  { town: 'Moreno Valley', k: 'moreno-valley', name: 'Tewolde T.', q: ex('Tewolde T.', 'very professional and reasonable price'), tag: [836, 24, 2], pin: [965, 29] },
+] as const;
+const W = 1160, H = 640, S = 1.2, OX = -42, OY = -108;          // desktop board crop
+const WM = 350, HM = 240, SM = 0.379, OXM = -10, OYM = -15;       // mobile board crop
+const at = (k: string, s: number, ox: number, oy: number) => [MAP_PTS[k][0] * s + ox, MAP_PTS[k][1] * s + oy];
+const pc = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+const [rx, ry] = at('riverside', S, OX, OY), [rxm, rym] = at('riverside', SM, OXM, OYM);
+const n = P.length;
+---
+<section class="sp" aria-labelledby="sp-h" data-m-section>
+  <Wave d="s3d" m="s3m" top={2090} topM={2424} />
+  <div class="wrap">
+    <Eyebrow>On Yelp</Eyebrow>
+    <h2 id="sp-h" class="sp-h" data-t="2">Customers from <span class="tone">all three regions.</span></h2>
+    <figure class="sp-fig">
+      <div class="sp-board" data-t="4" data-b3-scrub data-b3-start="top 75%" data-b3-end="bottom 70%">
+        <span class="sp-nail" style="left:10px;top:10px" aria-hidden="true"></span><span class="sp-nail" style="right:10px;top:10px" aria-hidden="true"></span>
+        <span class="sp-nail" style="left:10px;bottom:10px" aria-hidden="true"></span><span class="sp-nail" style="right:10px;bottom:10px" aria-hidden="true"></span>
+        <div class="sp-area"><div class="sp-map">
+          <div class="sp-tiles sp-tiles--d" style={`left:${pc(OX, W)};top:${pc(OY, H)};width:${pc(1129 * S, W)};height:${pc(701 * S, H)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="Map of Southern California with the towns Mike's Yelp reviewers are from" sizes="1360px" widths={[1129]} /></div>
+          <div class="sp-tiles sp-tiles--m" style={`left:${pc(OXM, WM)};top:${pc(OYM, HM)};width:${pc(1129 * SM, WM)};height:${pc(701 * SM, HM)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="" sizes="430px" widths={[600]} /></div>
+          <svg class="sp-strings" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
+            {P.map((p, i) => { const [x, y] = at(p.k, S, OX, OY); return <path d={`M${x.toFixed(1)} ${y.toFixed(1)} L${p.pin[0]} ${p.pin[1]}`} pathLength="1" data-b3-path data-b3-from={(i / n).toFixed(3)} data-b3-to={((i + 0.8) / n).toFixed(3)} />; })}
+          </svg>
+          {P.map((p, i) => { const [x, y] = at(p.k, S, OX, OY), [xm, ym] = at(p.k, SM, OXM, OYM); return (
+            <span class="sp-dot" style={`--x:${pc(x, W)};--y:${pc(y, H)};--xm:${pc(xm, WM)};--ym:${pc(ym, HM)}`} aria-hidden="true"><span class="sp-num">{i + 1}</span></span>
+          ); })}
+          <span class="sp-base" style={`--x:${pc(rx, W)};--y:${pc(ry, H)};--xm:${pc(rxm, WM)};--ym:${pc(rym, HM)}`} aria-hidden="true"></span>
+          <span class="sp-basetag" style={`left:${pc(rx + 24, W)};top:${pc(ry - 14, H)}`} aria-hidden="true">Riverside · Base</span>
+        </div>
+        <ol class="sp-tags" role="list">
+          {P.map((p, i) => (
+            <li class="sp-tag" style={`--tx:${pc(p.tag[0], W)};--ty:${pc(p.tag[1], H)};--r:${p.tag[2]}deg`} data-b3-stop={((i + 0.8) / n).toFixed(3)}>
+              <span class="sp-pin" style={`--px:${p.pin[0] - p.tag[0]}px;--py:${p.pin[1] - p.tag[1]}px`} aria-hidden="true"></span>
+              <span class="sp-n" aria-hidden="true">{i + 1}</span>
+              <p class="sp-town">{p.town}</p>
+              <blockquote class="sp-q"><p>“{p.q}”</p></blockquote>
+              <p class="sp-by">{p.name} · Yelp</p>
+            </li>
+          ))}
+        </ol></div>
+      </div>
+      <figcaption class="sp-cap">Map © OpenStreetMap contributors</figcaption>
+    </figure>
+  </div>
+</section>
+<style>
+  .sp { position: relative; height: 1000px; padding-top: 90px; background: var(--paper); }
+  .sp-h { margin-top: 18px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 60px; color: var(--ink); }
+  .tone { color: var(--tan-dark); }
+  .sp-fig { margin: 52px 0 0; }
+  .sp-board { position: relative; padding: 20px; background: var(--tan-dark); border-radius: 8px; box-shadow: 0 30px 50px rgba(60, 48, 25, .25); }
+  .sp-nail { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--tan); }
+  .sp-map { position: relative; aspect-ratio: 1160 / 640; overflow: hidden; background: #E3DAC6; }
+  .sp-tiles { position: absolute; }
+  .sp-tiles :global(img) { width: 100%; height: 100%; }
+  .sp-tiles--m { display: none; }
+  .sp-strings { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sp-strings path { fill: none; stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .sp-dot { position: absolute; left: var(--x); top: var(--y); width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--ink); border: 2px solid var(--paper); }
+  .sp-num { display: none; }
+  .sp-base { position: absolute; left: var(--x); top: var(--y); width: 34px; height: 28px; margin: -14px 0 0 -17px; background: var(--red); clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+  .sp-basetag { position: absolute; height: 28px; padding: 0 10px; display: flex; align-items: center; background: var(--ink); color: var(--paper); font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+  .sp-tags { margin: 0; padding: 0; list-style: none; }
+  .sp-area { position: relative; }
+  .sp-tags { position: absolute; inset: 0; }
+  .sp-tag { position: absolute; left: var(--tx); top: var(--ty); transform: rotate(var(--r)); width: 252px; min-height: 118px; padding: 18px 20px 14px; background: var(--bone); box-shadow: 0 10px 18px rgba(30, 24, 14, .3); transition: box-shadow .4s, scale .4s; }
+  .sp-pin { position: absolute; left: var(--px); top: var(--py); width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; border-radius: 50%; background: var(--red); }
+  .sp-n { display: none; }
+  .sp-town { font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+  .sp-q { margin: 6px 0 0; }
+  .sp-q p { font-weight: 600; font-size: 15px; line-height: 19px; color: var(--ink); }
+  .sp-by { margin-top: 8px; font-size: 12px; line-height: 16px; color: var(--ink-2); }
+  .sp-cap { margin-top: 14px; text-align: right; font-size: 10px; color: var(--ink-2); padding-right: 12px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sp { height: auto; padding: 100px 0 120px; }
+    .sp-h { font-size: clamp(40px, 4.6vw, 56px); line-height: 1.08; }
+    .sp-tag { width: 200px; padding: 12px 14px; }
+    .sp-q p { font-size: 13px; line-height: 17px; }
+  }
+  @media (max-width: 767px) {
+    .sp { height: auto; padding: 56px 0 30px; }
+    .sp-h { margin-top: 12px; font-size: 34px; line-height: 38px; }
+    .sp-fig { margin-top: 24px; }
+    .sp-board { padding: 0; background: none; box-shadow: none; border-radius: 0; }
+    .sp-nail, .sp-strings, .sp-basetag, .sp-tiles--d { display: none; }
+    .sp-tiles--m { display: block; }
+    .sp-map { aspect-ratio: 350 / 240; border: 8px solid var(--tan-dark); border-radius: 6px; margin: 0 -8px; box-sizing: content-box; }
+    .sp-dot, .sp-base { left: var(--xm); top: var(--ym); }
+    .sp-dot { width: 18px; height: 18px; margin: -9px 0 0 -9px; background: var(--red); border: 1.5px solid var(--bone); display: grid; place-items: center; }
+    .sp-num { display: block; font-family: var(--f-label); font-weight: 600; font-size: 10px; line-height: 1; color: var(--bone); }
+    .sp-base { width: 20px; height: 16px; margin: -8px 0 0 -10px; background: var(--ink); }
+    .sp-cap { text-align: left; margin-top: 16px; padding: 0; }
+    .sp-tags { position: static; margin-top: 24px; }
+    .sp-tag { position: relative; left: auto; top: auto; width: auto; min-height: 0; margin: 0 0 16px; padding: 12px 16px 12px 50px; transform: rotate(var(--r)); }
+    .sp-tag:nth-child(even) { margin-left: 14px; margin-right: -2px; }
+    .sp-pin { display: none; }
+    .sp-n { display: grid; place-items: center; position: absolute; left: 14px; top: 16px; width: 22px; height: 22px; border-radius: 50%; background: var(--red); color: var(--bone); font-family: var(--f-label); font-weight: 600; font-size: 11px; transition: transform .45s var(--ease-back); }
+    .sp-tag.is-on .sp-n { transform: scale(1.08) rotate(-6deg); }
+    .sp-q p { font-size: 15px; }
+  }
+</style>

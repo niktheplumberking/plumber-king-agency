@@ -1,0 +1,141 @@
+---
+// 5.1 Hero (Figma 670:3403 y 180-1000 / 670:8484 y 164-1466): copy left, van photo in the chamfered hex frame with the
+// road-sign town tag hanging from it, the estimate card overlapping the frame's lower left.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import CallBtn from '../b3kit/CallBtn.astro';
+import GhostBtn from '../b3kit/GhostBtn.astro';
+import type { TownPage } from '../../data/town-pages';
+interface Props { t: TownPage }
+const { t } = Astro.props;
+const up = t.name.toUpperCase();
+const fid = `est-${t.slug}`;
+---
+<section class="th on-ink" aria-labelledby="th-h1" data-m-section data-m-hero>
+  <div class="wrap th-grid">
+    <div class="th-copy">
+      <Eyebrow dark>Plumber · {t.name}, CA</Eyebrow>
+      <h1 id="th-h1" class:list={['th-h1', t.name.length > 8 && 'th-h1--long']} data-t="2">Plumber in {t.name}, CA</h1>
+      <p class="th-sub" data-t="3">Based in Riverside. Working in {t.name}.</p>
+      <p class="th-body" data-t="3" data-fx="nudge">Mike's Plumbing Services is a family-owned, service-area plumbing business based in Riverside. We come to you in {t.name} for leaks, drains, water heaters and more.</p>
+      <ul class="th-chips" role="list" data-t="5" data-stagger>
+        <li class="hx-chip">Free estimate</li>
+        <li class="hx-chip">Family Owned &amp; Operated</li>
+        <li class="hx-chip">Open 24 hours (Yelp)</li>
+      </ul>
+      <div class="th-btns">
+        <CallBtn v="tan" />
+        <GhostBtn href={`#${fid}`} dark />
+      </div>
+    </div>
+    <div class="th-media">
+      <div class="th-plate" aria-hidden="true"></div>
+      <figure class="th-frame" data-t="4" data-fx="frame"><div class="th-clip"><div class="th-photo">
+        <Img name="mike-navarro-loading-plumbing-van-riverside" alt={`Mike Navarro at the open back doors of his work van, the van that comes to ${t.name}`} sizes="(min-width: 1280px) 562px, (min-width: 768px) 46vw, 350px" box={562 / 641} boxM={350 / 360} priority focus="50% 50%" />
+      </div></div></figure>
+      <div class="th-sign" data-t="5">
+        <span class="th-pin th-pin--a" aria-hidden="true"></span><span class="th-pin th-pin--b" aria-hidden="true"></span>
+        <div class="th-sign-in">
+          <span class="th-sign-town" style={`--n:${up.length}`}>{up}</span>
+          <span class="th-sign-county">{t.county}</span>
+        </div>
+      </div>
+      <form class="th-form" id={fid} data-estimate-form novalidate data-t="4" aria-labelledby={`${fid}-t`}>
+        <p class="th-form-t" id={`${fid}-t`}>Free estimate · {t.name}</p>
+        <label class="sr-only" for={`${fid}-n`}>Name</label>
+        <input id={`${fid}-n`} name="name" type="text" autocomplete="name" placeholder="Name" required />
+        <label class="sr-only" for={`${fid}-p`}>Phone</label>
+        <input id={`${fid}-p`} name="phone" type="tel" autocomplete="tel" placeholder="Phone" required />
+        <label class="sr-only" for={`${fid}-a`}>Street or ZIP</label>
+        <input id={`${fid}-a`} name="address" type="text" autocomplete="street-address" placeholder="Street or ZIP" />
+        <label class="sr-only" for={`${fid}-m`}>What's going on?</label>
+        <input id={`${fid}-m`} name="message" type="text" placeholder="What's going on?" />
+        <input type="hidden" name="town" value={t.name} />
+        <button type="submit" class="th-submit">Get my free estimate <span aria-hidden="true">→</span></button>
+        <p class="th-msg" data-form-msg role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+<style>
+  .th { position: relative; height: 820px; overflow-x: clip; }
+  .th-grid { position: relative; height: 100%; }
+  .th-copy { position: absolute; left: 0; top: 90px; width: 560px; }
+  .th-h1 { margin-top: 14px; font-family: var(--f-display); font-weight: 400; font-size: 84px; line-height: 82px; letter-spacing: 0; color: var(--paper); }
+  .th-h1--long { font-size: 72px; line-height: 72px; }
+  .th-sub { margin-top: 26px; font-family: var(--f-label); font-weight: 500; font-size: 23px; line-height: 30px; letter-spacing: .01em; color: var(--tan); }
+  .th-body { margin-top: 15px; width: 500px; font-size: 17px; line-height: 26px; color: #E6DECC; }
+  .th-chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 36px 0 0; padding: 0; list-style: none; }
+  .th-btns { display: flex; gap: 16px; margin-top: 31px; }
+
+  /* the chamfered-hex chip (outline): two clip layers, so the 1.5 px edge follows the points */
+  .hx-chip { --c: 12px; position: relative; display: inline-flex; align-items: center; height: 36px; padding: 0 20px; font-family: var(--f-label); font-weight: 500; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); isolation: isolate; }
+  .hx-chip::before, .hx-chip::after { content: ''; position: absolute; z-index: -1; clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% 50%, calc(100% - var(--c)) 100%, var(--c) 100%, 0 50%); }
+  .hx-chip::before { inset: 0; background: #8E836B; }
+  .hx-chip::after { inset: 1.5px; background: var(--ink); }
+
+  .th-media { position: absolute; left: 570px; top: 0; width: 750px; height: 100%; }
+  .th-frame, .th-plate { --ch: 56px; position: absolute; left: 61px; top: 55px; width: 562px; height: 641px; margin: 0; }
+  .th-plate, .th-clip, .th-photo { clip-path: polygon(var(--ch) 0, calc(100% - var(--ch)) 0, 100% var(--ch), 100% calc(100% - var(--ch)), calc(100% - var(--ch)) 100%, var(--ch) 100%, 0 calc(100% - var(--ch)), 0 var(--ch)); }
+  .th-plate { left: 77px; top: 71px; background: var(--tan-dark); }
+  .th-clip { position: absolute; inset: 0; background: var(--tan); }
+  .th-photo { position: absolute; inset: 2px; --ch: 55px; overflow: hidden; }
+  .th-photo :global(img) { display: block; width: 100%; height: 100%; }
+
+  .th-sign { position: absolute; left: 413px; top: 124px; width: 240px; height: 96px; transform: rotate(4deg); filter: drop-shadow(0 10px 18px rgba(0,0,0,.45)); }
+  .th-sign-in { position: absolute; inset: 0; background: var(--tan); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .th-sign-in::before { content: ''; position: absolute; inset: 7px; border: 2px solid var(--ink); border-radius: 4px; }
+  .th-sign-town { font-family: var(--f-label); font-weight: 700; font-size: min(46px, calc(300px / var(--n))); line-height: 1; letter-spacing: .08em; color: var(--ink); margin-right: -.08em; }
+  .th-sign-county { margin-top: 6px; font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2); }
+  .th-pin { position: absolute; top: -70px; width: 2px; height: 72px; background: repeating-linear-gradient(var(--tan) 0 6px, transparent 6px 10px); transform: rotate(-4deg); transform-origin: bottom; }
+  .th-pin::before { content: ''; position: absolute; left: -3px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: var(--tan); }
+  .th-pin--a { left: 44px; } .th-pin--b { left: 194px; height: 64px; top: -58px; }
+
+  .th-form { position: absolute; left: 0; top: 426px; width: 380px; padding: 22px 22px 20px; background: var(--tan); border-radius: 2px; box-shadow: 0 18px 40px rgba(0,0,0,.35); color: var(--ink); z-index: 2; }
+  .th-form-t { font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 18px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 11px; }
+  .th-form input:not([type=hidden]) { display: block; width: 100%; height: 42px; margin-bottom: 10px; padding: 0 13px; border: 1px solid #B8AB8C; border-radius: 2px; background: var(--bone); font-size: 15px; color: var(--ink); }
+  .th-form input::placeholder { color: var(--ink-2); opacity: 1; }
+  .th-submit { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; margin-top: 16px; background: var(--ink); color: var(--tan); border-radius: 3px; font-weight: 600; font-size: 17px; transition: background-color var(--dur-2); }
+  .th-submit:hover { background: #2a2620; }
+  .th-msg:empty { display: none; }
+  .th-msg { margin-top: 8px; font-size: 14px; }
+  .th-form :focus-visible { outline-color: var(--ink); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .th { height: auto; padding: 72px 0 120px; }
+    .th-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; height: auto; }
+    .th-copy { position: static; width: auto; }
+    .th-h1 { font-size: clamp(56px, 6.4vw, 84px); line-height: .98; }
+    .th-body { width: auto; }
+    .th-btns { flex-wrap: wrap; }
+    .th-media { position: relative; left: auto; width: auto; height: auto; min-height: 640px; }
+    .th-frame, .th-plate { left: 0; top: 0; width: calc(100% - 16px); height: 520px; }
+    .th-plate { left: 16px; top: 16px; }
+    .th-sign { left: auto; right: -8px; top: 60px; }
+    .th-form { left: -24px; top: 360px; width: min(380px, 90%); }
+  }
+  @media (max-width: 767px) {
+    .th { height: auto; padding: 38px 0 35px; }
+    .th-grid { height: auto; }
+    .th-copy { position: static; width: auto; }
+    .th-h1 { margin-top: 13px; font-size: 50px; line-height: 52px; }
+    .th-h1--long { font-size: 44px; line-height: 48px; }
+    .th-sub { margin-top: 15px; font-size: 18px; line-height: 24px; }
+    .th-body { width: auto; margin-top: 16px; font-size: 15px; line-height: 23px; }
+    .th-chips { margin-top: 24px; gap: 7px 8px; }
+    .hx-chip { height: 34px; padding: 0 15px; font-size: 11px; --c: 10px; }
+    .th-btns { flex-direction: column; gap: 14px; margin-top: 24px; }
+    .th-btns :global(.gb) { height: 56px; }
+    .th-media { position: relative; left: auto; width: auto; height: 660px; margin-top: 28px; }
+    .th-photo { --ch: 35px; }
+    .th-frame, .th-plate { --ch: 36px; left: 0; top: 0; width: calc(100% - 8px); height: 362px; }
+    .th-plate { left: 8px; top: 8px; }
+    .th-sign { left: auto; right: 10px; top: 46px; width: 182px; height: 74px; transform: rotate(4deg); }
+    .th-sign-town { font-size: min(34px, calc(230px / var(--n))); }
+    .th-sign-county { font-size: 9px; margin-top: 4px; }
+    .th-pin { top: -50px; height: 52px; } .th-pin--a { left: 30px; } .th-pin--b { left: 150px; top: -44px; height: 46px; }
+    .th-form { left: -6px; right: -6px; top: 361px; width: auto; padding: 22px 20px 12px; }
+    .th-form input:not([type=hidden]) { height: 38px; margin-bottom: 12px; }
+    .th-submit { height: 44px; margin-top: 14px; font-size: 15px; }
+  }
+</style>

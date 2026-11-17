@@ -1,0 +1,18 @@
+---
+// VFACT eyebrow: a 20 x 14 chamfered hex-nut outline + Oswald caps label (Figma: 16 px, tracking ~0.06 em).
+// `tone` sets the colour: tan (on ink), deep (tan-dark on paper/tan), ink. `dot` swaps the hex for a red live dot.
+interface Props { text: string; tone?: 'tan' | 'deep' | 'ink' | 'mute'; class?: string; dot?: boolean; icon?: boolean; t?: string | false; }
+const { text, tone = 'tan', class: cls, dot = false, icon = true, t = '1' } = Astro.props;
+---
+<p class:list={['eb', `eb-${tone}`, cls]} data-t={t || undefined}>
+  {icon && (dot ? <span class="eb-dot" aria-hidden="true"></span> :
+    <svg class="eb-hex" viewBox="0 0 20 14" aria-hidden="true" focusable="false"><path d="M4.6 .9h10.8L19.1 7l-3.7 6.1H4.6L.9 7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" /></svg>)}
+  <span>{text}</span>
+</p>
+<style>
+  .eb { display: flex; align-items: center; gap: 9px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 16px; line-height: 20px; letter-spacing: .06em; text-transform: uppercase; }
+  .eb-hex { width: 20px; height: 14px; flex: none; }
+  .eb-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); flex: none; margin-right: 1px; }
+  .eb-tan { color: var(--tan); } .eb-deep { color: var(--tan-dark); } .eb-ink { color: var(--ink); } .eb-mute { color: var(--mute); }
+  @media (max-width: 767px) { .eb { font-size: 13px; line-height: 16px; gap: 8px; } .eb-hex { width: 17px; height: 12px; } }
+</style>

@@ -1,0 +1,90 @@
+---
+// 5.4 What we do in town (Figma 670:3403 y 2460-3060): flyer services as hex nuts threaded on rods; every nut is a link.
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import type { TownPage } from '../../data/town-pages';
+interface Props { t: TownPage }
+const { t } = Astro.props;
+type Nut = { l: string; href: string; d?: boolean; m?: boolean };
+// d = dark on desktop, m = dark on mobile (as in each Figma frame)
+const ROW1: Nut[] = [
+  { l: 'Drain Cleaning', href: '/drain-cleaning', d: true, m: true }, { l: 'Hydro Jetting', href: '/drain-cleaning' },
+  { l: 'Sewer Lines', href: '/services#drains' }, { l: 'Leak Detection', href: '/services#leaks', d: true },
+  { l: 'Leak Repair', href: '/services#leaks' }, { l: 'Water Heater Install', href: '/water-heaters', m: true },
+];
+const ROW2: Nut[] = [
+  { l: 'Water Heater Repair', href: '/water-heaters', m: true }, { l: 'Toilets, Sinks & Faucets', href: '/services#around-the-house' },
+  { l: 'Garbage Disposal', href: '/services#around-the-house', d: true }, { l: 'Water Filtration', href: '/services#around-the-house', m: true },
+  { l: 'Emergency Services', href: '/emergency-plumber', m: true },
+];
+// mobile rods: pairs as in 670:8484
+const MROWS = [[0, 1], [2, 3], [4, 5], [6], [7], [8, 9], [10]];
+const ALL = [...ROW1, ...ROW2];
+---
+<section class="ts" aria-labelledby="ts-h" data-m-section>
+  <Wave d="t3d" m="t3m" top={2460} topM={3139} />
+  <div class="wrap">
+    <Eyebrow>Services</Eyebrow>
+    <h2 id="ts-h" class="ts-h" data-t="2">Everything on the flyer, <span class="tone">in {t.name}.</span></h2>
+  </div>
+  <nav class="ts-rods ts-rods--d" aria-label={`Plumbing services in ${t.name}`}>
+    {[ROW1, ROW2].map((row) => (
+      <div class="ts-rod" data-t="4" data-stagger>
+        {row.map((n) => <a class:list={['nut', n.d && 'nut--dark']} href={n.href}><span>{n.l}</span><span class="nut-ar" aria-hidden="true">→</span></a>)}
+      </div>
+    ))}
+  </nav>
+  <nav class="ts-rods ts-rods--m" aria-label={`Plumbing services in ${t.name} (mobile)`}>
+    {MROWS.map((row) => (
+      <div class="ts-rod" data-t="4">
+        {row.map((i) => <a class:list={['nut', ALL[i].m && 'nut--dark']} href={ALL[i].href}><span>{ALL[i].l}</span></a>)}
+      </div>
+    ))}
+  </nav>
+</section>
+<style>
+  .ts { position: relative; height: 600px; padding-top: 100px; background: var(--paper); }
+  .ts-h { margin-top: 20px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 60px; letter-spacing: 0; color: var(--ink); }
+  .tone { color: var(--tan-dark); }
+  .ts-rods--m { display: none; }
+  .ts-rods--d { margin-top: 86px; }
+  .ts-rod { position: relative; display: flex; justify-content: space-between; align-items: center; margin: 0 120px; height: 62px; }
+  .ts-rod + .ts-rod { margin-top: 68px; }
+  /* the rod and its two hex end caps */
+  .ts-rod::before { content: ''; position: absolute; left: -50px; right: -50px; top: 50%; height: 12px; margin-top: -6px; z-index: -1;
+    background: linear-gradient(#5A4D33 0 2px, #8F7E59 2px 5px, #6B5C3E 5px 9px, #4B412C 9px 12px); }
+  .ts-rod::after { content: ''; position: absolute; inset: 0 -50px; z-index: -1; pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 42'%3E%3Cpath d='M8 1h16l7 10v20l-7 10H8L1 31V11z' fill='%23D2C5A6' stroke='%230E0D0B' stroke-width='1.2'/%3E%3C/svg%3E") left center / 30px 40px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 42'%3E%3Cpath d='M8 1h16l7 10v20l-7 10H8L1 31V11z' fill='%23D2C5A6' stroke='%230E0D0B' stroke-width='1.2'/%3E%3C/svg%3E") right center / 30px 40px no-repeat; }
+  .ts-rods { position: relative; isolation: isolate; }
+  .nut { --c: 22px; position: relative; display: inline-flex; align-items: center; gap: 4px; height: 62px; padding: 0 30px; font-family: var(--f-label); font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; color: var(--ink); isolation: isolate; filter: drop-shadow(0 10px 8px rgba(60, 48, 25, .28)); transition: transform var(--dur-2) var(--ease-out); }
+  .nut::before, .nut::after { content: ''; position: absolute; z-index: -1; clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% 50%, calc(100% - var(--c)) 100%, var(--c) 100%, 0 50%); }
+  .nut::before { inset: 0; background: var(--ink); }
+  .nut::after { inset: 1.5px; background: var(--tan); transition: background-color var(--dur-2); }
+  .nut--dark { color: var(--tan); }
+  .nut--dark::after { background: var(--ink); }
+  .nut-ar { font-family: var(--f-sans); font-size: 14px; transition: transform var(--dur-2) var(--ease-out); }
+  .nut:hover { transform: translateY(-3px); }
+  .nut:hover .nut-ar { transform: translateX(3px); }
+  .nut:not(.nut--dark):hover::after { background: #E2D7BC; }
+  .nut--dark:hover::after { background: #2A2620; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ts { height: auto; padding: 100px 0 120px; }
+    .ts-h { font-size: clamp(40px, 4.6vw, 56px); line-height: 1.08; }
+    .ts-rod { margin: 0 var(--gutter); flex-wrap: wrap; justify-content: center; gap: 18px 14px; height: auto; }
+    .nut { height: 52px; font-size: 14px; padding: 0 24px; }
+    .ts-rod::before, .ts-rod::after { display: none; }
+  }
+  @media (max-width: 767px) {
+    .ts { height: auto; padding: 50px 0 52px; }
+    .ts-h { font-size: 34px; line-height: 36px; margin-top: 12px; }
+    .ts-rods--d { display: none; }
+    .ts-rods--m { display: block; margin-top: 30px; }
+    .ts-rod { margin: 0 8px; justify-content: center; gap: 4px; height: 46px; }
+    .ts-rod + .ts-rod { margin-top: 16px; }
+    .ts-rod::before { left: 0; right: 0; height: 9px; margin-top: -4.5px; }
+    .ts-rod::after { display: none; }
+    .nut { --c: 14px; height: 46px; padding: 0 20px; font-size: 13px; letter-spacing: .04em; filter: drop-shadow(0 6px 5px rgba(60, 48, 25, .25)); }
+  }
+</style>

@@ -1,0 +1,53 @@
+/* Base + shared primitives for Mike's site. Component styles live in each component's <style>. */
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 24px); background: var(--ink); }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--f-sans); font-size: 17px; line-height: 1.6; font-weight: 400;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img, svg, video, picture { display: block; max-width: 100%; }
+img { height: auto; }
+h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid var(--tan-dark); outline-offset: 3px; border-radius: 4px; }
+.on-ink :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline-color: var(--tan); }
+::selection { background: var(--tan); color: var(--ink); }
+
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: fixed; left: 16px; top: -80px; z-index: 200; background: var(--ink); color: var(--paper); padding: 12px 18px; border-radius: 4px; font-weight: 700; transition: top .2s; }
+.skip:focus { top: 12px; }
+
+/* Full grid: content runs x 120 -> 1320 at 1440. Never a smaller centred container. */
+.wrap { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; }
+.on-ink { background: var(--ink); color: var(--paper); }
+.nowrap { white-space: nowrap; }
+a[href^="tel:"] { white-space: nowrap; }
+.balance { text-wrap: balance; }
+
+/* Seam layers: absolutely positioned over a section boundary, above both sections (BUILD-BRIEF section 2). */
+.seam-host { position: relative; }
+.seam { position: absolute; z-index: var(--z-seam); pointer-events: none; }
+
+/* split-line masks created by the motion module */
+.m-line { display: block; overflow: clip; overflow-clip-margin: .14em; padding-bottom: .06em; margin-bottom: -.06em; }
+.m-line > span { display: inline-block; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- motion pre-states (MOTION.md). Only under html.motion; released by .m-built; 3.5 s safety in Base.astro. ---------- */
+html.motion [data-m-section] [data-t]:not(.m-built):not([data-fx="frame"]):not([data-fx="nudge"]) { opacity: 0; }
+html.motion.intro [data-m-section][data-m-hero] [data-t]:not(.m-built), html.motion.pt-in [data-m-section][data-m-hero] [data-t]:not(.m-built) { opacity: 1; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }

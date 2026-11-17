@@ -1,0 +1,25 @@
+---
+// Breadcrumbs + BreadcrumbList JSON-LD. items: [{ label, href }] excluding Home (added). Last item = current page.
+// Figma (contact 435:2409, guide 439:9750): underlined links, a "/" separator 8 px either side, current page bold navy.
+interface Props { items: { label: string; href: string }[]; dark?: boolean; class?: string; }
+const { items, dark, class: cls } = Astro.props;
+const all = [{ label: 'Home', href: '/' }, ...items];
+const site = (import.meta.env.SITE as string || 'https://mikes-plumbing-riverside.vercel.app').replace(/\/$/, '');
+const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: all.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: site + (c.href === '/' ? '' : c.href) })) };
+---
+<nav class:list={['crumbs', dark && 'dark', cls]} aria-label="Breadcrumb" data-t="1">
+  <ol role="list">
+    {all.map((c, i) => (
+      <li>{i < all.length - 1 ? <><a href={c.href}>{c.label}</a><span class="sep" aria-hidden="true">/</span></> : <span aria-current="page">{c.label}</span>}</li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+<style>
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 0; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 18px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan-dark); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 8px; }
+  .crumbs a { display: inline-block; padding: 2px 0; text-decoration: underline; text-underline-offset: 3px; }
+  .crumbs a:hover { color: var(--ink); }
+  .crumbs [aria-current] { color: var(--ink); }
+  .dark ol { color: var(--mute); } .dark a:hover, .dark [aria-current] { color: var(--paper); }
+</style>

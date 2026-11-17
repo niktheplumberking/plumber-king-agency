@@ -1,0 +1,93 @@
+---
+// S6 Commercial and gas (Figma 02): navy band; copy, two rows, a sky call button and proof chips left; a framed photo on a
+// sky block, a tilted snapshot over it and Stefan's review card (patches JR + Elvis) breaking out of the band's foot.
+import SectionHead from '../../ui/SectionHead.astro';
+import Icon from '../../ui/Icon.astro';
+import Img from '../../ui/Img.astro';
+import PhotoTag from '../../ui/PhotoTag.astro';
+import CallButton from '../../ui/CallButton.astro';
+import ProofChips from '../../ui/ProofChips.astro';
+import ReviewCard from '../../ui/ReviewCard.astro';
+import FlowLines from '../../ui/FlowLines.astro';
+import { STEFAN } from './hub';
+---
+<section class="cm" aria-labelledby="cm-h" data-m-section>
+  <div class="cm-band on-navy"><FlowLines variant="navy" class="cm-fl" /></div>
+  <div class="wrap cm-grid">
+    <div class="cm-copy on-navy">
+      <SectionHead eyebrow="Commercial and residential" l1="It says so" l2="on the side of the truck" dark id="cm-h"
+        lead="Offices, church halls, rentals and new builds get the same crew and the same manners as a family kitchen. We work around your opening hours and keep the place clean while we do it." />
+      <ul role="list" class="cm-rows" data-t="4" data-stagger>
+        <li><span class="cm-i"><Icon name="building" size={22} /></span><span><b>Businesses and property managers.</b> One number, one crew that already knows your building.</span></li>
+        <li><span class="cm-i"><Icon name="zap" size={22} /></span><span><b>Gas lines.</b> New lines, appliance hookups and leak checks.</span></li>
+      </ul>
+      <div data-t="3" class="cm-cta"><CallButton v="priN" l2="Ask for a commercial estimate" /></div>
+      <ProofChips v="dark" class="cm-chips" />
+    </div>
+    <div class="cm-media">
+      <div class="cm-pics">
+      <span class="cm-back" aria-hidden="true"></span>
+      <div class="cm-ph frame" data-t="4" data-fx="frame">
+        <Img name="crew-three-techs-at-van" alt="Three Plumbing By Paul technicians at the open side door of a work van" sizes="(min-width: 1024px) 480px, calc(100vw - 40px)" focus="50% 30%" widths={[480, 720, 960, 1380]} />
+        <PhotoTag class="cm-tag">Commercial and residential</PhotoTag>
+      </div>
+      <div class="cm-sn snap" data-t="4" data-fx="toss">
+        <Img name="service-tech-threading-pipe-truck" alt="A technician threading pipe beside the wrapped Plumbing By Paul truck" sizes="(min-width: 1024px) 210px, 180px" focus="50% 60%" widths={[180, 360, 540]} />
+      </div>
+      </div>
+      <ReviewCard r={STEFAN} class="cm-rv" t="4" />
+    </div>
+  </div>
+</section>
+<style>
+  /* Figma 433:3826: the navy band is the whole 780 px section; Stefan's card (433:3901) hangs 48 px into the next section. */
+  .cm { position: relative; z-index: 2; background: var(--navy); padding: 96px 0 0; }
+  .cm-band { position: absolute; inset: 0; background: var(--navy); overflow: hidden; }
+  .cm-band :global(.cm-fl) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cm-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 520px); justify-content: space-between; column-gap: 60px; }
+  .cm-copy { padding-bottom: 100px; }
+  .cm-copy :global(.shead .lead) { max-width: 560px; margin-top: 12px; font-size: 16px; line-height: 28px; }
+  .cm-rows { display: grid; gap: 12px; max-width: 560px; margin: 28px 0 0; padding: 0; }
+  .cm-rows li { display: flex; align-items: center; gap: 16px; padding: 17px; border-radius: 16px; background: var(--navy-2); box-shadow: inset 0 0 0 1px var(--navy-3); color: var(--soft); font-weight: 500; font-size: 14px; line-height: 20px; }
+  .cm-rows b { display: block; margin-bottom: 2px; color: var(--white); font-weight: 700; font-size: 16px; line-height: 22px; }
+  .cm-i { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--sky); color: var(--navy); }
+  .cm-cta { margin-top: 28px; }
+  .cm-copy :global(.cm-chips) { margin-top: 24px; }
+  /* Figma shows three chips here (license, family-owned, Best of the Bay) */
+  .cm-copy :global(.cm-chips li:nth-child(n+4)) { display: none; }
+  .cm-media { position: relative; }
+  .cm-pics { position: absolute; inset: 0; }
+  .cm-back { position: absolute; left: 60px; right: 0; top: 20px; height: 380px; border-radius: var(--r-xl); background: var(--sky); }
+  .cm-ph { position: absolute; left: 36px; right: 24px; top: -4px; height: 380px; border-radius: var(--r-xl); box-shadow: 0 12px 28px rgba(17, 16, 50, .14); }
+  .cm-ph::after { content: ''; position: absolute; inset: 0; z-index: 1; border: 6px solid var(--white); border-radius: inherit; pointer-events: none; }
+  .cm-ph :global(.cm-tag) { position: absolute; left: 20px; top: 20px; z-index: 2; }
+  .cm-sn { position: absolute; left: -90px; top: 194px; z-index: 2; width: 180px; height: 250px; border-radius: 18px; transform: rotate(-5deg); box-shadow: 0 28px 56px rgba(17, 16, 50, .22); }
+  .cm-sn::after { content: ''; position: absolute; inset: 0; z-index: 1; border: 8px solid var(--white); border-radius: inherit; pointer-events: none; }
+  .cm-media :global(.cm-rv) { position: absolute; left: 0; right: 0; top: 382px; z-index: 3; min-height: 350px; padding-top: 28px; box-shadow: inset 0 0 0 1px var(--line), 0 28px 28px rgba(17, 16, 50, .22); }
+  /* Figma 433:3908: quote 15/24 regular; patches 433:3925/3929 hang 35 px above the card, 4 px from its right edge */
+  .cm-media :global(.cm-rv .q) { font-size: 15px; line-height: 24px; font-weight: 400; }
+  .cm-media :global(.cm-rv .pats) { right: 4px; top: -35px; }
+  @media (max-width: 1199px) and (min-width: 1024px) { .cm-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); } .cm-sn { left: -60px; } }
+  @media (max-width: 1023px) {
+    /* Figma 443:7297: head, lead, photo, the two rows, the call button, then Stefan's card (443:7342), which starts
+       56 px under the button and hangs 260 px into the promise section; the band stays navy down to 150 px into the card. */
+    .cm { padding: 64px 0 0; }
+    .cm-grid { display: flex; flex-direction: column; }
+    .cm-copy, .cm-media { display: contents; }
+    .cm-copy :global(.shead) { order: 1; }
+    .cm-copy :global(.shead .lead) { font-size: 16px; line-height: 26px; }
+    .cm-pics { order: 2; position: relative; inset: auto; height: 342px; margin-top: 28px; }
+    .cm-rows { order: 3; margin-top: 14px; }
+    .cm-cta { order: 4; margin-top: 24px; }
+    .cm-copy :global(.cm-chips) { display: none; }
+    .cm-cta :global(.btn) { width: 100%; }
+    .cm-rows li { align-items: flex-start; padding: 15px; gap: 14px; }
+    .cm-i { width: 40px; height: 40px; }
+    .cm-back { left: 18px; right: 0; top: 16px; height: 300px; border-radius: 22px; }
+    .cm-ph { left: 0; right: 18px; top: 0; height: 300px; border-radius: 22px; }
+    .cm-ph :global(.cm-tag) { display: none; }
+    .cm-sn { left: auto; right: -12px; top: 177px; width: 112px; height: 154px; border-radius: 14px; transform: rotate(5deg); }
+    .cm-sn::after { border-width: 6px; }
+    .cm-media :global(.cm-rv) { order: 5; position: relative; top: auto; min-height: 0; margin: 56px 0 -260px; padding-top: 28px; }
+  }
+</style>

@@ -1,0 +1,53 @@
+/* Mike's Plumbing Services design tokens. Source: handoff/BUILD-BRIEF.md + plan/DESIGN-SYSTEM-AND-HOME-SHEET.md (VFACT Figma).
+   Colours from his flyer and logo only. Red = live dots only. Never tan text on paper/bone, never paper text on tan. */
+@font-face { font-family: 'Abril Fatface'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/abril-fatface-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/oswald-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/oswald-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/oswald-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/oswald-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/archivo-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/archivo-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/archivo-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/archivo-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 800; font-display: swap; src: url('/fonts/archivo-latin-800-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: italic; font-weight: 400 500; font-display: swap; src: url('/fonts/archivo-latin-400-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Archivo'; font-style: italic; font-weight: 600 800; font-display: swap; src: url('/fonts/archivo-latin-600-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Yesteryear'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/yesteryear-latin-400-normal.woff2') format('woff2'); }
+/* Metric-ish fallbacks so the swap does not shift layout (CLS). */
+@font-face { font-family: 'Abril Fallback'; src: local('Georgia'); size-adjust: 108%; ascent-override: 92%; descent-override: 24%; }
+@font-face { font-family: 'Archivo Fallback'; src: local('Arial'); size-adjust: 100%; ascent-override: 88%; descent-override: 21%; }
+@font-face { font-family: 'Oswald Fallback'; src: local('Arial Narrow'), local('Arial'); size-adjust: 82%; ascent-override: 118%; descent-override: 29%; }
+
+:root {
+  --ink: #0E0D0B;      /* flyer black: dark sections, text on light */
+  --coal: #1C1A16;     /* raised surface on ink */
+  --paper: #F3ECDD;    /* light sections, text on ink */
+  --bone: #FBF8F2;     /* lightest surface */
+  --tan: #D2C5A6;      /* flyer tan: accent on ink, buttons (ink text on it) */
+  --tan-dark: #6B5C3E; /* small text / second line on paper (5.4:1) */
+  --red: #D9412B;      /* live dots only */
+  --mute: #A79D88;     /* meta on ink */
+  --ink-2: #4A443A;    /* body text on paper */
+  --line-d: #3A352C;   /* hairlines on ink (Figma hex outlines, chip borders) */
+
+  --f-display: 'Abril Fatface', 'Abril Fallback', Georgia, serif;
+  --f-label: 'Oswald', 'Oswald Fallback', 'Arial Narrow', sans-serif;
+  --f-sans: 'Archivo', 'Archivo Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --f-script: 'Yesteryear', 'Brush Script MT', cursive;
+
+  /* Layout. Desktop CSS is written in Figma px at 1440 (content x 120 -> 1320). Base.astro zooms the page by
+     width/1440 at 1280 px and wider, so 1280-1920+ keep Figma proportions. 768-1279: tablet gutter. <768: the 390 frames. */
+  --gutter: 120px;
+  --zoom: 1; --vw100: calc(100vw / var(--zoom)); --vh100: calc(100vh / var(--zoom));
+
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.65, 0, .35, 1);
+  --ease-back: cubic-bezier(.34, 1.56, .64, 1);
+  --dur-1: .2s; --dur-2: .35s; --dur-3: .6s;
+
+  --z-seam: 5; --z-header: 50; --z-menu: 60; --z-callbar: 45; --z-curtain: 90; --z-loader: 100;
+  --header-h: 64px;
+}
+@media (min-width: 1280px) { :root { --header-h: 96px; } }
+@media (min-width: 768px) and (max-width: 1279px) { :root { --gutter: clamp(48px, 6.25vw, 80px); --header-h: 80px; } }
+@media (max-width: 767px) { :root { --gutter: 20px; } }

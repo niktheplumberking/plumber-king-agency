@@ -41,7 +41,7 @@ export const site = {
     linkedin: "",
   } as Record<"instagram" | "facebook" | "linkedin", string>,
   /** Strategy-call booking page. Source: Nick, 2026-10-14. */
-  bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL || "https://calendly.com/plumber-king-agency/30-minutes-detailed-call",
+  bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL || "https://calendly.com/plumberkingagency/30-minutes-detailed-call",
   /** Lead form target. Default: public/lead.php, which emails each lead to `email` from Hostinger (PHP mail). */
   formEndpoint: process.env.NEXT_PUBLIC_FORM_ENDPOINT || "/lead.php",
   /** Brand files supplied by Nick on 2026-10-14 (logo, his photo, the crew banner), resized into public/brand/. */

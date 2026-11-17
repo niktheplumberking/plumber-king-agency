@@ -1,0 +1,106 @@
+const page=await figma.getNodeByIdAsync('481:437');await figma.setCurrentPageAsync(page);
+const sec=await figma.getNodeByIdAsync('481:442');
+for(const n of [...sec.children])if(n.name.startsWith('Drain cleaning page')||n.name.startsWith('NOTE (remove before dev)'))n.remove();
+const ANS='Mike’s Plumbing Services clears clogged drains in Riverside, the Inland Empire, Orange County and LA. Mike uses a drain snake for simple clogs and hydro jetting (high-pressure water) for grease, sludge and roots, and can run a camera down the line to find the cause. Estimates are free; call (951) 809-9533.';
+const STU='Ended up with a leak on our water service line. … Mike happened to call around 7pm the same day and offered to at least take a look and let me know where I stand. … the entire time he was working he was extremely conscientious about my lawn and cleaning up any mess. … I came home to a fixed leak and spotless work site. He was extremely communicative through the whole process. … Highly recommended.';
+const ERIK='Great service responded fast and did the work same day Would recommend and will use again for any plumbing service that I may need';
+const SIGNS=[['drop','Water drains slowly','Sinks, tubs or showers take longer and longer to empty.'],['wrench','Gurgling sounds','Air trapped by a partial clog bubbles up through the drain.'],['filter','Bad smell from drains','Food, grease or waste sitting in the line.'],['home','Toilet backs up','Water rises or overflows when you flush.'],['arrow','Water shows up in another drain','Using one fixture pushes water up in another, often a main line clog.'],['building','Slow commercial drains','Restaurant and bar drains slowed by grease build-up.']];
+const METH=[['Snaking','A drain snake (auger) breaks up and pulls out the clog. The quick fix for sinks, tubs and toilets.'],['Hydro jetting','High-pressure water scours grease, sludge and build-up off the pipe walls.'],['Camera inspection','A camera goes down the line to show what caused the clog and where it is.'],['Root removal','Tree roots that grow into a sewer line are cut out and cleared.']];
+const JOBS=[['interceptor','Grease interceptor service'],['ygrease','Commercial grease line job'],['yasphalt','Asphalt patch on a job site']];
+const FAQ=[['Snaking or hydro jetting: what’s the difference?','A snake (auger) breaks through a clog. Hydro jetting uses high-pressure water to scour grease, sludge and roots off the pipe walls. Mike looks at your line and tells you which one it needs, and why.'],['Do you do sewer camera inspections?'],['Can you clear tree roots from a sewer line?'],['Do you jet restaurant and commercial lines?'],['How much does drain cleaning cost?']];
+const REL=[['camera','Sewer lines & camera inspection','Camera inspection, root removal and line repairs.'],['building','Grease interceptors','Pumping and service for restaurant grease lines.'],['drop','Leak detection & repair','Hidden leaks, slab leaks and pipe repairs.'],['flame','Emergency plumbing','A backed-up drain that can’t wait? Call Mike.']];
+const H1=[['Drain cleaning & hydro jetting in ',{c:C.cream}],['Riverside.',{s:'Black Italic',c:C.tan}]];
+const CRUMB='Home  /  Services  /  Drain cleaning & hydro jetting';
+// ================= DESKTOP =================
+const D=F(sec,'Drain cleaning page - Desktop 1440',120,200,1440,9000,C.paper);
+UTILBAR(D,0);HEADER(D,40,'Services');
+const hero=PAGEHERO(D,144,{photo:'roots',photo2:'cleanout',z:60,crumb:CRUMB,eye:'Drain cleaning & hydro jetting',h1:H1,intro:'Slow sinks, backed-up toilets, roots in the line, grease in a restaurant drain. Mike clears it with a snake or a hydro jetter, checks the line with a camera, and tells you why it clogged.'});
+let y=144+hero.height,b;
+// quick answer
+const QA=F(D,'04 Quick answer (AEO, 51 words)',0,y,1440,600,C.paper);EYE(QA,'Quick answer',80,96);
+const box=F(QA,'quick answer box',80,146,820,300,C.white);box.strokes=[solid('#DDD5BC')];
+T(box,'What does drain cleaning with Mike involve?',40,36,{f:'Playfair Display',s:'Black',z:28,c:C.ink,w:740});const qt=T(box,ANS,40,92,{z:19,c:C.ink,w:740,lh:160});
+const kf=F(QA,'at a glance',940,146,420,300,C.ink);T(kf,'At a glance',32,32,{z:13,s:'SemiBold',c:C.tan,u:true,ls:16});
+['Homes and businesses','Snaking, hydro jetting, camera','Free estimates','15% off for new customers','Family owned & operated'].forEach((s,i)=>{SVG(kf,IC.check(C.tan),32,76+i*48,20);T(kf,s,64,74+i*48,{z:17,s:'Medium',c:C.cream});});
+const bh=Math.max(qt.y+qt.height+40,76+5*48+20);box.resize(820,bh);kf.resize(420,bh);R(box,0,0,6,bh,C.tan,1,'accent bar');QA.resize(1440,146+bh+100);y+=QA.height;
+// signs
+const SG=F(D,'05 Signs you need it',0,y,1440,900,C.ink);
+b=HEAD(SG,80,110,'Warning signs',[['Signs your drain needs '],['Mike.',1]],'General signs to watch for. Mike confirms the real cause on site.',{dark:true,w:820});
+SIGNS.forEach((s,i)=>{const x=80+(i%3)*434,yy=b+56+Math.floor(i/3)*234;const c=F(SG,'sign: '+s[1],x,yy,410,210,C.char);c.strokes=[solid(C.line)];
+ HX(c,28,28,72,48,{stroke:C.tan,sw:1.4,cut:14});SVG(c,IC[s[0]](C.tan),52,40,24);T(c,s[1],28,100,{f:'Playfair Display',s:'Black',z:23,c:C.cream,w:354});T(c,s[2],28,140,{z:16,c:C.mute,w:354,lh:150});});
+SG.resize(1440,b+56+2*210+24+120);y+=SG.height;
+// what Mike does
+const WD=F(D,'06 What Mike does',0,y,1440,1000,C.cream);
+IMGHX(WD,80,100,520,660,'bar',{cutCorners:50,n:'photo (real, IG): Mike on a bar sink drain'});T(WD,'Mike on a commercial drain job (his Instagram)',80,776,{z:14,c:C.muteD});
+b=HEAD(WD,680,100,'What Mike does',[['Four ways to clear '],['a line.',1]],null,{w:680,z:48});
+let my=b+40;METH.forEach((m,i)=>{HX(WD,680,my,60,40,{fill:C.ink,cut:12,n:'step hex'});T(WD,String(i+1),680,my+5,{f:'Playfair Display',s:'Black',z:22,c:C.cream,w:60,a:'CENTER'});
+ T(WD,m[0],764,my+2,{f:'Playfair Display',s:'Black',z:24,c:C.ink});const t=T(WD,m[1],764,my+40,{z:16,c:C.muteD,w:596,lh:150});my=t.y+t.height+30;});
+RULE(WD,680,my,680,C.tanD);my+=48;
+const bq=T(WD,'“Drain Cleaning using powerful snaking and hydrojetting methods to clear even the toughest blockages.”',680,my,{f:'Playfair Display',s:'Italic',z:21,c:C.ink,w:680,lh:140});
+const bs=T(WD,'Mike’s Yelp page',680,bq.y+bq.height+10,{z:14,s:'SemiBold',c:C.tanD,u:true,ls:12});
+const yt=T(WD,'and he explains the why behind the fix',680,bs.y+bs.height+20,{f:'Yellowtail',z:34,c:C.tanD,n:'script accent (1 per page)'});
+WD.resize(1440,Math.max(776+40,yt.y+yt.height)+100);y+=WD.height;
+// real job photos
+const PH=F(D,'07 Real job photos',0,y,1440,800,C.paper);
+b=HEAD(PH,80,100,'Real jobs',[['From Mike’s '],['own jobs.',1]],'Photos from Mike’s Yelp and Instagram. No stock photos.',{w:820});
+JOBS.forEach((j,i)=>{const x=80+i*435;IMGHX(PH,x,b+48,410,320,j[0],{cutCorners:30,n:'photo (real): '+j[0]});T(PH,j[1],x,b+48+336,{z:15,s:'Medium',c:C.ink});});
+PH.resize(1440,b+48+320+120);y+=PH.height;
+// reviews
+const RV=F(D,'08 Reviews (Yelp, word for word)',0,y,1440,900,C.char);
+b=HEAD(RV,80,100,'From Yelp',[['How Mike '],['works.',1]],'Word for word from Mike’s Yelp page.',{dark:true,w:820});
+const r1=REVIEW(RV,80,b+48,780,STU,'Stuart W.','San Diego','Jul 16, 2025',{dark:true});const r2=REVIEW(RV,884,b+48,476,ERIK,'Erik N.','Buena Park','Sep 4, 2025',{dark:true});
+RV.resize(1440,b+48+Math.max(r1.height,r2.height)+110);y+=RV.height;
+// FAQ
+const Fq=F(D,'09 FAQ',0,y,1440,900,C.paper);
+HEAD(Fq,80,100,'Drain questions',[['Asked '],['first.',1]],'Straight answers. Anything not confirmed yet is marked.',{w:460,iw:420});
+let qy=100;FAQ.forEach((q,i)=>{const open=i===0;const c=F(Fq,'faq: '+q[0],600,qy,760,76,open?C.white:C.paper);c.strokes=[solid('#DDD5BC')];
+ T(c,q[0],28,24,{f:'Playfair Display',s:'Black',z:21,c:C.ink,w:640});HX(c,700,22,36,30,{stroke:C.ink,sw:1.4,cut:8});T(c,open?'–':'+',700,23,{z:20,s:'SemiBold',w:36,a:'CENTER'});
+ if(open){const t=T(c,q[1],28,70,{z:16,c:C.muteD,w:660,lh:155});c.resize(760,t.y+t.height+28);}qy+=c.height+12;});
+Fq.resize(1440,Math.max(qy,420)+100);y+=Fq.height;
+// related
+const RL=F(D,'10 Related services',0,y,1440,700,C.ink);
+b=HEAD(RL,80,100,'Related services',[['Other jobs Mike '],['handles.',1]],null,{dark:true,w:820,z:48});
+REL.forEach((r,i)=>{const c=F(RL,'related: '+r[1],80+i*326,b+48,302,250,C.char);c.strokes=[solid(C.line)];HX(c,24,24,64,44,{stroke:C.tan,sw:1.3,cut:13});SVG(c,IC[r[0]](C.tan),44,34,24);
+ const t=T(c,r[1],24,90,{f:'Playfair Display',s:'Black',z:21,c:C.cream,w:254,lh:115});T(c,r[2],24,t.y+t.height+10,{z:15,c:C.mute,w:254,lh:150});T(c,'See service  →',24,208,{z:14,s:'SemiBold',c:C.tan});});
+RL.resize(1440,b+48+250+110);y+=RL.height;
+const CB=CONTACTBAND(D,y,{photo:'van',h:[['Drain backed up in\n'],['Riverside?',1],[' Call Mike.']]});y+=CB.height;const FT=FOOTER(D,y);y+=FT.height;D.resize(1440,y);
+NOTE(sec,1600,700,'MIKE TO CONFIRM: a drain cleaning review or photo. Stuart W.’s review is about a water service line leak (used here for how Mike works).');
+NOTE(sec,1600,1000,'MIKE TO CONFIRM: job and town for each job photo (grease interceptor, grease line, asphalt patch). Captions kept generic until then.');
+NOTE(sec,1600,1300,'MIKE TO CONFIRM (FAQ): sewer camera + hydro jetter done in-house; how he prices drain jobs (free estimate before work); emergency hours (Yelp 24h vs Nextdoor 7am-11pm).');
+// ================= MOBILE =================
+const M=F(sec,'Drain cleaning page - Mobile 390',2000,200,390,9000,C.paper);MHEADER(M,0);
+const mh=MPAGEHERO(M,72,{photo:'roots',photo2:'cleanout',z:36,crumb:'Home / Services / Drain cleaning',eye:'Drain cleaning',h1:H1,intro:'Slow sinks, backed-up toilets, roots, restaurant grease. Mike clears it with a snake or a hydro jetter and tells you why it clogged.'});
+let my2=72+mh.height;
+const mQA=F(M,'Quick answer (AEO)',0,my2,390,900,C.paper);EYE(mQA,'Quick answer',20,48,{z:11});
+const mb=F(mQA,'quick answer box',20,96,350,300,C.white);mb.strokes=[solid('#DDD5BC')];const mq1=T(mb,'What does drain cleaning with Mike involve?',24,24,{f:'Playfair Display',s:'Black',z:22,c:C.ink,w:302});
+const mq2=T(mb,ANS,24,mq1.y+mq1.height+14,{z:16,c:C.ink,w:302,lh:155});mb.resize(350,mq2.y+mq2.height+28);R(mb,0,0,5,mb.height,C.tan,1,'accent bar');
+let ky=96+mb.height+20;['Homes and businesses','Snaking, hydro jetting, camera','Free estimates','15% off for new customers'].forEach((s,i)=>{SVG(mQA,IC.check(C.tanD),20,ky+i*36+2,18);T(mQA,s,48,ky+i*36,{z:15,s:'Medium',c:C.ink});});
+mQA.resize(390,ky+4*36+40);my2+=mQA.height;
+const mSG=F(M,'Signs you need it',0,my2,390,1200,C.ink);b=HEAD(mSG,20,56,'Warning signs',[['Signs your drain needs '],['Mike.',1]],'General signs. Mike confirms the cause on site.',{dark:true,w:350,z:34});
+let sy=b+28;SIGNS.forEach(s=>{const c=F(mSG,'sign: '+s[1],20,sy,350,100,C.char);c.strokes=[solid(C.line)];HX(c,16,20,56,38,{stroke:C.tan,sw:1.3,cut:11});SVG(c,IC[s[0]](C.tan),34,29,20);
+ const t=T(c,s[1],88,18,{f:'Playfair Display',s:'Black',z:17,c:C.cream,w:246});const d=T(c,s[2],88,t.y+t.height+4,{z:13,c:C.mute,w:246,lh:140});c.resize(350,Math.max(96,d.y+d.height+18));sy+=c.height+10;});
+mSG.resize(390,sy+46);my2+=mSG.height;
+const mWD=F(M,'What Mike does',0,my2,390,1400,C.cream);b=HEAD(mWD,20,56,'What Mike does',[['Four ways to clear '],['a line.',1]],null,{w:350,z:34});
+IMGHX(mWD,20,b+28,350,300,'bar',{cutCorners:30,n:'photo (real, IG): Mike on a bar sink drain'});const mc=T(mWD,'Mike on a commercial drain job (his Instagram)',20,b+28+310,{z:13,c:C.muteD,w:350});
+let wy=mc.y+mc.height+28;METH.forEach((m,i)=>{HX(mWD,20,wy,52,34,{fill:C.ink,cut:10});T(mWD,String(i+1),20,wy+4,{f:'Playfair Display',s:'Black',z:19,c:C.cream,w:52,a:'CENTER'});
+ T(mWD,m[0],88,wy+2,{f:'Playfair Display',s:'Black',z:20,c:C.ink,w:282});const t=T(mWD,m[1],88,wy+34,{z:14,c:C.muteD,w:282,lh:145});wy=t.y+t.height+24;});
+const mbq=T(mWD,'“Drain Cleaning using powerful snaking and hydrojetting methods to clear even the toughest blockages.”  Mike’s Yelp page',20,wy+4,{f:'Playfair Display',s:'Italic',z:17,c:C.ink,w:350,lh:140});
+const myt=T(mWD,'and he explains the why behind the fix',20,mbq.y+mbq.height+14,{f:'Yellowtail',z:26,c:C.tanD,w:350});mWD.resize(390,myt.y+myt.height+56);my2+=mWD.height;
+const mPH=F(M,'Real job photos',0,my2,390,1200,C.paper);b=HEAD(mPH,20,56,'Real jobs',[['From Mike’s '],['own jobs.',1]],'From Mike’s Yelp and Instagram. No stock photos.',{w:350,z:34});
+let pjy=b+28;JOBS.forEach(j=>{IMGHX(mPH,20,pjy,350,220,j[0],{cutCorners:24,n:'photo (real): '+j[0]});T(mPH,j[1],20,pjy+230,{z:14,s:'Medium',c:C.ink});pjy+=284;});mPH.resize(390,pjy+28);my2+=mPH.height;
+const mRV=F(M,'Reviews (Yelp, word for word)',0,my2,390,1400,C.char);b=HEAD(mRV,20,56,'From Yelp',[['How Mike '],['works.',1]],null,{dark:true,w:350,z:34});
+const m1=REVIEW(mRV,20,b+28,350,STU,'Stuart W.','San Diego','Jul 16, 2025',{dark:true,z:15});const m2=REVIEW(mRV,20,m1.y+m1.height+16,350,ERIK,'Erik N.','Buena Park','Sep 4, 2025',{dark:true,z:15});
+mRV.resize(390,m2.y+m2.height+56);my2+=mRV.height;
+const mF=F(M,'FAQ',0,my2,390,1200,C.paper);b=HEAD(mF,20,56,'Drain questions',[['Asked '],['first.',1]],null,{w:350,z:34});
+let fy=b+28;FAQ.forEach((q,i)=>{const open=i===0;const c=F(mF,'faq: '+q[0],20,fy,350,76,open?C.white:C.paper);c.strokes=[solid('#DDD5BC')];
+ const q1=T(c,q[0],20,20,{f:'Playfair Display',s:'Black',z:18,c:C.ink,w:258});HX(c,296,18,36,30,{stroke:C.ink,sw:1.4,cut:8});T(c,open?'–':'+',296,19,{z:20,s:'SemiBold',w:36,a:'CENTER'});
+ let hh=Math.max(76,q1.y+q1.height+20);if(open){const t=T(c,q[1],20,q1.y+q1.height+12,{z:15,c:C.muteD,w:310,lh:150});hh=t.y+t.height+22;}c.resize(350,hh);fy+=hh+10;});
+mF.resize(390,fy+46);my2+=mF.height;
+const mRL=F(M,'Related services',0,my2,390,900,C.ink);b=HEAD(mRL,20,56,'Related services',[['Other jobs Mike '],['handles.',1]],null,{dark:true,w:350,z:34});
+let rly=b+28;REL.forEach(r=>{const c=F(mRL,'related: '+r[1],20,rly,350,96,C.char);c.strokes=[solid(C.line)];HX(c,16,26,56,38,{stroke:C.tan,sw:1.3,cut:11});SVG(c,IC[r[0]](C.tan),34,35,20);
+ const t=T(c,r[1],88,18,{f:'Playfair Display',s:'Black',z:17,c:C.cream,w:220});T(c,'See service  →',88,t.y+t.height+8,{z:13,s:'SemiBold',c:C.tan});c.resize(350,Math.max(96,t.y+t.height+44));rly+=c.height+10;});
+mRL.resize(390,rly+46);my2+=mRL.height;
+const MC=MCONTACT(M,my2);my2+=MC.height;const MF=MFOOTER(M,my2);my2+=MF.height;MSTICKY(M,my2);my2+=76;M.resize(390,my2);
+NOTE(sec,2430,700,'MIKE TO CONFIRM (mobile): same items as desktop: a drain review/photo, job photo captions, in-house camera + jetter, pricing approach, emergency hours.',300);
+let mxb=0;for(const n of sec.children)mxb=Math.max(mxb,n.y+n.height);sec.resizeWithoutConstraints(2830,mxb+200);
+return {D:D.id,dh:y,M:M.id,mh:my2,sec:[sec.width,sec.height]};

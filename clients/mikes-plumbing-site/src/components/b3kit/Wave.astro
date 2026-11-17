@@ -19,7 +19,7 @@ const st = bottom
 <style>
   .wave { position: absolute; left: 0; right: 0; top: var(--wd-t); height: var(--wd-h); z-index: 3; pointer-events: none; }
   .wave--bottom { top: auto; bottom: -1px; }
-  .wave svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .wave svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
   .wave-m { display: none; }
   @media (max-width: 767px) {
     .wave { top: var(--wm-t); height: var(--wm-h); }

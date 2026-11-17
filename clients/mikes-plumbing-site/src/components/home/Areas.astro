@@ -1,0 +1,164 @@
+---
+// Areas route map (Figma 631:2037 "areas · route map" y 7700-8600; mobile 640:437 y 10164-11122).
+// The real OpenStreetMap image, dashed routes out of Riverside (Figma vectors) that draw with the scroll
+// (scrub.ts [data-route-scrub] on each route's mask), town tags linking to the town pages, the route board, the service
+// ticket. Desktop is a 1440 x 900 stage in Figma px; mobile has its own 390 x 301 map strip (its own Figma vectors).
+import Img from '../ui/Img.astro';
+import Badge from './Badge.astro';
+import Wave from './Wave.astro';
+import { SITE } from '../../data/site';
+import { TOWNS } from '../../data/towns';
+
+const town = (slug: string) => TOWNS.find((x) => x.slug === slug)!;
+// d: desktop route (x, y = its svg box), dot/tag positions in stage px; m: the same for the mobile strip.
+const R = [
+  { s: 'west-hollywood', d: { x: 99, y: 176, p: 'M947.47 138.699C640.526 34.3631 325.119 -10.5727 1.25002 3.89164', dot: [90, 170], tag: [115, 164] },
+    m: { x: 18, y: 56, p: 'M317.71 49.6086C215.835 8.15852 110.198 -6.89148 0.800049 4.4586', dot: [13, 55], tag: [27, 39] } },
+  { s: 'los-angeles', d: { x: 217, y: 211, p: 'M829.353 103.168C559.884 13.1431 283.849 -17.2421 1.25009 12.0125', dot: [208, 213], tag: [233, 208] },
+    m: { x: 57, y: 67, p: 'M278.15 38.8721C188.618 2.18892 96.1679 -7.98775 0.800171 8.34214', dot: [52, 69], tag: [66, 73] } },
+  { s: 'buena-park', d: { x: 502, y: 311, p: 'M544.331 3.07822C348.461 -8.83716 167.434 37.3825 1.25015 141.737', dot: [493, 443], tag: [518, 438] },
+    m: { x: 153, y: 104, p: 'M182.69 2.18297C116.487 -4.16383 55.8573 11.3162 0.800049 48.623', dot: [148, 146], tag: [162, 142] } },
+  { s: 'corona', d: { x: 872, y: 313, p: 'M174.574 1.25049C103.55 17.2562 45.775 54.0608 1.25006 111.664', dot: [863, 415], tag: [888, 410] },
+    m: { x: 277, y: 105, p: 'M58.85 0.799805C35.0624 6.16047 15.7124 18.4871 0.800049 37.7798', dot: [272, 137], tag: [286, 133] } },
+  { s: 'moreno-valley', d: { x: 1046, y: 313, p: 'M1.25 1.25C34.1344 28.0745 71.7949 41.3413 114.231 41.0503', dot: [1149, 344], tag: [1174, 339] },
+    m: { x: 335, y: 105, p: 'M0.800049 0.799805C11.8138 9.78394 24.4271 14.2273 38.64 14.1298', dot: [368, 113], tag: [286, 104] } },
+  { s: 'murrieta', d: { x: 1046, y: 313, p: 'M1.25 1.25C7.51534 173.187 67.8577 323.401 182.277 451.892', dot: [1218, 755], tag: [1242, 750] },
+    m: { x: 335, y: 105, p: 'M0.800049 0.799805C2.89845 58.3854 23.1084 108.695 61.43 151.73', dot: [385, 251], tag: [333, 247] } },
+];
+const REG = [
+  { k: 'Inland Empire', towns: ['riverside', 'corona', 'moreno-valley', 'murrieta'] },
+  { k: 'Orange County', towns: ['buena-park'] },
+  { k: 'Los Angeles', towns: ['los-angeles', 'west-hollywood'] },
+];
+---
+<section class="ar" aria-labelledby="ar-h" data-m-section>
+  <div class="st">
+    <div class="map" data-t="1" data-fx="fade">
+      <div class="map-img"><Img name="map-inland-empire-orange-county-los-angeles" alt="Street map of the Inland Empire, Orange County and Los Angeles with Mike's routes out of Riverside" sizes="(min-width: 768px) 1440px, 486px" widths={[486, 972, 1129]} /></div>
+      <svg class="rts rts-d" viewBox="0 0 1440 900" aria-hidden="true">
+        <defs>{R.map((r, i) => <mask id={`rmd${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width="1600" height="1000"><path d={r.d.p} class="rm" pathLength="1" data-route-scrub /></mask>)}</defs>
+        <circle cx="1046" cy="313" r="110" class="pl a" /><circle cx="1045" cy="313" r="75" class="pl a" /><circle cx="1046" cy="313" r="42" class="pl b" />
+        {R.map((r, i) => <path d={r.d.p} transform={`translate(${r.d.x} ${r.d.y})`} class="rt" mask={`url(#rmd${i})`} />)}
+        {R.map((r) => <circle cx={r.d.dot[0] + 9} cy={r.d.dot[1] + 9} r="7.5" class="dt" />)}
+        <circle cx="1045" cy="313" r="9" class="rs" />
+      </svg>
+      <svg class="rts rts-m" viewBox="0 0 390 301" preserveAspectRatio="none" aria-hidden="true">
+        <defs>{R.map((r, i) => <mask id={`rmm${i}`} maskUnits="userSpaceOnUse" x="-40" y="-40" width="480" height="380"><path d={r.m.p} class="rm" pathLength="1" data-route-scrub /></mask>)}</defs>
+        <circle cx="335" cy="105" r="34" class="pl a" /><circle cx="335" cy="105" r="18" class="pl b" />
+        {R.map((r, i) => <path d={r.m.p} transform={`translate(${r.m.x} ${r.m.y})`} class="rt" mask={`url(#rmm${i})`} />)}
+        {R.map((r) => <circle cx={r.m.dot[0] + 5} cy={r.m.dot[1] + 5} r="4" class="dt" />)}
+        <circle cx="335" cy="105" r="4.75" class="rs" />
+      </svg>
+      <ul class="tags">
+        {R.map((r) => { const t = town(r.s); return (
+          <li style={`--dl:${r.d.tag[0]}px;--dt:${r.d.tag[1]}px;--ml:${r.m.tag[0]};--mt:${r.m.tag[1]}px`}><a href={t.href}>{t.name}<span class="sr-only"> plumber</span></a></li>
+        ); })}
+      </ul>
+      <p class="base" aria-hidden="true"><svg viewBox="0 0 158 56"><path d="M21.28 1H136.72L157 23L136.72 45H21.28L1 23Z" /><path d="M71.1 44.5H87.1L79.1 53.5Z" class="ptr" /></svg><span>Riverside · Base</span></p>
+    </div>
+    <p class="credit">Map © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
+
+    <div class="board" data-t="2">
+      <p class="eb"><svg viewBox="0 0 20 15" aria-hidden="true"><path d="M3.1.8h13.3l2.4 6.5-2.4 6.5H3.1L.8 7.3z" /></svg>Where Mike works</p>
+      <h2 id="ar-h" class="h2"><span class="nw">Based in Riverside.</span> <span class="tn">Working the IE,<br /> OC and LA.</span></h2>
+      <dl class="reg">
+        {REG.map((g) => (
+          <div><dt>{g.k}</dt><dd>{g.towns.map((s, i) => <>{i > 0 && <span aria-hidden="true"> · </span>}<a href={town(s).href}>{town(s).name}</a></>)}</dd></div>
+        ))}
+      </dl>
+      <p class="sure">Not sure Mike covers you? Call or text <a href={SITE.tel}>{SITE.phone}</a>.</p>
+    </div>
+
+    <div class="ticket" data-t="3" data-fx="toss">
+      <p class="tk-k">Service ticket</p>
+      <p class="tk-n">Mike's Plumbing Services</p>
+      <p class="tk-l">Riverside, CA · Service-area business</p>
+      <p class="tk-l b"><a href={SITE.tel}>{SITE.phone}</a> · Open 24 hours (Yelp)</p>
+    </div>
+    <Badge w={120} deg={10} fill={false} tone="ink" class="ar-stamp" data-t="5" data-fx="pop" />
+  </div>
+  <Wave only="d" class="ar-wb" y={862} h={44} d="M0 18C100 42 200 42 300 18C400 -6 500 -6 600 18C700 42 800 42 900 18C1000 -6 1100 -6 1200 18C1300 42 1400 42 1500 18V44H0V18Z" bottom="#FBF8F2" />
+  <Wave only="m" class="ar-wb" y={934} h={30} w={390} d="M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z" bottom="#FBF8F2" />
+</section>
+<style>
+  .ar { position: relative; z-index: 0; overflow: hidden; background: var(--paper); color: var(--ink); }
+  .st { position: relative; width: 1440px; height: 900px; margin-inline: auto; }
+  .map { position: absolute; inset: 0; }
+  .map-img { position: absolute; inset: 0; }
+  .map-img::after { content: ''; position: absolute; inset: 0; background: rgba(243,236,221,.1); }
+  .map-img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .rts { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .rts-m { display: none; }
+  .pl.a { fill: rgba(107,92,62,.1); } .pl.b { fill: rgba(107,92,62,.2); }
+  .rt { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2 7; }
+  .rm { fill: none; stroke: #fff; stroke-width: 10; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .dt { fill: var(--ink); stroke: var(--bone); stroke-width: 3; }
+  .rs { fill: var(--red); stroke: var(--bone); stroke-width: 4; }
+  .tags { margin: 0; padding: 0; list-style: none; }
+  .tags li { position: absolute; left: var(--dl); top: var(--dt); }
+  .tags a { display: block; height: 28px; padding: 0 10px; background: var(--ink); border-radius: 2px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 28px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); white-space: nowrap; transition: background .25s, color .25s; }
+  .tags a:hover { background: var(--red); color: var(--paper); }
+  .base { position: absolute; left: 968px; top: 235px; display: grid; place-items: center; width: 156px; height: 44px; font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 21px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); }
+  .base svg { position: absolute; left: -1px; top: -1px; width: 158px; height: 56px; overflow: visible; }
+  .base svg path { fill: var(--ink); stroke: var(--tan); stroke-width: 2; stroke-linejoin: round; }
+  .base svg .ptr { stroke: none; }
+  .base span { position: relative; margin-top: -1px; }
+  .credit { position: absolute; right: 24px; top: 876px; font-size: 11px; line-height: 12px; color: rgba(14,13,11,.7); }
+  .credit a { text-decoration: underline; text-underline-offset: 2px; }
+  .board { position: absolute; left: 64px; top: 410px; width: 410px; height: 440px; padding: 35px 24px 0 32px; background: var(--bone); border-top: 6px solid var(--tan-dark); box-shadow: 0 20px 40px -12px rgba(14,13,11,.35); }
+  .eb { display: flex; align-items: center; gap: 10px; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .eb svg { width: 18px; height: 13px; fill: none; stroke: var(--tan-dark); stroke-width: 1.6; stroke-linejoin: round; }
+  .h2 { margin-top: 10px; font-family: var(--f-display); font-weight: 400; font-size: 40px; line-height: 43.2px; }
+  .h2 .tn { color: var(--tan-dark); }
+  .nw { white-space: nowrap; }
+  .reg { margin: 37px 0 0; }
+  .reg > div { padding: 10px 0 9px; border-top: 1px solid rgba(14,13,11,.2); }
+  .reg dt { font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+  .reg dd { margin: 0; font-weight: 600; font-size: 15px; line-height: 16px; }
+  .reg a:hover, .sure a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .sure { margin-top: 5px; font-weight: 700; font-size: 14px; line-height: 15px; }
+  .ticket { position: absolute; left: 1000px; top: 56px; width: 340px; height: 150px; padding: 24px 26px; background: var(--bone); rotate: -2deg; box-shadow: 0 14px 28px -10px rgba(14,13,11,.35); }
+  .ticket::before { content: ''; position: absolute; inset: 10px; border: 1px dashed rgba(14,13,11,.3); pointer-events: none; }
+  .tk-k { font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .24em; text-transform: uppercase; color: var(--tan-dark); }
+  .tk-n { margin-top: 4px; font-family: var(--f-label); font-weight: 600; font-size: 19px; line-height: 28px; letter-spacing: .04em; text-transform: uppercase; }
+  .tk-l { margin-top: 6px; font-weight: 500; font-size: 13px; line-height: 14px; }
+  .tk-l.b { margin-top: 8px; font-weight: 700; }
+  .st :global(.ar-stamp) { position: absolute; left: 1250px; top: 140px; opacity: .9; }
+  .ar :global(.ar-wb) { z-index: 3; }
+
+  @media (min-width: 1024px) and (max-width: 1151px) { .st { zoom: .711; } }
+  @media (min-width: 1152px) and (max-width: 1279px) { .st { zoom: .8; } }
+  @media (min-width: 768px) and (max-width: 1023px) { .st { zoom: .533; } }
+  @media (max-width: 1279px) { .ar :global(.ar-wb.only-d) { top: auto !important; bottom: -6px; } }
+  @media (max-width: 767px) {
+    .st { width: auto; max-width: 430px; height: 958px; }
+    .map { inset: 0 0 auto; height: 301px; overflow: hidden; }
+    .map-img { left: -4.36%; right: auto; width: 124.6%; }
+    .rts-d, .pl { display: none; }
+    .base { left: calc(279 / 390 * 100%); top: 65px; width: 112px; height: 24px; font-size: 10px; line-height: 15px; letter-spacing: .08em; }
+    .base svg { width: 114px; height: 31px; }
+    .base svg path { stroke-width: 1.5; }
+    .rts-m { display: block; }
+    .rts-m .rt { stroke-width: 1.6; stroke-dasharray: 1.5 4.5; }
+    .rts-m .rm { stroke-width: 6; }
+    .rts-m .dt { stroke-width: 2; }
+    .rts-m .rs { stroke-width: 2.5; }
+    .rts-m .pl { display: inline; }
+    .tags li { left: calc(var(--ml) / 390 * 100%); top: var(--mt); }
+    .tags a { height: 18px; padding: 0 6px; font-size: 9px; line-height: 18px; letter-spacing: .08em; }
+    .credit { right: 20px; top: 307px; font-size: 10px; line-height: 11px; color: rgba(14,13,11,.6); }
+    .board { left: 16px; right: 16px; top: 277px; width: auto; height: 445px; padding: 28px 22px 0; border-top-width: 5px; }
+    .eb { font-size: 13px; line-height: 19px; }
+    .h2 { margin-top: 8px; font-size: 34px; line-height: 36.7px; }
+    .reg { margin-top: 20px; }
+    .reg > div { padding: 9px 0 19px; }
+    .reg dt { font-size: 11px; line-height: 18px; }
+    .sure { margin-top: 9px; }
+    .ticket { left: 30px; right: 30px; top: 758px; width: auto; height: 140px; padding: 22px 24px; }
+    .tk-k { font-size: 10px; line-height: 15px; }
+    .tk-n { margin-top: 3px; font-size: 17px; line-height: 25px; }
+    .tk-l { font-size: 12px; line-height: 13px; }
+    .st :global(.ar-stamp) { left: auto; right: 28px; top: 840px; width: 100px; }
+    .ar :global(.ar-wb.only-m) { top: auto !important; bottom: -6px; }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+// /emergency-plumber (Figma 669:783 desktop, 670:2103 mobile; PAGES-COPY section 4). Builder 2.
+import Base from '../layouts/Base.astro';
+import '../components/services/kit/kit.css';
+import EmHero from '../components/emergency/EmHero.astro';
+import SafetyCard from '../components/emergency/SafetyCard.astro';
+import CallLog from '../components/emergency/CallLog.astro';
+import Tickets from '../components/emergency/Tickets.astro';
+import TearOff from '../components/emergency/TearOff.astro';
+import RelatedFit from '../components/services/kit/RelatedFit.astro';
+import { serviceSchema } from '../lib/schema';
+import { SITE } from '../data/site';
+const description = `Emergency plumber in Riverside, CA. Burst line, backed-up drain, no hot water? Call Mike at ${SITE.phone}. Open 24 hours (Yelp).`;
+---
+<Base title="Emergency Plumber Riverside CA | Mike's Plumbing" description={description} path="/emergency-plumber"
+  og="leak-repair-wall-opened" ogAlt="A wall Mike's Plumbing opened to fix a leaking pipe"
+  jsonld={[serviceSchema({ name: 'Emergency plumbing in Riverside, CA', serviceType: 'Emergency plumbing', path: '/emergency-plumber', description })]}>
+  <EmHero />
+  <SafetyCard />
+  <CallLog />
+  <Tickets />
+  <TearOff />
+  <RelatedFit cap links={[{ name: 'Drain cleaning', href: '/drain-cleaning' }, { name: 'Water heaters', href: '/water-heaters' }, { name: 'All services', href: '/services' }]} />
+</Base>
+<script>import '../components/services/kit/scrub';</script>

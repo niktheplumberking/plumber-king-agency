@@ -1,0 +1,26 @@
+---
+// /drain-cleaning (Figma 670:13365 desktop, 672:437 mobile; PAGES-COPY section 3). Builder 2.
+import Base from '../layouts/Base.astro';
+import '../components/services/kit/kit.css';
+import DcHero from '../components/drain-cleaning/DcHero.astro';
+import Stack from '../components/drain-cleaning/Stack.astro';
+import RootsProof from '../components/drain-cleaning/RootsProof.astro';
+import Jet from '../components/drain-cleaning/Jet.astro';
+import DcReviews from '../components/drain-cleaning/DcReviews.astro';
+import PhoneCta from '../components/drain-cleaning/PhoneCta.astro';
+import RelatedFit from '../components/services/kit/RelatedFit.astro';
+import { serviceSchema } from '../lib/schema';
+const description = 'Drain cleaning, hydro jetting and sewer lines in Riverside, CA, including roots in the line and grease interceptors. Homes and commercial. Free estimate.';
+---
+<Base title="Drain Cleaning & Hydro Jetting Riverside CA | Mike's" description={description} path="/drain-cleaning"
+  og="tree-roots-in-sewer-line" ogAlt="Tree roots Mike's Plumbing pulled out of a sewer line"
+  jsonld={[serviceSchema({ name: 'Drain cleaning and hydro jetting in Riverside, CA', serviceType: 'Drain cleaning', path: '/drain-cleaning', description })]}>
+  <DcHero />
+  <Stack />
+  <RootsProof />
+  <Jet />
+  <DcReviews />
+  <PhoneCta h="Drain backed up?" em="Mike's got the fix." checks={['Drains', 'Sewer', 'Hydro jetting']} />
+  <RelatedFit cap links={[{ name: 'Emergency plumbing', href: '/emergency-plumber' }, { name: 'Leaks & water lines', href: '/services#leaks' }, { name: 'All services', href: '/services' }]} />
+</Base>
+<script>import '../components/services/kit/scrub';</script>

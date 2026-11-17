@@ -1,0 +1,99 @@
+---
+// 7.3 The van (Figma 669:911 / 670:2305): the van's rear as the frame, two back doors; the copy on the left door, the photo of
+// his van (doors open, shelving) on the right door. Mobile (670:2305): the copy sits above the van and the left door carries
+// the second quote (an aria-hidden copy; the real text stays in the copy block for screen readers).
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import Img from '../ui/Img.astro';
+const q2 = '“professionalism starts before the first wrench is turned.”';
+---
+<section class="av" aria-labelledby="av-h" data-m-section>
+  <Wave d="a2d" m="a2m" top={1720} topM={1536} />
+  <div class="av-in">
+    <div class="av-van" data-t="4" data-fx="nudge">
+      <span class="av-body" aria-hidden="true"></span>
+      <span class="av-light av-light--l" aria-hidden="true"></span><span class="av-light av-light--r" aria-hidden="true"></span>
+      <div class="av-door av-door--l"><p class="av-dq" aria-hidden="true">{q2}</p><p class="av-dby" aria-hidden="true">Mike Navarro, on his Instagram</p></div>
+      <div class="av-door av-door--r"><div class="av-photo"><Img name="mike-navarro-loading-plumbing-van-riverside" alt="Mike at his van with the back doors open and the shelving inside" sizes="(min-width: 768px) 470px, 136px" box={470 / 596} boxM={136 / 340} /></div></div>
+      <span class="av-handle av-handle--l" aria-hidden="true"></span><span class="av-handle av-handle--r" aria-hidden="true"></span>
+      <span class="av-bumper" aria-hidden="true"></span>
+      <span class="av-plate" aria-hidden="true"><span class="av-plate-s">Riverside · CA</span><span class="av-plate-t">EST 2025</span></span>
+      <span class="av-tyre av-tyre--l" aria-hidden="true"></span><span class="av-tyre av-tyre--r" aria-hidden="true"></span>
+    </div>
+    <div class="av-copy">
+      <Eyebrow>The van</Eyebrow>
+      <h2 id="av-h" class="av-h" data-t="2">An organized van <span class="tone">creates an organized mind.</span></h2>
+      <div class="av-text" data-t="3">
+        <p class="av-qs"><span>“The condition of your work van says a lot about the quality of your work.”</span> <span class="av-q2">{q2}</span></p>
+        <p class="av-para">Shelving inside, everything in its place. That's the van that pulls up to your house.</p>
+      </div>
+      <p class="av-by">Mike Navarro, on his Instagram</p>
+    </div>
+  </div>
+</section>
+<style>
+  .av { position: relative; height: 920px; background: var(--tan); }
+  .av-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
+  .av-van { position: absolute; left: 0; top: 0; width: 1440px; height: 100%; }
+  .av-body { position: absolute; left: 159px; top: 59px; width: 1122px; height: 742px; border: 2px solid var(--ink); border-radius: 70px 70px 0 0; background: var(--bone); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .35); }
+  .av-light { position: absolute; top: 180px; width: 22px; height: 120px; border-radius: 6px; background: var(--red); }
+  .av-light--l { left: 166px; } .av-light--r { left: 1252px; }
+  .av-door { position: absolute; top: 110px; width: 514px; height: 640px; border: 1.5px solid var(--ink); border-radius: 10px; background: var(--bone); }
+  .av-door--l { left: 200px; } .av-door--r { left: 726px; }
+  .av-dq, .av-dby { display: none; }
+  .av-photo { position: absolute; left: 20.5px; top: 20.5px; width: 470px; height: 596px; border-radius: 14px; overflow: hidden; }
+  .av-photo::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 14px; }
+  .av-handle { position: absolute; top: 380px; width: 10px; height: 90px; border-radius: 5px; background: var(--ink-2); }
+  .av-handle--l { left: 690px; } .av-handle--r { left: 740px; }
+  .av-bumper { position: absolute; left: 130px; top: 780px; width: 1180px; height: 44px; border-radius: 8px; background: var(--ink); }
+  .av-plate { position: absolute; left: 640px; top: 770px; width: 160px; height: 62px; border: 2px solid var(--ink); border-radius: 6px; background: var(--bone); display: flex; flex-direction: column; align-items: center; }
+  .av-plate-s { margin-top: 4px; font-family: var(--f-label); font-weight: 500; font-size: 9px; line-height: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+  .av-plate-t { margin-top: 1px; font-family: var(--f-label); font-weight: 700; font-size: 26px; line-height: 39px; letter-spacing: .06em; color: var(--ink); }
+  .av-tyre { position: absolute; top: 824px; width: 140px; height: 30px; border-radius: 15px; background: rgba(14, 13, 11, .9); }
+  .av-tyre--l { left: 180px; } .av-tyre--r { left: 1120px; }
+
+  .av-copy { position: absolute; left: 248px; top: 179px; width: 420px; height: 530px; }
+  .av-h { margin-top: 14px; font-family: var(--f-display); font-weight: 400; font-size: 44px; line-height: 1.06; color: var(--ink); }
+  .av .tone { color: var(--tan-dark); }
+  .av-qs { margin-top: 24px; font-weight: 500; font-size: 16px; line-height: 1.55; color: var(--ink); }
+  .av-q2 { display: block; }
+  .av-para { margin-top: 18px; font-size: 16px; line-height: 1.55; color: var(--ink-2); }
+  .av-by { position: absolute; left: 0; top: 511px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+
+  @media (max-width: 1279px) {
+    .av { height: auto; padding: 59px 0 84px; }
+    .av-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; height: auto; display: flex; flex-direction: column-reverse; }
+    .av-copy { position: static; width: auto; height: auto; }
+    .av-h { margin-top: 10px; font-size: 34px; }
+    .av-text { margin-top: 16px; font-size: 15px; line-height: 1.55; }
+    .av-qs, .av-para { display: inline; margin: 0; font-weight: 400; font-size: 15px; line-height: 1.55; color: var(--ink); }
+    .av-q2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .av-by { display: none; }
+    /* the van: % of the 358 x 436 mobile van box (670:2310) */
+    .av-van { position: relative; left: auto; top: auto; width: calc(100% + 8px); height: auto; margin: 40px -4px 0; aspect-ratio: 358 / 436; }
+    .av-body { left: 0; top: 0; width: 100%; height: 96.33%; border-width: 1.5px; border-radius: 40px 40px 0 0; }
+    .av-light { top: 16.06%; width: 2.79%; height: 16.06%; border-radius: 4px; }
+    .av-light--l { left: 1.12%; } .av-light--r { left: 96.09%; }
+    .av-door { top: 6.42%; width: 43.58%; height: 82.57%; border-width: 1.2px; border-radius: 6px; }
+    .av-door--l { left: 5.59%; } .av-door--r { left: 50.84%; }
+    .av-dq { display: block; margin: 24px 12px 0 14px; font-family: var(--f-display); font-size: 16px; line-height: 1.16; color: var(--ink); }
+    .av-dby { display: block; position: absolute; left: 14px; right: 12px; bottom: 13px; font-family: var(--f-label); font-weight: 500; font-size: 9px; line-height: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan-dark); }
+    .av-photo { left: 9px; top: 9px; right: 9px; bottom: 9px; width: auto; height: auto; border-radius: 8px; }
+    .av-photo::after { display: none; }
+    .av-handle { top: 41.28%; width: 1.68%; height: 11.47%; border-radius: 3px; }
+    .av-handle--l { left: 45.81%; } .av-handle--r { left: 52.51%; }
+    .av-bumper { left: -3.35%; top: 94.04%; width: 106.7%; height: 5.96%; border-radius: 6px; }
+    .av-plate { left: 36.03%; top: 92.66%; width: 27.93%; height: 8.72%; border-width: 1.5px; border-radius: 4px; justify-content: center; }
+    .av-plate-s { display: none; }
+    .av-plate-t { margin: 0; font-size: 17px; line-height: 25px; }
+    .av-tyre { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .av { padding: 90px 0 110px; }
+    .av-h { font-size: clamp(40px, 5vw, 52px); }
+    .av-qs, .av-para { font-size: 17px; }
+    .av-dq { margin: 40px 28px 0 28px; font-size: clamp(20px, 3vw, 28px); }
+    .av-dby { left: 28px; bottom: 26px; font-size: 11px; }
+    .av-plate-t { font-size: 22px; }
+  }
+</style>

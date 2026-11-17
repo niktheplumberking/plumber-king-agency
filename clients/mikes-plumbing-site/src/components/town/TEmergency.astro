@@ -29,11 +29,11 @@ const { t } = Astro.props;
   }
   @media (max-width: 767px) {
     .te { height: 154px; }
-    .te-row { display: grid; grid-template-columns: 26px 1fr; column-gap: 6px; align-content: center; height: 100%; }
-    .te-dot { width: 24px; height: 24px; margin: 0 0 0 -6px; } .te-dot::after { inset: 6px; }
-    .te-h { margin: 0; font-size: 20px; line-height: 26px; white-space: normal; }
-    .te-t { grid-column: 2; margin: 0; font-size: 13px; line-height: 18px; }
-    .te-ph { grid-column: 1 / -1; margin: 12px 0 0 6px; font-size: 34px; gap: 18px; }
-    .te-ar { font-size: 26px; }
+    .te-row { display: grid; grid-template-columns: 24px 1fr; column-gap: 2px; align-content: start; height: 100%; padding-top: 26px; }
+    .te-dot { width: 24px; height: 24px; margin: 2px 0 0 -6px; } .te-dot::after { inset: 6px; }
+    .te-h { margin: 0; font-size: 21px; line-height: 28px; white-space: normal; }
+    .te-t { grid-column: 2; margin: 6px 0 0; font-size: 13px; line-height: 14px; }
+    .te-ph { grid-column: 2; margin: 8px 0 0; font-size: 30px; line-height: 44px; gap: 14px; }
+    .te-ar { font-size: 24px; }
   }
 </style>

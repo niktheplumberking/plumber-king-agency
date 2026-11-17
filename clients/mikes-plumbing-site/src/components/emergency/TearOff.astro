@@ -1,0 +1,78 @@
+---
+// Final CTA · tear-off flyer (Figma 669:783 y 3260 h 640, coal; mobile y 3236 h 620). Mike's flyer with the logo, "Call
+// now.", the ink call button and a row of tear-off phone tabs, one already torn off and lying beside it ("Take one.").
+// Positions are Figma px for the 1440 frame (desktop; scaled down on tablets) and the 390 frame (phones), so the flyer keeps
+// its proportions: it is one drawn object, not a text layout.
+import { Image } from 'astro:assets';
+import logoInk from '../../assets/brand/logo-ink.png';
+import Wave from '../services/kit/Wave.astro';
+import Btn from '../services/kit/Btn.astro';
+import { SITE } from '../../data/site';
+const tabs = Array.from({ length: 10 }, (_, i) => i);
+---
+<section class="ft sv-sec sv-coal" aria-labelledby="ft-h" data-m-section>
+  <Wave fill="var(--coal)" up top={-30} shape={[350, 14, -4.667, 32.667, 34]} topM={-26} shapeM={[150, 12, -4, 28, 30]} />
+  <div class="ft-in">
+    <div class="ft-fly" data-t="2">
+      <Image src={logoInk} alt="Mike's Plumbing Services" width={440} class="ft-logo" />
+      <h2 id="ft-h" class="sv-h ft-h lh-abril">Call now.</h2>
+      <p class="ft-sub">Open 24 hours (Yelp). Free estimate.</p>
+      <div class="ft-btn"><Btn v="ink" l1={`Call ${SITE.phone}`} l2="Tap to call" w={360} label={`Call ${SITE.phone}`} /></div>
+      <i class="ft-cut" aria-hidden="true"></i>
+      <ul class="ft-tabs" role="list" aria-hidden="true">
+        {tabs.map((i) => <li class:list={['ft-tab', { 'is-gone': i === 3, 'is-m-gone': i === 2, 'is-m-out': i > 4 }]} style={`--i:${i}`}><span class="ft-num">{SITE.phone}</span><span class="ft-mike">Mike</span></li>)}
+      </ul>
+    </div>
+    <a class="ft-torn" href={SITE.tel} aria-label={`Call ${SITE.phone}`} data-t="3"><span class="ft-num">{SITE.phone}</span></a>
+    <p class="ft-take sv-script lh-yest" data-t="3" aria-hidden="true">Take one.</p>
+  </div>
+</section>
+
+<style>
+  .ft { position: relative; }
+  .ft-in { position: relative; width: 1440px; height: 640px; margin: 0 auto; }
+  .ft-fly { position: absolute; left: 180px; top: 50px; width: 1000px; height: 520px; rotate: 1.5deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 30px 50px -10px rgba(0, 0, 0, .6); }
+  .ft-logo { position: absolute; left: 50px; top: 46px; width: 220px; height: 140px; object-fit: contain; }
+  .ft-h { position: absolute; left: 310px; top: 40px; margin: 0; font-size: 84px; color: var(--ink); white-space: nowrap; }
+  .ft-sub { position: absolute; left: 314px; top: 150px; margin: 0; font-family: var(--f-sans); font-weight: 700; font-size: 20px; line-height: 22px; color: var(--ink); white-space: nowrap; }
+  .ft-btn { position: absolute; left: 314px; top: 196px; width: 360px; }
+  .ft-btn :global(.sv-btn) { width: 100%; }
+  .ft-cut { position: absolute; left: 0; right: 0; top: 300px; height: 1.5px; background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 12px); }
+  .ft-tabs { position: absolute; left: 0; top: 300px; width: 100%; height: 220px; margin: 0; padding: 0; list-style: none; }
+  .ft-tab { position: absolute; left: calc(var(--i) * 100px); top: 0; width: 100px; height: 220px; }
+  .ft-tab:not(:first-child)::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1.2px; background: repeating-linear-gradient(180deg, var(--ink) 0 3px, transparent 3px 7px); }
+  .ft-tab.is-gone { background: var(--coal); top: 1px; }
+  .ft-tab.is-gone::before, .ft-tab.is-gone > * { display: none; }
+  .ft-tab.is-gone + .ft-tab::before { display: block; }
+  .ft-num { position: absolute; left: 35px; top: 156px; width: 136px; height: 30px; rotate: -90deg; transform-origin: 0 0; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .04em; color: var(--ink); white-space: nowrap; }
+  .ft-mike { position: absolute; left: 61px; top: 45px; width: 25px; height: 16px; rotate: -90deg; transform-origin: 0 0; font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+  .ft-torn { position: absolute; left: 1230px; top: 320px; width: 100px; height: 220px; rotate: -14deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 12px 20px -6px rgba(0, 0, 0, .5); text-decoration: none; transition: rotate .4s var(--ease-out); }
+  .ft-torn:hover { rotate: -10deg; }
+  .ft-take { position: absolute; left: 1210px; top: 220px; margin: 0; font-size: 40px; color: var(--tan); white-space: nowrap; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ft { padding: 40px 0 30px; }
+    .ft-in { margin: 0; zoom: calc(100vw / 1440px); }
+  }
+  @media (max-width: 767px) {
+    .ft { padding-top: 60px; z-index: 2; }
+    .ft-in { width: 350px; height: 560px; zoom: min(1, calc((100vw - 40px) / 350px)); }
+    .ft-fly { left: 0; top: 0; width: 350px; height: 410px; box-shadow: 0 20px 30px -8px rgba(0, 0, 0, .6); }
+    .ft-logo { left: 20px; top: 24px; width: 120px; height: 78px; }
+    .ft-h { left: 150px; top: 30px; font-size: 46px; }
+    .ft-sub { left: 20px; top: 118px; font-size: 15px; line-height: 16px; }
+    .ft-btn { left: 20px; top: 152px; width: 310px; }
+    .ft-cut { top: 240px; }
+    .ft-tabs { top: 240px; height: 170px; }
+    .ft-tab { left: calc(var(--i) * 70px); width: 70px; height: 170px; }
+    .ft-tab.is-m-out { display: none; }
+    .ft-tab.is-gone { background: none; top: 0; }
+    .ft-tab.is-gone::before, .ft-tab.is-gone > * { display: block; }
+    .ft-tab.is-m-gone { background: var(--coal); top: 1px; }
+    .ft-tab.is-m-gone::before, .ft-tab.is-m-gone > * { display: none; }
+    .ft-mike { display: none !important; }
+    .ft-num { left: 23px; top: 121px; width: 107px; height: 24px; font-size: 16px; line-height: 24px; letter-spacing: .03em; }
+    .ft-torn { left: 230px; top: 440px; width: 70px; height: 170px; rotate: -12deg; box-shadow: 0 10px 16px -6px rgba(0, 0, 0, .5); }
+    .ft-take { left: 20px; top: 470px; font-size: 32px; }
+  }
+</style>

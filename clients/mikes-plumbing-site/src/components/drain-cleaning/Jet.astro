@@ -1,0 +1,105 @@
+---
+// 3.4 Hydro jetting · cross-section (Figma 670:13365 y 2656 h 698, paper; mobile y 3204 h 626). A pipe cut lengthwise: the
+// left half caked with grease (BEFORE), the right half clean (AFTER), the jet nozzle on its hose spraying back into the
+// buildup; eyebrow, H2 with red "jet it.", body.
+// Scroll moment: the seven (mobile five) water jets shoot out of the nozzle into the grease as you scroll (stroke draw).
+import Wave from '../services/kit/Wave.astro';
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import { ab } from '../services/kit/ab';
+// grease blobs along the top / bottom wall and specks in the caked half: [x, y, size] from the Figma JSON
+const grease = [
+  [2, 159.2, 36], [23.8, 526.6, 32.4], [31, 150.2, 66], [54.3, 507.1, 59.4], [82, 154.4, 52], [104.6, 516.2, 46.8],
+  [133, 158.6, 38], [154.9, 525.3, 34.2], [162, 149.6, 68], [185.4, 505.8, 61.2], [213, 153.8, 54], [235.7, 514.9, 48.6],
+  [264, 158, 40], [286, 524, 36], [293, 149, 70], [316.5, 504.5, 63], [344, 153.2, 56], [366.8, 513.6, 50.4],
+  [395, 157.4, 42], [417.1, 522.7, 37.8], [424, 148.4, 72], [447.6, 503.2, 64.8], [475, 152.6, 58], [497.9, 512.3, 52.2],
+  [526, 156.8, 44], [548.2, 521.4, 39.6], [555, 147.8, 74], [578.7, 501.9, 66.6],
+];
+const specks = [[34, 264, 12], [91, 351, 18], [148, 438, 24], [205, 255, 30], [274, 354, 12], [331, 441, 18], [388, 258, 24], [445, 345, 30], [514, 444, 12], [571, 261, 18]];
+const jets = [-150, -95, -45, 0, 45, 95, 150];
+const jetsM = [-70, -35, 0, 35, 70];
+---
+<section class="js sv-sec sv-paper sv-abs" style="--sh:698px" aria-labelledby="js-h" data-m-section>
+  <Wave fill="var(--paper)" up top={-34} topM={-24} />
+  <div class="js-in">
+    <Eyebrow tone="dark" class="js-eb" data-ab style={ab(999.5, 209)}>Hydro jetting</Eyebrow>
+    <h2 id="js-h" class="sv-h sv-h--red js-h" data-t="2" data-ab style={ab(1000, 240, 400)}>When a drain keeps clogging, <em>jet it.</em></h2>
+
+    <div class="js-dia js-d" aria-hidden="true" data-sv-scrub data-start="top 75%" data-end="center 40%">
+      <i class="js-wall" data-ab style={ab(0, 142, 1440, 28)}></i>
+      <i class="js-wall" data-ab style={ab(0, 550, 1440, 28)}></i>
+      <i class="js-hi" data-ab style={ab(0, 142, 1440, 5)}></i>
+      <i class="js-cake" data-ab style={ab(0, 170, 640, 380)}></i>
+      {grease.map(([x, y, s]) => <i class="js-g" data-ab style={ab(x, y, s, s)}></i>)}
+      {specks.map(([x, y, s]) => <i class="js-s" data-ab style={ab(x, y, s, s)}></i>)}
+      <i class="js-clean" data-ab style={ab(640, 170, 800, 380)}></i>
+      <i class="js-hose" data-ab style={ab(700, 356, 240, 8)}></i>
+      <svg class="js-jets" data-ab style={ab(370, 210, 260, 300)} viewBox="0 0 260 300">
+        {jets.map((dy) => <path data-sv-draw d={`M260 150L0 ${150 + dy}`} />)}
+      </svg>
+      <svg data-ab style={ab(629.25, 341.25, 71.5, 37.5)} viewBox="0 0 71.5 37.5"><path d="M.75.75H50.75L70.75 18.75 50.75 36.75H.75Z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" /></svg>
+      <span class="js-lab" data-ab style={ab(40, 106)}>Before · grease and buildup</span>
+      <span class="js-lab" data-ab style={ab(680, 106)}>After · jetted clean</span>
+    </div>
+
+    <div class="js-dia js-m" aria-hidden="true" data-sv-scrub data-start-m="top 80%" data-end-m="center 45%">
+      <span class="js-mlab js-mlab--l">Before</span><span class="js-mlab js-mlab--r">After · clean</span>
+      <i class="js-mwall js-mwall--t"></i><i class="js-mwall js-mwall--b"></i>
+      <div class="js-mcake">
+        {[0, 1, 2, 3, 4, 5].map((i) => <><i class="js-mg js-mg--t" style={`right:${170 - 34 * i}px`}></i><i class="js-mg js-mg--b" style={`right:${157 - 32 * i}px`}></i></>)}
+      </div>
+      <i class="js-mclean"></i>
+      <svg class="js-mjets" viewBox="0 0 135 140">{jetsM.map((dy) => <path data-sv-draw d={`M135 70L0 ${70 + dy}`} />)}</svg>
+      <i class="js-mhose"></i>
+      <svg class="js-mnoz" viewBox="0 0 51.2 29.2"><path d="M.6.6H36.3L50.6 14.6 36.3 28.6H.6Z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.2" /></svg>
+    </div>
+
+    <p class="js-body" data-t="3" data-ab style={ab(1000, 342, 400)}>Snaking pokes a hole through a clog. Hydro jetting washes the inside of the pipe with high-pressure water, so grease and buildup go with it. Ask Mike if your line is a good fit.</p>
+  </div>
+</section>
+
+<style>
+  .js-in { position: relative; }
+  .js-h { margin: 0; font-size: 42px; line-height: 1.04; }
+  .js-body { margin: 0; font-size: 15.5px; line-height: 1.55; color: var(--ink-2); }
+  .js-m { display: none; }
+  .js-d { position: absolute; inset: 0; z-index: 0; }
+  .js-eb, .js-h, .js-body { z-index: 1; }
+  .js-wall { display: block; background: #6b5c3e; }
+  .js-hi { display: block; background: rgba(255, 255, 255, .2); }
+  .js-cake { display: block; background: var(--coal); }
+  .js-g { display: block; border-radius: 50%; background: #3a3326; }
+  .js-s { display: block; border-radius: 50%; background: rgba(76, 66, 49, .8); }
+  .js-clean { display: block; background: var(--bone); }
+  .js-hose { display: block; background: var(--ink-2); }
+  .js-jets path, .js-mjets path { fill: none; stroke: var(--tan); stroke-width: 3; }
+  .js-lab, .js-mlab { font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 19px; letter-spacing: .14em; text-transform: uppercase; color: #6b5c3e; white-space: nowrap; }
+
+  @media (max-width: 1279px) {
+    .js-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .js-d { display: none; } .js-m { display: block; }
+    .js-m { position: relative; width: 100vw; margin-left: calc(-1 * var(--gutter)); height: 232px; margin-top: 32px; }
+    .js-mlab { position: absolute; top: 0; font-size: 11px; line-height: 16px; }
+    .js-mlab--l { left: var(--gutter); } .js-mlab--r { left: calc(50% + 20px); }
+    .js-mwall { position: absolute; left: 0; right: 0; height: 16px; background: #6b5c3e; }
+    .js-mwall--t { top: 20px; } .js-mwall--b { top: 216px; }
+    .js-mcake { position: absolute; left: 0; top: 36px; width: 50%; height: 180px; background: var(--coal); overflow-x: clip; }
+    .js-mg { position: absolute; border-radius: 50%; background: #3a3326; }
+    .js-mg--t { top: -9px; width: 30px; height: 30px; } .js-mg--b { top: 160px; width: 28px; height: 28px; }
+    .js-mclean { position: absolute; left: 50%; right: 0; top: 36px; height: 180px; background: var(--bone); }
+    .js-mjets { position: absolute; left: calc(50% - 145px); top: 56px; width: 135px; height: 140px; overflow: visible; }
+    .js-mjets path { stroke-width: 2.5; }
+    .js-mhose { position: absolute; left: calc(50% + 40px); right: 0; top: 122px; height: 7px; background: var(--ink-2); }
+    .js-mnoz { position: absolute; left: calc(50% - 10.6px); top: 111.4px; width: 51.2px; height: 29.2px; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .js { padding: 109px 0 100px; }
+    .js-h { margin-top: 12px; max-width: 560px; font-size: clamp(36px, 4.4vw, 42px); }
+    .js-body { margin-top: 32px; max-width: 520px; font-size: 17px; }
+  }
+  @media (max-width: 767px) {
+    .js { padding: 59px 0 80px; }
+    .js :global(.js-eb) { font-size: 13px; line-height: 19px; }
+    .js-h { margin-top: 10px; font-size: 34px; }
+    .js-body { margin-top: 28px; }
+  }
+</style>

@@ -17,3 +17,15 @@ about mobile 670:2272 done 45346
 our-work desktop 670:4205 done 84534
 our-work mobile 670:9446 done 43363
 reviews desktop 670:11578 done 82514
+reviews mobile 671:1096 done 60228
+contact desktop 669:438 done 56126
+contact mobile 670:1594 done 46022
+faq desktop 670:3208 done 56276
+faq mobile 670:5203 done 38001
+privacy desktop 670:7059 done 39908
+privacy mobile 670:7187 done 27194
+terms desktop 670:7272 done 41796
+terms mobile 670:7407 done 28543
+thank-you desktop 670:8742 done 39990
+thank-you mobile 670:8864 done 29313
+assets desktop 642:437 done 4047

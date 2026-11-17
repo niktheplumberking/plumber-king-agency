@@ -1,0 +1,92 @@
+---
+// 7.6 What's next (Figma 670:500 / 670:2378): a wall calendar with the 2026 page torn off, 2027 underneath, CTA beside it.
+// Scroll moment: as the section scrolls in, the 2026 page swings from the binding to its torn angle and "Booking now" lights
+// up when it settles. Reduced motion / no JS = the Figma state.
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import CallBtn from '../b3kit/CallBtn.astro';
+import GhostBtn from '../b3kit/GhostBtn.astro';
+---
+<section class="an" aria-labelledby="an-h" data-m-section>
+  <Wave d="a5d" m="a5m" top={4420} topM={4260} />
+  <div class="an-in">
+    <div class="an-cal" aria-hidden="true" data-b3-scrub data-b3-start="top 85%" data-b3-end="center 45%">
+      <div class="an-head"><span class="an-ht"><span class="an-hd">Mike's Plumbing Services · </span>Booking</span></div>
+      <span class="an-ring" style="--i:0"></span><span class="an-ring" style="--i:1"></span><span class="an-ring" style="--i:2"></span><span class="an-ring" style="--i:3"></span>
+      <p class="an-yr">2027</p>
+      <p class="an-now" data-b3-stop="0.97">Booking now</p>
+      <div class="an-torn" data-b3-tw='{"rotation":"+=8","y":-6}'>
+        <svg class="an-page an-page--d" viewBox="-1 -1 342 262"><path d="M0 0L340 0L340 150L318 170L296 152L270 182L246 160L220 196L196 172L170 214L146 190L118 228L92 206L64 244L38 222L0 260Z" /></svg>
+        <svg class="an-page an-page--m" viewBox="-1 -1 192 152"><path d="M0 0L190 0L190 86L176 98L162 86L146 104L130 92L114 114L98 100L80 124L64 110L46 132L28 120L0 150Z" /></svg>
+        <span class="an-old">2026</span>
+      </div>
+    </div>
+    <div class="an-copy">
+      <Eyebrow>2027</Eyebrow>
+      <h2 id="an-h" class="an-h" data-t="2">2026 tested us. <span class="tone">2027 we're built different.</span></h2>
+      <p class="an-body" data-t="3">Booking now for 2027.</p>
+      <div class="an-btns">
+        <CallBtn v="ink" plain />
+        <GhostBtn href="/contact" plain w={220} />
+      </div>
+    </div>
+  </div>
+  <Wave d="a6d" m="a6m" bottom />
+</section>
+<style>
+  .an { position: relative; height: 740px; background: var(--paper); }
+  .an-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
+  .an-cal { position: absolute; left: 150px; top: 120px; width: 500px; height: 520px; background: var(--bone); box-shadow: 0 24px 40px -10px rgba(0, 0, 0, .3); }
+  .an-head { height: 96px; padding-top: 40px; background: var(--ink); text-align: center; }
+  .an-ht { display: block; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 19px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); }
+  .an-ring { position: absolute; top: -14px; left: calc(84px + var(--i) * 80px); width: 12px; height: 34px; border-radius: 6px; background: var(--ink-2); }
+  .an-ring:nth-of-type(3) { left: 324px; } .an-ring:nth-of-type(4) { left: 404px; }
+  .an-yr { position: absolute; left: 0; right: 0; top: 150px; text-align: center; font-family: var(--f-display); font-size: 190px; line-height: 190px; color: var(--ink); }
+  .an-now { position: absolute; left: 0; right: 0; top: 400px; text-align: center; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .24em; text-transform: uppercase; color: var(--red); transition: transform .45s var(--ease-back); }
+  .an-now.is-on { transform: scale(1.08) rotate(-2deg); }
+  .an-torn { position: absolute; left: -50px; top: -24px; width: 340px; height: 260px; transform: rotate(-11deg); transform-origin: 0 0; }
+  .an-page { position: absolute; left: -1px; top: -1px; width: 342px; height: 262px; overflow: visible; fill: var(--paper); stroke: var(--mute); stroke-width: 1; stroke-linejoin: round; filter: drop-shadow(0 18px 14px rgba(0, 0, 0, .25)); }
+  .an-page--m { display: none; }
+  .an-old { position: absolute; left: 30px; top: 20px; font-family: var(--f-display); font-size: 110px; line-height: 110px; color: var(--mute); }
+
+  .an-copy { position: absolute; left: 780px; top: 169px; width: 540px; }
+  .an-h { margin-top: 15px; font-family: var(--f-display); font-weight: 400; font-size: 60px; line-height: 1.04; color: var(--ink); }
+  .an .tone { color: var(--tan-dark); }
+  .an-body { margin-top: 22px; font-size: 19px; line-height: 21px; color: var(--ink-2); }
+  .an-btns { display: flex; gap: 16px; margin-top: 41px; }
+  .an-btns :global(.cb-n) { font-weight: 600; font-size: 21px; letter-spacing: .02em; }
+  .an-btns :global(.gb-l) { font-weight: 700; }
+
+  @media (max-width: 1279px) {
+    .an { height: auto; padding: 70px 0 90px; }
+    .an-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; height: auto; }
+    .an-cal { position: relative; left: auto; top: auto; width: 280px; height: 300px; margin: 0 auto; }
+    .an-head { height: 56px; padding-top: 22px; }
+    .an-ht { font-size: 11px; line-height: 16px; }
+    .an-hd { display: none; }
+    .an-ring { top: -10px; left: calc(55px + var(--i) * 50px); width: 10px; height: 26px; border-radius: 5px; }
+    .an-ring:nth-of-type(3) { left: 165px; } .an-ring:nth-of-type(4) { left: 215px; }
+    .an-yr { top: 90px; font-size: 104px; line-height: 104px; }
+    .an-now { top: 238px; font-size: 14px; line-height: 21px; letter-spacing: .22em; }
+    .an-torn { left: -19px; top: -10px; width: 190px; height: 150px; }
+    .an-page--d { display: none; }
+    .an-page--m { display: block; width: 192px; height: 152px; }
+    .an-old { left: 16px; top: 12px; font-size: 60px; line-height: 60px; }
+    .an-copy { position: static; width: auto; margin-top: 43px; }
+    .an-copy :global(.eb) { font-size: 12.5px; line-height: 19px; }
+    .an-h { margin-top: 6px; font-size: 38px; }
+    .an-body { margin-top: 14px; font-size: 16px; line-height: 17px; }
+    .an-btns { flex-direction: column; gap: 12px; margin-top: 27px; }
+    .an-btns :global(.cb) { width: 100%; height: 60px; justify-content: center; }
+    .an-btns :global(.cb-n) { font-size: 20px; }
+    .an-btns :global(.gb) { width: 100%; height: 56px; align-items: center; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .an { padding: 110px 0 130px; }
+    .an-h { font-size: clamp(44px, 5.5vw, 56px); }
+    .an-body { font-size: 18px; line-height: 22px; }
+    .an-btns { flex-direction: row; }
+    .an-btns :global(.cb) { width: 300px; height: 64px; }
+    .an-btns :global(.gb) { width: 220px; height: 64px; }
+  }
+</style>

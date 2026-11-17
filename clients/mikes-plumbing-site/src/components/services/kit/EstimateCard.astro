@@ -1,0 +1,75 @@
+---
+// "estimate form card" (Figma water-heaters 2.1 / drain-cleaning / emergency): bone card, 2 px ink border, radius 10.
+// Desktop 340 wide (Name / Phone / Town or ZIP inputs 44 tall, "What's going on?" pill chips 34 tall, red submit 56);
+// mobile 350 wide (inputs 46, chips 36). Chips are real checkboxes (name="issue"); validation + sending: scripts/forms.ts.
+// `wide` = the 640 px drain-cleaning card (Name | Phone side by side, 54 px submit); `bare` = no ink border, deeper shadow.
+interface Props { id: string; title?: string; chips: string[]; page: string; wide?: boolean; bare?: boolean; class?: string; [k: string]: any }
+const { id, title = 'Get my free estimate', chips, page, wide, bare, class: cls, ...rest } = Astro.props;
+---
+<form class:list={['ef', { 'ef--wide': wide, 'ef--bare': bare }, cls]} id={id} data-estimate-form novalidate aria-labelledby={`${id}-t`} {...rest}>
+  <p class="ef-t" id={`${id}-t`}>{title}</p>
+  <div class="ef-two">
+    <div><label class="ef-l" for={`${id}-n`}>Name</label>
+    <input class="ef-i" id={`${id}-n`} name="name" type="text" autocomplete="name" required /></div>
+    <div><label class="ef-l" for={`${id}-p`}>Phone</label>
+    <input class="ef-i" id={`${id}-p`} name="phone" type="tel" autocomplete="tel" inputmode="tel" required /></div>
+  </div>
+  <label class="ef-l" for={`${id}-z`}>Town or ZIP</label>
+  <input class="ef-i" id={`${id}-z`} name="town" type="text" autocomplete="postal-code" />
+  <fieldset class="ef-f">
+    <legend class="ef-l">What's going on?</legend>
+    <div class="ef-chips">
+      {chips.map((c, i) => (
+        <label class="ef-c"><input type="checkbox" name="issue" value={c} id={`${id}-c${i}`} /><span>{c}</span></label>
+      ))}
+    </div>
+  </fieldset>
+  <input type="hidden" name="page" value={page} />
+  <button class="ef-b" type="submit">Get my free estimate <svg viewBox="0 0 15 12" width="15" height="12" aria-hidden="true"><path d="M0 6h13M8.2 1.2 13 6l-4.8 4.8" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
+  <p class="ef-msg" data-form-msg role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .ef { position: relative; box-sizing: border-box; padding: 20px 22px 22px; border: 2px solid var(--ink); border-radius: 10px; background: var(--bone); color: var(--ink);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .3); }
+  .ef-t { margin: 0 0 24px; font-family: var(--f-label); font-weight: 600; font-size: 16px; line-height: 24px; letter-spacing: .12em; text-transform: uppercase; }
+  .ef-l { display: block; padding: 0; margin: 0 0 6px; font-family: var(--f-sans); font-weight: 600; font-size: 13px; line-height: 14px; color: #4a443a; }
+  .ef-i { display: block; box-sizing: border-box; width: 100%; height: 44px; margin: 0 0 12px; padding: 0 12px; border: 1px solid rgba(14, 13, 11, .3); border-radius: 6px; background: #fff;
+    font: 400 16px/20px var(--f-sans); color: var(--ink); }
+  .ef-i[aria-invalid='true'] { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
+  .ef-f { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .ef-f legend { margin-bottom: 10px; }
+  .ef-chips { display: flex; flex-wrap: wrap; gap: 8px; padding-right: 4px; }
+  .ef-c { position: relative; display: inline-flex; cursor: pointer; }
+  .ef-c input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .ef-c span { display: inline-flex; align-items: center; height: 34px; box-sizing: border-box; padding: 0 12px; border: 1px solid rgba(14, 13, 11, .5); border-radius: 17px;
+    font: 500 13px/14px var(--f-sans); white-space: nowrap; transition: background-color .2s, color .2s; }
+  .ef-c input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .ef-c:hover span { background: rgba(14, 13, 11, .06); }
+  .ef-c input:checked:hover + span { background: #2a2620; }
+  .ef-c input:focus-visible + span { outline: 2px solid var(--red); outline-offset: 2px; }
+  .ef-b { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 56px; margin-top: 16px; border: 0; border-radius: 6px; background: var(--red); color: #fff;
+    font: 700 16px/17px var(--f-sans); cursor: pointer; transition: background-color .25s; }
+  .ef-b:hover { background: #c3361f; }
+  .ef-b svg { transition: transform .3s var(--ease-out); } .ef-b:hover svg { transform: translateX(3px); }
+  .ef-msg { margin: 0; font: 500 13px/1.4 var(--f-sans); color: var(--red); }
+  .ef-msg:not(:empty) { margin-top: 10px; }
+  .ef--bare { border: 0; padding: 22px 24px 24px; box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .4); }
+  .ef--wide { padding: 24px 28px 24px; }
+  .ef--wide .ef-t { margin-bottom: 14px; }
+  .ef--wide .ef-two { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; }
+  .ef--wide .ef-i { margin-bottom: 14px; }
+  .ef--wide .ef-chips { padding-right: 0; }
+  .ef--wide .ef-b { height: 54px; margin-top: 20px; }
+  @media (max-width: 767px) {
+    .ef--wide .ef-two { display: block; }
+    .ef--wide .ef-t { margin-bottom: 18px; } .ef--wide .ef-i { margin-bottom: 12px; } .ef--wide .ef-b { height: 56px; margin-top: 22px; }
+    .ef.ef--bare, .ef.ef--wide { padding: 20px; }
+    .ef { padding: 18px 18px 18px; box-shadow: none; }
+    .ef-t { margin-bottom: 18px; font-size: 15px; line-height: 22px; }
+    .ef-i { height: 46px; }
+    .ef-chips { padding-right: 0; }
+    .ef-c span { height: 36px; border-radius: 18px; }
+    .ef-b { margin-top: 22px; }
+  }
+</style>

@@ -1,0 +1,141 @@
+---
+// 8.2 The stamp wall (Figma 670:7496 / 670:9496): masonry of his IG photos (captions = only what the posts show) mixed with
+// black job tickets for the job types that have no photo yet [MIKE TO CONFIRM: photos for those, from his IG]. Working filter
+// chips. Masonry = a 1 px-row grid in dense flow: each item has a fixed column and order per breakpoint (desktop 4 columns
+// as 670:7496, mobile 2 columns as 670:9496) and spans its Figma height, so the columns stack exactly and close up on filter.
+// Mobile shows the first ten as in Figma, then "Show all 18 jobs".
+import { Image } from 'astro:assets';
+import logoCream from '../../assets/brand/logo-cream.png';
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import Img from '../ui/Img.astro';
+type It = { t: string; img?: string; cats: string; d: [number, number, number, number?, number?]; m: [number, number, number, number?]; x?: boolean; r?: number; rm?: number };
+// d = [column, order, height, photo height, ticket text width], m = [column, order, height, photo height]; r = ticket turn (deg)
+const ITEMS: It[] = [
+  { t: 'Gas control valve diagnosis on a 75-gallon water heater.', img: 'water-heater-gas-valve-small', cats: 'wh', d: [1, 1, 414, 360], m: [1, 1, 282, 220] },
+  { t: '100-gallon water heater for a restaurant.', cats: 'wh com', d: [1, 2, 150], m: [2, 1, 118], r: -0.8, rm: 1 },
+  { t: 'Copper lines with green buildup.', img: 'corroded-copper-pipe-leak', cats: 'leaks', d: [1, 3, 354, 300], m: [2, 3, 252, 190] },
+  { t: 'Slab leak.', cats: 'leaks', d: [1, 4, 150], m: [1, 3, 118], r: -1.1, rm: 1 },
+  { t: 'Grease interceptor baffle tee.', cats: 'drains com', d: [2, 1, 150], m: [2, 4, 118], r: -0.8, rm: -1 },
+  { t: 'Sewer root extraction.', img: 'tree-roots-in-sewer-line', cats: 'drains', d: [2, 2, 434, 380], m: [1, 2, 292, 230] },
+  { t: 'Wall opened up to reach a leaking line.', img: 'leak-repair-wall-opened', cats: 'leaks', d: [2, 3, 354, 300], m: [1, 4, 252, 190] },
+  { t: 'Re-pipe.', cats: 'leaks', d: [2, 4, 150], m: [2, 6, 118], r: 0.9, rm: -1, x: true },
+  { t: 'Descaling.', cats: 'wh', d: [2, 5, 150], m: [1, 7, 118], r: -0.5, rm: 1, x: true },
+  { t: 'Crawl-space supply line.', img: 'crawlspace-pipe-press-fittings-riverside', cats: 'leaks', d: [3, 1, 394, 340], m: [2, 2, 272, 210] },
+  { t: '4-inch gas line rework.', cats: 'leaks', d: [3, 2, 150], m: [2, 8, 118], r: -1.1, rm: -1, x: true },
+  { t: 'New cleanout in the yard.', img: 'new-sewer-cleanout-in-yard', cats: 'drains', d: [3, 3, 354, 300], m: [2, 5, 252, 190] },
+  { t: 'Pressure regulator on the supply line.', img: 'water-pressure-regulator-replacement', cats: 'leaks fix', d: [3, 4, 384, 330], m: [1, 5, 262, 200] },
+  { t: 'ADU rough-in.', img: 'bathroom-plumbing-rough-in', cats: 'leaks', d: [4, 1, 354, 300], m: [1, 6, 252, 190], x: true },
+  { t: 'On a commercial job.', img: 'commercial-plumbing-job-vans', cats: 'com', d: [4, 2, 274, 220], m: [2, 7, 212, 150], x: true },
+  { t: 'Mainline leak.', cats: 'leaks', d: [4, 3, 150], m: [1, 8, 118], r: -0.5, rm: 1, x: true },
+  { t: 'Flush valve. (His caption says the rest.)', img: 'new-kitchen-faucet-install', cats: 'fix', d: [4, 4, 414, 360], m: [2, 9, 282, 220], x: true },
+  { t: 'Shower valve access.', cats: 'fix', d: [4, 5, 150], m: [1, 9, 118], r: -0.8, rm: -1, x: true },
+];
+const CHIPS = [['all', 'All jobs'], ['wh', 'Water heaters'], ['drains', 'Drains & sewer'], ['leaks', 'Leaks & lines'], ['fix', 'Fixtures'], ['com', 'Commercial']];
+const st = (i: It) => `--c:${i.d[0]};--o:${i.d[1]};--h:${i.d[2]}px;--sd:${i.d[2] + 24};--ph:${i.d[3] ?? 0}px;--cm:${i.m[0]};--om:${i.m[1]};--hm:${i.m[2]}px;--sm:${i.m[2] + 14};--phm:${i.m[3] ?? 0}px;--r:${i.r ?? 0}deg;--rm:${i.rm ?? 0}deg`;
+---
+<section class="ow" aria-labelledby="ow-h" data-m-section>
+  <Wave d="o1d" m="o1m" top={1000} topM={1066} />
+  <div class="ow-in">
+    <Eyebrow>From the job</Eyebrow>
+    <h2 id="ow-h" class="ow-h" data-t="2">Every job <span class="tone">gets the stamp.</span></h2>
+    <div class="ow-chips" role="group" aria-label="Filter jobs" data-t="3">
+      {CHIPS.map(([k, l], i) => <button type="button" class="ow-chip" data-f={k} aria-pressed={i === 0 ? 'true' : 'false'}>{l}</button>)}
+    </div>
+    <ul class="ow-grid is-short" role="list" data-ow-grid aria-live="polite">
+      {ITEMS.map((i) => i.img ? (
+        <li class:list={['ow-tile', i.x && 'ow-x']} style={st(i)} data-cats={i.cats}>
+          <figure><div class="ow-ph"><Img name={i.img} alt={i.t} sizes="(min-width: 768px) 264px, 46vw" widths={[264, 400, 528]} /></div><figcaption>{i.t}</figcaption></figure>
+        </li>
+      ) : (
+        <li class:list={['ow-tk', i.x && 'ow-x']} style={st(i)} data-cats={i.cats}>
+          <span class="ow-tk-l">Job ticket · From his Instagram</span>
+          <p class="ow-tk-t">{i.t}</p>
+          <Image class="ow-tk-s" src={logoCream} alt="" widths={[96, 192]} sizes="96px" />
+        </li>
+      ))}
+    </ul>
+    <button type="button" class="ow-more" data-ow-more aria-expanded="false">Show all {ITEMS.length} jobs <span aria-hidden="true">↓</span></button>
+  </div>
+</section>
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-ow-grid]');
+  const more = document.querySelector<HTMLButtonElement>('[data-ow-more]');
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.ow-chip'));
+  const relayout = () => window.dispatchEvent(new Event('resize')); // ScrollTrigger + Lenis re-measure the page
+  chips.forEach((c) => c.addEventListener('click', () => {
+    const f = c.dataset.f!;
+    chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+    grid?.querySelectorAll<HTMLElement>('li').forEach((li) => { li.hidden = f !== 'all' && !li.dataset.cats!.split(' ').includes(f); });
+    if (f !== 'all') { grid?.classList.remove('is-short'); more?.setAttribute('hidden', ''); }
+    relayout();
+  }));
+  more?.addEventListener('click', () => { grid?.classList.remove('is-short'); more.setAttribute('aria-expanded', 'true'); more.hidden = true; relayout(); });
+</script>
+<style>
+  .ow { position: relative; padding: 119px 0 91px; background: var(--paper); }
+  .ow-in { position: relative; width: 1192px; margin: 0 auto; }
+  .ow-h { margin-top: 12px; font-family: var(--f-display); font-weight: 400; font-size: 68px; line-height: 1.04; color: var(--ink); }
+  .ow .tone { color: var(--tan-dark); }
+  .ow-chips { display: flex; gap: 10px; margin-top: 39px; }
+  .ow-chip { box-sizing: border-box; height: 40px; padding: 0 18px; border: 1.2px solid rgba(14, 13, 11, .5); border-radius: 20px; background: none; font-family: var(--f-sans); font-weight: 700; font-size: 14px; color: var(--ink); white-space: nowrap; cursor: pointer; transition: background-color var(--dur-2), color var(--dur-2), border-color var(--dur-2); }
+  .ow-chip:hover { border-color: var(--ink); }
+  .ow-chip[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .ow-chip:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  .ow-grid { display: grid; grid-template-columns: repeat(4, 280px); column-gap: 24px; grid-auto-rows: 1px; grid-auto-flow: dense; margin: 32px 0 0; padding: 0; list-style: none; }
+  .ow-grid > li { grid-column: var(--c); order: var(--o); grid-row-end: span var(--sd); height: var(--h); }
+  .ow-grid > li[hidden] { display: none; }
+  .ow-tile { padding: 8px; background: var(--bone); box-shadow: 0 10px 24px -8px rgba(0, 0, 0, .2); }
+  .ow-tile figure { margin: 0; }
+  .ow-ph { height: var(--ph); overflow: hidden; }
+  .ow-tile figcaption { margin: 8px 4px 0; font-weight: 500; font-size: 13px; line-height: 1.3; color: var(--ink-2); }
+  .ow-tk { position: relative; overflow: hidden; border-radius: 6px; background: var(--ink); transform: rotate(var(--r)); transform-origin: 0 0; box-shadow: 0 10px 24px -8px rgba(0, 0, 0, .2); }
+  .ow-tk::before, .ow-tk::after { content: ''; position: absolute; top: 65px; width: 20px; height: 20px; border-radius: 50%; background: var(--paper); }
+  .ow-tk::before { left: -10px; } .ow-tk::after { right: -10px; }
+  .ow-tk-l { position: absolute; left: 16px; top: 14px; font-family: var(--f-label); font-weight: 500; font-size: 9.5px; line-height: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan); white-space: nowrap; }
+  .ow-tk-t { position: absolute; left: 16px; top: 38px; width: 160px; font-family: var(--f-display); font-size: 22px; line-height: 1.12; color: var(--paper); }
+  .ow-tk :global(.ow-tk-s) { position: absolute; left: 176px; top: 72px; width: 96px; height: 62px; object-fit: contain; transform: rotate(14deg); transform-origin: 0 0; }
+  .ow-more { display: none; }
+
+  @media (max-width: 1279px) {
+    .ow { padding: 59px 0 80px; }
+    .ow-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; }
+    .ow-in :global(.eb) { font-size: 12px; line-height: 18px; }
+    .ow-h { margin-top: 9px; font-size: 40px; }
+    .ow-chips { gap: 8px; margin: 20px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; }
+    .ow-chips::-webkit-scrollbar { display: none; }
+    .ow-chip { flex: none; height: 36px; padding: 0 14px; border-radius: 18px; font-size: 13px; }
+    .ow-grid { grid-template-columns: 1fr 1fr; column-gap: 10px; margin-top: 28px; }
+    .ow-grid > li { grid-column: var(--cm); order: var(--om); grid-row-end: span var(--sm); height: var(--hm); }
+    .ow-grid.is-short > .ow-x { display: none; }
+    .ow-tile { padding: 6px; box-shadow: 0 8px 18px -6px rgba(0, 0, 0, .2); }
+    .ow-ph { height: var(--phm); }
+    .ow-tile figcaption { margin: 6px 2px 0; font-size: 11px; }
+    .ow-tk { border-radius: 3.72px; transform: rotate(var(--rm)); }
+    .ow-tk::before, .ow-tk::after { top: 53px; width: 12px; height: 12px; }
+    .ow-tk::before { left: -6px; } .ow-tk::after { right: -6px; }
+    .ow-tk-l { left: 10px; top: 9px; font-size: 5.9px; line-height: 9px; }
+    .ow-tk-t { left: 10px; top: 24px; width: 96px; font-size: 13.64px; }
+    .ow-tk :global(.ow-tk-s) { left: auto; right: 4px; top: 70px; width: 60px; height: 38px; }
+    .ow-more { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 54px; margin-top: 14px; border: 1.5px solid var(--ink); border-radius: 6px; background: none; font-family: var(--f-sans); font-weight: 700; font-size: 15px; color: var(--ink); cursor: pointer; }
+    .ow-more[hidden] { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ow { padding: 90px 0 110px; }
+    .ow-h { font-size: clamp(44px, 5.5vw, 60px); }
+    .ow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+    .ow-grid > li { grid-column: var(--cm); order: var(--om); grid-row-end: span var(--sd); height: var(--h); }
+    .ow-grid.is-short > .ow-x { display: block; }
+    .ow-ph { height: var(--ph); }
+    .ow-tile { padding: 8px; }
+    .ow-tile figcaption { font-size: 13px; }
+    .ow-tk { transform: rotate(var(--r)); border-radius: 6px; }
+    .ow-tk::before, .ow-tk::after { top: 65px; width: 20px; height: 20px; }
+    .ow-tk::before { left: -10px; } .ow-tk::after { right: -10px; }
+    .ow-tk-l { left: 16px; top: 14px; font-size: 9.5px; line-height: 14px; }
+    .ow-tk-t { left: 16px; top: 38px; width: 160px; font-size: 22px; }
+    .ow-tk :global(.ow-tk-s) { left: auto; right: 12px; top: 72px; width: 96px; height: 62px; }
+    .ow-more { display: none; }
+  }
+</style>

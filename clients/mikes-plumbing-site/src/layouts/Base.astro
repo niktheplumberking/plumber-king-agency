@@ -111,7 +111,7 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
         var w = d.clientWidth || window.innerWidth;
         if (!document.body) w = window.innerWidth - sb;
         var z = w >= 1280 ? Math.round(w / 1440 * 10000) / 10000 : 1;
-        var s = z > 1 ? String(z) : '';
+        var s = z !== 1 ? String(z) : '';
         if (d.style.zoom !== s) { d.style.zoom = s; d.style.setProperty('--zoom', String(z)); }
       }
       fit();

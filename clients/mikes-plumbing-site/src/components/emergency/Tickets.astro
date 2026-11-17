@@ -1,0 +1,95 @@
+---
+// Tickets · emergencies we handle (Figma 669:783 y 2460 h 800, ink; mobile y 2652 h 584). Eyebrow, H2 and five pinned
+// work-order tickets with a torn top edge (photo, WO number, the emergency, call line). Mobile: a swipe row.
+import Wave from '../services/kit/Wave.astro';
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import Img from '../ui/Img.astro';
+import { ab } from '../services/kit/ab';
+import { SITE } from '../../data/site';
+const tickets = [
+  { h: 'Leaks and slab leaks', img: 'leak-repair-wall-opened', alt: 'A wall opened up to reach a leaking pipe', rot: -2 },
+  { h: 'Main water and service line leaks', img: 'crawlspace-pipe-press-fittings-riverside', alt: 'New water line with press fittings in a crawl space', rot: 1.5 },
+  { h: 'Backed-up drains and sewer lines', img: 'tree-roots-in-sewer-line', alt: 'Roots pulled out of a sewer line', rot: -1 },
+  { h: 'Water heater not working or leaking', img: 'water-heater-gas-valve-small', alt: 'Gas control valve on a water heater', rot: 2 },
+  { h: 'Gas line problems', rot: -1.5 },
+];
+// torn top edge: teeth of `half` px, `d` deep, across `w`
+const zig = (w: number, half: number, d: number) => {
+  const n = Math.round(w / half), pts: string[] = [];
+  for (let i = 0; i <= n; i++) pts.push(`${+((i * w) / n).toFixed(2)}px ${i % 2 ? 0 : d}px`);
+  return `polygon(${pts.join(',')},100% 100%,0 100%)`;
+};
+---
+<section class="tk sv-sec sv-ink sv-abs" style={`--sh:800px;--zd:${zig(224, 8, 10)};--zm:${zig(174, 7.9, 8)}`} aria-labelledby="tk-h" data-m-section>
+  <Wave fill="var(--ink)" up top={-34} shape={[240, 16, -5.333, 37.333, 38]} topM={-26} shapeM={[150, 12, -4, 28, 30]} />
+  <div class="tk-in">
+    <Eyebrow tone="tan" class="tk-eb" data-ab style={ab(119.5, 99)}>The calls</Eyebrow>
+    <h2 id="tk-h" class="sv-h tk-h lh-abril" data-t="2" data-ab style={ab(120, 132)}>What counts as <em>an emergency?</em></h2>
+    <ul class="tk-row" role="list" data-t="3" data-stagger>
+      {tickets.map((t, i) => (
+        <li class="tk-t" data-ab style={`${ab(120 + 244 * i, 290, 224, 400, t.rot)};--tr:${-t.rot}deg`}>
+          <div class="tk-p">
+            {t.img ? <div class="tk-ph sv-photo"><Img name={t.img} alt={t.alt} sizes="(min-width: 768px) 200px, 154px" box={200 / 150} boxM={154 / 116} /></div>
+              : <div class="tk-ph tk-gas" aria-hidden="true">GAS</div>}
+            <span class="tk-wo">WO-0{i + 1}</span>
+            <h3>{t.h}</h3>
+            <i class="tk-ln" aria-hidden="true"></i>
+            <a class="tk-call" href={SITE.tel} aria-label={`Call ${SITE.phone} about ${t.h.toLowerCase()}`}>Call {SITE.phone}&nbsp;&nbsp;<span aria-hidden="true">→</span></a>
+          </div>
+          <i class="tk-pin" aria-hidden="true"></i>
+        </li>
+      ))}
+    </ul>
+    <p class="tk-swipe" aria-hidden="true">← swipe for all five →</p>
+  </div>
+</section>
+
+<style>
+  .tk-in { position: relative; }
+  .tk-h { margin: 0; font-size: 58px; color: var(--paper); white-space: nowrap; }
+  .tk-row { margin: 0; padding: 0; list-style: none; }
+  .tk-t { filter: drop-shadow(0 18px 15px rgba(0, 0, 0, .45)); }
+  .tk-p { position: absolute; inset: 0; background: var(--bone); clip-path: var(--zd); }
+  .tk-ph { position: absolute; left: 12px; top: 22px; width: 200px; height: 150px; }
+  .tk-gas { background: var(--tan); text-align: center; font-family: var(--f-display); font-size: 64px; line-height: 86px; padding-top: 30px; box-sizing: border-box; color: rgba(14, 13, 11, .9); }
+  .tk-wo { position: absolute; left: 16px; top: 190px; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; letter-spacing: .12em; color: var(--red); }
+  .tk-t h3 { position: absolute; left: 16px; top: 214px; width: 192px; margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 24px; line-height: 1.12; color: var(--ink); }
+  .tk-ln { position: absolute; left: 16px; top: 340px; width: 192px; height: 1px; background: repeating-linear-gradient(90deg, #a79d88 0 3px, transparent 3px 7px); }
+  .tk-call { position: absolute; left: 16px; top: 356px; font-family: var(--f-sans); font-weight: 700; font-size: 13px; line-height: 14px; color: var(--ink); text-decoration: none; white-space: nowrap; }
+  .tk-call:hover { text-decoration: underline; }
+  .tk-call::after { content: ''; position: absolute; inset: -12px -8px; }
+  .tk-pin { position: absolute; left: 103px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--red); box-shadow: 0 3px 4px rgba(0, 0, 0, .4); }
+  .tk-swipe { display: none; }
+
+  @media (max-width: 1279px) {
+    .tk-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .tk-h { white-space: normal; }
+    .tk-row { display: flex; gap: 16px; width: calc(100% + 2 * var(--gutter)); margin-left: calc(-1 * var(--gutter)); padding: 4px var(--gutter) 30px; box-sizing: border-box;
+      overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .tk-row::-webkit-scrollbar { display: none; }
+    .tk-t { position: relative; flex: none; width: 224px; height: 400px; rotate: var(--tr); scroll-snap-align: start; scroll-margin-left: var(--gutter); }
+    .tk-swipe { display: block; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .14em; color: var(--mute); }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tk { padding: 100px 0 80px; }
+    .tk-h { margin-top: 12px; font-size: clamp(42px, 5vw, 58px); }
+    .tk-row { margin-top: 40px; }
+    .tk-swipe { margin-top: 10px; }
+  }
+  @media (max-width: 767px) {
+    .tk { padding: 49px 0 34px; }
+    .tk :global(.tk-eb) { font-size: 13px; line-height: 19px; }
+    .tk-h { margin-top: 8px; font-size: 34px; line-height: 1.06; }
+    .tk-row { margin-top: 32px; padding: 4px var(--gutter) 26px; }
+    .tk-t { width: 174px; height: 320px; filter: drop-shadow(0 12px 10px rgba(0, 0, 0, .45)); }
+    .tk-p { clip-path: var(--zm); }
+    .tk-ph { left: 10px; top: 18px; width: 154px; height: 116px; }
+    .tk-gas { font-size: 48px; line-height: 65px; padding-top: 24px; }
+    .tk-wo { left: 12px; top: 146px; font-size: 11px; line-height: 16px; }
+    .tk-t h3 { left: 12px; top: 164px; width: 150px; font-size: 19px; }
+    .tk-ln { display: none; }
+    .tk-call { left: 12px; top: 290px; font-size: 11.5px; line-height: 13px; }
+    .tk-pin { left: 80px; width: 14px; height: 14px; }
+    .tk-swipe { margin-top: 4px; }
+  }
+</style>

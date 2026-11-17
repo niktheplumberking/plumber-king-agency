@@ -1,0 +1,78 @@
+---
+// 2.5 What customers say (Figma 670:7700 y 3420 h 820, paper; mobile y 3987 h 743). Two Yelp quotes on tilted paper slips with
+// a tan top band and the logo stamp. Quotes come from src/data/reviews.ts: each excerpt must appear word for word in that
+// review (checked at build time), the meta line names the reviewer, town, date and the job from the review.
+import { Image } from 'astro:assets';
+import logoInk from '../../assets/brand/logo-ink.png';
+import Wave from '../services/kit/Wave.astro';
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import { ab } from '../services/kit/ab';
+import { REVIEWS } from '../../data/reviews';
+import { SITE } from '../../data/site';
+const pick = (name: string, excerpt: string, job: string) => {
+  const r = REVIEWS.find((x) => x.name === name);
+  if (!r || !r.text.includes(excerpt)) throw new Error(`Slips: "${excerpt}" is not in ${name}'s review`);
+  const [m, d, y] = r.date.split(' ');
+  return { q: excerpt, meta: `${r.name}, ${r.town}, CA · ${m} ${d}, ${y} · ${job}` };
+};
+const a = pick('Sal C.', 'He was upfront and honest with me on pricing and reliable when setting up the appointments.', 'Slab leak, water lines, shower valves');
+const b = pick('Eleanor M.', "He's reasonably priced, detailed & patient. Call him!", '3 toilets and a pressure regulator');
+const r = SITE.rating;
+---
+<section class="sl sv-sec sv-paper sv-abs" style="--sh:820px" aria-labelledby="sl-h" data-m-section>
+  <Wave fill="var(--paper)" top={-34} topM={-24} />
+  <div class="sl-in">
+    <Eyebrow tone="dark" class="sl-eb" data-ab style={ab(119.5, 129)}>On {r.source} · {r.value} · {r.count} reviews</Eyebrow>
+    <h2 id="sl-h" class="sv-h sl-h" data-t="2" data-ab style={ab(120, 162, 420)}>Honest work. <em>In their words.</em></h2>
+    <p class="sl-note" data-t="3" data-ab style={ab(120, 300)}>{r.value} on {r.source}, {r.count} reviews (checked {r.checked})</p>
+    <div class="sl-pile" data-t="3" data-stagger>
+      <figure class="sl-slip sl-slip--a" data-ab style={ab(600, 110, 640, 227, -2)}>
+        <blockquote><p>“{a.q}”</p></blockquote><figcaption>{a.meta}</figcaption>
+      </figure>
+      <figure class="sl-slip sl-slip--b" data-ab style={ab(760, 440, 520, 208, 2.5)}>
+        <blockquote><p>“{b.q}”</p></blockquote><figcaption>{b.meta}</figcaption>
+      </figure>
+      <Image src={logoInk} alt="" width={260} class="sl-stamp" aria-hidden="true" data-ab style={ab(1160, 400, 130, 80, -14)} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .sl-in { position: relative; }
+  .sl-h { margin: 0; font-size: 56px; line-height: 1.04; }
+  .sl-note { margin: 0; font-weight: 500; font-size: 14px; line-height: 15px; color: var(--ink-2); }
+  .sl-slip { margin: 0; box-sizing: border-box; padding: 40px 36px 0; background: var(--bone); border-top: 6px solid var(--tan); box-shadow: 0 14px 28px -8px rgba(0, 0, 0, .2); }
+  .sl-slip blockquote { margin: 0; }
+  .sl-slip p { margin: 0; font-family: var(--f-display); font-size: 30px; line-height: 1.22; color: var(--ink); }
+  .sl-slip figcaption { margin-top: 22px; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 1.4; letter-spacing: .1em; text-transform: uppercase; color: #6b5c3e; }
+  .sl-slip--a { padding-top: 34px; } .sl-slip--b { padding-top: 34px; }
+  .sl-stamp { object-fit: contain; opacity: .9; }
+
+  @media (max-width: 1279px) {
+    .sl-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .sl-pile { position: relative; width: 100%; }
+    .sl-slip, .sl-stamp { position: absolute; transform-origin: 0 0; }
+    .sl-note { order: 9; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sl { padding: 110px 0 100px; }
+    .sl-h { margin-top: 12px; }
+    .sl-pile { height: 560px; margin-top: 40px; }
+    .sl-slip--a { left: 0; top: 0; width: min(640px, 92%); rotate: 2deg; }
+    .sl-slip--b { right: 0; top: 280px; width: min(520px, 80%); rotate: -2.5deg; }
+    .sl-stamp { right: 10px; top: 250px; width: 130px; height: 80px; rotate: 14deg; }
+    .sl-note { margin-top: 24px; }
+  }
+  @media (max-width: 767px) {
+    .sl { padding: 59px 0 66px; }
+    .sl-h { margin-top: 10px; font-size: 34px; line-height: 1.06; }
+    .sl-pile { height: 453px; margin-top: 30px; }
+    .sl-slip { padding: 25px 22px 0; border-top-width: 5px; box-shadow: 0 10px 20px -6px rgba(0, 0, 0, .2); }
+    .sl-slip p { font-size: 22px; }
+    .sl-slip figcaption { margin-top: 16px; font-size: 11px; letter-spacing: .08em; }
+    .sl-slip--a { left: -6px; top: 0; width: 340px; height: 210px; rotate: 2deg; }
+    .sl-slip--b { left: 16px; top: 250px; width: 340px; height: 183px; rotate: -2deg; }
+    .sl-stamp { left: 264px; top: 220px; width: 96px; height: 60px; rotate: 14deg; }
+    .sl-note { margin-top: 20px; font-size: 13px; line-height: 14px; }
+  }
+</style>

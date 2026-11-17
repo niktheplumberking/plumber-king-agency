@@ -1,0 +1,67 @@
+---
+// 2.4 Commercial heaters (Figma 670:7700 y 2720 h 700, ink; mobile y 3305 h 682). A tank side with "100 GAL" in stencil
+// numbers (his restaurant job), eyebrow, H2, body, tan call button.
+import Wave from '../services/kit/Wave.astro';
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import Btn from '../services/kit/Btn.astro';
+import { ab } from '../services/kit/ab';
+import { SITE } from '../../data/site';
+---
+<section class="bh sv-sec sv-ink sv-abs" style="--sh:700px" aria-labelledby="bh-h" data-m-section>
+  <Wave fill="var(--ink)" top={-34} topM={-24} />
+  <div class="bh-in">
+    <figure class="bh-tank" data-t="3" data-ab style={ab(90, 110, 760, 480)}>
+      <i class="bh-band bh-band--a" aria-hidden="true"></i><i class="bh-band bh-band--b" aria-hidden="true"></i>
+      {[[25, 95], [25, 235], [25, 375], [725, 95], [725, 235], [725, 375]].map(([x, y]) => <i class="bh-rv" style={`left:${x}px;top:${y}px`} aria-hidden="true"></i>)}
+      <p class="bh-num" aria-label="100-gallon water heater"><span class="bh-100" aria-hidden="true">100</span><span class="bh-gal" aria-hidden="true">GAL</span></p>
+      <figcaption>Restaurant job · <span class="bh-d">from </span>Mike's <span class="bh-d">Instagram</span><span class="bh-m">IG</span></figcaption>
+    </figure>
+    <Eyebrow tone="tan" class="bh-eb" data-ab style={ab(939.5, 189)}>Commercial</Eyebrow>
+    <h2 id="bh-h" class="sv-h bh-h" data-t="2" data-ab style={ab(940, 222, 400)}>Big heater. <em>Busy kitchen.</em></h2>
+    <p class="bh-body" data-t="3" data-ab style={ab(940, 354, 380)}>One of the jobs on Mike's Instagram: a 100-gallon water heater at a restaurant. If your business runs on hot water, call us.</p>
+    <div class="bh-btn" data-ab style={ab(940, 465, 330, 64)}>
+      <Btn v="tan" l1={SITE.phone} l2="Call about a commercial heater" w={330} label={`Call ${SITE.phone} about a commercial water heater`} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .bh-in { position: relative; }
+  .bh-tank { margin: 0; border-radius: 60px; background: var(--coal); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .5); overflow: hidden; }
+  .bh-band { position: absolute; left: 0; right: 0; height: 10px; background: rgba(14, 13, 11, .6); }
+  .bh-band--a { top: 70px; } .bh-band--b { top: 400px; }
+  .bh-rv { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: #6b5c3e; }
+  .bh-num { margin: 0; color: var(--tan); font-family: var(--f-label); font-weight: 700; }
+  .bh-100 { position: absolute; left: 60px; top: 60px; font-size: 250px; line-height: 371px; }
+  .bh-gal { position: absolute; left: 470px; top: 180px; font-size: 120px; line-height: 178px; }
+  .bh-tank figcaption { position: absolute; left: 60px; top: 430px; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 19px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+  .bh-m { display: none; }
+  .bh-h { margin: 0; font-size: 54px; line-height: 1.04; color: var(--paper); }
+  .bh-body { margin: 0; font-size: 17px; line-height: 1.6; color: var(--mute); }
+  .bh-btn :global(.sv-btn) { width: 100%; }
+
+  @media (max-width: 1279px) {
+    .bh-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .bh-tank { position: relative; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .bh { padding: 90px 0 110px; }
+    .bh-tank { width: 760px; height: 480px; zoom: min(1, calc((100vw - 2 * var(--gutter)) / 760px)); }
+    .bh :global(.bh-eb) { margin-top: 48px; }
+    .bh-h { margin-top: 12px; max-width: 560px; font-size: clamp(40px, 4.6vw, 54px); }
+    .bh-body { margin-top: 20px; max-width: 520px; } .bh-btn { margin-top: 30px; width: 330px; }
+  }
+  @media (max-width: 767px) {
+    .bh { padding: 60px 0 76px; }
+    .bh-tank { width: 100%; height: 230px; border-radius: 34px; box-shadow: 0 14px 28px -8px rgba(0, 0, 0, .5); }
+    .bh-band { height: 6px; } .bh-band--a { top: 34px; } .bh-band--b { top: 190px; }
+    .bh-rv, .bh-d { display: none; } .bh-m { display: inline; }
+    .bh-100 { left: 26px; top: 20px; font-size: 120px; line-height: 178px; }
+    .bh-gal { left: 230px; top: 84px; font-size: 56px; line-height: 83px; }
+    .bh-tank figcaption { left: 26px; top: 204px; font-size: 10px; line-height: 15px; letter-spacing: .12em; }
+    .bh :global(.bh-eb) { margin-top: 39px; }
+    .bh-h { margin-top: 10px; font-size: 34px; line-height: 1.06; }
+    .bh-body { margin-top: 16px; font-size: 15.5px; line-height: 1.55; }
+    .bh-btn { margin-top: 24px; width: 100%; }
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+// 3.3 Roots in the line · proof (Figma 670:13365 y 1896 h 760, ink; mobile y 2452 h 752). Full-bleed photo of the roots
+// pulled from a sewer line under an ink fade, eyebrow, H2, body, the cream logo stamp, a polaroid of the new cleanout and the
+// script line "saving pipes (and noses) daily".
+import { Image } from 'astro:assets';
+import logoCream from '../../assets/brand/logo-cream.png';
+import Wave from '../services/kit/Wave.astro';
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import Img from '../ui/Img.astro';
+import { ab } from '../services/kit/ab';
+---
+<section class="rp sv-sec sv-ink sv-abs" style="--sh:760px" aria-labelledby="rp-h" data-m-section>
+  <div class="rp-bg sv-photo" aria-hidden="true">
+    <Img name="tree-roots-in-sewer-line" alt="" sizes="(min-width: 768px) 100vw, 700px" box={1440 / 760} boxM={700 / 752} />
+  </div>
+  <i class="rp-fade" aria-hidden="true"></i>
+  <Wave fill="var(--ink)" top={-34} topM={-24} />
+  <div class="rp-in">
+    <Eyebrow tone="tan" class="rp-eb" data-ab style={ab(119.5, 119)}>From the job</Eyebrow>
+    <h2 id="rp-h" class="sv-h rp-h" data-t="2" data-ab style={ab(120, 152, 560)}>This is what was <em>in the sewer line.</em></h2>
+    <p class="rp-body" data-t="3" data-ab style={ab(120, 302, 440)}>Sewer root extraction. Photo from the job, posted on Mike's Instagram.</p>
+    <div class="rp-vis" data-t="3">
+      <Image src={logoCream} alt="" width={340} class="rp-stamp" aria-hidden="true" data-ab style={ab(820, 200, 260, 160, -14)} />
+      <figure class="rp-pol" data-ab style={ab(1060, 440, 300, 290, 3)}>
+        <div class="rp-ph sv-photo"><Img name="new-sewer-cleanout-in-yard" alt="A new sewer cleanout Mike put in a front yard" sizes="(min-width: 768px) 280px, 204px" box={280 / 220} boxM={204 / 164} /></div>
+        <figcaption>A new cleanout in the yard.</figcaption>
+      </figure>
+    </div>
+    <p class="rp-script sv-script lh-yest" data-t="4" data-ab style={ab(120, 600)}>saving pipes (and noses) daily</p>
+  </div>
+</section>
+
+<style>
+  .rp-bg { position: absolute; inset: 0; }
+  .rp-fade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14, 13, 11, .9) 0%, rgba(14, 13, 11, .5) 50%, rgba(14, 13, 11, .1) 100%); }
+  .rp-in { position: relative; }
+  .rp-h { margin: 0; font-size: 64px; line-height: 1.02; color: var(--paper); }
+  .rp-body { margin: 0; font-size: 17px; line-height: 1.55; color: var(--tan); }
+  .rp-stamp { object-fit: contain; }
+  .rp-pol { margin: 0; background: var(--bone); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .6); }
+  .rp-ph { position: absolute; left: 10px; top: 10px; width: 280px; height: 220px; }
+  .rp-pol figcaption { position: absolute; left: 12px; top: 244px; font-family: var(--f-sans); font-weight: 600; font-size: 14px; line-height: 15px; color: var(--ink); white-space: nowrap; }
+  .rp-script { margin: 0; font-size: 40px; color: var(--paper); white-space: nowrap; }
+
+  @media (max-width: 1279px) {
+    .rp-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .rp-vis { position: relative; width: 100%; }
+    .rp-stamp, .rp-pol { position: absolute; transform-origin: 0 0; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rp { padding: 110px 0 90px; }
+    .rp-h { margin-top: 12px; max-width: 560px; font-size: clamp(44px, 5vw, 64px); }
+    .rp-body { margin-top: 18px; max-width: 440px; }
+    .rp-vis { height: 380px; margin-top: 30px; }
+    .rp-stamp { right: 330px; top: 30px; width: 260px; height: 160px; rotate: 14deg; }
+    .rp-pol { right: 10px; top: 60px; width: 300px; height: 290px; rotate: -3deg; }
+    .rp-script { margin-top: 30px; }
+  }
+  @media (max-width: 767px) {
+    .rp { padding: 59px 0 49px; }
+    .rp-bg { left: calc(50% - 355px); right: auto; width: 700px; }
+    .rp-fade { background: rgba(14, 13, 11, .6); }
+    .rp :global(.rp-eb) { font-size: 13px; line-height: 19px; }
+    .rp-h { margin-top: 10px; font-size: 36px; line-height: 1.04; }
+    .rp-body { margin-top: 14px; max-width: 330px; font-size: 15px; line-height: 1.5; }
+    .rp-vis { height: 380px; margin-top: 30px; }
+    .rp-stamp { right: 30px; top: 0; width: 170px; height: 104px; rotate: 14deg; }
+    .rp-pol { right: 0; top: 160px; width: 220px; height: 220px; rotate: -3deg; box-shadow: 0 14px 28px -8px rgba(0, 0, 0, .6); }
+    .rp-ph { left: 8px; top: 8px; width: 204px; height: 164px; }
+    .rp-pol figcaption { left: 10px; top: 186px; font-size: 12.5px; line-height: 14px; }
+    .rp-script { margin-top: 30px; font-size: 28px; }
+  }
+</style>

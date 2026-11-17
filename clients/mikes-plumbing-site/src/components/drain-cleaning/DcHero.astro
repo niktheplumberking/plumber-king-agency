@@ -1,0 +1,96 @@
+---
+// 3.1 Hero · cut-away pipe (Figma 670:13365 y 180 h 866, coal; mobile 672:437 y 164 h 1292). Eyebrow, H1, tan script line,
+// quick answer, call + form buttons, three chips, the crawl-space photo inside a cut-away pipe between two flanges, and the
+// wide estimate form card.
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import Btn from '../services/kit/Btn.astro';
+import Chip from '../services/kit/Chip.astro';
+import EstimateCard from '../services/kit/EstimateCard.astro';
+import Img from '../ui/Img.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import { ab } from '../services/kit/ab';
+import { SITE } from '../../data/site';
+---
+<section class="dh sv-sec sv-coal sv-abs" style="--sh:866px" aria-labelledby="dh-h" data-m-section data-m-hero>
+  <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: 'Drain cleaning', href: '/drain-cleaning' }]} class="sr-only" />
+  <div class="dh-in">
+    <Eyebrow tone="tan" class="dh-eb" data-ab style={ab(119.5, 109)}>Drains &amp; sewer lines · Riverside<span class="dh-d">, CA</span></Eyebrow>
+    <h1 id="dh-h" class="sv-h dh-h" data-t="2" data-ab style={ab(120, 142, 520)}>Drain Cleaning &amp; Hydro Jetting in Riverside, CA</h1>
+    <p class="dh-script sv-script" data-t="3" data-ab style={ab(120, 332, 520)}>“We don't cut corners, we clean them!”</p>
+    <p class="dh-body" data-t="3" data-ab style={ab(120, 392, 500)}>Drain cleaning, repair and new installation. Sewer lines and hydro jetting. Homes and commercial.</p>
+    <figure class="dh-vis" data-t="3">
+      <i class="dh-fl dh-fl--l" data-ab style={ab(686, 68, 30, 274)} aria-hidden="true"></i>
+      <i class="dh-fl dh-fl--r" data-ab style={ab(1324, 68, 30, 274)} aria-hidden="true"></i>
+      <div class="dh-photo sv-photo" data-ab style={ab(716, 90, 608, 230)}>
+        <Img name="crawlspace-pipe-press-fittings-riverside" alt="Mike's new pipe and press fittings in a Riverside crawl space" sizes="(min-width: 768px) 608px, 346px" box={608 / 230} boxM={346 / 140} priority />
+        <i class="dh-wall" aria-hidden="true"></i>
+      </div>
+      <figcaption class="dh-cap" data-ab style={ab(716, 350)}>On the job · Mike's Instagram</figcaption>
+    </figure>
+    <div class="dh-btns" data-ab style={ab(120, 474, 526, 64)}>
+      <Btn v="tan" l1={`Call ${SITE.phone}`} l2="Free estimate" w={290} label={`Call ${SITE.phone} for a free estimate`} />
+      <Btn v="out" href="#estimate" l1="Get a free estimate" l2="Form on the right" w={220} class="dh-ghost" />
+    </div>
+    <ul class="dh-chips" role="list" data-t="4" data-stagger data-ab style={ab(120, 562)}>
+      <li><Chip tone="tan">Free estimate</Chip></li>
+      <li><Chip tone="tan">Hydro Jetting</Chip></li>
+      <li><Chip tone="tan">Open 24 hours (Yelp)</Chip></li>
+    </ul>
+    <div class="dh-form" data-t="4" data-ab style={ab(700, 390, 640)}>
+      <EstimateCard id="estimate" page="/drain-cleaning" wide bare chips={['Slow drain', 'Backed up', 'Sewer smell', 'Roots', 'Commercial grease line', 'Not sure']} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .dh-in { position: relative; }
+  .dh-h { margin: 0; font-size: 56px; line-height: 1.04; color: var(--paper); }
+  .dh-script { margin: 0; font-size: 34px; line-height: 50px; color: var(--tan); }
+  .dh-body { margin: 0; font-size: 17px; line-height: 1.6; color: var(--mute); }
+  .dh-vis { margin: 0; }
+  .dh-fl { display: block; border-radius: 4px; background: var(--tan); }
+  .dh-fl::before, .dh-fl::after { content: ''; position: absolute; left: 11px; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+  .dh-fl::before { top: 8px; } .dh-fl::after { bottom: 12px; }
+  .dh-photo { border-radius: 115px; }
+  .dh-wall { position: absolute; inset: 0; border: 10px solid #6b5c3e; border-radius: inherit; }
+  .dh-cap { font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+  .dh-btns { display: flex; gap: 16px; }
+  .dh-chips { display: flex; gap: 10px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 1279px) {
+    .dh-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .dh-vis { position: relative; width: 100%; }
+    .dh-fl, .dh-photo { position: absolute; }
+    .dh-cap { display: none; }
+    .dh-form { position: relative; width: 100%; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .dh { padding: 72px 0 110px; }
+    .dh-h { margin-top: 12px; max-width: 640px; font-size: clamp(44px, 5vw, 56px); }
+    .dh-script { margin-top: 18px; } .dh-body { margin-top: 10px; max-width: 520px; }
+    .dh-vis { height: 274px; margin-top: 36px; }
+    .dh-fl { top: 0; width: 30px; height: 274px; } .dh-fl--l { left: -14px; } .dh-fl--r { right: -14px; }
+    .dh-photo { left: 16px; right: 16px; top: 22px; height: 230px; }
+    .dh-btns { margin-top: 32px; } .dh-chips { margin-top: 24px; flex-wrap: wrap; }
+    .dh-form { max-width: 640px; margin-top: 40px; }
+  }
+  @media (max-width: 767px) {
+    .dh { padding: 39px 0 70px; }
+    .dh-d { display: none; }
+    .dh :global(.dh-eb) { font-size: 13px; line-height: 19px; }
+    .dh-h { margin-top: 10px; font-size: 36px; line-height: 1.06; }
+    .dh-script { margin-top: 10px; font-size: 28px; line-height: 1.15; }
+    .dh-body { margin-top: 8px; font-size: 15.5px; line-height: 1.55; }
+    .dh-vis { height: 168px; margin-top: 12px; }
+    .dh-fl { top: 0; width: 22px; height: 168px; border-radius: 3px; } .dh-fl--l { left: -14px; } .dh-fl--r { right: -14px; }
+    .dh-fl::before, .dh-fl::after { display: none; }
+    .dh-photo { left: 2px; right: 2px; top: 14px; height: 140px; border-radius: 70px; }
+    .dh-wall { border-width: 7px; }
+    .dh-btns { margin-top: 16px; width: 100%; }
+    .dh-btns :global(.dh-ghost) { display: none; }
+    .dh-chips { flex-wrap: wrap; gap: 10px 8px; margin-top: 14px; max-width: 320px; }
+    .dh-chips :global(.sv-chip) { height: 30px; padding: 0 14px; font-size: 11.5px; letter-spacing: .08em; --cs: 1.1px; }
+    .dh-chips :global(.sv-chip-o svg) { width: 15px; }
+    .dh-form { margin-top: 26px; }
+  }
+</style>

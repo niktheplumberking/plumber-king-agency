@@ -6,14 +6,27 @@ import Reviews from '../components/home/Reviews.astro';
 import Services from '../components/home/Services.astro';
 import Family from '../components/home/Family.astro';
 import Work from '../components/home/Work.astro';
+import Diagnosis from '../components/home/Diagnosis.astro';
+import Process from '../components/home/Process.astro';
+import Emergency from '../components/home/Emergency.astro';
+import Areas from '../components/home/Areas.astro';
+import Faq from '../components/home/Faq.astro';
+import FinalCta from '../components/home/FinalCta.astro';
+import { faqSchema } from '../components/home/faq';
 ---
 <Base title="Plumber in Riverside, CA | Mike's Plumbing Services"
   description="Family-owned plumbing for homes and businesses across the Inland Empire, Orange County and Los Angeles. Rated 5.0 on Yelp. Free estimates."
-  path="/" og="mike-navarro-loading-plumbing-van-riverside" ogAlt="Mike Navarro at the back of his plumbing van in Riverside, CA"
+  path="/" jsonld={[faqSchema()]} og="mike-navarro-loading-plumbing-van-riverside" ogAlt="Mike Navarro at the back of his plumbing van in Riverside, CA"
   preload={{ name: 'mike-navarro-loading-plumbing-van-riverside', sizes: '(min-width: 1024px) 522px, 342px', widths: [360, 540, 720] }}>
   <Hero />
   <Reviews />
   <Services />
   <Family />
   <Work />
+  <Diagnosis />
+  <Process />
+  <Emergency />
+  <Areas />
+  <Faq />
+  <FinalCta />
 </Base>

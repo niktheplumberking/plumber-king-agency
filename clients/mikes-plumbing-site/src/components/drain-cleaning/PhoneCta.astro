@@ -1,0 +1,62 @@
+---
+// 3.6 Final CTA · flyer field + giant phone (Figma 670:13365 y 4071 h 643, ink; mobile y 4492 h 556). H2, the three red
+// check marks, the phone number set huge (a tel: link), call + form buttons, a cream rule with a hex nut.
+import Wave from '../services/kit/Wave.astro';
+import Btn from '../services/kit/Btn.astro';
+import { ab } from '../services/kit/ab';
+import { SITE } from '../../data/site';
+interface Props { h: string; em: string; checks: string[] }
+const { h, em, checks } = Astro.props;
+---
+<section class="pp sv-sec sv-ink sv-abs" style="--sh:643px" aria-labelledby="pp-h" data-m-section>
+  <Wave fill="var(--ink)" up top={-34} topM={-24} />
+  <div class="pp-in">
+    <h2 id="pp-h" class="sv-h pp-h" data-t="2" data-ab style={ab(120, 110, 680)}>{h} <em>{em}</em></h2>
+    <ul class="pp-ck" role="list" data-t="3" data-stagger data-ab style={ab(120, 246)}>
+      {checks.map((c) => <li><svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 9.5 7 15 16 2.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" /></svg>{c}</li>)}
+    </ul>
+    <a class="pp-tel" href={SITE.tel} data-t="3" data-ab style={ab(110, 292)} aria-label={`Call ${SITE.phone}`}>{SITE.phone}</a>
+    <div class="pp-btns" data-ab style={ab(1000, 128, 320, 144)}>
+      <Btn v="tan" l1="Call now" l2="Free estimate" w={320} label={`Call ${SITE.phone} now`} />
+      <Btn v="out" href="#estimate" l1="Get a free estimate" l2="Fill in the form" w={320} />
+    </div>
+    <div class="pp-rule" data-ab style={ab(120, 549, 1200, 17)} aria-hidden="true">
+      <svg viewBox="0 0 28 17"><path d="M4.6.75H23.4L27.25 8.5 23.4 16.25H4.6L.75 8.5Z" fill="#0E0D0B" stroke="#D2C5A6" stroke-width="1.5" /></svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pp-in { position: relative; }
+  .pp-h { margin: 0; font-size: 52px; line-height: 1.04; color: var(--paper); }
+  .pp-ck { display: flex; gap: 40px; margin: 0; padding: 0; list-style: none; }
+  .pp-ck li { display: flex; align-items: center; gap: 12px; font-family: var(--f-label); font-weight: 600; font-size: 24px; line-height: 36px; letter-spacing: .08em; text-transform: uppercase; color: var(--tan); white-space: nowrap; }
+  .pp-ck svg { width: 18px; height: 18px; color: var(--red); }
+  .pp-tel { font-family: var(--f-label); font-weight: 700; font-size: 176px; line-height: 261px; color: var(--tan); text-decoration: none; white-space: nowrap; }
+  .pp-tel:hover { text-decoration: underline; text-decoration-thickness: 6px; text-underline-offset: 14px; }
+  .pp-btns { display: flex; flex-direction: column; gap: 16px; }
+  .pp-rule::before { content: ''; position: absolute; left: 0; right: 0; top: 8px; height: 2px; background: rgba(210, 197, 166, .3); }
+  .pp-rule svg { position: absolute; left: 586px; top: 0; width: 28px; height: 17px; overflow: visible; }
+
+  @media (max-width: 1279px) {
+    .pp-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .pp-rule { display: none; }
+    .pp-btns { width: 100%; max-width: 350px; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .pp { padding: 100px 0 100px; }
+    .pp-h { max-width: 680px; font-size: clamp(42px, 5vw, 52px); }
+    .pp-ck { margin-top: 24px; }
+    .pp-tel { margin-top: 10px; font-size: min(176px, calc((100vw - 2 * var(--gutter)) / 6.5)); line-height: 1.48; }
+    .pp-btns { margin-top: 20px; }
+  }
+  @media (max-width: 767px) {
+    .pp { padding: 60px 0 46px; }
+    .pp-h { font-size: 34px; }
+    .pp-ck { gap: 18px; margin-top: 20px; }
+    .pp-ck li { gap: 7px; font-size: 16px; line-height: 24px; letter-spacing: .06em; }
+    .pp-ck svg { width: 12px; height: 12px; }
+    .pp-tel { margin-top: 10px; font-size: 84px; line-height: 1; white-space: normal; max-width: 340px; }
+    .pp-btns { margin-top: 20px; gap: 10px; max-width: none; }
+  }
+</style>

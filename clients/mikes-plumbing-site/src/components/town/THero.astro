@@ -82,14 +82,14 @@ const fid = `est-${t.slug}`;
   .th-photo { position: absolute; inset: 2px; --ch: 55px; overflow: hidden; }
   .th-photo :global(img) { display: block; width: 100%; height: 100%; }
 
-  .th-sign { position: absolute; left: 413px; top: 124px; width: 240px; height: 96px; transform: rotate(4deg); filter: drop-shadow(0 10px 18px rgba(0,0,0,.45)); }
-  .th-sign-in { position: absolute; inset: 0; background: var(--tan); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .th-sign { position: absolute; left: 420px; top: 120px; width: 240px; height: 92px; rotate: 5deg; transform-origin: 0 0; filter: drop-shadow(0 10px 18px rgba(0,0,0,.45)); }
+  .th-sign-in { position: absolute; inset: 0; padding-top: 10px; background: var(--tan); border-radius: 6px; display: flex; flex-direction: column; align-items: center; }
   .th-sign-in::before { content: ''; position: absolute; inset: 7px; border: 2px solid var(--ink); border-radius: 4px; }
-  .th-sign-town { font-family: var(--f-label); font-weight: 700; font-size: min(46px, calc(300px / var(--n))); line-height: 1; letter-spacing: .08em; color: var(--ink); margin-right: -.08em; }
-  .th-sign-county { margin-top: 6px; font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2); }
-  .th-pin { position: absolute; top: -70px; width: 2px; height: 72px; background: repeating-linear-gradient(var(--tan) 0 6px, transparent 6px 10px); transform: rotate(-4deg); transform-origin: bottom; }
+  .th-sign-town { display: flex; align-items: center; height: 52px; font-family: var(--f-label); font-weight: 700; font-size: min(40px, calc(260px / var(--n))); line-height: 1; letter-spacing: .1em; color: var(--ink); margin-right: -.1em; }
+  .th-sign-county { margin-top: 0; font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .16em; margin-right: -.16em; text-transform: uppercase; color: var(--ink-2); }
+  .th-pin { position: absolute; top: -64px; width: 2px; height: 64px; background: repeating-linear-gradient(var(--mute) 0 5px, transparent 5px 8px); transform: rotate(-5deg); transform-origin: bottom; }
   .th-pin::before { content: ''; position: absolute; left: -3px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: var(--tan); }
-  .th-pin--a { left: 44px; } .th-pin--b { left: 194px; height: 64px; top: -58px; }
+  .th-pin--a { left: 40px; } .th-pin--b { left: 190px; }
 
   .th-form { position: absolute; left: 0; top: 426px; width: 380px; padding: 22px 22px 20px; background: var(--tan); border-radius: 2px; box-shadow: 0 18px 40px rgba(0,0,0,.35); color: var(--ink); z-index: 2; }
   .th-form-t { font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 18px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 11px; }
@@ -115,27 +115,30 @@ const fid = `est-${t.slug}`;
     .th-form { left: -24px; top: 360px; width: min(380px, 90%); }
   }
   @media (max-width: 767px) {
-    .th { height: auto; padding: 38px 0 35px; }
+    .th { height: auto; padding: 38px 0 50px; }
     .th-grid { height: auto; }
     .th-copy { position: static; width: auto; }
-    .th-h1 { margin-top: 13px; font-size: 50px; line-height: 52px; }
+    .th-h1 { margin-top: 12px; font-size: 50px; line-height: 50px; }
     .th-h1--long { font-size: 44px; line-height: 48px; }
-    .th-sub { margin-top: 15px; font-size: 18px; line-height: 24px; }
-    .th-body { width: auto; margin-top: 16px; font-size: 15px; line-height: 23px; }
-    .th-chips { margin-top: 24px; gap: 7px 8px; }
-    .hx-chip { height: 34px; padding: 0 15px; font-size: 11px; --c: 10px; }
+    .th-sub { margin-top: 12px; font-size: 17px; line-height: 25px; letter-spacing: .03em; }
+    .th-body { width: auto; margin-top: 15px; font-size: 15px; line-height: 23px; }
+    .th-chips { margin-top: 20px; gap: 8px; }
+    .hx-chip { height: 32px; padding: 0 15px; font-size: 11.5px; letter-spacing: .08em; --c: 10px; }
     .th-btns { flex-direction: column; gap: 14px; margin-top: 24px; }
     .th-btns :global(.gb) { height: 56px; }
     .th-media { position: relative; left: auto; width: auto; height: 660px; margin-top: 28px; }
     .th-photo { --ch: 35px; }
-    .th-frame, .th-plate { --ch: 36px; left: 0; top: 0; width: calc(100% - 8px); height: 362px; }
+    .th-frame, .th-plate { --ch: 36px; left: 0; top: 0; width: calc(100% - 8px); height: 380px; }
     .th-plate { left: 8px; top: 8px; }
-    .th-sign { left: auto; right: 10px; top: 46px; width: 182px; height: 74px; transform: rotate(4deg); }
-    .th-sign-town { font-size: min(34px, calc(230px / var(--n))); }
-    .th-sign-county { font-size: 9px; margin-top: 4px; }
-    .th-pin { top: -50px; height: 52px; } .th-pin--a { left: 30px; } .th-pin--b { left: 150px; top: -44px; height: 46px; }
-    .th-form { left: -6px; right: -6px; top: 361px; width: auto; padding: 22px 20px 12px; }
+    .th-sign { left: 146px; right: auto; top: 40px; width: 190px; height: 70px; rotate: 4deg; }
+    .th-sign-in { padding-top: 6px; }
+    .th-sign-town { height: 40px; }
+    .th-pin { top: -40px; height: 40px; transform: rotate(-4deg); }
+    .th-sign-town { font-size: min(30px, calc(230px / var(--n))); letter-spacing: .1em; }
+    .th-sign-county { font-size: 9px; line-height: 13px; letter-spacing: .14em; margin-top: 0; }
+    .th-pin--a { left: 34px; } .th-pin--b { left: 154px; }
+    .th-form { left: -6px; right: -6px; top: 360px; width: auto; padding: 16px 20px 8px; }
     .th-form input:not([type=hidden]) { height: 38px; margin-bottom: 12px; }
-    .th-submit { height: 44px; margin-top: 14px; font-size: 15px; }
+    .th-submit { height: 44px; margin-top: 3px; font-size: 15px; }
   }
 </style>

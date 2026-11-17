@@ -1,0 +1,94 @@
+---
+// 2.1 Hero · split + stamp (Figma 670:7700 y 180 h 700, paper; mobile 670:11675 y 164 h 1437). Eyebrow, H1, red script line,
+// quick answer, call + form buttons, three chips, hex photo on a tan shadow plate with the "DIAGNOSIS MATTERS." rubber stamp,
+// and the estimate form card.
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import Btn from '../services/kit/Btn.astro';
+import Chip from '../services/kit/Chip.astro';
+import EstimateCard from '../services/kit/EstimateCard.astro';
+import Img from '../ui/Img.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import { ab } from '../services/kit/ab';
+import { SITE } from '../../data/site';
+---
+<section class="wx sv-sec sv-paper sv-abs" style="--sh:700px" aria-labelledby="wx-h" data-m-section data-m-hero>
+  <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: 'Water heaters', href: '/water-heaters' }]} class="sr-only" />
+  <div class="wx-in">
+    <Eyebrow tone="dark" class="wx-eb" data-ab style={ab(119.5, 95)}>Water heaters · Riverside, CA</Eyebrow>
+    <h1 id="wx-h" class="sv-h wx-h" data-t="2" data-ab style={ab(120, 128, 490)}>Water Heater Repair &amp; Install in Riverside, CA</h1>
+    <p class="wx-script sv-script lh-yest" data-t="3" data-ab style={ab(120, 322)}>Diagnosis matters.</p>
+    <p class="wx-body" data-t="3" data-ab style={ab(120, 389, 520)}>Before you buy a new water heater, find out what's really wrong with the old one.</p>
+    <div class="wx-vis" data-t="3">
+      <i class="wx-plate" data-ab style={ab(644, 116, 320, 400)} aria-hidden="true"></i>
+      <div class="wx-photo sv-photo" data-ab style={ab(630, 100, 320, 400)}>
+        <Img name="water-heater-gas-valve-small" alt="Gas control valve on a 75-gallon gas water heater, with Mike's logo" sizes="(min-width: 768px) 320px, 290px" box={320 / 400} boxM={290 / 350} priority />
+      </div>
+      <svg class="wx-hexl" viewBox="0 0 323 403" data-ab style={ab(628.75, 98.53, 323, 403)} aria-hidden="true"><path d="M161.25 1.47L321.25 101.47V301.47L161.25 401.47 1.25 301.47V101.47Z" fill="none" stroke="#0E0D0B" stroke-width="2.5" vector-effect="non-scaling-stroke" /></svg>
+      <div class="wx-stamp" data-ab style={ab(626, 390, 275.5, 63, -9)} aria-hidden="true"><i></i><span>Diagnosis matters.</span></div>
+    </div>
+    <div class="wx-btns" data-ab style={ab(120, 473, 566, 64)}>
+      <Btn v="ink" l1={`Call ${SITE.phone}`} l2="Free estimate" w={300} label={`Call ${SITE.phone} for a free estimate`} />
+      <Btn v="outInk" href="#estimate" l1="Get a free estimate" l2="Fill in the form" w={250} class="wx-ghost" />
+    </div>
+    <ul class="wx-chips" role="list" data-t="4" data-stagger data-ab style={ab(120, 561)}>
+      <li><Chip tone="dark">Water Heater Repair</Chip></li>
+      <li><Chip tone="dark">Water Heater Install</Chip></li>
+      <li><Chip tone="dark">Residential &amp; Commercial</Chip></li>
+    </ul>
+    <div class="wx-form" data-t="4" data-ab style={ab(990, 60, 340)}>
+      <EstimateCard id="estimate" page="/water-heaters" chips={['No hot water', 'Leaking', 'Making noise', 'Want a new one', 'Commercial', 'Not sure']} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .wx-in { position: relative; }
+  .wx-h { margin: 0; font-size: 52px; line-height: 1.04; color: var(--ink); }
+  .wx-script { margin: 0; font-size: 40px; color: var(--red); }
+  .wx-body { margin: 0; font-size: 18px; line-height: 1.55; color: var(--ink-2); }
+  .wx-plate { display: block; background: var(--tan); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+  .wx-photo { clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+  .wx-stamp { opacity: .9; box-sizing: border-box; border: 3.28px solid var(--tan); border-radius: 5.25px; color: var(--tan); }
+  .wx-stamp i { position: absolute; inset: 3.3px; border: .98px solid var(--tan); border-radius: 2.6px; }
+  .wx-stamp span { position: absolute; left: 0; right: 0; top: 9.8px; text-align: center; font-family: var(--f-label); font-weight: 700; font-size: 26.24px; line-height: 39px; letter-spacing: .06em; text-transform: uppercase; }
+  .wx-btns { display: flex; gap: 16px; }
+  .wx-chips { display: flex; gap: 10px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 1279px) {
+    .wx-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .wx-vis { position: relative; width: 100%; }
+    .wx-vis > * { position: absolute; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .wx { padding: 72px 0 110px; }
+    .wx-h { margin-top: 12px; max-width: 620px; font-size: clamp(44px, 5vw, 52px); }
+    .wx-script { margin-top: 18px; } .wx-body { margin-top: 6px; max-width: 520px; }
+    .wx-vis { order: 9; height: 460px; margin-top: 40px; }
+    .wx-plate { left: 14px; top: 16px; width: 320px; height: 400px; }
+    .wx-photo { left: 0; top: 0; width: 320px; height: 400px; }
+    .wx-hexl { left: -1.25px; top: -1.47px; width: 323px; height: 403px; }
+    .wx-stamp { left: -4px; top: 290px; width: 275.5px; height: 63px; rotate: 9deg; transform-origin: 0 0; }
+    .wx-btns { margin-top: 28px; } .wx-chips { margin-top: 24px; flex-wrap: wrap; }
+    .wx-form { order: 10; position: relative; width: 100%; max-width: 420px; margin-top: 40px; }
+  }
+  @media (max-width: 767px) {
+    .wx { padding: 39px 0 70px; }
+    .wx-h { margin-top: 10px; font-size: 36px; line-height: 1.06; }
+    .wx-script { margin-top: 8px; font-size: 32px; }
+    .wx-body { margin-top: 4px; font-size: 15.5px; }
+    .wx-vis { height: 360px; margin-top: 24px; }
+    .wx-plate { left: 37px; top: 12px; width: 290px; height: 350px; }
+    .wx-photo { left: 25px; top: 0; width: 290px; height: 350px; }
+    .wx-hexl { left: 24px; top: -1px; width: 292px; height: 352px; }
+    .wx-hexl path { stroke-width: 2; }
+    .wx-stamp { left: 16px; top: 290px; width: 300px; height: 64px; rotate: 8deg; transform-origin: 0 0; opacity: 1; border-width: 4px; border-radius: 6px; color: #6b5c3e; }
+    .wx-stamp i { inset: 3px; border-width: 1.2px; border-radius: 3px; }
+    .wx-stamp span { top: 9px; font-size: 28px; line-height: 41px; letter-spacing: .05em; }
+    .wx-btns { margin-top: 20px; width: 100%; }
+    .wx-btns :global(.wx-ghost) { display: none; }
+    .wx-chips { flex-wrap: wrap; gap: 10px 8px; margin-top: 14px; max-width: 320px; }
+    .wx-chips :global(.sv-chip) { height: 30px; padding: 0 14px; font-size: 11.5px; letter-spacing: .08em; --cs: 1.1px; }
+    .wx-chips :global(.sv-chip-o svg) { width: 15px; }
+    .wx-form { position: relative; width: 100%; margin-top: 30px; }
+  }
+</style>

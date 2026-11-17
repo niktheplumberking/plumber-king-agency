@@ -1,0 +1,102 @@
+---
+// 7.5 Family (Figma 670:469 / 670:2349): snapshots on a fridge door (mascot + slime stamp, hex magnets, FAMILY letter
+// magnets), copy and Brandon A.'s line on the right. [MIKE TO CONFIRM] who else is in the family business; a real family
+// photo would replace the mascot snapshot (PAGES-COPY 7.5).
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import Img from '../ui/Img.astro';
+import { REVIEWS } from '../../data/reviews';
+const b = REVIEWS.find((r) => r.name === 'Brandon A.')!;
+const line = "He's my first phone call when I need a plumber.";
+if (!b.text.includes(line)) throw new Error('AFamily: quote not in Brandon A.\'s review');
+const date = b.date.replace(/^(\w+) (\d+) (\d+)$/, '$1 $2, $3');
+const L = [['F', 'red', 6], ['A', 'tan', -4], ['M', 'bone', 3], ['I', 'tan', -7], ['L', 'red', 5], ['Y', 'bone', -3]] as const;
+---
+<section class="af on-ink" aria-labelledby="af-h" data-m-section>
+  <Wave d="a4d" m="a4m" top={3600} topM={3341} />
+  <div class="af-in">
+    <div class="af-fridge" data-t="4" data-fx="nudge">
+      <figure class="af-snap af-snap--a"><div class="af-ph"><Img name="mikes-plumbing-3d-mascot-saluting" alt="Mike's 3D mascot saluting, holding a wrench" sizes="(min-width: 768px) 306px, 174px" box={306 / 330} /></div>
+        <figcaption><span class="af-d">His 3D mascot, from his IG</span><span class="af-m">His 3D mascot (IG)</span></figcaption></figure>
+      <figure class="af-snap af-snap--b"><div class="af-ph"><Img name="drain-slime-job-stamp" alt="Mike's Plumbing Services hex stamp in green slime on a job" sizes="(min-width: 768px) 266px, 154px" box={266 / 276} /></div>
+        <figcaption>Every job gets the stamp</figcaption></figure>
+      <svg class="af-mag af-mag--a" viewBox="0 0 46 36" aria-hidden="true"><path d="M5.98 0H40.02L46 18L40.02 36H5.98L0 18Z" /></svg>
+      <svg class="af-mag af-mag--b" viewBox="0 0 46 36" aria-hidden="true"><path d="M5.98 0H40.02L46 18L40.02 36H5.98L0 18Z" /></svg>
+      <p class="af-word" aria-label="Family">{L.map(([c, col, r], i) => <span class={`af-l af-l--${col}`} style={`--i:${i};--r:${r}deg`} aria-hidden="true">{c}</span>)}</p>
+    </div>
+    <div class="af-copy">
+      <Eyebrow dark>Family owned &amp; operated</Eyebrow>
+      <h2 id="af-h" class="af-h" data-t="2">Family owned. <span class="tone">Family operated.</span></h2>
+      <p class="af-body" data-t="3">Mike's Plumbing Services is a family-owned and operated business, run by Mike Navarro out of Riverside.</p>
+      <figure class="af-q" data-t="3">
+        <blockquote><p>“{line}”</p></blockquote>
+        <figcaption>{b.name} · Los Angeles, CA · Yelp · {date}</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+<style>
+  .af { position: relative; height: 820px; background: var(--ink); }
+  .af-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
+  .af-fridge { position: absolute; left: 90px; top: 70px; width: 640px; height: 690px; border-radius: 24px; background: var(--coal); }
+  .af-snap { position: absolute; margin: 0; background: var(--bone); transform-origin: 0 0; box-shadow: 0 20px 40px -8px rgba(0, 0, 0, .6); }
+  .af-snap--a { left: 60px; top: 70px; width: 330px; height: 410px; padding: 12px; transform: rotate(-6deg); }
+  .af-snap--b { left: 340px; top: 200px; width: 290px; height: 350px; padding: 12px; transform: rotate(7deg); }
+  .af-snap--a .af-ph { width: 306px; height: 330px; overflow: hidden; }
+  .af-snap--b .af-ph { width: 266px; height: 276px; overflow: hidden; }
+  .af-snap figcaption { margin: 14px 0 0 4px; font-family: var(--f-script); font-size: 22px; line-height: 32px; color: var(--ink-2); white-space: nowrap; }
+  .af-snap--b figcaption { margin-top: 10px; }
+  .af-m { display: none; }
+  .af-mag { position: absolute; width: 46px; height: 36px; filter: drop-shadow(0 6px 5px rgba(0, 0, 0, .5)); }
+  .af-mag--a { left: 62px; top: 46px; fill: var(--red); }
+  .af-mag--b { left: 458px; top: 184px; fill: var(--tan); }
+  .af-word { position: absolute; left: 60px; top: 590px; margin: 0; height: 72px; }
+  .af-l { position: absolute; left: calc(var(--i) * 66px); top: 0; width: 56px; height: 64px; border-radius: 8px; display: grid; place-items: center; font-family: var(--f-label); font-weight: 700; font-size: 40px; line-height: 1; color: var(--ink); transform: rotate(var(--r)); transform-origin: 0 0; box-shadow: 0 6px 10px -2px rgba(0, 0, 0, .5); }
+  .af-l:nth-child(even) { top: 8px; }
+  .af-l--red { background: var(--red); } .af-l--tan { background: var(--tan); } .af-l--bone { background: var(--bone); }
+
+  .af-copy { position: absolute; left: 820px; top: 149px; width: 520px; }
+  .af-h { margin-top: 15px; font-family: var(--f-display); font-weight: 400; font-size: 64px; line-height: 1.04; color: var(--paper); }
+  .af .tone { color: var(--tan); }
+  .af-body { margin-top: 24px; width: 500px; font-size: 18px; line-height: 1.55; color: rgba(243, 236, 221, .9); }
+  .af-q { position: relative; margin: 40px 0 0; width: 500px; height: 150px; padding: 4px 0 0 28px; }
+  .af-q::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 150px; border-radius: 2px; background: var(--tan); }
+  .af-q blockquote { margin: 0; }
+  .af-q p { font-family: var(--f-display); font-size: 30px; line-height: 1.18; color: var(--tan); }
+  .af-q figcaption { margin-top: 34px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .12em; text-transform: uppercase; color: rgba(243, 236, 221, .7); }
+
+  @media (max-width: 1279px) {
+    .af { height: auto; padding: 50px 0 80px; }
+    .af-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; height: auto; }
+    /* the fridge: everything in cqw of the 350 px mobile fridge (670:2350), so it scales down on narrow phones */
+    .af-fridge { position: relative; left: auto; top: auto; width: 100%; max-width: 480px; height: auto; aspect-ratio: 350 / 420; border-radius: 18px; container-type: inline-size; }
+    .af-snap--a { left: 4cqw; top: 10.29cqw; width: 54.29cqw; height: 67.43cqw; padding: 2.29cqw; }
+    .af-snap--b { left: 53.71cqw; top: 41.71cqw; width: 48.57cqw; height: 58.86cqw; padding: 2.29cqw; }
+    .af-snap--a .af-ph { width: 49.71cqw; height: 54.29cqw; }
+    .af-snap--b .af-ph { width: 44cqw; height: 45.71cqw; }
+    .af-snap figcaption, .af-snap--b figcaption { margin: 2.29cqw 0 0 .57cqw; font-size: 4.29cqw; line-height: 1.4; }
+    .af-snap--b figcaption { font-size: 4cqw; }
+    .af-d { display: none; } .af-m { display: inline; }
+    .af-mag { width: 9.71cqw; height: 7.43cqw; }
+    .af-mag--a { left: 2.86cqw; top: 6.86cqw; } .af-mag--b { left: 69.14cqw; top: 30.29cqw; }
+    .af-word { left: 8cqw; top: 100.57cqw; height: 15cqw; }
+    .af-l { left: calc(var(--i) * 14.29cqw); width: 11.43cqw; height: 13.14cqw; border-radius: 1.71cqw; font-size: 8cqw; }
+    .af-l:nth-child(even) { top: 1.71cqw; }
+    .af-copy { position: static; width: auto; margin-top: 59px; }
+    .af-copy :global(.eb) { font-size: 12.5px; line-height: 19px; }
+    .af-h { margin-top: 10px; font-size: 40px; }
+    .af-body { width: auto; margin-top: 16px; font-size: 15px; }
+    .af-q { width: auto; height: auto; margin-top: 28px; padding: 0 0 0 18px; }
+    .af-q::before { width: 3px; height: 120px; border-radius: 0; }
+    .af-q p { font-size: 24px; }
+    .af-q figcaption { margin-top: 12px; font-size: 10.5px; line-height: 16px; letter-spacing: .1em; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .af { padding: 90px 0 120px; }
+    .af-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; max-width: none; align-items: center; }
+    .af-copy { margin-top: 0; }
+    .af-h { font-size: clamp(40px, 4.6vw, 56px); }
+    .af-body { font-size: 17px; }
+    .af-q p { font-size: 26px; }
+  }
+</style>

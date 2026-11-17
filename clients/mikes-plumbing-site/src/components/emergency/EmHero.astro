@@ -1,0 +1,94 @@
+---
+// Hero · giant number (Figma 669:783 y 180 h 700, ink; mobile 670:2103 y 164 h 762). Live dot eyebrow, H1, "Open 24 hours
+// (Yelp).", a faint hex-nut field behind the siren tile from Mike's flyer, the phone number set at 200 px (a tel: link), the
+// quick answer, the red call button and the quiet "Not an emergency?" link.
+import Btn from '../services/kit/Btn.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import { ab } from '../services/kit/ab';
+import { SITE } from '../../data/site';
+const hexes = [980, 1130, 1280].flatMap((x) => [40, 170, 300].map((y) => [x, y]));
+---
+<section class="eh sv-sec sv-ink sv-abs" style="--sh:700px" aria-labelledby="eh-h" data-m-section data-m-hero>
+  <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: 'Emergency plumber', href: '/emergency-plumber' }]} class="sr-only" />
+  <div class="eh-in">
+    {hexes.map(([x, y]) => <svg class="eh-hex" data-ab style={ab(x - 0.5, y - 0.5, 121, 97)} viewBox="0 0 121 97" aria-hidden="true"><path d="M16.1.5H104.9L120.5 48.5 104.9 96.5H16.1L.5 48.5Z" /></svg>)}
+    <p class="eh-eb" data-t="1" data-ab style={ab(116, 70)}><span class="eh-dot" aria-hidden="true"><i></i></span>Emergency services · Riverside, CA</p>
+    <h1 id="eh-h" class="sv-h eh-h" data-t="2" data-ab style={ab(120, 108, 600)}>Emergency Plumber <em>in Riverside, CA</em></h1>
+    <p class="eh-open" data-t="3" data-ab style={ab(120, 250)}>Open 24 hours (Yelp).</p>
+    <a class="eh-tel" href={SITE.tel} data-t="3" data-ab style={ab(107, 290)} aria-label={`Call ${SITE.phone}`}>{SITE.phone}</a>
+    <div class="eh-tile" data-t="3" data-ab style={ab(1086, 72, 234, 190)} aria-hidden="true">
+      <svg class="eh-siren" viewBox="0 0 120 120"><path d="M22 72V50C22 32 34 22 48 22 62 22 74 32 74 50V72Z" fill="#D9412B" /><rect x="14" y="74" width="80" height="12" rx="2" fill="#0E0D0B" /><path class="eh-rays" d="M8 18 16.5 26.5M100 10 108.5 1.5" stroke="#0E0D0B" stroke-width="3" /></svg>
+      <p class="eh-tt">Emergency <br />services</p>
+      <p class="eh-more sv-script lh-yest">And More!</p>
+      <p class="eh-from">from Mike's flyer</p>
+    </div>
+    <p class="eh-body" data-t="3" data-ab style={ab(120, 578, 430)}>Burst line, backed-up drain, no hot water? Call and tell Mike what's going on.</p>
+    <div class="eh-btn" data-ab style={ab(640, 574, 380, 64)}>
+      <Btn v="red" l1={`Call ${SITE.phone}`} l2="Tap to call" w={380} label={`Call ${SITE.phone}`} />
+    </div>
+    <p class="eh-alt" data-t="4" data-ab style={ab(1060, 584)}>Not an emergency?<br class="eh-br" /> <a href="/contact"><u>Get a free estimate</u>&nbsp;&nbsp;<span aria-hidden="true">→</span></a></p>
+  </div>
+</section>
+
+<style>
+  .eh-in { position: relative; }
+  .eh-hex { overflow: visible; } .eh-hex path { fill: none; stroke: rgba(210, 197, 166, .1); stroke-width: 1; stroke-linejoin: round; }
+  .eh-eb { display: flex; align-items: center; gap: 8px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan); }
+  .eh-dot { position: relative; flex: none; width: 24px; height: 24px; border-radius: 50%; background: rgba(217, 65, 43, .3); }
+  .eh-dot i { position: absolute; left: 6px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--red); }
+  @media (prefers-reduced-motion: no-preference) { .eh-dot { animation: eh-pulse 2s ease-in-out infinite; } }
+  @keyframes eh-pulse { 50% { transform: scale(1.25); background: rgba(217, 65, 43, .12); } }
+  .eh-h { margin: 0; font-size: 60px; line-height: 1.04; color: var(--paper); }
+  .eh-h em { display: block; }
+  .eh-open { margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 22px; line-height: 33px; letter-spacing: .04em; color: var(--tan); }
+  .eh-tel { font-family: var(--f-label); font-weight: 600; font-size: 200px; line-height: 296px; letter-spacing: -.01em; color: var(--tan); text-decoration: none; white-space: nowrap; }
+  .eh-tel:hover { text-decoration: underline; text-decoration-thickness: 6px; text-underline-offset: 14px; }
+  .eh-tile { border-radius: 4px; background: var(--tan); box-shadow: 0 14px 30px -8px rgba(0, 0, 0, .5); color: var(--ink); }
+  .eh-siren { position: absolute; left: 0; top: 0; width: 120px; height: 120px; overflow: visible; }
+  .eh-tile p { margin: 0; position: absolute; }
+  .eh-tt { left: 112px; top: 24px; font-family: var(--f-label); font-weight: 700; font-size: 22px; line-height: 22px; text-transform: uppercase; }
+  .eh-more { left: 22px; top: 120px; font-size: 30px; }
+  .eh-from { left: 130px; top: 164px; font-family: var(--f-sans); font-weight: 500; font-size: 11px; line-height: 12px; color: var(--ink-2); white-space: nowrap; }
+  .eh-body { margin: 0; font-size: 18px; line-height: 1.5; color: rgba(243, 236, 221, .9); }
+  .eh-btn :global(.sv-btn) { width: 100%; }
+  .eh-alt { margin: 0; font-family: var(--f-sans); font-weight: 700; font-size: 15px; line-height: 1.4; color: var(--tan); }
+  .eh-alt a { color: inherit; text-decoration: none; }
+  .eh-alt u { text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  .eh-alt a:hover u { text-decoration-thickness: 3px; }
+
+  @media (max-width: 1279px) {
+    .eh-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .eh-hex, .eh-rays, .eh-from { display: none; }
+    .eh-tile { position: relative; width: 100%; max-width: 420px; height: 84px; box-shadow: none; }
+    .eh-tile { order: 5; } .eh-body { order: 6; } .eh-btn { order: 7; } .eh-alt { order: 8; }
+    .eh-siren { left: -2px; top: -4px; width: 97px; height: 97px; }
+    .eh-tt { left: 92px; top: 14px; font-size: 18px; line-height: 27px; }
+    .eh-tt br { display: none; }
+    .eh-more { left: 92px; top: 40px; font-size: 22px; }
+    .eh-btn { width: 100%; max-width: 380px; }
+    .eh-br { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .eh { padding: 72px 0 100px; }
+    .eh-h { margin-top: 14px; font-size: clamp(44px, 5.4vw, 60px); }
+    .eh-open { margin-top: 18px; }
+    .eh-tel { font-size: min(200px, calc((100vw - 2 * var(--gutter)) / 6.3)); line-height: 1.3; }
+    .eh-tile { margin-top: 10px; }
+    .eh-body { margin-top: 28px; max-width: 480px; }
+    .eh-btn { margin-top: 24px; } .eh-alt { margin-top: 22px; }
+  }
+  @media (max-width: 767px) {
+    .eh { padding: 46px 0 55px; }
+    .eh-eb { gap: 9px; margin-left: 1px; font-size: 12px; line-height: 18px; letter-spacing: .1em; }
+    .eh-dot { width: 10px; height: 10px; background: var(--red); animation: none !important; }
+    .eh-dot i { display: none; }
+    .eh-h { margin-top: 12px; font-size: 40px; line-height: 1.06; }
+    .eh-h em { display: inline; }
+    .eh-open { margin-top: 12px; font-size: 18px; line-height: 27px; }
+    .eh-tel { margin-top: 19px; font-size: 84px; line-height: .96; white-space: normal; max-width: 340px; }
+    .eh-tile { margin-top: 18px; }
+    .eh-body { margin-top: 20px; font-size: 15px; }
+    .eh-btn { margin-top: 18px; max-width: none; }
+    .eh-alt { margin-top: 20px; font-size: 14px; line-height: 15px; }
+  }
+</style>

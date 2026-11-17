@@ -1,0 +1,135 @@
+---
+// Proof · call log clipboard (Figma 669:783 y 1560 h 900, paper; mobile y 1558 h 1094). Eyebrow, H2 with red line 2, the
+// Yelp seal (rating from SITE.rating), and a clipboard "call log" of four Yelp lines with red date stamps.
+// Quotes come from src/data/reviews.ts and must appear word for word in that review (checked at build time).
+// Scroll moment: the red date stamps thud onto the log one after another as you scroll down the clipboard.
+import Wave from '../services/kit/Wave.astro';
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import { ab } from '../services/kit/ab';
+import { REVIEWS } from '../../data/reviews';
+import { SITE } from '../../data/site';
+const line = (name: string, q: string, stamp: string, meta: string, metaM: string, rot: number) => {
+  const r = REVIEWS.find((x) => x.name === name);
+  if (!r || !r.text.includes(q)) throw new Error(`CallLog: "${q}" is not in ${name}'s review`);
+  return { q, stamp, meta, metaM, rot };
+};
+const log = [
+  line('Stuart W.', 'Mike happened to call around 7pm the same day and offered to at least take a look and let me know where I stand.', 'Jul 16, 2025', 'Stuart W. · leak on the water service line', 'Stuart W. · water service line leak', -3),
+  line('Stuart W.', 'He insisted that he could finish the diagnosis that night which I greatly appreciated!', 'Same night', 'Stuart W.', 'Stuart W.', 2),
+  line('Sal C.', 'Mike was able helped me out with a slab leak on short notice, rerouted water lines and new showers valves installed.', 'Jul 25, 2026', 'Sal C., Corona, CA', 'Sal C., Corona, CA', -2),
+  line('Erik N.', 'Great service responded fast and did the work same day', 'Sep 4, 2025', 'Erik N., Buena Park, CA', 'Erik N., Buena Park, CA', 3),
+];
+const r = SITE.rating;
+---
+<section class="cl sv-sec sv-paper sv-abs" style="--sh:900px" aria-labelledby="cl-h" data-m-section>
+  <Wave fill="var(--paper)" top={-30} shape={[300, 14, -4.667, 32.667, 34]} topM={-22} shapeM={[150, 10, -3.333, 23.333, 26]} />
+  <div class="cl-in">
+    <Eyebrow tone="dark" class="cl-eb" data-ab style={ab(119.5, 119)}>On Yelp</Eyebrow>
+    <h2 id="cl-h" class="sv-h sv-h--red cl-h" data-t="2" data-ab style={ab(120, 152, 540)}>When it couldn't <em>wait until morning.</em></h2>
+    <p class="cl-body" data-t="3" data-ab style={ab(120, 300, 440)}>Four lines from real Yelp reviews, word for word.<span class="cl-m"> Checked {r.checked}.</span></p>
+    <div class="cl-seal" data-t="3" data-ab style={ab(120, 410, 260, 180, -4)} role="img" aria-label={`${r.value} out of 5 on ${r.source}, ${r.count} reviews`}>
+      <svg viewBox="0 0 260 180" preserveAspectRatio="none" aria-hidden="true"><path d="M34 0H226L260 90 226 180H34L0 90Z" fill="#0E0D0B" /><path class="cl-in2" d="M42.7 10.6H217.3L248 90 217.3 169.4H42.7L12 90Z" fill="none" stroke="rgba(210,197,166,.5)" stroke-width="1.2" stroke-linejoin="round" vector-effect="non-scaling-stroke" /></svg>
+      <span class="cl-v" aria-hidden="true">{r.value}</span>
+      <span class="cl-st" aria-hidden="true">★★★★★</span>
+      <span class="cl-n" aria-hidden="true">{r.count} <span class="cl-d">reviews </span>on {r.source}</span>
+    </div>
+    <p class="cl-chk" data-ab style={ab(132, 612)}>Checked {r.checked}</p>
+    <a class="cl-all" href={SITE.social.yelp} target="_blank" rel="noopener" data-ab style={ab(120, 650)}><u>Read all {r.count} on Yelp</u>&nbsp;&nbsp;<span aria-hidden="true">→</span></a>
+
+    <div class="cl-board" data-t="3" data-sv-scrub data-start="top 65%" data-end="bottom 75%" data-start-m="top 70%" data-end-m="bottom 80%" data-ab style={ab(690, 90, 600, 712, 2)}>
+      <i class="cl-sheet" aria-hidden="true"></i>
+      <i class="cl-clip" aria-hidden="true"><i></i><i></i></i>
+      <p class="cl-k">Call log</p>
+      <p class="cl-sub">Mike's Plumbing Services · from Yelp</p>
+      <ol class="cl-log" role="list">
+        {log.map((l, i) => (
+          <li>
+            <span class="cl-stamp" style={`--sr:${-l.rot}deg`} data-sv-stop data-at={(0.1 + i * 0.25).toFixed(2)}>{l.stamp}</span>
+            <blockquote><p>“{l.q}”</p></blockquote>
+            <p class="cl-meta"><span class="cl-d">{l.meta}</span><span class="cl-mm">{l.metaM}</span></p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cl-in { position: relative; }
+  .cl-h { margin: 0; font-size: 58px; line-height: 1.04; }
+  .cl-h em { display: block; }
+  .cl-body { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+  .cl-m, .cl-mm { display: none; }
+  .cl-seal { color: var(--tan); text-align: center; }
+  .cl-seal svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cl-seal > span { position: absolute; left: 0; right: 0; }
+  .cl-v { top: 20px; font-family: var(--f-display); font-size: 60px; line-height: 81px; }
+  .cl-st { top: 102px; font-family: var(--f-sans); font-weight: 700; font-size: 15px; line-height: 16px; letter-spacing: .2em; }
+  .cl-n { top: 128px; font-family: var(--f-label); font-weight: 500; font-size: 10.5px; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; color: var(--paper); }
+  .cl-chk { margin: 0; font-size: 12px; line-height: 13px; color: var(--ink-2); }
+  .cl-all { font-family: var(--f-sans); font-weight: 700; font-size: 15px; line-height: 16px; color: var(--ink); text-decoration: none; }
+  .cl-all u { text-decoration-thickness: 1.5px; text-underline-offset: 3px; } .cl-all:hover u { text-decoration-thickness: 3px; }
+
+  .cl-board { border-radius: 18px; background: #6b5c3e; box-shadow: 0 30px 50px -12px rgba(0, 0, 0, .4); }
+  .cl-sheet { position: absolute; left: 30px; top: 56px; width: 540px; height: 620px; border-radius: 2px; background: var(--bone); }
+  .cl-clip { position: absolute; left: 210px; top: 18px; width: 180px; height: 70px; border-radius: 10px; background: #8c8578; }
+  .cl-clip i { position: absolute; }
+  .cl-clip i:first-child { left: 26px; top: 12px; width: 128px; height: 22px; border-radius: 6px; background: #b8b1a3; }
+  .cl-clip i:last-child { left: 84px; top: 17px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink-2); }
+  .cl-k { position: absolute; left: 60px; top: 108px; margin: 0; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink); }
+  .cl-sub { position: absolute; left: 60px; top: 136px; margin: 0; font-size: 12px; line-height: 13px; color: var(--ink-2); }
+  .cl-log { position: absolute; left: 60px; top: 178px; width: 480px; margin: 0; padding: 0; list-style: none; }
+  .cl-log li { position: relative; padding: 16px 0 18px 130px; background: repeating-linear-gradient(90deg, rgba(167, 157, 136, .6) 0 2px, transparent 2px 6px) top / 100% 1px no-repeat; }
+  .cl-stamp { position: absolute; left: 0; top: 18px; width: 112px; height: 30px; box-sizing: border-box; padding-top: 5px; border: 1.6px solid var(--red); border-radius: 3px; rotate: var(--sr); transform-origin: 0 0;
+    text-align: center; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; letter-spacing: .08em; text-transform: uppercase; color: var(--red); }
+  /* the stamp keeps its tilt while it pops: scale only */
+  :global(.sv-scrub-on) .cl-stamp.is-lit { animation-name: cl-thud; }
+  @keyframes cl-thud { 0% { scale: 1.3; } 60% { scale: .95; } 100% { scale: 1; } }
+  .cl-log blockquote { margin: 0; }
+  .cl-log blockquote p { margin: 0; width: 350px; font-weight: 500; font-size: 16px; line-height: 1.45; color: var(--ink); }
+  .cl-meta { margin: 8px 0 0; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .08em; text-transform: uppercase; color: #6b5c3e; }
+
+  @media (max-width: 1279px) {
+    .cl-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .cl-chk, .cl-sub { display: none; } .cl-m { display: inline; }
+    .cl-seal, .cl-board { position: relative; }
+    .cl-board { order: 9; rotate: -1deg; transform-origin: 0 0; }
+    .cl-all { order: 10; }
+    .cl-log { position: relative; left: auto; top: auto; width: auto; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .cl { padding: 110px 0 100px; }
+    .cl-h { margin-top: 12px; font-size: clamp(42px, 5vw, 58px); }
+    .cl-body { margin-top: 20px; max-width: 440px; }
+    .cl-seal { width: 260px; height: 180px; margin-top: 30px; rotate: 4deg; }
+    .cl-board { width: 600px; margin-top: 48px; padding: 178px 60px 40px; box-sizing: border-box; }
+    .cl-board .cl-log { margin: 0; }
+    .cl-sheet { height: auto; bottom: 26px; }
+    .cl-all { margin-top: 36px; }
+  }
+  @media (max-width: 767px) {
+    .cl { padding: 49px 0 54px; }
+    .cl :global(.cl-eb) { font-size: 13px; line-height: 19px; }
+    .cl-h { margin-top: 8px; font-size: 34px; line-height: 1.06; }
+    .cl-h em { display: inline; }
+    .cl-d { display: none; } .cl-mm { display: inline; }
+    .cl-body { order: 3; position: absolute; left: 170px; top: 133px; width: calc(100% - 170px); margin: 0; font-size: 13px; line-height: 1.45; }
+    .cl-seal { width: 150px; height: 96px; margin-top: 20px; rotate: 4deg; transform-origin: 0 0; }
+    .cl-in2 { display: none; }
+    .cl-v { top: 10px; font-size: 34px; line-height: 46px; }
+    .cl-st { top: 54px; font-size: 10px; line-height: 11px; letter-spacing: .16em; }
+    .cl-n { top: 70px; font-size: 10px; line-height: 15px; letter-spacing: .12em; }
+    .cl-board { width: calc(100% + 8px); margin: 34px 0 0 -4px; padding: 108px 18px 20px; box-sizing: border-box; border-radius: 14px; box-shadow: 0 20px 30px -8px rgba(0, 0, 0, .4); }
+    .cl-sheet { left: 16px; right: 16px; top: 40px; bottom: 10px; width: auto; height: auto; }
+    .cl-clip { left: calc(50% - 60px); top: 10px; width: 120px; height: 50px; border-radius: 8px; }
+    .cl-clip i:first-child { left: 20px; top: 8px; width: 80px; height: 16px; border-radius: 5px; }
+    .cl-clip i:last-child { display: none; }
+    .cl-k { left: 34px; top: 74px; font-size: 16px; line-height: 24px; letter-spacing: .14em; }
+    .cl-log { margin: 0 16px; }
+    .cl-log li { padding: 14px 0 18px; }
+    .cl-stamp { position: relative; top: 0; display: block; width: 100px; height: 26px; padding-top: 4px; border-width: 1.5px; font-size: 11.5px; line-height: 17px; }
+    .cl-log blockquote { margin-top: 12px; } .cl-log blockquote p { width: auto; font-size: 14px; }
+    .cl-meta { margin-top: 6px; font-size: 11px; line-height: 16px; }
+    .cl-all { margin-top: 30px; }
+  }
+</style>

@@ -39,31 +39,32 @@ const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: i
   .tf { position: relative; padding: 100px 0 92px; min-height: 800px; background: var(--paper); }
   .tf-grid { display: grid; grid-template-columns: 440px 760px; }
   .tf-head { padding-top: 12px; }
-  .tf-h { margin-top: 11px; font-family: var(--f-display); font-weight: 400; font-size: 66px; line-height: 64px; color: var(--ink); }
+  .tf-h { margin-top: 11px; font-family: var(--f-display); font-weight: 400; font-size: 64px; line-height: 64px; color: var(--ink); }
   .tone { display: block; color: var(--tan-dark); }
   .tf-more { display: inline-flex; gap: 6px; margin-top: 50px; font-weight: 600; font-size: 15px; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
   .tf-more:hover { color: var(--tan-dark); }
   .tf-more--m { display: none; }
   .tf-list { padding-top: 0; }
-  .tf-item { position: relative; margin-top: 30px; }
+  .tf-item { position: relative; margin-top: -8px; }
   .tf-item:first-child { margin-top: 0; }
-  .tf-sum { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 78px; padding: 18px 24px 18px 28px; margin-top: 38px; background: var(--tan); cursor: pointer; list-style: none; transition: background-color var(--dur-2); }
+  .tf-sum { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 78px; padding: 24px 24px 22px 28px; margin-top: 38px; background: var(--tan); cursor: pointer; list-style: none; transition: background-color var(--dur-2); }
   .tf-sum::-webkit-details-marker { display: none; }
   .tf-item:nth-child(3) .tf-sum, .tf-item:nth-child(3) .tf-tab { background: #C9BB98; }
   .tf-tab { position: absolute; left: calc(var(--i) * 180px); top: -38px; width: 202px; height: 38px; padding: 12px 0 0 20px; background: var(--tan);
     clip-path: polygon(0 4px, 4px 0, 168px 0, 202px 38px, 0 38px); font-family: var(--f-label); font-weight: 700; font-size: 13px; line-height: 14px; letter-spacing: .1em; color: var(--ink); }
-  .tf-q { font-family: var(--f-display); font-size: 28px; line-height: 34px; color: var(--ink); }
-  .tf-pm { position: relative; width: 38px; height: 38px; flex: none; border: 1.5px solid var(--ink); border-radius: 50%; transition: background-color var(--dur-2), transform var(--dur-2) var(--ease-out); }
+  .tf-q { font-family: var(--f-display); font-size: 24px; line-height: 32px; color: var(--ink); }
+  .tf-item[open] .tf-q { font-size: 30px; line-height: 40px; }
+  .tf-pm { position: relative; width: 38px; height: 38px; margin: -3px 0; flex: none; border: 1.5px solid var(--ink); border-radius: 50%; transition: background-color var(--dur-2), transform var(--dur-2) var(--ease-out); }
   .tf-pm::before, .tf-pm::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.5px; margin: -.75px 0 0 -6px; background: currentColor; transition: transform var(--dur-2); }
   .tf-pm::after { transform: rotate(90deg); }
   .tf-sum:hover .tf-pm { transform: rotate(90deg); }
-  .tf-item[open] .tf-sum { background: var(--bone); padding-top: 30px; padding-bottom: 14px; align-items: flex-start; }
+  .tf-item[open] .tf-sum { background: var(--bone); padding-top: 26px; padding-bottom: 20px; align-items: flex-start; }
   .tf-item[open] .tf-tab { background: var(--bone); }
   .tf-item[open] .tf-pm { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .tf-item[open] .tf-pm::after { transform: rotate(0); }
-  .tf-a { padding: 0 130px 35px 28px; background: var(--bone); }
-  .tf-a p { font-size: 17px; line-height: 28px; color: var(--ink-2); }
-  .tf-red { display: block; width: 120px; height: 3px; margin-top: 46px; background: var(--red); }
+  .tf-a { padding: 0 112px 51px 28px; background: var(--bone); }
+  .tf-a p { font-size: 18px; line-height: 28px; color: var(--ink-2); }
+  .tf-red { display: block; width: 120px; height: 3px; margin-top: 34px; background: var(--red); }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .tf { min-height: 0; padding: 96px 0 120px; }
@@ -71,21 +72,22 @@ const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: i
     .tf-tab { left: calc(var(--i) * 22%); }
   }
   @media (max-width: 767px) {
-    .tf { min-height: 0; padding: 26px 0 70px; }
+    .tf { min-height: 0; padding: 49px 0 42px; }
     .tf-grid { grid-template-columns: 1fr; }
     .tf-head { padding: 0; }
-    .tf-h { font-size: 34px; line-height: 40px; margin-top: 10px; }
+    .tf-h { font-size: 38px; line-height: 51px; margin-top: 9px; }
     .tone { display: inline; }
     .tf-more--d { display: none; }
     .tf-more--m { display: inline-flex; margin-top: 24px; }
-    .tf-list { margin-top: 28px; }
-    .tf-item { margin-top: 0; }
-    .tf-sum { min-height: 58px; margin-top: 30px; padding: 12px 16px 12px 18px; }
-    .tf-item[open] .tf-sum { padding-top: 18px; padding-bottom: 8px; }
+    .tf-list { margin: 32px -6px 0; }
+    .tf-item { margin-top: -4px; }
+    .tf-item:first-child { margin-top: 0; }
+    .tf-sum { min-height: 57px; margin-top: 30px; padding: 18px 16px 16px 18px; }
+    .tf-item[open] .tf-sum { padding-top: 18px; padding-bottom: 7px; }
     .tf-tab { left: calc(var(--i) * 70px); top: -32px; width: 150px; height: 32px; padding: 11px 0 0 14px; font-size: 11px; clip-path: polygon(0 4px, 4px 0, 120px 0, 150px 32px, 0 32px); }
-    .tf-q { font-size: 20px; line-height: 23px; }
-    .tf-pm { width: 30px; height: 30px; }
-    .tf-a { padding: 0 18px 20px; }
+    .tf-q, .tf-item[open] .tf-q { font-size: 20px; line-height: 23px; }
+    .tf-pm { width: 30px; height: 30px; margin: -4px 0 -3px; }
+    .tf-a { padding: 0 18px 30px; }
     .tf-a p { font-size: 15px; line-height: 23px; }
     .tf-red { display: none; }
   }

@@ -1,0 +1,190 @@
+---
+// FAQ "Ask Mike." (Figma 631:2037 "faq · ask mike" y 8600-9720; mobile 640:437 y 11122-12452).
+// The giant title sits on a pipe; a search line filters the questions; details[data-acc] rows (ui.ts animates them),
+// the open row floods ink edge to edge; a pinned note sends people to text a photo. FAQPage JSON-LD comes from faq.ts
+// (index.astro passes it to Base).
+import { FAQ } from './faq';
+import { SITE } from '../../data/site';
+const hexW = 'M5.9 .7H35.5L40.7 16.7L35.5 32.7H5.9L.7 16.7Z';
+const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
+---
+<section class="fq" aria-labelledby="fq-h" data-m-section data-faq>
+  <div class="fq-top">
+    <p class="eb" data-t="1"><svg viewBox="0 0 20 15" aria-hidden="true"><path d="M3.14.8h13.32l2.34 6.5-2.34 6.5H3.14L.8 7.3z" /></svg>Questions people ask</p>
+    <h2 id="fq-h" class="ttl" data-t="2" data-fx="lines">Ask Mike.</h2>
+  </div>
+  <div class="pipe" aria-hidden="true">
+    <svg class="pp" viewBox="0 0 1440 14" preserveAspectRatio="none"><rect width="1440" height="14" rx="7" fill="#6B5C3E" /><path d="M7 7H1433" class="pw" pathLength="1" data-pipe-water /><rect y="3" width="1440" height="2" fill="rgba(255,255,255,.3)" /></svg>
+    <span class="nut n1"></span><span class="nut n2"></span>
+    <svg class="drip d1" viewBox="0 0 14 21"><path d={drip} /></svg><svg class="drip d2" viewBox="0 0 14 21"><path d={drip} /></svg>
+  </div>
+  <div class="fq-in">
+    <div class="srch" data-t="3">
+      <label class="s-k" for="fq-s">Search the answers</label>
+      <div class="s-f">
+        <svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="8" cy="8" r="7" /><path d="M13 13l7 7" /></svg>
+        <input id="fq-s" type="search" placeholder="Try &quot;water heater&quot;" autocomplete="off" data-faq-search />
+      </div>
+      <p class="s-none" data-faq-none role="status" aria-live="polite"></p>
+    </div>
+    <p class="intro" data-t="3">Six questions people ask before they call. Straight answers, in plain words.</p>
+    <div class="rows" data-t="4" data-stagger>
+      {FAQ.map((x, i) => (
+        <details class="row" data-acc name="home-faq" open={i === 0} data-faq-row>
+          <summary>
+            <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="q">{x.q}</span>
+            <span class="tg" aria-hidden="true"><svg viewBox="0 0 42 34"><path d={hexW} /></svg><span class="pl">+</span><span class="x">×</span></span>
+          </summary>
+          <div class="acc-body">
+            <p>{x.a}</p>
+            {x.link && <a href={x.link.href}>{x.link.label} <span aria-hidden="true">→</span></a>}
+          </div>
+        </details>
+      ))}
+    </div>
+    <aside class="note" data-t="3" data-fx="toss" aria-label="Not on the list?">
+      <span class="tape" aria-hidden="true"></span>
+      <p class="n-h">Not on the list?</p>
+      <p class="n-p">Mike says it himself: "DM me a picture." Send a photo and ask him straight.</p>
+      <a class="n-b" href={SITE.sms}>Text Mike a photo <span aria-hidden="true">→</span></a>
+    </aside>
+  </div>
+</section>
+<script>
+  // Search: rows whose question or answer contains every typed word stay; the rest step aside until the field clears.
+  document.querySelectorAll<HTMLElement>('[data-faq]').forEach((sec) => {
+    const input = sec.querySelector<HTMLInputElement>('[data-faq-search]');
+    const none = sec.querySelector<HTMLElement>('[data-faq-none]');
+    const rows = [...sec.querySelectorAll<HTMLDetailsElement>('[data-faq-row]')];
+    if (!input) return;
+    input.addEventListener('input', () => {
+      const words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      rows.forEach((r) => {
+        const hit = words.every((w) => (r.textContent ?? '').toLowerCase().includes(w));
+        r.hidden = !hit; if (hit) shown++;
+      });
+      if (none) none.textContent = words.length ? (shown ? `${shown} of ${rows.length} questions match.` : 'No match. Text Mike a photo and ask him straight.') : '';
+    });
+  });
+</script>
+<style>
+  .fq { position: relative; z-index: 1; height: 1120px; background: var(--bone); color: var(--ink); overflow-x: clip; }
+  .fq-top { position: relative; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding-top: 95px; }
+  .eb { display: flex; align-items: center; gap: 10px; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .eb svg { width: 18px; height: 13px; fill: none; stroke: var(--tan-dark); stroke-width: 1.6; stroke-linejoin: round; }
+  .ttl { position: absolute; left: -12px; top: 96px; font-family: var(--f-display); font-weight: 400; font-size: 236px; line-height: 236px; white-space: nowrap; }
+  .pipe { position: absolute; left: 0; right: 0; top: 301px; height: 14px; z-index: 2; pointer-events: none; }
+  .pp { display: block; width: 100%; height: 14px; overflow: visible; }
+  .pw { fill: none; stroke: #8E7B55; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .nut { position: absolute; top: -6px; width: 34px; height: 26px; background: var(--ink); clip-path: polygon(15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%, 0 50%); }
+  .nut::before { content: ''; position: absolute; inset: 1.5px; background: var(--tan); clip-path: inherit; }
+  .n1 { left: 79px; } .n2 { left: 983px; }
+  .drip { position: absolute; right: 13px; width: 14px; height: 21px; fill: #6B5C3E; }
+  .d1 { top: 21px; } .d2 { top: 57px; opacity: .45; }
+  .fq-in { position: relative; width: calc(100% - 2 * var(--gutter)); margin: 304px auto 0; }
+  .srch { width: 880px; }
+  .s-k { display: block; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .16em; text-transform: uppercase; color: var(--tan-dark); }
+  .s-f { display: flex; align-items: center; gap: 16px; height: 56px; margin-top: 14px; border-bottom: 2px solid var(--ink); }
+  .s-f svg { flex: none; width: 22px; height: 22px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; margin-top: -6px; }
+  .s-f input { flex: 1; height: 100%; padding: 0 0 10px; border: 0; background: none; font: 400 20px/22px var(--f-sans); color: var(--ink); }
+  .s-f input::placeholder { color: rgba(14,13,11,.4); }
+  .s-f input:focus { outline: none; }
+  .s-f:focus-within { border-bottom-color: var(--red); }
+  .s-none { min-height: 0; margin-top: 8px; font-size: 14px; color: var(--ink-2); }
+  .s-none:empty { display: none; }
+  .intro { position: absolute; right: 0; top: 0; width: 240px; font-weight: 500; font-size: 17px; line-height: 25.5px; color: var(--ink-2); }
+  .rows { width: 880px; margin-top: 32px; }
+  .row { position: relative; border-bottom: 1px solid rgba(14,13,11,.2); }
+  .row[hidden] { display: none; }
+  summary { position: relative; display: grid; grid-template-columns: 80px 1fr 40px; align-items: center; min-height: 71px; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  .n { font-family: var(--f-label); font-weight: 600; font-size: 15px; letter-spacing: .1em; color: var(--tan-dark); }
+  .q { font-weight: 600; font-size: 21px; line-height: 23px; }
+  .tg { position: relative; display: grid; place-items: center; width: 40px; height: 32px; font-size: 20px; line-height: 1; }
+  .tg svg { position: absolute; inset: 0; width: 42px; height: 34px; margin: -1px; fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; transition: transform .35s var(--ease-out); }
+  .tg .x { display: none; }
+  summary:hover .tg svg { transform: rotate(30deg); }
+  summary:hover .q { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .acc-body { overflow: hidden; }
+  .acc-body p { font-size: 18px; line-height: 27.9px; color: rgba(251,248,242,.9); }
+  .acc-body a { display: inline-block; margin-top: 18px; font-weight: 700; font-size: 15px; color: var(--tan); }
+  .acc-body a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  /* open row: floods ink edge to edge; question big, answer to its right, a hex "×" at the far right */
+  .row[open] { margin-top: -1px; border-bottom-color: transparent; background: var(--ink); box-shadow: 0 0 0 100vmax var(--ink); clip-path: inset(0 -100vmax); min-height: 200px; }
+  .row[open] summary { align-items: start; grid-template-columns: 80px 460px; min-height: 200px; padding-top: 38px; }
+  .row[open] .n { margin-top: 10px; font-size: 16px; color: var(--tan); }
+  .row[open] .q { font-family: var(--f-display); font-weight: 400; font-size: 40px; line-height: 44px; color: var(--bone); text-decoration: none; }
+  .row[open] .tg { position: absolute; left: 1152px; top: 46px; width: 48px; height: 36px; color: var(--tan); font-size: 24px; }
+  .row[open] .tg svg { width: 50px; height: 38px; stroke: var(--tan); stroke-width: 1.6; }
+  .row[open] .tg .pl { display: none; } .row[open] .tg .x { display: block; }
+  .row[open] .acc-body { position: absolute; left: 620px; top: 44px; width: 440px; }
+  .note { position: absolute; left: 948px; top: 370px; width: 270px; height: 250px; padding: 30px 22px 0; background: var(--tan); rotate: 3deg; box-shadow: 0 16px 30px -10px rgba(14,13,11,.4); }
+  .tape { position: absolute; left: 95px; top: -6px; width: 80px; height: 22px; background: rgba(251,248,242,.8); }
+  .n-h { font-family: var(--f-script); font-size: 32px; line-height: 47px; }
+  .n-p { margin-top: 5px; font-weight: 500; font-size: 15px; line-height: 22.5px; }
+  .n-b { display: flex; align-items: center; gap: 8px; width: 226px; height: 48px; margin-top: 25px; padding: 0 22px; background: var(--ink); color: var(--tan); font-weight: 700; font-size: 15px; border-radius: 2px; transition: background .25s; }
+  .n-b:hover { background: #2A2620; }
+
+  @media (max-width: 1279px) {
+    .fq { height: auto; padding-bottom: 120px; }
+    .ttl { font-size: clamp(120px, 16.4vw, 236px); line-height: 1; top: auto; position: relative; left: -6px; margin-top: 4px; }
+    .fq-top { padding-bottom: 0; }
+    .pipe { top: auto; position: relative; margin-top: -24px; }
+    .n2 { left: 68%; }
+    .fq-in { margin-top: 60px; }
+    .srch, .rows { width: calc(100% - 300px); }
+    .row[open] .tg { left: auto; right: -280px; }
+    .row[open] summary { grid-template-columns: 64px minmax(0, 1fr); }
+    .row[open] .acc-body { position: static; width: auto; padding: 0 0 30px 64px; }
+    .row[open] summary { min-height: 0; padding-bottom: 14px; }
+    .row[open] { min-height: 0; }
+    .note { left: auto; right: 0; top: 260px; }
+  }
+  @media (max-width: 1023px) {
+    .srch, .rows { width: 100%; }
+    .intro { position: static; width: auto; margin-top: 18px; }
+    .row[open] .tg { right: 0; top: 28px; }
+    .note { position: relative; top: auto; margin: 60px auto 0; }
+  }
+  @media (max-width: 767px) {
+    .fq { padding-bottom: 67px; }
+    .fq-top { padding-top: 55px; }
+    .eb { font-size: 13px; line-height: 19px; }
+    .ttl { left: -4px; margin-top: 2px; font-size: 78px; line-height: 78px; }
+    .pipe { height: 8px; margin-top: -9px; }
+    .pp { height: 8px; }
+    .pw { stroke-width: 2; }
+    .nut { top: -6px; width: 26px; height: 20px; }
+    .n1 { left: 17px; } .n2 { left: 287px; }
+    .d1 { top: 12px; right: 4px; } .d2 { display: none; }
+    .fq-in { display: flex; flex-direction: column; margin-top: 23px; }
+    .intro { order: 1; margin-top: 0; font-size: 15px; line-height: 22.5px; }
+    .srch { order: 2; margin-top: 28px; }
+    .s-k { font-size: 11px; line-height: 16px; }
+    .s-f { gap: 10px; height: 34px; margin-top: 6px; }
+    .s-f svg { width: 18px; height: 18px; }
+    .s-f input { font-size: 17px; padding-bottom: 6px; }
+    .rows { order: 3; margin-top: 34px; }
+    summary { grid-template-columns: 40px 1fr 36px; min-height: 0; padding: 20px 0 22px; align-items: start; }
+    .n { margin-top: 2px; font-size: 13px; }
+    .q { font-size: 17px; line-height: 22px; padding-right: 18px; }
+    .tg { width: 36px; height: 28px; font-size: 17px; }
+    .tg svg { width: 38px; height: 30px; }
+    .row { border-bottom-color: rgba(14,13,11,.2); }
+    .row[open] summary { display: block; padding: 30px 0 0; min-height: 0; }
+    .row[open] .n { display: block; margin: 0; font-size: 14px; }
+    .row[open] .q { display: block; margin-top: 9px; padding-right: 50px; font-size: 28px; line-height: 30.8px; }
+    .row[open] .tg { right: 0; top: 24px; width: 40px; height: 32px; font-size: 20px; }
+    .row[open] .tg svg { width: 42px; height: 34px; stroke-width: 1.4; }
+    .row[open] .acc-body { padding: 14px 0 31px; }
+    .acc-body p { font-size: 15px; line-height: 23.25px; }
+    .acc-body a { margin-top: 13px; font-size: 14px; }
+    .note { order: 4; width: 300px; height: 230px; margin: 40px auto 0; padding: 30px 22px 0; rotate: 2.5deg; }
+    .tape { left: 110px; height: 20px; }
+    .n-h { font-size: 30px; line-height: 44px; }
+    .n-p { margin-top: 6px; font-size: 14px; line-height: 21px; }
+    .n-b { width: 256px; height: 46px; margin-top: 24px; }
+  }
+</style>

@@ -1,0 +1,81 @@
+---
+// 1.9 Final CTA · hex swell (Figma 669:539 y 5910 h 700, ink; mobile y 7301 h 639). Rule lines and three growing hex nuts each
+// side, the big double hex, two-tone H2, the phone number big, body, call + form buttons.
+// Scroll moment: the big hex outline draws itself as the section scrolls in and the side nuts light up outside-in.
+import Wave from './kit/Wave.astro';
+import Btn from './kit/Btn.astro';
+import { ab } from './kit/ab';
+import { SITE } from '../../data/site';
+interface Props { h?: string; em?: string; body?: string; id?: string }
+const { h = 'Not sure which one you need?', em = 'Ask Mike.', body = "Call for a free estimate, or send the form and tell us what's going on.", id = 'fc-h' } = Astro.props;
+const nuts = [
+  { x: 180, y: 343.4, w: 22, h: 13.2, o: 0.5, d: 'M3.56.7H19.84L22.7 7.3 19.84 13.9H3.56L.7 7.3Z', at: 0.15 },
+  { x: 220, y: 339.8, w: 34, h: 20.4, o: 0.6, d: 'M5.12.7H30.28L34.7 10.9 30.28 21.1H5.12L.7 10.9Z', at: 0.3 },
+  { x: 272, y: 335, w: 50, h: 30, o: 0.8, d: 'M7.2.7H44.2L50.7 15.7 44.2 30.7H7.2L.7 15.7Z', at: 0.45 },
+];
+---
+<section class="fc sv-sec sv-ink sv-abs" style="--sh:700px" aria-labelledby={id} data-m-section>
+  <Wave fill="var(--ink)" top={-34} topM={-24} />
+  <div class="fc-in" data-sv-scrub data-start="top 85%" data-end="center 55%">
+    <div class="fc-deco" aria-hidden="true">
+      <i class="fc-ln" data-ab style={ab(0, 349.25, 180, 1.5)}></i><i class="fc-ln" data-ab style={ab(1260, 349.25, 180, 1.5)}></i>
+      <i class="fc-ln fc-ln2" data-ab style={ab(330, 349.25, 40, 1.5)}></i><i class="fc-ln fc-ln2" data-ab style={ab(1070, 349.25, 40, 1.5)}></i>
+      {nuts.map((n) => [n.x, 1440 - n.x - n.w].map((x) => (
+        <svg class="fc-nut" data-sv-stop data-at={n.at} viewBox={`0 0 ${n.w + 1.4} ${n.h + 1.4}`} data-ab style={ab(x - 0.7, n.y - 0.7, n.w + 1.4, n.h + 1.4)}><path d={n.d} fill="none" stroke="#D2C5A6" stroke-opacity={n.o} stroke-width="1.4" stroke-linejoin="round" /></svg>
+      )))}
+      <svg class="fc-hex fc-d" viewBox="0 0 703 523" data-ab style={ab(368.5, 88.5, 703, 523)}><path data-sv-draw d="M155.5 1.5H547.5L701.5 261.5L547.5 521.5H155.5L1.5 261.5Z" fill="none" stroke="#D2C5A6" stroke-width="3" stroke-linejoin="round" /></svg>
+      <svg class="fc-hex-i fc-d" viewBox="0 0 665 489" data-ab style={ab(387.5, 105.5, 665, 489)}><path d="M146.58.5H518.42L664.5 244.5 518.42 488.5H146.58L.5 244.5Z" fill="none" stroke="#D2C5A6" stroke-opacity=".4" stroke-linejoin="round" /></svg>
+    </div>
+    <div class="fc-box">
+      <svg class="fc-hex fc-m" viewBox="0 0 373 373" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M82.65 1.25H289.85L371.25 186.25L289.85 371.25H82.65L1.25 186.25Z" fill="none" stroke="#D2C5A6" stroke-width="2.5" stroke-linejoin="round" /></svg>
+      <svg class="fc-hex-i fc-m" viewBox="0 0 347 347" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M76.62.5H270.38L346.5 173.5L270.38 346.5H76.62L.5 173.5Z" fill="none" stroke="#D2C5A6" stroke-opacity=".4" stroke-linejoin="round" /></svg>
+      <h2 id={id} class="sv-h fc-h" data-t="2" data-ab style={ab(470, 170, 500)}>{h} <em>{em}</em></h2>
+      <a class="fc-ph" href={SITE.tel} data-t="3" data-ab style={ab(370, 270, 700)}>{SITE.phone}</a>
+      <p class="fc-body" data-t="3" data-ab style={ab(470, 389, 500)}>{body}</p>
+    </div>
+    <div class="fc-btns" data-t="4" data-ab style={ab(496, 449, 448, 64)}>
+      <Btn v="tan" l1="Call now" l2="Free estimate" w={216} label={`Call ${SITE.phone} now for a free estimate`} />
+      <Btn v="out" href="/contact" l1="Get a free estimate" l2="Send the form" w={216} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .fc-in { position: relative; }
+  .fc-m { display: none; }
+  .fc-ln { display: block; background: rgba(210, 197, 166, .5); }
+  .fc-ln2 { background: rgba(210, 197, 166, .6); }
+  .fc-nut { --pop-r: 6deg; }
+  .fc-h { margin: 0; font-size: 40px; line-height: 1.08; text-align: center; color: var(--paper); }
+  .fc-ph { display: block; font-family: var(--f-label); font-weight: 600; font-size: 76px; line-height: 113px; text-align: center; color: var(--tan); text-decoration: none; }
+  .fc-ph:hover { color: #ddd2b6; }
+  .fc-body { margin: 0; font-size: 16px; line-height: 1.5; text-align: center; color: var(--mute); }
+  .fc-btns { display: flex; gap: 16px; }
+
+  @media (max-width: 1279px) {
+    .fc-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: center; }
+    .fc-deco { display: none; }
+    .fc-box { position: relative; display: flex; flex-direction: column; align-items: center; }
+    .fc-m { display: block; position: absolute; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fc { padding: 90px 0 110px; }
+    .fc-box { width: 560px; height: 520px; justify-content: center; padding: 0 90px; box-sizing: border-box; }
+    .fc-hex { inset: 0; width: 100%; height: 100%; }
+    .fc-hex-i { inset: 16px; width: calc(100% - 32px); height: calc(100% - 32px); }
+    .fc-ph { font-size: 56px; line-height: 1.4; }
+    .fc-btns { margin-top: 32px; }
+  }
+  @media (max-width: 767px) {
+    .fc { padding: 65px 0 46px; }
+    .fc-box { width: calc(100% + 20px); max-width: 370px; aspect-ratio: 1; }
+    .fc-hex { inset: 0; width: 100%; height: 100%; }
+    .fc-hex-i { inset: 12px; width: calc(100% - 24px); height: calc(100% - 24px); }
+    .fc-box::before, .fc-box::after { content: ''; position: absolute; top: 50%; width: 14px; height: 1.5px; background: rgba(210, 197, 166, .5); }
+    .fc-box::before { left: calc((100% - 100vw) / 2); } .fc-box::after { right: calc((100% - 100vw) / 2); }
+    .fc-h { margin-top: 75px; max-width: 200px; font-size: 26px; }
+    .fc-ph { margin-top: 10px; font-size: 40px; line-height: 59px; }
+    .fc-body { margin-top: 4px; max-width: 200px; font-size: 13px; line-height: 1.45; }
+    .fc-btns { flex-direction: column; gap: 10px; width: 100%; margin-top: 20px; }
+  }
+</style>

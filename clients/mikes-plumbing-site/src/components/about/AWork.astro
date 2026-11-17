@@ -1,0 +1,112 @@
+---
+// 7.4 How we work (Figma 670:441 / 670:2323): three numbered rows on paper, outlined numerals 1-2-3, Abril titles with a red
+// marker underline, the flyer's wavy rule with a hex nut between rows, two IG snapshots.
+// Scroll moment: the red underlines draw one after another as the rows pass; as each line completes, its numeral lights up
+// (red outline, scale 1.08, small turn). Reduced motion / no JS = the Figma state (all lines drawn, numerals tan-dark).
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import Img from '../ui/Img.astro';
+import { REVIEWS } from '../../data/reviews';
+const has = (name: string, part: string) => {
+  const r = REVIEWS.find((x) => x.name === name);
+  if (!r || !r.text.includes(part)) throw new Error(`AWork: "${part}" is not in ${name}'s review`);
+  return part;
+};
+const UL = 'M1.5 4.77C55.17 0.77 108.83 0.44 162.5 3.77C216.17 7.11 269.83 6.44 323.5 1.77';
+const n = 3;
+---
+<section class="aw" aria-labelledby="aw-h" data-m-section>
+  <Wave d="a3d" m="a3m" top={2640} topM={2377} />
+  <div class="aw-in">
+    <Eyebrow>The way we work</Eyebrow>
+    <h2 id="aw-h" class="aw-h" data-t="2">We don't cut corners, <span class="tone">we clean them!</span></h2>
+    <ol class="aw-rows" role="list" data-b3-scrub data-b3-start="top 70%" data-b3-end="bottom 60%">
+      <li class="aw-row" data-b3-stop={(0.9 / n).toFixed(3)}>
+        <span class="aw-num" aria-hidden="true">1</span>
+        <h3 class="aw-t">Diagnose first.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-b3-path data-b3-from="0" data-b3-to={(0.9 / n).toFixed(3)} /></svg></h3>
+        <p class="aw-p">“DIAGNOSIS MATTERS.” On a 75-gallon gas heater someone was told to replace, the problem was simply the gas control valve.</p>
+        <figure class="aw-snap aw-snap--1"><div class="aw-ph"><Img name="water-heater-gas-valve-small" alt="Gas control valve on a water heater" sizes="(min-width: 768px) 136px, 86px" widths={[136, 272]} /></div><figcaption>Gas control valve · Mike's IG</figcaption></figure>
+      </li>
+      <li class="aw-row" data-b3-stop={(1.9 / n).toFixed(3)}>
+        <span class="aw-rule" aria-hidden="true"><span class="aw-wv"></span><svg class="aw-nut" viewBox="0 0 30 20"><path d="M4.39 0.75H25.11L28.75 9.75L25.11 18.75H4.39L0.75 9.75Z" /></svg><span class="aw-wv"></span></span>
+        <span class="aw-num" aria-hidden="true">2</span>
+        <h3 class="aw-t">Say it straight.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-b3-path data-b3-from={(1 / n).toFixed(3)} data-b3-to={(1.9 / n).toFixed(3)} /></svg></h3>
+        <p class="aw-p aw-p--w">Customers on Yelp call his pricing <b>“{has('Bruce H.', 'fair and competitive')}”</b> (Bruce H.) and <b>“{has('Sal C.', 'upfront and honest')}”</b> (Sal C.).</p>
+      </li>
+      <li class="aw-row" data-b3-stop={(2.9 / n).toFixed(3)}>
+        <span class="aw-rule" aria-hidden="true"><span class="aw-wv"></span><svg class="aw-nut" viewBox="0 0 30 20"><path d="M4.39 0.75H25.11L28.75 9.75L25.11 18.75H4.39L0.75 9.75Z" /></svg><span class="aw-wv"></span></span>
+        <span class="aw-num" aria-hidden="true">3</span>
+        <h3 class="aw-t">Leave it clean.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-b3-path data-b3-from={(2 / n).toFixed(3)} data-b3-to={(2.9 / n).toFixed(3)} /></svg></h3>
+        <p class="aw-p">“{has('Stuart W.', 'extremely conscientious about my lawn and cleaning up any mess')}” (Stuart W.)</p>
+        <figure class="aw-snap aw-snap--3"><div class="aw-ph"><Img name="new-sewer-cleanout-in-yard" alt="New sewer cleanout installed in a yard" sizes="(min-width: 768px) 136px, 86px" widths={[136, 272]} /></div><figcaption>New cleanout, yard · Mike's IG</figcaption></figure>
+      </li>
+    </ol>
+  </div>
+</section>
+<style>
+  .aw { position: relative; height: 960px; padding-top: 119px; background: var(--paper); }
+  .aw-in { position: relative; width: 1200px; margin: 0 auto; }
+  .aw-h { margin-top: 12px; font-family: var(--f-display); font-weight: 400; font-size: 64px; line-height: 1.04; color: var(--ink); white-space: nowrap; }
+  .aw .tone { color: var(--tan-dark); }
+  .aw-rows { position: relative; margin: 0; padding: 0; list-style: none; }
+  /* rows: numeral tops at 2946 / 3136 / 3326 (190 apart); the rule sits 10 px above the next numeral */
+  .aw-row { position: relative; height: 190px; }
+  .aw-row:first-child { margin-top: 87px; }
+  .aw-num { position: absolute; left: 0; top: 0; font-family: var(--f-display); font-size: 170px; line-height: 170px; color: transparent; -webkit-text-stroke: 2px var(--tan-dark); transform-origin: 30% 60%; transition: transform .45s var(--ease-back), -webkit-text-stroke-color .3s; }
+  .aw-row.is-on .aw-num { -webkit-text-stroke-color: var(--red); transform: scale(1.08) rotate(-4deg); }
+  .aw-t { position: absolute; left: 180px; top: 52px; font-family: var(--f-display); font-weight: 400; font-size: 46px; line-height: 62px; color: var(--ink); white-space: nowrap; }
+  .aw-ul { position: absolute; left: -5.5px; top: 60px; width: 325px; height: 8px; overflow: visible; }
+  .aw-row:nth-child(3) .aw-ul { width: 315px; }
+  .aw-ul path { fill: none; stroke: var(--red); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .aw-p { position: absolute; left: 640px; top: 54px; width: 380px; font-size: 18px; line-height: 1.55; color: var(--ink-2); }
+  .aw-p--w { width: 540px; }
+  .aw-p b { font-weight: 700; color: var(--ink); }
+  .aw-rule { position: absolute; left: 0; right: -10px; top: 5px; height: 18px; display: flex; align-items: center; justify-content: space-between; }
+  /* the flyer's wavy rule: one 60 px period (Figma 670:452), repeated */
+  .aw-wv { width: 571px; height: 10px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 10'%3E%3Cpath d='M0 4.75C10 -.58 20 -.58 30 4.75S50 10.08 60 4.75' fill='none' stroke='%23D2C5A6' stroke-width='1.5'/%3E%3C/svg%3E") 0 0 / 60px 10px repeat-x; }
+  .aw-nut { width: 30px; height: 20px; flex: none; margin: 0 -1px; fill: var(--paper); stroke: var(--tan-dark); stroke-width: 1.5; stroke-linejoin: round; }
+  .aw-snap { position: absolute; left: 1050px; width: 150px; height: 178px; margin: 0; padding: 7px; background: var(--bone); box-shadow: 0 12px 22px -6px rgba(0, 0, 0, .3); transform-origin: 0 0; }
+  .aw-snap--1 { top: 18px; transform: rotate(-4deg); }
+  .aw-snap--3 { top: 18px; transform: rotate(4deg); }
+  .aw-ph { width: 136px; height: 136px; overflow: hidden; }
+  .aw-snap figcaption { margin: 11px 0 0 1px; font-family: var(--f-label); font-weight: 500; font-size: 7.5px; line-height: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+
+  @media (max-width: 1279px) {
+    .aw { height: auto; padding: 59px 0 100px; }
+    .aw-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; }
+    .aw-h { margin-top: 10px; font-size: 36px; line-height: 1.06; white-space: normal; }
+    .aw-row { height: auto; padding: 28px 0 0 76px; }
+    .aw-row:first-child { margin-top: 26px; min-height: 260px; }
+    .aw-row:nth-child(2) { min-height: 236px; }
+    .aw-num { font-size: 96px; line-height: 96px; -webkit-text-stroke-width: 1.6px; }
+    .aw-t, .aw-p { position: relative; left: auto; top: auto; width: auto; }
+    .aw-t { display: inline-block; font-size: 28px; line-height: 38px; white-space: normal; }
+    .aw-ul { left: -4px; top: 36px; width: 199px; height: 7px; }
+    .aw-row:nth-child(3) .aw-ul { width: 193px; }
+    .aw-ul path { stroke-width: 2.5; }
+    .aw-p { margin-top: 20px; font-size: 15px; line-height: 1.5; }
+    .aw-row:has(.aw-snap) .aw-p { margin-right: 94px; }
+    .aw-p b { font-weight: 400; color: inherit; }
+    .aw-rule { left: 0; right: 0; top: -25px; height: 16px; }
+    .aw-wv { width: auto; flex: 1; height: 8px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 8'%3E%3Cpath d='M0 3.65C6.67 -.35 13.33 -.35 20 3.65S33.33 7.65 40 3.65' fill='none' stroke='%23D2C5A6' stroke-width='1.3'/%3E%3C/svg%3E"); background-size: 40px 8px; }
+    .aw-nut { width: 28px; height: 18px; margin: 0 6px; stroke-width: 1.3; }
+    .aw-snap { left: auto; right: -10px; width: 96px; height: 112px; padding: 5px; }
+    .aw-snap--1 { top: 82px; } .aw-snap--3 { top: 82px; }
+    .aw-ph { width: 86px; height: 86px; }
+    .aw-snap figcaption { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .aw { padding: 90px 0 110px; }
+    .aw-h { font-size: clamp(44px, 5.5vw, 60px); }
+    .aw-row { padding-left: 130px; }
+    .aw-row:first-child, .aw-row:nth-child(2) { min-height: 250px; }
+    .aw-num { font-size: 140px; line-height: 140px; }
+    .aw-t { font-size: 40px; line-height: 54px; }
+    .aw-ul { top: 52px; width: 290px; }
+    .aw-p { font-size: 17px; max-width: 480px; }
+    .aw-row:has(.aw-snap) .aw-p { margin-right: 170px; }
+    .aw-snap { width: 150px; height: 178px; padding: 7px; right: 0; top: 30px; }
+    .aw-ph { width: 136px; height: 136px; }
+    .aw-snap figcaption { display: block; }
+  }
+</style>

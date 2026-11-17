@@ -1,0 +1,86 @@
+---
+// 8.1 Hero (Figma 670:4232 / 670:9461): copy left on coal; right, a typed job sheet stamped with his ink logo, the cream stamp
+// tag and a huge faint cream stamp behind. Courier Prime is not self-hosted: the sheet uses the same Courier stack as /reviews.
+import { Image } from 'astro:assets';
+import logoInk from '../../assets/brand/logo-ink.png';
+import logoCream from '../../assets/brand/logo-cream.png';
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import GhostBtn from '../b3kit/GhostBtn.astro';
+import { SITE } from '../../data/site';
+---
+<section class="oh on-ink" aria-labelledby="oh-h1" data-m-section data-m-hero>
+  <div class="oh-in">
+    <div class="oh-copy">
+      <Eyebrow dark>Our work · Every job gets the stamp</Eyebrow>
+      <h1 id="oh-h1" class="oh-h1" data-t="2">Our Plumbing Work, <span class="tone">from Riverside to LA</span></h1>
+      <p class="oh-body" data-t="3">Real photos from real jobs, straight from Mike's Instagram.</p>
+      <div class="oh-btns">
+        <a class="oh-ig" href={SITE.social.instagram} target="_blank" rel="noopener" data-t="3">Follow {SITE.social.instagramHandle}</a>
+        <GhostBtn href="/contact" dark plain w={230} />
+      </div>
+    </div>
+    <div class="oh-art" aria-hidden="true">
+      <Image class="oh-big" src={logoCream} alt="" widths={[760]} sizes="760px" />
+      <div class="oh-sheet">
+        <p class="oh-sh-h">Job sheet · Mike's Plumbing Services</p>
+        <Image class="oh-sh-stamp" src={logoInk} alt="" widths={[300, 600]} sizes="300px" />
+        <p class="oh-sh-t">Every job gets the stamp.</p>
+        <p class="oh-sh-p">Water heaters · sewer roots · slab leaks · re-pipes · ADU rough-ins · commercial jobs</p>
+      </div>
+      <div class="oh-tag"><Image src={logoCream} alt="" widths={[190, 380]} sizes="190px" /></div>
+    </div>
+  </div>
+</section>
+<style>
+  .oh { position: relative; height: 820px; background: var(--coal); overflow: hidden; }
+  .oh-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
+  .oh-copy { position: absolute; left: 120px; top: 169px; width: 600px; }
+  .oh-h1 { margin-top: 15px; font-family: var(--f-display); font-weight: 400; font-size: 76px; line-height: 1.02; color: var(--paper); }
+  .oh .tone { color: var(--tan); }
+  .oh-body { margin-top: 24px; font-size: 19px; line-height: 1.5; color: rgba(243, 236, 221, .8); }
+  .oh-btns { display: flex; gap: 16px; margin-top: 40px; }
+  .oh-ig { display: flex; align-items: center; width: 330px; height: 64px; padding: 0 22px; border-radius: 6px; background: var(--tan); color: var(--ink); font-weight: 700; font-size: 16px; white-space: nowrap; transition: background-color var(--dur-2) var(--ease-out); }
+  .oh-ig:hover { background: #e0d5bb; }
+  .oh-btns :global(.gb) { width: 230px; border-radius: 6px; }
+  .oh-btns :global(.gb-l) { font-weight: 700; }
+
+  .oh-art { position: absolute; inset: 0; pointer-events: none; }
+  .oh-art :global(.oh-big) { position: absolute; left: 720px; top: 80px; width: 760px; height: 500px; object-fit: contain; opacity: .07; transform: rotate(8deg); transform-origin: 0 0; }
+  .oh-sheet { --tw: 'Courier New', 'Courier Prime', Courier, 'Liberation Mono', 'Nimbus Mono PS', monospace; position: absolute; left: 880px; top: 120px; width: 420px; height: 520px; background-color: var(--bone); transform: rotate(-5deg); transform-origin: 0 0; box-shadow: 0 30px 60px -14px rgba(0, 0, 0, .6); font-family: var(--tw); }
+  .oh-sheet { background-image: linear-gradient(var(--tan), var(--tan)), repeating-linear-gradient(transparent 0 23px, rgba(201, 191, 168, .6) 23px 24px); background-size: 100% 56px, 376px 216px; background-position: 0 0, 22px 267px; background-repeat: no-repeat; }
+  .oh-sh-h { position: absolute; left: 22px; top: 20px; font-weight: 700; font-size: 12px; line-height: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .oh-sheet :global(.oh-sh-stamp) { position: absolute; left: 56px; top: 86px; width: 300px; height: 150px; object-fit: contain; transform: rotate(8deg); transform-origin: 0 0; }
+  .oh-sh-t { position: absolute; left: 22px; top: 268px; font-weight: 700; font-size: 15px; line-height: 17px; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .oh-sh-p { position: absolute; left: 22px; top: 297px; width: 376px; font-size: 14px; line-height: 24px; color: var(--ink-2); }
+  .oh-tag { position: absolute; left: 730px; top: 450px; width: 230px; height: 150px; padding: 16px 20px; border-radius: 10px; background: var(--ink); transform: rotate(11deg); transform-origin: 0 0; box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .6); }
+  .oh-tag :global(img) { width: 190px; height: 118px; object-fit: contain; }
+
+  @media (max-width: 1279px) {
+    .oh { height: auto; padding: 47px 0 0; }
+    .oh-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; height: auto; }
+    .oh-copy { position: static; width: auto; }
+    .oh-copy :global(.eb) { font-size: 12px; line-height: 18px; }
+    .oh-h1 { margin-top: 11px; font-size: 42px; line-height: 1.04; }
+    .oh-body { margin-top: 16px; font-size: 16px; }
+    .oh-btns { flex-direction: column; gap: 12px; margin-top: 28px; }
+    .oh-ig { width: 100%; height: 58px; justify-content: center; font-size: 15px; }
+    .oh-btns :global(.gb) { width: 100%; height: 54px; }
+    .oh-btns :global(.gb-l) { font-size: 15px; }
+    /* the stage below the copy: the desktop sheet and tag at the mobile frame's .55 scale (670:9461) */
+    .oh-art { position: relative; inset: auto; height: 478px; margin: 0 -20px; }
+    .oh-art :global(.oh-big) { left: 32px; top: 28px; transform: rotate(8deg) scale(.55); }
+    .oh-sheet { left: 120px; top: 50px; transform: rotate(-5deg) scale(.55); }
+    .oh-tag { left: 38px; top: 232px; transform: rotate(11deg) scale(.548); }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .oh { padding-top: 90px; }
+    .oh-h1 { font-size: clamp(48px, 6.5vw, 72px); }
+    .oh-btns { flex-direction: row; }
+    .oh-ig { width: 330px; height: 64px; }
+    .oh-btns :global(.gb) { width: 230px; height: 64px; }
+    .oh-art { height: 520px; margin: 0; }
+    .oh-sheet { left: 50%; top: 40px; margin-left: -150px; transform: rotate(-5deg) scale(.8); }
+    .oh-tag { left: 50%; top: 330px; margin-left: -330px; transform: rotate(11deg) scale(.8); }
+    .oh-art :global(.oh-big) { left: 50%; top: 0; margin-left: -380px; transform: rotate(8deg) scale(.9); }
+  }
+</style>

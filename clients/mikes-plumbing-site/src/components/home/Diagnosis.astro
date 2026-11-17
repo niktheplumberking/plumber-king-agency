@@ -1,0 +1,225 @@
+---
+// "Diagnosis matters" case file (Figma 631:2037 frame "why us: diagnosis matters" y 4800-5920; mobile 640:437 y 6221-7635).
+// Also owns the two seams around it: the pipe + shut-off valve + "Diagnose first." tag on its top edge (it overlaps the
+// work wall, so this section stacks above it) and the dripping stub + tan wave on its bottom edge into the process.
+// Pillar quotes are excerpts of reviews.ts, checked word for word at build time.
+import Img from '../ui/Img.astro';
+import Eyebrow from './Eyebrow.astro';
+import Wave from './Wave.astro';
+import Btn from '../global/Btn.astro';
+import WaveRule from '../global/WaveRule.astro';
+import { SITE } from '../../data/site';
+import { REVIEWS } from '../../data/reviews';
+
+const P = [
+  { word: 'Friendly.', label: "Mike's bio, word 1", who: 'Jack D.', job: 'Garbage disposal',
+    d: ['He arrived on time and installed it quickly. He communicated well, was ', 'polite and courteous', ''],
+    m: ['He communicated well, was ', 'polite and courteous', ''] },
+  { word: 'Transparent.', label: 'Word 2', who: 'Sydney H.', job: 'Kitchen faucet',
+    d: ['Mike was fast with his response, replaced my faucet ', 'for a fair price', ' and did a great job in a timely manner.'],
+    m: ['Mike was fast with his response, replaced my faucet ', 'for a fair price', ''] },
+  { word: 'Proficient.', label: 'Word 3', who: 'Eleanor M.', job: 'Toilets + regulator',
+    d: ['We replaced 3 toilets and a pressure regulator. […] He\'s reasonably priced, ', 'detailed & patient', '. Call him!'],
+    m: ['He\'s reasonably priced, ', 'detailed & patient', '. Call him!'] },
+];
+for (const p of P) {
+  const r = REVIEWS.find((x) => x.name === p.who);
+  for (const q of [p.d, p.m]) for (const part of q.join('').split(' […] ')) {
+    if (!r || !r.text.includes(part)) throw new Error(`Diagnosis: quote not in reviews.ts: ${p.who}: ${part}`);
+  }
+}
+const nut = 'M8 .75h18l7.25 12.25L26 25.25H8L.75 13z';
+const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
+---
+<section class="dg on-paper" aria-labelledby="dg-h" data-m-section>
+  <Wave only="d" y={-38} h={44} d="M0 18C103.333 42 206.667 42 310 18C413.333 -6 516.667 -6 620 18C723.333 42 826.667 42 930 18C1033.33 -6 1136.67 -6 1240 18C1343.33 42 1446.67 42 1550 18V44H0V18Z" bottom="#FBF8F2" />
+  <Wave only="m" y={-24} h={30} w={390} d="M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z" bottom="#FBF8F2" />
+
+  <!-- top seam: pipe from the work wall, couplings, the shut-off valve dripping, the "Diagnose first." tag -->
+  <div class="vs vs-d" aria-hidden="true">
+    <svg class="vs-pipe" viewBox="0 0 1440 200"><path class="p-body" d="M0 48 H1352 Q1382 48 1382 78 V92" /><path class="p-water" d="M0 48 H1352 Q1382 48 1382 78 V92" pathLength="1" data-pipe-water /><path class="p-hi" d="M0 45.5 H1352" /></svg>
+    <svg class="nut" style="left:283px;top:35px" viewBox="0 0 34 26"><path d={nut} /></svg>
+    <svg class="nut" style="left:803px;top:35px" viewBox="0 0 34 26"><path d={nut} /></svg>
+    <span class="str"></span>
+    <span class="tag"><span class="hole"></span>Diagnose first.</span>
+    <svg class="nut" style="left:1365px;top:91px" viewBox="0 0 34 26"><path d={nut} /></svg>
+    <span class="box" style="left:1366px;top:118px;width:32px;height:26px"></span>
+    <span class="hdl" style="left:1384px;top:98px;width:46px;height:7px"></span>
+    <svg class="drip dr1" style="left:1375px;top:152px" viewBox="0 0 14 21"><path d={drip} /></svg>
+    <svg class="drip dr2" style="left:1375px;top:182px" viewBox="0 0 14 21"><path d={drip} /></svg>
+  </div>
+  <div class="vs vs-m" aria-hidden="true">
+    <svg class="vs-pipe" viewBox="0 0 390 120"><path class="p-body m" d="M0 27 H331 Q352 27 352 48 V58" /><path class="p-water m" d="M0 27 H331 Q352 27 352 48 V58" pathLength="1" data-pipe-water /></svg>
+    <svg class="nut" style="left:107px;top:17px;width:26px;height:20px" viewBox="0 0 34 26"><path d={nut} /></svg>
+    <svg class="nut" style="left:344px;top:56px;width:26px;height:20px" viewBox="0 0 34 26"><path d={nut} /></svg>
+    <span class="box" style="left:345px;top:78px;width:24px;height:18px"></span>
+    <span class="hdl" style="left:354px;top:70px;width:30px;height:5px"></span>
+    <svg class="drip dr1" style="left:350px;top:102px" viewBox="0 0 14 21"><path d={drip} /></svg>
+  </div>
+
+  <div class="dg-in">
+    <figure class="case" data-t="1" data-fx="frame">
+      <div class="ph"><Img name="water-heater-gas-valve-riverside" alt="Gas control valve on a 75-gallon water heater, the part Mike replaced instead of the whole heater" sizes="(min-width: 1024px) 500px, 350px" widths={[350, 500, 700, 1000]} /></div>
+      <svg class="ol" viewBox="0 0 502 642" preserveAspectRatio="none" aria-hidden="true"><path d="M41 1H461L501 41V601L461 641H41L1 601V41L41 1Z" /></svg>
+      <p class="tab"><svg viewBox="0 0 302 50" preserveAspectRatio="none" aria-hidden="true"><path d="M24.75 .75H276.75L300.75 24.75L276.75 48.75H24.75L.75 24.75Z" /></svg><span class="d">Case file · 75-gallon water heater</span><span class="m">Case file · 75-gal heater</span></p>
+      <figcaption class="verdict" data-t="3" data-fx="toss">
+        <s class="told">Told: replace the whole heater.</s>
+        <span class="found">Found: one gas control valve.</span>
+        <span class="not d">Not the whole heater.</span>
+      </figcaption>
+    </figure>
+    <div class="dg-txt">
+      <Eyebrow data-t="1">Diagnosis matters</Eyebrow>
+      <h2 id="dg-h" class="h2" data-t="2">Told it needed a new water&nbsp;heater. <span class="tn">It needed one valve.</span></h2>
+      <p class="lead" data-t="3">A customer was told their 75-gallon water heater had to be replaced. Mike diagnosed it properly and found the real problem: the gas control valve.</p>
+      <p class="rule d" data-t="3">Mike's rule, from his Instagram: “DIAGNOSIS MATTERS.”</p>
+      <div class="cta" data-t="4">
+        <Btn v="dark" sub="Get an honest diagnosis" class="dg-btn" data-magnetic />
+        <a class="txt d" href={SITE.sms}>Text a photo first <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+
+  <WaveRule class="dg-rule" color="rgba(14,13,11,.3)" bg="var(--bone)" />
+  <ul class="pil" data-t="2" data-stagger>
+    {P.map((p) => (
+      <li>
+        <h3 class="pw">{p.word}</h3>
+        <p class="pl d">{p.label}</p>
+        <blockquote>
+          <p class="d">“{p.d[0]}<b>{p.d[1]}</b>{p.d[2]}”</p>
+          <p class="m">“{p.m[0]}<b>{p.m[1]}</b>{p.m[2]}”</p>
+          <footer>{p.who} · Yelp<span class="d"> · {p.job}</span></footer>
+        </blockquote>
+      </li>
+    ))}
+  </ul>
+
+  <!-- bottom seam: the stub that drips into the process, then the tan wave -->
+  <div class="ds ds-d" aria-hidden="true">
+    <span class="stub" style="left:0;top:24px;width:180px;height:14px"></span>
+    <svg class="nut" style="left:163px;top:18px" viewBox="0 0 34 26"><path d={nut} /></svg>
+    <svg class="drip dr1" style="left:189px;top:52px" viewBox="0 0 14 21"><path d={drip} /></svg>
+    <svg class="drip dr2" style="left:189px;top:82px" viewBox="0 0 14 21"><path d={drip} /></svg>
+  </div>
+  <div class="ds ds-m" aria-hidden="true">
+    <span class="stub" style="left:310px;top:16px;width:80px;height:10px"></span>
+    <svg class="nut" style="left:297px;top:11px;width:26px;height:20px" viewBox="0 0 34 26"><path d={nut} /></svg>
+    <svg class="drip dr1" style="left:290px;top:36px" viewBox="0 0 14 21"><path d={drip} /></svg>
+    <svg class="drip dr2" style="left:290px;top:62px" viewBox="0 0 14 21"><path d={drip} /></svg>
+  </div>
+  <Wave only="d" class="dg-wb" y={1086} h={40} d="M0 16C86.6667 -5.33333 173.333 -5.33333 260 16C346.667 37.3333 433.333 37.3333 520 16C606.667 -5.33333 693.333 -5.33333 780 16C866.667 37.3333 953.333 37.3333 1040 16C1126.67 -5.33333 1213.33 -5.33333 1300 16C1386.67 37.3333 1473.33 37.3333 1560 16V40H0V16Z" bottom="#D2C5A6" />
+  <Wave only="m" class="dg-wb" y={1392} h={28} w={390} d="M0 10C43.3333 -3.33333 86.6667 -3.33333 130 10C173.333 23.3333 216.667 23.3333 260 10C303.333 -3.33333 346.667 -3.33333 390 10C433.333 23.3333 476.667 23.3333 520 10V28H0V10Z" bottom="#D2C5A6" />
+</section>
+<style>
+  .dg { position: relative; z-index: 3; height: 1120px; background: var(--bone); color: var(--ink); overflow-x: clip; }
+  .m { display: none; }
+  .vs, .ds { position: absolute; left: 0; width: 100%; pointer-events: none; z-index: 4; }
+  .vs-d { top: -60px; height: 200px; }
+  .ds-d { top: 1060px; height: 120px; }
+  .vs-m, .ds-m { display: none; }
+  .vs-pipe { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .p-body { fill: none; stroke: #6B5C3E; stroke-width: 16; }
+  .p-body.m { stroke-width: 10; }
+  .p-water { fill: none; stroke: #8E7B55; stroke-width: 6; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .p-water.m { stroke-width: 4; }
+  .p-hi { fill: none; stroke: rgba(255,255,255,.2); stroke-width: 3; }
+  .nut { position: absolute; width: 34px; height: 26px; }
+  .nut path { fill: var(--tan); stroke: var(--ink); stroke-width: 1.5; }
+  .box { position: absolute; background: var(--tan); border-radius: 2px; }
+  .hdl { position: absolute; background: var(--red); border-radius: 4px; }
+  .stub { position: absolute; background: #6B5C3E; border-radius: 0 3px 3px 0; }
+  .drip { position: absolute; width: 14px; height: 21px; fill: #6B5C3E; }
+  .dr2 { opacity: .4; }
+  .str { position: absolute; left: 1009px; top: 56px; width: 1.5px; height: 40px; background: var(--tan); }
+  .tag { position: absolute; left: 912px; top: 94px; width: 196px; height: 62px; padding: 19px 0 0 20px; background: var(--tan); border-radius: 3px; transform: rotate(4deg); transform-origin: 50% 0; box-shadow: 0 8px 16px rgba(14,13,11,.22); font-family: var(--f-script); font-size: 24px; line-height: 30px; color: var(--ink); }
+  .hole { position: absolute; left: 93px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); }
+
+  .dg-in { position: relative; display: grid; grid-template-columns: 500px 1fr; column-gap: 100px; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding-top: 120px; }
+  .case { position: relative; margin: 0; width: 500px; height: 640px; }
+  .ph { position: absolute; inset: 0; overflow: hidden; clip-path: polygon(40px 0, 460px 0, 100% 40px, 100% 600px, 460px 100%, 40px 100%, 0 600px, 0 40px); }
+  .ph :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .ol { position: absolute; left: -1px; top: -1px; width: 502px; height: 642px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+  .tab { position: absolute; left: 30px; top: -24px; display: grid; place-items: center; width: 300px; height: 48px; margin: 0; font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .tab svg { position: absolute; left: -.75px; top: -.75px; width: 302px; height: 50px; fill: var(--tan); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+  .tab span { position: relative; }
+  .verdict { position: absolute; left: 260px; top: 530px; display: flex; flex-direction: column; width: 330px; height: 176px; padding: 26px 24px 0; background: var(--ink); border-radius: 4px; box-shadow: 0 18px 30px rgba(14,13,11,.28); }
+  .told { font-weight: 600; font-size: 17px; line-height: 18px; color: var(--mute); }
+  .found { margin-top: 15px; font-family: var(--f-display); font-size: 26px; line-height: 28.6px; color: var(--tan); }
+  .not { margin-top: 12px; font-weight: 500; font-size: 14px; line-height: 15px; color: rgba(243,236,221,.8); }
+  .dg-txt { padding-top: 29px; }
+  .h2 { margin-top: 15px; max-width: 600px; font-family: var(--f-display); font-weight: 400; font-size: 50px; line-height: 53px; }
+  .h2 .tn { display: block; color: var(--tan-dark); }
+  .lead { margin-top: 20px; max-width: 560px; font-size: 17px; line-height: 26.35px; color: var(--ink-2); }
+  .rule { margin-top: 40px; font-weight: 700; font-size: 17px; line-height: 26px; }
+  .cta { display: flex; align-items: center; gap: 26px; margin-top: 56px; }
+  .dg :global(.dg-btn) { width: 300px; }
+  .txt { font-weight: 700; font-size: 16px; color: var(--ink); }
+  .txt span { display: inline-block; margin-left: 6px; transition: transform .25s; }
+  .txt:hover span { transform: translateX(4px); }
+  .dg :global(.dg-rule) { width: calc(100% - 2 * var(--gutter)); margin: 85px auto 0; }
+  .pil { display: grid; grid-template-columns: 386fr 410fr 404fr; width: calc(100% - 2 * var(--gutter)); margin: 25px auto 0; padding: 0; list-style: none; }
+  .pil li { position: relative; min-height: 190px; padding: 0 30px 0 24px; }
+  .pil li:first-child { padding-left: 0; }
+  .pil li + li::before { content: ''; position: absolute; left: 0; top: 4px; width: 1px; height: 190px; background: rgba(14,13,11,.2); }
+  .pw { font-family: var(--f-display); font-weight: 400; font-size: 38px; line-height: 51px; }
+  .pl { margin-top: 1px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan-dark); }
+  blockquote { margin: 8px 0 0; max-width: 360px; }
+  blockquote p { font-weight: 500; font-size: 16px; line-height: 24px; color: var(--ink-2); }
+  blockquote b { font-weight: 800; color: var(--ink); }
+  blockquote footer { margin-top: 12px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .08em; text-transform: uppercase; color: var(--tan-dark); }
+
+  @media (max-width: 1279px) {
+    .dg { height: auto; padding-bottom: 150px; }
+    .vs-d { display: none; }
+    .ds-d { top: auto; bottom: -60px; }
+    .dg :global(.dg-wb.only-d) { top: auto !important; bottom: -6px; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .dg-in { grid-template-columns: minmax(0, 42%) 1fr; column-gap: 56px; }
+    .case { width: 100%; height: auto; aspect-ratio: 500 / 640; }
+    .ol { width: calc(100% + 2px); height: calc(100% + 2px); }
+    .verdict { left: auto; right: -40px; top: auto; bottom: -60px; width: 300px; height: auto; padding-bottom: 22px; }
+    .h2 { font-size: clamp(36px, 4.2vw, 50px); line-height: 1.06; }
+    .pil li { padding-right: 18px; }
+  }
+  @media (max-width: 1023px) and (min-width: 768px) {
+    .dg-in { grid-template-columns: 1fr; }
+    .case { max-width: 500px; }
+    .verdict { right: -20px; }
+    .dg-txt { padding-top: 100px; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; }
+    .m { display: inline; }
+    .dg { padding-bottom: 31px; }
+    .vs-m { display: block; top: -50px; left: auto; right: 0; width: 390px; height: 120px; }
+    .ds-m { display: block; top: auto; bottom: -34px; width: 390px; height: 90px; left: auto; right: 0; }
+    .dg :global(.dg-wb.only-m) { top: auto !important; bottom: -6px; }
+    .dg-in { display: block; padding-top: 70px; }
+    .case { width: 100%; height: auto; aspect-ratio: 350 / 400; }
+    .ph { clip-path: polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px); }
+    .ol { width: calc(100% + 2px); height: calc(100% + 2px); }
+    .ol path { vector-effect: non-scaling-stroke; }
+    .tab { left: 20px; top: -22px; width: 250px; height: 40px; font-size: 12px; }
+    .tab svg { width: 252px; height: 42px; }
+    .verdict { left: auto; right: 0; top: auto; bottom: -60px; width: 260px; height: 130px; padding: 18px 18px 0; }
+    .told { font-size: 14px; line-height: 15px; }
+    .found { margin-top: 13px; font-size: 20px; line-height: 22px; }
+    .dg-txt { padding-top: 89px; }
+    .h2 { margin-top: 13px; font-size: 32px; line-height: 34.56px; }
+    .h2 .tn { display: inline; }
+    .lead { margin-top: 15px; font-size: 16px; line-height: 24.8px; }
+    .cta { margin-top: 71px; }
+    .dg :global(.dg-btn) { width: 100%; }
+    .dg :global(.dg-rule) { width: calc(100% - 40px); margin-top: 30px; }
+    .pil { display: block; width: calc(100% - 40px); margin-top: 26px; }
+    .pil li { min-height: 0; padding: 0; }
+    .pil li + li { margin-top: 15px; }
+    .pil li + li::before { display: none; }
+    .pw { font-size: 30px; line-height: 40px; }
+    blockquote { margin-top: 4px; }
+    blockquote p { font-size: 15px; line-height: 22.5px; }
+    blockquote footer { margin-top: 8px; font-size: 11px; line-height: 16px; }
+  }
+</style>

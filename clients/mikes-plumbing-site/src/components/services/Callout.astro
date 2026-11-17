@@ -1,0 +1,86 @@
+---
+// 1.8 Emergency callout (Figma 669:539 y 5580 h 330, bone; mobile y 6903 h 398), with the tan "commercial jobs" tape across the
+// seam above it (desktop -60, 5560, 1600 x 58, rot -2.2; mobile -40, 6877, 620 x 44, rot -3). Siren + pulse rings, red dot,
+// eyebrow, H2, "Open 24 hours (Yelp)" line, red call button, link to /emergency-plumber.
+import Eyebrow from './kit/Eyebrow.astro';
+import Btn from './kit/Btn.astro';
+import TLink from './kit/TLink.astro';
+import { ab } from './kit/ab';
+import { SITE } from '../../data/site';
+const jobs = ['100-gallon heater, restaurant', 'Grease interceptor baffle tee', '4-inch gas line rework', 'ADU rough-in', '100-gallon heater, restaurant'];
+---
+<section id="emergency" class="ec sv-sec sv-bone sv-abs" style="--sh:330px" aria-labelledby="ec-h" data-m-section>
+  <div class="ec-tape" aria-hidden="true"><p>{jobs.map((j, i) => (<>{i > 0 && <svg viewBox="0 0 16 14" class="ec-hx"><path d="M4 0h8l4 7-4 7H4L0 7z" fill="#D9412B" /></svg>}<span>{j}</span></>))}</p></div>
+  <div class="ec-in">
+    <div class="ec-siren" data-t="2" aria-hidden="true">
+      <svg class="ec-d" viewBox="0 0 128 128" data-ab style={ab(186, 126, 128, 128)}>
+        <g fill="none" stroke="#D9412B" stroke-width="1.5"><circle cx="64" cy="64" r="63.25" stroke-opacity=".2" /><circle cx="64" cy="64" r="47.25" stroke-opacity=".3" /><circle cx="64" cy="64" r="31.25" stroke-opacity=".5" /></g>
+        <path d="M8 64a56 56 0 0 1 112 0z" fill="#D9412B" /><rect y="64" width="128" height="18" rx="3" fill="#0E0D0B" /><circle cx="64" cy="40" r="10" fill="#fff" fill-opacity=".6" />
+      </svg>
+      <svg class="ec-m" viewBox="0 0 92 92">
+        <g fill="none" stroke="#D9412B" stroke-width="1.5"><circle cx="46" cy="46" r="45.25" stroke-opacity=".2" /><circle cx="46" cy="46" r="33.25" stroke-opacity=".4" /></g>
+        <path d="M10 46a36 36 0 0 1 72 0z" fill="#D9412B" /><rect x="4" y="46" width="84" height="12" rx="3" fill="#0E0D0B" /><circle cx="46" cy="31" r="7" fill="#fff" fill-opacity=".6" />
+      </svg>
+    </div>
+    <i class="ec-dot" data-ab style={ab(392, 125, 14, 14)} aria-hidden="true"></i>
+    <Eyebrow tone="red" class="ec-eb" data-ab style={ab(423.5, 121)}>Emergency services</Eyebrow>
+    <h2 id="ec-h" class="sv-h ec-h" data-t="2" data-ab style={ab(424, 150)}>Water where it shouldn't be?</h2>
+    <p class="ec-body" data-t="3" data-ab style={ab(424, 218)}>Open 24 hours (Yelp). Call and tell Mike what's going on.</p>
+    <div class="ec-btn" data-ab style={ab(1080, 118, 260, 64)}>
+      <Btn v="red" l2="Call now" w={260} label={`Call ${SITE.phone} now`} />
+    </div>
+    <TLink href="/emergency-plumber" tone="ink" class="ec-link" data-ab style={ab(1080, 204)}>Emergency plumbing</TLink>
+  </div>
+</section>
+
+<style>
+  .ec { overflow-x: clip; overflow-y: visible; }
+  .ec-tape { position: absolute; z-index: 4; left: -60px; top: -20px; width: 1600px; height: 58px; rotate: 2.2deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 10px 20px -8px rgba(0, 0, 0, .4); overflow: hidden; pointer-events: none; }
+  .ec-tape p { position: absolute; left: 60px; top: 15px; margin: 0; display: flex; align-items: center; gap: 18px; white-space: nowrap; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .ec-hx { width: 16px; height: 14px; flex: none; }
+  .ec-in { position: relative; }
+  .ec-m { display: none; }
+  .ec-dot { border-radius: 50%; background: var(--red); }
+  .ec-h { margin: 0; font-size: 44px; line-height: 1.344; white-space: nowrap; }
+  .ec-body { margin: 0; font-weight: 500; font-size: 17px; line-height: 18px; color: #4a443a; }
+  .ec-btn :global(.sv-btn) { width: 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ec-dot { animation: ec-pulse 2s ease-out infinite; }
+    @keyframes ec-pulse { 0% { box-shadow: 0 0 0 0 rgba(217, 65, 43, .45); } 70%, 100% { box-shadow: 0 0 0 10px rgba(217, 65, 43, 0); } }
+  }
+
+  @media (max-width: 1279px) {
+    .ec-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: grid; grid-template-columns: auto 1fr; column-gap: 26px; align-items: start; }
+    .ec-siren { grid-row: 1 / 4; position: relative; }
+    .ec-siren svg { display: block; }
+    .ec-dot { position: absolute; }
+    .ec-h { white-space: normal; }
+    .ec-body, .ec-btn, .ec :global(.ec-link) { grid-column: 1 / -1; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ec { padding: 110px 0 90px; }
+    .ec-siren svg.ec-d { width: 128px; height: 128px; }
+    .ec-siren svg.ec-m { display: none; }
+    .ec-dot { left: 0; top: 0; display: none; }
+    .ec :global(.ec-eb) { grid-column: 2; }
+    .ec-h { grid-column: 2; font-size: clamp(34px, 4vw, 44px); line-height: 1.2; }
+    .ec-body { grid-column: 2 !important; margin-top: 8px; }
+    .ec-btn { grid-column: 2 !important; margin-top: 28px; width: 260px; }
+    .ec :global(.ec-link) { grid-column: 2 !important; margin-top: 20px; justify-self: start; }
+  }
+  @media (max-width: 767px) {
+    .ec { padding: 64px 0 42px; }
+    .ec-tape { left: -40px; top: -26px; width: 620px; height: 44px; rotate: 3deg; }
+    .ec-tape p { left: 30px; top: 11px; gap: 12px; font-size: 15px; line-height: 22px; letter-spacing: .06em; }
+    .ec-hx { width: 12px; height: 11px; }
+    .ec-in { column-gap: 0; grid-template-columns: 116px 1fr; }
+    .ec-siren svg.ec-d { display: none; } .ec-siren svg.ec-m { display: block; width: 92px; height: 92px; margin-left: -2px; }
+    .ec-dot { left: 110px; top: 16px; width: 12px; height: 12px; }
+    .ec :global(.ec-eb) { grid-column: 2; margin-top: 14px; padding-left: 14px; }
+    .ec :global(.ec-eb .sv-eb-hex) { display: none; }
+    .ec-h { grid-column: 2; margin-top: 3px; font-size: 28px; line-height: 1.06; }
+    .ec-body { margin-top: 30px; font-size: 15px; line-height: 1.5; }
+    .ec-btn { margin-top: 20px; }
+    .ec :global(.ec-link) { margin-top: 18px; font-size: 15px; justify-self: start; }
+  }
+</style>

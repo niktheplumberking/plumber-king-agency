@@ -20,8 +20,8 @@ const WORDS = ['Fair price', 'Same day', 'Excellent communicator', 'Very clean',
 const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M12 1h26l11 17-11 17H12L1 18z"/><path class="ar" d="M18 18h14m-5-5 5 5-5 5"/></svg>';
 ---
 <section class="sv on-ink" aria-labelledby="sv-h" data-m-section>
-  <Wave only="d" y={-45} h={55} c={26.5} a={15.5} p={560} m={140} top="#F3ECDD" bottom="#0E0D0B" />
-  <Wave only="m" y={-24} h={30} c={14} a={8} p={300} m={300} w={390} top="#F3ECDD" bottom="#0E0D0B" />
+  <Wave only="d" y={-34} h={40} d="M0 16C93.3333 -5.33333 186.667 -5.33333 280 16C373.333 37.3333 466.667 37.3333 560 16C653.333 -5.33333 746.667 -5.33333 840 16C933.333 37.3333 1026.67 37.3333 1120 16C1213.33 -5.33333 1306.67 -5.33333 1400 16C1493.33 37.3333 1586.67 37.3333 1680 16V40H0V16Z" bottom="#0E0D0B" />
+  <Wave only="m" y={-22} h={28} w={390} d="M0 10C43.3333 -3.33333 86.6667 -3.33333 130 10C173.333 23.3333 216.667 23.3333 260 10C303.333 -3.33333 346.667 -3.33333 390 10C433.333 23.3333 476.667 23.3333 520 10V28H0V10Z" bottom="#0E0D0B" />
   <Marquee class="sv-band" words={WORDS} star="#D9412B" />
   <div class="sv-in">
     <div class="sv-head">
@@ -120,7 +120,7 @@ const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M
   });
 </script>
 <style>
-  .sv { position: relative; background: var(--ink); color: var(--paper); padding: 0 0 94px; overflow-x: clip; }
+  .sv { position: relative; background: var(--ink); color: var(--paper); padding: 0 0 80px; overflow-x: clip; }
   .sv :global(.sv-band) { position: absolute; left: -40px; right: -40px; top: 4px; z-index: 4; rotate: 1.62deg; }
   .sv-in { position: relative; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding-top: 130px; }
   .sv-head { display: grid; grid-template-columns: 1fr 420px; align-items: start; }
@@ -131,7 +131,7 @@ const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M
   .sv-lead .m, .also .m { display: none; }
   .tl { display: inline-flex; align-items: center; gap: 6px; margin-top: 30px; font-weight: 600; font-size: 15px; color: var(--tan); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
   .tl:hover { color: var(--paper); }
-  .sv-list { position: relative; margin-top: 74px; }
+  .sv-list { position: relative; margin-top: 69px; }
   .rows { margin: 0; padding: 0; border-top: 1.5px dashed #3A352C; }
   .row { position: relative; border-bottom: 1.5px dashed #3A352C; }
   .row::before { content: ''; position: absolute; top: 0; bottom: 0; left: calc(-1 * var(--gutter)); right: calc(-1 * var(--gutter)); background: #1C1A16; opacity: 0; transition: opacity .35s; }
@@ -159,7 +159,7 @@ const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M
   .pol-c { display: block; padding: 17px 2px 0; font-family: var(--f-label); font-weight: 500; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
   .tape { position: absolute; left: 50%; top: -12px; z-index: 2; width: 90px; height: 24px; translate: -50% 0; background: rgba(210, 197, 166, .85); rotate: 1deg; }
   .view { position: absolute; right: -32px; top: 52px; display: grid; place-content: center; justify-items: center; gap: 2px; width: 92px; height: 92px; border-radius: 50%; background: #D9412B; color: var(--paper); font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; rotate: -4deg; }
-  .also { display: flex; align-items: baseline; gap: 62px; margin-top: 30px; }
+  .also { display: flex; align-items: baseline; gap: 62px; margin-top: 40px; }
   .also-k { font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); white-space: nowrap; }
   .also-l { font-size: 15px; color: #CFC8B8; }
   .also-l i { font-style: normal; margin: 0 9px; color: #A79D88; }
@@ -175,38 +175,38 @@ const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M
     .also { flex-wrap: wrap; gap: 12px 24px; }
   }
   @media (max-width: 767px) {
-    .sv { padding-bottom: 80px; }
+    .sv { padding-bottom: 66px; }
     .sv :global(.sv-band) { top: -18px; rotate: 1.62deg; }
-    .sv-in { padding-top: 73px; }
+    .sv-in { padding-top: 70px; }
     .sv-head { display: block; }
-    .h2 { margin-top: 18px; font-size: 38px; line-height: 40px; }
+    .h2 { margin-top: 17px; font-size: 38px; line-height: 40px; }
     .h2 .tn { display: inline; }
-    .sv-lead { padding-top: 22px; }
+    .sv-lead { padding-top: 18px; }
     .sv-lead p { font-size: 15px; line-height: 23px; }
     .sv-lead .d { display: none; } .sv-lead .m { display: inline; }
     .sv-lead .tl { display: none; }
     .sv-list { margin-top: 34px; }
     .rows { border-top: 0; }
     .row { border-bottom-color: #3A352C; }
-    .row-a { grid-template-columns: 36px 1fr 46px; height: 76px; }
+    .row-a { grid-template-columns: 36px 1fr 46px; height: 75px; }
     .row-tag { display: none; }
     .row-n { font-size: 14px; }
     .row-t { font-size: 28px; line-height: 34px; }
     .row-go :global(svg) { width: 46px; height: 32px; }
     .row.is-on .row-x { display: grid; }
-    .row.is-on .row-a { height: auto; padding-top: 22px; row-gap: 12px; }
+    .row.is-on .row-a { height: auto; padding-top: 20px; row-gap: 12px; }
     .row.is-on .row-tag { display: block; grid-column: 2 / 4; grid-row: 2; font-size: 12px; color: var(--paper); }
-    .row-x { position: relative; grid-template-columns: 206px 1fr; gap: 20px; padding: 10px 0 24px; }
-    .pol-m { width: 172px; padding: 8px 8px 0; transform: rotate(3deg); margin: 0 0 0 30px; }
-    .pol-m .pol-ph { height: 160px; }
+    .row-x { position: relative; grid-template-columns: 206px 1fr; gap: 20px; padding: 13px 0 10px; }
+    .pol-m { width: 172px; padding: 8px 8px 0; transform: rotate(4deg); margin: 0 0 0 36px; }
+    .pol-m .pol-ph { height: 152px; }
     .pol-m .pol-c { padding: 10px 2px 8px; font-size: 9px; }
-    .row-xt { padding-top: 22px; }
+    .row-xt { padding-top: 24px; }
     .row-xt p { font-size: 14px; line-height: 20px; color: var(--paper); }
-    .row-xt a { display: inline-flex; align-items: center; gap: 6px; margin-top: 40px; font-weight: 600; font-size: 13px; line-height: 18px; color: var(--tan); }
-    .also { display: block; margin-top: 34px; }
+    .row-xt a { display: block; margin-top: 56px; font-weight: 600; font-size: 13px; line-height: 18px; color: var(--tan); }
+    .also { display: block; margin-top: 28px; }
     .also-k { font-size: 12px; }
-    .also-l { margin-top: 10px; font-size: 14px; line-height: 22px; }
+    .also-l { margin-top: 6px; font-size: 14px; line-height: 22px; }
     .also-l i { margin: 0 4px; }
-    .also .m { display: inline-flex; margin-top: 26px; }
+    .also .m { display: inline-flex; margin-top: 24px; }
   }
 </style>

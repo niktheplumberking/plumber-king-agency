@@ -1,0 +1,186 @@
+---
+// "How a job goes" (Figma 631:2037 frame "process (stair steps)" y 5920-6880; mobile 640:437 "process" y 7635-8919).
+// One stage of absolute positions in Figma px (desktop 1440 wide; mobile a 390 column). The pipe is the Figma vector;
+// scrub.ts runs the water along it with the scroll and lights each stop as the water reaches it ([data-flow]).
+// Stop quotes are excerpts of reviews.ts (checked at build time). Also owns the pipe into the dial and the coal wave.
+import Eyebrow from './Eyebrow.astro';
+import Wave from './Wave.astro';
+import { SITE } from '../../data/site';
+import { REVIEWS } from '../../data/reviews';
+
+const STOPS = [
+  { n: '01', flag: 'Call or photo', t: 'Send a photo or call', p: 'A photo of the wet spot or the leak often says a lot. Mike will tell you what it looks like.', dx: 230, dy: 350, my: 274, rot: 2 },
+  { n: '02', flag: 'Diagnose', t: 'Proper diagnosis', p: 'Mike\'s own rule, from his Instagram: “DIAGNOSIS MATTERS.”', dx: 610, dy: 350, my: 444, rot: -2 },
+  { n: '03', flag: 'Price', t: 'Upfront on price', q: ['his prices are quite reasonable', 'Jack D.'], dx: 1010, dy: 350, my: 614, rot: 2, red: true },
+  { n: '04', flag: 'Fix', t: 'Fixed and cleaned up', q: ['extremely conscientious about my lawn and cleaning up any mess', 'Stuart W.'], dx: 1010, dy: 570, my: 784, rot: -2 },
+  { n: '05', flag: 'Follow-up', t: 'Mike checks back', pre: 'Tewolde wrote he ', q: ['calls back to inquire how the work is going', 'Tewolde T.'], dx: 600, dy: 570, my: 954, rot: 2, noName: true },
+];
+for (const s of STOPS) if (s.q) {
+  const r = REVIEWS.find((x) => x.name === s.q![1]);
+  if (!r || !r.text.includes(s.q[0])) throw new Error(`Process: quote not in reviews.ts: ${s.q[1]}`);
+}
+const shortName = (n: string) => n;
+const D = 'M0 10H1250C1360 10 1360 230 1250 230H240C220 230 210 240 210 260V476';
+const M = 'M0 7H320C390 7 390 177 320 177H70C0 177 0 347 70 347H320C390 347 390 517 320 517H70C0 517 0 687 70 687H320C333.333 687 340 693.667 340 707V847';
+const chevR = 'M.58 .81L7.58 5.81L.58 10.81';
+const CD = [[100, 5, 1], [420, 5, 1], [800, 5, 1], [1160, 5, 1], [1157, 225, -1], [807, 225, -1], [427, 225, -1]];
+const CM = [[110, 3, 1], [276, 173, -1], [110, 343, 1], [276, 513, -1], [110, 683, 1]];
+---
+<section class="pr on-paper" aria-labelledby="pr-h" data-m-section data-flow>
+  <div class="st">
+    <div class="pr-head">
+      <Eyebrow data-t="1">How a job goes</Eyebrow>
+      <h2 id="pr-h" class="h2" data-t="2">From your first call <span class="tn">to the clean-up.</span></h2>
+      <p class="note" data-t="3" data-fx="write">Five stops on every job. Follow the pipe.</p>
+    </div>
+
+    <svg class="pw pw-d" viewBox="0 0 1343 476" aria-hidden="true">
+      <path class="pw-body" d={D} />
+      <path class="pw-water" d={D} pathLength="1" />
+      <path class="pw-hi" d={D} transform="translate(0 -5)" />
+      {CD.map(([x, y, s]) => <g class="chev" data-x={x + 3.5} data-y={y + 5} transform={`translate(${x} ${y})${s < 0 ? ' scale(-1 1)' : ''}`}><path d={chevR} /></g>)}
+      <g class="pw-head"><circle r="9" class="ph-glow" /><circle r="5" class="ph-dot" /></g>
+    </svg>
+    <svg class="pw pw-m" viewBox="0 0 390 860" preserveAspectRatio="none" aria-hidden="true">
+      <path class="pw-body" d={M} />
+      <path class="pw-water" d={M} pathLength="1" />
+      <path class="pw-hi" d={M} transform="translate(0 -6)" />
+      {CM.map(([x, y, s]) => <g class="chev" data-x={x + 3} data-y={y + 4} transform={`translate(${x} ${y})${s < 0 ? ' scale(-1 1)' : ''}`}><path d="M.5 .75L6.5 4.75L.5 8.75" /></g>)}
+      <g class="pw-head"><circle r="7" class="ph-glow" /><circle r="4" class="ph-dot" /></g>
+    </svg>
+
+    <svg class="wheel" viewBox="0 0 60 98" aria-hidden="true">
+      <circle cx="30" cy="30" r="27" fill="none" stroke="#D9412B" stroke-width="6" />
+      <path d="M0 30H60M15 4L45 56M45 4L15 56" stroke="#D9412B" stroke-width="4" />
+      <rect x="26" y="30" width="8" height="34" fill="#0E0D0B" /><circle cx="30" cy="30" r="7" fill="#0E0D0B" />
+    </svg>
+    <div class="gauge" aria-hidden="true">
+      <span class="g-n" data-gauge-needle data-x="1332" data-y="120"></span><span class="g-c"></span><span class="g-ok">OK</span>
+    </div>
+
+    <ol class="stops">
+      {STOPS.map((s, i) => (
+        <li class:list={['stp', s.red && 'red']} style={`--dx:${s.dx}px;--dy:${s.dy}px;--my:${s.my}px;--rot:${s.rot}deg`} data-t="2" data-fx="pop">
+          <span class="flag">{s.flag}</span>
+          <span class="wire" aria-hidden="true"></span>
+          <span class="hx" aria-hidden="true">
+            <span class="hx-in">
+              <svg viewBox="0 0 82 58"><path d="M11.4 1H70.6L81 29L70.6 57H11.4L1 29Z" /></svg>
+              <span class="hx-glow"></span>
+              <svg class="hx-lit" viewBox="0 0 82 58"><path d="M11.4 1H70.6L81 29L70.6 57H11.4L1 29Z" /></svg>
+              <span class="hx-n">{s.n}</span><span class="hx-n lit">{s.n}</span>
+            </span>
+          </span>
+          <h3 class="t"><span class="sr-only">Step {i + 1}: </span>{s.t}</h3>
+          <p class="p">{s.q ? <>{s.pre}“{s.q[0]}”{s.noName ? '' : ` ${shortName(s.q[1])}, Yelp`}</> : s.p}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="bar" data-t="3">
+      <p class="b-s">Step 1 starts here:</p>
+      <a class="b-ph" href={SITE.tel}>{SITE.phone}</a>
+      <p class="b-l">Call<span aria-hidden="true">  ·  </span><span class="sr-only">, </span>or text Mike a photo of the problem</p>
+      <a class="b-btn" href={SITE.sms}>Text a photo <span aria-hidden="true">→</span></a>
+    </div>
+    <span class="dial-pipe" aria-hidden="true"><svg viewBox="0 0 20 170" preserveAspectRatio="none"><rect width="20" height="170" rx="2" fill="#6B5C3E" /><path class="dp-water" d="M10 0V170" pathLength="1" data-pipe-water /><rect x="9" width="2" height="170" fill="rgba(255,255,255,.2)" /></svg><span class="dp-nut"></span><span class="dp-line"></span></span>
+  </div>
+  <Wave only="d" class="pr-wb" y={922} h={44} d="M0 18C106.667 42 213.333 42 320 18C426.667 -6 533.333 -6 640 18C746.667 42 853.333 42 960 18C1066.67 -6 1173.33 -6 1280 18C1386.67 42 1493.33 42 1600 18V44H0V18Z" bottom="#1C1A16" />
+  <Wave only="m" class="pr-wb" y={1260} h={30} w={390} d="M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z" bottom="#1C1A16" />
+</section>
+<script>import './scrub';</script>
+<style>
+  .pr { position: relative; z-index: 2; background: var(--tan); color: var(--ink); }
+  .st { position: relative; width: 1440px; height: 960px; margin-inline: auto; }
+  .pr-head { position: absolute; left: 120px; top: 99px; width: 1180px; }
+  .pr :global(.eb) { color: var(--ink); }
+  .h2 { margin-top: 13px; font-family: var(--f-display); font-weight: 400; font-size: 52px; line-height: 54px; }
+  .h2 .tn { display: block; color: var(--tan-dark); }
+  .note { position: absolute; left: 780px; top: 97px; font-family: var(--f-script); font-size: 30px; line-height: 44px; color: var(--red); white-space: nowrap; }
+  .pw { position: absolute; overflow: visible; pointer-events: none; }
+  .pw-d { left: 0; top: 340px; width: 1343px; height: 476px; }
+  .pw-m { display: none; }
+  .pw-body { fill: none; stroke: #6B5C3E; stroke-width: 20; stroke-linejoin: round; }
+  .pw-water { fill: none; stroke: #EDE3CB; stroke-width: 5; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; opacity: .7; }
+  .pw-hi { fill: none; stroke: rgba(255,255,255,.25); stroke-width: 3; stroke-linejoin: round; }
+  .chev path { fill: none; stroke: var(--tan); stroke-width: 2; stroke-linejoin: round; }
+  .chev { transition: opacity .4s; }
+  .is-scrub .chev:not(.is-on) { opacity: .45; }
+  .pw-head { opacity: 0; transition: opacity .3s; }
+  .ph-glow { fill: rgba(243,236,221,.35); }
+  .ph-dot { fill: var(--paper); stroke: #6B5C3E; stroke-width: 1.5; }
+  .wheel { position: absolute; left: 770px; top: 276px; width: 60px; height: 98px; overflow: visible; }
+  .gauge { position: absolute; left: 1298px; top: 426px; width: 68px; height: 68px; border: 3px solid var(--ink); border-radius: 50%; background: var(--bone); }
+  .g-n { position: absolute; left: 31px; top: 30px; width: 24px; height: 2.5px; margin-top: -1.25px; background: var(--red); transform-origin: 0 50%; transform: rotate(-40deg); }
+  .g-c { position: absolute; left: 27px; top: 27px; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+  .g-ok { position: absolute; left: 0; right: 0; top: 41px; text-align: center; font-family: var(--f-label); font-weight: 600; font-size: 11px; line-height: 14px; }
+
+  .stops { margin: 0; padding: 0; list-style: none; }
+  .stp { position: absolute; left: calc(var(--dx) - 120px); top: calc(var(--dy) - 72px); width: 240px; text-align: center; }
+  .flag { display: inline-block; height: 24px; padding: 0 10px; background: var(--ink); color: var(--tan); font-family: var(--f-label); font-weight: 600; font-size: 11.5px; line-height: 24px; letter-spacing: .14em; text-transform: uppercase; rotate: var(--rot); }
+  .red .flag { background: var(--red); color: var(--paper); }
+  .wire { display: block; width: 2px; height: 24px; margin: -2px auto 0; background: var(--ink-2); }
+  .hx { position: relative; display: block; width: 80px; height: 56px; margin: -4px auto 0; }
+  .hx-in { position: absolute; inset: 0; display: block; }
+  .hx svg { position: absolute; left: -1px; top: -1px; width: 82px; height: 58px; overflow: visible; filter: drop-shadow(0 4px 6px rgba(14,13,11,.25)); }
+  .hx svg path { fill: var(--ink); stroke: var(--tan); stroke-width: 2; stroke-linejoin: round; }
+  .hx .hx-lit path { fill: var(--tan); stroke: var(--ink); }
+  .hx-n { position: absolute; inset: 0; font-family: var(--f-label); font-weight: 600; font-size: 24px; line-height: 56px; color: var(--tan); }
+  .hx-n.lit { color: var(--ink); }
+  .hx-glow { position: absolute; inset: -18px -22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(251,248,242,.85), rgba(251,248,242,0)); }
+  .hx-lit, .hx-n.lit, .hx-glow { opacity: 1; transition: opacity .35s ease-out; }
+  .is-scrub .stp:not(.is-lit) .hx-lit, .is-scrub .stp:not(.is-lit) .hx-n.lit, .is-scrub .stp:not(.is-lit) .hx-glow { opacity: 0; }
+  .hx-in { transform: scale(1.08) rotate(-3deg); }
+  .is-scrub .stp:not(.is-lit) .hx-in { transform: none; transition: transform .3s ease-out; }
+  .is-scrub .stp.is-lit .hx-in { animation: lit .62s cubic-bezier(.3,1.4,.5,1) both; }
+  @keyframes lit { 0% { transform: none; } 45% { transform: scale(1.14) rotate(-7deg); } 100% { transform: scale(1.08) rotate(-3deg); } }
+  .t { margin-top: 16px; font-weight: 700; font-size: 18px; line-height: 20px; }
+  .p { margin: 8px auto 0; font-size: 14px; line-height: 20.3px; color: var(--ink-2); }
+
+  .bar { position: absolute; left: 120px; top: 816px; z-index: 2; display: flex; align-items: center; width: 1200px; height: 72px; padding: 0 20px 0 28px; background: var(--ink); border-radius: 4px; }
+  .b-s { width: 272px; font-family: var(--f-script); font-size: 30px; line-height: 44px; color: var(--tan); }
+  .b-ph { width: 220px; font-family: var(--f-label); font-weight: 600; font-size: 28px; line-height: 41px; color: var(--paper); }
+  .b-ph:hover { color: var(--tan); }
+  .b-l { font-weight: 500; font-size: 15px; color: rgba(243,236,221,.8); white-space: pre; }
+  .b-btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; margin-left: auto; padding: 0 24px; width: 180px; background: var(--tan); color: var(--ink); font-weight: 700; font-size: 15px; border-radius: 2px; transition: background .25s; }
+  .b-btn:hover { background: var(--paper); }
+  .dial-pipe { position: absolute; left: 1060px; top: 888px; z-index: 3; width: 20px; height: 170px; }
+  .dial-pipe svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .dp-nut { position: absolute; left: -7px; top: 149px; width: 34px; height: 26px; background: var(--ink); clip-path: polygon(23% 0, 77% 0, 100% 50%, 77% 100%, 23% 100%, 0 50%); }
+  .dp-nut::before { content: ''; position: absolute; inset: 1.5px; background: var(--tan); clip-path: inherit; }
+  .dp-line { position: absolute; left: 9px; top: 175px; width: 2px; height: 55px; background: rgba(255,255,255,.2); }
+  .dp-water { fill: none; stroke: #EDE3CB; stroke-width: 6; stroke-dasharray: 1; stroke-dashoffset: 0; opacity: .7; }
+  .pr :global(.pr-wb) { z-index: 2; }
+
+  @media (min-width: 1024px) and (max-width: 1151px) { .st { zoom: .711; } }
+  @media (min-width: 1152px) and (max-width: 1279px) { .st { zoom: .8; } }
+  @media (max-width: 1279px) { .pr :global(.pr-wb.only-d) { top: auto !important; bottom: -6px; } .dial-pipe { top: auto; bottom: -98px; } }
+  @media (max-width: 1023px) {
+    .st { width: auto; max-width: 430px; height: 1284px; }
+    .pr-head { left: 20px; top: 55px; width: auto; right: 20px; }
+    .h2 { margin-top: 9px; font-size: 34px; line-height: 36px; }
+    .h2 .tn { display: inline; }
+    .note { position: static; margin-top: 8px; font-size: 22px; line-height: 32px; }
+    .pw-d, .wheel, .gauge { display: none; }
+    .pw-m { display: block; left: 0; top: 267px; width: 100%; height: 860px; }
+    .pw-m .pw-body { stroke-width: 14; vector-effect: non-scaling-stroke; }
+    .pw-m .pw-water { stroke-width: 4; }
+    .pw-m .pw-hi { stroke-width: 2; vector-effect: non-scaling-stroke; }
+    .chev path { stroke-width: 1.8; }
+    .stp { left: 50%; top: calc(var(--my) - 62px); width: 280px; margin-left: -140px; }
+    .flag { height: 22px; padding: 0 9px; font-size: 10.5px; line-height: 22px; }
+    .wire { height: 22px; }
+    .hx { width: 64px; height: 44px; margin-top: -4px; }
+    .hx svg { width: 66px; height: 46px; }
+    .hx-n { font-size: 20px; line-height: 44px; }
+    .t { margin-top: 10px; font-size: 16px; line-height: 17px; }
+    .p { margin-top: 7px; font-size: 13px; line-height: 18.85px; }
+    .bar { left: 20px; right: 20px; top: 1114px; display: block; width: auto; height: 120px; padding: 14px 18px; }
+    .b-s { width: auto; font-size: 26px; line-height: 38px; }
+    .b-ph { display: inline-block; width: auto; margin-top: 2px; font-size: 26px; line-height: 39px; }
+    .b-l { display: none; }
+    .b-btn { position: absolute; right: 18px; bottom: 19px; width: 132px; height: 40px; padding: 0 14px; font-size: 14px; }
+    .dial-pipe { display: none; }
+    .pr :global(.pr-wb.only-m) { top: auto !important; bottom: -6px; }
+  }
+</style>

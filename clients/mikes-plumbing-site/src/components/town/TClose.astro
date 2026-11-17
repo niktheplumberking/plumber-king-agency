@@ -52,7 +52,7 @@ const up = t.name.toUpperCase();
     </figure>
     <div class="tc-copy">
       <Eyebrow>Neighbors</Eyebrow>
-      <h2 id="tc-h" class="tc-h" data-t="2">Riverside to {t.name}. <span class="tone">{t.sameCounty ? 'Same county, same plumber.' : 'Same van, same plumber.'}</span></h2>
+      <h2 id="tc-h" class="tc-h" data-t="2">Riverside to {t.name}. <span class="tone">{t.sameCounty ? 'Same county,' : 'Same van,'}<br /> same plumber.</span></h2>
       <p class="tc-body" data-t="3">{t.geo} We're a service-area business: we don't have a shop for you to visit, we bring the shop to you in the van.</p>
       <blockquote class="tc-q" data-t="4">
         <p>“The condition of your work van says a lot about the quality of your work.”</p>
@@ -93,8 +93,8 @@ const up = t.name.toUpperCase();
   .tc-dot--town.is-on { transform: scale(1.08); box-shadow: 0 0 0 7px rgba(217, 65, 43, .25); }
 
   .tc-copy { position: absolute; left: 780px; top: 114px; width: 440px; }
-  .tc-h { width: 520px; margin-top: 6px; font-family: var(--f-display); font-weight: 400; font-size: 56px; line-height: 54px; letter-spacing: 0; color: var(--ink); }
-  .tc-h .tone { display: block; max-width: 380px; }
+  .tc-h { width: 486px; margin-top: 6px; font-family: var(--f-display); font-weight: 400; font-size: 52px; line-height: 1.04; letter-spacing: 0; color: var(--ink); }
+  .tc-h .tone { display: block; }
   .tone { color: var(--tan-dark); }
   .tc-body { margin-top: 26px; width: 410px; font-size: 17px; line-height: 26px; color: var(--ink-2); }
   .tc-q { position: absolute; top: 406px; left: 0; width: 420px; height: 120px; margin: 0; padding: 22px 24px; background: var(--ink); color: var(--paper); }
@@ -110,16 +110,19 @@ const up = t.name.toUpperCase();
     .tc-q { position: static; width: auto; height: auto; margin-top: 32px; }
   }
   @media (max-width: 767px) {
-    .tc { height: auto; padding: 51px 0 40px; }
+    .tc { height: auto; padding: 51px 0 56px; }
     .tc-grid { display: flex; flex-direction: column; height: auto; }
     .tc-copy { display: contents; }
     .tc-copy > :global(.eb) { order: 1; }
-    .tc-h { order: 2; width: auto; margin-top: 12px; font-size: 34px; line-height: 36px; }
+    .tc-h { order: 2; width: auto; margin-top: 9px; font-size: 34px; line-height: 1.06; }
+    .tc-h br { display: none; }
     .tc-h .tone { display: inline; }
-    .tc-mapwrap { order: 3; position: static; width: 100%; margin-top: 18px; }
-    .tc-body { order: 4; width: auto; margin-top: 24px; font-size: 15px; line-height: 22px; }
-    .tc-q { order: 5; position: static; width: auto; height: auto; margin-top: 24px; padding: 20px 20px 18px; }
+    .tc-mapwrap { order: 3; position: static; width: 100%; margin-top: 20px; }
+    .tc-body { order: 4; width: auto; margin-top: 20px; font-size: 15px; line-height: 23px; }
+    .tc-q { order: 5; position: static; width: auto; height: auto; min-height: 132px; margin-top: 20px; padding: 18px 20px 18px; }
     .tc-q p { font-size: 19px; line-height: 24px; }
+    .tc-q footer { margin-top: 10px; font-size: 10.5px; }
+    .tc-cap { margin-top: 8px; font-size: 9px; line-height: 10px; }
     .tc-tag { height: 22px; font-size: 10px; padding: 0 8px; margin: -36px 0 0 12px; }
     .tc-tiles { left: var(--lm); top: var(--tm); width: var(--wm); height: var(--hm); }
     .tc-pt { left: var(--xm); top: var(--ym); }

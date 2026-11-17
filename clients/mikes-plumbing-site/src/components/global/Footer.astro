@@ -57,12 +57,12 @@ const year = new Date().getFullYear();
   .ft { background: #151410; color: #CFC8B8; }
   .ft-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding: 8px 0 0; height: 380px; }
   .ft :global(.ft-rule) { margin-top: 0; }
-  .ft-grid { display: grid; grid-template-columns: 440px 250px 250px 1fr; margin-top: 50px; }
+  .ft-grid { display: grid; grid-template-columns: 440px 250px 250px 1fr; margin-top: 46px; }
   .ft-logo { display: block; width: 150px; margin-left: 0; }
   .ft-logo :global(img) { width: 100%; height: auto; }
   .ft-tag { margin-top: 18px; font-family: var(--f-script); font-size: 26px; line-height: 34px; color: var(--tan); }
   .ft-p { margin-top: 10px; max-width: 320px; font-size: 14px; line-height: 22px; color: #A9A293; }
-  .ft-h { margin: 6px 0 12px; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); }
+  .ft-h { margin: 6px 0 10px; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); }
   .ft-col ul { margin: 0; padding: 0; display: grid; gap: 0; }
   .ft-col li { font-size: 15px; line-height: 32px; }
   .ft-col a { transition: color .25s; }
@@ -73,19 +73,20 @@ const year = new Date().getFullYear();
   .ft-legal span { margin: 0 4px; }
   @media (max-width: 1279px) { .ft-in { height: auto; padding-bottom: 48px; } .ft-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 24px; } }
   @media (max-width: 767px) {
-    .ft-in { padding: 0 0 36px; }
+    .ft-in { padding: 0 0 32px; }
     .ft :global(.ft-rule) { margin-top: 0; }
     .ft-grid { display: block; margin-top: 30px; }
     .ft-logo { width: 116px; }
-    .ft-tag { margin-top: 20px; font-size: 24px; }
-    .ft-p { margin-top: 10px; max-width: none; }
-    .ft-col { margin-top: 30px; }
-    .ft-h { margin: 0 0 6px; font-size: 12px; }
-    .ft-col ul { display: block; }
+    .ft-tag { margin-top: 16px; font-size: 24px; line-height: 35px; }
+    .ft-p { margin-top: 5px; max-width: none; }
+    .ft-col { margin-top: 22px; }
+    nav.ft-col:first-of-type { margin-top: 38px; }
+    .ft-h { margin: 0 0 4px; font-size: 12px; line-height: 18px; }
+    .ft-col ul { display: block; font-size: 14px; line-height: 22px; }
     .ft-col li { display: inline; font-size: 14px; line-height: 22px; }
     .ft-col li + li::before { content: ' · '; color: #A9A293; }
-    .ft-col a { display: inline-block; padding: 0; }
-    .ft-bar-in { height: 38px; font-size: 12px; }
+    .ft-col a { display: inline; padding: 0; }
+    .ft-bar-in { height: 56px; font-size: 12px; }
     .ft-legal { margin-right: 0; }
   }
 </style>

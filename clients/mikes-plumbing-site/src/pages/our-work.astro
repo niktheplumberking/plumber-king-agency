@@ -1,0 +1,25 @@
+---
+// Our work (Figma 670:4205 desktop / 670:9446 mobile, PAGES-COPY section 8).
+import Base from '../layouts/Base.astro';
+import OHero from '../components/our-work/OHero.astro';
+import OWall from '../components/our-work/OWall.astro';
+import OCase from '../components/our-work/OCase.astro';
+import ODm from '../components/our-work/ODm.astro';
+import { BUSINESS_ID, abs } from '../lib/schema';
+const path = '/our-work';
+const ld = [
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', url: abs(path), name: 'Our plumbing work', about: { '@id': BUSINESS_ID() } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/') },
+    { '@type': 'ListItem', position: 2, name: 'Our work', item: abs(path) } ] },
+];
+---
+<Base title="Our Plumbing Work | Real Jobs | Mike's Plumbing"
+  description="Real jobs from Mike's Plumbing Services in the Inland Empire, OC and LA: water heaters, sewer roots, slab leaks, re-pipes, ADU rough-ins and more."
+  path={path} og="water-heater-gas-valve-riverside" ogAlt="A gas control valve on a 75-gallon water heater, from a Mike's Plumbing Services job" jsonld={ld} estimate="/contact">
+  <OHero />
+  <OWall />
+  <OCase />
+  <ODm />
+</Base>
+<script>import '../components/b3kit/scrub';</script>

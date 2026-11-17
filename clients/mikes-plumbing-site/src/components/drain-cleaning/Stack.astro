@@ -1,0 +1,103 @@
+---
+// 3.2 What we do · drain stack (Figma 670:13365 y 1046 h 850, paper; mobile y 1456 h 996). A vertical drain stack that
+// comes down through the seam from the hero, five cleanout fittings on it (01-05) with the five services, and on the right
+// the eyebrow, H2 and ink call button.
+// Scroll moment: water runs down the stack (a dark shade drains away from the top) and each cleanout cap lights, grows and
+// turns a little as the water reaches it, 01 -> 05.
+import Wave from '../services/kit/Wave.astro';
+import Eyebrow from '../services/kit/Eyebrow.astro';
+import Btn from '../services/kit/Btn.astro';
+import { ab } from '../services/kit/ab';
+import { SITE } from '../../data/site';
+const items = [
+  { h: 'Drain cleaning.', p: 'Kitchen, bath and laundry drains that are slow or stopped.' },
+  { h: 'Hydro jetting.', p: 'High-pressure water that scours grease and buildup off the pipe walls.' },
+  { h: 'Sewer lines.', p: 'Including pulling out roots that have grown into the line.' },
+  { h: 'Repair & new installation.', p: 'When a drain line is broken or you need a new one.' },
+  { h: 'Grease interceptors.', p: 'For restaurants and commercial kitchens.' },
+];
+---
+<section class="st sv-sec sv-paper sv-abs" style="--sh:850px" aria-labelledby="st-h" data-m-section>
+  <Wave fill="var(--paper)" up top={-34} topM={-24} />
+  <div class="st-in">
+    <i class="st-seam" data-ab style={ab(146, -90, 48, 120)} aria-hidden="true"></i>
+    <svg class="st-seamcap" data-ab style={ab(133.3, -96.7, 74, 22)} viewBox="0 0 74 22" aria-hidden="true"><path d="M10.06.7H63.34L72.7 10.7 63.34 20.7H10.06L.7 10.7Z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.4" /></svg>
+    <Eyebrow tone="dark" class="st-eb" data-ab style={ab(879.5, 115)}>The work</Eyebrow>
+    <h2 id="st-h" class="sv-h st-h" data-t="2" data-ab style={ab(880, 148, 440)}>Clear it. Fix it. <em>Or put in new.</em></h2>
+    <div class="st-run" data-sv-scrub data-start="top 70%" data-end="bottom 70%" data-start-m="top 75%" data-end-m="bottom 65%" data-ab style={ab(130, 0, 600, 830)}>
+      <div class="st-pipe" aria-hidden="true"><i class="st-hi"></i><i class="st-shade" data-sv-fill data-rev data-axis="y"></i></div>
+      <ol class="st-list" role="list">
+        {items.map((it, i) => (
+          <li class="st-it">
+            <span class="st-fit" data-sv-stop data-at={(0.06 + i * 0.19).toFixed(2)} aria-hidden="true"><i class="st-cap"></i><i class="st-plug"></i></span>
+            <div class="st-tx" data-sv-stop data-at={(0.06 + i * 0.19).toFixed(2)}>
+              <span class="st-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{it.h}</h3>
+              <p>{it.p}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="st-btn" data-ab style={ab(880, 318, 330, 64)}>
+      <Btn v="ink" l1={SITE.phone} l2="Free estimate" w={330} label={`Call ${SITE.phone} for a free estimate`} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .st-in { position: relative; }
+  .st-seam { display: block; background: #6b5c3e; z-index: 4; }
+  .st-seamcap { z-index: 4; }
+  .st-seam::after { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 6px; background: rgba(255, 255, 255, .2); }
+  .st-h { margin: 0; font-size: 64px; line-height: 1.02; }
+  .st-pipe { position: absolute; left: 16px; top: 0; width: 48px; height: 830px; background: #6b5c3e; overflow: hidden; }
+  .st-hi { position: absolute; left: 8px; top: 0; width: 6px; height: 100%; background: rgba(255, 255, 255, .2); }
+  .st-shade { position: absolute; inset: 0; background: rgba(14, 13, 11, .45); transform-origin: 50% 100%; }
+  .st-list { position: relative; margin: 0; padding: 110px 0 0; list-style: none; }
+  .st-it { position: relative; height: 136px; }
+  .st-fit { position: absolute; left: 0; top: 0; width: 80px; height: 64px; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 6px; background: var(--tan); --pop-r: -8deg; }
+  .st-cap { position: absolute; left: 14px; top: 6px; width: 48px; height: 48px; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 50%; background: var(--bone); }
+  .st-plug { position: absolute; left: 29px; top: 21px; width: 18px; height: 18px; border-radius: 2px; background: var(--ink); }
+  .st-tx { position: absolute; left: 110px; top: 4px; width: 480px; transform-origin: 0 30%; --pop-r: 0deg; }
+  .st-n { display: block; font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 18px; letter-spacing: .1em; color: #6b5c3e; }
+  .st-tx h3 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 32px; line-height: 43px; color: var(--ink); white-space: nowrap; }
+  .st-tx p { margin: 1px 0 0; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+  .st-btn :global(.sv-btn) { width: 100%; }
+
+  @media (max-width: 1279px) {
+    .st-seam, .st-seamcap { display: none; }
+    .st-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
+    .st-run { position: relative; width: 100%; }
+    .st-n { display: none; }
+    .st-btn { width: 100%; max-width: 350px; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .st { padding: 110px 0 100px; }
+    .st-h { margin-top: 12px; max-width: 640px; font-size: clamp(44px, 5vw, 64px); }
+    .st-run { margin-top: 36px; height: 760px; }
+    .st-pipe { left: 16px; height: 100%; }
+    .st-list { padding-top: 30px; }
+    .st-it { height: 146px; }
+    .st-tx { top: 4px; width: min(560px, calc(100% - 110px)); }
+    .st-tx h3 { white-space: normal; }
+    .st-btn { margin-top: 40px; }
+  }
+  @media (max-width: 767px) {
+    .st { padding: 59px 0 56px; }
+    .st :global(.st-eb) { font-size: 13px; line-height: 19px; }
+    .st-h { margin-top: 10px; font-size: 36px; line-height: 1.04; }
+    .st-run { height: 660px; margin-top: 14px; }
+    .st-pipe { left: 4px; width: 32px; height: 660px; }
+    .st-hi { left: 5px; width: 4px; }
+    .st-list { padding-top: 20px; }
+    .st-it { height: 128px; }
+    .st-fit { left: -8px; width: 56px; height: 46px; border-width: 1.5px; border-radius: 5px; }
+    .st-cap { left: 9.5px; top: 4.5px; width: 34px; height: 34px; border-width: 1.5px; }
+    .st-plug { left: 19.5px; top: 14.5px; width: 14px; height: 14px; }
+    .st-tx { left: 66px; top: 0; width: calc(100% - 66px); max-width: 284px; }
+    .st-tx h3 { font-size: 22px; line-height: 30px; white-space: normal; }
+    .st-tx p { margin-top: 2px; font-size: 14.5px; line-height: 1.5; }
+    .st-btn { margin-top: 40px; max-width: none; }
+  }
+</style>

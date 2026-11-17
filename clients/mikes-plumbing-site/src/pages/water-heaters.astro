@@ -1,0 +1,27 @@
+---
+// /water-heaters (Figma 670:7700 desktop, 670:11675 mobile; PAGES-COPY section 2). Builder 2.
+import Base from '../layouts/Base.astro';
+import '../components/services/kit/kit.css';
+import WhHero from '../components/water-heaters/WhHero.astro';
+import CaseFile from '../components/water-heaters/CaseFile.astro';
+import RepairInstall from '../components/water-heaters/RepairInstall.astro';
+import BigHeater from '../components/water-heaters/BigHeater.astro';
+import Slips from '../components/water-heaters/Slips.astro';
+import PlateCta from '../components/water-heaters/PlateCta.astro';
+import RelatedFit from '../components/services/kit/RelatedFit.astro';
+import { serviceSchema } from '../lib/schema';
+import { SITE } from '../data/site';
+const description = `Water heater repair and install in Riverside, CA. We find out what's really wrong before anyone talks about replacing it. Free estimate: ${SITE.phone}.`;
+---
+<Base title="Water Heater Repair & Install Riverside CA | Mike's" description={description} path="/water-heaters"
+  og="water-heater-gas-valve-small" ogAlt="Gas control valve on a water heater Mike's Plumbing repaired in Riverside, CA"
+  jsonld={[serviceSchema({ name: 'Water heater repair and installation in Riverside, CA', serviceType: 'Water heater repair', path: '/water-heaters', description })]}>
+  <WhHero />
+  <CaseFile />
+  <RepairInstall />
+  <BigHeater />
+  <Slips />
+  <PlateCta h="No hot water?" em="Call before you replace it." body="Free estimate. We'll tell you what's really wrong." />
+  <RelatedFit links={[{ name: 'Leak detection & repair', href: '/services#leaks' }, { name: 'Emergency plumbing', href: '/emergency-plumber' }, { name: 'All services', href: '/services' }]} />
+</Base>
+<script>import '../components/services/kit/scrub';</script>

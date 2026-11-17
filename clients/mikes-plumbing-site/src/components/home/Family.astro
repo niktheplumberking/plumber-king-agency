@@ -14,8 +14,8 @@ const TAGS = [
 const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5 8-4.5 8h-11L1 9z"/></svg>';
 ---
 <section class="fm on-paper" aria-labelledby="fm-h" data-m-section>
-  <Wave only="d" y={-50} h={56} c={28} a={20} p={700} m={520} top="#0E0D0B" bottom="#F3ECDD" />
-  <Wave only="m" y={-26} h={32} c={16} a={10} p={390} m={250} w={390} top="#0E0D0B" bottom="#F3ECDD" />
+  <Wave only="d" y={-42} h={48} d="M0 20C116.667 46.6667 233.333 46.6667 350 20C466.667 -6.66667 583.333 -6.66667 700 20C816.667 46.6667 933.333 46.6667 1050 20C1166.67 -6.66667 1283.33 -6.66667 1400 20C1516.67 46.6667 1633.33 46.6667 1750 20V48H0V20Z" bottom="#F3ECDD" />
+  <Wave only="m" y={-26} h={32} w={390} d="M0 12C53.3333 28 106.667 28 160 12C213.333 -4 266.667 -4 320 12C373.333 28 426.667 28 480 12V32H0V12Z" bottom="#F3ECDD" />
   <!-- pipe seam: from the Services footer down the right edge, under the text, to the tags -->
   <svg class="pipe only-d" viewBox="0 0 640 656" aria-hidden="true" data-seam-pipe>
     <path class="p-body" d="M620 0 V586 Q620 606 600 606 H40" />
@@ -25,6 +25,14 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
   <span class="nut-d n1" aria-hidden="true" set:html={bolt}></span>
   <span class="nut-d n2" aria-hidden="true" set:html={bolt}></span>
   <span class="nut-d n3" aria-hidden="true" set:html={bolt}></span>
+  <svg class="pipe-m" viewBox="0 0 361 858" aria-hidden="true">
+    <path class="p-body m" d="M355.5 5.5V828.5C355.5 844.5 347.5 852.5 331.5 852.5H5.5" />
+    <path class="p-fill m" d="M355.5 5.5V828.5C355.5 844.5 347.5 852.5 331.5 852.5H5.5" pathLength="1" data-pipe-water />
+    <path class="p-hi m" d="M353 3V826C353 842 345 850 329 850H3" />
+  </svg>
+  <span class="nut-m" style="right:6px;top:-97px" aria-hidden="true" set:html={bolt}></span>
+  <span class="nut-m" style="right:6px;top:-11px" aria-hidden="true" set:html={bolt}></span>
+  <span class="nut-m nm3" aria-hidden="true" set:html={bolt}></span>
   <div class="fm-in">
     <figure class="fm-media">
       <div class="fm-frame" data-t="4" data-fx="frame">
@@ -43,7 +51,7 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
         <Eyebrow data-t="1">Family owned &amp; operated · Est. 2025</Eyebrow>
         <h2 id="fm-h" class="h2" data-t="2">An organized van <span class="tn">creates an organized mind.</span></h2>
       </div>
-      <p class="lead" data-t="3">Mike's Plumbing Services is Mike Navarro's family business, started in Riverside in 2025. In his words: “professionalism starts before the first wrench is turned.”</p>
+      <p class="lead" data-t="3"><span class="dk-only">Mike's Plumbing Services is </span>Mike Navarro's family business, started in Riverside in 2025. In his words: “professionalism starts before the first wrench is turned.”</p>
       <ul role="list" class="tags" data-t="4" data-stagger>
         {TAGS.map((t) => (
           <li class:list={['tag', t.dark && 'dk']} style={`--deg:${t.deg}deg`}>
@@ -64,6 +72,7 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
 <style>
   .fm { position: relative; background: var(--paper); color: var(--ink); height: 880px; }
   .only-d { display: block; }
+  .pipe-m, .nut-m { display: none; }
   .pipe { position: absolute; left: 680px; top: -106px; width: 640px; height: 656px; overflow: visible; z-index: 3; pointer-events: none; }
   .p-body { fill: none; stroke: #6B5C3E; stroke-width: 14; }
   .p-fill { fill: none; stroke: #8E7B55; stroke-width: 8; stroke-dasharray: 1; stroke-dashoffset: 0; }
@@ -125,9 +134,15 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
   }
   @media (max-width: 1023px) and (min-width: 768px) { .fm-in { grid-template-columns: 1fr; } .fm-media { max-width: 420px; } }
   @media (max-width: 767px) {
-    .fm { padding-bottom: 60px; }
+    .fm { display: flow-root; padding-bottom: 48px; }
+    .pipe-m { display: block; position: absolute; right: 9px; top: -95px; width: 361px; height: 858px; z-index: 3; pointer-events: none; overflow: visible; }
+    .p-body.m { stroke-width: 11; stroke-linecap: round; } .p-fill.m { stroke-width: 5; } .p-hi.m { stroke: rgba(255,255,255,.22); opacity: 1; }
+    .nut-m { display: block; position: absolute; z-index: 4; width: 28px; height: 22px; pointer-events: none; }
+    .nut-m :global(svg) { display: block; width: 100%; height: 100%; }
+    .nut-m :global(path) { fill: var(--tan); stroke: var(--ink); stroke-width: 1.3; }
+    .nm3 { left: calc(100% - 384px); top: 746px; }
     .fm-in { display: block; }
-    .fm-media { margin: 68px 0 0 20px; width: 300px; }
+    .fm-media { margin: 60px 0 0; width: 300px; }
     .fm-frame { width: 300px; height: 380px; }
     .fm-frame::before { left: 10px; top: 10px; }
     .fm-clip, .fm-frame::before { clip-path: polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px); }
@@ -136,14 +151,17 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
     .fm-lab span { font-size: 14px; }
     .flyer { left: 178px; top: 240px; width: 130px; height: 172px; rotate: 5deg; }
     .fm-txt { padding-top: 56px; }
-    .h2 { margin-top: 14px; font-size: 36px; line-height: 36px; }
-    .lead { margin-top: 20px; font-size: 15px; line-height: 23px; }
-    .tags { display: flex; gap: 18px; width: auto; margin: 70px calc(-1 * var(--gutter)) 0; padding: 50px var(--gutter) 20px; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 0; }
+    .h2 { margin-top: 14px; max-width: 330px; font-size: 34px; line-height: 36px; }
+    .lead { margin-top: 16px; max-width: 330px; font-size: 15px; line-height: 23.25px; }
+    .lead .dk-only { display: none; }
+    .tags { display: flex; gap: 16px; width: auto; margin: 32px calc(-1 * var(--gutter)) 0; padding: 36px var(--gutter) 14px 24px; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 0; }
     .tag { flex: 0 0 160px; scroll-snap-align: start; }
-    .tag::before { top: -50px; height: 50px; }
+    .tag::before { top: -36px; height: 36px; }
+    .tag-in { min-height: 170px; padding: 34px 14px 12px; }
+    .tag-n { font-size: 12px; } .tag-h { margin-top: 2px; font-size: 15px; line-height: 19px; } .tag-q { margin-top: 8px; font-size: 11.5px; line-height: 15.5px; }
     .tags { scrollbar-width: none; }
     .swipe { display: block; margin-top: 18px; font-family: var(--f-label); font-size: 11px; letter-spacing: .14em; color: var(--mute); }
-    .fm-links { margin-top: 16px; }
+    .fm-links { margin-top: 12px; }
     .or { display: none; }
   }
 </style>

@@ -6,8 +6,15 @@ import Hero from '../components/services/Hero.astro';
 import FlyerList from '../components/services/FlyerList.astro';
 import Drains from '../components/services/Drains.astro';
 import Leaks from '../components/services/Leaks.astro';
+import Heaters from '../components/services/Heaters.astro';
+import House from '../components/services/House.astro';
+import Commercial from '../components/services/Commercial.astro';
+import Callout from '../components/services/Callout.astro';
+import FinalCta from '../components/services/FinalCta.astro';
+import Related from '../components/services/kit/Related.astro';
 import { serviceSchema } from '../lib/schema';
-const description = 'Drains, sewer lines, hydro jetting, leaks, water heaters, toilets, sinks and faucets. Family owned in Riverside. Free estimate: (951) 809-9533.';
+import { SITE } from '../data/site';
+const description = `Drains, sewer lines, hydro jetting, leaks, water heaters, toilets, sinks and faucets. Family owned in Riverside. Free estimate: ${SITE.phone}.`;
 ---
 <Base title="Plumbing Services Riverside CA | Mike's Plumbing" description={description} path="/services"
   og="mikes-plumbing-flyer-services-list" ogAlt="Mike's Plumbing Services flyer listing his plumbing services in Riverside, CA"
@@ -16,5 +23,11 @@ const description = 'Drains, sewer lines, hydro jetting, leaks, water heaters, t
   <FlyerList />
   <Drains />
   <Leaks />
+  <Heaters />
+  <House />
+  <Commercial />
+  <Callout />
+  <FinalCta />
+  <Related current="/services" />
 </Base>
 <script>import '../components/services/kit/scrub';</script>

@@ -1,0 +1,154 @@
+---
+// Final CTA "job ticket" (Figma 631:2037 "final CTA · job ticket" y 9720-10720; mobile 640:437 y 12452-13850), with the
+// review ticker on the seam above it. The job ticket is the page's #estimate form (the header and mobile call bar jump
+// here): forms.ts validates name + phone; the photo input uses ui.ts [data-photo]. Ticker words are Yelp phrases.
+import Btn from '../global/Btn.astro';
+import Badge from './Badge.astro';
+import Marquee from './Marquee.astro';
+import { SITE } from '../../data/site';
+const WORDS = ["From Mike's Yelp reviews", 'Excellent communicator', 'Fair and competitive', 'Upfront and honest', 'Very clean', 'Did the work same day', 'Reasonably priced', 'Great communication skills'];
+const JOBS = ['Leak', 'Clog', 'No hot water', 'Sewer', 'Water heater', 'Other'];
+---
+<section class="fc on-ink" id="estimate" aria-labelledby="fc-h" data-m-section>
+  <Marquee words={WORDS} star="#0E0D0B" size="sm" class="fc-tick" />
+  <div class="st">
+    <div class="fc-txt">
+      <p class="scr" data-t="1">Free estimate</p>
+      <h2 id="fc-h" class="h2" data-t="2">Got plumbing problems? <span class="tn">Mike's got the fix!</span></h2>
+      <p class="lead" data-t="3">His words, not ours. Tell him what's going on and he'll call you back with a straight answer.</p>
+      <div data-t="4"><Btn v="call" sub="Tap to call · Open 24 hours (Yelp)" class="fc-call" data-magnetic /></div>
+      <ul class="chk" data-t="4" data-stagger>
+        <li><span aria-hidden="true">✓</span><a href={SITE.social.yelp} target="_blank" rel="noopener">★ 5.0 on Yelp · 20 reviews<span class="sr-only"> (opens in a new tab)</span></a></li>
+        <li><span aria-hidden="true">✓</span>Free estimates</li>
+        <li><span aria-hidden="true">✓</span>Family owned &amp; operated</li>
+      </ul>
+      <p class="fill" data-t="3" data-fx="write"><span class="m">Or f</span><span class="d">F</span>ill it in.<br />Mike calls you back.</p>
+      <svg class="arw d" viewBox="0 0 166 60" aria-hidden="true"><path d="M1.25 1.25C51.25 71.25 111.25 71.25 161.25 11.25" /><path d="M145.25 5.25L165.25 1.25L161.25 21.25" /></svg>
+      <svg class="arw m" viewBox="0 0 40 72" aria-hidden="true"><path d="M37 1C10 12 2 32 8 56" /><path d="M1 46L8 57L17 49" /></svg>
+    </div>
+    <div class="tk-wrap" data-t="2" data-fx="toss">
+      <span class="carbon" aria-hidden="true"></span>
+      <form class="tk" data-estimate-form novalidate aria-labelledby="tk-h" enctype="multipart/form-data">
+        <p class="tk-top"><span class="tk-k">Job ticket</span><span class="tk-no" aria-hidden="true">No. 0001</span></p>
+        <p class="tk-sub">Mike's Plumbing Services · {SITE.phone}<span class="d"> · Riverside, CA</span></p>
+        <h3 id="tk-h" class="tk-h">Get my free estimate</h3>
+        <div class="f f-name"><label for="tk-name">Your name</label><input id="tk-name" name="name" type="text" autocomplete="name" required /></div>
+        <div class="f f-phone"><label for="tk-phone">Phone</label><input id="tk-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required /></div>
+        <div class="f f-city"><label for="tk-city">City</label><input id="tk-city" name="city" type="text" autocomplete="address-level2" /></div>
+        <fieldset class="jobs">
+          <legend>What's going on?</legend>
+          <div class="cbs">{JOBS.map((j, i) => <label class="cb"><input type="checkbox" name="problem" value={j} checked={i === 0} /><span class="bx" aria-hidden="true"></span>{j}</label>)}</div>
+        </fieldset>
+        <div class="f f-more"><label for="tk-more">Tell Mike more</label><textarea id="tk-more" name="details" rows="3"></textarea></div>
+        <label class="photo"><input type="file" name="photo" accept="image/*" data-photo /><span data-photo-label>+  Add a photo of the problem</span></label>
+        <button class="send" type="submit">Send to Mike <span aria-hidden="true">→</span></button>
+        <p class="tk-msg" id="tk-msg" data-form-msg role="status" aria-live="polite"></p>
+        <p class="copy">CUSTOMER COPY · No spam, ever.</p>
+        <span class="perf" aria-hidden="true"></span>
+      </form>
+    </div>
+    <Badge w={150} deg={-10} fill={false} class="fc-stamp" data-t="5" data-fx="pop" />
+  </div>
+</section>
+<style>
+  .fc { position: relative; z-index: 2; overflow-x: clip; height: 1000px; background: var(--ink); color: var(--bone); scroll-margin-top: 80px; }
+  .m { display: none; }
+  .fc :global(.fc-tick) { position: absolute; left: -60px; top: -30px; z-index: 3; width: 1560px; height: 58px; rotate: 1.6deg; }
+  .fc :global(.fc-tick .mq-w) { font-size: 20px; }
+  .fc :global(.fc-tick .mq-w i) { margin: 0 18px; font-size: 18px; }
+  .st { position: relative; width: 1440px; height: 1000px; margin-inline: auto; }
+  .fc-txt { position: absolute; left: 120px; top: 170px; width: 660px; }
+  .scr { font-family: var(--f-script); font-size: 42px; line-height: 62px; color: var(--tan); }
+  .h2 { margin-top: -6px; width: 640px; font-family: var(--f-display); font-weight: 400; font-size: 70px; line-height: 71.4px; color: var(--bone); }
+  .h2 .tn { display: block; color: var(--tan); }
+  .lead { margin-top: 22px; width: 520px; font-size: 18px; line-height: 27.9px; color: var(--mute); }
+  .fc :global(.fc-call) { width: 320px; margin-top: 32px; }
+  .chk { margin: 32px 0 0; padding: 0; list-style: none; font-weight: 600; font-size: 14px; line-height: 15px; }
+  .chk li { display: flex; gap: 10px; }
+  .chk li + li { margin-top: 15px; }
+  .chk a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .fill { position: absolute; left: 400px; top: 469px; font-family: var(--f-script); font-size: 28px; line-height: 30.8px; color: var(--tan); }
+  .arw { position: absolute; left: 480px; top: 541px; width: 166px; height: 60px; overflow: visible; fill: none; stroke: var(--tan); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .tk-wrap { position: absolute; left: 812px; top: 130px; width: 500px; height: 760px; }
+  .carbon { position: absolute; left: 6px; top: 4px; width: 500px; height: 760px; background: var(--tan); rotate: -3deg; box-shadow: 0 20px 40px -10px rgba(0,0,0,.5); }
+  .tk { position: relative; height: 100%; padding: 34px 36px 0; background: var(--bone); color: var(--ink); box-shadow: 0 24px 40px -14px rgba(0,0,0,.55); }
+  .tk-top { display: flex; justify-content: space-between; font-family: var(--f-label); font-size: 15px; line-height: 22px; }
+  .tk-k { font-weight: 600; letter-spacing: .24em; text-transform: uppercase; }
+  .tk-no { font-weight: 500; letter-spacing: .06em; color: var(--red); }
+  .tk-sub { margin-top: 4px; padding-bottom: 15px; border-bottom: 1px dashed rgba(14,13,11,.45); font-size: 12px; line-height: 13px; color: rgba(14,13,11,.6); }
+  .tk-h { margin-top: 19px; font-family: var(--f-display); font-weight: 400; font-size: 32px; line-height: 43px; }
+  .f label, .jobs legend { display: block; font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .16em; text-transform: uppercase; color: var(--tan-dark); }
+  .f input { display: block; width: 100%; height: 30px; padding: 0; border: 0; border-bottom: 2px solid rgba(14,13,11,.5); border-radius: 0; background: none; font: 500 17px/28px var(--f-sans); color: var(--ink); }
+  .f input:focus, .f textarea:focus { outline: none; border-bottom-color: var(--ink); }
+  .f input[aria-invalid='true'] { border-bottom-color: var(--red); }
+  .f-name { margin-top: 19px; }
+  .f-phone, .f-city { display: inline-block; width: 200px; margin-top: 22px; vertical-align: top; }
+  .f-city { margin-left: 24px; }
+  .jobs { margin: 32px 0 0; padding: 0; border: 0; }
+  .jobs legend { padding: 0; margin-bottom: 14px; }
+  .cbs { display: grid; grid-template-columns: 146px 146px 1fr; row-gap: 18px; }
+  .cb { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 15px; line-height: 16px; cursor: pointer; }
+  .cb input { position: absolute; opacity: 0; width: 18px; height: 18px; margin: 0; }
+  .bx { position: relative; flex: none; width: 18px; height: 18px; border: 1.5px solid var(--ink); }
+  .cb input:checked + .bx { background: var(--ink); }
+  .cb input:checked + .bx::after { content: '✓'; position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; font-size: 12px; line-height: 1; color: var(--bone); }
+  .cb input:focus-visible + .bx { outline: 2px solid var(--red); outline-offset: 2px; }
+  .f-more { margin-top: 18px; }
+  .f-more textarea { display: block; width: 100%; height: 96px; margin-top: 6px; padding: 4px 0 0; border: 0; resize: none; background: repeating-linear-gradient(to bottom, transparent 0 31px, rgba(14,13,11,.3) 31px 32px); font: 500 16px/32px var(--f-sans); color: var(--ink); }
+  .photo { position: relative; display: flex; align-items: center; height: 48px; margin-top: 18px; padding: 0 18px; border: 1.5px dashed var(--ink); font-weight: 600; font-size: 14px; cursor: pointer; white-space: pre; overflow: hidden; }
+  .photo input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .photo:focus-within { outline: 2px solid var(--red); outline-offset: 2px; }
+  .photo:hover { background: rgba(14,13,11,.04); }
+  .send { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 56px; margin-top: 16px; border: 0; border-radius: 2px; background: var(--ink); color: var(--tan); font: 700 17px/1 var(--f-sans); cursor: pointer; transition: background .25s; }
+  .send:hover { background: #2A2620; }
+  .send[disabled] { opacity: .6; cursor: progress; }
+  .tk-msg { min-height: 0; margin-top: 8px; font-size: 13px; line-height: 17px; color: var(--red); }
+  .tk-msg:empty { display: none; }
+  .copy { margin-top: 22px; font-family: var(--f-label); font-weight: 500; font-size: 10px; line-height: 15px; letter-spacing: .16em; color: rgba(14,13,11,.5); }
+  .perf { position: absolute; left: 4px; right: 0; bottom: -6px; height: 12px; background: radial-gradient(circle 6px at 6px 6px, var(--ink) 98%, transparent) 0 0 / 19.6px 12px repeat-x; }
+  .st :global(.fc-stamp) { position: absolute; left: 600px; top: 810px; z-index: 2; }
+
+  @media (min-width: 1024px) and (max-width: 1151px) { .st { zoom: .711; } }
+  @media (min-width: 1152px) and (max-width: 1279px) { .st { zoom: .8; } }
+  @media (max-width: 1279px) { .fc { height: auto; } .fc :global(.fc-tick) { width: calc(100% + 120px); } }
+  @media (min-width: 768px) and (max-width: 1023px) { .st { zoom: .533; } }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .fc :global(.fc-tick) { left: -30px; top: -26px; width: calc(100% + 60px); height: 46px; rotate: 2deg; }
+    .fc :global(.fc-tick .mq-w) { font-size: 15px; }
+    .fc :global(.fc-tick .mq-w i) { margin: 0 12px; font-size: 13px; }
+    .st { width: auto; max-width: 430px; height: 1398px; }
+    .fc-txt { left: 20px; right: 20px; top: 96px; width: auto; }
+    .scr { font-size: 32px; line-height: 47px; }
+    .h2 { margin-top: -5px; width: auto; font-size: 40px; line-height: 42.4px; }
+    .h2 .tn { display: inline; }
+    .lead { width: auto; margin-top: 16px; font-size: 15px; line-height: 23.25px; }
+    .fc :global(.fc-call) { width: 100%; margin-top: 24px; }
+    .chk { margin-top: 24px; font-size: 13px; line-height: 14px; }
+    .chk li + li { margin-top: 12px; }
+    .fill { left: auto; right: 7px; top: 412px; font-size: 24px; line-height: 26.4px; }
+    .arw { left: 130px; top: 442px; width: 40px; height: 72px; }
+    .arw.m { display: block; } .arw.d { display: none; }
+    .tk-wrap { left: 22px; right: 22px; top: 618px; width: auto; height: 700px; }
+    .carbon { width: 100%; height: 700px; }
+    .tk { padding: 26px 24px 0; }
+    .tk-top { font-size: 13px; line-height: 19px; }
+    .tk-sub { margin-top: 3px; padding-bottom: 12px; font-size: 11px; line-height: 12px; }
+    .tk-h { margin-top: 14px; font-size: 26px; line-height: 35px; }
+    .f label, .jobs legend { font-size: 10px; line-height: 15px; }
+    .f input { height: 27px; font-size: 16px; }
+    .f-name { margin-top: 17px; }
+    .f-phone, .f-city { display: block; width: auto; margin: 22px 0 0; }
+    .jobs { margin-top: 26px; }
+    .cbs { grid-template-columns: 150px 1fr; row-gap: 15px; }
+    .jobs legend { margin-bottom: 11px; }
+    .cb { gap: 9px; font-size: 14px; }
+    .bx { width: 17px; height: 17px; border-width: 1.4px; }
+    .f-more { margin-top: 24px; }
+    .f-more textarea { height: 66px; margin-top: 4px; line-height: 30px; background: repeating-linear-gradient(to bottom, transparent 0 29px, rgba(14,13,11,.3) 29px 30px); }
+    .photo { height: 44px; margin-top: 14px; padding: 0 16px; font-size: 13px; }
+    .send { height: 52px; margin-top: 12px; font-size: 16px; }
+    .copy { margin-top: 10px; font-size: 9px; line-height: 13px; }
+    .st :global(.fc-stamp) { left: auto; right: 18px; top: 1312px; width: 110px; }
+  }
+</style>

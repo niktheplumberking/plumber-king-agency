@@ -1,0 +1,50 @@
+---
+// 7.2 Mike's line (Figma 669:903 / 670:2298): one huge pull quote on the ink field, giant tan quote mark, dot texture right.
+// [MIKE TO CONFIRM] exact wording of the line (PAGES-COPY 7.2): shown as approved in Figma.
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+---
+<section class="aq on-ink" aria-labelledby="aq-h" data-m-section>
+  <Wave d="a1d" m="a1m" top={1100} topM={949} />
+  <span class="aq-dots" aria-hidden="true"></span>
+  <div class="aq-in">
+    <span class="aq-mark" aria-hidden="true">“</span>
+    <Eyebrow dark class="aq-eb">In Mike's words</Eyebrow>
+    <h2 id="aq-h" class="aq-h" data-t="2">Quitting isn't <span class="tone">in the job description.</span></h2>
+    <blockquote class="aq-q" data-t="3"><p>“Somebody's sink is leaking, somebody's day is depending on me, and quitting isn't in the job description”</p></blockquote>
+    <p class="aq-by" data-t="3">Mike Navarro · From his Instagram</p>
+  </div>
+</section>
+<style>
+  .aq { position: relative; height: 620px; background: var(--ink); overflow-x: clip; }
+  .aq-dots { position: absolute; left: calc(50% + 140px); top: 0; width: 578px; height: 614px; background: radial-gradient(circle at 1px 1px, rgba(210, 197, 166, .1) 1.2px, transparent 1.3px) 0 0 / 18px 18px; }
+  .aq-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
+  .aq-mark { position: absolute; left: 96px; top: 80px; font-family: var(--f-display); font-size: 360px; line-height: 360px; color: var(--tan); }
+  .aq-in :global(.aq-eb) { position: absolute; left: 300px; top: 169px; }
+  .aq-h { position: absolute; left: 300px; top: 206px; width: 1020px; font-family: var(--f-display); font-weight: 400; font-size: 92px; line-height: 1.02; color: var(--paper); }
+  .aq .tone { color: var(--tan); }
+  .aq-q { position: absolute; left: 300px; top: 430px; width: 780px; margin: 0; }
+  .aq-q p { font-style: italic; font-size: 22px; line-height: 1.5; color: rgba(243, 236, 221, .8); }
+  .aq-by { position: absolute; left: 300px; top: 518px; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 19px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); }
+
+  @media (max-width: 1279px) {
+    .aq { height: auto; padding: 169px 0 110px; }
+    .aq-dots { left: auto; right: 0; width: 45%; height: 100%; }
+    .aq-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; height: auto; }
+    .aq-dots { display: none; }
+    .aq-mark { left: -6px; top: -139px; font-size: 180px; line-height: 180px; }
+    .aq-in :global(.aq-eb), .aq-h, .aq-q, .aq-by { position: relative; left: auto; top: auto; width: auto; }
+    .aq-in :global(.aq-eb) { font-size: 12.5px; line-height: 19px; }
+    .aq-h { margin-top: 10px; font-size: 46px; line-height: 1.04; }
+    .aq-q { margin-top: 24px; }
+    .aq-q p { font-size: 17px; }
+    .aq-by { margin-top: 16px; font-size: 11.5px; line-height: 17px; letter-spacing: .12em; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .aq { padding: 200px 0 130px; }
+    .aq-dots { display: block; }
+    .aq-mark { top: -170px; font-size: 220px; line-height: 220px; }
+    .aq-h { font-size: clamp(56px, 7vw, 80px); }
+    .aq-q p { font-size: 20px; }
+  }
+</style>

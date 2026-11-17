@@ -1,0 +1,101 @@
+---
+// 8.4 Send your job (Figma 670:7635 / 670:9583): copy + DM / call buttons left, a phone showing an Instagram DM thread right
+// (Mike's tan bubble with the line, a customer's photo), the ink stamp beside it. Mobile: the same phone at the frame's scale.
+import { Image } from 'astro:assets';
+import logoCream from '../../assets/brand/logo-cream.png';
+import Eyebrow from '../b3kit/Eyebrow.astro';
+import Wave from '../b3kit/Wave.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const mask = `--logo:url(${logoCream.src})`;
+---
+<section class="od" aria-labelledby="od-h" data-m-section>
+  <Wave d="o3d" m="o3m" top={3766} topM={3794} />
+  <div class="od-in">
+    <div class="od-copy">
+      <Eyebrow>Got one for us?</Eyebrow>
+      <h2 id="od-h" class="od-h" data-t="2">Wet spot by the wall? <span class="tone">DM me a picture.</span></h2>
+      <p class="od-body" data-t="3">Send a photo on Instagram and tell Mike what's going on.</p>
+    </div>
+    <div class="od-phonewrap" aria-hidden="true" data-t="4" data-fx="nudge">
+      <div class="od-phone"><div class="od-tilt">
+        <div class="od-screen">
+          <span class="od-notch"></span><span class="od-time">9:41</span>
+          <div class="od-bar">
+            <span class="od-av"><svg viewBox="0 0 40 33"><path d="M6.74 0L36.18 3.09L39.78 18.56L33.04 32.93L3.6 29.84L0 14.37Z" /></svg><span class="od-avlogo" style={mask}></span></span>
+            <span class="od-name">mikesplumbingservices</span><span class="od-sub"><span class="od-d">Instagram · Mike's Plumbing Services</span><span class="od-m">Instagram</span></span>
+          </div>
+          <p class="od-bub">Wet spot by the wall? DM me a picture.</p>
+          <div class="od-pic"><Img name="drain-slime-job-stamp" alt="" sizes="(min-width: 768px) 180px, 124px" widths={[180, 360]} box={180 / 240} /></div>
+          <span class="od-input">Message...</span>
+        </div>
+      </div></div>
+    </div>
+    <div class="od-btns">
+      <a class="od-dm" href={SITE.social.instagram} target="_blank" rel="noopener" data-t="3">DM {SITE.social.instagramHandle}</a>
+      <a class="od-call" href={SITE.tel} data-t="3">Call {SITE.phone}</a>
+    </div>
+    <span class="od-stamp" style={mask} aria-hidden="true"></span>
+  </div>
+  <Wave d="o4d" m="o4m" bottom />
+</section>
+<style>
+  .od { position: relative; height: 820px; background: var(--tan); overflow: hidden; }
+  .od-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
+  .od-copy { position: absolute; left: 120px; top: 199px; width: 600px; }
+  .od-h { margin-top: 13px; font-family: var(--f-display); font-weight: 400; font-size: 68px; line-height: 1.02; color: var(--ink); }
+  .od .tone { color: var(--tan-dark); }
+  .od-body { margin-top: 24px; font-size: 19px; line-height: 1.5; color: var(--ink-2); }
+  .od-btns { position: absolute; left: 120px; top: 532px; display: flex; gap: 16px; }
+  .od-dm, .od-call { display: flex; align-items: center; height: 64px; padding: 0 22px; border-radius: 6px; white-space: nowrap; transition: background-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out); }
+  .od-dm { width: 320px; background: var(--ink); color: var(--tan); font-weight: 700; font-size: 16px; }
+  .od-dm:hover { background: #26231d; }
+  .od-call { width: 250px; border: 1.5px solid var(--ink); color: var(--ink); font-family: var(--f-label); font-weight: 600; font-size: 20px; letter-spacing: .02em; }
+  .od-call:hover { background: var(--ink); color: var(--tan); }
+
+  .od-phonewrap { position: absolute; left: 880px; top: 60px; width: 340px; height: 680px; }
+  .od-phone { width: 340px; height: 680px; }
+  .od-tilt { width: 340px; height: 680px; padding: 12px; border-radius: 48px; background: var(--ink); transform: rotate(6deg); transform-origin: 0 0; box-shadow: 0 40px 70px -20px rgba(0, 0, 0, .5); }
+  .od-screen { position: relative; width: 316px; height: 656px; border-radius: 38px; overflow: hidden; background: var(--bone); font-family: var(--f-sans); color: var(--ink); }
+  .od-notch { position: absolute; left: 118px; top: 10px; width: 80px; height: 22px; border-radius: 11px; background: var(--ink); }
+  .od-time { position: absolute; left: 24px; top: 14px; font-weight: 700; font-size: 13px; line-height: 14px; }
+  .od-bar { position: absolute; left: 0; right: 0; top: 52px; height: 63px; border-top: 1px solid #E6E0D3; border-bottom: 1px solid #E6E0D3; }
+  .od-av { position: absolute; left: 20px; top: 13px; width: 40px; height: 33px; }
+  .od-av svg { width: 40px; height: 33px; fill: var(--ink); }
+  .od-avlogo { position: absolute; left: 4px; top: 4px; width: 32px; height: 22px; background: var(--tan); -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+  .od-name { position: absolute; left: 70px; top: 13px; font-weight: 700; font-size: 14px; line-height: 15px; }
+  .od-sub { position: absolute; left: 70px; top: 33px; font-size: 11px; line-height: 12px; color: var(--mute); white-space: nowrap; }
+  .od-m { display: none; }
+  .od-bub { position: absolute; left: 16px; top: 150px; width: 230px; height: 64px; padding: 12px 16px 0 14px; border-radius: 20px; background: var(--tan); font-weight: 500; font-size: 14px; line-height: 1.35; }
+  .od-pic { position: absolute; left: 120px; top: 240px; width: 180px; height: 240px; border-radius: 20px; overflow: hidden; }
+  .od-input { position: absolute; left: 16px; top: 592px; width: 284px; height: 44px; padding: 13px 18px 0; border: 1.5px solid #E6E0D3; border-radius: 22px; font-size: 14px; line-height: 15px; color: var(--mute); }
+  .od-stamp { position: absolute; left: 1200px; top: 560px; width: 180px; height: 118px; background: rgba(14, 13, 11, .9); -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; transform: rotate(-14deg); transform-origin: 0 0; }
+
+  @media (max-width: 1279px) {
+    .od { height: auto; padding: 59px 0 90px; }
+    .od-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; height: auto; }
+    .od-copy { position: static; width: auto; }
+    .od-copy :global(.eb) { font-size: 12px; line-height: 18px; }
+    .od-h { margin-top: 9px; font-size: 40px; line-height: 1.04; }
+    .od-body { margin-top: 14px; font-size: 16px; }
+    /* the desktop phone at the mobile frame's scale (240 / 340), turned 5deg as 670:9588 */
+    .od-phonewrap { position: relative; left: auto; top: auto; width: 240px; height: 480px; margin: 30px 0 20px 60px; }
+    .od-phone { transform: scale(.70588); transform-origin: 0 0; }
+    .od-tilt { transform: rotate(5deg); border-radius: 51px; }
+    .od-d { display: none; } .od-m { display: inline; }
+    .od-time { display: none; }
+    .od-btns { position: static; flex-direction: column; gap: 12px; }
+    .od-dm, .od-call { width: 100%; justify-content: center; }
+    .od-dm { height: 58px; font-size: 15px; }
+    .od-call { height: 54px; font-size: 19px; }
+    .od-stamp { display: none; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .od { padding: 90px 0 120px; }
+    .od-h { font-size: clamp(48px, 6vw, 64px); }
+    .od-phonewrap { width: 340px; height: 690px; margin: 40px auto 30px; }
+    .od-phone { transform: none; }
+    .od-btns { flex-direction: row; }
+    .od-dm { width: 320px; height: 64px; } .od-call { width: 250px; height: 64px; }
+  }
+</style>

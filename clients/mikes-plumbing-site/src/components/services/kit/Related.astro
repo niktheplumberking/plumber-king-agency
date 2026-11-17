@@ -1,0 +1,39 @@
+---
+// Related services + town links (BUILD-BRIEF: every service page links its sibling services and the town pages). Not a Figma
+// section: a slim ink band between the final CTA and the footer, set in the kit's chip and label styles so it reads as part
+// of the page. `current` = this page's href (left out of the services row).
+import Chip from './Chip.astro';
+import { SERVICE_PAGES } from '../../../data/services';
+import { TOWNS } from '../../../data/towns';
+interface Props { current?: string }
+const { current } = Astro.props;
+const services = [{ name: 'All services', href: '/services' }, ...SERVICE_PAGES].filter((s) => s.href !== current);
+---
+<nav class="rl sv-ink" aria-label="Related services and areas">
+  <div class="wrap rl-in">
+    <div class="rl-row">
+      <p class="sv-label rl-k">Related services</p>
+      <ul role="list">{services.map((s) => <li><Chip tone="tan" href={s.href}>{s.name}</Chip></li>)}</ul>
+    </div>
+    <div class="rl-row">
+      <p class="sv-label rl-k">Plumber near you</p>
+      <ul role="list" class="rl-towns">{TOWNS.map((t) => <li><a href={t.href}>{t.name}, CA</a></li>)}</ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .rl { position: relative; padding: 8px 0 72px; }
+  .rl-in { display: flex; flex-direction: column; gap: 22px; border-top: 1px solid rgba(210, 197, 166, .18); padding-top: 40px; }
+  .rl-row { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .rl-k { flex: none; width: 160px; margin: 0; color: var(--mute); }
+  .rl ul { display: flex; flex-wrap: wrap; gap: 10px 12px; margin: 0; padding: 0; list-style: none; }
+  .rl-towns { gap: 8px 22px !important; }
+  .rl-towns a { font-family: var(--f-sans); font-weight: 600; font-size: 15px; line-height: 20px; color: var(--paper); text-decoration: underline; text-decoration-color: rgba(210, 197, 166, .4); text-underline-offset: 4px; }
+  .rl-towns a:hover { text-decoration-color: var(--tan); }
+  @media (max-width: 767px) {
+    .rl { padding: 0 0 56px; }
+    .rl-in { padding-top: 32px; gap: 26px; }
+    .rl-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>

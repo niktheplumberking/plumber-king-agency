@@ -1,0 +1,147 @@
+---
+// Emergency 24h dial (Figma 631:2037 "emergency · 24h dial" y 6880-7700; mobile 640:437 y 8919-10164).
+// The dial is one SVG in the desktop frame's units (428 box), so it scales to the mobile 300 box. Its needle sweeps
+// with the scroll (scrub.ts [data-dial]); without motion it rests where Figma has it. "24 hours" is only ever said
+// with Yelp next to it (facts rule). Owns the coal wave lip that overlaps the route map below.
+import Btn from '../global/Btn.astro';
+import Wave from './Wave.astro';
+import { SITE } from '../../data/site';
+const TICKS = 'M170 16V0M190.101 17.3175L191.145 9.38593M209.858 21.2474L213.999 5.79261M228.933 27.7226L231.995 20.3315M247 36.6321L255 22.7757M263.749 47.8236L268.619 41.4768M278.894 61.1056L290.208 49.7918M292.176 76.2507L298.523 71.3806M303.368 93L317.224 85M312.277 111.067L319.668 108.005M318.753 130.142L334.207 126.001M322.682 149.899L330.614 148.855M324 170H340M322.682 190.101L330.614 191.145M318.753 209.858L334.207 213.999M312.277 228.933L319.668 231.995M303.368 247L317.224 255M292.176 263.749L298.523 268.619M278.894 278.894L290.208 290.208M263.749 292.176L268.619 298.523M247 303.368L255 317.224M228.933 312.277L231.995 319.668M209.858 318.753L213.999 334.207M190.101 322.682L191.145 330.614M170 324V340M149.899 322.682L148.855 330.614M130.142 318.753L126.001 334.207M111.067 312.277L108.005 319.668M93 303.368L85 317.224M76.2507 292.176L71.3806 298.523M61.1056 278.894L49.7918 290.208M47.8236 263.749L41.4768 268.619M36.6321 247L22.7757 255M27.7226 228.933L20.3315 231.995M21.2474 209.858L5.79261 213.999M17.3175 190.101L9.38593 191.145M16 170H0M17.3175 149.899L9.38593 148.855M21.2474 130.142L5.79261 126.001M27.7226 111.067L20.3315 108.005M36.6321 93L22.7757 85M47.8236 76.2507L41.4768 71.3806M61.1056 61.1056L49.7918 49.7918M76.2507 47.8236L71.3806 41.4768M93 36.6321L85 22.7757M111.067 27.7226L108.005 20.3315M130.142 21.2474L126.001 5.79261M149.899 17.3175L148.855 9.38593';
+const hex = 'M6.52 .8H39.08L44.8 16.8L39.08 32.8H6.52L.8 16.8Z';
+const STEPS = [
+  { t: 'Shut off the water.', p: 'Main valve, or the valve under the fixture.' },
+  { t: 'Protect what you can.', p: 'Move things off the wet floor. Power off near the water.' },
+  { t: 'Text Mike a photo.', p: 'So he knows what to bring.', sms: true },
+];
+---
+<section class="em on-ink" aria-labelledby="em-h" data-m-section>
+  <svg class="wt w1" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14C60 -4.66667 120 -4.66667 180 14C240 32.6667 300 32.6667 360 14C420 -4.66667 480 -4.66667 540 14C600 32.6667 660 32.6667 720 14C780 -4.66667 840 -4.66667 900 14C960 32.6667 1020 32.6667 1080 14C1140 -4.66667 1200 -4.66667 1260 14C1320 32.6667 1380 32.6667 1440 14V200H0V14Z" /></svg>
+  <svg class="wt w2" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true"><path d="M0 10C80 23.3333 160 23.3333 240 10C320 -3.33333 400 -3.33333 480 10C560 23.3333 640 23.3333 720 10C800 -3.33333 880 -3.33333 960 10C1040 23.3333 1120 23.3333 1200 10C1280 -3.33333 1360 -3.33333 1440 10V150H0V10Z" /></svg>
+  <div class="em-in">
+    <div class="em-txt">
+      <p class="eb" data-t="1"><span class="dot" aria-hidden="true"></span><span class="d">Emergency · Open 24 hours on Yelp</span><span class="m">Emergency · Open 24 hrs on Yelp</span></p>
+      <h2 id="em-h" class="h2" data-t="2">Somebody's sink is leaking. <span class="tn">Call Mike.</span></h2>
+      <a class="big" href={SITE.tel} data-t="3" aria-label={`Call Mike: ${SITE.phone}`}>{SITE.phone}</a>
+      <p class="sm" data-t="3">Tap to call. Homes, restaurants and businesses.</p>
+      <div class="cta" data-t="4">
+        <Btn v="call" title="Call Mike now" sub="Open 24 hours (Yelp)" class="em-call" data-magnetic />
+        <Btn v="text" sub="He'll tell you what it is" class="em-ghost" />
+      </div>
+    </div>
+    <figure class="dial" data-dial data-t="2" data-fx="scale">
+      <svg viewBox="0 0 428 428" role="img" aria-label="A 24-hour dial: Yelp lists Mike as open 24 hours">
+        <circle cx="214" cy="214" r="211" class="bz" />
+        <circle cx="214" cy="214" r="195.25" class="fc" />
+        <path d={TICKS} class="tk" transform="translate(44 44)" />
+        <g class="nm"><text x="213.5" y="110">24</text><text x="318" y="214">6</text><text x="214" y="318">12</text><text x="110" y="214">18</text></g>
+        <text x="214" y="255" class="op">OPEN</text>
+        <text x="214" y="276" class="hr">24 HOURS</text>
+        <g class="nd" data-dial-needle data-from="-300" data-to="0" data-origin="214 214"><path d="M151 78L229.46 235.6L221.3 239.4Z" /></g>
+        <path d="M198.72 198H231.28L237 215L231.28 232H198.72L193 215Z" class="hub" /><circle cx="214" cy="214" r="5" fill="#0E0D0B" />
+      </svg>
+      <figcaption>Yelp lists Mike as open 24 hours.</figcaption>
+    </figure>
+  </div>
+  <div class="wait" data-t="3">
+    <p class="w-h">While you wait</p>
+    <ol class="w-l" data-stagger>
+      {STEPS.map((s, i) => (
+        <li>
+          <span class="w-n" aria-hidden="true"><svg viewBox="0 0 46 34"><path d={hex} /></svg><span>{i + 1}</span></span>
+          <strong>{s.sms ? <a href={SITE.sms}>{s.t}</a> : s.t}</strong>
+          <span class="w-p">{s.p}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <Wave only="d" class="em-wb" y={818} h={32} d="M0 0V16C93.3333 -5.33333 186.667 -5.33333 280 16C373.333 37.3333 466.667 37.3333 560 16C653.333 -5.33333 746.667 -5.33333 840 16C933.333 37.3333 1026.67 37.3333 1120 16C1213.33 -5.33333 1306.67 -5.33333 1400 16C1493.33 37.3333 1586.67 37.3333 1680 16V0H0Z" bottom="#1C1A16" />
+  <Wave only="m" class="em-wb" y={1243} h={20} w={390} d="M0 0V10C46.6667 -3.33333 93.3333 -3.33333 140 10C186.667 23.3333 233.333 23.3333 280 10C326.667 -3.33333 373.333 -3.33333 420 10V0H0Z" bottom="#1C1A16" />
+</section>
+<style>
+  .em { position: relative; z-index: 1; height: 820px; background: #1C1A16; color: var(--bone); }
+  .m { display: none; }
+  .wt { position: absolute; left: 0; width: 100%; pointer-events: none; }
+  .wt path { fill: var(--tan); }
+  .w1 { top: 640px; height: 180px; opacity: .1; }
+  .w2 { top: 690px; height: 130px; opacity: .06; }
+  .em-in { position: relative; display: flex; justify-content: space-between; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding-top: 158px; }
+  .eb { display: flex; align-items: center; gap: 12px; margin-left: 2px; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan); }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); }
+  .h2 { margin-top: 13px; font-family: var(--f-display); font-weight: 400; font-size: 58px; line-height: 60.3px; color: var(--bone); }
+  .h2 .tn { display: block; color: var(--tan); }
+  .big { display: block; margin: 14px 0 0 -8px; font-family: var(--f-label); font-weight: 600; font-size: 96px; line-height: 142px; letter-spacing: .01em; color: var(--tan); white-space: nowrap; transition: color .25s; }
+  .big:hover { color: var(--paper); }
+  .sm { margin-top: 2px; font-size: 18px; line-height: 20px; color: var(--mute); }
+  .cta { display: flex; gap: 16px; margin-top: 20px; }
+  .em :global(.em-call) { width: 300px; }
+  .em :global(.em-call .mb-t) { font-family: var(--f-label); font-size: 22px; line-height: 27px; letter-spacing: .02em; }
+  .em :global(.em-ghost) { width: 250px; box-shadow: inset 0 0 0 1.5px var(--bone); color: var(--bone); }
+  .em :global(.em-ghost .mb-s) { color: rgba(251,248,242,.8); }
+  .dial { position: relative; flex: none; width: 428px; margin: 0 36px 0 0; text-align: center; }
+  .dial svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .bz { fill: var(--ink); stroke: #6B5C3E; stroke-width: 6; }
+  .fc { fill: var(--ink); stroke: #3A352C; stroke-width: 1.5; }
+  .tk { fill: none; stroke: var(--tan); stroke-width: 2; }
+  .nm text { font-family: var(--f-label); font-weight: 600; font-size: 26px; fill: var(--bone); text-anchor: middle; dominant-baseline: central; }
+  .op { font-family: var(--f-label); font-weight: 600; font-size: 22px; letter-spacing: .1em; fill: var(--tan); text-anchor: middle; dominant-baseline: central; }
+  .hr { font-family: var(--f-label); font-weight: 500; font-size: 13px; letter-spacing: .3em; fill: #C9BFA8; text-anchor: middle; dominant-baseline: central; }
+  .nd path { fill: var(--red); }
+  .hub { fill: var(--tan); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+  figcaption { margin-top: 14px; font-weight: 500; font-size: 13px; line-height: 14px; color: #C9BFA8; }
+  .wait { position: relative; display: flex; width: calc(100% - 2 * var(--gutter)); margin: 75px auto 0; }
+  .w-h { width: 280px; flex: none; font-family: var(--f-script); font-size: 36px; line-height: 53px; color: var(--tan); }
+  .w-l { position: relative; display: grid; grid-template-columns: 320px 320px 1fr; flex: 1; margin: 8px 0 0; padding: 0; list-style: none; }
+  .w-l::before { content: ''; position: absolute; left: 0; right: 0; top: 14px; border-top: 2px dashed #6B5C3E; }
+  .w-l li { position: relative; display: grid; grid-template-columns: 58px 1fr; grid-template-rows: auto auto; align-content: start; column-gap: 0; padding-right: 20px; }
+  .w-n { position: relative; grid-row: 1 / 3; display: grid; place-items: center; width: 44px; height: 32px; margin-top: -4px; font-family: var(--f-label); font-weight: 600; font-size: 16px; color: var(--tan); }
+  .w-n svg { position: absolute; inset: -1px; width: 46px; height: 34px; }
+  .w-n path { fill: #1C1A16; stroke: var(--tan); stroke-width: 1.6; stroke-linejoin: round; }
+  .w-n span { position: relative; }
+  .w-l strong { position: relative; font-weight: 700; font-size: 17px; line-height: 18px; color: var(--bone); background: #1C1A16; justify-self: start; padding-right: 6px; }
+  .w-l strong a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .w-p { margin-top: 8px; max-width: 250px; font-size: 13px; line-height: 18.2px; color: #C9BFA8; }
+  .em :global(.em-wb) { z-index: 1; }
+
+  @media (max-width: 1279px) {
+    .em { height: auto; padding-bottom: 120px; }
+    .em :global(.em-wb.only-d) { top: auto !important; bottom: -30px; }
+    .w1 { top: auto; bottom: 0; } .w2 { top: auto; bottom: 0; }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .em-in { gap: 40px; }
+    .h2 { font-size: clamp(40px, 4.5vw, 58px); line-height: 1.04; }
+    .big { font-size: clamp(56px, 7vw, 96px); line-height: 1.4; }
+    .dial { width: clamp(280px, 32vw, 428px); margin-right: 0; }
+    .cta { flex-wrap: wrap; }
+    .wait { display: block; }
+    .w-l { margin-top: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 1023px) and (min-width: 768px) { .em-in { flex-direction: column; } .dial { align-self: center; margin-top: 48px; } }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .em { padding-bottom: 57px; }
+    .w1 { top: 1000px; bottom: 0; height: auto; } .w2 { top: 1054px; bottom: 0; height: auto; }
+    .em :global(.em-wb.only-m) { top: auto !important; bottom: -18px; }
+    .em-in { display: block; padding-top: 67px; }
+    .eb { gap: 9px; margin-left: 1px; font-size: 12px; line-height: 18px; letter-spacing: .1em; }
+    .dot { width: 10px; height: 10px; }
+    .h2 { margin-top: 13px; font-size: 38px; line-height: 41px; }
+    .big { margin: 12px 0 0; font-size: min(54px, 13.6vw); line-height: 80px; }
+    .sm { margin-top: 6px; font-size: 15px; line-height: 16px; }
+    .cta { flex-direction: column; gap: 12px; margin-top: 24px; }
+    .em :global(.em-call), .em :global(.em-ghost) { width: 100%; }
+    .dial { width: 300px; margin: 42px auto 0; }
+    figcaption { margin-top: 12px; font-weight: 400; font-size: 12px; line-height: 13px; }
+    .wait { display: block; margin-top: 35px; }
+    .w-h { width: auto; font-size: 32px; line-height: 47px; }
+    .w-l { display: block; margin-top: 11px; }
+    .w-l::before { display: none; }
+    .w-l li { grid-template-columns: 56px 1fr; padding: 0; }
+    .w-l li + li { margin-top: 42px; }
+    .w-n { width: 40px; height: 30px; margin-top: 2px; font-size: 15px; }
+    .w-n svg { width: 42px; height: 32px; }
+    .w-n path { stroke-width: 1.5; }
+    .w-l strong { font-size: 16px; line-height: 17px; padding: 0; }
+    .w-p { margin-top: 7px; max-width: 290px; }
+  }
+</style>

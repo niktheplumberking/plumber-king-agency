@@ -52,7 +52,7 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
         <h2 id="fm-h" class="h2" data-t="2">An organized van <span class="tn">creates an organized mind.</span></h2>
       </div>
       <p class="lead" data-t="3"><span class="dk-only">Mike's Plumbing Services is </span>Mike Navarro's family business, started in Riverside in 2025. In his words: “professionalism starts before the first wrench is turned.”</p>
-      <ul role="list" class="tags" data-t="4" data-stagger>
+      <ul role="list" class="tags" data-t="4" data-stagger tabindex="0" aria-labelledby="fm-h">
         {TAGS.map((t) => (
           <li class:list={['tag', t.dark && 'dk']} style={`--deg:${t.deg}deg`}>
             <span class="tag-in">

@@ -13,7 +13,7 @@ import { SITE } from '../../data/site';
     <figure class="bh-tank" data-t="3" data-ab style={ab(90, 110, 760, 480)}>
       <i class="bh-band bh-band--a" aria-hidden="true"></i><i class="bh-band bh-band--b" aria-hidden="true"></i>
       {[[25, 95], [25, 235], [25, 375], [725, 95], [725, 235], [725, 375]].map(([x, y]) => <i class="bh-rv" style={`left:${x}px;top:${y}px`} aria-hidden="true"></i>)}
-      <p class="bh-num" aria-label="100-gallon water heater"><span class="bh-100" aria-hidden="true">100</span><span class="bh-gal" aria-hidden="true">GAL</span></p>
+      <p class="bh-num" role="img" aria-label="100-gallon water heater"><span class="bh-100" aria-hidden="true">100</span><span class="bh-gal" aria-hidden="true">GAL</span></p>
       <figcaption>Restaurant job · <span class="bh-d">from </span>Mike's <span class="bh-d">Instagram</span><span class="bh-m">IG</span></figcaption>
     </figure>
     <Eyebrow tone="tan" class="bh-eb" data-ab style={ab(939.5, 189)}>Commercial</Eyebrow>

@@ -22,7 +22,7 @@ const L = [['F', 'red', 6], ['A', 'tan', -4], ['M', 'bone', 3], ['I', 'tan', -7]
         <figcaption>Every job gets the stamp</figcaption></figure>
       <svg class="af-mag af-mag--a" viewBox="0 0 46 36" aria-hidden="true"><path d="M5.98 0H40.02L46 18L40.02 36H5.98L0 18Z" /></svg>
       <svg class="af-mag af-mag--b" viewBox="0 0 46 36" aria-hidden="true"><path d="M5.98 0H40.02L46 18L40.02 36H5.98L0 18Z" /></svg>
-      <p class="af-word" aria-label="Family">{L.map(([c, col, r], i) => <span class={`af-l af-l--${col}`} style={`--i:${i};--r:${r}deg`} aria-hidden="true">{c}</span>)}</p>
+      <p class="af-word" role="img" aria-label="Family">{L.map(([c, col, r], i) => <span class={`af-l af-l--${col}`} style={`--i:${i};--r:${r}deg`} aria-hidden="true">{c}</span>)}</p>
     </div>
     <div class="af-copy">
       <Eyebrow dark>Family owned &amp; operated</Eyebrow>

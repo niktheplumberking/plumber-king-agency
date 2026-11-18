@@ -45,7 +45,7 @@ const st = (i: It) => `--c:${i.d[0]};--o:${i.d[1]};--h:${i.d[2]}px;--sd:${i.d[2]
     <ul class="ow-grid is-short" role="list" data-ow-grid aria-live="polite">
       {ITEMS.map((i) => i.img ? (
         <li class:list={['ow-tile', i.x && 'ow-x']} style={st(i)} data-cats={i.cats}>
-          <figure><div class="ow-ph"><Img name={i.img} alt={i.t} sizes="(min-width: 768px) 264px, 46vw" widths={[264, 400, 528]} /></div><figcaption>{i.t}</figcaption></figure>
+          <figure><div class="ow-ph"><Img name={i.img} alt="" sizes="(min-width: 768px) 264px, 46vw" widths={[264, 400, 528]} /></div><figcaption>{i.t}</figcaption></figure>
         </li>
       ) : (
         <li class:list={['ow-tk', i.x && 'ow-x']} style={st(i)} data-cats={i.cats}>

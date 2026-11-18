@@ -93,10 +93,31 @@ function effect(t: HTMLElement, fx: Fx, hero: boolean, i = 0, dur?: number): gsa
         tl.fromTo(inner, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: d, ease, stagger: gap, immediateRender: true }, 0);
         tl.add(() => hl.forEach((line, k) => { line.classList.remove('m-line'); while (inner[k].firstChild) line.insertBefore(inner[k].firstChild!, inner[k]); inner[k].remove(); }));
       } else {
+        // QA 18 Nov: SplitText turns every <br> into a line break, even one hidden by CSS at this width (`br { display: none }`
+        // on phones), so the split headline had one line more than the real one and the page jumped (CLS) on revert. Hidden
+        // <br>s are parked as empty placeholders during the split and put back after the revert.
+        const parked: string[] = [];
+        $$('br', t).forEach((br) => { if (getComputedStyle(br).display !== 'none') return; const s = document.createElement('span'); s.setAttribute('data-m-br', String(parked.length)); parked.push(br.outerHTML); br.replaceWith(s); });
+        // The split must not resize the headline (a shrink-wrapped or centred H1 narrows to its widest line, and the line
+        // masks can be shorter than the real line boxes): its box is held at its real size until the revert.
+        const keep = { w: t.style.width, h: t.style.minHeight };
+        const box = { w: t.offsetWidth, h: t.offsetHeight };
+        const unpark = () => $$('[data-m-br]', t).forEach((s) => { const tpl = document.createElement('template'); tpl.innerHTML = parked[Number(s.getAttribute('data-m-br'))] ?? '<br>'; s.replaceWith(tpl.content); });
+        // Real line count (rows of text) before the split. SplitText cannot break after a hyphen ("Backed-up"), so its lines
+        // can differ from the browser's; then the headline would re-wrap (and the page jump) on revert, so it rises whole.
+        const rg = document.createRange(); rg.selectNodeContents(t);
+        const tops = Array.from(rg.getClientRects()).filter((r) => r.width > 1).map((r) => r.top).sort((a, b) => a - b);
+        const rows = tops.filter((v, k) => k === 0 || v - tops[k - 1] > (parseFloat(getComputedStyle(t).fontSize) || 16) * 0.5).length;
         const split = SplitText.create(t, { type: 'lines', mask: 'lines', linesClass: 'm-l' });
+        if (rows && split.lines.length !== rows) { split.revert(); unpark(); go({ y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }); break; }
+        if (box.w) { t.style.width = box.w + 'px'; t.style.minHeight = box.h + 'px'; }
         tl.set(t, { autoAlpha: 1 });
         tl.fromTo(split.lines, { yPercent: 110, rotate: 2 }, { yPercent: 0, rotate: 0, duration: d, ease, stagger: gap, immediateRender: true }, 0);
-        tl.add(() => split.revert());
+        tl.add(() => {
+          split.revert();
+          t.style.width = keep.w; t.style.minHeight = keep.h;
+          unpark();
+        });
       }
       break;
     }
@@ -232,8 +253,28 @@ function onScroll(tl: gsap.core.Timeline, trigger: Element, start: string, above
   // y is subtracted at every refresh (0 once they have played).
   const [edge, at] = start.split(' ');
   const hostY = () => { let d = 0; for (let a = trigger.parentElement; a && a !== document.body; a = a.parentElement) d += Number(gsap.getProperty(a, 'y')) || 0; return d; };
-  triggers.push(ScrollTrigger.create({ trigger, start: () => { const d = Math.round(hostY()); return d ? `${edge}${d > 0 ? '-=' : '+='}${Math.abs(d)} ${at}` : start; }, once: true, onEnter: () => { tl.play(); } }));
+  const st = ScrollTrigger.create({ trigger, start: () => { const d = Math.round(hostY()); return d ? `${edge}${d > 0 ? '-=' : '+='}${Math.abs(d)} ${at}` : start; }, once: true, onEnter: () => { pending.delete(st); tl.play(); } });
+  triggers.push(st);
+  pending.set(st, { tl, trigger });
 }
+
+/* QA 18 Nov (frame sampler): when the scroll STOPS with an element already on screen but still below its trigger line (the
+ * bottom 12 % band under `top 88%`), it would sit invisible in view until the next scroll. On scroll end, any such entrance
+ * plays normally (same tween, no instant finish). Elements only peeking in (less than half shown, top in the last 3 %) wait. */
+const pending = new Map<ScrollTrigger, { tl: gsap.core.Timeline; trigger: Element }>();
+let lastCatch = 0;
+function catchUp() {
+  if (!MOTION || kbd || !pending.size) return;
+  const now = performance.now(); if (now - lastCatch < 100) return; lastCatch = now;
+  const vh = window.innerHeight;
+  pending.forEach(({ tl, trigger }, st) => {
+    const r = trigger.getBoundingClientRect();
+    if ((r.top < vh * 0.97 || r.top + r.height / 2 < vh) && r.bottom > 0 && r.height > 0) { pending.delete(st); st.kill(); tl.play(); }
+  });
+}
+// Lenis' lerp tail is long (the last few px take ~0.6 s), so "stopped" = Lenis below 1 px/frame (see boot), with
+// ScrollTrigger's scrollEnd as the fallback.
+ScrollTrigger.addEventListener('scrollEnd', catchUp);
 
 /** Plan one section: the head block (one trigger), and every other element on its own trigger. Read phase only. */
 function planSection(sec: HTMLElement) {
@@ -675,6 +716,7 @@ function boot() {
   const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 * (parseFloat(document.documentElement.style.zoom) || 1) }, autoRaf: false });
   window.__pbpLenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
+  lenis.on('scroll', (l: Lenis) => { if (Math.abs(l.velocity) < 1) catchUp(); });
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
   // Re-measure when the page geometry changes without a window resize: the wide-screen zoom on <html> (Base.astro sets

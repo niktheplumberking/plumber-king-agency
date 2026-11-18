@@ -111,6 +111,13 @@ html.motion [data-sv-scrub] [data-sv-fill][data-rev] { transform: none; }
   .sv-abs { height: var(--sh); }
   .sv-abs [data-ab] { position: absolute; left: var(--x); top: var(--y); width: var(--w, auto); height: var(--h, auto); margin: 0; }
   .sv-abs [data-ab][style*="--r:"] { rotate: var(--r); transform-origin: 0 0; }
+  /* QA 18 Nov: an animated wrapper ([data-t], no [data-ab]) around placed [data-ab] children becomes their containing block
+     while motion.ts transforms it and stops being one when the transform is cleared; Chrome reports that switch as a layout
+     shift (CLS 0.2-0.5 per scroll on services / water-heaters / drain-cleaning). Make the wrapper the same box as the
+     section's containing block (inset 0), so the children are placed against an identical box in every state; it passes
+     pointer events through to whatever lies under its empty area. */
+  .sv-abs [data-t]:not([data-ab]):has(> [data-ab]) { position: absolute; inset: 0; width: auto; height: auto; margin: 0; pointer-events: none; }
+  .sv-abs [data-t]:not([data-ab]):has(> [data-ab]) > * { pointer-events: auto; }
 }
 /* Figma "auto" line heights (font ascent + descent) */
 .lh-abril { line-height: 1.344; } .lh-arch { line-height: 1.09; } .lh-osw { line-height: 1.482; } .lh-yest { line-height: 1.47; }

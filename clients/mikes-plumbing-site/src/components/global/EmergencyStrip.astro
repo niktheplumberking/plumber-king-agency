@@ -2,12 +2,12 @@
 // Emergency strip under the header on every page (Figma Home 631:2037 y 136, 44 px tan; mobile y 104, 60 px).
 import { SITE } from '../../data/site';
 ---
-<div class="es">
+<aside class="es" aria-label="Water emergency">
   <div class="es-in">
     <p class="es-t"><span class="es-dot" aria-hidden="true"></span><span>Water where it shouldn't be?&nbsp; Shut off the main, then call <a href={SITE.tel}>{SITE.phone}</a>. Open 24 hours on Yelp.</span></p>
     <a class="es-l" href="/emergency-plumber">What to do while you wait <svg viewBox="0 0 18 10" width="16" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg></a>
   </div>
-</div>
+</aside>
 <style>
   .es { background: var(--tan); color: var(--ink); }
   .es-in { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 44px; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; }

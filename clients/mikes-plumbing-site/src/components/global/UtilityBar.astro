@@ -3,13 +3,13 @@
 // Mobile shows the rating only (centred).
 import { SITE } from '../../data/site';
 ---
-<div class="ub" data-intro="topbar">
+<aside class="ub" data-intro="topbar" aria-label="Rating, hours and phone">
   <div class="ub-in">
     <a class="ub-rate" href={SITE.social.yelp} target="_blank" rel="noopener"><span class="ub-stars" aria-hidden="true">★★★★★</span> {SITE.rating.value} on Yelp · {SITE.rating.count} reviews<span class="sr-only"> (opens Yelp)</span></a>
     <p class="ub-mid">Family owned &amp; operated <span aria-hidden="true">·</span> Residential &amp; commercial <span aria-hidden="true">·</span> Riverside · IE · OC · LA</p>
     <p class="ub-right"><span class="ub-dot" aria-hidden="true"></span>{SITE.hoursYelp} <span aria-hidden="true">·</span> <a href={SITE.tel}>{SITE.phone}</a></p>
   </div>
-</div>
+</aside>
 <style>
   .ub { position: relative; z-index: calc(var(--z-header) + 1); height: 40px; background: #050504; color: var(--mute); font-size: 13px; line-height: 16px; }
   .ub-in { position: relative; display: flex; align-items: center; height: 100%; padding: 0 42px 0 120px; }

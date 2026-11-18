@@ -7,6 +7,7 @@ import SafetyCard from '../components/emergency/SafetyCard.astro';
 import CallLog from '../components/emergency/CallLog.astro';
 import Tickets from '../components/emergency/Tickets.astro';
 import TearOff from '../components/emergency/TearOff.astro';
+import RelatedFit from '../components/services/shared/RelatedFit.astro';
 import { serviceSchema } from '../lib/schema';
 import { SITE } from '../data/site';
 const description = `Emergency plumber in Riverside, CA. Burst line, backed-up drain, no hot water? Call Mike at ${SITE.phone}. Open 24 hours (Yelp).`;
@@ -19,4 +20,5 @@ const description = `Emergency plumber in Riverside, CA. Burst line, backed-up d
   <CallLog />
   <Tickets />
   <TearOff />
+  <RelatedFit cap links={[{ name: 'Drain cleaning & hydro jetting', href: '/drain-cleaning' }, { name: 'Water heaters', href: '/water-heaters' }, { name: 'All services', href: '/services' }]} />
 </Base>

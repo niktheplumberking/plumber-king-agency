@@ -1,78 +1,180 @@
 ---
-// 2.5 What customers say (Figma 670:7700 y 3420 h 820, paper; mobile y 3987 h 743). Two Yelp quotes on tilted paper slips with
-// a tan top band and the logo stamp. Quotes come from src/data/reviews.ts: each excerpt must appear word for word in that
-// review (checked at build time), the meta line names the reviewer, town, date and the job from the review.
-import { Image } from 'astro:assets';
-import logoInk from '../../assets/brand/logo-ink.png';
+// 2.5 What customers say (fix round 1 B18; was 2 quotes with an empty column under the heading). The proof is on the page:
+// 14 of Mike's 20 Yelp reviews on his paper slips, word for word (excerpts are checked against src/data/reviews.ts at build
+// time, typos kept), the one water-heater review first. Desktop: two columns drift slowly in opposite directions (the idea of
+// 21st.dev "Testimonials Vertical Marquee" 32621, restyled as Mike's slips), pausing on hover or focus, with the heading
+// and the black 5.0 badge pinned on the left. Phones: one row of slips you swipe. Reduced motion: no drift, the columns
+// scroll by hand. Drift writer: `transform` on .sl-track (this script); entrance (slips tear in, scripts/objects.ts):
+// `transform`, `opacity`, `clip-path` on the first slips; hover: `translate` on the slip (CSS); idle: the badge shakes.
 import Wave from '../kit/Wave.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
-import { ab } from '../services/shared/ab';
 import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
-const pick = (name: string, excerpt: string, job: string) => {
+const pick = (name: string, excerpt: string) => {
   const r = REVIEWS.find((x) => x.name === name);
   if (!r || !r.text.includes(excerpt)) throw new Error(`Slips: "${excerpt}" is not in ${name}'s review`);
   const [m, d, y] = r.date.split(' ');
-  return { q: excerpt, meta: `${r.name}, ${r.town}, CA · ${m} ${d}, ${y} · ${job}` };
+  return { q: excerpt, name: r.name, town: r.town, date: `${m} ${d}, ${y}` };
 };
-const a = pick('Sal C.', 'He was upfront and honest with me on pricing and reliable when setting up the appointments.', 'Slab leak, water lines, shower valves');
-const b = pick('Eleanor M.', "He's reasonably priced, detailed & patient. Call him!", '3 toilets and a pressure regulator');
+const A = [
+  pick('Robert U.', 'Absolutely wonderful service, repaired water main to my house and installed new water heater all in one afternoon. Excellent service highly recommend'),
+  pick('Eleanor M.', "He's reasonably priced, detailed & patient. Call him!"),
+  pick('Jackie H.', 'He took his time explaining everything in detail and made sure we understood all our options, which made us feel very comfortable.'),
+  pick('Isaiah C.', 'Owner Mike came himself and took care of issues I had with my toilet and sink. Was on time and took care of everything pretty quick. Left everything clean and working perfectly.'),
+  pick('Bruce H.', 'He is an excellent communicator. His prices are fair and competitive. I will definitely use him again!'),
+  pick('Janeth H.', 'Needed my garbage disposal repaired, he was quick and efficient! I value a clean plumber. 10 out of 10 recommend.'),
+  pick('Stuart W.', 'I came home to a fixed leak and spotless work site.'),
+];
+const B = [
+  pick('Sal C.', 'He was upfront and honest with me on pricing and reliable when setting up the appointments.'),
+  pick('Laura G.', 'Mike was great , he responded very quickly and he was honest,efficient and very respectful.'),
+  pick('Sydney H.', 'Very clean, professional, and great communication skills. Highly recommend!'),
+  pick('Debbie H.', 'As a single female I appreciate his honesty and excellent workmanship more than words can convey.'),
+  pick('Jack D.', 'He arrived on time and installed it quickly. He communicated well, was polite and courteous, and his prices are quite reasonable.'),
+  pick('Julian T.', 'awesome service. showed up on time. Completed the service requested and left the area super clean. Would definitely recommend. 5 stars.'),
+  pick('Brandon A.', "Mike did a couple of jobs in my house! He's my first phone call when I need a plumber."),
+];
 const r = SITE.rating;
+const cols = [{ k: 'a', dir: -1, list: A }, { k: 'b', dir: 1, list: B }];
 ---
-<section class="sl sv-sec sv-paper sv-abs" style="--sh:820px" aria-labelledby="sl-h" data-m-section>
+<section class="sl sv-sec sv-paper" aria-labelledby="sl-h" data-m-section>
   <Wave fill="var(--paper)" top={-34} topM={-24} />
-  <div class="sl-in">
-    <Eyebrow look="figma" tone="deep" class="sl-eb" data-ab style={ab(119.5, 129)}>On {r.source} · {r.value} · {r.count} reviews</Eyebrow>
-    <h2 id="sl-h" class="sv-h sl-h" data-t="2" data-ab style={ab(120, 162, 420)}>Honest work. <em>In their words.</em></h2>
-    <p class="sl-note" data-t="3" data-ab style={ab(120, 300)}>{r.value} on {r.source}, {r.count} reviews (checked {r.checked})</p>
-    <div class="sl-pile" data-t="3" data-stagger>
-      <figure class="sl-slip sl-slip--a" data-ab style={ab(600, 110, 640, 227, -2)}>
-        <blockquote><p>“{a.q}”</p></blockquote><figcaption>{a.meta}</figcaption>
-      </figure>
-      <figure class="sl-slip sl-slip--b" data-ab style={ab(760, 440, 520, 208, 2.5)}>
-        <blockquote><p>“{b.q}”</p></blockquote><figcaption>{b.meta}</figcaption>
-      </figure>
-      <Image src={logoInk} alt="" width={260} class="sl-stamp" aria-hidden="true" data-ab style={ab(1160, 400, 130, 80, -14)} />
+  <div class="wrap sl-in">
+    <div class="sl-side">
+      <Eyebrow look="figma" tone="deep" class="sl-eb" data-t="1">On {r.source} · {r.value} · {r.count} reviews</Eyebrow>
+      <h2 id="sl-h" class="sv-h sl-h" data-t="2">Honest work. <em>In their words.</em></h2>
+      <p class="sl-lead" data-t="3">{A.length + B.length} of Mike's {r.count} Yelp reviews, word for word. The one about a water heater comes first.</p>
+      <a class="sl-badge" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="3" data-fx="pop" data-idle="shake" aria-label={`${r.value} out of 5 on ${r.source}, ${r.count} reviews. Read them all on Yelp (opens in a new tab)`}>
+        <svg viewBox="0 0 240 150" preserveAspectRatio="none" aria-hidden="true"><path d="M30 0H210L240 75 210 150H30L0 75Z" fill="#0E0D0B" /><path d="M38 9H202L230 75 202 141H38L10 75Z" fill="none" stroke="rgba(210,197,166,.5)" stroke-width="1.2" vector-effect="non-scaling-stroke" /></svg>
+        <span class="sl-bv" aria-hidden="true">{r.value}</span>
+        <span class="sl-bs" aria-hidden="true">★★★★★</span>
+        <span class="sl-bn" aria-hidden="true">{r.count} reviews on {r.source}</span>
+      </a>
+      <p class="sl-note" data-t="3">Checked {r.checked} · <a href={SITE.social.yelp} target="_blank" rel="noopener"><u>Read all {r.count} on Yelp</u>&nbsp;<span aria-hidden="true">→</span></a></p>
+    </div>
+    <div class="sl-view" tabindex="0" role="region" aria-label="Yelp reviews on paper slips. They drift slowly; hover or focus to stop them." data-slips>
+      {cols.map((c) => (
+        <div class:list={['sl-col', `sl-col--${c.k}`]} data-dir={c.dir}>
+          <div class="sl-track">
+            {[0, 1].map((copy) => (
+              <ul class:list={['sl-copy', copy && 'sl-copy--2']} role="list" aria-hidden={copy ? 'true' : undefined} inert={copy ? true : undefined}>
+                {c.list.map((s, i) => (
+                  <li class="sl-slip" style={`--tilt:${((i % 3) - 1) * 1.2}deg`} data-tear={!copy && i < 3 ? '' : undefined}>
+                    <figure>
+                      <blockquote><p>“{s.q}”</p></blockquote>
+                      <figcaption><span class="sl-av" aria-hidden="true">{s.name[0]}</span><span class="sl-who"><b>{s.name}</b> {s.town} · {s.date}</span><span class="sl-st"><span aria-hidden="true">★★★★★</span><span class="sr-only">5 stars on Yelp</span></span></figcaption>
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
-  .sl-in { position: relative; }
-  .sl-h { margin: 0; font-size: 56px; line-height: 1.04; }
-  .sl-note { margin: 0; font-weight: 500; font-size: 14px; line-height: 15px; color: var(--ink-2); }
-  .sl-slip { margin: 0; box-sizing: border-box; padding: 40px 36px 0; background: var(--bone); border-top: 6px solid var(--tan); box-shadow: 0 14px 28px -8px rgba(0, 0, 0, .2); }
-  .sl-slip blockquote { margin: 0; }
-  .sl-slip p { margin: 0; font-family: var(--f-display); font-size: 30px; line-height: 1.22; color: var(--ink); }
-  .sl-slip figcaption { margin-top: 22px; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 1.4; letter-spacing: .1em; text-transform: uppercase; color: #6b5c3e; }
-  .sl-slip--a { padding-top: 34px; } .sl-slip--b { padding-top: 34px; }
-  .sl-stamp { object-fit: contain; opacity: .9; }
+  .sl { padding: 120px 0 110px; }
+  .sl-in { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 72px; align-items: start; }
+  .sl-side { position: relative; padding-top: 40px; }
+  .sl-h { margin: 14px 0 0; font-size: 56px; line-height: 1.04; }
+  .sl-h em { display: block; }
+  .sl-lead { margin-top: 22px; max-width: 34ch; font-size: 17px; line-height: 26px; color: var(--ink-2); }
+  .sl-badge { position: relative; display: grid; place-items: center; align-content: center; width: 240px; height: 150px; margin-top: 34px; rotate: -4deg; color: var(--paper); text-decoration: none;
+    transition: translate .4s cubic-bezier(.45, 0, .55, 1), filter .4s cubic-bezier(.45, 0, .55, 1); filter: drop-shadow(0 12px 16px rgba(14, 13, 11, .25)); }
+  .sl-badge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sl-badge > span { position: relative; }
+  .sl-bv { font-family: var(--f-display); font-size: 56px; line-height: 1; }
+  .sl-bs { margin-top: 2px; font-size: 16px; letter-spacing: .14em; color: var(--red); }
+  .sl-bn { margin-top: 6px; font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); }
+  .sl-note { margin-top: 22px; font-weight: 500; font-size: 14px; line-height: 20px; color: var(--ink-2); }
+  .sl-note a u { text-underline-offset: 3px; }
 
-  @media (max-width: 1279px) {
-    .sl-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
-    .sl-pile { position: relative; width: 100%; }
-    .sl-slip, .sl-stamp { position: absolute; transform-origin: 0 0; }
-    .sl-note { order: 9; }
+  /* the drifting columns: a window with soft top and bottom edges */
+  .sl-view { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; height: 640px; overflow: hidden;
+    -webkit-mask-image: linear-gradient(transparent 0, #000 70px, #000 calc(100% - 70px), transparent 100%); mask-image: linear-gradient(transparent 0, #000 70px, #000 calc(100% - 70px), transparent 100%); }
+  .sl-view:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
+  .sl-col { position: relative; min-width: 0; }
+  .sl-col--b { padding-top: 0; }
+  .sl-track { will-change: transform; }
+  .sl-copy { display: grid; gap: 26px; margin: 0; padding: 0 6px 26px; list-style: none; }
+  .sl-slip { rotate: var(--tilt); transition: translate .4s cubic-bezier(.45, 0, .55, 1), rotate .4s cubic-bezier(.45, 0, .55, 1); }
+  .sl-slip figure { margin: 0; padding: 26px 26px 20px; background: var(--bone); border-top: 6px solid var(--tan); box-shadow: 0 14px 24px -12px rgba(0, 0, 0, .28);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), 96% 100%, 92% calc(100% - 6px), 88% 100%, 84% calc(100% - 6px), 80% 100%, 76% calc(100% - 6px), 72% 100%, 68% calc(100% - 6px), 64% 100%, 60% calc(100% - 6px), 56% 100%, 52% calc(100% - 6px), 48% 100%, 44% calc(100% - 6px), 40% 100%, 36% calc(100% - 6px), 32% 100%, 28% calc(100% - 6px), 24% 100%, 20% calc(100% - 6px), 16% 100%, 12% calc(100% - 6px), 8% 100%, 4% calc(100% - 6px), 0 100%); }
+  .sl-slip blockquote { margin: 0; }
+  .sl-slip p { margin: 0; font-family: var(--f-display); font-size: 21px; line-height: 1.3; color: var(--ink); }
+  .sl-slip figcaption { display: grid; grid-template-columns: 34px 1fr; align-items: center; column-gap: 12px; margin-top: 18px; padding-bottom: 6px; }
+  .sl-av { grid-row: span 2; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--tan); font-family: var(--f-display); font-size: 17px; line-height: 1; }
+  .sl-who { font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; color: #6b5c3e; }
+  .sl-who b { font-weight: 600; color: var(--ink); }
+  .sl-st { font-size: 12px; letter-spacing: .12em; color: var(--red); }
+  @media (hover: hover) and (pointer: fine) {
+    .sl-slip:hover { translate: 0 -4px; rotate: 0deg; }
+    .sl-badge:hover { translate: 0 -4px; filter: drop-shadow(0 18px 20px rgba(14, 13, 11, .32)); }
   }
+  html.motion .sl-slip[data-tear] { opacity: 0; visibility: hidden; }
+  /* reduced motion / no JS: nothing drifts; the window scrolls by hand and the loop copy is not shown */
+  html:not(.motion) .sl-view { overflow-y: auto; -webkit-mask-image: none; mask-image: none; }
+  html:not(.motion) .sl-copy--2 { display: none; }
+
   @media (min-width: 768px) and (max-width: 1279px) {
     .sl { padding: 110px 0 100px; }
-    .sl-h { margin-top: 12px; }
-    .sl-pile { height: 560px; margin-top: 40px; }
-    .sl-slip--a { left: 0; top: 0; width: min(640px, 92%); rotate: 2deg; }
-    .sl-slip--b { right: 0; top: 280px; width: min(520px, 80%); rotate: -2.5deg; }
-    .sl-stamp { right: 10px; top: 250px; width: 130px; height: 80px; rotate: 14deg; }
-    .sl-note { margin-top: 24px; }
+    .sl-in { grid-template-columns: 1fr; gap: 40px; }
+    .sl-side { padding-top: 0; }
+    .sl-view { height: 560px; }
   }
   @media (max-width: 767px) {
-    .sl { padding: 59px 0 66px; }
+    .sl { padding: 59px 0 60px; }
+    .sl-in { grid-template-columns: 1fr; gap: 28px; }
+    .sl-side { padding-top: 0; }
     .sl-h { margin-top: 10px; font-size: 34px; line-height: 1.06; }
-    .sl-pile { height: 453px; margin-top: 30px; }
-    .sl-slip { padding: 25px 22px 0; border-top-width: 5px; box-shadow: 0 10px 20px -6px rgba(0, 0, 0, .2); }
-    .sl-slip p { font-size: 22px; }
-    .sl-slip figcaption { margin-top: 16px; font-size: 11px; letter-spacing: .08em; }
-    .sl-slip--a { left: -6px; top: 0; width: 340px; height: 210px; rotate: 2deg; }
-    .sl-slip--b { left: 16px; top: 250px; width: 340px; height: 183px; rotate: -2deg; }
-    .sl-stamp { left: 264px; top: 220px; width: 96px; height: 60px; rotate: 14deg; }
-    .sl-note { margin-top: 20px; font-size: 13px; line-height: 14px; }
+    .sl-lead { margin-top: 14px; font-size: 15px; line-height: 23px; }
+    .sl-badge { width: 200px; height: 124px; margin-top: 24px; }
+    .sl-bv { font-size: 44px; }
+    .sl-note { margin-top: 16px; font-size: 13px; }
+    /* one row of slips you swipe */
+    .sl-view { display: flex; gap: 16px; height: auto; margin-inline: calc(-1 * var(--gutter)); padding: 8px var(--gutter) 18px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-mask-image: none; mask-image: none; scrollbar-width: none; }
+    .sl-col, .sl-track, .sl-copy { display: contents; }
+    .sl-copy--2 { display: none; }
+    .sl-slip { flex: 0 0 82%; scroll-snap-align: center; }
+    .sl-slip p { font-size: 19px; }
   }
 </style>
+<script>
+  // B18 drift: column A rises, column B sinks, ~16 px/s, one seamless loop (two copies). Hover or focus eases the speed to 0
+  // over ~0.6 s and back (never a jump). Runs only in view, only on >= 768 px, only under html.motion.
+  import { gsap } from 'gsap';
+  import { enter, tearIn } from '../../scripts/objects';
+  const view = document.querySelector<HTMLElement>('[data-slips]');
+  const html = document.documentElement;
+  if (view && html.classList.contains('motion')) {
+    enter(view, () => tearIn(Array.from(view.querySelectorAll<HTMLElement>('[data-tear]')), 0.12), 'top 85%');
+    const cols = Array.from(view.querySelectorAll<HTMLElement>('.sl-col')).map((c) => ({ track: c.querySelector<HTMLElement>('.sl-track')!, copy: c.querySelector<HTMLElement>('.sl-copy')!, dir: Number(c.dataset.dir) || 1, y: 0, h: 0 }));
+    const SPEED = 16; let v = SPEED; let target = SPEED; let inView = false;
+    const wide = window.matchMedia('(min-width: 768px)');
+    const measure = () => cols.forEach((c) => { c.h = c.copy.offsetHeight; if (c.dir > 0 && c.y === 0) c.y = -c.h; });
+    const write = () => cols.forEach((c) => { c.track.style.transform = `translate3d(0, ${c.y.toFixed(2)}px, 0)`; });
+    const tick = (_t: number, dtMs: number) => {
+      if (!inView || !wide.matches) return;
+      const dt = Math.min(dtMs, 64) / 1000;
+      v += (target - v) * Math.min(1, dt * 5);
+      cols.forEach((c) => { if (!c.h) return; c.y += c.dir * v * dt; if (c.y <= -c.h) c.y += c.h; if (c.y > 0) c.y -= c.h; });
+      write();
+    };
+    const pause = (on: boolean) => { target = on ? 0 : SPEED; };
+    view.addEventListener('pointerenter', () => pause(true));
+    view.addEventListener('pointerleave', () => pause(view.contains(document.activeElement)));
+    view.addEventListener('focusin', () => pause(true));
+    view.addEventListener('focusout', () => pause(view.matches(':hover')));
+    new IntersectionObserver(([e]) => { inView = e.isIntersecting; }).observe(view);
+    const reset = () => { cols.forEach((c) => { c.y = 0; c.track.style.transform = ''; }); if (wide.matches) { measure(); write(); } };
+    wide.addEventListener('change', reset);
+    window.addEventListener('resize', () => { if (wide.matches) measure(); });
+    document.fonts?.ready.then(() => { if (wide.matches) { measure(); write(); } });
+    if (wide.matches) { measure(); write(); }
+    gsap.ticker.add(tick);
+    (window as any).__slips = { cols, get v() { return v; } };
+  }
+</script>

@@ -1,28 +1,37 @@
 ---
-// "2.7 related" (Figma water-heaters 670:7700 y 4800 h 300, tan; mobile y 5352 h 292): RELATED label + three fitting links
-// (elbow / tee / union icons, Abril 24 underlined + arrow). Town links live in the footer and menus (QA 18 Nov: the extra
-// town row was not in Figma).
+// "More from Mike" (fix round 1 B19; was the "Related" band with three unlabelled pipe fittings, Figma water-heaters 2.7 /
+// drain-cleaning 3.7). One component on every service page: a short label and three clear cards, each a real page link with
+// a one-line description from PAGES-COPY (the family headlines of the services hub, sections 1.2-1.8). The fittings stay
+// only as small decoration in the card corner. Hover (fine pointers): the card lifts (`translate`), its rule and arrow run
+// (CSS transitions, ease-in-out 0.4 s). Entrance: the cards rise one after another (data-stagger).
 import Wave from '../../kit/Wave.astro';
-// `cap` = the drain-cleaning version (Figma 3.7, paper): cleanout-cap icons 56 / 36 px, Abril 28 / 22, paper band.
-interface Props { links: { name: string; href: string }[]; cap?: boolean }
+// `cap` = paper band (drain cleaning); otherwise tan.
+interface Props { links: { name: string; href: string; d?: string }[]; cap?: boolean }
 const { links, cap } = Astro.props;
+// One-line descriptions, word for word from PAGES-COPY (services hub family headlines and the emergency callout).
+const DESC: Record<string, string> = {
+  '/drain-cleaning': 'Slow drain? Backed-up line? Let’s clear it.',
+  '/water-heaters': 'Diagnosis matters. Especially on a water heater.',
+  '/emergency-plumber': 'Water where it shouldn’t be? Open 24 hours (Yelp).',
+  '/services': 'Everything on the flyer. And more.',
+};
 const icons = ['elbow', 'tee', 'union'];
 ---
-<nav class:list={['rf sv-sec', cap ? 'sv-paper rf--cap' : 'sv-tan']} aria-label="Related services" data-m-section>
+<nav class:list={['rf sv-sec', cap ? 'sv-paper rf--cap' : 'sv-tan']} aria-labelledby="rf-k" data-m-section>
   <Wave fill={cap ? 'var(--paper)' : 'var(--tan)'} top={-34} topM={-24} />
   <div class="wrap rf-in">
-    <p class="rf-k" data-t="1">Related</p>
-    <ul class="rf-list" role="list" data-t="2" data-stagger>
+    <h2 id="rf-k" class="rf-k" data-t="1"><svg viewBox="0 0 20 15" aria-hidden="true"><path d="M3.1.8h13.3l2.4 6.5-2.4 6.5H3.1L.8 7.3z" /></svg>More from Mike</h2>
+    <ul class="rf-list" role="list" data-t="4" data-stagger>
       {links.map((l, i) => (
         <li><a class="rf-a" href={l.href}>
-          {cap ? <span class="rf-ic rf-cap" aria-hidden="true"><i></i></span> :
+          <span class="rf-n">{l.name}</span>
+          <span class="rf-d">{l.d ?? DESC[l.href] ?? ''}</span>
+          <span class="rf-go" aria-hidden="true"><i></i>See the page<svg viewBox="0 0 18 10" width="18" height="10"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg></span>
           <span class:list={['rf-ic', `rf-ic--${icons[i % 3]}`]} aria-hidden="true">
-            {icons[i % 3] === 'elbow' && <svg viewBox="0 0 60 60" width="60" height="60"><path d="M7 53V23C7 12.3 12.3 7 23 7H53" fill="none" stroke="currentColor" stroke-width="14" /></svg>}
-            {icons[i % 3] === 'tee' && <><i class="rf-t1"></i><i class="rf-t2"></i></>}
-            {icons[i % 3] === 'union' && <><i class="rf-u1"></i><svg viewBox="0 0 32 36" width="32" height="36"><path d="M4.16 0H27.84L32 18 27.84 36H4.16L0 18Z" fill="currentColor" /></svg></>}
-            <svg class="rf-m" viewBox="0 0 22 16" width="22" height="16"><path d="M2.86 0H19.14L22 8 19.14 16H2.86L0 8Z" fill="currentColor" /></svg>
-          </span>}
-          <span class="rf-n"><u>{l.name}</u>&nbsp;&nbsp;<span aria-hidden="true">→</span></span>
+            {icons[i % 3] === 'elbow' && <svg viewBox="0 0 60 60"><path d="M7 53V23C7 12.3 12.3 7 23 7H53" fill="none" stroke="currentColor" stroke-width="12" /></svg>}
+            {icons[i % 3] === 'tee' && <svg viewBox="0 0 60 60"><path d="M4 18H56M30 18V56" fill="none" stroke="currentColor" stroke-width="12" /></svg>}
+            {icons[i % 3] === 'union' && <svg viewBox="0 0 60 60"><path d="M2 30H58" stroke="currentColor" stroke-width="12" /><path d="M20 14H40L46 30 40 46H20L14 30Z" fill="currentColor" /></svg>}
+          </span>
         </a></li>
       ))}
     </ul>
@@ -30,46 +39,38 @@ const icons = ['elbow', 'tee', 'union'];
 </nav>
 
 <style>
-  .rf { padding: 96px 0 72px; }
-  .rf-k { margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
-  .rf-list { display: grid; grid-template-columns: repeat(3, 380px); column-gap: 40px; margin: 23px 0 0; padding: 0; list-style: none; }
-  .rf-a { display: flex; align-items: flex-start; gap: 0; height: 80px; color: var(--ink); text-decoration: none; }
-  .rf-ic { position: relative; flex: none; width: 80px; height: 80px; color: var(--ink); }
-  .rf-ic--elbow svg { position: absolute; left: -7px; top: -1px; }
-  .rf-t1 { position: absolute; left: 0; top: 24px; width: 58px; height: 16px; border-radius: 8px; background: currentColor; }
-  .rf-t2 { position: absolute; left: 21px; top: 24px; width: 16px; height: 40px; border-radius: 8px; background: currentColor; }
-  .rf-u1 { position: absolute; left: 0; top: 28px; width: 30px; height: 16px; border-radius: 3px; background: currentColor; }
-  .rf-ic--union svg:not(.rf-m) { position: absolute; left: 26px; top: 18px; }
-  .rf-m { display: none; }
-  .rf-n { margin-top: 12px; font-family: var(--f-display); font-size: 24px; line-height: 32px; white-space: nowrap; }
-  .rf-n u { text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
-  .rf-a:hover u { text-decoration-thickness: 3px; }
-  .rf-a > .rf-ic { transition: transform .35s var(--ease-out); } .rf-a:hover > .rf-ic { transform: translateX(4px); }
-  .rf--cap { padding-top: 90px; }
-  .rf--cap .rf-list { margin-top: 29px; }
-  .rf--cap .rf-a { height: 56px; align-items: flex-start; }
-  .rf--cap .rf-ic.rf-cap { position: relative; width: 56px; height: 56px; margin: -10px 20px 0 0; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 50%; background: var(--bone); }
-  .rf-cap i { position: absolute; left: 17px; top: 17px; width: 18px; height: 18px; border-radius: 2px; background: var(--ink); }
-  .rf--cap .rf-n { margin-top: 0; font-size: 28px; line-height: 38px; }
-
-  @media (max-width: 1279px) {
-    .rf-list { grid-template-columns: 1fr; row-gap: 10px; }
-    .rf-a { height: auto; align-items: center; }
-    .rf-ic { width: 34px; height: 16px; }
-    .rf-ic > :not(.rf-m) { display: none; }
-    .rf-m { display: block; }
-    .rf-n { margin-top: 0; white-space: normal; }
-    .rf--cap .rf-a { height: 36px; align-items: center; }
-    .rf--cap .rf-cap > i { display: block; }
-    .rf--cap .rf-ic.rf-cap { width: 36px; height: 36px; margin: 0 12px 0 0; border-width: 1.5px; }
-    .rf--cap .rf-cap i { left: 10.5px; top: 10.5px; width: 12px; height: 12px; }
-    .rf--cap .rf-n { margin-top: 0; font-size: 22px; line-height: 30px; }
+  .rf { padding: 96px 0 80px; }
+  .rf-k { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+  .rf-k svg { width: 18px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+  .rf-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 24px 0 0; padding: 0; list-style: none; }
+  .rf-a { position: relative; display: grid; align-content: start; height: 100%; min-height: 188px; box-sizing: border-box; padding: 26px 28px 22px; overflow: hidden;
+    background: var(--bone); color: var(--ink); text-decoration: none; border-top: 5px solid var(--ink); box-shadow: 0 10px 22px -12px rgba(14, 13, 11, .35);
+    transition: translate .4s cubic-bezier(.45, 0, .55, 1), box-shadow .4s cubic-bezier(.45, 0, .55, 1), border-color .4s cubic-bezier(.45, 0, .55, 1); }
+  .rf--cap .rf-a { background: #fff9ee; }
+  .rf-n { position: relative; z-index: 1; font-family: var(--f-display); font-size: 28px; line-height: 1.1; }
+  .rf-d { position: relative; z-index: 1; margin-top: 10px; max-width: 30ch; font-size: 15px; line-height: 22px; color: var(--ink-2); }
+  .rf-go { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
+  .rf-go i { display: block; width: 18px; height: 1.5px; background: currentColor; transform-origin: 0 50%; transition: scale .4s cubic-bezier(.45, 0, .55, 1); }
+  .rf-go svg { transition: translate .4s cubic-bezier(.45, 0, .55, 1); }
+  .rf-ic { position: absolute; right: -10px; bottom: -10px; width: 74px; height: 74px; color: rgba(14, 13, 11, .09); transition: rotate .5s cubic-bezier(.45, 0, .55, 1); }
+  .rf-ic svg { width: 100%; height: 100%; overflow: visible; }
+  .rf-a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+  @media (hover: hover) and (pointer: fine) {
+    .rf-a:hover { translate: 0 -6px; box-shadow: 0 22px 34px -16px rgba(14, 13, 11, .45); border-color: var(--red); }
+    .rf-a:hover .rf-go i { scale: 2.2 1; }
+    .rf-a:hover .rf-go svg { translate: 20px 0; }
+    .rf-a:hover .rf-ic { rotate: -12deg; }
   }
-  @media (min-width: 768px) and (max-width: 1279px) { .rf { padding: 80px 0 72px; } .rf-list { grid-template-columns: repeat(2, auto); column-gap: 48px; justify-content: start; } }
+
+  @media (min-width: 768px) and (max-width: 1279px) { .rf { padding: 80px 0 72px; } .rf-n { font-size: 24px; } }
   @media (max-width: 767px) {
     .rf { padding: 56px 0 56px; }
     .rf-k { font-size: 13px; line-height: 19px; }
-    .rf-list { margin-top: 17px; row-gap: 18px; }
-    .rf--cap .rf-list { margin-top: 15px; }
+    .rf-list { grid-template-columns: 1fr; gap: 14px; margin-top: 18px; }
+    .rf-a { min-height: 0; padding: 18px 20px 16px; }
+    .rf-n { font-size: 22px; }
+    .rf-d { margin-top: 6px; font-size: 14px; line-height: 20px; }
+    .rf-go { margin-top: 12px; }
+    .rf-ic { width: 56px; height: 56px; }
   }
 </style>

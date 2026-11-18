@@ -90,10 +90,12 @@ Runs only in view and under `html.motion`; reduced motion = static first copy. C
   ease back while it shrinks (`.acc-off`: styled closed, still rendered). The opening answer fades in after 0.15 s.
   A click mid-animation re-targets from the current heights, so the latest click wins.
 - Title layers (fix round 2, review 11): a title whose open look is another face or colour (Home FAQ: sans ink on bone ->
-  serif bone on ink) carries `data-acc-title`. During a switch a snapshot of its old look (`.acc-ghost`, aria-hidden,
-  absolute at the old place) and the title in its new look are both at full opacity; a 70 ms left-to-right wipe hands one
-  over to the other while the row's background passes its middle, where ink and bone text both read on it (>= 3:1).
-  No font jump at frame 0, no half-faded title. The ghost is removed at the end or on a re-target.
+  serif bone on ink) carries `data-acc-title`; its row switches as a swap (`.acc-swap`, review 11 re-look), inside the
+  same 0.7 s height timeline: 0 -> 0.15 s the summary text fades out on the old background (the title as a snapshot of its
+  old look, `.acc-ghost`, aria-hidden, absolute at the old place; a closing answer is hidden at once); 0.15 -> 0.35 s the
+  background switches (CSS 0.2 s) with no text shown, text colours step at 0.25 s; 0.35 -> 0.6 s the summary text fades in
+  on the new background (opening answer 0.35 -> 0.7 s). Two title layers are never visible together and no text sits on
+  the mid-grey. The ghost is removed at the end or on a re-target (latest click wins).
 - `data-acc="pop"`: a floating dropdown list fades and slides (0.5 s). It closes on Escape or an outside click.
 - `aria-expanded` on the summary mirrors the state. Reduced motion (no `html.motion`) gives the instant native toggle.
 - Component CSS: style the open look on `[open]:not(.acc-off)`.
@@ -186,7 +188,7 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 | `details[data-acc]` | `height`, `overflow`, `open`, classes `.acc-off` / `.acc-anim`, `name` (held off during a switch) | `accordion.ts` |
 | `details[data-acc]` body children | `opacity` (row); `opacity`, `visibility`, `transform` (pop) | `accordion.ts` |
 | `summary` of a `[data-acc]` row | `aria-expanded` | `accordion.ts` |
-| `[data-acc-title]`, `.acc-ghost` | `clip-path`, `transition` (during a switch) | `accordion.ts` |
+| `[data-acc-title]`, `.acc-ghost`, a swap row's summary children | `opacity`, `transition` (during a switch) | `accordion.ts` |
 | colours of an accordion row | `background-color`, `color`, `border-color`, `fill`, `stroke`, … | CSS transitions (`kit.css`) |
 | `[data-t]` entrance items, parallax | `opacity`, `transform` | `motion.ts` |
 | `[data-marquee-track]` | `transform` (x) | `marquee.ts` |

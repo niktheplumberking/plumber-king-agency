@@ -24,6 +24,15 @@ details[data-acc].acc-anim, details[data-acc].acc-anim * {
   transition-property: background-color, color, border-color, box-shadow, fill, stroke, font-size, line-height, letter-spacing, padding;
   transition-duration: .7s; transition-timing-function: cubic-bezier(.45, 0, .55, 1);
 }
+/* A swap row (data-acc-title, accordion.ts header; review 11 re-look): its text is faded out from 0 to 0.15 s and back in
+   from 0.35 s, so the background / band switches in between (0.15 -> 0.35 s) and text colours step at 0.25 s, while no
+   text is shown. Sizes keep the 0.7 s height tween. */
+details[data-acc].acc-anim.acc-swap, details[data-acc].acc-anim.acc-swap * {
+  transition: background-color .2s cubic-bezier(.45, 0, .55, 1) .15s, box-shadow .2s cubic-bezier(.45, 0, .55, 1) .15s,
+    color 0s linear .25s, border-color 0s linear .25s, fill 0s linear .25s, stroke 0s linear .25s,
+    font-size .7s cubic-bezier(.45, 0, .55, 1), line-height .7s cubic-bezier(.45, 0, .55, 1),
+    letter-spacing .7s cubic-bezier(.45, 0, .55, 1), padding .7s cubic-bezier(.45, 0, .55, 1);
+}
 
 /* ---------- Hover (fix round 1, B11; kit/README.md "Hover"). Every clickable object answers a fine pointer. Lifts use the
    individual `translate` / `rotate` / `scale` properties (never `transform`), so they add to entrances, parallax and idle.

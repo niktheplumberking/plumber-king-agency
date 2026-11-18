@@ -10,11 +10,13 @@
 // components only add `:not(.acc-off)` to their [open] rules. aria-expanded on the summary mirrors the state.
 // Reduced motion (no html.motion): instant, native toggle.
 // Title layers (fix round 2, review 11): a title whose open look is another face / colour (e.g. Home FAQ: sans ink on bone ->
-// serif bone on ink) carries `data-acc-title`. During a switch it is drawn twice: a snapshot of the old look (absolute, at
-// its old place) and the title in its new look. Both stay at full opacity (a half-faded title is what lost contrast); a
-// quick left-to-right wipe (70 ms) hands the old layer over to the new one while the background passes its middle, in the
-// band where both ink and bone text read on it at >= 3:1 (measured: ink alpha 0.45 -> 0.66 of the row's colour tween, so
-// an opening row wipes at 0.37 s, a closing one at 0.33 s). No frame shows the font swap or a half-faded title.
+// serif bone on ink) carries `data-acc-title`; its row then switches as a "swap" (.acc-swap, review 11 re-look):
+//   0    -> 0.15 s  the summary's text fades out on the OLD background (the title as a snapshot of its old look, absolute
+//                   at its old place); a closing row's answer is hidden at once (its summary changes size under it)
+//   0.15 -> 0.35 s  the background / band switches (CSS, 0.2 s) with NO text on it; text colours step at 0.25 s
+//   0.35 -> 0.6 s   the summary's text (title in its new look) fades in on the NEW background; an opening answer 0.35 -> 0.7 s
+// So two title layers are never visible together, and no text ever sits on the mid-grey of the background tween.
+// The height tween stays one 0.7 s ease-in-out timeline; the latest click still wins.
 import { gsap } from 'gsap';
 
 const html = document.documentElement;
@@ -35,6 +37,8 @@ const aria = (d: Row) => sumOf(d)?.setAttribute('aria-expanded', String(isOpen(d
 const running = new Map<Row[], gsap.core.Timeline>();
 const ghosts = new Map<Row, HTMLElement>();
 const titleOf = (d: Row) => sumOf(d)?.querySelector<HTMLElement>('[data-acc-title]') ?? null;
+/** The summary's own children (number, title, toggle), the ghost excluded: what a swap fades out and in. */
+const textOf = (d: Row) => (Array.from(sumOf(d)?.children ?? []) as HTMLElement[]).filter((c) => !c.classList.contains('acc-ghost'));
 const SNAP = ['fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'lineHeight', 'letterSpacing', 'textTransform', 'color', 'textAlign'] as const;
 /** The title as it looks now: a fixed copy of its old look, laid exactly over its old place in the summary. */
 function snapshot(d: Row): { el: HTMLElement; css: Partial<CSSStyleDeclaration>; box: DOMRect; host: DOMRect } | null {
@@ -44,7 +48,7 @@ function snapshot(d: Row): { el: HTMLElement; css: Partial<CSSStyleDeclaration>;
   (css as any).opacity = cs.opacity;
   return { el: t, css, box: t.getBoundingClientRect(), host: sumOf(d).getBoundingClientRect() };
 }
-function dropGhost(d: Row) { ghosts.get(d)?.remove(); ghosts.delete(d); const t = titleOf(d); if (t) gsap.set(t, { clearProps: 'opacity,transition,clipPath' }); }
+function dropGhost(d: Row) { ghosts.get(d)?.remove(); ghosts.delete(d); const t = titleOf(d); if (t) gsap.set(t, { clearProps: 'transition,clipPath' }); }
 
 /** Open `target` (or close it when it is open) inside its group, as one continuous timeline. */
 function toggleRow(target: Row) {
@@ -71,6 +75,7 @@ function toggleRow(target: Row) {
   // 3. the visual end state, with colour / size transitions on (closing rows stay rendered as .acc-off until the end)
   moving.forEach((d) => {
     d.classList.add('acc-anim');
+    d.classList.toggle('acc-swap', !!snaps.get(d));
     if (want.get(d)) { d.open = true; d.classList.remove('acc-off'); } else if (d.open) d.classList.add('acc-off');
     aria(d);
   });
@@ -78,7 +83,7 @@ function toggleRow(target: Row) {
     onComplete: () => {
       moving.forEach((d) => {
         if (!want.get(d)) { d.open = false; d.classList.remove('acc-off'); }
-        d.classList.remove('acc-anim'); gsap.set([d, ...bodyOf(d)], { clearProps: 'height,opacity,overflow' }); dropGhost(d); aria(d);
+        d.classList.remove('acc-anim', 'acc-swap'); gsap.set([d, ...bodyOf(d), ...textOf(d)], { clearProps: 'height,opacity,overflow' }); dropGhost(d); aria(d);
       });
       group.forEach((d) => { if (d.dataset.accName) d.setAttribute('name', d.dataset.accName); });
       running.delete(key);
@@ -91,26 +96,26 @@ function toggleRow(target: Row) {
     // body computes opacity 1, which would make the fade a no-op).
     const s0 = startState.get(d)!; const inline = body[0]?.style.opacity;
     const from = inline ? parseFloat(inline) : s0.open && !s0.off ? 1 : 0;
-    if (want.get(d)) tl.fromTo(body, { opacity: from }, { opacity: 1, duration: DUR - 0.15, ease: 'sine.inOut', immediateRender: true }, 0.15);
-    else tl.to(body, { opacity: 0, duration: 0.3, ease: 'sine.inOut' }, 0);
-    // Title layers: one wipe line in summary coordinates; left of it the new look, right of it the old one (no fades).
     const s = snaps.get(d);
-    if (s) {
+    if (!s) {
+      if (want.get(d)) tl.fromTo(body, { opacity: from }, { opacity: 1, duration: DUR - 0.15, ease: 'sine.inOut', immediateRender: true }, 0.15);
+      else tl.to(body, { opacity: 0, duration: 0.3, ease: 'sine.inOut' }, 0);
+    } else {
+      // Swap (see the header): out on the old background, the background alone, in on the new one.
+      if (want.get(d)) {
+        tl.fromTo(body, { opacity: from }, { opacity: 0, duration: from ? 0.15 : 0.001, ease: 'sine.out', immediateRender: true }, 0)
+          .fromTo(body, { opacity: 0 }, { opacity: 1, duration: DUR - 0.35, ease: 'sine.inOut', immediateRender: false }, 0.35);
+      }
+      else tl.set(body, { opacity: 0 }, 0);
+      const kids = textOf(d).filter((k) => k !== s.el);
       const g = s.el.cloneNode(true) as HTMLElement;
       g.removeAttribute('data-acc-title'); g.removeAttribute('id'); g.setAttribute('aria-hidden', 'true'); g.classList.add('acc-ghost');
       Object.assign(g.style, s.css, { position: 'absolute', margin: '0', left: `${s.box.left - s.host.left}px`, top: `${s.box.top - s.host.top}px`, width: `${s.box.width}px`, transition: 'none', pointerEvents: 'none', textDecoration: 'none' });
       sumOf(d).append(g); ghosts.set(d, g);
       gsap.set(s.el, { transition: 'none' });
-      const host = sumOf(d).getBoundingClientRect(); const nb = s.el.getBoundingClientRect();
-      const gx = s.box.left - s.host.left, gw = s.box.width, nx = nb.left - host.left, nw = nb.width;
-      const x0 = Math.min(gx, nx), x1 = Math.max(gx + gw, nx + nw);
-      const wipe = { x: x0 };
-      const paint = () => {
-        g.style.clipPath = `inset(-30% 0 -30% ${Math.max(0, wipe.x - gx)}px)`;
-        s.el.style.clipPath = `inset(-30% ${Math.max(0, nx + nw - wipe.x)}px -30% 0)`;
-      };
-      paint();
-      tl.to(wipe, { x: x1, duration: 0.07, ease: 'none', onUpdate: paint }, want.get(d) ? 0.37 : 0.33);
+      tl.fromTo(g, { opacity: parseFloat(s.css.opacity as string) || 0 }, { opacity: 0, duration: 0.15, ease: 'sine.out', immediateRender: true }, 0)
+        .fromTo(s.el, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'sine.inOut', immediateRender: true }, 0.35);
+      if (kids.length) tl.to(kids, { opacity: 0, duration: 0.15, ease: 'sine.out' }, 0).to(kids, { opacity: 1, duration: 0.25, ease: 'sine.inOut' }, 0.35);
     }
   });
   tl.eventCallback('onInterrupt', () => moving.forEach(dropGhost));

@@ -28,10 +28,15 @@ const SLIDES = [
 });
 const TICKETS = [
   { n: '02', q: '“He is an excellent communicator.”', by: 'Bruce H.', t: 'toilet install' },
-  { n: '03', q: '“Upfront and honest with me on pricing.”', by: 'Sal C.', t: 'slab leak, Corona' },
-  { n: '04', q: '“Reasonably priced, detailed & patient.”', by: 'Eleanor M.', t: '3 toilets + regulator', d: true },
+  { n: '03', q: '“He was upfront and honest with me on pricing”', by: 'Sal C.', t: 'slab leak, Corona' },
+  { n: '04', q: '“He\'s reasonably priced, detailed & patient.”', by: 'Eleanor M.', t: '3 toilets + regulator', d: true },
   { n: '05', q: '“He arrived on time and installed it quickly.”', by: 'Jack D.', t: 'garbage disposal, Murrieta' },
-];
+].map((t) => {
+  // QA C9: every ticket quote is word for word from reviews.ts (checked at build, like the slides)
+  const r = REVIEWS.find((x) => x.name === t.by);
+  if (!r || !r.text.includes(t.q.slice(1, -1))) throw new Error(`Reviews: ticket quote for ${t.by} is not word for word`);
+  return t;
+});
 const TALLY = [
   { n: 6, l: 'Fair price', red: true },
   { n: 4, l: 'Communication' },

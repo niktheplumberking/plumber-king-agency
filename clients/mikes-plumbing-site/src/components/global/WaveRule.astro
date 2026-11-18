@@ -3,14 +3,24 @@
 // Colour = `color` (stroke); `bg` fills the nut so the line stops at its edges. Stretches to its box width (1200 at 1440).
 interface Props { color?: string; bg?: string; class?: string; nut?: number }
 const { color = '#6B6455', bg = 'var(--ink)', class: cls, nut = 50 } = Astro.props;
+// Phones: Figma's own mobile rule (351 x 10, 8 half-waves of ~44 px), so the wave keeps its gentle period instead of the
+// desktop path squeezed into 350 px (QA 18 Nov: it read as a tight zigzag).
+const dm = 'M0.27478 4.7998C14.8581 -0.533529 29.4414 -0.533529 44.0248 4.7998C58.6081 10.1331 73.1914 10.1331 87.7748 4.7998C102.358 -0.533529 116.941 -0.533529 131.525 4.7998C146.108 10.1331 160.691 10.1331 175.275 4.7998C189.858 -0.533529 204.441 -0.533529 219.025 4.7998C233.608 10.1331 248.191 10.1331 262.775 4.7998C277.358 -0.533529 291.941 -0.533529 306.525 4.7998C321.108 10.1331 335.691 10.1331 350.275 4.7998';
 const d = 'M0 8 Q33.5 -2 67 8 T134 8 T201 8 T268 8 T335 8 T402 8 T469 8 T536 8 T603 8 T670 8 T737 8 T804 8 T871 8 T938 8 T1005 8 T1072 8 T1139 8 T1206 8';
 ---
 <div class:list={['wr', cls]} style={`--wr-c:${color};--wr-bg:${bg};--wr-n:${nut}%`} aria-hidden="true">
   <svg class="wr-l" viewBox="0 0 1200 16" preserveAspectRatio="none"><path d={d} fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke" /></svg>
+  <svg class="wr-l wr-lm" viewBox="0 0 351 10" preserveAspectRatio="none"><path d={dm} fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke" /></svg>
   <svg class="wr-n" viewBox="0 0 36 20"><path d="M9 1h18l8 9-8 9H9L1 10z" fill="var(--wr-bg)" stroke="currentColor" stroke-width="1.5" /></svg>
 </div>
 <style>
   .wr { position: relative; height: 16px; color: var(--wr-c); }
   .wr-l { display: block; width: 100%; height: 16px; }
   .wr-n { position: absolute; left: var(--wr-n); top: -2px; width: 36px; height: 20px; transform: translateX(-50%); }
+  .wr-lm { display: none; }
+  @media (max-width: 767px) {
+    .wr-l:not(.wr-lm) { display: none; }
+    .wr-lm { display: block; height: 10px; position: relative; top: 3px; }
+    .wr-n { top: -1px; width: 28px; height: 18px; }
+  }
 </style>

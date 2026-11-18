@@ -136,6 +136,8 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
   .rc-F .rc-fig, .rc-W .rc-fig { padding-bottom: 37px; }
   .rc-F .rc-fig > .rc-by, .rc-W .rc-fig > .rc-by { margin-bottom: 0; }
   .rc-F .rc-tag, .rc-W .rc-tag { position: absolute; right: 32px; top: 40px; margin: 0; }
+  /* QA 18 Nov: on the two-column cards the tag sat on the second column's first line; it gets its own row (top right). */
+  .rc-W .rc-tag { position: static; order: -1; align-self: flex-end; margin: -27px 0 14px; }
   .rl-tally { margin-top: 64px; font-size: 15px; line-height: 22px; color: #CAC4B7; }
   .rl-tally a { margin-left: 4px; font-weight: 600; color: var(--tan); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
   .rl-tally a:hover { color: var(--paper); }

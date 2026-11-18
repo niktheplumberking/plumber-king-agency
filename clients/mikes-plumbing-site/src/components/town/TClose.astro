@@ -62,7 +62,7 @@ const up = t.name.toUpperCase();
   </div>
 </section>
 <style>
-  .tc { position: relative; height: 700px; background: var(--paper); }
+  .tc { position: relative; height: 700px; background: var(--paper); overflow-x: clip; } /* QA 18 Nov: the quote slides in from +80 px and widened the page at 1024 */
   .tc-grid { position: relative; height: 100%; }
   .tc-mapwrap { position: absolute; left: 0; top: 90px; width: 672px; margin: 0; }
   .tc-map { position: relative; aspect-ratio: 672 / 480; overflow: hidden; background: #E3DAC6; box-shadow: 0 24px 40px rgba(60, 48, 25, .22); }

@@ -105,6 +105,12 @@ const up = t.name.toUpperCase();
     .tj-box { width: 18px; height: 18px; } .tj-box svg { width: 18px; height: 18px; }
     .tj-q { margin: 10px 20px 0; }
     .tj-q p { font-size: 15px; line-height: 24px; background: none; padding: 0; }
-    .tj-stamp { right: auto; left: 160px; bottom: -14px; width: 150px; height: 90px; }
+    /* QA 18 Nov: Figma mobile stamp = one 2.5 px outline, CORONA Oswald Bold 24 / ON YELP 9 (12 % tracking), turned 12deg,
+       centred ~(258, card bottom - 45). */
+    .tj-stamp { right: auto; left: 183px; bottom: 3px; width: 150px; height: 90px; transform: rotate(12deg); }
+    .tj-stamp svg path + path { display: none; }
+    .tj-stamp svg path:first-child { stroke-width: 2.5; }
+    .tj-st-t { font-weight: 700; font-size: min(24px, calc(150px / var(--n))); letter-spacing: .12em; }
+    .tj-st-s { font-size: 9px; letter-spacing: .12em; margin-top: 2px; }
   }
 </style>

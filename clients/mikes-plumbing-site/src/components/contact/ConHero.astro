@@ -121,7 +121,7 @@ const hex = 'M6.16.7h31.08l5.46 16-5.46 16H6.16L.7 16.7z';
   .ch-chip { position: relative; cursor: pointer; }
   .ch-chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
   .ch-chip span { --cp: polygon(17px 0, calc(100% - 17px) 0, 100% 50%, calc(100% - 17px) 100%, 17px 100%, 0 50%);
-    position: relative; display: inline-flex; align-items: center; height: 36px; padding: 0 21.5px; font-weight: 600; font-size: 13.5px; line-height: 15px; color: var(--ink); background: rgba(74, 68, 58, .6); clip-path: var(--cp); }
+    position: relative; display: inline-flex; align-items: center; height: 36px; padding: 0 20px; font-weight: 600; font-size: 13.5px; line-height: 15px; color: var(--ink); background: rgba(74, 68, 58, .6); clip-path: var(--cp); }
   .ch-chip span::before { content: ''; position: absolute; z-index: -1; inset: 1.1px; background: #fff; clip-path: polygon(16.6px 0, calc(100% - 16.6px) 0, 100% 50%, calc(100% - 16.6px) 100%, 16.6px 100%, 0 50%); transition: background-color var(--dur-2); }
   .ch-chip span { isolation: isolate; }
   .ch-chip input:checked + span { background: var(--ink); color: var(--tan); } .ch-chip input:checked + span::before { background: var(--ink); }

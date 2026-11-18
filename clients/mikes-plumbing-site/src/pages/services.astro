@@ -11,7 +11,6 @@ import House from '../components/services/House.astro';
 import Commercial from '../components/services/Commercial.astro';
 import Callout from '../components/services/Callout.astro';
 import FinalCta from '../components/services/FinalCta.astro';
-import Related from '../components/services/kit/Related.astro';
 import { serviceSchema } from '../lib/schema';
 import { SITE } from '../data/site';
 const description = `Drains, sewer lines, hydro jetting, leaks, water heaters, toilets, sinks and faucets. Family owned in Riverside. Free estimate: ${SITE.phone}.`;
@@ -28,6 +27,5 @@ const description = `Drains, sewer lines, hydro jetting, leaks, water heaters, t
   <Commercial />
   <Callout />
   <FinalCta />
-  <Related current="/services" />
 </Base>
 <script>import '../components/services/kit/scrub';</script>

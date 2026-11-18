@@ -24,7 +24,7 @@ import Img from '../ui/Img.astro';
   </div>
 </section>
 <style>
-  .ah { position: relative; height: 920px; background: var(--paper); }
+  .ah { position: relative; height: 920px; background: var(--paper); overflow-x: clip; }
   .ah-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
   .ah-halo, .ah-halo2, .ah-halo-m { position: absolute; fill: none; stroke: var(--tan); stroke-linejoin: round; }
   .ah-halo { left: 330px; top: 80px; width: 782px; height: 542px; stroke-width: 1.5; }
@@ -60,6 +60,8 @@ import Img from '../ui/Img.astro';
     .ah-cap { margin-top: 12px; font-size: 8px; line-height: 12px; }
     .ah-tape { display: none; }
   }
+  /* QA 18 Nov: below 390 the 96 px "EST 2025" scales with the width (it set a 380 px page width at 360). */
+  @media (max-width: 389px) { .ah-est { font-size: 24.6vw; line-height: 24.6vw; } }
   @media (min-width: 768px) and (max-width: 1279px) {
     .ah { padding-top: 56px; }
     .ah-halo-m { top: 30px; width: 480px; height: 346px; margin-left: -240px; }

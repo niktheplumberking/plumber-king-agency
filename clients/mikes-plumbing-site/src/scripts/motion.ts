@@ -96,6 +96,9 @@ function effect(t: HTMLElement, fx: Fx, hero: boolean, i = 0, dur?: number): gsa
         // QA 18 Nov: SplitText turns every <br> into a line break, even one hidden by CSS at this width (`br { display: none }`
         // on phones), so the split headline had one line more than the real one and the page jumped (CLS) on revert. Hidden
         // <br>s are parked as empty placeholders during the split and put back after the revert.
+        // A block that holds more than text (a card with a logo, a button, other [data-t] items) is not split: splitting and
+        // reverting it rebuilds its children, so their own entrances would point at detached nodes. It rises whole.
+        if (t.querySelector('img, picture, svg, a, button, input, [data-t]')) { go({ y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1 }); break; }
         const parked: string[] = [];
         $$('br', t).forEach((br) => { if (getComputedStyle(br).display !== 'none') return; const s = document.createElement('span'); s.setAttribute('data-m-br', String(parked.length)); parked.push(br.outerHTML); br.replaceWith(s); });
         // The split must not resize the headline (a shrink-wrapped or centred H1 narrows to its widest line, and the line
@@ -253,9 +256,10 @@ function onScroll(tl: gsap.core.Timeline, trigger: Element, start: string, above
   // y is subtracted at every refresh (0 once they have played).
   const [edge, at] = start.split(' ');
   const hostY = () => { let d = 0; for (let a = trigger.parentElement; a && a !== document.body; a = a.parentElement) d += Number(gsap.getProperty(a, 'y')) || 0; return d; };
-  const st = ScrollTrigger.create({ trigger, start: () => { const d = Math.round(hostY()); return d ? `${edge}${d > 0 ? '-=' : '+='}${Math.abs(d)} ${at}` : start; }, once: true, onEnter: () => { pending.delete(st); tl.play(); } });
+  let fired = false; // onEnter can run inside create() (already past the start): `st` is not assigned yet then
+  const st = ScrollTrigger.create({ trigger, start: () => { const d = Math.round(hostY()); return d ? `${edge}${d > 0 ? '-=' : '+='}${Math.abs(d)} ${at}` : start; }, once: true, onEnter: (self) => { fired = true; pending.delete(self); tl.play(); } });
   triggers.push(st);
-  pending.set(st, { tl, trigger });
+  if (!fired) pending.set(st, { tl, trigger });
 }
 
 /* QA 18 Nov (frame sampler): when the scroll STOPS with an element already on screen but still below its trigger line (the

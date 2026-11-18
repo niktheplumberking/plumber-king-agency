@@ -85,6 +85,38 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
   motion.
 - `finePointer()`: hover effects run only on `(hover: hover) and (pointer: fine)`.
 
+### `data-idle`: put an idle gesture on an object (any builder may add it, no script needed)
+`<svg|img|div data-idle="GESTURE" [data-idle-origin="50% 0%"] [data-idle-priority="N"]>` on the **object itself, never on
+text**. `idle.ts` collects every `[data-idle]` at boot (and `registerIdle()` adds custom ones). Every 5-7 s (random) it
+plays ONE gesture on ONE element that is at least half in view, picking the lowest priority number first and never the same
+element twice in a row. Paused while scrolling, on hover, on form focus, when the tab is hidden and under reduced motion.
+
+The gesture runs on the Web Animations API with `composite: 'add'` on the **individual CSS properties** `rotate`, `scale`,
+`translate`: it adds on top of whatever `transform` an entrance, a parallax or a scrub writes, so it never fights them and
+always ends exactly where it started. Do not put `data-idle` on an element whose own `rotate`/`scale`/`translate` is
+animated by someone else (put it on a wrapper or inner child).
+
+| `data-idle` | Gesture (duration) | Default priority | For |
+|---|---|---|---|
+| `shake` | rotate +-4 deg x3 with a small x jiggle (0.6 s) | 1 | the black "5.0 · 20 reviews on Yelp" badge |
+| `thump` | scale 1 -> 1.1 -> 0.97 -> 1 (0.5 s) | 2 | stamps |
+| `nut` | rotate +60 deg, ease-in-out (0.7 s); a hexagon ends looking identical | 3 | hex nuts |
+| `valve` | rotate +90 deg, ease-in-out (0.8 s) | 4 | the red valve wheel |
+| `drip` | falls 16 px and fades, then reappears at the top (0.7 s) | 5 | drips |
+| `twitch` | rotate +6 / -3 / 0 deg (0.5 s) | 6 | dial / gauge needles (set `data-idle-origin` to the pivot) |
+| `sway` | rotate +3 / -2 / 0 deg from the top centre (0.8 s) | 7 | hanging tags, signs |
+
+`data-idle-origin` sets the `transform-origin` for the gesture (default: `center` for nut/valve/thump/shake, `50% 0%` for
+sway). SVG children: the scheduler sets `transform-box: fill-box` so the origin is the shape's own box.
+
+### Hover (CSS, `kit.css`): every clickable object answers a fine pointer
+- Global: every `a`, `button`, `summary`, `[role=button]` gets a visible hover (colour or underline transition, 0.3 s).
+- Opt-in lifts, on `(hover: hover) and (pointer: fine)` only, transition 0.35 s ease-in-out:
+  `data-hover="lift"` (translate 0 -4 px + deeper shadow), `data-hover="tilt"` (rotate -1.5 deg, scale 1.02),
+  `data-hover="nut"` (an inner `[data-nut]` or `.nut` child turns 60 deg). They use `translate` / `rotate` / `scale`, never
+  `transform`, so they combine with entrances. Cards/rows/tags/stamps/strips that are links get `lift` by default from
+  `kit.css` selectors; add the attribute on anything else.
+
 ## One writer per property
 
 Each animated property of an element has exactly one owner. If a second module needs to move the same element, it
@@ -114,4 +146,5 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 | `[data-t]` entrance items, parallax | `opacity`, `transform` | `motion.ts` |
 | `[data-marquee-track]` | `transform` (translate3d x) | `marquee.ts` (Phase 2) |
 | hover lift | `translate` (CSS transition) | component CSS, `finePointer()` |
-| idle gesture | `rotate` / `scale` on the element or an inner child (never `transform` when an entrance owns it) | `idle.ts` |
+| idle gesture | `rotate` / `scale` / `translate` (WAAPI, `composite: 'add'`, so it adds to any transform) | `idle.ts` |
+| hover lift / tilt (`data-hover`) | `translate` / `rotate` / `scale` (CSS transition) | `kit.css` |

@@ -458,7 +458,7 @@ function parallax() {
       const cap = out ? Infinity : room;
       const lim = (v: number) => Math.sign(v) * Math.min(Math.abs(v) * k, cap);
       const it = { el, a: lim(a), b: lim(b), out };
-      if (Math.max(Math.abs(it.a), Math.abs(it.b)) < 8) return; // too little room to read as depth: leave it still
+      if (Math.max(Math.abs(it.a), Math.abs(it.b)) < 6) return; // too little room to read as depth: leave it still
       used.add(el); items.push(it);
     };
     $$('[data-m-section]').forEach((sec) => {
@@ -472,16 +472,16 @@ function parallax() {
           const s = sec.getBoundingClientRect(), r = w.getBoundingClientRect();
           const cs = getComputedStyle(sec);
           const room = /hidden|clip/.test(cs.overflow + cs.overflowY) ? 64 : Math.max(0, s.bottom - r.bottom - 8);
-          add(w, 0, Math.min(64, room / k), Infinity, true);
-        } else add(w, -36, 36, roomAround(w, sec));
+          add(w, 0, Math.min(32, room / k), Infinity, true);
+        } else add(w, -16, 16, roomAround(w, sec)); // B5: media columns +-16 px
         // Accents riding on the photo (seals, snapshots, chips) drift a little against it: depth inside the column.
         $$<HTMLElement>(`${ACCENT_SEL}, [data-fx="toss"], [data-fx="pop"]`, w).filter(shown).forEach((a) => add(a, hero ? 0 : 14, hero ? -28 : -14, 40, hero));
       });
       if (hero) return;
       // 2. Section heads (eyebrow + headline + lead as one block): lead the page, +24 -> -24 px (United: h2 +40 -> -20).
-      $$('.shead', sec).filter(shown).forEach((h) => { if (!h.closest('[data-carousel], [data-track]')) add(h, 24, -24, roomAround(h, sec)); });
+      $$('.shead', sec).filter(shown).forEach((h) => { if (!h.closest('[data-carousel], [data-track]')) add(h, 10, -10, roomAround(h, sec)); }); // B5: headings +-10 px max
       // 3. Seals, stamps and stickers that sit on their own (not on a photo): lead, +-28 px.
-      $$<HTMLElement>(ACCENT_SEL, sec).filter((a) => shown(a) && ![...wraps].some((w) => w.contains(a))).forEach((a) => add(a, 28, -28, roomAround(a, sec)));
+      $$<HTMLElement>(ACCENT_SEL, sec).filter((a) => shown(a) && ![...wraps].some((w) => w.contains(a))).forEach((a) => add(a, 14, -14, roomAround(a, sec))); // B5: stamps lead +-14 px
       // 4. Decorative flow lines and empty colour blocks behind photos: lag the most, +-48 px.
       $$<HTMLElement>('img[data-flow]', sec).filter(shown).forEach((d) => add(d, -48, 48, roomAround(d, sec) + 40));
       $$<HTMLElement>('[data-t]', sec).filter((d) => shown(d) && isShape(d) && !d.closest('[data-stagger]')).forEach((d) => add(d, -30, 30, 60));
@@ -513,6 +513,46 @@ function parallax() {
   // Triggers are measured without the drift (it would shift every start point by up to the range), then repainted.
   ScrollTrigger.addEventListener('refreshInit', () => pxItems.forEach((it) => it.clear?.()));
   ScrollTrigger.addEventListener('refresh', () => pxItems.forEach((it) => it.paint?.()));
+}
+
+/* United's in-frame drift (fix round 1, B5; United initAutoParallax): every cover photo that fills a clipping frame drifts
+ * inside it. One writer per property: the img gets CSS `scale: 1.14` (set once, so the photo overfills its frame by 7 % on
+ * each side) and this scrub writes only its `translate` (0 -5 % -> 0 5 %, scrub 0.6). Entrances never touch the img (the
+ * clip reveal is on the frame); media-column drift writes `translate` on the column wrapper, never on the img. Skipped:
+ * carousels and tracks, cut-outs (PNG, object-fit contain), maps, small images, anything under [data-no-px]. The hero photo
+ * stays still at load and drifts 0 -> 5 % only as the hero scrolls away. Nothing is measured during a scroll: the frames are
+ * found once per layout band and the tweens follow ScrollTrigger's own (deferred) refresh. */
+function photoDrift() {
+  const mm = gsap.matchMedia();
+  mm.add({ desk: '(min-width: 1024px)', tab: '(min-width: 640px) and (max-width: 1023px)', mob: '(max-width: 639px)' }, () => {
+    const mine: HTMLImageElement[] = [];
+    $$<HTMLImageElement>('main img').forEach((img) => {
+      if (img.closest('[data-carousel], [data-track], [data-no-px], [data-marquee], .map, [class*="map"], [data-drift-off]')) return;
+      const cs = getComputedStyle(img);
+      const src = img.currentSrc || img.src;
+      if (cs.objectFit !== 'cover' || src.toLowerCase().includes('.png') || cs.scale !== 'none' || cs.translate !== 'none') return;
+      const r = img.getBoundingClientRect();
+      if (r.width < 160 || r.height < 120) return;
+      // The frame: the img's own box (or an ancestor of the same box) must clip, so the overfill never shows.
+      let clip = false;
+      for (let e = img.parentElement; e && !e.matches('main, section'); e = e.parentElement) {
+        if (getComputedStyle(e).display === 'contents') continue; // <picture>
+        const q = e.getBoundingClientRect();
+        if (Math.abs(q.width - r.width) > 2 || Math.abs(q.height - r.height) > 2) break;
+        if (/hidden|clip/.test(getComputedStyle(e).overflow)) { clip = true; break; }
+      }
+      if (!clip) return;
+      const hero = !!img.closest('[data-m-hero]');
+      img.setAttribute('data-drift', '');
+      img.style.scale = '1.14';
+      const o = { v: hero ? 0 : -5 };
+      const paint = () => { img.style.translate = `0 ${o.v.toFixed(3)}%`; };
+      paint();
+      gsap.to(o, { v: 5, ease: 'none', onUpdate: paint, scrollTrigger: { trigger: img.closest('div, figure, a, li') ?? img, start: hero ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6 } });
+      mine.push(img);
+    });
+    return () => { mine.forEach((img) => { img.style.scale = ''; img.style.translate = ''; img.removeAttribute('data-drift'); }); };
+  });
 }
 
 /* ------------------------------------------------------------------ signature moments */
@@ -663,7 +703,7 @@ function boot() {
     // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front, as
     // United does, so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
     const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));
-    buildRest(() => { signatures(); pointer(); initMarquees(); requestRefresh(0); idle(() => { parallax(); requestRefresh(0); }, 600); });
+    buildRest(() => { signatures(); pointer(); initMarquees(); requestRefresh(0); idle(() => { parallax(); photoDrift(); requestRefresh(0); }, 600); });
   };
   // Arrived through an in-site link: the page starts covered and at the top (kit/curtain.ts reveal), the hero is hidden
   // under the cover, then the panel lifts. Otherwise the loader (first visit) or a plain start.

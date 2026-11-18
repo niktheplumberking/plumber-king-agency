@@ -4,6 +4,10 @@
 // chips. Masonry = a 1 px-row grid in dense flow: each item has a fixed column and order per breakpoint (desktop 4 columns
 // as 670:7496, mobile 2 columns as 670:9496) and spans its Figma height, so the columns stack exactly and close up on filter.
 // Mobile shows the first ten as in Figma, then "Show all 18 jobs".
+// B29: the columns drift with the scroll (scrub 0.6): columns 1 and 3 rise, 2 and 4 sink, 56 px of travel each (+-28 px
+// around their place, aligned when the wall's middle is mid-screen); phones (2 columns) +-12 px. Writer: the CSS `translate`
+// of each tile (the tickets keep their CSS `transform` tilt; the tiles have no entrance). The grid has room above and below
+// for the travel, so no tile is cut or covers the chips. A filter or "Show all" re-measures once (kit/settle).
 import { Image } from 'astro:assets';
 import logoCream from '../../assets/brand/logo-cream.png';
 import Eyebrow from '../kit/Eyebrow.astro';
@@ -59,10 +63,31 @@ const st = (i: It) => `--c:${i.d[0]};--o:${i.d[1]};--h:${i.d[2]}px;--sd:${i.d[2]
   </div>
 </section>
 <script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { requestRefresh } from '../kit/settle';
+  import { afterHandoff } from '../../scripts/objects';
+  gsap.registerPlugin(ScrollTrigger);
   const grid = document.querySelector<HTMLElement>('[data-ow-grid]');
   const more = document.querySelector<HTMLButtonElement>('[data-ow-more]');
   const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.ow-chip'));
-  const relayout = () => window.dispatchEvent(new Event('resize')); // ScrollTrigger + Lenis re-measure the page
+  const relayout = () => requestRefresh(60); // ScrollTrigger + Lenis re-measure the page once
+  // B29 column drift
+  if (grid && document.documentElement.classList.contains('motion')) afterHandoff(() => {
+    const items = Array.from(grid.querySelectorAll<HTMLElement>(':scope > li'));
+    const mm = gsap.matchMedia();
+    const drift = (key: '--c' | '--cm', amp: number) => {
+      const dir = items.map((li) => (Number(li.style.getPropertyValue(key)) % 2 ? -1 : 1)); // odd columns rise, even sink
+      const write = (p: number) => items.forEach((li, i) => { li.style.translate = `0 ${(dir[i] * amp * (2 * p - 1)).toFixed(2)}px`; });
+      const o = { p: 0.5 };
+      const tw = gsap.fromTo(o, { p: 0 }, { p: 1, ease: 'none', onUpdate: () => write(o.p), scrollTrigger: { trigger: grid, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+      (window as any).__owDrift = { tw, items, dir, amp };
+      return () => { tw.scrollTrigger?.kill(); tw.kill(); items.forEach((li) => { li.style.translate = ''; }); };
+    };
+    mm.add('(min-width: 1280px)', () => drift('--c', 28));
+    mm.add('(max-width: 1279px)', () => drift('--cm', 12));
+    requestRefresh();
+  });
   chips.forEach((c) => c.addEventListener('click', () => {
     const f = c.dataset.f!;
     chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
@@ -83,7 +108,7 @@ const st = (i: It) => `--c:${i.d[0]};--o:${i.d[1]};--h:${i.d[2]}px;--sd:${i.d[2]
   .ow-chip[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
   .ow-chip:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
-  .ow-grid { display: grid; grid-template-columns: repeat(4, 280px); column-gap: 24px; grid-auto-rows: 1px; grid-auto-flow: dense; margin: 32px 0 0; padding: 0; list-style: none; }
+  .ow-grid { display: grid; grid-template-columns: repeat(4, 280px); column-gap: 24px; grid-auto-rows: 1px; grid-auto-flow: dense; margin: 60px 0 0; padding: 0 0 28px; list-style: none; }
   .ow-grid > li { grid-column: var(--c); order: var(--o); grid-row-end: span var(--sd); height: var(--h); }
   .ow-grid > li[hidden] { display: none; }
   .ow-tile { padding: 8px; background: var(--bone); box-shadow: 0 10px 24px -8px rgba(0, 0, 0, .2); }
@@ -106,7 +131,7 @@ const st = (i: It) => `--c:${i.d[0]};--o:${i.d[1]};--h:${i.d[2]}px;--sd:${i.d[2]
     .ow-chips { gap: 8px; margin: 20px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; }
     .ow-chips::-webkit-scrollbar { display: none; }
     .ow-chip { flex: none; height: 36px; padding: 0 14px; border-radius: 18px; font-size: 13px; }
-    .ow-grid { grid-template-columns: 1fr 1fr; column-gap: 10px; margin-top: 28px; }
+    .ow-grid { grid-template-columns: 1fr 1fr; column-gap: 10px; margin-top: 40px; padding-bottom: 12px; }
     .ow-grid > li { grid-column: var(--cm); order: var(--om); grid-row-end: span var(--sm); height: var(--hm); }
     .ow-grid.is-short > .ow-x { display: none; }
     .ow-tile { padding: 6px; box-shadow: 0 8px 18px -6px rgba(0, 0, 0, .2); }

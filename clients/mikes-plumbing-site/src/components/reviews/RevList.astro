@@ -50,6 +50,22 @@ const cards = LAYOUT.map(([name, size, tone, toneM, tag], i) => {
   return { r, size, tone, toneM, tag, cats, alt: i % 2 === 1 };
 });
 if (cards.length !== REVIEWS.length || new Set(cards.map((c) => c.r.name)).size !== REVIEWS.length) throw new Error('RevList: every review must appear exactly once');
+// B27: the key phrase of each review (a substring of its own text, checked here) gets a tan underline that draws in when
+// the card crosses the reading line (40 % of the viewport) or on hover.
+const KEY: Record<string, string> = {
+  'Brandon A.': "He's my first phone call", 'Eleanor M.': 'reasonably priced, detailed & patient', 'Bruce H.': 'He is an excellent communicator',
+  'Sal C.': 'upfront and honest with me on pricing', 'Jack D.': 'He arrived on time and installed it quickly', 'Tewolde T.': 'calls back to inquire how the work is going',
+  'Sydney H.': 'Very clean, professional, and great communication skills', 'Erik N.': 'did the work same day', 'Isaiah C.': 'Left everything clean and working perfectly',
+  'Robert U.': 'installed new water heater all in one afternoon', 'Jared K.': 'Answered my late night call', 'Pamela N.': 'complete the job in one afternoon',
+  'Laura G.': 'suggested the best option', 'Debbie H.': "wasn't gonna leave until fixed", 'Suzi J.': 'Mike was here within two hours of our call',
+  'Janeth H.': 'I value a clean plumber', 'Martha B.': 'He had all the parts and fixed it perfectly', 'Julian T.': 'left the area super clean',
+  'Jackie H.': 'a very fair price honestly better than anyone else we had contacted', 'Stuart W.': 'extremely conscientious about my lawn and cleaning up any mess',
+};
+const split = (r: Review) => {
+  const k = KEY[r.name]; const at = k ? r.text.indexOf(k) : -1;
+  if (at < 0) throw new Error(`RevList: key phrase for ${r.name} is not in the review`);
+  return [r.text.slice(0, at), k, r.text.slice(at + k.length)];
+};
 const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c.cats.includes(k)).length);
 ---
 <section class="rl" aria-labelledby="rl-h" data-m-section>
@@ -61,12 +77,12 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
       {FILTERS.map(([k, label], i) => <button type="button" class="rl-chip" aria-pressed={i === 0 ? 'true' : 'false'} data-k={k}>{label}<span class="sr-only"> ({count(k)})</span></button>)}
     </div>
     <p class="sr-only" role="status" data-rl-status></p>
-    <ul class="rl-grid" role="list" data-t="4" data-stagger>
+    <ul class="rl-grid" role="list" data-t="4" data-stagger data-rl-read>
       {cards.map((c) => (
         <li class:list={['rc', `rc-${c.size}`, `t-${c.tone}`, `m-${c.toneM}`, c.alt && 'rc-alt']} data-cats={c.cats.join(' ')}>
           <figure class="rc-fig">
             <span class="rc-mark" aria-hidden="true">“</span>
-            <blockquote class="rc-q" cite={SITE.social.yelp}><p>“{c.r.text}”</p></blockquote>
+            <blockquote class="rc-q" cite={SITE.social.yelp}><p>“{split(c.r)[0]}<span class="rc-k">{split(c.r)[1]}</span>{split(c.r)[2]}”</p></blockquote>
             <figcaption class="rc-by">
               <span class="rc-hex" aria-hidden="true">{initials(c.r.name)}</span>
               <span class="rc-who"><b>{c.r.name}</b><span>{place(c.r.town)} · {when(c.r.date)} · Yelp</span></span>
@@ -95,6 +111,18 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
       if (status) status.textContent = `Showing ${n} review${n === 1 ? '' : 's'}`;
     });
   });
+  // B27 reading line: the card(s) on a line at 40 % of the viewport are "read" (full brightness, key phrase underlined);
+  // while any card is on the line the others ease back to 70 %. An IntersectionObserver with a zero-height root band
+  // reports it, so nothing is measured during the scroll. Only under html.motion (reduced motion: all at 100 %).
+  const grid = document.querySelector<HTMLElement>('[data-rl-read]');
+  if (grid && document.documentElement.classList.contains('motion')) {
+    const on = new Set<Element>();
+    const io = new IntersectionObserver((es) => {
+      es.forEach((e) => { e.target.classList.toggle('is-read', e.isIntersecting); if (e.isIntersecting) on.add(e.target); else on.delete(e.target); });
+      grid.classList.toggle('is-reading', on.size > 0);
+    }, { rootMargin: '-40% 0px -60% 0px', threshold: 0 });
+    grid.querySelectorAll('.rc').forEach((c) => io.observe(c));
+  }
 </script>
 <style>
   .rl { position: relative; background: var(--coal); color: var(--paper); padding: 137px 0 70px; overflow-x: clip; }
@@ -117,6 +145,17 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
   .t-red .rc-fig { background: var(--red); --tag-c: var(--red); --meta: #3A130C; --mark: rgba(14, 13, 11, .25); }
   .t-coal .rc-fig { background: #2A2722; color: var(--paper); --tag-bg: var(--paper); --tag-c: var(--ink); --hex-bg: var(--paper); --hex-c: var(--ink); --meta: var(--mute); --mark: rgba(243, 236, 221, .22); }
   .rc-fig { color: var(--ink); }
+  /* B27: reading-line highlight (opacity on the figure, the entrance owns the li) + the key phrase's underline */
+  .rc-fig { transition: opacity .6s cubic-bezier(.45, 0, .55, 1), translate .4s cubic-bezier(.45, 0, .55, 1), box-shadow .4s cubic-bezier(.45, 0, .55, 1); }
+  .rc-k { --ul: var(--tan); background: linear-gradient(var(--ul), var(--ul)) 0 100% / 100% 2px no-repeat; padding-bottom: 1px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size .7s cubic-bezier(.45, 0, .55, 1); }
+  .t-tan .rc-k, .t-red .rc-k { --ul: var(--ink); } .t-paper .rc-k { --ul: var(--tan-dark); }
+  html.motion .rc-k { background-size: 0 2px; }
+  html.motion .rc.is-read .rc-k { background-size: 100% 2px; }
+  html.motion .is-reading .rc:not(.is-read) .rc-fig { opacity: .7; }
+  @media (hover: hover) and (pointer: fine) {
+    .rc:hover .rc-fig { translate: 0 -4px; box-shadow: 0 18px 28px -16px rgba(0, 0, 0, .6); opacity: 1 !important; }
+    html.motion .rc:hover .rc-k { background-size: 100% 2px; }
+  }
   .rc-mark { position: absolute; left: 26px; top: -6px; font-family: var(--f-display); font-size: 84px; line-height: 1; color: var(--mark); pointer-events: none; }
   .rc-q p { font-size: 17px; line-height: 25px; }
   .rc-L .rc-q p, .rc-F .rc-q p { font-family: var(--f-display); font-size: 24px; line-height: 31px; padding-top: 1px; }
@@ -163,6 +202,8 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
     .m-tan .rc-fig { background: var(--tan); --tag-bg: var(--ink); --tag-c: var(--tan); --hex-bg: var(--ink); --hex-c: var(--tan); --meta: #514C41; color: var(--ink); }
     .m-paper .rc-fig { background: var(--bone); --tag-bg: var(--ink); --tag-c: var(--bone); --hex-bg: var(--ink); --hex-c: var(--bone); --meta: #6B675E; color: var(--ink); }
     .m-red .rc-fig { background: var(--red); --tag-bg: var(--ink); --tag-c: var(--red); --hex-bg: var(--ink); --hex-c: var(--red); --meta: #3A130C; color: var(--ink); }
+    .m-tan .rc-k, .m-red .rc-k { --ul: var(--ink); } .m-paper .rc-k, .m-coal .rc-k { --ul: var(--tan); }
+    .m-paper .rc-k { --ul: var(--tan-dark); }
     .m-coal .rc-fig { background: #2A2722; color: var(--paper); --tag-bg: var(--tan); --tag-c: var(--ink); --hex-bg: var(--paper); --hex-c: var(--ink); --meta: var(--mute); }
     .rc .rc-hex { color: var(--hex-c); background: var(--hex-bg); width: 34px; height: 28px; font-size: 11px; }
     .rc-mark { display: none; }

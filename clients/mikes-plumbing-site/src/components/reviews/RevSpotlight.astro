@@ -1,42 +1,84 @@
 ---
-// 9.3 Spotlight (Figma 670:11578 y 1822-2742 / 671:1096 y 1730-2494). Paper field; a ruled typewriter sheet, tilted 1.2 deg,
-// with a red margin line, Stuart W.'s Yelp review typed out ("extremely conscientious" underlined in tan-deep) and Mike's
-// hex badge stamped in red over the bottom-right corner. The quote is cut from REVIEWS (word for word), never retyped:
-// the Figma shows the part from "Mike happened" to "any mess."; his full review is in the list below.
+// 9.3 Spotlight (Figma 670:11578 y 1822-2742 / 671:1096 y 1730-2494; fix round 1 B26: a carousel of review notes). Paper
+// field; ruled typewriter sheets, tilted 1.2 deg, with a red margin line, a Yelp review typed out (its key words underlined
+// in tan-deep) and Mike's "Est 2025" hex badge stamped in red over the bottom-right corner. Every 5 s the current sheet
+// slides out to the left while the next slides in from the right (0.9 s power2.inOut). Pauses on hover and focus; arrows,
+// dots and swipe drive it by hand; reduced motion: no auto-advance and an instant switch. Every excerpt is cut from REVIEWS
+// (word for word), never retyped. Writer: the carousel script owns `transform` / `visibility` of .rs-slide; the sheet keeps
+// its CSS `rotate`.
 import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Wave from '../kit/Wave.astro';
 import Stamp from '../kit/Stamp.astro';
 import { place, when } from './fmt';
-const r = REVIEWS.find((x) => x.name === 'Stuart W.');
-if (!r) throw new Error('RevSpotlight: Stuart W. is not in REVIEWS');
-const a = r.text.indexOf('Mike happened'); const b = r.text.indexOf('any mess.') + 'any mess.'.length;
-if (a < 0 || b < 9) throw new Error('RevSpotlight: excerpt not found in the review');
-const ex = r.text.slice(a, b);
-const hl = 'extremely conscientious';
-const [pre, post] = ex.split(hl);
+const cut = (name: string, from: string, to: string | null, hl: string, job: string) => {
+  const r = REVIEWS.find((x) => x.name === name);
+  if (!r) throw new Error(`RevSpotlight: ${name} is not in REVIEWS`);
+  const a = r.text.indexOf(from); const b = to ? r.text.indexOf(to, a) + to.length : r.text.length;
+  if (a < 0 || (to && b < to.length)) throw new Error(`RevSpotlight: excerpt not found in ${name}'s review`);
+  const ex = r.text.slice(a, b);
+  if (!ex.includes(hl)) throw new Error(`RevSpotlight: "${hl}" is not in the excerpt`);
+  const [pre, ...rest] = ex.split(hl);
+  return { r, pre, hl, post: rest.join(hl), job };
+};
+const SLIDES = [
+  cut('Stuart W.', 'Mike happened', 'any mess.', 'extremely conscientious', 'leak on the water service line'),
+  cut('Jackie H.', 'He fixed our water leaks', 'not just getting in and out.', 'genuinely cares about doing quality work', 'water leaks + new water lines'),
+  cut('Debbie H.', 'Amazing!', null, "wasn't gonna leave until fixed", 'same-day repair'),
+  cut('Martha B.', 'I had a stop valve', null, 'Mike actually called me', 'stop valve behind the toilet'),
+  cut('Eleanor M.', 'Highly recommend', null, 'detailed & patient', '3 toilets and a pressure regulator'),
+];
 ---
 <section class="rs" aria-labelledby="rs-h" data-m-section>
   <Wave z={1} d={{ a: 16.5, L: 521 }} m={{ a: 10.3, L: 300.5 }} fill="#F3ECDD" above="#D2C5A6" />
   <div class="wrap rs-in">
-    <h2 id="rs-h" class="sr-only">Spotlight review from {r.name}</h2>
+    <h2 id="rs-h" class="sr-only">Spotlight reviews</h2>
     <Eyebrow look="page" text="Spotlight" tone="deep" class="rs-eb" />
-    <figure class="rs-sheet" data-t="4">
-      <p class="rs-meta" aria-hidden="true">Spotlight <span>·</span> Yelp<i class="rs-d"> review</i> <span>·</span> ★★★★★</p>
-      <blockquote class="rs-q" cite={SITE.social.yelp}>
-        <p>"{pre}<strong>{hl}</strong>{post}"</p>
-      </blockquote>
-      <figcaption class="rs-by"><b>{r.name.toUpperCase()}</b><span aria-hidden="true">·</span>{place(r.town)}<span aria-hidden="true">·</span>{when(r.date)}<span aria-hidden="true">·</span>leak on the water service line<span class="sr-only"> (5 stars on Yelp)</span></figcaption>
-    </figure>
-    <Stamp w={206} deg={17} class="rs-stamp" opacity={0.9} />
+    <div class="rs-car" role="region" aria-roledescription="carousel" aria-labelledby="rs-h" data-rs-car>
+      <div class="rs-ctl" data-t="3">
+        <button type="button" class="rs-arr" data-rs-prev aria-label="Previous review"><svg viewBox="0 0 18 10" width="18" height="10" aria-hidden="true"><path d="M18 5H2M6 1L2 5l4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg></button>
+        <div class="rs-dots" role="group" aria-label="Choose a review">
+          {SLIDES.map((s, i) => <button type="button" class="rs-dot" data-rs-dot={i} aria-label={`Review ${i + 1} of ${SLIDES.length}: ${s.r.name}`} aria-current={i === 0 ? 'true' : undefined}><i></i></button>)}
+        </div>
+        <button type="button" class="rs-arr" data-rs-next aria-label="Next review"><svg viewBox="0 0 18 10" width="18" height="10" aria-hidden="true"><path d="M0 5h16M12 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" /></svg></button>
+      </div>
+      <div class="rs-view" data-t="4" aria-live="off">
+        {SLIDES.map((s, i) => (
+          <div class:list={['rs-slide', i === 0 && 'is-on']} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${SLIDES.length}`} aria-hidden={i ? 'true' : undefined} inert={i ? true : undefined}>
+            <figure class="rs-sheet">
+              <p class="rs-meta" aria-hidden="true">Spotlight <span>·</span> Yelp<i class="rs-d"> review</i> <span>·</span> ★★★★★</p>
+              <blockquote class="rs-q" cite={SITE.social.yelp}>
+                <p>"{s.pre}<strong>{s.hl}</strong>{s.post}"</p>
+              </blockquote>
+              <figcaption class="rs-by"><b>{s.r.name.toUpperCase()}</b><span aria-hidden="true">·</span>{place(s.r.town)}<span aria-hidden="true">·</span>{when(s.r.date)}<span aria-hidden="true">·</span>{s.job}<span class="sr-only"> (5 stars on Yelp)</span></figcaption>
+            </figure>
+            <Stamp w={206} deg={17} class="rs-stamp" opacity={0.9} t={false} />
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 </section>
 <style>
   .rs { position: relative; height: 920px; background: var(--paper); overflow-x: clip; }
   .rs-in { position: relative; height: 100%; }
   .rs-in :global(.rs-eb) { position: absolute; left: 60px; top: 77px; }
-  .rs-sheet { position: absolute; left: 53px; top: 159px; width: 1080px; height: 680px; margin: 0; padding: 50px 0 0 68px; rotate: 1.2deg;
+  .rs-car { position: absolute; inset: 0; }
+  .rs-ctl { position: absolute; right: 60px; top: 66px; z-index: 3; display: flex; align-items: center; gap: 14px; }
+  .rs-arr { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; color: var(--ink); box-shadow: inset 0 0 0 1.5px rgba(14, 13, 11, .35);
+    transition: background-color .4s cubic-bezier(.45, 0, .55, 1), color .4s cubic-bezier(.45, 0, .55, 1), box-shadow .4s cubic-bezier(.45, 0, .55, 1); }
+  .rs-arr:hover { background: var(--ink); color: var(--tan); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .rs-arr:focus-visible, .rs-dot:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .rs-dots { display: flex; gap: 2px; }
+  .rs-dot { display: grid; place-items: center; width: 24px; height: 32px; }
+  .rs-dot i { display: block; width: 8px; height: 8px; border-radius: 50%; background: rgba(14, 13, 11, .25); transition: width .5s cubic-bezier(.45, 0, .55, 1), background-color .5s cubic-bezier(.45, 0, .55, 1), border-radius .5s; }
+  .rs-dot[aria-current='true'] i { width: 20px; border-radius: 4px; background: var(--red); }
+  html:not(.js) .rs-ctl { display: none; }
+  .rs-view { position: absolute; left: 53px; top: 159px; width: 1080px; height: 760px; touch-action: pan-y; }
+  .rs-slide { position: absolute; inset: 0; }
+  .rs-slide:not(.is-on) { visibility: hidden; }
+  .rs-sheet { position: absolute; left: 0; top: 0; width: 1080px; height: 680px; margin: 0; padding: 50px 0 0 68px; rotate: 1.2deg; box-sizing: border-box;
     background-color: var(--bone);
     background-image: linear-gradient(90deg, transparent 39px, rgba(217, 65, 43, .38) 39px 41px, transparent 41px),
       repeating-linear-gradient(180deg, transparent 0 35px, #E9E4D9 35px 36px);
@@ -50,24 +92,78 @@ const [pre, post] = ex.split(hl);
   .rs-q strong { font-weight: 700; color: var(--tan-dark); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
   .rs-by { margin-top: 25px; font-weight: 700; font-size: 15px; line-height: 20px; }
   .rs-by span { margin: 0 14px; }
-  .rs-in :global(.rs-stamp) { position: absolute; left: 952px; top: 655px; }
+  .rs-slide :global(.rs-stamp) { position: absolute; left: 899px; top: 496px; }
   @media (min-width: 768px) and (max-width: 1279px) {
     .rs { height: auto; padding: 150px 0 140px; }
+    .rs-car { position: relative; inset: auto; }
     .rs-in :global(.rs-eb) { position: static; margin-left: 40px; }
-    .rs-sheet { position: relative; left: auto; top: auto; width: auto; height: auto; margin: 40px 20px 0; padding: 50px 48px 120px 68px; }
-    .rs-q { width: auto; } .rs-q p { font-size: clamp(18px, 2.2vw, 25px); line-height: 1.64; }
-    .rs-in :global(.rs-stamp) { left: auto; right: 10px; top: auto; bottom: -40px; }
+    .rs-ctl { top: -58px; right: 20px; }
+    .rs-view { position: relative; left: auto; top: auto; width: auto; height: 640px; margin: 40px 20px 0; }
+    .rs-sheet { width: 100%; height: 560px; padding: 50px 48px 0 68px; }
+    .rs-q { width: auto; } .rs-q p { font-size: clamp(17px, 2vw, 22px); line-height: 1.6; }
+    .rs-slide :global(.rs-stamp) { left: auto; right: 10px; top: auto; bottom: 0; }
   }
   @media (max-width: 767px) {
-    .rs { height: 764px; }
+    .rs { height: 830px; }
     .rs-in { width: 100%; }
     .rs-in :global(.rs-eb) { left: 20px; top: 71px; }
-    .rs-sheet { left: 10.5px; top: 106px; width: 362px; height: 602px; padding: 23px 0 0 38px; rotate: 1.07deg;
+    .rs-ctl { left: 20px; right: auto; top: 748px; gap: 8px; }
+    .rs-arr { width: 42px; height: 42px; }
+    .rs-view { left: 10.5px; top: 106px; width: 362px; height: 640px; max-width: calc(100% - 21px); }
+    .rs-sheet { width: 100%; height: 602px; padding: 23px 0 0 38px; rotate: 1.07deg;
       background-image: linear-gradient(90deg, transparent 21px, rgba(217, 65, 43, .38) 21px 23px, transparent 23px); background-size: 100% 100%; background-position: 0 0; }
     .rs-meta { font-size: 10px; line-height: 14px; } .rs-meta span { margin: 0 6px; } .rs-d { display: none; }
-    .rs-q { margin-top: 19px; width: 302px; } .rs-q p { font-size: 15px; line-height: 23px; }
+    .rs-q { margin-top: 19px; width: calc(100% - 60px); } .rs-q p { font-size: 15px; line-height: 23px; }
     .rs-q strong { text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
-    .rs-by { margin-top: 17px; width: 296px; font-size: 10.5px; line-height: 17px; } .rs-by span { margin: 0 5px; }
-    .rs-in :global(.rs-stamp) { left: 225px; top: 596px; width: 118px; rotate: 17deg; }
+    .rs-by { margin-top: 17px; width: calc(100% - 66px); font-size: 10.5px; line-height: 17px; } .rs-by span { margin: 0 5px; }
+    .rs-slide :global(.rs-stamp) { left: auto; right: 18px; top: 490px; width: 118px; rotate: 17deg; }
   }
 </style>
+<script>
+  // B26 carousel (see the header). One writer for each slide's transform / visibility: this script.
+  import { gsap } from 'gsap';
+  const car = document.querySelector<HTMLElement>('[data-rs-car]');
+  if (car) {
+    const slides = Array.from(car.querySelectorAll<HTMLElement>('.rs-slide'));
+    const dots = Array.from(car.querySelectorAll<HTMLButtonElement>('[data-rs-dot]'));
+    const view = car.querySelector<HTMLElement>('.rs-view')!;
+    const motion = () => document.documentElement.classList.contains('motion');
+    let cur = 0; let tl: gsap.core.Timeline | null = null;
+    const mark = (i: number) => {
+      slides.forEach((s, k) => { const on = k === i; s.toggleAttribute('inert', !on); on ? s.removeAttribute('aria-hidden') : s.setAttribute('aria-hidden', 'true'); });
+      dots.forEach((d, k) => (k === i ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
+    };
+    const go = (to: number, dir = to > cur ? 1 : -1, user = false) => {
+      to = (to + slides.length) % slides.length;
+      if (to === cur) return;
+      view.setAttribute('aria-live', user ? 'polite' : 'off');
+      const from = slides[cur]; const next = slides[to];
+      tl?.progress(1);
+      cur = to; mark(to);
+      if (!motion()) { from.classList.remove('is-on'); next.classList.add('is-on'); return; }
+      next.classList.add('is-on');
+      tl = gsap.timeline({ defaults: { duration: 0.9, ease: 'power2.inOut' }, onComplete: () => { from.classList.remove('is-on'); gsap.set(from, { clearProps: 'transform' }); } })
+        .fromTo(from, { xPercent: 0, rotation: 0 }, { xPercent: -118 * dir, rotation: -3 * dir }, 0)
+        .fromTo(next, { xPercent: 118 * dir, rotation: 3 * dir }, { xPercent: 0, rotation: 0 }, 0);
+      (window as any).__rsLog?.push({ t: Math.round(performance.now()), to, user });
+    };
+    car.querySelector('[data-rs-prev]')!.addEventListener('click', () => { go(cur - 1, -1, true); restart(); });
+    car.querySelector('[data-rs-next]')!.addEventListener('click', () => { go(cur + 1, 1, true); restart(); });
+    dots.forEach((d, k) => d.addEventListener('click', () => { go(k, k > cur ? 1 : -1, true); restart(); }));
+    // swipe (touch / pen / mouse drag)
+    let x0: number | null = null;
+    view.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    view.addEventListener('pointerup', (e) => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 50) { go(cur + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1, true); restart(); } });
+    view.addEventListener('pointercancel', () => { x0 = null; });
+    // auto-advance every 5 s, paused on hover / focus / hidden tab / off screen; never under reduced motion
+    let paused = false; let seen = false; let timer = 0;
+    const restart = () => { clearTimeout(timer); if (motion()) timer = window.setTimeout(() => { if (!paused && seen && !document.hidden) go(cur + 1, 1); restart(); }, 5000); };
+    car.addEventListener('pointerenter', () => { paused = true; });
+    car.addEventListener('pointerleave', () => { paused = car.contains(document.activeElement); });
+    car.addEventListener('focusin', () => { paused = true; });
+    car.addEventListener('focusout', () => { paused = car.matches(':hover'); });
+    new IntersectionObserver(([e]) => { seen = e.isIntersecting; }).observe(view);
+    (window as any).__rs = { get cur() { return cur; }, get paused() { return paused; } };
+    restart();
+  }
+</script>

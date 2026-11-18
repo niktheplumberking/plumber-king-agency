@@ -23,3 +23,14 @@ no horizontal scroll 1440/390/360, console clean, no cross-page hashes, check-se
 14. Loader: top-right counter says 100/100 while slats read ~08x. loader-1440-18.
 
 Pass: B4, B5, B7, B8, B10, B14, B16, B18, B19, B20, B21, B23, B26, B30, B31, B32, B33. Not fully verified: B12 map, B27 40% line.
+
+## Re-look at d2c3b0b
+10 of 14 pass. Item 12 route map regressed (map sat empty in view); item 11 accordion text-on-text during cross-wipe; minor emergency 390 call-log spacing.
+Fixed in 38ad2f1 (accordion out/background/in swap), b40506e (route map follower + timer hold), 80b113b (all map tags inside frame).
+
+## Final check at 80b113b: SHIP TO OWNER
+- Route map draws while in view: home 1440 0.14 -> 0.98 over scrollY 7617-7978; 390 0.04 -> 0.94; Corona 0.09 -> 0.95; all tags inside the frame.
+- Accordion: out, background, in; never two layers, no text on mid-grey; ~0.85 s; aria correct.
+- Emergency 390 call log: gap above first slip, badge clear.
+- B29 drift measured exactly +-40 px (1440) / +-20 px (390); filters work; no photo cut.
+- Quick pass Home, Reviews, Our Work, Contact, Corona, Emergency at 1440/390: nothing new; no h-scroll at 360 on 17 pages.

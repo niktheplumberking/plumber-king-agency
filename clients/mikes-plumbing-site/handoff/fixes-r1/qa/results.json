@@ -1,0 +1,1500 @@
+{
+ "date": "2026-11-18",
+ "build": "ddfaf3c (+ QA commit)",
+ "server": "dist served locally; Lighthouse also against a brotli server to mirror Vercel",
+ "D1": {
+  "build": "ok, 21 pages",
+  "checkLinks": "0 broken",
+  "consoleErrors": 0,
+  "axeViolations": {
+   "390": 0,
+   "1440": 0,
+   "pages": 21,
+   "mode": "reduced motion"
+  },
+  "hScroll": {
+   "widths": [
+    1920,
+    1440,
+    1280,
+    1024,
+    820,
+    390,
+    360
+   ],
+   "pages": 21,
+   "overflowPx": 0
+  },
+  "keyboard": {
+   "mega": {
+    "tabPath": [
+     "A|Skip to content|skip",
+     "A|★★★★★ 5.0 on Yelp · 20 reviews|ub-rate",
+     "A|(951) 809-9533|",
+     "A|Mike's Plumbing Services, home|hdr-logo",
+     "BUTTON|Services|nl"
+    ],
+    "expandedAfterEnter": "true",
+    "firstTabInPanel": "A|Drain cleaning & hydro jetting|",
+    "afterEscape": "BUTTON|Services|nl",
+    "expandedAfterEsc": "false",
+    "areasArrowDown": "A|Riverside (home base)|"
+   },
+   "acc": {
+    "open": [],
+    "aria": "false",
+    "afterSpace": []
+   },
+   "carousel": {
+    "c0": 0,
+    "afterNext": 1,
+    "afterPrev": 0,
+    "afterDot3": 3,
+    "inertOthers": [
+     true,
+     true,
+     true,
+     false,
+     true
+    ]
+   },
+   "tear": {
+    "first": "A|Tear off strip 1: Call now · (951) 809-9533. Long press to call.|ft-tab",
+    "afterEnterFocus": "A|Tear off strip 2: Open 24 hours (Yelp) · Free estimate. Long press to call.|ft-tab",
+    "tears": 2,
+    "url": "http://localhost:4710/emergency-plumber",
+    "status": "Strip torn off. 7 left."
+   },
+   "mobile": {
+    "tabPath": [
+     "A|Skip to content|skip",
+     "A|★★★★★ 5.0 on Yelp · 20 reviews|ub-rate",
+     "A|Mike's Plumbing Services, home|hdr-logo",
+     "A|Call (951) 809-9533|m-call",
+     "BUTTON|Menu|menu-btn"
+    ],
+    "focusAfterOpen": "BUTTON|Close menu|mn-close",
+    "hidden": false,
+    "focusStayedInside": [
+     true
+    ],
+    "afterEsc": "BUTTON|Menu|menu-btn",
+    "hiddenAfterEsc": true
+   },
+   "forms": [
+    {
+     "pg": "/",
+     "W": 1440,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/",
+     "W": 1440,
+     "fi": 1,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/",
+     "W": 390,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/",
+     "W": 390,
+     "fi": 1,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/contact",
+     "W": 1440,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/contact",
+     "W": 390,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/water-heaters",
+     "W": 1440,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/drain-cleaning",
+     "W": 390,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/plumber-corona-ca",
+     "W": 1440,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/plumber-moreno-valley-ca",
+     "W": 390,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/plumber-murrieta-ca",
+     "W": 1440,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/plumber-buena-park-ca",
+     "W": 1440,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/plumber-los-angeles-ca",
+     "W": 390,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    },
+    {
+     "pg": "/plumber-west-hollywood-ca",
+     "W": 1440,
+     "fi": 0,
+     "emptySubmit": {
+      "msg": "Please add your name and a 10-digit phone number so we can call you back.",
+      "focus": "name",
+      "inv": "true"
+     },
+     "tabAfterName": "phone",
+     "landed": "/thank-you"
+    }
+   ]
+  }
+ },
+ "D2": {
+  "hits": 0,
+  "slipsClipRectChange": "legitimate: only matters under reduced motion where .sl-view is overflow-y:auto (a real clip); old script gave 6 hits there, all inside the scroller box. Motion ON: .sl-view overflow hidden + 70px mask; wave box starts 76px below the view at 1440 and 78px below the lowest slip at 390"
+ },
+ "D3": "24/24 band checks pass (360/390/1440/1920; 22.8-114 px/s; loop 37.6-38.5 s; gap 0; hover 0; reduced 0)",
+ "D4": {
+  "nav1440": "340 navigations from all 21 pages to every header/mega link after a 2500px scroll: 0 fails, landed scrollY 0",
+  "nav390": "69 navigations (every 5th target per page): 0 fails",
+  "curtain": "monotonic all 8 blinds cover+reveal, max mid stall 17 ms, 4x CPU max frame gap 109 ms during reveal",
+  "backForward": "native (navigation type back_forward)"
+ },
+ "D6": {
+  "note": "per-frame sampler at reading pace 750 px/s and fling; 21 pages x 1440/390",
+  "jumpsOver30pct": "0 except /thank-you tyw-nut scrubbed pop (scale 1->1.08 over 0.07 of the scrub, intended)",
+  "hiddenAfterFastScroll": 0,
+  "invisibleOver300ms": {
+   "eyebrowsAndSmallG2": "311-533 ms (1440) / 313-383 ms (390) on most section eyebrows",
+   "townHeroSign": "528-547 ms at page load (hero sequence)",
+   "emergencyCallPhotos390": "467-567 ms (stagger), photos 3-4 are off-screen in the swipe row"
+  }
+ },
+ "D7": "31 scrubbed paths sampled: all pass (10 samples strictly inside 0..1, monotonic); drain jets, service-areas hero routes and RouteMap traced directly; valve +360 per forward pass, 0 on reverse; dial needle -160..-40, 98 distinct values",
+ "D8": [
+  {
+   "pg": "/",
+   "W": 1440,
+   "rows": 6,
+   "samples": 27,
+   "maxOpen": 1,
+   "h1": {
+    "from": 201,
+    "to": 72,
+    "maxStepFrac": 0.19
+   },
+   "h4": {
+    "from": 72,
+    "to": 201,
+    "maxStepFrac": 0.19
+   },
+   "h1shrinkMono": true,
+   "h4growMono": true,
+   "bg1": {
+    "tot": 255,
+    "maxStepFrac": 0.13
+   },
+   "bg4": {
+    "tot": 14,
+    "maxStepFrac": 1
+   },
+   "c1": {
+    "tot": 237,
+    "maxStepFrac": 0.13
+   },
+   "c4": {
+    "tot": 237,
+    "maxStepFrac": 0.13
+   },
+   "settleMs": 750,
+   "race2then3": "001000",
+   "doubleClickRow1": "000000"
+  },
+  {
+   "pg": "/",
+   "W": 390,
+   "rows": 6,
+   "samples": 27,
+   "maxOpen": 1,
+   "h1": {
+    "from": 252,
+    "to": 71,
+    "maxStepFrac": 0.19
+   },
+   "h4": {
+    "from": 87,
+    "to": 329,
+    "maxStepFrac": 0.19
+   },
+   "h1shrinkMono": true,
+   "h4growMono": true,
+   "bg1": {
+    "tot": 255,
+    "maxStepFrac": 0.13
+   },
+   "bg4": {
+    "tot": 14,
+    "maxStepFrac": 1
+   },
+   "c1": {
+    "tot": 237,
+    "maxStepFrac": 0.13
+   },
+   "c4": {
+    "tot": 237,
+    "maxStepFrac": 0.13
+   },
+   "settleMs": 751,
+   "race2then3": "001000",
+   "doubleClickRow1": "000000"
+  }
+ ],
+ "D9": {
+  "tear": {
+   "390": {
+    "strips": 4,
+    "tornAfterAll": 4,
+    "allBackMsAfterFirstTear": 4196,
+    "status": "The strips are back.",
+    "url": "/emergency-plumber"
+   },
+   "1440": {
+    "strips": 9,
+    "tornAfterAll": 9,
+    "allBackMsAfterFirstTear": 8336,
+    "status": "The strips are back.",
+    "url": "/emergency-plumber"
+   }
+  },
+  "carousel": {
+   "390": {
+    "autoAdvances": 4,
+    "gapsMs": [
+     5002,
+     5001,
+     5001
+    ],
+    "pause": null,
+    "swipe": {
+     "before": 4,
+     "afterSwipeLeft": 0
+    }
+   },
+   "1440": {
+    "autoAdvances": 4,
+    "gapsMs": [
+     5001,
+     5002,
+     5001
+    ],
+    "pause": {
+     "before": 4,
+     "after7s": 4,
+     "paused": true
+    },
+    "swipe": null
+   }
+  },
+  "play": {
+   "tag": "A",
+   "href": "https://www.instagram.com/mikesplumbingservices/",
+   "target": "_blank",
+   "label": "Watch Mike's clips on Instagram (opens in a new tab)",
+   "size": [
+    94,
+    94
+   ],
+   "op": "1",
+   "popupUrl": "https://www.instagram.com/accounts/login/?next=https%3A%2F%2Fwww.instagram.com%2Fmikesplumbingservices%2F&is_from_rle",
+   "samePageUrl": "/services"
+  },
+  "wall": {
+   "390": {
+    "travelMin": -20,
+    "travelMax": 20,
+    "cutMax": 0,
+    "minChipGap": -28,
+    "n": 10,
+    "samples": [
+     [
+      34,
+      -20,
+      20,
+      -28
+     ],
+     [
+      234,
+      -20,
+      20,
+      32
+     ],
+     [
+      434,
+      -18.8,
+      18.8,
+      33
+     ],
+     [
+      634,
+      -15.1,
+      15.1,
+      37
+     ],
+     [
+      834,
+      -11.3,
+      11.3,
+      41
+     ],
+     [
+      1034,
+      -7.6,
+      7.6,
+      44
+     ],
+     [
+      1234,
+      -3.9,
+      3.9,
+      48
+     ],
+     [
+      1434,
+      -0.1,
+      0.1,
+      52
+     ],
+     [
+      1634,
+      -3.6,
+      3.6,
+      48
+     ],
+     [
+      1834,
+      -7.4,
+      7.4,
+      45
+     ],
+     [
+      2034,
+      -11.1,
+      11.1,
+      41
+     ],
+     [
+      2234,
+      -14.8,
+      14.8,
+      37
+     ],
+     [
+      2434,
+      -18.6,
+      18.6,
+      33
+     ],
+     [
+      2634,
+      -20,
+      20,
+      32
+     ],
+     [
+      2834,
+      -20,
+      20,
+      32
+     ],
+     [
+      3034,
+      -20,
+      20,
+      32
+     ],
+     [
+      3234,
+      -20,
+      20,
+      32
+     ],
+     [
+      3434,
+      -20,
+      20,
+      32
+     ],
+     [
+      3634,
+      -20,
+      20,
+      32
+     ]
+    ]
+   },
+   "1440": {
+    "travelMin": -40,
+    "travelMax": 40,
+    "cutMax": 0,
+    "minChipGap": -32,
+    "n": 18,
+    "samples": [
+     [
+      197,
+      -40,
+      40,
+      -32
+     ],
+     [
+      413,
+      -40,
+      40,
+      28
+     ],
+     [
+      613,
+      -34.8,
+      34.8,
+      33
+     ],
+     [
+      813,
+      -28.1,
+      28.1,
+      40
+     ],
+     [
+      1013,
+      -21.5,
+      21.5,
+      47
+     ],
+     [
+      1213,
+      -14.8,
+      14.8,
+      53
+     ],
+     [
+      1413,
+      -8.2,
+      8.2,
+      60
+     ],
+     [
+      1613,
+      -1.5,
+      1.5,
+      67
+     ],
+     [
+      1813,
+      -5.2,
+      5.2,
+      67
+     ],
+     [
+      2013,
+      -11.8,
+      11.8,
+      60
+     ],
+     [
+      2213,
+      -18.5,
+      18.5,
+      54
+     ],
+     [
+      2413,
+      -25.1,
+      25.1,
+      47
+     ],
+     [
+      2613,
+      -31.8,
+      31.8,
+      40
+     ],
+     [
+      2813,
+      -38.5,
+      38.5,
+      34
+     ],
+     [
+      3013,
+      -40,
+      40,
+      32
+     ],
+     [
+      3213,
+      -40,
+      40,
+      32
+     ],
+     [
+      3413,
+      -40,
+      40,
+      32
+     ],
+     [
+      3613,
+      -40,
+      40,
+      32
+     ],
+     [
+      3813,
+      -40,
+      40,
+      32
+     ]
+    ]
+   }
+  }
+ },
+ "D10": [
+  {
+   "pg": "/",
+   "W": 1440,
+   "photos": 11,
+   "photoGapMax": -4.4,
+   "photoRange": [
+    -5,
+    5
+   ],
+   "heads": 3,
+   "headRange": [
+    -9,
+    10
+   ],
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "crawlspace-pipe-press-fittings-riverside",
+    "water-heater-gas-valve-small.C8cTLQk-_vA",
+    "tree-roots-in-sewer-line.BRfyX8U3_5vO5v.",
+    "leak-repair-wall-opened.DV7A2uE3_2jl3Ja.",
+    "new-kitchen-faucet-install.N3kY90Mu_Z1Lj",
+    "commercial-plumbing-job-vans.BAI5w3ED_Z1",
+    "Pressure regulator replaced on the suppl",
+    "Open framing with new drain and supply r",
+    "Utility room job with Mike's green slime",
+    "Copper water lines with green corrosion ",
+    "Gas control valve on a 75-gallon water h"
+   ]
+  },
+  {
+   "pg": "/services",
+   "W": 1440,
+   "photos": 6,
+   "photoGapMax": -8.2,
+   "photoRange": [
+    -5,
+    4.75
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Tree roots Mike pulled out of a sewer li",
+    "Corroded copper pipe with green buildup ",
+    "Wall opened up to reach a leaking water ",
+    "Gas control valve on a water heater Mike",
+    "Mike's Instagram post of a new faucet in",
+    "ADU bathroom plumbing rough-in by Mike's"
+   ]
+  },
+  {
+   "pg": "/drain-cleaning",
+   "W": 1440,
+   "photos": 3,
+   "photoGapMax": -5.4,
+   "photoRange": [
+    -5,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Mike's new pipe and press fittings in a ",
+    "tree-roots-in-sewer-line.BRfyX8U3_1VdkgD",
+    "A new sewer cleanout Mike put in a front"
+   ]
+  },
+  {
+   "pg": "/water-heaters",
+   "W": 1440,
+   "photos": 2,
+   "photoGapMax": -6,
+   "photoRange": [
+    -4.58,
+    4.64
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Gas control valve on a 75-gallon gas wat",
+    "Close-up of the heater's gas control val"
+   ]
+  },
+  {
+   "pg": "/emergency-plumber",
+   "W": 1440,
+   "photos": 4,
+   "photoGapMax": -3,
+   "photoRange": [
+    -4.97,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "New water line with press fittings in a ",
+    "Roots pulled out of a sewer line",
+    "Gas control valve on a water heater",
+    "A wall opened up to reach a leaking pipe"
+   ]
+  },
+  {
+   "pg": "/about",
+   "W": 1440,
+   "photos": 4,
+   "photoGapMax": -7.7,
+   "photoRange": [
+    -5,
+    4.72
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Mike's Plumbing Services work vans parke",
+    "Mike at his van with the back doors open",
+    "Mike's 3D mascot saluting, holding a wre",
+    "Mike's Plumbing Services hex stamp in gr"
+   ]
+  },
+  {
+   "pg": "/reviews",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    -13,
+    11
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/our-work",
+   "W": 1440,
+   "photos": 14,
+   "photoGapMax": -4.4,
+   "photoRange": [
+    -5,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    -40,
+    35.2
+   ],
+   "photoNames": [
+    "Mike Navarro loading the back of his whi",
+    "Mike running a drain camera through a fl",
+    "bathroom-plumbing-rough-in.GeNRC21r_1Vcl",
+    "water-heater-gas-valve-small.C8cTLQk-_Z1",
+    "tree-roots-in-sewer-line.BRfyX8U3_Zz78fG",
+    "crawlspace-pipe-press-fittings-riverside",
+    "commercial-plumbing-job-vans.BAI5w3ED_8H",
+    "leak-repair-wall-opened.DV7A2uE3_Z1SRdig",
+    "new-sewer-cleanout-in-yard.DcS0qT-D_NHiX",
+    "corroded-copper-pipe-leak.DNuzjDOd_sWSQP",
+    "new-kitchen-faucet-install.N3kY90Mu_TqfC",
+    "water-pressure-regulator-replacement.Bs8",
+    "The 75-gallon gas water heater and its g",
+    "drain-slime-job-stamp.CSQZoFQ9_ZpOgYC.av"
+   ]
+  },
+  {
+   "pg": "/faq",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/contact",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/service-areas",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/plumber-corona-ca",
+   "W": 1440,
+   "photos": 1,
+   "photoGapMax": -12.7,
+   "photoRange": [
+    0,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    29
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-moreno-valley-ca",
+   "W": 1440,
+   "photos": 1,
+   "photoGapMax": -12.7,
+   "photoRange": [
+    0,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    29
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-murrieta-ca",
+   "W": 1440,
+   "photos": 1,
+   "photoGapMax": -12.7,
+   "photoRange": [
+    0,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    29
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-buena-park-ca",
+   "W": 1440,
+   "photos": 1,
+   "photoGapMax": -12.7,
+   "photoRange": [
+    0,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    29
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-los-angeles-ca",
+   "W": 1440,
+   "photos": 1,
+   "photoGapMax": -12.7,
+   "photoRange": [
+    0,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    29
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-west-hollywood-ca",
+   "W": 1440,
+   "photos": 1,
+   "photoGapMax": -12.7,
+   "photoRange": [
+    0,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    29
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/privacy",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": null,
+   "photoNames": []
+  },
+  {
+   "pg": "/terms",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": null,
+   "photoNames": []
+  },
+  {
+   "pg": "/thank-you",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/404",
+   "W": 1440,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/",
+   "W": 390,
+   "photos": 5,
+   "photoGapMax": -3.8,
+   "photoRange": [
+    -5,
+    5
+   ],
+   "heads": 3,
+   "headRange": [
+    0,
+    0
+   ],
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Water heater gas control valve on a job ",
+    "Pressure regulator replaced on the suppl",
+    "Open framing with new drain and supply r",
+    "Utility room job with Mike's green slime",
+    "Gas control valve on a 75-gallon water h"
+   ]
+  },
+  {
+   "pg": "/services",
+   "W": 390,
+   "photos": 6,
+   "photoGapMax": -4.3,
+   "photoRange": [
+    -5,
+    4.65
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Tree roots Mike pulled out of a sewer li",
+    "Corroded copper pipe with green buildup ",
+    "Wall opened up to reach a leaking water ",
+    "Gas control valve on a water heater Mike",
+    "Mike's Instagram post of a new faucet in",
+    "ADU bathroom plumbing rough-in by Mike's"
+   ]
+  },
+  {
+   "pg": "/drain-cleaning",
+   "W": 390,
+   "photos": 3,
+   "photoGapMax": -4.4,
+   "photoRange": [
+    -4.79,
+    4.65
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Mike's new pipe and press fittings in a ",
+    "tree-roots-in-sewer-line.BRfyX8U3_1VdkgD",
+    "A new sewer cleanout Mike put in a front"
+   ]
+  },
+  {
+   "pg": "/water-heaters",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -13.9,
+   "photoRange": [
+    0,
+    3.02
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Gas control valve on a 75-gallon gas wat"
+   ]
+  },
+  {
+   "pg": "/emergency-plumber",
+   "W": 390,
+   "photos": 4,
+   "photoGapMax": -3.3,
+   "photoRange": [
+    -5,
+    4.19
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "A wall opened up to reach a leaking pipe",
+    "New water line with press fittings in a ",
+    "Roots pulled out of a sewer line",
+    "Gas control valve on a water heater"
+   ]
+  },
+  {
+   "pg": "/about",
+   "W": 390,
+   "photos": 3,
+   "photoGapMax": -5.8,
+   "photoRange": [
+    -4.36,
+    4.2
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": [
+    "Mike's Plumbing Services work vans parke",
+    "Mike's 3D mascot saluting, holding a wre",
+    "Mike's Plumbing Services hex stamp in gr"
+   ]
+  },
+  {
+   "pg": "/reviews",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    -6,
+    6
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/our-work",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -7.7,
+   "photoRange": [
+    -5,
+    4.43
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    -20,
+    20
+   ],
+   "photoNames": [
+    "The 75-gallon gas water heater and its g"
+   ]
+  },
+  {
+   "pg": "/faq",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/contact",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/service-areas",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/plumber-corona-ca",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -11.7,
+   "photoRange": [
+    0,
+    3.88
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    13
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-moreno-valley-ca",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -7.5,
+   "photoRange": [
+    0,
+    5
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    13
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-murrieta-ca",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -11.7,
+   "photoRange": [
+    0,
+    3.88
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    13
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-buena-park-ca",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -11.5,
+   "photoRange": [
+    0,
+    3.93
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    13
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-los-angeles-ca",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -11.5,
+   "photoRange": [
+    0,
+    3.93
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    13
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/plumber-west-hollywood-ca",
+   "W": 390,
+   "photos": 1,
+   "photoGapMax": -11.5,
+   "photoRange": [
+    0,
+    3.93
+   ],
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    13
+   ],
+   "photoNames": [
+    "Mike Navarro at the open back doors of h"
+   ]
+  },
+  {
+   "pg": "/privacy",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": null,
+   "photoNames": []
+  },
+  {
+   "pg": "/terms",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": null,
+   "photoNames": []
+  },
+  {
+   "pg": "/thank-you",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  },
+  {
+   "pg": "/404",
+   "W": 390,
+   "photos": 0,
+   "photoGapMax": null,
+   "photoRange": null,
+   "heads": 0,
+   "headRange": null,
+   "otherRange": [
+    0,
+    0
+   ],
+   "photoNames": []
+  }
+ ],
+ "D11": "21 pages x 1440/390: 64/40 px above rule, one colour #151410, Privacy-Terms right edge 1320 at 1440, MIKE’S svg bottom = footer bottom, h-scroll 0",
+ "D12": {
+  "brotli": {
+   "home": {
+    "perf": 91,
+    "seo": 69,
+    "lcp_s": 3.26,
+    "cls": 0,
+    "fcp_s": 2.04,
+    "lcpElement": "section.hero > div.hero-in > div.hero-txt > p.lead",
+    "seoFailing": "is-crawlable (meta robots noindex,nofollow + robots.txt Disallow: /)"
+   },
+   "water-heaters": {
+    "perf": 95,
+    "seo": 69,
+    "lcp_s": 2.67,
+    "cls": 0.005,
+    "fcp_s": 1.83,
+    "lcpElement": "div.wx-vis > div.wx-photo > picture > img.img",
+    "seoFailing": "is-crawlable (meta robots noindex,nofollow + robots.txt Disallow: /)"
+   },
+   "plumber-corona-ca": {
+    "perf": 98,
+    "seo": 69,
+    "lcp_s": 2.28,
+    "cls": 0,
+    "fcp_s": 1.28,
+    "lcpElement": "div.th-clip > div.th-photo > picture > img.img",
+    "seoFailing": "is-crawlable (meta robots noindex,nofollow + robots.txt Disallow: /)"
+   },
+   "reviews": {
+    "perf": 95,
+    "seo": 69,
+    "lcp_s": 2.67,
+    "cls": 0.001,
+    "fcp_s": 1.8,
+    "lcpElement": "div.wrap > div.rh-art > a.rh-badge > span.rh-bv",
+    "seoFailing": "is-crawlable (meta robots noindex,nofollow + robots.txt Disallow: /)"
+   }
+  },
+  "uncompressed": {
+   "home": {
+    "perf": 69,
+    "lcp_s": 5.75,
+    "note": "no compression on the local static server"
+   },
+   "water-heaters": {
+    "perf": 78,
+    "lcp_s": 4.43,
+    "note": "no compression on the local static server"
+   },
+   "plumber-corona-ca": {
+    "perf": 79,
+    "lcp_s": 4.46,
+    "note": "no compression on the local static server"
+   },
+   "reviews": {
+    "perf": 76,
+    "lcp_s": 4.77,
+    "note": "no compression on the local static server"
+   }
+  }
+ },
+ "C9": {
+  "24/7": 0,
+  "licens*": "0 (only GSAP @license comments in JS)",
+  "": 0,
+  "quotes": "146 quoted strings checked; 2 home ticket quotes were trimmed/re-capitalised (fixed); remaining non-matches are Mike Instagram quotes, bracket ellipses and the /drain-cleaning heading “Very clean, professional.” (period replaces the review comma)"
+ }
+}

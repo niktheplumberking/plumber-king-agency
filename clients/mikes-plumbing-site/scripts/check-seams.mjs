@@ -51,10 +51,11 @@ function measure(SEAM_OBJECTS) {
     let { left, top, right, bottom } = r;
     for (let e = el.parentElement; e && e !== document.body; e = e.parentElement) {
       const cs = getComputedStyle(e);
-      if (/hidden|clip/.test(cs.overflowX + cs.overflowY)) {
+      // scroll containers (auto / scroll) clip their content too (e.g. the Slips view under reduced motion)
+      if (/hidden|clip|auto|scroll/.test(cs.overflowX + cs.overflowY)) {
         const q = e.getBoundingClientRect();
-        if (/hidden|clip/.test(cs.overflowX)) { left = Math.max(left, q.left); right = Math.min(right, q.right); }
-        if (/hidden|clip/.test(cs.overflowY)) { top = Math.max(top, q.top); bottom = Math.min(bottom, q.bottom); }
+        if (/hidden|clip|auto|scroll/.test(cs.overflowX)) { left = Math.max(left, q.left); right = Math.min(right, q.right); }
+        if (/hidden|clip|auto|scroll/.test(cs.overflowY)) { top = Math.max(top, q.top); bottom = Math.min(bottom, q.bottom); }
       }
     }
     return right - left > 0.5 && bottom - top > 0.5 ? { left, top: top + sy, right, bottom: bottom + sy } : null;

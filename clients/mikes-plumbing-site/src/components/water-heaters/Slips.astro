@@ -44,7 +44,7 @@ const cols = [{ k: 'a', dir: -1, list: A }, { k: 'b', dir: 1, list: B }];
       <Eyebrow look="figma" tone="deep" class="sl-eb" data-t="1">On {r.source} · {r.value} · {r.count} reviews</Eyebrow>
       <h2 id="sl-h" class="sv-h sl-h" data-t="2">Honest work. <em>In their words.</em></h2>
       <p class="sl-lead" data-t="3">{A.length + B.length} of Mike's {r.count} Yelp reviews, word for word. The one about a water heater comes first.</p>
-      <a class="sl-badge" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="3" data-fx="pop" data-idle="shake" aria-label={`${r.value} out of 5 on ${r.source}, ${r.count} reviews. Read them all on Yelp (opens in a new tab)`}>
+      <a class="sl-badge" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="3" data-fx="pop" data-idle="shake" aria-label={`${r.value}, ${r.count} reviews on ${r.source} (out of 5). Read them all on Yelp (opens in a new tab)`}>
         <svg viewBox="0 0 240 150" preserveAspectRatio="none" aria-hidden="true"><path d="M30 0H210L240 75 210 150H30L0 75Z" fill="#0E0D0B" /><path d="M38 9H202L230 75 202 141H38L10 75Z" fill="none" stroke="rgba(210,197,166,.5)" stroke-width="1.2" vector-effect="non-scaling-stroke" /></svg>
         <span class="sl-bv" aria-hidden="true">{r.value}</span>
         <span class="sl-bs" aria-hidden="true">★★★★★</span>

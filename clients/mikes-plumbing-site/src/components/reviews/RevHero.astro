@@ -42,7 +42,7 @@ const stars = [-6, 4, -2, 5, -4];
         ))}
       </ul>
       <p class="rh-ctl" aria-hidden="true"><button type="button" class="rh-next" tabindex="-1" data-rh-next>Next review <span>→</span></button></p>
-      <a class="rh-badge" href={SITE.social.yelp} target="_blank" rel="noopener" data-idle="shake" aria-label={`${R.value} out of 5 on ${R.source}, ${R.count} reviews. Read them on Yelp (opens in a new tab)`}>
+      <a class="rh-badge" href={SITE.social.yelp} target="_blank" rel="noopener" data-idle="shake" aria-label={`${R.value}, ${R.count} reviews on ${R.source} (out of 5). Read them on Yelp (opens in a new tab)`}>
         <svg viewBox="0 0 250 160" preserveAspectRatio="none" aria-hidden="true"><path d="M32 1h186l31 79-31 79H32L1 80z" fill="#0E0D0B" stroke="#D2C5A6" stroke-width="2" vector-effect="non-scaling-stroke" /><path d="M40 10h170l27 70-27 70H40L13 80z" fill="none" stroke="#D2C5A6" stroke-opacity=".35" stroke-width="1.2" vector-effect="non-scaling-stroke" /></svg>
         <span class="rh-bv" aria-hidden="true">{R.value}</span>
         <span class="rh-stars" aria-hidden="true">{stars.map((d) => <svg viewBox="0 0 24 24" style={`rotate:${d}deg`}><path d={star} fill="#D2C5A6" /></svg>)}</span>

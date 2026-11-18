@@ -36,14 +36,14 @@ const tabs = Array.from({ length: 10 }, (_, i) => i);
       </ul>
       <p class="sr-only" aria-live="polite" data-tear-status></p>
     </div>
-    <a class="ft-torn" href={SITE.tel} aria-label={`Call ${SITE.phone}`} data-t="3"><span class="ft-txt" aria-hidden="true"><span class="ft-k">Call now</span><span class="ft-num">{SITE.phone}</span></span></a>
+    <a class="ft-torn" href={SITE.tel} aria-label={`Call now ${SITE.phone}`} data-t="3"><span class="ft-txt" aria-hidden="true"><span class="ft-k">Call now</span><span class="ft-num">{SITE.phone}</span></span></a>
     <p class="ft-take sv-script lh-yest" data-t="3" aria-hidden="true">Take one.</p>
   </div>
 </section>
 
 <style>
   .ft { position: relative; clip-path: inset(-200px 0 0 0); } /* the torn-off slip is cut at the footer seam (Figma mobile) */
-  .ft-in { position: relative; width: 1440px; height: 640px; margin: 0 auto; }
+  .ft-in { position: relative; width: 1440px; height: 660px; margin: 0 auto; } /* +20: the fly and tabs keep 24 px from the footer wave */
   .ft-fly { position: absolute; left: 180px; top: 50px; width: 1000px; height: 520px; rotate: 1.5deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 30px 50px -10px rgba(0, 0, 0, .6); }
   .ft-logo { position: absolute; left: 50px; top: 46px; width: 220px; height: 140px; object-fit: contain; }
   .ft-h { position: absolute; left: 310px; top: 40px; margin: 0; font-size: 84px; color: var(--ink); white-space: nowrap; }

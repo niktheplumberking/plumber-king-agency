@@ -135,7 +135,9 @@ const r = SITE.rating;
     .cl-board { position: relative; }
     .cl-proof { width: 100%; max-width: 560px; margin-top: 30px; }
     .cl-seal { position: relative; }
-    .cl-pins { display: grid; gap: 16px; margin-top: -40px; padding-left: 40px; }
+    /* round 2 re-look: ~16 px of paper above the first slip's red bar, and the badge pinned below the second slip, clear of its text */
+    .cl-pins { display: grid; gap: 16px; margin-top: -4px; padding-left: 40px; }
+    .cl-seal { margin-top: 24px; }
     .cl-pin { position: relative; left: auto; top: auto; width: auto; }
     .cl-chk { position: static; margin-top: 18px; }
     .cl-board { order: 9; rotate: -1deg; transform-origin: 0 0; }
@@ -158,7 +160,8 @@ const r = SITE.rating;
     .cl-body { margin-top: 14px; font-size: 15px; line-height: 1.45; }
     .cl-proof { margin-top: 22px; }
     .cl-seal { width: 150px; height: 104px; rotate: -4deg; }
-    .cl-pins { margin-top: -26px; padding-left: 18px; gap: 12px; }
+    .cl-pins { margin-top: 0; padding-left: 18px; gap: 12px; }
+    .cl-seal { margin-top: 16px; }
     .cl-pin figure { padding: 18px 18px 14px; }
     .cl-pin p { font-size: 14px; }
     .cl-pin figcaption { font-size: 11px; line-height: 16px; }

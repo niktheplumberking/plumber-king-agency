@@ -1,45 +1,46 @@
-// Curtain hooks (kit/Curtain.astro; MOTION.md section 3; fix round 1 A-3 + B4). One channel: GSAP `yPercent` on .pt-panel.
-//   park()            boot, every page: yPercent 100 (below the screen), unless this page arrived under the curtain.
-//   cover(url)        an in-site link: one continuous ease-in-out cover to yPercent 0 (full coverage), THEN navigate.
+// Curtain hooks (kit/Curtain.astro; MOTION.md section 3; fix round 1 A-3, B2, B4). 8 blinds, one channel per blind: GSAP
+// `xPercent` on .pt-blind (odd rows park left, even rows park right, like the loader's exit).
+//   park()            boot, every page: blinds off-screen, unless this page arrived under the curtain.
+//   cover(url)        an in-site link: the blinds close in from both sides in one ease-in-out move (full coverage), THEN
+//                     navigate.
 //   reveal(onHandoff) the page we arrived at (html.pt-in): it starts covered (CSS, no transform), the page is put at the top
-//                     under the cover, then one continuous ease-in-out lift to yPercent -100. onHandoff fires once the panel
-//                     has cleared the header (the hero then plays); onDone once it is fully off-screen.
+//                     under the cover, then the blinds slide off. onHandoff fires in the reveal's onComplete, once the last
+//                     blind is fully off-screen (B3 handoff rule: header + hero start only then).
 // Navigation rule (B4): a page reached through an in-site link always opens at the top. history.scrollRestoration is
 // 'manual' only while we arrive (so the browser cannot restore a stale position under the cover), and back to 'auto' after
-// the lift, so back/forward keep the browser's native restore. Same-page # links are not ours (Lenis scrolls them smoothly).
-// Phase 2 swaps the visual (8 blinds) but keeps these three hooks and the single yPercent channel.
+// the reveal, so back/forward keep the browser's native restore. Same-page # links are not ours (Lenis scrolls them).
 import { gsap } from 'gsap';
 
 const html = document.documentElement;
-const DUR_COVER = 0.6;
-const DUR_REVEAL = 0.75;
+const DUR = 0.6;
+const STAGGER = 0.012;
 const EASE = 'power2.inOut';
 
 const root = () => document.querySelector<HTMLElement>('[data-pt]');
-const panelOf = (pt: HTMLElement) => pt.querySelector<HTMLElement>('.pt-panel')!;
+const blindsOf = (pt: HTMLElement) => Array.from(pt.querySelectorAll<HTMLElement>('.pt-blind'));
+const off = (i: number) => (i % 2 ? 101 : -101);
 
 export function park() {
   const pt = root(); if (!pt) return;
-  if (!html.classList.contains('pt-in')) gsap.set(panelOf(pt), { yPercent: 100 });
+  if (!html.classList.contains('pt-in')) gsap.set(blindsOf(pt), { xPercent: off });
   // Back/forward cache restore: never leave the curtain down.
   window.addEventListener('pageshow', (ev) => {
     if (!ev.persisted) return;
-    gsap.killTweensOf(panelOf(pt)); pt.classList.remove('is-on'); html.classList.remove('pt-in');
-    gsap.set(panelOf(pt), { yPercent: 100 });
+    const b = blindsOf(pt); gsap.killTweensOf(b); pt.classList.remove('is-on'); html.classList.remove('pt-in');
+    gsap.set(b, { xPercent: off }); gsap.set(pt.querySelector('.pt-mark'), { autoAlpha: 0 });
   });
 }
 
 /** Cover the page, then go to `href`. Returns false when there is no curtain (the caller navigates itself). */
 export function cover(href: string): boolean {
   const pt = root(); if (!pt) return false;
-  const panel = panelOf(pt);
-  try { sessionStorage.setItem('mps-nav', '1'); } catch (err) { /* no storage: the next page simply shows without the lift */ }
+  const blinds = blindsOf(pt);
+  try { sessionStorage.setItem('mps-nav', '1'); } catch (err) { /* no storage: the next page simply shows without the reveal */ }
   pt.classList.add('is-on');
-  const mark = pt.querySelector('.pt-mark');
-  gsap.killTweensOf(panel);
+  gsap.killTweensOf(blinds);
   gsap.timeline({ onComplete: () => { location.href = href; } })
-    .fromTo(panel, { yPercent: Number(gsap.getProperty(panel, 'yPercent')) || 100 }, { yPercent: 0, duration: DUR_COVER, ease: EASE })
-    .fromTo(mark, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: 'sine.inOut' }, DUR_COVER * 0.55);
+    .to(blinds, { xPercent: 0, duration: DUR, ease: EASE, stagger: STAGGER }, 0)
+    .fromTo(pt.querySelector('.pt-mark'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: 'sine.inOut' }, DUR * 0.6);
   return true;
 }
 
@@ -49,27 +50,24 @@ export function toTop() {
   (window as any).__pbpLenis?.scrollTo(0, { immediate: true, force: true });
 }
 
-/** Arrived under the curtain: start covered, put the page at the top, then lift. False when this page did not arrive so. */
+/** Arrived under the curtain: start covered, put the page at the top, then reveal. False when this page did not arrive so. */
 export function reveal(onHandoff: () => void, onDone: () => void = () => {}): boolean {
   const pt = root();
   if (!pt || !html.classList.contains('pt-in')) return false;
-  const panel = panelOf(pt);
+  const blinds = blindsOf(pt);
   try { history.scrollRestoration = 'manual'; } catch (e) { /* old browsers */ }
   toTop();
-  gsap.set(panel, { yPercent: 0 });
-  const mark = pt.querySelector('.pt-mark');
+  gsap.set(blinds, { xPercent: 0 });
   gsap.timeline({
     delay: 0.05,
     onComplete: () => {
       html.classList.remove('pt-in');
-      gsap.set(panel, { yPercent: 100 });
       try { history.scrollRestoration = 'auto'; } catch (e) { /* old browsers */ }
-      onDone();
+      onHandoff(); onDone();
     },
   })
-    .to(mark, { autoAlpha: 0, duration: 0.25, ease: 'sine.inOut' }, 0)
-    .to(panel, { yPercent: -100, duration: DUR_REVEAL, ease: EASE }, 0.1)
-    .add(onHandoff, 0.1 + DUR_REVEAL * 0.45);
+    .fromTo(pt.querySelector('.pt-mark'), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.25, ease: 'sine.inOut' }, 0)
+    .to(blinds, { xPercent: off, duration: DUR, ease: EASE, stagger: STAGGER }, 0.1);
   return true;
 }
 

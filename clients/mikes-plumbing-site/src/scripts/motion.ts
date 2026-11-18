@@ -10,6 +10,7 @@ import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import Lenis from 'lenis';
 import { park, reveal, interceptLinks } from '../components/kit/curtain';
+import { runLoader } from '../components/kit/loader';
 import { settled, requestRefresh } from '../components/kit/settle';
 
 declare global { interface Window { __pbpMotion?: boolean; __pbpLenis?: Lenis } }
@@ -28,7 +29,6 @@ const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
  * its entrance when it is already above the viewport when its tween is built (anchor jump, reload mid-page). */
 const EASE = 'power3.out';          // loader, curtain mark, header bits
 const SOFT = 'power2.out';          // header top-bar fade
-const ACCENT = 'back.out(1.3)';     // loader seal
 const G_DELAY = [0, 0.15, 0.3];     // G1 / G2 / G3
 const HEAD_STEP = 0.1;              // items of one group inside a section head, DOM order
 const START = { one: 'top 88%', group: 'top 85%', draw: 'top 92%', count: 'top 90%' }; // United's trigger points
@@ -590,52 +590,8 @@ function introChrome(tl: gsap.core.Timeline) {
   }
 }
 
-function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
-  const ld = document.querySelector<HTMLElement>('[data-loader]');
-  if (!ld || !html.classList.contains('intro')) { onHandoff(); return; }
-  const panel = ld.querySelector<HTMLElement>('.ld-panel')!;
-  const edge = ld.querySelector<SVGElement>('.ld-edge');
-  const water = ld.querySelector<HTMLElement>('.ld-water');
-  const t0 = performance.now();
-  const MIN = 1800, MAX = 3400;
-  window.__pbpLenis?.stop();
-  // One beat at a time, each starting when the previous is ~70 % done: ring, seal, stripes, words, pipe.
-  const build = gsap.timeline();
-  build
-    .to(ld.querySelector('.ld-ring circle'), { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0)
-    .to(ld.querySelector('.ld-seal'), { scale: 1, duration: 0.6, ease: ACCENT }, 0.56)
-    .to($$('.ld-stripes path', ld), { x: 0, xPercent: 0, autoAlpha: 1, duration: 0.5, ease: EASE, stagger: 0.1 }, 0.98)
-    .to(ld.querySelector('.ld-word'), { autoAlpha: 1, duration: 0.45, ease: SOFT }, 1.38)
-    .to(ld.querySelector('.ld-pipe'), { autoAlpha: 1, duration: 0.4, ease: SOFT }, 1.66);
-  // Water fills toward 85 % while the page loads, then to full.
-  const fill = water ? gsap.to(water, { scaleX: 0.85, duration: 1.6, ease: 'power2.out', delay: 1.75 }) : null;
-
-  let lifted = false;
-  const lift = () => {
-    if (lifted) return; lifted = true;
-    fill?.kill(); build.progress(1);
-    onLift(); // the panel still covers the page: the hero takes its pre-states now, unseen
-    const skipBtn = ld.querySelector('.ld-skip'); if (skipBtn) gsap.to(skipBtn, { autoAlpha: 0, duration: 0.2 }); // it sits outside the panel
-    // Layout px (offsetHeight), not getBoundingClientRect: under the wide-screen zoom a rect is in zoomed px.
-    const h = panel.offsetHeight + ((edge as any)?.clientHeight || 120) + 8;
-    const out = gsap.timeline({ onComplete: () => {
-      html.classList.remove('intro'); ld.style.display = 'none';
-      try { sessionStorage.setItem('mps-intro', '1'); } catch (e) { /* storage blocked: loader may show again next visit */ }
-      window.__pbpLenis?.start();
-    } });
-    if (water) out.to(water, { scaleX: 1, duration: 0.3, ease: 'power2.out' });
-    out.to(ld.querySelector('.ld-core'), { y: -40, autoAlpha: 0, duration: 0.45, ease: 'power2.in' }, '>-0.05');
-    out.to(panel, { y: -h, duration: 1.05, ease: 'power3.inOut' }, '<0.1');
-    // The panel rises from the bottom, so the hero (top of the page) is uncovered last: hand off just past mid-lift.
-    out.add(onHandoff, '<0.45');
-  };
-  const ready = () => { const wait = Math.max(0, MIN - (performance.now() - t0)); gsap.delayedCall(wait / 1000, lift); };
-  if (document.readyState === 'complete') ready(); else window.addEventListener('load', ready, { once: true });
-  gsap.delayedCall(MAX / 1000, lift);
-  const skip = () => lift();
-  ld.addEventListener('pointerdown', skip, { once: true });
-  window.addEventListener('keydown', skip, { once: true });
-}
+// The loader itself lives in kit/loader.ts (fix round 1, B3: slat counter + 8 blinds). The hero and header start in its
+// onDone, once the last blind is fully off-screen; Lenis starts at that same moment.
 
 /* ------------------------------------------------------------------ boot */
 
@@ -711,7 +667,7 @@ function boot() {
   // Arrived through an in-site link: the page starts covered and at the top (kit/curtain.ts reveal), the hero is hidden
   // under the cover, then the panel lifts. Otherwise the loader (first visit) or a plain start.
   if (html.classList.contains('pt-in') && document.querySelector('[data-pt]')) { hideHero(); reveal(handoff); }
-  else runLoader(handoff, buildHero);
+  else runLoader({ onCover: buildHero, onDone: handoff });
   // Fonts, images and the zoom change line breaks and positions: re-measure once they have all settled.
   settled().then(() => requestRefresh(0));
 }

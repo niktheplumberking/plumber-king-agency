@@ -1,53 +1,65 @@
 ---
-// First-visit-per-session loader (MOTION.md section 3; shown only under html.intro, set before paint in Base.astro).
-// Mike's version of Paul's beats (motion.ts runLoader drives them): a gauge ring draws round his hex badge, the badge
-// settles, three flyer rules slide in, the words, then a pipe between two hex nuts fills with water while the page loads
-// (min 1.8 s, max 3.4 s). The ink panel lifts with a wave as its trailing edge. Click, tap or any key skips.
+// First-visit-per-session loader (fix round 1, B3). Base: 21st.dev "Swiss Poster Counter Preloader" (id 35248,
+// slat-count-preloader by kedhareswer), re-implemented in vanilla TS + GSAP (kit/loader.ts) and translated to Mike:
+// ink poster, tan and bone slats that read as pipe sections, counting 000 -> 100 while the page loads; Mike's hex badge
+// small top-left; "Friendly · Transparent · Proficient" in Oswald. At 100 the poster splits into 8 horizontal blinds that
+// slide off, alternating left and right (the page curtain, kit/Curtain.astro, is the same 8 blinds). Shown only under
+// html.intro (Base.astro: once per session, never under reduced motion). Click, tap or any key skips. Max 3.4 s.
 import { Image } from 'astro:assets';
 import logo from '../../assets/brand/logo-cream.png';
+const BLINDS = 8;
+const SLOTS = 3;
 ---
 <div class="ld" data-loader aria-hidden="true">
-  <div class="ld-panel">
-    <div class="ld-core">
-      <div class="ld-mark">
-        <svg class="ld-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="57" pathLength="1" /></svg>
-        <span class="ld-seal"><Image src={logo} alt="" width={240} height={153} loading="eager" /></span>
-      </div>
-      <svg class="ld-stripes" viewBox="0 0 120 22" aria-hidden="true">
-        <path class="s1" d="M20 0h80v2H20z" fill="#D2C5A6" /><path class="s2" d="M8 9h104v3H8z" fill="#D2C5A6" /><path class="s3" d="M20 19h80v2H20z" fill="#D2C5A6" />
-      </svg>
-      <p class="ld-word">Friendly <span>·</span> Transparent <span>·</span> Proficient</p>
-      <div class="ld-pipe">
-        <svg class="ld-nut" viewBox="0 0 22 26"><path d="M5 1h12l4 6v12l-4 6H5l-4-6V7z" /></svg>
-        <span class="ld-tube"><span class="ld-water"></span></span>
-        <svg class="ld-nut" viewBox="0 0 22 26"><path d="M5 1h12l4 6v12l-4 6H5l-4-6V7z" /></svg>
-      </div>
+  <div class="ld-blinds">{Array.from({ length: BLINDS }, () => <i class="ld-blind"></i>)}</div>
+  <div class="ld-stage">
+    <div class="ld-count">
+      {Array.from({ length: SLOTS }, () => (
+        <span class="ld-slot">{Array.from({ length: 21 }, (_, i) => <i class="ld-slat" style={`--c:${i % 3};--r:${Math.floor(i / 3)}`}></i>)}</span>
+      ))}
+      <span class="ld-pct">%</span>
     </div>
-    <svg class="ld-edge" viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 0h1440v22c-120 0-200 30-360 30S840 14 720 14 480 44 330 44 120 18 0 18z" fill="#0E0D0B" /></svg>
+    <span class="ld-badge"><Image src={logo} alt="" width={160} height={102} loading="eager" /></span>
+    <p class="ld-hud ld-tr"><span class="ld-dot"></span><span>Riverside, CA</span><br /><span class="ld-num">000 / 100</span></p>
+    <p class="ld-hud ld-bl">Friendly <span>·</span> Transparent <span>·</span> Proficient</p>
+    <i class="ld-mark ld-m1"></i><i class="ld-mark ld-m2"></i>
   </div>
-  <button type="button" class="ld-skip" data-loader-skip tabindex="-1">Skip intro</button>
+  <button type="button" class="ld-skip" data-loader-skip tabindex="-1">Skip intro →</button>
 </div>
 <style>
   .ld { display: none; }
-  :global(html.intro) .ld { display: block; position: fixed; inset: 0; z-index: var(--z-loader); }
-  .ld-panel { position: absolute; inset: 0 0 auto 0; height: 100%; background: var(--ink); will-change: transform; }
-  .ld-edge { position: absolute; left: 0; top: calc(100% - 1px); width: 100%; height: clamp(36px, 4.2vw, 60px); }
-  .ld-core { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 18px; color: var(--paper); }
-  .ld-mark { position: relative; width: 168px; height: 168px; }
-  .ld-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
-  .ld-ring circle { fill: none; stroke: var(--tan-dark); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1; }
-  .ld-seal { position: absolute; left: 24px; right: 24px; top: 50%; translate: 0 -50%; transform: scale(0); }
-  .ld-seal :global(img) { width: 100%; height: auto; }
-  .ld-stripes { width: 120px; height: 22px; overflow: visible; }
-  .ld-stripes path { transform: translateX(-140%); opacity: 0; }
-  .ld-word { font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--tan); opacity: 0; }
-  .ld-word span { color: var(--tan-dark); }
-  .ld-pipe { display: flex; align-items: center; width: min(280px, 70vw); margin-top: 4px; opacity: 0; }
-  .ld-nut { width: 18px; height: 22px; flex: none; position: relative; z-index: 1; }
-  .ld-nut path { fill: var(--tan); stroke: var(--ink); stroke-width: 1.5; }
-  .ld-tube { position: relative; flex: 1; height: 12px; margin: 0 -3px; background: #2A2620; box-shadow: inset 0 0 0 1.5px var(--tan-dark); overflow: hidden; }
-  .ld-water { position: absolute; inset: 2px; background: linear-gradient(90deg, var(--tan-dark), var(--tan)); transform-origin: left center; transform: scaleX(0); }
-  .ld-water::after { content: ''; position: absolute; top: 2px; left: 6px; right: 6px; height: 1.5px; background: rgba(255, 255, 255, .35); }
-  .ld-skip { position: absolute; right: 20px; bottom: 20px; min-height: 44px; padding: 0 16px; color: var(--mute); font-weight: 600; font-size: 13px; }
+  :global(html.intro) .ld { display: block; position: fixed; inset: 0; z-index: var(--z-loader); color: var(--paper); overflow: hidden; }
+  .ld-blinds { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .ld-blind { flex: 1 1 0; margin-bottom: -1px; background: var(--ink); will-change: transform; }
+  .ld-stage { position: absolute; inset: 0; display: grid; place-items: center; }
+  .ld-count {
+    --dh: min(34vh, 28vw); --g: calc(var(--dh) * .024); --h: calc((var(--dh) - 6 * var(--g)) / 7); --w: calc(var(--h) * 2);
+    position: relative; display: flex; gap: calc(var(--w) * .55);
+  }
+  .ld-slot { position: relative; width: calc(3 * var(--w) + 2 * var(--g)); height: var(--dh); }
+  .ld-slat {
+    position: absolute; left: calc(var(--c) * (var(--w) + var(--g))); top: calc(var(--r) * (var(--h) + var(--g)));
+    width: var(--w); height: var(--h); border-radius: 2px; background: var(--tan);
+    box-shadow: inset 0 calc(var(--h) * .18) 0 rgba(255, 255, 255, .22), inset 0 calc(var(--h) * -.16) 0 rgba(0, 0, 0, .18);
+    transform: translate(calc(var(--x, 0) * (100% + var(--g))), calc(var(--y, 0) * (100% + var(--g)))) scaleX(var(--s, 0));
+    transition: transform .42s cubic-bezier(.65, 0, .35, 1);
+  }
+  .ld-slat:nth-child(3n + 2) { background: var(--paper); }
+  .ld-pct { position: absolute; left: 100%; top: calc(var(--h) * .2); margin-left: calc(var(--w) * .2); font-family: var(--f-label); font-weight: 600; font-size: max(13px, calc(var(--h) * .7)); line-height: 1; color: var(--tan); }
+  .ld-badge { position: absolute; left: clamp(20px, 4vw, 48px); top: clamp(18px, 4vh, 40px); width: clamp(64px, 6vw, 88px); }
+  .ld-badge :global(img) { display: block; width: 100%; height: auto; }
+  .ld-hud { position: absolute; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 1.5; letter-spacing: .16em; text-transform: uppercase; color: var(--tan); }
+  .ld-tr { right: clamp(20px, 4vw, 48px); top: clamp(22px, 4vh, 44px); text-align: right; }
+  .ld-num { color: var(--mute); }
+  .ld-dot { display: inline-block; width: 7px; height: 7px; margin-right: 8px; background: var(--red); vertical-align: 1px; }
+  .ld-bl { left: clamp(20px, 4vw, 48px); bottom: clamp(22px, 4vh, 44px); font-size: clamp(13px, 1.1vw, 16px); }
+  .ld-bl span { color: var(--mute); }
+  .ld-mark { position: absolute; top: 50%; width: 14px; height: 14px; margin-top: -7px; opacity: .5; }
+  .ld-mark::before, .ld-mark::after { content: ''; position: absolute; background: var(--tan); }
+  .ld-mark::before { left: 6px; top: 0; width: 2px; height: 14px; }
+  .ld-mark::after { top: 6px; left: 0; width: 14px; height: 2px; }
+  .ld-m1 { left: clamp(20px, 4vw, 48px); } .ld-m2 { right: clamp(20px, 4vw, 48px); }
+  .ld-skip { position: absolute; right: clamp(12px, 4vw, 40px); bottom: clamp(12px, 4vh, 32px); min-height: 44px; padding: 0 8px; font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); transition: color .3s; }
   .ld-skip:hover { color: var(--paper); }
+  @media (max-width: 767px) { .ld-m1, .ld-m2 { display: none; } .ld-bl { max-width: 60vw; font-size: 12px; bottom: 28px; } .ld-hud { font-size: 11px; } .ld-count { --dh: min(30vh, 25vw); } }
 </style>

@@ -1,28 +1,23 @@
 ---
-// Page curtain (kit/curtain.ts drives it; MOTION.md section 3). One transform channel: GSAP `yPercent` on .pt-panel, nothing
-// else ever writes its transform (fix round 1, A-3). The panel is taller than the viewport by one wave edge at each end, so:
-//   yPercent 100  = parked below the screen (set at boot)        yPercent 0 = covering the whole screen, both waves off-screen
-//   yPercent -100 = lifted above the screen (end of the reveal)
-// CSS gives the panel NO transform: its resting CSS state is "covering", which is exactly what html.pt-in needs at first
-// paint on the page you arrive at; on every other page the curtain is visibility: hidden until the script has parked it.
-// Phase 2 swaps the visual (8 blinds, same family as the new loader) inside .pt-panel; the channel stays.
+// Page curtain (kit/curtain.ts drives it; MOTION.md section 3). Fix round 1 B2: the same family as the loader
+// (global/Loader.astro): 8 horizontal ink blinds. Cover = the blinds close in from both sides (odd rows from the left, even
+// rows from the right) in one ease-in-out move; reveal = they slide off the same way the loader's do. One transform
+// channel per blind: GSAP `xPercent` on .pt-blind, nothing else writes its transform (A-3).
+//   xPercent -101 / +101 = parked off-screen (set at boot)      xPercent 0 = covering
+// CSS gives the blinds NO transform: their resting CSS state is "covering", which is exactly what html.pt-in needs at
+// first paint on the page you arrive at; on every other page the curtain is visibility: hidden until the script parks it.
 import { Image } from 'astro:assets';
 import logo from '../../assets/brand/logo-cream.png';
 ---
 <div class="pt" data-pt aria-hidden="true">
-  <div class="pt-panel">
-    <svg class="pt-edge pt-edge-t" viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 60h1440V38c-120 0-200-30-360-30S840 46 720 46 480 16 330 16 120 42 0 42z" fill="#0E0D0B" /></svg>
-    <div class="pt-body"><span class="pt-mark"><Image src={logo} alt="" width={240} height={153} loading="eager" decoding="async" /></span></div>
-    <svg class="pt-edge pt-edge-b" viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 60h1440V38c-120 0-200-30-360-30S840 46 720 46 480 16 330 16 120 42 0 42z" fill="#0E0D0B" /></svg>
-  </div>
+  {Array.from({ length: 8 }, () => <i class="pt-blind"></i>)}
+  <span class="pt-mark"><Image src={logo} alt="" width={240} height={153} loading="eager" decoding="async" /></span>
 </div>
 <style>
-  .pt { position: fixed; inset: 0; z-index: var(--z-curtain); pointer-events: none; visibility: hidden; --pt-e: clamp(36px, 4.2vw, 60px); }
+  .pt { position: fixed; inset: 0; z-index: var(--z-curtain); pointer-events: none; visibility: hidden; display: flex; flex-direction: column; overflow: hidden; }
   .pt.is-on, :global(html.pt-in) .pt { visibility: visible; }
-  .pt-panel { position: absolute; left: 0; right: 0; top: calc(-1 * var(--pt-e)); height: calc(100% + 2 * var(--pt-e)); display: flex; flex-direction: column; will-change: transform; }
-  .pt-edge { display: block; flex: none; width: 100%; height: var(--pt-e); margin: -1px 0; position: relative; }
-  .pt-edge-b { transform: scaleY(-1); }
-  .pt-body { position: relative; flex: 1; background: var(--ink); }
-  .pt-mark { position: absolute; left: 50%; top: 50%; width: 120px; translate: -50% -50%; }
+  .pt-blind { flex: 1 1 0; margin-bottom: -1px; background: var(--ink); will-change: transform; }
+  .pt-mark { position: absolute; left: 50%; top: 50%; width: 120px; translate: -50% -50%; opacity: 0; }
+  :global(html.pt-in) .pt-mark { opacity: 1; }
   .pt-mark :global(img) { width: 100%; height: auto; }
 </style>

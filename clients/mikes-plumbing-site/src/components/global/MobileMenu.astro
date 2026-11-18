@@ -27,7 +27,7 @@ const LINKS = [
   <nav class="mn-body" aria-label="Mobile">
     <ul role="list" class="mn-list">
       <li data-mn-item>
-        <details class="mn-d">
+        <details class="mn-d" data-acc name="mnav">
           <summary>Services<span class="pm" aria-hidden="true"></span></summary>
           <ul role="list" class="mn-sub">
             {SERVICE_PAGES.map((s) => <li><a href={s.href}>{s.name}</a></li>)}
@@ -37,7 +37,7 @@ const LINKS = [
         </details>
       </li>
       <li data-mn-item>
-        <details class="mn-d">
+        <details class="mn-d" data-acc name="mnav">
           <summary>Areas<span class="pm" aria-hidden="true"></span></summary>
           <ul role="list" class="mn-sub">
             {TOWNS.map((t) => <li><a href={t.href}>{t.slug === 'riverside' ? 'Riverside (home base)' : t.name}</a></li>)}
@@ -70,7 +70,7 @@ const LINKS = [
   .pm { position: relative; width: 18px; height: 18px; }
   .pm::before, .pm::after { content: ''; position: absolute; left: 0; top: 8px; width: 18px; height: 2px; background: var(--tan); transition: transform .3s var(--ease-out); }
   .pm::after { transform: rotate(90deg); }
-  .mn-d[open] .pm::after { transform: rotate(0); }
+  .mn-d[open]:not(.acc-off) .pm::after { transform: rotate(0); }
   .mn-sub { display: grid; gap: 0; margin: 0 0 14px; padding: 0; }
   .mn-sub a { display: flex; align-items: center; min-height: 44px; font-size: 16px; color: var(--paper); }
   .mn-sub .mn-all { color: var(--tan); font-weight: 600; }

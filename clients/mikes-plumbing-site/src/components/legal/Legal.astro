@@ -35,7 +35,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
       <svg class="lb-mark" viewBox="0 0 26 20" aria-hidden="true"><path d="M3.72.6h17.76l3.12 9-3.12 9H3.72L.6 9.6z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.2" stroke-linejoin="round" /></svg>
       <ul role="list">{sections.map((s, i) => <li><a class:list={['lb-t', i === 0 && 'is-on']} href={`#${s.id}`}><span>{nn(i)}</span>{s.nav}</a></li>)}</ul>
     </nav>
-    <details class="lb-pill">
+    <details class="lb-pill" data-acc>
       <summary><span class="lb-rh">Contents</span><span class="lb-n">{sections.length} sections <span aria-hidden="true">▾</span></span></summary>
       <ul role="list">{sections.map((s, i) => <li><a href={`#${s.id}`}><span>{nn(i)}</span>{s.nav}</a></li>)}</ul>
     </details>
@@ -58,6 +58,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
   </div>
 </section>
 <script>
+  import { setOpen } from '../kit/accordion';
   // The contents marker follows the section you are reading (desktop rail); the phone pill closes after a jump.
   document.querySelectorAll<HTMLElement>('.lb').forEach((sec) => {
     const items = Array.from(sec.querySelectorAll<HTMLElement>('.ls'));
@@ -73,7 +74,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
       if (mark) mark.style.transform = `translateY(${i * 42}px)`;
     };
     addEventListener('scroll', pick, { passive: true }); pick();
-    pill?.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) pill.open = false; });
+    pill?.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) setOpen(pill, false); });
   });
 </script>
 <style>

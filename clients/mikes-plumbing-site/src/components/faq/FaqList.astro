@@ -18,12 +18,12 @@ const photos = {
 const nn = (i: number) => String(i + 1).padStart(2, '0');
 const nut = 'M7.46.7h38.48l6.76 20-6.76 20H7.46L.7 20.7z';
 ---
-<section class="fl" aria-label="Questions and answers" data-m-section data-scrub data-start="top 45%" data-end="bottom 45%" data-start-m="top 30%" data-end-m="bottom 30%">
+<section class="fl" aria-label="Questions and answers" data-m-section data-scrub data-stop-mode="pop" data-start="top 45%" data-end="bottom 45%" data-start-m="top 30%" data-end-m="bottom 30%">
   <Wave z={1} d={{ a: 18.64, L: 560.5 }} m={{ a: 12.32, L: 302.5, phi: -3.1 }} fill="#F3ECDD" above="#0E0D0B" />
   <div class="fl-bar" data-fl-bar>
     <p class="fl-cnt"><span data-fl-n>01</span> / {nn(FAQS.length - 1)}</p>
     <p class="fl-cur" data-fl-t aria-live="off">{FAQS[0].topic}</p>
-    <details class="fl-all">
+    <details class="fl-all" data-acc="pop">
       <summary>All topics <span aria-hidden="true">▾</span></summary>
       <ul role="list">{FAQS.map((f, i) => <li><a href={`#${f.id}`}><span>{nn(i)}</span>{f.topic}</a></li>)}</ul>
     </details>
@@ -68,6 +68,7 @@ const nut = 'M7.46.7h38.48l6.76 20-6.76 20H7.46L.7 20.7z';
   </div>
 </section>
 <script>
+  import { setOpen } from '../kit/accordion';
   // Which question you are reading: the rail marks it (coupling + bold topic); the phone bar shows its number and name.
   document.querySelectorAll<HTMLElement>('.fl').forEach((sec) => {
     const qs = Array.from(sec.querySelectorAll<HTMLElement>('.fq'));
@@ -89,7 +90,7 @@ const nut = 'M7.46.7h38.48l6.76 20-6.76 20H7.46L.7 20.7z';
       set(i);
     };
     addEventListener('scroll', pick, { passive: true }); addEventListener('resize', pick); pick();
-    all?.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) all.open = false; });
+    all?.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) setOpen(all, false); });
   });
 </script>
 <style>

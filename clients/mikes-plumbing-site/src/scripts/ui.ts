@@ -1,11 +1,10 @@
-// Interface behaviour (runs with or without motion): header states, mega menus, mobile menu, footer accordions,
-// FAQ accordions, carousels, crew patches, mobile call bar, form niceties. Motion-only polish is gated on html.motion.
+// Interface behaviour (runs with or without motion): header states, mega menus, mobile menu, accordions (kit), carousels, crew patches, mobile call bar, form niceties. Motion-only polish is gated on html.motion.
+import { initAccordions } from '../components/kit/accordion';
 const html = document.documentElement;
 const MOTION = () => html.classList.contains('motion');
 const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector(s) as T | null;
 const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll(s)) as T[];
 const desktop = window.matchMedia('(min-width: 1200px)');
-const mobile = window.matchMedia('(max-width: 1023px)');
 
 /* ---------- header: compact after 40 px, hides on the way down, returns on the way up ---------- */
 function header() {
@@ -36,7 +35,8 @@ function mega() {
   const close = (k = openKey, focus = false) => {
     if (!k) return;
     const p = panel(k); const b = btn(k);
-    if (p) p.hidden = true;
+    // Fade out (B1: nothing disappears in one frame); reopening mid-fade cancels it.
+    if (p) { if (MOTION()) { p.getAnimations().forEach((a) => a.cancel()); p.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'cubic-bezier(.37,0,.63,1)' }).onfinish = () => { if (openKey !== k) p.hidden = true; }; } else p.hidden = true; }
     b?.setAttribute('aria-expanded', 'false');
     if (focus) b?.focus();
     if (openKey === k) openKey = null;
@@ -44,6 +44,7 @@ function mega() {
   const open = (k: string) => {
     if (openKey && openKey !== k) close(openKey);
     const p = panel(k); if (!p) return;
+    p.getAnimations().forEach((a) => a.cancel());
     p.hidden = false; btn(k)?.setAttribute('aria-expanded', 'true'); openKey = k;
     if (MOTION()) {
       p.animate([{ opacity: 0, transform: 'translateY(-10px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.16,1,.3,1)' });
@@ -137,46 +138,8 @@ function mobileMenu() {
   desktop.addEventListener('change', (e) => { if (e.matches) close(false); });
 }
 
-/* ---------- footer columns: accordions on mobile only ("Find us" starts open) ---------- */
-function footer() {
-  const cols = $$('[data-fcol]');
-  const set = (c: HTMLElement, on: boolean) => { c.classList.toggle('is-closed', !on); $('.fh-b', c)?.setAttribute('aria-expanded', String(on)); };
-  const apply = () => cols.forEach((c) => set(c, mobile.matches ? c.hasAttribute('data-fcol-open') : true));
-  cols.forEach((c) => $('.fh-b', c)?.addEventListener('click', () => { if (mobile.matches) set(c, c.classList.contains('is-closed')); }));
-  mobile.addEventListener('change', apply);
-  apply();
-}
-
-/* ---------- details accordions: smooth height, one open per group (native name= is the no-JS fallback) ---------- */
-function accordions() {
-  $$<HTMLDetailsElement>('details[data-acc]').forEach((d) => {
-    const sum = $('summary', d); const body = $<HTMLElement>('.acc-body', d);
-    if (!sum || !body) return;
-    let anim: Animation | null = null;
-    const shut = (x: HTMLDetailsElement) => {
-      const b = $<HTMLElement>('.acc-body', x); if (!b || !x.open) return;
-      if (!MOTION()) { x.open = false; return; }
-      const h = b.offsetHeight;
-      b.animate([{ height: `${h}px`, opacity: 1 }, { height: '0px', opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.16,1,.3,1)' }).onfinish = () => { x.open = false; };
-    };
-    sum.addEventListener('click', (e) => {
-      if (!MOTION()) return; // native toggle
-      e.preventDefault();
-      anim?.cancel();
-      if (d.open) { shut(d); return; }
-      const group = d.getAttribute('name');
-      if (group) $$<HTMLDetailsElement>(`details[data-acc][name="${group}"]`).forEach((o) => { if (o !== d) shut(o); });
-      // Open without the native exclusivity closing others abruptly: drop the name for the moment we set open.
-      // Drop the name while the others animate shut: native exclusivity would otherwise close this one again
-      // the moment the name returns while a sibling is still open. It comes back once they have closed.
-      if (group) d.removeAttribute('name');
-      d.open = true;
-      if (group) window.setTimeout(() => d.setAttribute('name', group), 420);
-      const h = body.offsetHeight;
-      anim = body.animate([{ height: '0px', opacity: 0 }, { height: `${h}px`, opacity: 1 }], { duration: 480, easing: 'cubic-bezier(.16,1,.3,1)' });
-    });
-  });
-}
+/* ---------- accordions: every <details data-acc> (FAQ rows, town FAQ, legal contents pill, mobile menu groups, FAQ topic
+   dropdown) runs on the one kit controller (components/kit/accordion.ts). ---------- */
 
 /* ---------- carousels (mobile rails): dots + "n of 6" follow the scroll position ---------- */
 function carousels() {
@@ -230,7 +193,7 @@ function callBar() {
   const bar = $('[data-mbar]'); if (!bar) return;
   // "Free estimate" points at the waterline form; pages without one (contact, legal, thank-you, 404) use the contact form.
   const est = $<HTMLAnchorElement>('a.mb-est[href="#estimate"]', bar); // safety net if a page forgets Base's `estimate`
-  if (est && !document.getElementById('estimate')) est.href = document.getElementById('request') ? '#request' : '/contact#request';
+  if (est && !document.getElementById('estimate')) est.href = document.getElementById('request') ? '#request' : '/contact'; // a cross-page link opens at the top (fix round 1, B4)
   const first = $('main section'); const cta = $('#estimate') ?? $('#request');
   let pastHero = false, atCta = false;
   const sync = () => bar.classList.toggle('is-on', pastHero && !atCta);
@@ -252,4 +215,4 @@ function formBits() {
   });
 }
 
-header(); mega(); mobileMenu(); footer(); accordions(); carousels(); crew(); callBar(); formBits();
+header(); mega(); mobileMenu(); initAccordions(); carousels(); crew(); callBar(); formBits();

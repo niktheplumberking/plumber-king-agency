@@ -1,4 +1,4 @@
-/* Shared parts for the service pages (/services, /water-heaters, /drain-cleaning, /emergency-plumber). Builder 2.
+/* Shared parts for the service pages (buttons and eyebrows live in components/kit) (/services, /water-heaters, /drain-cleaning, /emergency-plumber). Builder 2.
    Every class is prefixed sv- so nothing collides with the global or Home styles. Desktop values = Figma px at 1440. */
 
 .sv-sec { position: relative; overflow-x: clip; }
@@ -18,42 +18,6 @@
 .sv-ink .sv-body, .sv-coal .sv-body { color: var(--mute); }
 .sv-script { font-family: var(--f-script); font-weight: 400; }
 .sv-label { font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 16px; letter-spacing: .12em; text-transform: uppercase; }
-
-/* eyebrow */
-.sv-eb { display: flex; align-items: center; gap: 8px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; }
-.sv-eb-hex { flex: none; width: 20px; height: 15px; margin-left: -1px; }
-.sv-eb-dot { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px rgba(217, 65, 43, .25); margin: 0 4px 0 2px; }
-.sv-eb--tan { color: var(--tan); } .sv-eb--dark { color: var(--tan-dark); } .sv-eb--ink { color: var(--ink); } .sv-eb--red { color: var(--red); } .sv-eb--paper { color: var(--paper); }
-
-/* buttons (Figma "btn call" / "btn ghost": 64 tall, radius 6, text x +22; solid: Oswald 600 22 +2% at y 8, Archivo 500 12
-   at y 39, 36 px disc 16 px from the right with an Archivo Bold arrow; ghost: 1.5 px inside stroke, Archivo 700 16 at y 12,
-   Archivo 400 12 at y 36) */
-.sv-btn { position: relative; display: inline-flex; align-items: flex-start; justify-content: space-between; gap: 12px; box-sizing: border-box;
-  width: var(--bw, auto); height: 64px; padding: 8px 16px 0 22px; border-radius: 6px; text-decoration: none; isolation: isolate;
-  transition: background-color .25s var(--ease-out), color .25s var(--ease-out), box-shadow .25s var(--ease-out); }
-.sv-btn-txt { display: flex; flex-direction: column; min-width: 0; }
-.sv-btn-l1 { font-family: var(--f-sans); font-weight: 700; font-size: 16px; line-height: 17px; white-space: nowrap; }
-.sv-btn-big { font-family: var(--f-label); font-weight: 600; font-size: 22px; line-height: 33px; letter-spacing: .02em; }
-.sv-btn-l2 { font-family: var(--f-sans); font-weight: 400; font-size: 12px; line-height: 13px; margin-top: 7px; white-space: nowrap; opacity: .8; }
-.sv-btn-big + .sv-btn-l2 { margin-top: -2px; font-weight: 500; }
-.sv-btn--out, .sv-btn--outInk { padding-top: 10.5px; padding-left: 20.5px; border: 1.5px solid currentColor; }
-.sv-btn-disc { flex: none; display: grid; place-items: center; width: 36px; height: 36px; margin-top: 6px; border-radius: 50%; transition: transform .35s var(--ease-out); }
-.sv-btn-disc svg { width: 15px; height: 12px; }
-.sv-btn:hover .sv-btn-disc { transform: translateX(3px); }
-.sv-btn--tan { background: var(--tan); color: var(--ink); }
-.sv-btn--tan .sv-btn-disc { background: var(--ink); color: var(--tan); }
-.sv-btn--tan:hover { background: #ddd2b6; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
-.sv-btn--ink { background: var(--ink); color: var(--tan); }
-.sv-btn--ink .sv-btn-disc { background: var(--tan); color: var(--ink); }
-.sv-btn--ink:hover { background: #2a2620; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
-.sv-btn--red { background: var(--red); color: #fff; }
-.sv-btn--red .sv-btn-disc { background: #fff; color: var(--red); }
-.sv-btn--red:hover { background: #c3361f; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
-.sv-btn--out { color: var(--tan); }
-.sv-btn--out:hover { background: rgba(210, 197, 166, .1); }
-.sv-btn--outInk { color: var(--ink); }
-.sv-btn--outInk:hover { background: rgba(14, 13, 11, .06); }
-.sv-btn:active { translate: 0 1px; }
 
 /* hex chips (Figma: 34 tall, ends 17 px deep, stroke 1.2 tan @0.7, Oswald 500 13 +10% caps, text 18 px in) */
 .sv-chip { position: relative; display: inline-flex; align-items: center; height: 34px; padding: 0 18px; color: inherit; text-decoration: none;
@@ -82,11 +46,6 @@ a.sv-chip:hover .sv-chip-o i, a.sv-chip:hover .sv-chip-o { color: var(--tan); }
 .sv-stamp { position: absolute; pointer-events: none; }
 .sv-stamp img { width: 100%; height: auto; }
 
-/* reduced width helpers */
-@media (max-width: 767px) {
-  .sv-eb { font-size: 13px; line-height: 19px; }
-  .sv-btn { width: 100%; }
-}
 
 /* scroll moments (kit/scrub.ts): the final state is the CSS default; only under html.motion do fills start empty */
 html.motion [data-sv-scrub] [data-sv-fill] { transform: scaleX(0); }

@@ -5,9 +5,9 @@
 // purpose (Nick: keep legal pages calm); the rail marker simply follows the section you are reading.
 // The frame's "EFFECTIVE DATE: [CONFIRM]" line renders only once `effective` is given (Mike to confirm the date).
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Wave from '../kit-b4/Wave.astro';
-import Logo from '../kit-b4/Logo.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
+import Logo from '../kit/Logo.astro';
 interface Sec { id: string; t: string; nav: string; a: string }
 interface Props { title: string; sub: string; sections: Sec[]; cta: string; effective?: string }
 const { title, sub, sections, cta, effective } = Astro.props;
@@ -19,7 +19,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
   <div class="wrap lh-in">
     <Logo w={132} class="lh-logo" />
     <div class="lh-copy">
-      <Eyebrow text="Legal · Plain English" tone="deep" />
+      <Eyebrow look="page" text="Legal · Plain English" tone="deep" />
       <h1 id="lh-h" class="lh-h1" data-t="2">{title}</h1>
       <p class="lh-sub" data-t="3">{sub}</p>
       {effective && <p class="lh-eff">Effective date: {effective}</p>}
@@ -27,7 +27,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
   </div>
 </section>
 <section class="lb" aria-label={`${title} sections`}>
-  <Wave d={{ a: 16.5, L: 480.5 }} m={{ a: 10.29, L: 301 }} fill="#FBF8F2" above="#F3ECDD" />
+  <Wave z={1} d={{ a: 16.5, L: 480.5 }} m={{ a: 10.29, L: 301 }} fill="#FBF8F2" above="#F3ECDD" />
   <div class="wrap lb-in">
     <nav class="lb-rail" aria-labelledby="lb-rh">
       <p id="lb-rh" class="lb-rh">Contents</p>
@@ -51,7 +51,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
   </div>
 </section>
 <section class="le" aria-labelledby="le-h">
-  <Wave d={{ a: 14.44, L: 420.5 }} m={{ a: 10.29, L: 301 }} fill="#D2C5A6" above="#FBF8F2" />
+  <Wave z={1} d={{ a: 14.44, L: 420.5 }} m={{ a: 10.29, L: 301 }} fill="#D2C5A6" above="#FBF8F2" />
   <div class="wrap le-in">
     <h2 id="le-h" class="le-h" data-t="2">{cta}</h2>
     <a class="le-btn" href={SITE.tel} data-t="3"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M3.79 0C1.34 0-.49 2.45.12 6.12 1.96 14.7 9.3 22.04 17.88 23.88 21.55 24.49 24 22.66 24 20.21v-3.06c0-1.23-.61-1.84-1.84-2.45l-4.28-1.84c-1.23-.61-2.45 0-3.07 1.22l-1.22 1.84c-3.68-1.22-5.51-3.67-6.74-6.74l1.84-1.22c1.22-.61 1.84-1.84 1.22-3.06L8.08 1.22C7.47 0 6.85 0 5.63 0z" fill="currentColor"/></svg>{SITE.phone}</a>

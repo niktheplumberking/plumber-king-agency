@@ -6,8 +6,8 @@
 // Mobile shows the first ten as in Figma, then "Show all 18 jobs".
 import { Image } from 'astro:assets';
 import logoCream from '../../assets/brand/logo-cream.png';
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import Img from '../ui/Img.astro';
 type It = { t: string; img?: string; cats: string; d: [number, number, number, number?, number?]; m: [number, number, number, number?]; x?: boolean; r?: number; rm?: number };
 // d = [column, order, height, photo height, ticket text width], m = [column, order, height, photo height]; r = ticket turn (deg)
@@ -35,9 +35,9 @@ const CHIPS = [['all', 'All jobs'], ['wh', 'Water heaters'], ['drains', 'Drains 
 const st = (i: It) => `--c:${i.d[0]};--o:${i.d[1]};--h:${i.d[2]}px;--sd:${i.d[2] + 24};--ph:${i.d[3] ?? 0}px;--cm:${i.m[0]};--om:${i.m[1]};--hm:${i.m[2]}px;--sm:${i.m[2] + 14};--phm:${i.m[3] ?? 0}px;--r:${i.r ?? 0}deg;--rm:${i.rm ?? 0}deg`;
 ---
 <section class="ow" aria-labelledby="ow-h" data-m-section>
-  <Wave d="o1d" m="o1m" top={1000} topM={1066} />
+  <Wave d="o1d" m="o1m" hostY={1000} hostYM={1066} />
   <div class="ow-in">
-    <Eyebrow>From the job</Eyebrow>
+    <Eyebrow look="town">From the job</Eyebrow>
     <h2 id="ow-h" class="ow-h" data-t="2">Every job <span class="tone">gets the stamp.</span></h2>
     <div class="ow-chips" role="group" aria-label="Filter jobs" data-t="3">
       {CHIPS.map(([k, l], i) => <button type="button" class="ow-chip" data-f={k} aria-pressed={i === 0 ? 'true' : 'false'}>{l}</button>)}

@@ -3,18 +3,18 @@
 // Instagram DM in his words (verbatim) with a red pin, eyebrow 02, H2, body, five hex bullets, DM + call buttons.
 import { Image } from 'astro:assets';
 import logoCream from '../../assets/brand/logo-cream.png';
-import Wave from './kit/Wave.astro';
-import Eyebrow from './kit/Eyebrow.astro';
-import Btn from './kit/Btn.astro';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
 import Img from '../ui/Img.astro';
-import { ab } from './kit/ab';
+import { ab } from './shared/ab';
 import { SITE } from '../../data/site';
 const bullets = ['Leak detection', 'Leak repair, including slab leaks', 'Water service and main line leaks', 'Re-pipes and rerouted water lines', 'Pressure regulators and shut-off valves'];
 ---
 <section id="leaks" class="lk sv-sec sv-paper sv-abs" style="--sh:840px" aria-labelledby="lk-h" data-m-section>
   <Wave fill="var(--paper)" top={-34} topM={-24} />
   <div class="lk-in">
-    <Eyebrow tone="dark" class="lk-eb" data-ab style={ab(779.5, 119)}>02 · Leaks &amp; water lines</Eyebrow>
+    <Eyebrow look="figma" tone="deep" class="lk-eb" data-ab style={ab(779.5, 119)}>02 · Leaks &amp; water lines</Eyebrow>
     <h2 id="lk-h" class="sv-h lk-h" data-t="2" data-ab style={ab(780, 152, 540, 114)}>Wet spot by the wall? <em>Send Mike a picture.</em></h2>
 
     <div class="lk-pics" data-t="3" data-stagger>
@@ -41,8 +41,8 @@ const bullets = ['Leak detection', 'Leak repair, including slab leaks', 'Water s
       ))}
     </ul>
     <div class="lk-btns" data-ab style={ab(780, 572, 526, 64)}>
-      <Btn v="ink" href={SITE.social.instagram} external l1="DM a photo" l2={SITE.social.instagramHandle} w={270} label={`DM a photo to ${SITE.social.instagramHandle} on Instagram (opens in a new tab)`} />
-      <Btn v="outInk" l1={`Call ${SITE.phone}`} l2="Free estimate" w={240} label={`Call ${SITE.phone} for a free estimate`} />
+      <Btn look="figma" v="ink" href={SITE.social.instagram} external title="DM a photo" sub={SITE.social.instagramHandle} w={270} />
+      <Btn look="figma" v="outInk" title={`Call ${SITE.phone}`} sub="Free estimate" w={240} />
     </div>
   </div>
 </section>

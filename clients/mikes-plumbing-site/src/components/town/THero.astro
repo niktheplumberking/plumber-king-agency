@@ -2,9 +2,8 @@
 // 5.1 Hero (Figma 670:3403 y 180-1000 / 670:8484 y 164-1466): copy left, van photo in the chamfered hex frame with the
 // road-sign town tag hanging from it, the estimate card overlapping the frame's lower left.
 import Img from '../ui/Img.astro';
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import CallBtn from '../b3kit/CallBtn.astro';
-import GhostBtn from '../b3kit/GhostBtn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
 import type { TownPage } from '../../data/town-pages';
 interface Props { t: TownPage }
 const { t } = Astro.props;
@@ -14,7 +13,7 @@ const fid = `est-${t.slug}`;
 <section class="th on-ink" aria-labelledby="th-h1" data-m-section data-m-hero>
   <div class="wrap th-grid">
     <div class="th-copy">
-      <Eyebrow dark>Plumber · {t.name}, CA</Eyebrow>
+      <Eyebrow look="town" tone="tan">Plumber · {t.name}, CA</Eyebrow>
       <h1 id="th-h1" class:list={['th-h1', t.name.length > 8 && 'th-h1--long']} data-t="2">Plumber in {t.name}, CA</h1>
       <p class="th-sub" data-t="3">Based in Riverside. Working in {t.name}.</p>
       <p class="th-body" data-t="3" data-fx="nudge">Mike's Plumbing Services is a family-owned, service-area plumbing business based in Riverside. We come to you in {t.name} for leaks, drains, water heaters and more.</p>
@@ -24,8 +23,8 @@ const fid = `est-${t.slug}`;
         <li class="hx-chip">Open 24 hours (Yelp)</li>
       </ul>
       <div class="th-btns">
-        <CallBtn v="tan" />
-        <GhostBtn href={`#${fid}`} dark />
+        <Btn look="call" v="tan" />
+        <Btn look="ghost" href={`#${fid}`} dark />
       </div>
     </div>
     <div class="th-media">

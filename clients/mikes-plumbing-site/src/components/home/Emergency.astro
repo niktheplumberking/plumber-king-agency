@@ -3,8 +3,8 @@
 // The dial is one SVG in the desktop frame's units (428 box), so it scales to the mobile 300 box. Its needle sweeps
 // with the scroll (scrub.ts [data-dial]); without motion it rests where Figma has it. "24 hours" is only ever said
 // with Yelp next to it (facts rule). Owns the coal wave lip that overlaps the route map below.
-import Btn from '../global/Btn.astro';
-import Wave from './Wave.astro';
+import Btn from '../kit/Btn.astro';
+import Wave from '../kit/Wave.astro';
 import { SITE } from '../../data/site';
 const TICKS = 'M170 16V0M190.101 17.3175L191.145 9.38593M209.858 21.2474L213.999 5.79261M228.933 27.7226L231.995 20.3315M247 36.6321L255 22.7757M263.749 47.8236L268.619 41.4768M278.894 61.1056L290.208 49.7918M292.176 76.2507L298.523 71.3806M303.368 93L317.224 85M312.277 111.067L319.668 108.005M318.753 130.142L334.207 126.001M322.682 149.899L330.614 148.855M324 170H340M322.682 190.101L330.614 191.145M318.753 209.858L334.207 213.999M312.277 228.933L319.668 231.995M303.368 247L317.224 255M292.176 263.749L298.523 268.619M278.894 278.894L290.208 290.208M263.749 292.176L268.619 298.523M247 303.368L255 317.224M228.933 312.277L231.995 319.668M209.858 318.753L213.999 334.207M190.101 322.682L191.145 330.614M170 324V340M149.899 322.682L148.855 330.614M130.142 318.753L126.001 334.207M111.067 312.277L108.005 319.668M93 303.368L85 317.224M76.2507 292.176L71.3806 298.523M61.1056 278.894L49.7918 290.208M47.8236 263.749L41.4768 268.619M36.6321 247L22.7757 255M27.7226 228.933L20.3315 231.995M21.2474 209.858L5.79261 213.999M17.3175 190.101L9.38593 191.145M16 170H0M17.3175 149.899L9.38593 148.855M21.2474 130.142L5.79261 126.001M27.7226 111.067L20.3315 108.005M36.6321 93L22.7757 85M47.8236 76.2507L41.4768 71.3806M61.1056 61.1056L49.7918 49.7918M76.2507 47.8236L71.3806 41.4768M93 36.6321L85 22.7757M111.067 27.7226L108.005 20.3315M130.142 21.2474L126.001 5.79261M149.899 17.3175L148.855 9.38593';
 const hex = 'M6.52 .8H39.08L44.8 16.8L39.08 32.8H6.52L.8 16.8Z';
@@ -54,8 +54,8 @@ const STEPS = [
       ))}
     </ol>
   </div>
-  <Wave only="d" class="em-wb" y={818} h={32} d="M0 0V16C93.3333 -5.33333 186.667 -5.33333 280 16C373.333 37.3333 466.667 37.3333 560 16C653.333 -5.33333 746.667 -5.33333 840 16C933.333 37.3333 1026.67 37.3333 1120 16C1213.33 -5.33333 1306.67 -5.33333 1400 16C1493.33 37.3333 1586.67 37.3333 1680 16V0H0Z" bottom="#1C1A16" />
-  <Wave only="m" class="em-wb" y={1243} h={20} w={390} d="M0 0V10C46.6667 -3.33333 93.3333 -3.33333 140 10C186.667 23.3333 233.333 23.3333 280 10C326.667 -3.33333 373.333 -3.33333 420 10V0H0Z" bottom="#1C1A16" />
+  <Wave only="d" class="em-wb" z={2} top={818} d={{ path: 'M0 0V16C93.3333 -5.33333 186.667 -5.33333 280 16C373.333 37.3333 466.667 37.3333 560 16C653.333 -5.33333 746.667 -5.33333 840 16C933.333 37.3333 1026.67 37.3333 1120 16C1213.33 -5.33333 1306.67 -5.33333 1400 16C1493.33 37.3333 1586.67 37.3333 1680 16V0H0Z', h: 32 }} fill="#1C1A16" />
+  <Wave only="m" class="em-wb" z={2} topM={1243} m={{ path: 'M0 0V10C46.6667 -3.33333 93.3333 -3.33333 140 10C186.667 23.3333 233.333 23.3333 280 10C326.667 -3.33333 373.333 -3.33333 420 10V0H0Z', h: 20, w: 390 }} fill="#1C1A16" />
 </section>
 <style>
   .em { position: relative; z-index: 1; height: 820px; background: #1C1A16; color: var(--bone); }
@@ -104,7 +104,7 @@ const STEPS = [
 
   @media (max-width: 1279px) {
     .em { height: auto; padding-bottom: 120px; }
-    .em :global(.em-wb.only-d) { top: auto !important; bottom: -30px; }
+    .em :global(.em-wb.wave--only-d) { top: auto !important; bottom: -30px; }
     .w1 { top: auto; bottom: 0; } .w2 { top: auto; bottom: 0; }
   }
   @media (min-width: 768px) and (max-width: 1279px) {
@@ -121,7 +121,7 @@ const STEPS = [
     .d { display: none; } .m { display: inline; }
     .em { padding-bottom: 57px; }
     .w1 { top: 1000px; bottom: 0; height: auto; } .w2 { top: 1054px; bottom: 0; height: auto; }
-    .em :global(.em-wb.only-m) { top: auto !important; bottom: -18px; }
+    .em :global(.em-wb.wave--only-m) { top: auto !important; bottom: -18px; }
     .em-in { display: block; padding-top: 67px; }
     .eb { gap: 9px; margin-left: 1px; font-size: 12px; line-height: 18px; letter-spacing: .1em; }
     .dot { width: 10px; height: 10px; }

@@ -1,5 +1,6 @@
-// Wave seams, exact paths from the Figma node dumps (handoff/figma-cache/*.json, nodes named 'wave seam').
-// y = top of the wave in the Figma frame, h = height, fill = colour of the section below, d = path in a w x h box (clipped at w).
+// Traced Figma seam vectors for the town, service-area, about and our-work pages (handoff/figma-cache/*.json, nodes named
+// "wave seam"). y = top of the wave in the Figma frame, h = height, fill = colour of the section below, d = path in a w x h box.
+// Used by kit/Wave.astro as `d="t1d"` / `m="t1m"` (string keys).
 export const WAVES: Record<string, { y: number; h: number; fill: string; w: number; d: string }> = {
   t1d: { y: 966, h: 38, fill: '#F3ECDD', w: 1440, d: 'M0 16C103.333 -5.33333 206.667 -5.33333 310 16C413.333 37.3333 516.667 37.3333 620 16C723.333 -5.33333 826.667 -5.33333 930 16C1033.33 37.3333 1136.67 37.3333 1240 16C1343.33 -5.33333 1446.67 -5.33333 1550 16C1653.33 37.3333 1756.67 37.3333 1860 16C1963.33 -5.33333 2066.67 -5.33333 2170 16V38H0V16Z' },
   t2d: { y: 1666, h: 38, fill: '#0E0D0B', w: 1440, d: 'M0 16C100 -5.33333 200 -5.33333 300 16C400 37.3333 500 37.3333 600 16C700 -5.33333 800 -5.33333 900 16C1000 37.3333 1100 37.3333 1200 16C1300 -5.33333 1400 -5.33333 1500 16C1600 37.3333 1700 37.3333 1800 16C1900 -5.33333 2000 -5.33333 2100 16V38H0V16Z' },

@@ -6,11 +6,11 @@
 // pops to 1.08 and turns a little as the water reaches it (kit/scrub.ts). Static final state = the Figma frame.
 import { Image } from 'astro:assets';
 import logoCream from '../../assets/brand/logo-cream.png';
-import Wave from './kit/Wave.astro';
-import Eyebrow from './kit/Eyebrow.astro';
-import TLink from './kit/TLink.astro';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import TLink from './shared/TLink.astro';
 import Img from '../ui/Img.astro';
-import { ab } from './kit/ab';
+import { ab } from './shared/ab';
 const markers = [
   { d: ['Drain cleaning, repair', '& new installation'], m: ['Drain cleaning, repair', '& new installation'], tone: 'tan' },
   { d: ['Hydro', 'jetting'], m: ['Hydro jetting'], tone: 'bone' },
@@ -20,9 +20,9 @@ const markers = [
 const drip = 'M7 0C7 0 14 9 14 13C14 17.4 10.9 20 7 20C3.1 20 0 17.4 0 13C0 9 7 0 7 0Z';
 ---
 <section id="drains" class="dr sv-sec sv-ink sv-abs" style="--sh:800px" aria-labelledby="dr-h" data-m-section>
-  <Wave fill="var(--ink)" up top={-34} topM={-24} />
+  <Wave fill="var(--ink)" rise top={-34} topM={-24} />
   <div class="dr-in">
-    <Eyebrow tone="tan" class="dr-eb" data-ab style={ab(119.5, 109)}>01 · Drains &amp; sewer</Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="dr-eb" data-ab style={ab(119.5, 109)}>01 · Drains &amp; sewer</Eyebrow>
     <h2 id="dr-h" class="sv-h dr-h" data-t="2" data-ab style={ab(120, 142, 700, 118)}>Slow drain? Backed-up line? <em>Let's clear it.</em></h2>
     <p class="dr-body" data-t="3" data-ab style={ab(880, 150, 440)}>From a kitchen sink that won't drain to a main sewer line full of roots, we clean it, repair it, or put in new. When a line keeps clogging, hydro jetting scours it clean instead of just poking a hole through.</p>
 

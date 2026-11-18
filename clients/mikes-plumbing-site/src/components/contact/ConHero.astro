@@ -5,8 +5,8 @@
 // step track (1 The problem, 2 The place, 3 You; the track follows the field you are in), hex chips as real checkboxes,
 // details, photo, town/ZIP, Home|Business, name, phone, email, submit. forms.ts validates and goes to /thank-you.
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Wave from '../kit-b4/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 const problems = ['Drain or sewer', 'Leak', 'Water heater', 'Toilet, sink or faucet', 'Garbage disposal', 'Water filtration', 'Emergency', 'Something else'];
 const steps = [['1', 'The problem'], ['2', 'The place'], ['3', 'You']];
 const hex = 'M6.16.7h31.08l5.46 16-5.46 16H6.16L.7 16.7z';
@@ -14,7 +14,7 @@ const hex = 'M6.16.7h31.08l5.46 16-5.46 16H6.16L.7 16.7z';
 <section class="ch on-ink" aria-labelledby="ch-h" data-m-section data-m-hero>
   <div class="wrap ch-in">
     <div class="ch-copy">
-      <Eyebrow text="Contact · Free estimate" />
+      <Eyebrow look="page" text="Contact · Free estimate" />
       <h1 id="ch-h" class="ch-h1" data-t="2">Get a Free Plumbing Estimate <span class="tn">in Riverside, CA</span></h1>
       <p class="ch-script" data-t="3" data-fx="nudge">Call today for free estimate!</p>
       <a class="ch-tile" href={SITE.tel} data-t="4">
@@ -24,7 +24,7 @@ const hex = 'M6.16.7h31.08l5.46 16-5.46 16H6.16L.7 16.7z';
       <p class="ch-meta" data-t="3">{SITE.hoursYelp} <span aria-hidden="true">·</span> Free estimate <span class="ch-fam"><span aria-hidden="true">·</span> Family owned &amp; operated</span> <span class="ch-off"><span aria-hidden="true">·</span> {SITE.offer}</span></p>
     </div>
     <div class="ch-fw">
-    <Wave d={{ a: 12.4, L: 300.5, W: 390 }} fill="#F3ECDD" above="#0E0D0B" class="ch-mwave" />
+    <Wave z={1} d={{ a: 12.4, L: 300.5, W: 390 }} fill="#F3ECDD" above="#0E0D0B" class="ch-mwave" />
     <form class="ch-form" data-estimate-form method="post" action="/thank-you" novalidate aria-labelledby="ch-fh" data-t="4" data-fx="up" enctype="multipart/form-data">
       <h2 id="ch-fh" class="ch-fh">Free estimate request</h2>
       <ol class="ch-steps" role="list" aria-label="Three short steps">

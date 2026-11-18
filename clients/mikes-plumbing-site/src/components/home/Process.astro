@@ -3,8 +3,8 @@
 // One stage of absolute positions in Figma px (desktop 1440 wide; mobile a 390 column). The pipe is the Figma vector;
 // scrub.ts runs the water along it with the scroll and lights each stop as the water reaches it ([data-flow]).
 // Stop quotes are excerpts of reviews.ts (checked at build time). Also owns the pipe into the dial and the coal wave.
-import Eyebrow from './Eyebrow.astro';
-import Wave from './Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { SITE } from '../../data/site';
 import { REVIEWS } from '../../data/reviews';
 
@@ -85,8 +85,8 @@ const CM = [[110, 3, 1], [276, 173, -1], [110, 343, 1], [276, 513, -1], [110, 68
     </div>
     <span class="dial-pipe" aria-hidden="true"><svg viewBox="0 0 20 170" preserveAspectRatio="none"><rect width="20" height="170" rx="2" fill="#6B5C3E" /><path class="dp-water" d="M10 0V170" pathLength="1" data-pipe-water /><rect x="9" width="2" height="170" fill="rgba(255,255,255,.2)" /></svg><span class="dp-nut"></span><span class="dp-line"></span></span>
   </div>
-  <Wave only="d" class="pr-wb" y={922} h={44} d="M0 18C106.667 42 213.333 42 320 18C426.667 -6 533.333 -6 640 18C746.667 42 853.333 42 960 18C1066.67 -6 1173.33 -6 1280 18C1386.67 42 1493.33 42 1600 18V44H0V18Z" bottom="#1C1A16" />
-  <Wave only="m" class="pr-wb" y={1260} h={30} w={390} d="M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z" bottom="#1C1A16" />
+  <Wave only="d" class="pr-wb" z={2} top={922} d={{ path: 'M0 18C106.667 42 213.333 42 320 18C426.667 -6 533.333 -6 640 18C746.667 42 853.333 42 960 18C1066.67 -6 1173.33 -6 1280 18C1386.67 42 1493.33 42 1600 18V44H0V18Z', h: 44 }} fill="#1C1A16" />
+  <Wave only="m" class="pr-wb" z={2} topM={1260} m={{ path: 'M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z', h: 30, w: 390 }} fill="#1C1A16" />
 </section>
 <script>import './scrub';</script>
 <style>
@@ -154,7 +154,7 @@ const CM = [[110, 3, 1], [276, 173, -1], [110, 343, 1], [276, 513, -1], [110, 68
 
   @media (min-width: 1024px) and (max-width: 1151px) { .st { zoom: .711; } }
   @media (min-width: 1152px) and (max-width: 1279px) { .st { zoom: .8; } }
-  @media (max-width: 1279px) { .pr :global(.pr-wb.only-d) { top: auto !important; bottom: -6px; } .dial-pipe { top: auto; bottom: -98px; } }
+  @media (max-width: 1279px) { .pr :global(.pr-wb.wave--only-d) { top: auto !important; bottom: -6px; } .dial-pipe { top: auto; bottom: -98px; } }
   @media (max-width: 1023px) {
     .st { width: auto; max-width: 430px; height: 1284px; }
     .pr-head { left: 20px; top: 55px; width: auto; right: 20px; }
@@ -181,6 +181,6 @@ const CM = [[110, 3, 1], [276, 173, -1], [110, 343, 1], [276, 513, -1], [110, 68
     .b-l { display: none; }
     .b-btn { position: absolute; right: 18px; bottom: 19px; width: 132px; height: 40px; padding: 0 14px; font-size: 14px; }
     .dial-pipe { display: none; }
-    .pr :global(.pr-wb.only-m) { top: auto !important; bottom: -6px; }
+    .pr :global(.pr-wb.wave--only-m) { top: auto !important; bottom: -6px; }
   }
 </style>

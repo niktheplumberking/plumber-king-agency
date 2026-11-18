@@ -2,13 +2,12 @@
 // 7.6 What's next (Figma 670:500 / 670:2378): a wall calendar with the 2026 page torn off, 2027 underneath, CTA beside it.
 // Scroll moment: as the section scrolls in, the 2026 page swings from the binding to its torn angle and "Booking now" lights
 // up when it settles. Reduced motion / no JS = the Figma state.
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
-import CallBtn from '../b3kit/CallBtn.astro';
-import GhostBtn from '../b3kit/GhostBtn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
+import Btn from '../kit/Btn.astro';
 ---
 <section class="an" aria-labelledby="an-h" data-m-section>
-  <Wave d="a5d" m="a5m" top={4420} topM={4260} />
+  <Wave d="a5d" m="a5m" hostY={4420} hostYM={4260} />
   <div class="an-in">
     <div class="an-cal" aria-hidden="true" data-b3-scrub data-b3-start="top 85%" data-b3-end="center 45%">
       <div class="an-head"><span class="an-ht"><span class="an-hd">Mike's Plumbing Services · </span>Booking</span></div>
@@ -22,12 +21,12 @@ import GhostBtn from '../b3kit/GhostBtn.astro';
       </div>
     </div>
     <div class="an-copy">
-      <Eyebrow>2027</Eyebrow>
+      <Eyebrow look="town">2027</Eyebrow>
       <h2 id="an-h" class="an-h" data-t="2">2026 tested us. <span class="tone">2027 we're built different.</span></h2>
       <p class="an-body" data-t="3">Booking now for 2027.</p>
       <div class="an-btns">
-        <CallBtn v="ink" plain />
-        <GhostBtn href="/contact" plain w={220} />
+        <Btn look="call" v="ink" plain />
+        <Btn look="ghost" href="/contact" plain w={220} />
       </div>
     </div>
   </div>

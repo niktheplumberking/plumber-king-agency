@@ -2,8 +2,8 @@
 // 5.5 Why Mike (Figma 670:3403 y 3060-3760): the three words stacked big and turned upright down each column, proof on the
 // right. Scroll moment: as the section scrolls, stops 01, 02, 03 light up in order (number grows to 1.08 and turns a
 // little, the red rule runs out).
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 const COLS = [
   { w: 'Friendly', q: '“He communicated well, was polite and courteous”', by: 'Jack D. (Yelp)' },
   { w: 'Transparent', q: '“upfront and honest with me on pricing”', by: 'Sal C., Corona (Yelp)' },
@@ -11,9 +11,9 @@ const COLS = [
 ];
 ---
 <section class="tw" aria-labelledby="tw-h" data-m-section>
-  <Wave d="t4d" m="t4m" top={3060} topM={3793} />
+  <Wave d="t4d" m="t4m" hostY={3060} hostYM={3793} />
   <div class="wrap">
-    <Eyebrow ink>The way we work</Eyebrow>
+    <Eyebrow look="town" tone="ink">The way we work</Eyebrow>
     <h2 id="tw-h" class="sr-only">Friendly. Transparent. Proficient.</h2>
     <ol class="tw-cols" role="list" data-b3-scrub data-b3-start="top 80%" data-b3-end="bottom 70%">
       {COLS.map((c, i) => (

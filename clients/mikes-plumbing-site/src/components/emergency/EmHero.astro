@@ -2,9 +2,9 @@
 // Hero · giant number (Figma 669:783 y 180 h 700, ink; mobile 670:2103 y 164 h 762). Live dot eyebrow, H1, "Open 24 hours
 // (Yelp).", a faint hex-nut field behind the siren tile from Mike's flyer, the phone number set at 200 px (a tel: link), the
 // quick answer, the red call button and the quiet "Not an emergency?" link.
-import Btn from '../services/kit/Btn.astro';
+import Btn from '../kit/Btn.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
-import { ab } from '../services/kit/ab';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 const hexes = [980, 1130, 1280].flatMap((x) => [40, 170, 300].map((y) => [x, y]));
 ---
@@ -24,7 +24,7 @@ const hexes = [980, 1130, 1280].flatMap((x) => [40, 170, 300].map((y) => [x, y])
     </div>
     <p class="eh-body" data-t="3" data-ab style={ab(120, 578, 430)}>Burst line, backed-up drain, no hot water? Call and tell Mike what's going on.</p>
     <div class="eh-btn" data-ab style={ab(640, 574, 380, 64)}>
-      <Btn v="red" l1={`Call ${SITE.phone}`} l2="Tap to call" w={380} label={`Call ${SITE.phone}`} />
+      <Btn look="figma" v="red" title={`Call ${SITE.phone}`} sub="Tap to call" w={380} />
     </div>
     <p class="eh-alt" data-t="4" data-ab style={ab(1060, 584)}>Not an emergency?<br class="eh-br" /> <a href="/contact"><u>Get a free estimate</u>&nbsp;&nbsp;<span aria-hidden="true">→</span></a></p>
   </div>

@@ -4,8 +4,8 @@
 // the words customers used, five tan stars stamped underneath, "20 REVIEWS ON YELP".
 // The rating line is real text (SITE.rating); the "5.0" art is decorative (aria-hidden). No AggregateRating anywhere.
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Btn from '../kit-b4/Btn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
 const R = SITE.rating;
 // Phrases printed inside the digits: short words from the Yelp reviews (decorative, aria-hidden).
 const words = ['COMMUNICATOR', 'VERY CLEAN', 'UPFRONT AND HONEST', 'EXCELLENT', 'REASONABLY PRICED', 'ON TIME', 'SAME DAY', 'HIGHLY RECOMMEND', 'CALL HIM!', 'FAIR PRICE'];
@@ -17,7 +17,7 @@ const stars = [-6, 4, -2, 5, -4];
 <section class="rh on-ink" aria-labelledby="rh-h" data-m-section data-m-hero>
   <div class="wrap rh-in">
     <div class="rh-copy">
-      <Eyebrow text="Reviews · Yelp" />
+      <Eyebrow look="page" text="Reviews · Yelp" />
       <h1 id="rh-h" class="rh-h1" data-t="2">Mike's Plumbing <span class="nowrap">Services <span class="tn">Reviews</span></span></h1>
       <p class="rh-sub" data-t="3" data-fx="nudge">{R.value} on {R.source} · {R.count} reviews. Checked {R.checked}.</p>
     </div>
@@ -49,8 +49,8 @@ const stars = [-6, 4, -2, 5, -4];
       <p class="rh-count">{R.count} reviews on {R.source}</p>
     </div>
     <div class="rh-btns" data-t="3">
-      <Btn href={SITE.social.yelp} external w={260} arrow>Read them on Yelp</Btn>
-      <Btn href="/contact" v="line" w={230}>Get a free estimate</Btn>
+      <Btn look="bar" href={SITE.social.yelp} external w={260} arrow>Read them on Yelp</Btn>
+      <Btn look="bar" href="/contact" v="line" w={230}>Get a free estimate</Btn>
     </div>
   </div>
 </section>

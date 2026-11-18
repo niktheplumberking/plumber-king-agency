@@ -1,9 +1,9 @@
 ---
 // 2.6 Final CTA · gas line into service plate (Figma 670:7700 y 4240 h 560, ink; mobile y 4730 h 622). H2, line, call + form
 // buttons, a gas line with a hex nut running into a heater rating plate (service / call / area).
-import Wave from '../services/kit/Wave.astro';
-import Btn from '../services/kit/Btn.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Btn from '../kit/Btn.astro';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 interface Props { h: string; em: string; body: string; service?: string }
 const { h, em, body, service = 'Free estimate' } = Astro.props;
@@ -14,8 +14,8 @@ const { h, em, body, service = 'Free estimate' } = Astro.props;
     <h2 id="pc-h" class="sv-h pc-h" data-t="2" data-ab style={ab(120, 120, 620)}>{h} <em>{em}</em></h2>
     <p class="pc-body" data-t="3" data-ab style={ab(120, 254)}>{body}</p>
     <div class="pc-btns" data-t="4" data-ab style={ab(120, 314, 566, 64)}>
-      <Btn v="tan" l2="Call now" w={300} label={`Call ${SITE.phone} now`} />
-      <Btn v="out" href="#estimate" l1="Get a free estimate" l2="Fill in the form" w={250} class="pc-ghost" />
+      <Btn look="figma" v="tan" sub="Call now" w={300} />
+      <Btn look="figma" v="out" href="#estimate" title="Get a free estimate" sub="Fill in the form" w={250} class="pc-ghost" />
     </div>
     <div class="pc-vis" data-t="3">
       <i class="pc-line pc-line--l" data-ab style={ab(720, 277, 140, 6)} aria-hidden="true"></i>

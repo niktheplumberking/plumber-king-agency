@@ -1,16 +1,15 @@
 ---
 // 6.5 Final CTA (Figma 670:10564 y 3090-3650): "Not sure if we come to you? Just ask." with the red hex as the full stop.
-import Wave from '../b3kit/Wave.astro';
-import CallBtn from '../b3kit/CallBtn.astro';
-import GhostBtn from '../b3kit/GhostBtn.astro';
+import Wave from '../kit/Wave.astro';
+import Btn from '../kit/Btn.astro';
 ---
 <section class="sx on-ink" aria-labelledby="sx-h" data-m-section>
-  <Wave d="s4d" m="s4m" top={3090} topM={3482} />
+  <Wave d="s4d" m="s4m" hostY={3090} hostYM={3482} />
   <div class="wrap">
     <h2 id="sx-h" class="sx-h" data-t="2"><span class="sx-1">Not sure if we come to you?</span> <span class="sx-2">Just ask<span class="sx-dot" aria-hidden="true"></span><span class="sr-only">.</span></span></h2>
     <div class="sx-row">
-      <CallBtn v="tan" />
-      <GhostBtn href="/contact" dark w={220} />
+      <Btn look="call" v="tan" />
+      <Btn look="ghost" href="/contact" dark w={220} />
       <p class="sx-note" data-t="3">Based in Riverside · Serving IE | OC | LA</p>
     </div>
   </div>

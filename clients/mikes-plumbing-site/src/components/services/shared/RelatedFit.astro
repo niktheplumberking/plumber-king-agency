@@ -2,7 +2,7 @@
 // "2.7 related" (Figma water-heaters 670:7700 y 4800 h 300, tan; mobile y 5352 h 292): RELATED label + three fitting links
 // (elbow / tee / union icons, Abril 24 underlined + arrow). Town links live in the footer and menus (QA 18 Nov: the extra
 // town row was not in Figma).
-import Wave from './Wave.astro';
+import Wave from '../../kit/Wave.astro';
 // `cap` = the drain-cleaning version (Figma 3.7, paper): cleanout-cap icons 56 / 36 px, Abril 28 / 22, paper band.
 interface Props { links: { name: string; href: string }[]; cap?: boolean }
 const { links, cap } = Astro.props;

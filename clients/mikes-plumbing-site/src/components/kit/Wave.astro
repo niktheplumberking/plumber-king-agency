@@ -1,0 +1,111 @@
+---
+// Wave seam: the ONE wave component for every page (kit/README.md). It sits absolutely at the top edge of the LOWER section
+// (the host, position: relative) and paints that section's colour (`fill`) up into the section above, so the boundary
+// reads as a wave. Desktop geometry `d`, mobile geometry `m` (< 768 px); without `m` the desktop shape shows at all widths.
+//
+// Geometry (`d` / `m`), one of:
+//   (omitted)                       the standard Figma seam: half-waves drawn as cubics, `shape` / `shapeM` =
+//                                   [half, mid, lo, hi, height] (default desktop 280/16/38, mobile 150/11/26); `rise` /
+//                                   `riseM` = the curve rises first from x 0. Drawn in px (no stretching), clipped.
+//   'o2d' (string)                  a traced Figma vector from kit/waves.ts; `hostY` / `hostYM` = the Figma y where the host
+//                                   section starts, so the box top = vector y - hostY. Fill comes from the table.
+//   { path, h, w? }                 a traced Figma vector given inline (w defaults to 1440), stretched to the width.
+//   { a, L, phi?, clip?, x0?, x1?, W? }  a fitted sine around the boundary line: y = a sin(2πx/L + phi); the trough below
+//                                   the boundary is painted `above` (the upper section's colour). x0/x1 = part of the frame.
+// Position: `top` / `topM` = box top in px relative to the host (defaults come from the geometry); `bottom` = sit on the
+// host's bottom edge instead. `only` = render one breakpoint. `z` = stacking inside the host (default 3).
+// Clearance (Nick, fix round 1, B6): content keeps --wave-clear (24 px desktop / 16 px mobile, tokens.css) from the curve.
+// `clear={false}` marks a wave whose neighbours are named seam objects; the checker (scripts/check-seams) reads data-wave.
+import { WAVES } from './waves';
+type Shape = [number, number, number, number, number];
+interface Sine { a: number; L: number; phi?: number; clip?: number; x0?: number; x1?: number; W?: number }
+interface Traced { path: string; h: number; w?: number }
+type Geo = string | Sine | Traced;
+interface Props {
+  d?: Geo; m?: Geo; fill?: string; above?: string; top?: number; topM?: number; hostY?: number; hostYM?: number;
+  bottom?: boolean; only?: 'd' | 'm'; z?: number; class?: string; clear?: boolean;
+  rise?: boolean; riseM?: boolean; shape?: Shape; shapeM?: Shape;
+}
+const {
+  d, m, fill, above, top, topM, hostY = 0, hostYM = 0, bottom = false, only, z = 3, class: cls, clear = true,
+  rise = false, riseM, shape = [280, 16, -5.333, 37.333, 38], shapeM = [150, 11, -3.667, 25.667, 26],
+} = Astro.props;
+
+interface Out { vb?: string; w: number; h: number; px: boolean; paths: { d: string; fill: string }[]; top: number; left: number; width: number }
+
+// The standard seam: half-waves of `half` px as cubics with handles at 1/3 and 2/3 (exact Figma vector).
+function cubic(w: number, s: Shape, up: boolean, defTop: number, t?: number): Out {
+  const [half, mid, lo, hi, h] = s;
+  let p = `M0 ${mid}`;
+  for (let x = 0, i = 0; x < w; x += half, i++) {
+    const y = (i % 2 === 0) === up ? lo : hi;
+    p += `C${+(x + half / 3).toFixed(2)} ${y} ${+(x + (2 * half) / 3).toFixed(2)} ${y} ${x + half} ${mid}`;
+  }
+  return { w, h, px: true, paths: [{ d: `${p}V${h}H0Z`, fill: fill ?? 'currentColor' }], top: t ?? defTop, left: 0, width: 100 };
+}
+// A fitted sine around the boundary line (the host's top edge).
+function sine(s: Sine, W: number, t?: number): Out {
+  const phi = s.phi ?? -Math.PI;
+  const x0 = s.x0 ?? 0, x1 = s.x1 ?? (s.W ?? W);
+  const base = s.a;
+  const low = s.clip != null ? Math.min(s.a, s.clip) : s.a;
+  const H = Math.ceil(base + low + 2);
+  const pts: string[] = []; const up: string[] = [];
+  const step = (x1 - x0) / Math.ceil((x1 - x0) / (W > 600 ? 8 : 3));
+  for (let x = x0; x <= x1 + 0.01; x += step) {
+    let y = base + s.a * Math.sin((2 * Math.PI * x) / s.L + phi);
+    if (s.clip != null) y = Math.min(y, base + s.clip);
+    pts.push(`${(x - x0).toFixed(1)} ${y.toFixed(2)}`);
+    up.push(`${(x - x0).toFixed(1)} ${Math.max(y, base).toFixed(2)}`);
+  }
+  const ww = x1 - x0;
+  return {
+    vb: `0 0 ${ww} ${H}`, w: ww, h: H, px: false, top: t ?? -base, left: (x0 / W) * 100, width: (ww / W) * 100,
+    paths: [{ d: `M0 ${base - 1} L0 ${base} L${up.join(' L')} L${ww} ${base - 1}Z`, fill: above ?? 'transparent' }, { d: `M0 ${H} L${pts.join(' L')} L${ww} ${H}Z`, fill: fill ?? 'currentColor' }],
+  };
+}
+function geo(g: Geo | undefined, mobile: boolean): Out {
+  const t = mobile ? topM : top;
+  if (g === undefined) return mobile ? cubic(1050, shapeM, riseM ?? rise, -24, t) : cubic(2240, shape, rise, -34, t);
+  if (typeof g === 'string') {
+    const k = WAVES[g];
+    if (!k) throw new Error(`Wave: unknown key ${g}`);
+    return { vb: `0 0 ${k.w} ${k.h}`, w: k.w, h: k.h, px: false, paths: [{ d: k.d, fill: fill ?? k.fill }], top: t ?? k.y - (mobile ? hostYM : hostY), left: 0, width: 100 };
+  }
+  if ('path' in g) {
+    const w = g.w ?? (mobile ? 390 : 1440);
+    if (t === undefined) throw new Error('Wave: a traced path needs top / topM');
+    return { vb: `0 0 ${w} ${g.h}`, w, h: g.h, px: false, paths: [{ d: g.path, fill: fill ?? 'currentColor' }], top: t, left: 0, width: 100 };
+  }
+  return sine(g, g.W ?? (mobile ? 390 : 1440), t);
+}
+const D = only === 'm' ? null : geo(d, false);
+// Mobile: its own geometry when given (or the standard seam when `d` is the standard seam); else the desktop one at all widths.
+const M = only === 'd' ? null : m !== undefined || d === undefined || only === 'm' ? geo(only === 'm' ? (m ?? d) : m, true) : null;
+const box = (o: Out | null, k: string) => (o ? `--wt${k}:${o.top}px;--wh${k}:${o.h}px;--wl${k}:${o.left}%;--ww${k}:${o.width}%;--wo${k}:${o.px ? 'hidden' : 'visible'};` : '');
+const style = `${box(D ?? M, '')}${box(M ?? D, 'm')}--wz:${z}`;
+const svg = (o: Out, c: string) => ({ o, c });
+const svgs = [D && svg(D, M ? 'wave-d' : 'wave-a'), M && svg(M, D ? 'wave-m' : 'wave-a')].filter(Boolean) as { o: Out; c: string }[];
+---
+<div class:list={['wave', bottom && 'wave--bottom', only && `wave--only-${only}`, cls]} style={style} aria-hidden="true" data-wave={clear ? 'clear' : 'seam'}>
+  {svgs.map(({ o, c }) => (
+    o.px
+      ? <svg class:list={['wave-s', 'wave-px', c]} width={o.w} height={o.h} focusable="false">{o.paths.map((p) => <path d={p.d} fill={p.fill} />)}</svg>
+      : <svg class:list={['wave-s', c]} viewBox={o.vb} preserveAspectRatio="none" focusable="false">{o.paths.map((p) => <path d={p.d} fill={p.fill} />)}</svg>
+  ))}
+</div>
+<style>
+  .wave { position: absolute; z-index: var(--wz); top: var(--wt); left: var(--wl); width: var(--ww); height: var(--wh); overflow: var(--wo); pointer-events: none; }
+  .wave--bottom { top: auto; bottom: -1px; }
+  .wave-s { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; overflow: hidden; }
+  .wave-px { width: auto; height: auto; max-width: none; }
+  .wave-m { display: none; }
+  @media (max-width: 767px) {
+    .wave { top: var(--wtm); left: var(--wlm); width: var(--wwm); height: var(--whm); overflow: var(--wom); }
+    .wave--bottom { top: auto; }
+    .wave-d { display: none; }
+    .wave-m { display: block; }
+    .wave--only-d { display: none; }
+  }
+  @media (min-width: 768px) { .wave--only-m { display: none; } }
+</style>

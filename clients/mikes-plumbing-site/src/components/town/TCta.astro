@@ -1,8 +1,7 @@
 ---
 // 5.8 Final CTA (Figma 670:3403 y 4680-5320): the town road sign on two posts, headline, call + estimate, nearby towns.
-import Wave from '../b3kit/Wave.astro';
-import CallBtn from '../b3kit/CallBtn.astro';
-import GhostBtn from '../b3kit/GhostBtn.astro';
+import Wave from '../kit/Wave.astro';
+import Btn from '../kit/Btn.astro';
 import { SITE } from '../../data/site';
 import type { TownPage } from '../../data/town-pages';
 interface Props { t: TownPage }
@@ -10,7 +9,7 @@ const { t } = Astro.props;
 const up = t.name.toUpperCase();
 ---
 <section class="tx on-ink" aria-labelledby="tx-h" data-m-section>
-  <Wave d="t5d" m="t5m" top={4680} topM={5659} />
+  <Wave d="t5d" m="t5m" hostY={4680} hostYM={5659} />
   <div class="wrap tx-grid">
     <div class="tx-signwrap" aria-hidden="true">
       <span class="tx-post tx-post--a"></span><span class="tx-post tx-post--b"></span>
@@ -23,8 +22,8 @@ const up = t.name.toUpperCase();
     <div class="tx-copy">
       <h2 id="tx-h" class="tx-h" data-t="2">Need a plumber in {t.name}? <span class="tone">Mike's got the fix.</span></h2>
       <div class="tx-btns">
-        <CallBtn v="tan" />
-        <GhostBtn href="/contact" dark w={240} />
+        <Btn look="call" v="tan" />
+        <Btn look="ghost" href="/contact" dark w={240} />
       </div>
       <p class="tx-near-l" data-t="1">Also nearby</p>
       <ul class="tx-near" role="list" data-t="5" data-stagger>

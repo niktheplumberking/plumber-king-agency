@@ -3,9 +3,9 @@
 // left half caked with grease (BEFORE), the right half clean (AFTER), the jet nozzle on its hose spraying back into the
 // buildup; eyebrow, H2 with red "jet it.", body.
 // Scroll moment: the seven (mobile five) water jets shoot out of the nozzle into the grease as you scroll (stroke draw).
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { ab } from '../services/shared/ab';
 // grease blobs along the top / bottom wall and specks in the caked half: [x, y, size] from the Figma JSON
 const grease = [
   [2, 159.2, 36], [23.8, 526.6, 32.4], [31, 150.2, 66], [54.3, 507.1, 59.4], [82, 154.4, 52], [104.6, 516.2, 46.8],
@@ -19,9 +19,9 @@ const jets = [-150, -95, -45, 0, 45, 95, 150];
 const jetsM = [-70, -35, 0, 35, 70];
 ---
 <section class="js sv-sec sv-paper sv-abs" style="--sh:698px" aria-labelledby="js-h" data-m-section>
-  <Wave fill="var(--paper)" up top={-34} topM={-24} />
+  <Wave fill="var(--paper)" rise top={-34} topM={-24} />
   <div class="js-in">
-    <Eyebrow tone="dark" class="js-eb" data-ab style={ab(999.5, 209)}>Hydro jetting</Eyebrow>
+    <Eyebrow look="figma" tone="deep" class="js-eb" data-ab style={ab(999.5, 209)}>Hydro jetting</Eyebrow>
     <h2 id="js-h" class="sv-h sv-h--red js-h" data-t="2" data-ab style={ab(1000, 240, 400)}>When a drain keeps clogging, <em>jet it.</em></h2>
 
     <div class="js-dia js-d" aria-hidden="true" data-sv-scrub data-start="top 75%" data-end="center 40%">

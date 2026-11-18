@@ -3,13 +3,13 @@
 // Instagram DM ("DM me a picture", his words). A riveted bone plate "Didn't see your question? Ask Mike." straddles the
 // seam. Each half is one link. Two half-width waves (tan / ink) bite into the paper above (desktop); one tan wave on phones.
 import { SITE } from '../../data/site';
-import Wave from '../kit-b4/Wave.astro';
+import Wave from '../kit/Wave.astro';
 const rivet = 'M2.58.5h11.84l2.08 6-2.08 6H2.58L.5 6.5z';
 const arrowHex = 'M8.32 0h47.36L64 24l-8.32 24H8.32L0 24z';
 ---
 <section class="fa" aria-labelledby="fa-h" data-m-section>
-  <Wave d={{ a: 18.52, L: 521, phi: -3.12, x0: 0, x1: 780 }} m={{ a: 12.35, L: 301 }} fill="#D2C5A6" above="#F3ECDD" class="fa-wl" />
-  <Wave d={{ a: 18.52, L: 521, phi: 0.77, x0: 720, x1: 1440 }} fill="#0E0D0B" above="#F3ECDD" class="fa-wr" />
+  <Wave z={1} d={{ a: 18.52, L: 521, phi: -3.12, x0: 0, x1: 780 }} m={{ a: 12.35, L: 301 }} fill="#D2C5A6" above="#F3ECDD" class="fa-wl" />
+  <Wave z={1} d={{ a: 18.52, L: 521, phi: 0.77, x0: 720, x1: 1440 }} fill="#0E0D0B" above="#F3ECDD" class="fa-wr" />
   <div class="fa-plate" data-t="2">
     <h2 id="fa-h" class="fa-h">Didn't see your question? <span>Ask Mike.</span></h2>
     {[0, 1, 2, 3].map((i) => <svg class={`fa-rv fa-rv${i}`} viewBox="0 0 17 13" aria-hidden="true"><path d={rivet} /></svg>)}

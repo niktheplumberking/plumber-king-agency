@@ -3,13 +3,13 @@
 // INSTAGRAM (tan, "DM me a picture", his IG line word for word), YELP (bone). SITE.email sits under the heading (no slot in
 // the frame; it is the business email from his Nextdoor page). Card positions are the frame's (rotated about the top-left).
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Wave from '../kit-b4/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 ---
 <section class="co" aria-labelledby="co-h" data-m-section>
-  <Wave d={{ a: 20.65, L: 560.5 }} fill="#F3ECDD" above="#0E0D0B" class="co-wave" />
+  <Wave z={1} d={{ a: 20.65, L: 560.5 }} fill="#F3ECDD" above="#0E0D0B" class="co-wave" />
   <div class="wrap co-in">
-    <Eyebrow text="Other ways" tone="deep" />
+    <Eyebrow look="page" text="Other ways" tone="deep" />
     <h2 id="co-h" class="co-h2" data-t="2">Rather not<br /> fill in a form?</h2>
     <p class="co-mail" data-t="3">Or email <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
     <ul class="co-cards" role="list" data-t="4" data-stagger>

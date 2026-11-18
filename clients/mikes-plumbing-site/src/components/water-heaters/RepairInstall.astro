@@ -3,14 +3,14 @@
 // a gas valve whose red handle points between "repair" and "install", the two options under it.
 // Scroll moment: the valve handle turns from the repair side to its Figma position (install) as you scroll, while the riser
 // fills with water from the top (desktop) / the line fills left to right (mobile).
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { ab } from '../services/shared/ab';
 ---
 <section class="ri sv-sec sv-paper sv-abs" style="--sh:860px" aria-labelledby="ri-h" data-m-section>
   <Wave fill="var(--paper)" top={-34} topM={-24} />
   <div class="ri-in" data-sv-scrub data-start="top 65%" data-end="bottom 80%" data-start-m="top 70%" data-end-m="center 40%">
-    <Eyebrow tone="dark" class="ri-eb" data-ab style={ab(646.5, 109)}>Repair · Install</Eyebrow>
+    <Eyebrow look="figma" tone="deep" class="ri-eb" data-ab style={ab(646.5, 109)}>Repair · Install</Eyebrow>
     <h2 id="ri-h" class="sv-h ri-h" data-t="2" data-ab style={ab(220, 142, 1000)}>Fix it when it can be fixed. <em>Replace it when it can't.</em></h2>
 
     <div class="ri-dia ri-d" aria-hidden="true" data-t="3">

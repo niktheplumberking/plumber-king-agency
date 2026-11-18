@@ -1,11 +1,11 @@
 ---
 // 1.7 Commercial strip (Figma 669:539 y 4880 h 700, photo + ink fade; mobile y 6232 h 671). Van-at-a-job photo behind an ink fade,
 // eyebrow, H2, body (his IG jobs), tan call button, ADU rough-in polaroid.
-import Wave from './kit/Wave.astro';
-import Eyebrow from './kit/Eyebrow.astro';
-import Btn from './kit/Btn.astro';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
 import Img from '../ui/Img.astro';
-import { ab } from './kit/ab';
+import { ab } from './shared/ab';
 import { SITE } from '../../data/site';
 ---
 <section id="commercial" class="cm sv-sec sv-ink sv-abs" style="--sh:700px" aria-labelledby="cm-h" data-m-section>
@@ -17,11 +17,11 @@ import { SITE } from '../../data/site';
       <div class="cm-ph sv-photo"><Img name="bathroom-plumbing-rough-in" alt="ADU bathroom plumbing rough-in by Mike's Plumbing" sizes="(min-width: 768px) 280px, 156px" box={280 / 300} boxM={156 / 160} /></div>
       <figcaption>ADU rough-in</figcaption>
     </figure>
-    <Eyebrow tone="tan" class="cm-eb" data-ab style={ab(119.5, 149)}>Residential &amp; commercial</Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="cm-eb" data-ab style={ab(119.5, 149)}>Residential &amp; commercial</Eyebrow>
     <h2 id="cm-h" class="sv-h cm-h" data-t="2" data-ab style={ab(120, 182, 640)}>Homes, ADUs and <em>commercial kitchens.</em></h2>
     <p class="cm-body" data-t="3" data-ab style={ab(120, 328, 520)}>Jobs on his Instagram include a 100-gallon heater for a restaurant, a grease interceptor baffle tee, a 4-inch gas line rework and an ADU rough-in.</p>
     <div class="cm-btn" data-ab style={ab(120, 443, 330, 64)}>
-      <Btn v="tan" l1={SITE.phone} l2="Call about a commercial job" w={330} label={`Call ${SITE.phone} about a commercial job`} />
+      <Btn look="figma" v="tan" title={SITE.phone} sub="Call about a commercial job" w={330} />
     </div>
   </div>
 </section>

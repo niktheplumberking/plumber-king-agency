@@ -2,10 +2,10 @@
 // 1.2 The flyer list (Figma 669:539 y 920 h 760, paper; mobile y 974 h 1108). Script label, two-tone H2, his flyer list word
 // for word in two columns of six (each row a jump link to its family), the siren "Emergency Services / And More!" tile and
 // the ink phone button under it. >= 1280: Figma x/y (kit/ab); below: the 390 flow (tablet = 2 columns).
-import Btn from './kit/Btn.astro';
-import Wave from './kit/Wave.astro';
-import Siren from './kit/Siren.astro';
-import { ab } from './kit/ab';
+import Btn from '../kit/Btn.astro';
+import Wave from '../kit/Wave.astro';
+import Siren from './shared/Siren.astro';
+import { ab } from './shared/ab';
 import { FLYER_LIST } from '../../data/services';
 import { SITE } from '../../data/site';
 const target: Record<string, string> = {
@@ -17,7 +17,7 @@ const target: Record<string, string> = {
 const cols = [FLYER_LIST.slice(0, 6), FLYER_LIST.slice(6)];
 ---
 <section class="fl sv-sec sv-paper sv-abs" style="--sh:760px" aria-labelledby="fl-h" data-m-section>
-  <Wave fill="var(--paper)" up top={-34} topM={-24} />
+  <Wave fill="var(--paper)" rise top={-34} topM={-24} />
   <div class="fl-in">
     <p class="fl-script sv-script lh-yest" data-t="1" data-ab style={ab(120, 96)}>Our Services</p>
     <h2 id="fl-h" class="sv-h fl-h" data-t="2" data-ab style={ab(120, 166, 1000, 60)}>Everything on the flyer. <em>And more.</em></h2>
@@ -38,7 +38,7 @@ const cols = [FLYER_LIST.slice(0, 6), FLYER_LIST.slice(6)];
       <span class="fl-tile-s sv-script lh-yest">And More!</span>
     </a>
     <div class="fl-btn" data-ab style={ab(900, 598, 420, 64)}>
-      <Btn v="ink" l1={SITE.phone} l2="Call today for a free estimate" w={420} label={`Call ${SITE.phone}, call today for a free estimate`} />
+      <Btn look="figma" v="ink" title={SITE.phone} sub="Call today for a free estimate" w={420} />
     </div>
   </div>
 </section>

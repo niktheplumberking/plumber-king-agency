@@ -4,10 +4,10 @@
 // the eyebrow, H2 and ink call button.
 // Scroll moment: water runs down the stack (a dark shade drains away from the top) and each cleanout cap lights, grows and
 // turns a little as the water reaches it, 01 -> 05.
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import Btn from '../services/kit/Btn.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 const items = [
   { h: 'Drain cleaning.', p: 'Kitchen, bath and laundry drains that are slow or stopped.' },
@@ -18,11 +18,11 @@ const items = [
 ];
 ---
 <section class="st sv-sec sv-paper sv-abs" style="--sh:850px" aria-labelledby="st-h" data-m-section>
-  <Wave fill="var(--paper)" up top={-34} topM={-24} />
+  <Wave fill="var(--paper)" rise top={-34} topM={-24} />
   <div class="st-in">
     <i class="st-seam" data-ab style={ab(146, -90, 48, 120)} aria-hidden="true"></i>
     <svg class="st-seamcap" data-ab style={ab(133.3, -96.7, 74, 22)} viewBox="0 0 74 22" aria-hidden="true"><path d="M10.06.7H63.34L72.7 10.7 63.34 20.7H10.06L.7 10.7Z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.4" /></svg>
-    <Eyebrow tone="dark" class="st-eb" data-ab style={ab(879.5, 115)}>The work</Eyebrow>
+    <Eyebrow look="figma" tone="deep" class="st-eb" data-ab style={ab(879.5, 115)}>The work</Eyebrow>
     <h2 id="st-h" class="sv-h st-h" data-t="2" data-ab style={ab(880, 148, 440)}>Clear it. Fix it. <em>Or put in new.</em></h2>
     <div class="st-run" data-sv-scrub data-start="top 70%" data-end="bottom 70%" data-start-m="top 75%" data-end-m="bottom 65%" data-ab style={ab(130, 0, 600, 830)}>
       <div class="st-pipe" aria-hidden="true"><i class="st-hi"></i><i class="st-shade" data-sv-fill data-rev data-axis="y"></i></div>
@@ -40,7 +40,7 @@ const items = [
       </ol>
     </div>
     <div class="st-btn" data-ab style={ab(880, 318, 330, 64)}>
-      <Btn v="ink" l1={SITE.phone} l2="Free estimate" w={330} label={`Call ${SITE.phone} for a free estimate`} />
+      <Btn look="figma" v="ink" title={SITE.phone} sub="Free estimate" w={330} />
     </div>
   </div>
 </section>

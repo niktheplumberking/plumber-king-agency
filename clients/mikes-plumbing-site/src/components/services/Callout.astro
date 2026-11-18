@@ -2,10 +2,10 @@
 // 1.8 Emergency callout (Figma 669:539 y 5580 h 330, bone; mobile y 6903 h 398), with the tan "commercial jobs" tape across the
 // seam above it (desktop -60, 5560, 1600 x 58, rot -2.2; mobile -40, 6877, 620 x 44, rot -3). Siren + pulse rings, red dot,
 // eyebrow, H2, "Open 24 hours (Yelp)" line, red call button, link to /emergency-plumber.
-import Eyebrow from './kit/Eyebrow.astro';
-import Btn from './kit/Btn.astro';
-import TLink from './kit/TLink.astro';
-import { ab } from './kit/ab';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import TLink from './shared/TLink.astro';
+import { ab } from './shared/ab';
 import { SITE } from '../../data/site';
 const jobs = ['100-gallon heater, restaurant', 'Grease interceptor baffle tee', '4-inch gas line rework', 'ADU rough-in', '100-gallon heater, restaurant'];
 ---
@@ -23,11 +23,11 @@ const jobs = ['100-gallon heater, restaurant', 'Grease interceptor baffle tee', 
       </svg>
     </div>
     <i class="ec-dot" data-ab style={ab(392, 125, 14, 14)} aria-hidden="true"></i>
-    <Eyebrow tone="red" class="ec-eb" data-ab style={ab(423.5, 121)}>Emergency services</Eyebrow>
+    <Eyebrow look="figma" tone="red" class="ec-eb" data-ab style={ab(423.5, 121)}>Emergency services</Eyebrow>
     <h2 id="ec-h" class="sv-h ec-h" data-t="2" data-ab style={ab(424, 150)}>Water where it shouldn't be?</h2>
     <p class="ec-body" data-t="3" data-ab style={ab(424, 218)}>Open 24 hours (Yelp). Call and tell Mike what's going on.</p>
     <div class="ec-btn" data-ab style={ab(1080, 118, 260, 64)}>
-      <Btn v="red" l2="Call now" w={260} label={`Call ${SITE.phone} now`} />
+      <Btn look="figma" v="red" sub="Call now" w={260} />
     </div>
     <TLink href="/emergency-plumber" tone="ink" class="ec-link" data-ab style={ab(1080, 204)}>Emergency plumbing</TLink>
   </div>

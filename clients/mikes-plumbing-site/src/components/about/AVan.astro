@@ -2,13 +2,13 @@
 // 7.3 The van (Figma 669:911 / 670:2305): the van's rear as the frame, two back doors; the copy on the left door, the photo of
 // his van (doors open, shelving) on the right door. Mobile (670:2305): the copy sits above the van and the left door carries
 // the second quote (an aria-hidden copy; the real text stays in the copy block for screen readers).
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import Img from '../ui/Img.astro';
 const q2 = '“professionalism starts before the first wrench is turned.”';
 ---
 <section class="av" aria-labelledby="av-h" data-m-section>
-  <Wave d="a2d" m="a2m" top={1720} topM={1536} />
+  <Wave d="a2d" m="a2m" hostY={1720} hostYM={1536} />
   <div class="av-in">
     <div class="av-van" data-t="4" data-fx="nudge">
       <span class="av-body" aria-hidden="true"></span>
@@ -21,7 +21,7 @@ const q2 = '“professionalism starts before the first wrench is turned.”';
       <span class="av-tyre av-tyre--l" aria-hidden="true"></span><span class="av-tyre av-tyre--r" aria-hidden="true"></span>
     </div>
     <div class="av-copy">
-      <Eyebrow>The van</Eyebrow>
+      <Eyebrow look="town">The van</Eyebrow>
       <h2 id="av-h" class="av-h" data-t="2">An organized van <span class="tone">creates an organized mind.</span></h2>
       <div class="av-text" data-t="3">
         <p class="av-qs"><span>“The condition of your work van says a lot about the quality of your work.”</span> <span class="av-q2">{q2}</span></p>

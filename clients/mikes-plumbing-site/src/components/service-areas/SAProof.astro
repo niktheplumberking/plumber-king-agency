@@ -3,8 +3,8 @@
 // cropped map with strings to each town. Quotes are excerpts taken from REVIEWS (checked to be word for word at build).
 // Scroll moment: desktop, the strings run out to each tag in order (01-05); mobile, the numbered pins and cards light in order.
 import Img from '../ui/Img.astro';
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { REVIEWS } from '../../data/reviews';
 import { MAP_PTS } from '../../data/town-pages';
 const ex = (name: string, part: string) => {
@@ -29,9 +29,9 @@ const n = P.length;
 const RM = [1.5, -1.5, 1, -1, 1.5];                                // mobile card turns (Figma 670:12943-12967)
 ---
 <section class="sp" aria-labelledby="sp-h" data-m-section>
-  <Wave d="s3d" m="s3m" top={2090} topM={2424} />
+  <Wave d="s3d" m="s3m" hostY={2090} hostYM={2424} />
   <div class="wrap">
-    <Eyebrow>On Yelp</Eyebrow>
+    <Eyebrow look="town">On Yelp</Eyebrow>
     <h2 id="sp-h" class="sp-h" data-t="2">Customers from <span class="tone">all three regions.</span></h2>
     <figure class="sp-fig">
       <div class="sp-board" data-t="4" data-b3-scrub data-b3-start="top 75%" data-b3-end="bottom 70%">

@@ -3,8 +3,8 @@
 // words (slow marquee, pauses on hover), section head, six big rows (links). Desktop: hovering a row lights it and the
 // polaroid photo card follows the pointer. Mobile: the active row expands with its photo (tap a row to open it).
 import Img from '../ui/Img.astro';
-import Eyebrow from './Eyebrow.astro';
-import Wave from './Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import Marquee from './Marquee.astro';
 import { SITE } from '../../data/site';
 const ROWS = [
@@ -20,8 +20,8 @@ const WORDS = ['Fair price', 'Same day', 'Excellent communicator', 'Very clean',
 const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M12 1h26l11 17-11 17H12L1 18z"/><path class="ar" d="M18 18h14m-5-5 5 5-5 5"/></svg>';
 ---
 <section class="sv on-ink" aria-labelledby="sv-h" data-m-section>
-  <Wave only="d" y={-34} h={40} d="M0 16C93.3333 -5.33333 186.667 -5.33333 280 16C373.333 37.3333 466.667 37.3333 560 16C653.333 -5.33333 746.667 -5.33333 840 16C933.333 37.3333 1026.67 37.3333 1120 16C1213.33 -5.33333 1306.67 -5.33333 1400 16C1493.33 37.3333 1586.67 37.3333 1680 16V40H0V16Z" bottom="#0E0D0B" />
-  <Wave only="m" y={-22} h={28} w={390} d="M0 10C43.3333 -3.33333 86.6667 -3.33333 130 10C173.333 23.3333 216.667 23.3333 260 10C303.333 -3.33333 346.667 -3.33333 390 10C433.333 23.3333 476.667 23.3333 520 10V28H0V10Z" bottom="#0E0D0B" />
+  <Wave only="d" z={2} top={-34} d={{ path: 'M0 16C93.3333 -5.33333 186.667 -5.33333 280 16C373.333 37.3333 466.667 37.3333 560 16C653.333 -5.33333 746.667 -5.33333 840 16C933.333 37.3333 1026.67 37.3333 1120 16C1213.33 -5.33333 1306.67 -5.33333 1400 16C1493.33 37.3333 1586.67 37.3333 1680 16V40H0V16Z', h: 40 }} fill="#0E0D0B" />
+  <Wave only="m" z={2} topM={-22} m={{ path: 'M0 10C43.3333 -3.33333 86.6667 -3.33333 130 10C173.333 23.3333 216.667 23.3333 260 10C303.333 -3.33333 346.667 -3.33333 390 10C433.333 23.3333 476.667 23.3333 520 10V28H0V10Z', h: 28, w: 390 }} fill="#0E0D0B" />
   <Marquee class="sv-band" words={WORDS} star="#D9412B" />
   <div class="sv-in">
     <div class="sv-head">

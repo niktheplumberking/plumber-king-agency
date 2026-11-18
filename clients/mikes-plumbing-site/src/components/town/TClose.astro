@@ -2,8 +2,8 @@
 // 5.2 Close by (Figma 670:3403 y 1000-1700): OSM map crop with the pipe-run route from Riverside to the town (scroll moment:
 // the water runs down the pipe from Riverside as you scroll, the elbow nut and the town dot light up as it arrives), copy right.
 import Img from '../ui/Img.astro';
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { MAP_PTS, type TownPage } from '../../data/town-pages';
 interface Props { t: TownPage }
 const { t } = Astro.props;
@@ -24,7 +24,7 @@ const v = (k: 'r' | 'c' | 't') => `--x:${D[k][0]};--y:${D[k][1]};--xm:${M[k][0]}
 const up = t.name.toUpperCase();
 ---
 <section class="tc" aria-labelledby="tc-h" data-m-section>
-  <Wave d="t1d" m="t1m" top={1000} topM={1466} />
+  <Wave d="t1d" m="t1m" hostY={1000} hostYM={1466} />
   <div class="wrap tc-grid">
     <figure class="tc-mapwrap" data-t="4">
       <div class="tc-map" data-b3-scrub data-no-px>
@@ -51,7 +51,7 @@ const up = t.name.toUpperCase();
       <figcaption class="tc-cap">Map © OpenStreetMap contributors</figcaption>
     </figure>
     <div class="tc-copy">
-      <Eyebrow>Neighbors</Eyebrow>
+      <Eyebrow look="town">Neighbors</Eyebrow>
       <h2 id="tc-h" class="tc-h" data-t="2">Riverside to {t.name}. <span class="tone">{t.sameCounty ? 'Same county,' : 'Same van,'}<br /> same plumber.</span></h2>
       <p class="tc-body" data-t="3">{t.geo} We're a service-area business: we don't have a shop for you to visit, we bring the shop to you in the van.</p>
       <blockquote class="tc-q" data-t="4">

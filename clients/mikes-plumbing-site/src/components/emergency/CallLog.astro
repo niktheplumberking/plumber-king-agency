@@ -3,9 +3,9 @@
 // Yelp seal (rating from SITE.rating), and a clipboard "call log" of four Yelp lines with red date stamps.
 // Quotes come from src/data/reviews.ts and must appear word for word in that review (checked at build time).
 // Scroll moment: the red date stamps thud onto the log one after another as you scroll down the clipboard.
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { ab } from '../services/shared/ab';
 import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
 const line = (name: string, q: string, stamp: string, meta: string, metaM: string, rot: number) => {
@@ -24,7 +24,7 @@ const r = SITE.rating;
 <section class="cl sv-sec sv-paper sv-abs" style="--sh:900px" aria-labelledby="cl-h" data-m-section>
   <Wave fill="var(--paper)" top={-30} shape={[300, 14, -4.667, 32.667, 34]} topM={-22} shapeM={[150, 10, -3.333, 23.333, 26]} />
   <div class="cl-in">
-    <Eyebrow tone="dark" class="cl-eb" data-ab style={ab(119.5, 119)}>On Yelp</Eyebrow>
+    <Eyebrow look="figma" tone="deep" class="cl-eb" data-ab style={ab(119.5, 119)}>On Yelp</Eyebrow>
     <h2 id="cl-h" class="sv-h sv-h--red cl-h" data-t="2" data-ab style={ab(120, 152, 540)}>When it couldn't <em>wait until morning.</em></h2>
     <p class="cl-body" data-t="3" data-ab style={ab(120, 300, 440)}>Four lines from real Yelp reviews, word for word.<span class="cl-m"> Checked {r.checked}.</span></p>
     <div class="cl-seal" data-t="3" data-ab style={ab(120, 410, 260, 180, -4)} role="img" aria-label={`${r.value} out of 5 on ${r.source}, ${r.count} reviews`}>

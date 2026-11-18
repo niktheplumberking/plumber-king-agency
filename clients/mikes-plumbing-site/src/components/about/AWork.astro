@@ -3,8 +3,8 @@
 // marker underline, the flyer's wavy rule with a hex nut between rows, two IG snapshots.
 // Scroll moment: the red underlines draw one after another as the rows pass; as each line completes, its numeral lights up
 // (red outline, scale 1.08, small turn). Reduced motion / no JS = the Figma state (all lines drawn, numerals tan-dark).
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import Img from '../ui/Img.astro';
 import { REVIEWS } from '../../data/reviews';
 const has = (name: string, part: string) => {
@@ -16,9 +16,9 @@ const UL = 'M1.5 4.77C55.17 0.77 108.83 0.44 162.5 3.77C216.17 7.11 269.83 6.44 
 const n = 3;
 ---
 <section class="aw" aria-labelledby="aw-h" data-m-section>
-  <Wave d="a3d" m="a3m" top={2640} topM={2377} />
+  <Wave d="a3d" m="a3m" hostY={2640} hostYM={2377} />
   <div class="aw-in">
-    <Eyebrow>The way we work</Eyebrow>
+    <Eyebrow look="town">The way we work</Eyebrow>
     <h2 id="aw-h" class="aw-h" data-t="2">We don't cut corners, <span class="tone">we clean them!</span></h2>
     <ol class="aw-rows" role="list" data-b3-scrub data-b3-start="top 70%" data-b3-end="bottom 60%">
       <li class="aw-row" data-b3-stop={(0.9 / n).toFixed(3)}>

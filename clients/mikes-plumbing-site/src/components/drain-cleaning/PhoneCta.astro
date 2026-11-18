@@ -1,15 +1,15 @@
 ---
 // 3.6 Final CTA · flyer field + giant phone (Figma 670:13365 y 4071 h 643, ink; mobile y 4492 h 556). H2, the three red
 // check marks, the phone number set huge (a tel: link), call + form buttons, a cream rule with a hex nut.
-import Wave from '../services/kit/Wave.astro';
-import Btn from '../services/kit/Btn.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Btn from '../kit/Btn.astro';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 interface Props { h: string; em: string; checks: string[] }
 const { h, em, checks } = Astro.props;
 ---
 <section class="pp sv-sec sv-ink sv-abs" style="--sh:643px" aria-labelledby="pp-h" data-m-section>
-  <Wave fill="var(--ink)" up top={-34} topM={-24} />
+  <Wave fill="var(--ink)" rise top={-34} topM={-24} />
   <div class="pp-in">
     <h2 id="pp-h" class="sv-h pp-h" data-t="2" data-ab style={ab(120, 110, 680)}>{h} <em>{em}</em></h2>
     <ul class="pp-ck" role="list" data-t="3" data-stagger data-ab style={ab(120, 246)}>
@@ -17,8 +17,8 @@ const { h, em, checks } = Astro.props;
     </ul>
     <a class="pp-tel" href={SITE.tel} data-t="3" data-ab style={ab(110, 292)} aria-label={`Call ${SITE.phone}`}>{SITE.phone}</a>
     <div class="pp-btns" data-ab style={ab(1000, 128, 320, 144)}>
-      <Btn v="tan" l1="Call now" l2="Free estimate" w={320} label={`Call ${SITE.phone} now`} />
-      <Btn v="out" href="#estimate" l1="Get a free estimate" l2="Fill in the form" w={320} />
+      <Btn look="figma" v="tan" title="Call now" sub="Free estimate" w={320} />
+      <Btn look="figma" v="out" href="#estimate" title="Get a free estimate" sub="Fill in the form" w={320} />
     </div>
     <div class="pp-rule" data-ab style={ab(120, 549, 1200, 17)} aria-hidden="true">
       <svg viewBox="0 0 28 17"><path d="M4.6.75H23.4L27.25 8.5 23.4 16.25H4.6L.75 8.5Z" fill="#0E0D0B" stroke="#D2C5A6" stroke-width="1.5" /></svg>

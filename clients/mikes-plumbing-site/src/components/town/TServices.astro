@@ -1,7 +1,7 @@
 ---
 // 5.4 What we do in town (Figma 670:3403 y 2460-3060): flyer services as hex nuts threaded on rods; every nut is a link.
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import type { TownPage } from '../../data/town-pages';
 interface Props { t: TownPage }
 const { t } = Astro.props;
@@ -22,9 +22,9 @@ const MROWS = [[0, 1], [2, 3], [4, 5], [6], [7], [8, 9], [10]];
 const ALL = [...ROW1, ...ROW2];
 ---
 <section class="ts" aria-labelledby="ts-h" data-m-section>
-  <Wave d="t3d" m="t3m" top={2460} topM={3139} />
+  <Wave d="t3d" m="t3m" hostY={2460} hostYM={3139} />
   <div class="wrap">
-    <Eyebrow>Services</Eyebrow>
+    <Eyebrow look="town">Services</Eyebrow>
     <h2 id="ts-h" class="ts-h" data-t="2">Everything on the flyer, <span class="tone">in {t.name}.</span></h2>
   </div>
   <nav class="ts-rods ts-rods--d" aria-label={`Plumbing services in ${t.name}`}>

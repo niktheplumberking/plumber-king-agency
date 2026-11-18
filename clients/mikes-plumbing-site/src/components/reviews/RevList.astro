@@ -8,8 +8,8 @@
 // 9-20 are short labels written from each review's own words. Filters match words in the review text.
 import { REVIEWS, type Review } from '../../data/reviews';
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Wave from '../kit-b4/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { place, when, initials } from './fmt';
 type Size = 's' | 'L' | 'F' | 'W';
 type Tone = 'tan' | 'paper' | 'red' | 'coal';
@@ -53,9 +53,9 @@ if (cards.length !== REVIEWS.length || new Set(cards.map((c) => c.r.name)).size 
 const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c.cats.includes(k)).length);
 ---
 <section class="rl" aria-labelledby="rl-h" data-m-section>
-  <Wave d={{ a: 16.5, L: 600.5 }} m={{ a: 10.3, L: 300.5 }} fill="#1C1A16" above="#F3ECDD" />
+  <Wave z={1} d={{ a: 16.5, L: 600.5 }} m={{ a: 10.3, L: 300.5 }} fill="#1C1A16" above="#F3ECDD" />
   <div class="wrap rl-in">
-    <Eyebrow text={`All ${REVIEWS.length} Yelp reviews`} />
+    <Eyebrow look="page" text={`All ${REVIEWS.length} Yelp reviews`} />
     <h2 id="rl-h" class="rl-h2" data-t="2">Every review we <span class="tn">captured, word for word.</span></h2>
     <div class="rl-chips" role="group" aria-label="Filter reviews by what customers mention" data-t="3" data-rl-filters>
       {FILTERS.map(([k, label], i) => <button type="button" class="rl-chip" aria-pressed={i === 0 ? 'true' : 'false'} data-k={k}>{label}<span class="sr-only"> ({count(k)})</span></button>)}

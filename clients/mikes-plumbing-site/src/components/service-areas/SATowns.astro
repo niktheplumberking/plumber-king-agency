@@ -1,14 +1,14 @@
 ---
 // 6.3 Town links (Figma 670:10564 y 1610-2090): a tray of hex-nut buttons, each town inside a nut, wrapping on mobile.
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { TOWNS } from '../../data/towns';
 ---
 <section class="st" aria-labelledby="st-h" data-m-section>
-  <Wave d="s2d" m="s2m" top={1610} topM={1868} />
+  <Wave d="s2d" m="s2m" hostY={1610} hostYM={1868} />
   <div class="wrap st-grid">
     <div>
-      <Eyebrow ink>Town pages</Eyebrow>
+      <Eyebrow look="town" tone="ink">Town pages</Eyebrow>
       <h2 id="st-h" class="st-h" data-t="2">Find your town</h2>
     </div>
     <ul class="st-tray" role="list" data-t="4" data-stagger>

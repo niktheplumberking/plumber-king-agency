@@ -1,12 +1,12 @@
 ---
 // 1.5 Water heaters (Figma 669:539 y 3320 h 800, coal; mobile y 4222 h 928). Manila case file teaser behind a hex-clipped photo
 // of his heater's gas control valve (double hex frame), eyebrow 03, H2, body, three paper chips, link to /water-heaters.
-import Wave from './kit/Wave.astro';
-import Eyebrow from './kit/Eyebrow.astro';
-import Chip from './kit/Chip.astro';
-import TLink from './kit/TLink.astro';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Chip from './shared/Chip.astro';
+import TLink from './shared/TLink.astro';
 import Img from '../ui/Img.astro';
-import { ab } from './kit/ab';
+import { ab } from './shared/ab';
 ---
 <section id="water-heaters" class="wh sv-sec sv-coal sv-abs" style="--sh:800px" aria-labelledby="wh-h" data-m-section>
   <Wave fill="var(--coal)" top={-34} topM={-24} />
@@ -26,7 +26,7 @@ import { ab } from './kit/ab';
         <svg class="wh-frame wh-m" viewBox="0 0 352.5 302.5" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M78.25 1.25H274.25L351.25 151.25L274.25 301.25H78.25L1.25 151.25Z" fill="none" stroke="#D2C5A6" stroke-width="2.5" stroke-linejoin="round" /></svg>
       </div>
     </div>
-    <Eyebrow tone="tan" class="wh-eb" data-ab style={ab(799.5, 149)}>03 · Water heaters</Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="wh-eb" data-ab style={ab(799.5, 149)}>03 · Water heaters</Eyebrow>
     <h2 id="wh-h" class="sv-h wh-h" data-t="2" data-ab style={ab(800, 182, 520)}>Diagnosis matters. <em>Especially on a water heater.</em></h2>
     <p class="wh-body" data-t="3" data-ab style={ab(800, 375, 520)}>Install and repair, home and commercial, from a household tank to a 100-gallon heater in a restaurant. We find out what's actually wrong before anyone talks about replacing it.</p>
     <ul class="wh-chips" role="list" data-t="4" data-stagger data-ab style={ab(800, 482)}>

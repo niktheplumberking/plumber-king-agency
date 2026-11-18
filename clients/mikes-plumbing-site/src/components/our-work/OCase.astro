@@ -4,8 +4,8 @@
 // Scroll moment (Nick's numbered stops): as the photo scrolls through, pins 1, 2, 3 light up in order (scale 1.08, small
 // turn) and each one's dashed leader runs out to its pipe tag. Reduced motion / no JS = the Figma state (all leaders drawn).
 import logoCream from '../../assets/brand/logo-cream.png';
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import Img from '../ui/Img.astro';
 // pin = centre on the 560 x 660 photo (desktop px, used as % for every size); line = leader end in section px; tag = desktop tag box
 const PINS = [
@@ -16,11 +16,11 @@ const PINS = [
 const PX = 740, PY = 110, n = PINS.length;
 ---
 <section class="oc on-ink" aria-labelledby="oc-h" data-m-section>
-  <Wave d="o2d" m="o2m" top={2886} topM={2744} />
+  <Wave d="o2d" m="o2m" hostY={2886} hostYM={2744} />
   <div class="oc-in">
     <div class="oc-folder" data-t="4" data-fx="nudge">
       <p class="oc-label">CASE FILE · No. 01</p>
-      <Eyebrow>Case file</Eyebrow>
+      <Eyebrow look="town">Case file</Eyebrow>
       <h2 id="oc-h" class="oc-h">Diagnosis <span class="tone">matters.</span></h2>
       <blockquote class="oc-q"><p>“...was told it needed to be replaced. After properly diagnosing it, we found the issue was simply the gas control valve.”</p></blockquote>
       <p class="oc-by">Mike Navarro, on his Instagram</p>

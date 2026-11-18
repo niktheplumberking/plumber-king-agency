@@ -2,19 +2,19 @@
 // 3.1 Hero · cut-away pipe (Figma 670:13365 y 180 h 866, coal; mobile 672:437 y 164 h 1292). Eyebrow, H1, tan script line,
 // quick answer, call + form buttons, three chips, the crawl-space photo inside a cut-away pipe between two flanges, and the
 // wide estimate form card.
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import Btn from '../services/kit/Btn.astro';
-import Chip from '../services/kit/Chip.astro';
-import EstimateCard from '../services/kit/EstimateCard.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Chip from '../services/shared/Chip.astro';
+import EstimateCard from '../services/shared/EstimateCard.astro';
 import Img from '../ui/Img.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
-import { ab } from '../services/kit/ab';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 ---
 <section class="dh sv-sec sv-coal sv-abs" style="--sh:866px" aria-labelledby="dh-h" data-m-section data-m-hero>
   <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: 'Drain cleaning', href: '/drain-cleaning' }]} class="sr-only" />
   <div class="dh-in">
-    <Eyebrow tone="tan" class="dh-eb" data-ab style={ab(119.5, 109)}>Drains &amp; sewer lines · Riverside<span class="dh-d">, CA</span></Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="dh-eb" data-ab style={ab(119.5, 109)}>Drains &amp; sewer lines · Riverside<span class="dh-d">, CA</span></Eyebrow>
     <h1 id="dh-h" class="sv-h dh-h" data-t="2" data-ab style={ab(120, 142, 520)}>Drain Cleaning &amp; Hydro Jetting in Riverside, CA</h1>
     <p class="dh-script sv-script" data-t="3" data-ab style={ab(120, 332, 520)}>“We don't cut corners, we clean them!”</p>
     <p class="dh-body" data-t="3" data-ab style={ab(120, 392, 500)}>Drain cleaning, repair and new installation. Sewer lines and hydro jetting. Homes and commercial.</p>
@@ -28,8 +28,8 @@ import { SITE } from '../../data/site';
       <figcaption class="dh-cap" data-ab style={ab(716, 350)}>On the job · Mike's Instagram</figcaption>
     </figure>
     <div class="dh-btns" data-ab style={ab(120, 474, 526, 64)}>
-      <Btn v="tan" l1={`Call ${SITE.phone}`} l2="Free estimate" w={290} label={`Call ${SITE.phone} for a free estimate`} />
-      <Btn v="out" href="#estimate" l1="Get a free estimate" l2="Form on the right" w={220} class="dh-ghost" />
+      <Btn look="figma" v="tan" title={`Call ${SITE.phone}`} sub="Free estimate" w={290} />
+      <Btn look="figma" v="out" href="#estimate" title="Get a free estimate" sub="Form on the right" w={220} class="dh-ghost" />
     </div>
     <ul class="dh-chips" role="list" data-t="4" data-stagger data-ab style={ab(120, 562)}>
       <li><Chip tone="tan">Free estimate</Chip></li>

@@ -2,17 +2,17 @@
 // 8.4 Send your job (Figma 670:7635 / 670:9583): copy + DM / call buttons left, a phone showing an Instagram DM thread right
 // (Mike's tan bubble with the line, a customer's photo), the ink stamp beside it. Mobile: the same phone at the frame's scale.
 import logoCream from '../../assets/brand/logo-cream.png';
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
 const mask = `--logo:url(${logoCream.src})`;
 ---
 <section class="od" aria-labelledby="od-h" data-m-section>
-  <Wave d="o3d" m="o3m" top={3766} topM={3794} />
+  <Wave d="o3d" m="o3m" hostY={3766} hostYM={3794} />
   <div class="od-in">
     <div class="od-copy">
-      <Eyebrow>Got one for us?</Eyebrow>
+      <Eyebrow look="town">Got one for us?</Eyebrow>
       <h2 id="od-h" class="od-h" data-t="2">Wet spot by the wall? <span class="tone">DM me a picture.</span></h2>
       <p class="od-body" data-t="3">Send a photo on Instagram and tell Mike what's going on.</p>
     </div>

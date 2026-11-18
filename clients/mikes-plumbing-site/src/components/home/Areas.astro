@@ -5,7 +5,7 @@
 // ticket. Desktop is a 1440 x 900 stage in Figma px; mobile has its own 390 x 301 map strip (its own Figma vectors).
 import Img from '../ui/Img.astro';
 import Badge from './Badge.astro';
-import Wave from './Wave.astro';
+import Wave from '../kit/Wave.astro';
 import { SITE } from '../../data/site';
 import { TOWNS } from '../../data/towns';
 
@@ -77,8 +77,8 @@ const REG = [
     </div>
     <Badge w={120} deg={10} fill={false} tone="ink" class="ar-stamp" data-t="5" data-fx="pop" />
   </div>
-  <Wave only="d" class="ar-wb" y={862} h={44} d="M0 18C100 42 200 42 300 18C400 -6 500 -6 600 18C700 42 800 42 900 18C1000 -6 1100 -6 1200 18C1300 42 1400 42 1500 18V44H0V18Z" bottom="#FBF8F2" />
-  <Wave only="m" class="ar-wb" y={934} h={30} w={390} d="M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z" bottom="#FBF8F2" />
+  <Wave only="d" class="ar-wb" z={2} top={862} d={{ path: 'M0 18C100 42 200 42 300 18C400 -6 500 -6 600 18C700 42 800 42 900 18C1000 -6 1100 -6 1200 18C1300 42 1400 42 1500 18V44H0V18Z', h: 44 }} fill="#FBF8F2" />
+  <Wave only="m" class="ar-wb" z={2} topM={934} m={{ path: 'M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z', h: 30, w: 390 }} fill="#FBF8F2" />
 </section>
 <style>
   .ar { position: relative; z-index: 0; overflow: hidden; background: var(--paper); color: var(--ink); }
@@ -129,7 +129,7 @@ const REG = [
   @media (min-width: 1024px) and (max-width: 1151px) { .st { zoom: .711; } }
   @media (min-width: 1152px) and (max-width: 1279px) { .st { zoom: .8; } }
   @media (min-width: 768px) and (max-width: 1023px) { .st { zoom: .533; } }
-  @media (max-width: 1279px) { .ar :global(.ar-wb.only-d) { top: auto !important; bottom: -6px; } }
+  @media (max-width: 1279px) { .ar :global(.ar-wb.wave--only-d) { top: auto !important; bottom: -6px; } }
   @media (max-width: 767px) {
     .st { width: auto; max-width: 430px; height: 958px; }
     .map { inset: 0 0 auto; height: 301px; overflow: hidden; }
@@ -159,6 +159,6 @@ const REG = [
     .tk-n { margin-top: 3px; font-size: 17px; line-height: 25px; }
     .tk-l { font-size: 12px; line-height: 13px; }
     .st :global(.ar-stamp) { left: auto; right: 28px; top: 840px; width: 100px; }
-    .ar :global(.ar-wb.only-m) { top: auto !important; bottom: -6px; }
+    .ar :global(.ar-wb.wave--only-m) { top: auto !important; bottom: -6px; }
   }
 </style>

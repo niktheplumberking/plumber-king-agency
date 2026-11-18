@@ -2,10 +2,10 @@
 // 2.2 Signature · the case file (Figma 670:7700 y 880 h 980, ink; mobile y 1601 h 1072). Manila folder (back + front, tilted)
 // with the four case lines, the evidence polaroid on a paper clip and the red DIAGNOSED stamp; Mike's post word for word.
 // Scroll moment: the file is "read" line by line (each line lights and pops in turn) and the DIAGNOSED stamp lands last.
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
-import { ab } from '../services/kit/ab';
+import { ab } from '../services/shared/ab';
 const rows = [
   { k: 'The heater', v: '75-gallon, gas' },
   { k: "What they'd heard", v: 'needs to be replaced' },
@@ -14,9 +14,9 @@ const rows = [
 ];
 ---
 <section class="cf sv-sec sv-ink sv-abs" style="--sh:980px" aria-labelledby="cf-h" data-m-section>
-  <Wave fill="var(--ink)" up top={-34} topM={-24} />
+  <Wave fill="var(--ink)" rise top={-34} topM={-24} />
   <div class="cf-in">
-    <Eyebrow tone="tan" class="cf-eb" data-ab style={ab(119.5, 119)}>Case file · 75-gallon gas heater</Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="cf-eb" data-ab style={ab(119.5, 119)}>Case file · 75-gallon gas heater</Eyebrow>
     <h2 id="cf-h" class="sv-h cf-h" data-t="2" data-ab style={ab(120, 152, 760)}>Told to replace it. <em>It needed one part.</em></h2>
 
     <div class="cf-file" data-sv-scrub data-start="top 70%" data-end="bottom 75%" data-t="3" data-ab style={ab(110, 330, 820, 560, -2)}>

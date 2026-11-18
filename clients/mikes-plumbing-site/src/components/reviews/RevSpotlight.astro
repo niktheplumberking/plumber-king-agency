@@ -5,9 +5,9 @@
 // the Figma shows the part from "Mike happened" to "any mess."; his full review is in the list below.
 import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Wave from '../kit-b4/Wave.astro';
-import Stamp from '../kit-b4/Stamp.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
+import Stamp from '../kit/Stamp.astro';
 import { place, when } from './fmt';
 const r = REVIEWS.find((x) => x.name === 'Stuart W.');
 if (!r) throw new Error('RevSpotlight: Stuart W. is not in REVIEWS');
@@ -18,10 +18,10 @@ const hl = 'extremely conscientious';
 const [pre, post] = ex.split(hl);
 ---
 <section class="rs" aria-labelledby="rs-h" data-m-section>
-  <Wave d={{ a: 16.5, L: 521 }} m={{ a: 10.3, L: 300.5 }} fill="#F3ECDD" above="#D2C5A6" />
+  <Wave z={1} d={{ a: 16.5, L: 521 }} m={{ a: 10.3, L: 300.5 }} fill="#F3ECDD" above="#D2C5A6" />
   <div class="wrap rs-in">
     <h2 id="rs-h" class="sr-only">Spotlight review from {r.name}</h2>
-    <Eyebrow text="Spotlight" tone="deep" class="rs-eb" />
+    <Eyebrow look="page" text="Spotlight" tone="deep" class="rs-eb" />
     <figure class="rs-sheet" data-t="4">
       <p class="rs-meta" aria-hidden="true">Spotlight <span>·</span> Yelp<i class="rs-d"> review</i> <span>·</span> ★★★★★</p>
       <blockquote class="rs-q" cite={SITE.social.yelp}>

@@ -3,15 +3,15 @@
 // a three-column masonry of his stamped job photos (chamfered tiles), a Yelp quote tile and a "Stamped by Mike" tile.
 // The pipe/valve seam below it lives in Diagnosis.astro (it sits above this section).
 import Img from '../ui/Img.astro';
-import Eyebrow from './Eyebrow.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
 import Badge from './Badge.astro';
-import Wave from './Wave.astro';
+import Wave from '../kit/Wave.astro';
 import { SITE } from '../../data/site';
 const arrow = '<svg viewBox="0 0 18 10" width="16" height="10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M0 5h16M12 1l4 4-4 4"/></svg>';
 ---
 <section class="wk on-ink" aria-labelledby="wk-h" data-m-section>
-  <Wave only="d" y={-30} h={36} d="M0 14C80 -4.66667 160 -4.66667 240 14C320 32.6667 400 32.6667 480 14C560 -4.66667 640 -4.66667 720 14C800 32.6667 880 32.6667 960 14C1040 -4.66667 1120 -4.66667 1200 14C1280 32.6667 1360 32.6667 1440 14C1520 -4.66667 1600 -4.66667 1680 14V36H0V14Z" bottom="#0E0D0B" />
-  <Wave only="m" y={-20} h={26} w={390} d="M0 9C40 -3 80 -3 120 9C160 21 200 21 240 9C280 -3 320 -3 360 9C400 21 440 21 480 9V26H0V9Z" bottom="#0E0D0B" />
+  <Wave only="d" z={2} top={-30} d={{ path: 'M0 14C80 -4.66667 160 -4.66667 240 14C320 32.6667 400 32.6667 480 14C560 -4.66667 640 -4.66667 720 14C800 32.6667 880 32.6667 960 14C1040 -4.66667 1120 -4.66667 1200 14C1280 32.6667 1360 32.6667 1440 14C1520 -4.66667 1600 -4.66667 1680 14V36H0V14Z', h: 36 }} fill="#0E0D0B" />
+  <Wave only="m" z={2} topM={-20} m={{ path: 'M0 9C40 -3 80 -3 120 9C160 21 200 21 240 9C280 -3 320 -3 360 9C400 21 440 21 480 9V26H0V9Z', h: 26, w: 390 }} fill="#0E0D0B" />
   <div class="wk-in">
     <div class="wk-txt">
       <div class="shead">

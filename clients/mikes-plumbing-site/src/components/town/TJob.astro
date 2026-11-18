@@ -1,8 +1,8 @@
 ---
 // 5.3 A town job in the customer's words (Figma 670:3403 y 1700-2460): the Yelp review word for word on a work-order
 // ticket with the town hex stamp; job items pulled out as check marks (only what the review says).
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { SITE } from '../../data/site';
 import type { TownPage } from '../../data/town-pages';
 interface Props { t: TownPage }
@@ -13,10 +13,10 @@ const first = r.name.split(' ')[0];
 const up = t.name.toUpperCase();
 ---
 <section class="tj on-ink" aria-labelledby="tj-h" data-m-section>
-  <Wave d="t2d" m="t2m" top={1700} topM={2271} />
+  <Wave d="t2d" m="t2m" hostY={1700} hostYM={2271} />
   <div class="wrap tj-grid">
     <div class="tj-copy">
-      <Eyebrow dark>{t.name} · On Yelp</Eyebrow>
+      <Eyebrow look="town" tone="tan">{t.name} · On Yelp</Eyebrow>
       <h2 id="tj-h" class="tj-h" data-t="2">{t.job.h1} <span class="tone">{t.job.h2}</span></h2>
       <p class="tj-lede" data-t="3">One {t.name} customer, in {t.job.pronoun} own words. Word for word from Yelp.</p>
       <a class="tj-link tj-link--d" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="3">Read {first}'s review on Yelp <span aria-hidden="true">→</span></a>

@@ -2,19 +2,19 @@
 // 2.1 Hero · split + stamp (Figma 670:7700 y 180 h 700, paper; mobile 670:11675 y 164 h 1437). Eyebrow, H1, red script line,
 // quick answer, call + form buttons, three chips, hex photo on a tan shadow plate with the "DIAGNOSIS MATTERS." rubber stamp,
 // and the estimate form card.
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import Btn from '../services/kit/Btn.astro';
-import Chip from '../services/kit/Chip.astro';
-import EstimateCard from '../services/kit/EstimateCard.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Chip from '../services/shared/Chip.astro';
+import EstimateCard from '../services/shared/EstimateCard.astro';
 import Img from '../ui/Img.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
-import { ab } from '../services/kit/ab';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 ---
 <section class="wx sv-sec sv-paper sv-abs" style="--sh:700px" aria-labelledby="wx-h" data-m-section data-m-hero>
   <Breadcrumbs items={[{ label: 'Services', href: '/services' }, { label: 'Water heaters', href: '/water-heaters' }]} class="sr-only" />
   <div class="wx-in">
-    <Eyebrow tone="dark" class="wx-eb" data-ab style={ab(119.5, 95)}>Water heaters · Riverside, CA</Eyebrow>
+    <Eyebrow look="figma" tone="deep" class="wx-eb" data-ab style={ab(119.5, 95)}>Water heaters · Riverside, CA</Eyebrow>
     <h1 id="wx-h" class="sv-h wx-h" data-t="2" data-ab style={ab(120, 128, 490)}>Water Heater Repair &amp; Install in Riverside, CA</h1>
     <p class="wx-script sv-script lh-yest" data-t="3" data-ab style={ab(120, 322)}>Diagnosis matters.</p>
     <p class="wx-body" data-t="3" data-ab style={ab(120, 389, 520)}>Before you buy a new water heater, find out what's really wrong with the old one.</p>
@@ -27,8 +27,8 @@ import { SITE } from '../../data/site';
       <div class="wx-stamp" data-ab style={ab(626, 390, 275.5, 63, -9)} aria-hidden="true"><i></i><span>Diagnosis matters.</span></div>
     </div>
     <div class="wx-btns" data-ab style={ab(120, 473, 566, 64)}>
-      <Btn v="ink" l1={`Call ${SITE.phone}`} l2="Free estimate" w={300} label={`Call ${SITE.phone} for a free estimate`} />
-      <Btn v="outInk" href="#estimate" l1="Get a free estimate" l2="Fill in the form" w={250} class="wx-ghost" />
+      <Btn look="figma" v="ink" title={`Call ${SITE.phone}`} sub="Free estimate" w={300} />
+      <Btn look="figma" v="outInk" href="#estimate" title="Get a free estimate" sub="Fill in the form" w={250} class="wx-ghost" />
     </div>
     <ul class="wx-chips" role="list" data-t="4" data-stagger data-ab style={ab(120, 561)}>
       <li><Chip tone="dark">Water Heater Repair</Chip></li>

@@ -7,7 +7,7 @@
 // that question reaches the reading line, and the topic number swells and turns (phone: the bar's progress line fills).
 import { Image } from 'astro:assets';
 import { SITE } from '../../data/site';
-import Wave from '../kit-b4/Wave.astro';
+import Wave from '../kit/Wave.astro';
 import { FAQS } from './faq';
 import valve from '../../assets/photos/water-heater-gas-valve-riverside.jpg';
 import copper from '../../assets/photos/corroded-copper-pipe-leak.jpg';
@@ -19,7 +19,7 @@ const nn = (i: number) => String(i + 1).padStart(2, '0');
 const nut = 'M7.46.7h38.48l6.76 20-6.76 20H7.46L.7 20.7z';
 ---
 <section class="fl" aria-label="Questions and answers" data-m-section data-scrub data-start="top 45%" data-end="bottom 45%" data-start-m="top 30%" data-end-m="bottom 30%">
-  <Wave d={{ a: 18.64, L: 560.5 }} m={{ a: 12.32, L: 302.5, phi: -3.1 }} fill="#F3ECDD" above="#0E0D0B" />
+  <Wave z={1} d={{ a: 18.64, L: 560.5 }} m={{ a: 12.32, L: 302.5, phi: -3.1 }} fill="#F3ECDD" above="#0E0D0B" />
   <div class="fl-bar" data-fl-bar>
     <p class="fl-cnt"><span data-fl-n>01</span> / {nn(FAQS.length - 1)}</p>
     <p class="fl-cur" data-fl-t aria-live="off">{FAQS[0].topic}</p>

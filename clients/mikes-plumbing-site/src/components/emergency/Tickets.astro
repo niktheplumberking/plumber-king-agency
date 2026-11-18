@@ -1,10 +1,10 @@
 ---
 // Tickets · emergencies we handle (Figma 669:783 y 2460 h 800, ink; mobile y 2652 h 584). Eyebrow, H2 and five pinned
 // work-order tickets with a torn top edge (photo, WO number, the emergency, call line). Mobile: a swipe row.
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
-import { ab } from '../services/kit/ab';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 const tickets = [
   { h: 'Leaks and slab leaks', img: 'leak-repair-wall-opened', alt: 'A wall opened up to reach a leaking pipe', rot: -2 },
@@ -21,9 +21,9 @@ const zig = (w: number, half: number, d: number) => {
 };
 ---
 <section class="tk sv-sec sv-ink sv-abs" style={`--sh:800px;--zd:${zig(224, 8, 10)};--zm:${zig(174, 7.9, 8)}`} aria-labelledby="tk-h" data-m-section>
-  <Wave fill="var(--ink)" up top={-34} shape={[240, 16, -5.333, 37.333, 38]} topM={-26} shapeM={[150, 12, -4, 28, 30]} />
+  <Wave fill="var(--ink)" rise top={-34} shape={[240, 16, -5.333, 37.333, 38]} topM={-26} shapeM={[150, 12, -4, 28, 30]} />
   <div class="tk-in">
-    <Eyebrow tone="tan" class="tk-eb" data-ab style={ab(119.5, 99)}>The calls</Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="tk-eb" data-ab style={ab(119.5, 99)}>The calls</Eyebrow>
     <h2 id="tk-h" class="sv-h tk-h lh-abril" data-t="2" data-ab style={ab(120, 132)}>What counts as <em>an emergency?</em></h2>
     <ul class="tk-row" role="list" data-t="3" data-stagger>
       {tickets.map((t, i) => (

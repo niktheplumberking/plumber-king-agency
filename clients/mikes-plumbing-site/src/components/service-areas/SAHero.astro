@@ -2,9 +2,8 @@
 // 6.1 Hero (Figma 670:10564 y 180-900 / 670:12818 y 164-964): copy left, the OSM map in a hex window with the Riverside
 // hex pin and the town dots. Scroll moment: the routes run out from Riverside to each town as the hero scrolls away.
 import Img from '../ui/Img.astro';
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import CallBtn from '../b3kit/CallBtn.astro';
-import GhostBtn from '../b3kit/GhostBtn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
 import { MAP_PTS } from '../../data/town-pages';
 const W = 700, H = 500, S = 0.73, OX = -44, OY = -28;
 const at = (k: string) => [MAP_PTS[k][0] * S + OX, MAP_PTS[k][1] * S + OY];
@@ -20,7 +19,7 @@ const xy = (k: string) => { const [x, y] = at(k), [xm, ym] = atm(k); return `--x
 <section class="sh" aria-labelledby="sh-h1" data-m-section data-m-hero>
   <div class="wrap sh-grid">
     <div class="sh-copy">
-      <Eyebrow>Service areas · Based in Riverside<span class="sh-ca">, CA</span></Eyebrow>
+      <Eyebrow look="town">Service areas · Based in Riverside<span class="sh-ca">, CA</span></Eyebrow>
       <h1 id="sh-h1" class="sh-h1" data-t="2">Plumber Serving the <span class="tone">Inland Empire, OC &amp; LA</span></h1>
       <p class="sh-sub" data-t="3" aria-label="IE, OC, LA">
         <span>IE</span><svg viewBox="0 0 46 20" aria-hidden="true"><rect x="0" y="7" width="46" height="6" rx="2" fill="#6B5C3E" /><path d="M14 1h18l6 9-6 9H14l-6-9z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" /></svg>
@@ -29,8 +28,8 @@ const xy = (k: string) => { const [x, y] = at(k), [xm, ym] = atm(k); return `--x
       </p>
       <p class="sh-body" data-t="3" data-fx="nudge">We're based in Riverside and come to you. Residential and commercial.</p>
       <div class="sh-btns">
-        <CallBtn v="ink" />
-        <GhostBtn href="/contact" w={210} />
+        <Btn look="call" v="ink" />
+        <Btn look="ghost" href="/contact" w={210} />
       </div>
     </div>
     <figure class="sh-mapwrap" data-t="4" data-fx="nudge">

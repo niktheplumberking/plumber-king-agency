@@ -2,8 +2,8 @@
 // 7.5 Family (Figma 670:469 / 670:2349): snapshots on a fridge door (mascot + slime stamp, hex magnets, FAMILY letter
 // magnets), copy and Brandon A.'s line on the right. [MIKE TO CONFIRM] who else is in the family business; a real family
 // photo would replace the mascot snapshot (PAGES-COPY 7.5).
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import Img from '../ui/Img.astro';
 import { REVIEWS } from '../../data/reviews';
 const b = REVIEWS.find((r) => r.name === 'Brandon A.')!;
@@ -13,7 +13,7 @@ const date = b.date.replace(/^(\w+) (\d+) (\d+)$/, '$1 $2, $3');
 const L = [['F', 'red', 6], ['A', 'tan', -4], ['M', 'bone', 3], ['I', 'tan', -7], ['L', 'red', 5], ['Y', 'bone', -3]] as const;
 ---
 <section class="af on-ink" aria-labelledby="af-h" data-m-section>
-  <Wave d="a4d" m="a4m" top={3600} topM={3341} />
+  <Wave d="a4d" m="a4m" hostY={3600} hostYM={3341} />
   <div class="af-in">
     <div class="af-fridge" data-t="4" data-fx="nudge">
       <figure class="af-snap af-snap--a"><div class="af-ph"><Img name="mikes-plumbing-3d-mascot-saluting" alt="Mike's 3D mascot saluting, holding a wrench" sizes="(min-width: 768px) 306px, 174px" box={306 / 330} /></div>
@@ -25,7 +25,7 @@ const L = [['F', 'red', 6], ['A', 'tan', -4], ['M', 'bone', 3], ['I', 'tan', -7]
       <p class="af-word" role="img" aria-label="Family">{L.map(([c, col, r], i) => <span class={`af-l af-l--${col}`} style={`--i:${i};--r:${r}deg`} aria-hidden="true">{c}</span>)}</p>
     </div>
     <div class="af-copy">
-      <Eyebrow dark>Family owned &amp; operated</Eyebrow>
+      <Eyebrow look="town" tone="tan">Family owned &amp; operated</Eyebrow>
       <h2 id="af-h" class="af-h" data-t="2">Family owned. <span class="tone">Family operated.</span></h2>
       <p class="af-body" data-t="3">Mike's Plumbing Services is a family-owned and operated business, run by Mike Navarro out of Riverside.</p>
       <figure class="af-q" data-t="3">

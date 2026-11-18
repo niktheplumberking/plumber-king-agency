@@ -4,8 +4,8 @@
 // right (desktop) past a hex nut into the spotlight section; on phones it runs down the middle behind stacked tapes.
 // Scroll moment (data-scrub): water runs along the pipe as you scroll; each tape lights up and swells as the water
 // reaches it, then the nut. Quotes are copied word for word from REVIEWS (checked in code, never retyped).
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Wave from '../kit-b4/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { REVIEWS } from '../../data/reviews';
 const all = REVIEWS.map((r) => r.text).join(' ').toLowerCase();
 const q = (s: string) => { if (!all.includes(s.toLowerCase())) throw new Error(`RevPattern: "${s}" is not in REVIEWS`); return s; };
@@ -16,10 +16,10 @@ const tapes = [
 ];
 ---
 <section class="rp" aria-labelledby="rp-h" data-m-section data-scrub data-start="top 55%" data-end="bottom 35%" data-start-m="top 40%" data-end-m="bottom 60%">
-  <Wave d={{ a: 16.5, L: 560.5 }} m={{ a: 10.3, L: 300.5 }} fill="#D2C5A6" above="#0E0D0B" />
+  <Wave z={1} d={{ a: 16.5, L: 560.5 }} m={{ a: 10.3, L: 300.5 }} fill="#D2C5A6" above="#0E0D0B" />
   <div class="wrap rp-in">
     <div class="rp-head">
-      <Eyebrow text="The pattern" tone="deep" />
+      <Eyebrow look="page" text="The pattern" tone="deep" />
       <h2 id="rp-h" class="rp-h2" data-t="2">Communication. Fair price. <span class="dk">Clean work.</span></h2>
       <p class="rp-lead" data-t="3">Every phrase on the tape is copied word for word from Mike's Yelp reviews.</p>
     </div>

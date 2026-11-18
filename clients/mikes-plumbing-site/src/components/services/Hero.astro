@@ -4,27 +4,27 @@
 // The pinned flyer (his, tilted 4 deg) + tape cross the seam into 1.2: positioned here, above the wave.
 import { Image } from 'astro:assets';
 import logoCream from '../../assets/brand/logo-cream.png';
-import Btn from './kit/Btn.astro';
-import Chip from './kit/Chip.astro';
-import Eyebrow from './kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Chip from './shared/Chip.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
-import { ab } from './kit/ab';
+import { ab } from './shared/ab';
 import { SITE } from '../../data/site';
 ---
 <section class="hh sv-sec sv-ink sv-abs" style="--sh:740px" aria-labelledby="hh-h" data-m-section data-m-hero>
   <span class="hh-o" aria-hidden="true"></span><span class="hh-i" aria-hidden="true"></span>
   <Breadcrumbs items={[{ label: 'Services', href: '/services' }]} dark class="sr-only" />
   <Image src={logoCream} alt="Mike's Plumbing Services hex badge logo, EST 2025" width={480} class="hh-logo" loading="eager" data-ab style={ab(600, 66, 240, 140)} />
-  <Eyebrow tone="tan" class="hh-eb" data-ab style={ab(599, 231)}>Our services · Riverside, CA</Eyebrow>
+  <Eyebrow look="figma" tone="tan" class="hh-eb" data-ab style={ab(599, 231)}>Our services · Riverside, CA</Eyebrow>
   <h1 id="hh-h" class="hh-h1 f-abril" data-t="2" data-ab style={ab(120, 262, 1200, 94)}>Plumbing Services in Riverside, CA</h1>
   <svg class="hh-hex" data-ab style={ab(705.2, 363.2, 30, 19)} viewBox="0 0 30 19" aria-hidden="true"><path d="M4.44.8h20.72l3.64 8.5-3.64 8.5H4.44L.8 9.3z" fill="none" stroke="#D2C5A6" stroke-width="1.6" stroke-linejoin="round" /></svg>
   <i class="hh-ln" data-ab style={ab(420, 371.25, 250, 1.5)} aria-hidden="true"></i><i class="hh-ln" data-ab style={ab(770, 371.25, 250, 1.5)} aria-hidden="true"></i>
   <p class="hh-script f-yest" data-t="3" data-ab style={ab(120, 394, 1200, 59)}>Got plumbing problems? Mike's got the fix!</p>
   <p class="hh-body" data-t="3" data-ab style={ab(400, 462, 640, 54)}>Residential and commercial plumbing across the Inland Empire, Orange County and LA. Family owned and operated. Call for a free estimate.</p>
   <div class="hh-btns" data-ab style={ab(432, 540, 576, 64)}>
-    <Btn v="tan" l1={`Call ${SITE.phone}`} l2="Free estimate" w={300} label={`Call ${SITE.phone} for a free estimate`} />
-    <Btn v="out" href="/contact" l1="Get a free estimate" l2="Tell us what's going on" w={260} />
+    <Btn look="figma" v="tan" title={`Call ${SITE.phone}`} sub="Free estimate" w={300} />
+    <Btn look="figma" v="out" href="/contact" title="Get a free estimate" sub="Tell us what's going on" w={260} />
   </div>
   <ul class="hh-chips" role="list" data-t="5" data-stagger data-ab style={ab(449.5, 622, 541, 34)}>
     <li><Chip>Free estimate</Chip></li>

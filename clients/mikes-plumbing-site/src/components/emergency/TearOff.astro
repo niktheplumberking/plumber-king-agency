@@ -5,19 +5,19 @@
 // its proportions: it is one drawn object, not a text layout.
 import { Image } from 'astro:assets';
 import logoInk from '../../assets/brand/logo-ink.png';
-import Wave from '../services/kit/Wave.astro';
-import Btn from '../services/kit/Btn.astro';
+import Wave from '../kit/Wave.astro';
+import Btn from '../kit/Btn.astro';
 import { SITE } from '../../data/site';
 const tabs = Array.from({ length: 10 }, (_, i) => i);
 ---
 <section class="ft sv-sec sv-coal" aria-labelledby="ft-h" data-m-section>
-  <Wave fill="var(--coal)" up top={-30} shape={[350, 14, -4.667, 32.667, 34]} topM={-26} shapeM={[150, 12, -4, 28, 30]} />
+  <Wave fill="var(--coal)" rise top={-30} shape={[350, 14, -4.667, 32.667, 34]} topM={-26} shapeM={[150, 12, -4, 28, 30]} />
   <div class="ft-in">
     <div class="ft-fly" data-t="2">
       <Image src={logoInk} alt="Mike's Plumbing Services" width={440} class="ft-logo" />
       <h2 id="ft-h" class="sv-h ft-h lh-abril">Call now.</h2>
       <p class="ft-sub">Open 24 hours (Yelp). Free estimate.</p>
-      <div class="ft-btn"><Btn v="ink" l1={`Call ${SITE.phone}`} l2="Tap to call" w={360} label={`Call ${SITE.phone}`} /></div>
+      <div class="ft-btn"><Btn look="figma" v="ink" title={`Call ${SITE.phone}`} sub="Tap to call" w={360} /></div>
       <i class="ft-cut" aria-hidden="true"></i>
       <ul class="ft-tabs" role="list" aria-hidden="true">
         {tabs.map((i) => <li class:list={['ft-tab', { 'is-gone': i === 3, 'is-m-gone': i === 2, 'is-m-out': i > 4 }]} style={`--i:${i}`}><span class="ft-num">{SITE.phone}</span><span class="ft-mike">Mike</span></li>)}

@@ -1,6 +1,6 @@
 ---
 // 5.7 FAQ (Figma 670:3403 y 3880-4680): accordion styled as folder tabs stepping right; FAQPage JSON-LD for exactly these.
-import Eyebrow from '../b3kit/Eyebrow.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
 import type { TownPage } from '../../data/town-pages';
 interface Props { t: TownPage }
 const { t } = Astro.props;
@@ -15,7 +15,7 @@ const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: i
 <section class="tf" aria-labelledby="tf-h" data-m-section>
   <div class="wrap tf-grid">
     <div class="tf-head">
-      <Eyebrow>FAQ · {t.name}</Eyebrow>
+      <Eyebrow look="town">FAQ · {t.name}</Eyebrow>
       <h2 id="tf-h" class="tf-h" data-t="2">{t.name} <span class="tone">questions.</span></h2>
       <a class="tf-more tf-more--d" href="/faq" data-t="3">More questions? Ask Mike <span aria-hidden="true">→</span></a>
     </div>

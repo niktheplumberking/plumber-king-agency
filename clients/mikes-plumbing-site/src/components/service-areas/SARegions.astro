@@ -1,8 +1,8 @@
 ---
 // 6.2 The three regions (Figma 670:10564 y 900-1610): three flyer columns divided by rules, hex badge + script region
 // name, towns as check-mark lines. [CONFIRM] town list (Mike).
-import Eyebrow from '../b3kit/Eyebrow.astro';
-import Wave from '../b3kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { TOWNS } from '../../data/towns';
 const REG = [
   { ab: 'IE', name: 'Inland Empire', key: 'Inland Empire' },
@@ -11,9 +11,9 @@ const REG = [
 ] as const;
 ---
 <section class="sr on-ink" aria-labelledby="sr-h" data-m-section>
-  <Wave d="s1d" m="s1m" top={900} topM={964} />
+  <Wave d="s1d" m="s1m" hostY={900} hostYM={964} />
   <div class="wrap">
-    <Eyebrow dark>Where we work</Eyebrow>
+    <Eyebrow look="town" tone="tan">Where we work</Eyebrow>
     <h2 id="sr-h" class="sr-h" data-t="2">Three regions. <span class="tone">One van.</span></h2>
     <div class="sr-cols">
       {REG.map((r, i) => (

@@ -4,9 +4,9 @@
 // review (checked at build time), the meta line names the reviewer, town, date and the job from the review.
 import { Image } from 'astro:assets';
 import logoInk from '../../assets/brand/logo-ink.png';
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { ab } from '../services/shared/ab';
 import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
 const pick = (name: string, excerpt: string, job: string) => {
@@ -22,7 +22,7 @@ const r = SITE.rating;
 <section class="sl sv-sec sv-paper sv-abs" style="--sh:820px" aria-labelledby="sl-h" data-m-section>
   <Wave fill="var(--paper)" top={-34} topM={-24} />
   <div class="sl-in">
-    <Eyebrow tone="dark" class="sl-eb" data-ab style={ab(119.5, 129)}>On {r.source} · {r.value} · {r.count} reviews</Eyebrow>
+    <Eyebrow look="figma" tone="deep" class="sl-eb" data-ab style={ab(119.5, 129)}>On {r.source} · {r.value} · {r.count} reviews</Eyebrow>
     <h2 id="sl-h" class="sv-h sl-h" data-t="2" data-ab style={ab(120, 162, 420)}>Honest work. <em>In their words.</em></h2>
     <p class="sl-note" data-t="3" data-ab style={ab(120, 300)}>{r.value} on {r.source}, {r.count} reviews (checked {r.checked})</p>
     <div class="sl-pile" data-t="3" data-stagger>

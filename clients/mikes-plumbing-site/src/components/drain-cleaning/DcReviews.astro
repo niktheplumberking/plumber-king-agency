@@ -2,9 +2,9 @@
 // 3.5 What customers say (Figma 670:13365 y 3354 h 717, tan; mobile y 3830 h 662). One big Yelp quote with the key words
 // underlined, a footnote slip with a second quote. Quotes come from src/data/reviews.ts: every excerpt must appear word for
 // word in that review (checked at build time); the meta line names reviewer, town, date and the job from the review.
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { ab } from '../services/shared/ab';
 import { REVIEWS } from '../../data/reviews';
 const pick = (name: string, excerpt: string, job: string) => {
   const r = REVIEWS.find((x) => x.name === name);
@@ -21,7 +21,7 @@ const b = pick('Sydney H.', q2, 'Kitchen faucet replacement');
 <section class="dr2 sv-sec sv-tan sv-abs" style="--sh:717px" aria-labelledby="dr2-h" data-m-section>
   <Wave fill="var(--tan)" top={-34} topM={-24} />
   <div class="dr2-in">
-    <Eyebrow tone="ink" class="dr2-eb" data-ab style={ab(119.5, 109)}>On Yelp</Eyebrow>
+    <Eyebrow look="figma" tone="ink" class="dr2-eb" data-ab style={ab(119.5, 109)}>On Yelp</Eyebrow>
     <h2 id="dr2-h" class="sv-h dr2-h lh-abril" data-t="2" data-ab style={ab(120, 140)}>“Very clean, professional.” <em>In their words.</em></h2>
     <span class="dr2-mark" data-ab style={ab(100, 150)} aria-hidden="true">“</span>
     <figure class="dr2-q" data-t="3" data-ab style={ab(120, 220, 1200)}>

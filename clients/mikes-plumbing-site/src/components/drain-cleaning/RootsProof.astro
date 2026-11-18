@@ -4,10 +4,10 @@
 // script line "saving pipes (and noses) daily".
 import { Image } from 'astro:assets';
 import logoCream from '../../assets/brand/logo-cream.png';
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
-import { ab } from '../services/kit/ab';
+import { ab } from '../services/shared/ab';
 ---
 <section class="rp sv-sec sv-ink sv-abs" style="--sh:760px" aria-labelledby="rp-h" data-m-section>
   <div class="rp-bg sv-photo" aria-hidden="true">
@@ -16,7 +16,7 @@ import { ab } from '../services/kit/ab';
   <i class="rp-fade" aria-hidden="true"></i>
   <Wave fill="var(--ink)" top={-34} topM={-24} />
   <div class="rp-in">
-    <Eyebrow tone="tan" class="rp-eb" data-ab style={ab(119.5, 119)}>From the job</Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="rp-eb" data-ab style={ab(119.5, 119)}>From the job</Eyebrow>
     <h2 id="rp-h" class="sv-h rp-h" data-t="2" data-ab style={ab(120, 152, 560)}>This is what was <em>in the sewer line.</em></h2>
     <p class="rp-body" data-t="3" data-ab style={ab(120, 302, 440)}>Sewer root extraction. Photo from the job, posted on Mike's Instagram.</p>
     <div class="rp-vis" data-t="3">

@@ -1,10 +1,10 @@
 ---
 // 2.4 Commercial heaters (Figma 670:7700 y 2720 h 700, ink; mobile y 3305 h 682). A tank side with "100 GAL" in stencil
 // numbers (his restaurant job), eyebrow, H2, body, tan call button.
-import Wave from '../services/kit/Wave.astro';
-import Eyebrow from '../services/kit/Eyebrow.astro';
-import Btn from '../services/kit/Btn.astro';
-import { ab } from '../services/kit/ab';
+import Wave from '../kit/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import { ab } from '../services/shared/ab';
 import { SITE } from '../../data/site';
 ---
 <section class="bh sv-sec sv-ink sv-abs" style="--sh:700px" aria-labelledby="bh-h" data-m-section>
@@ -16,11 +16,11 @@ import { SITE } from '../../data/site';
       <p class="bh-num" role="img" aria-label="100-gallon water heater"><span class="bh-100" aria-hidden="true">100</span><span class="bh-gal" aria-hidden="true">GAL</span></p>
       <figcaption>Restaurant job · <span class="bh-d">from </span>Mike's <span class="bh-d">Instagram</span><span class="bh-m">IG</span></figcaption>
     </figure>
-    <Eyebrow tone="tan" class="bh-eb" data-ab style={ab(939.5, 189)}>Commercial</Eyebrow>
+    <Eyebrow look="figma" tone="tan" class="bh-eb" data-ab style={ab(939.5, 189)}>Commercial</Eyebrow>
     <h2 id="bh-h" class="sv-h bh-h" data-t="2" data-ab style={ab(940, 222, 400)}>Big heater. <em>Busy kitchen.</em></h2>
     <p class="bh-body" data-t="3" data-ab style={ab(940, 354, 380)}>One of the jobs on Mike's Instagram: a 100-gallon water heater at a restaurant. If your business runs on hot water, call us.</p>
     <div class="bh-btn" data-ab style={ab(940, 465, 330, 64)}>
-      <Btn v="tan" l1={SITE.phone} l2="Call about a commercial heater" w={330} label={`Call ${SITE.phone} about a commercial water heater`} />
+      <Btn look="figma" v="tan" title={SITE.phone} sub="Call about a commercial heater" w={330} />
     </div>
   </div>
 </section>

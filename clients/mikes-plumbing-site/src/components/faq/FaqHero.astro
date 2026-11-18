@@ -2,13 +2,13 @@
 // 11.1 Hero (Figma 670:3208 y 180-680 / 670:5203 y 164-576). Ink field, H1 (second half tan), Mike's tagline in script,
 // "Jump to" hex chips (links to the questions below; they scroll sideways on phones), a giant outlined "?" whose dot drips
 // into the paper section. Scroll moment: the two drips slide down a little as the hero scrolls away (data-scrub-y).
-import Eyebrow from '../kit-b4/Eyebrow.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
 import { FAQS } from './faq';
 ---
 <section class="fh on-ink" aria-labelledby="fh-h" data-m-section data-m-hero data-scrub data-start="top top" data-end="bottom 20%">
   <div class="wrap fh-in">
     <span class="fh-q" aria-hidden="true">?</span>
-    <Eyebrow text="FAQ · Ask Mike" />
+    <Eyebrow look="page" text="FAQ · Ask Mike" />
     <h1 id="fh-h" class="fh-h1" data-t="2">Plumbing Questions, <span class="tn">Answered in Riverside, CA</span></h1>
     <p class="fh-script" data-t="3" data-fx="nudge">Friendly. Transparent. Proficient.</p>
     <nav class="fh-jump" aria-labelledby="fh-jl" data-t="4">

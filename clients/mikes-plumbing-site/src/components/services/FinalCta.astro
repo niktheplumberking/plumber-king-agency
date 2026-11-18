@@ -2,9 +2,9 @@
 // 1.9 Final CTA · hex swell (Figma 669:539 y 5910 h 700, ink; mobile y 7301 h 639). Rule lines and three growing hex nuts each
 // side, the big double hex, two-tone H2, the phone number big, body, call + form buttons.
 // Scroll moment: the big hex outline draws itself as the section scrolls in and the side nuts light up outside-in.
-import Wave from './kit/Wave.astro';
-import Btn from './kit/Btn.astro';
-import { ab } from './kit/ab';
+import Wave from '../kit/Wave.astro';
+import Btn from '../kit/Btn.astro';
+import { ab } from './shared/ab';
 import { SITE } from '../../data/site';
 interface Props { h?: string; em?: string; body?: string; id?: string }
 const { h = 'Not sure which one you need?', em = 'Ask Mike.', body = "Call for a free estimate, or send the form and tell us what's going on.", id = 'fc-h' } = Astro.props;
@@ -34,8 +34,8 @@ const nuts = [
       <p class="fc-body" data-t="3" data-ab style={ab(470, 389, 500)}>{body}</p>
     </div>
     <div class="fc-btns" data-t="4" data-ab style={ab(496, 449, 448, 64)}>
-      <Btn v="tan" l1="Call now" l2="Free estimate" w={216} label={`Call ${SITE.phone} now for a free estimate`} />
-      <Btn v="out" href="/contact" l1="Get a free estimate" l2="Send the form" w={216} />
+      <Btn look="figma" v="tan" title="Call now" sub="Free estimate" w={216} />
+      <Btn look="figma" v="out" href="/contact" title="Get a free estimate" sub="Send the form" w={216} />
     </div>
   </div>
 </section>

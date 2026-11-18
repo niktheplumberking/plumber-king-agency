@@ -4,14 +4,14 @@
 // a straight pipe), then "We come to you. No walk-in shop." + payments (Yelp) + service areas link.
 // Scroll moment (data-scrub): water runs down and along the pipe; the coupling swells and the sign swings as it passes.
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Wave from '../kit-b4/Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 const pipe = 'M780 -40V50C780 63.3 786.67 70 800 70H1300';
 const regions = [['IE', 'Inland Empire'], ['OC', 'Orange County'], ['LA', 'Los Angeles']];
 const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.payments.length - 1];
 ---
 <section class="hs on-ink" aria-labelledby="hs-h" data-m-section data-scrub data-start="top 80%" data-end="top 15%" data-start-m="top 20%" data-end-m="top -30%">
-  <Wave d={{ a: 18.59, L: 600.5 }} m={{ a: 12.82, L: 300 }} fill="#0E0D0B" above="#F3ECDD" />
+  <Wave z={1} d={{ a: 18.59, L: 600.5 }} m={{ a: 12.82, L: 300 }} fill="#0E0D0B" above="#F3ECDD" />
   <svg class="hs-pipe" viewBox="0 -60 1440 300" aria-hidden="true" focusable="false">
     <path d={pipe} fill="none" stroke="#6B5C3E" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
     <path class="hs-water" d={pipe} pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".38" stroke-width="5" stroke-linecap="round" data-scrub-fill />
@@ -21,7 +21,7 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
   </svg>
   <div class="wrap hs-in">
     <div class="hs-plate" data-t="2">
-      <Eyebrow text="Based in" class="hs-eb" t={false} />
+      <Eyebrow look="page" text="Based in" class="hs-eb" t={false} />
       <h2 id="hs-h" class="hs-h2">Riverside, CA</h2>
       <p class="hs-k">Serving</p>
       <ul class="hs-reg" role="list">
@@ -39,7 +39,7 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
       <div class="hs-mpipe" aria-hidden="true"><i class="hs-mw" data-scrub-fill data-axis="x"></i></div>
     </div>
     <div class="hs-txt" data-t="3">
-      <Eyebrow text="Hours · Area" t={false} />
+      <Eyebrow look="page" text="Hours · Area" t={false} />
       <h3 class="hs-h3">We come to you.</h3>
       <p class="hs-no">No walk-in shop.</p>
       <p class="hs-pay">Pay by {pay} (Yelp).</p>

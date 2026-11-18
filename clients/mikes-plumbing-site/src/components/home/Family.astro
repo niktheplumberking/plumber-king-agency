@@ -3,8 +3,8 @@
 // hex bolts and a tan offset block, "Mike's mascot" label, his flyer pinned over the corner; text right; the pipe that
 // comes down out of Services (seam, fills with the scroll) turns under the text and three tags hang from it.
 import Img from '../ui/Img.astro';
-import Eyebrow from './Eyebrow.astro';
-import Wave from './Wave.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Wave from '../kit/Wave.astro';
 import { SITE } from '../../data/site';
 const TAGS = [
   { n: '01', h: 'First phone call.', q: '“He\'s my first phone call when I need a plumber.” Brandon A., Yelp', deg: 3 },
@@ -14,8 +14,8 @@ const TAGS = [
 const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5 8-4.5 8h-11L1 9z"/></svg>';
 ---
 <section class="fm on-paper" aria-labelledby="fm-h" data-m-section>
-  <Wave only="d" y={-42} h={48} d="M0 20C116.667 46.6667 233.333 46.6667 350 20C466.667 -6.66667 583.333 -6.66667 700 20C816.667 46.6667 933.333 46.6667 1050 20C1166.67 -6.66667 1283.33 -6.66667 1400 20C1516.67 46.6667 1633.33 46.6667 1750 20V48H0V20Z" bottom="#F3ECDD" />
-  <Wave only="m" y={-26} h={32} w={390} d="M0 12C53.3333 28 106.667 28 160 12C213.333 -4 266.667 -4 320 12C373.333 28 426.667 28 480 12V32H0V12Z" bottom="#F3ECDD" />
+  <Wave only="d" z={2} top={-42} d={{ path: 'M0 20C116.667 46.6667 233.333 46.6667 350 20C466.667 -6.66667 583.333 -6.66667 700 20C816.667 46.6667 933.333 46.6667 1050 20C1166.67 -6.66667 1283.33 -6.66667 1400 20C1516.67 46.6667 1633.33 46.6667 1750 20V48H0V20Z', h: 48 }} fill="#F3ECDD" />
+  <Wave only="m" z={2} topM={-26} m={{ path: 'M0 12C53.3333 28 106.667 28 160 12C213.333 -4 266.667 -4 320 12C373.333 28 426.667 28 480 12V32H0V12Z', h: 32, w: 390 }} fill="#F3ECDD" />
   <!-- pipe seam: from the Services footer down the right edge, under the text, to the tags -->
   <svg class="pipe only-d" viewBox="0 0 640 656" aria-hidden="true" data-seam-pipe>
     <path class="p-body" d="M620 0 V586 Q620 606 600 606 H40" />

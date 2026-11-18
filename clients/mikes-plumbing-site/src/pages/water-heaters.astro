@@ -1,14 +1,14 @@
 ---
 // /water-heaters (Figma 670:7700 desktop, 670:11675 mobile; PAGES-COPY section 2). Builder 2.
 import Base from '../layouts/Base.astro';
-import '../components/services/kit/kit.css';
+import '../components/services/shared/services.css';
 import WhHero from '../components/water-heaters/WhHero.astro';
 import CaseFile from '../components/water-heaters/CaseFile.astro';
 import RepairInstall from '../components/water-heaters/RepairInstall.astro';
 import BigHeater from '../components/water-heaters/BigHeater.astro';
 import Slips from '../components/water-heaters/Slips.astro';
 import PlateCta from '../components/water-heaters/PlateCta.astro';
-import RelatedFit from '../components/services/kit/RelatedFit.astro';
+import RelatedFit from '../components/services/shared/RelatedFit.astro';
 import { serviceSchema } from '../lib/schema';
 import { SITE } from '../data/site';
 const description = `Water heater repair and install in Riverside, CA. We find out what's really wrong before anyone talks about replacing it. Free estimate: ${SITE.phone}.`;
@@ -24,4 +24,4 @@ const description = `Water heater repair and install in Riverside, CA. We find o
   <PlateCta h="No hot water?" em="Call before you replace it." body="Free estimate. We'll tell you what's really wrong." />
   <RelatedFit links={[{ name: 'Leak detection & repair', href: '/services#leaks' }, { name: 'Emergency plumbing', href: '/emergency-plumber' }, { name: 'All services', href: '/services' }]} />
 </Base>
-<script>import '../components/services/kit/scrub';</script>
+<script>import '../components/services/shared/scrub';</script>

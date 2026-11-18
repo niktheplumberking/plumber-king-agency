@@ -3,8 +3,8 @@
 // the reply line (no timing: Mike to confirm what reply he promises), back-home link. Right (desktop) / below (phone):
 // the estimate request printed out of a slot, stamped RECEIVED, his flyer line in script, zigzag tear at the bottom.
 import { SITE } from '../../data/site';
-import Eyebrow from '../kit-b4/Eyebrow.astro';
-import Logo from '../kit-b4/Logo.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Logo from '../kit/Logo.astro';
 const rows = [['Request', 'Free estimate'], ['Status', 'Received'], ['Next', 'Mike gets back to you'], ['Phone', SITE.phone]];
 let zig = 'M0 0H400V537.08';
 for (let i = 0; i < 28; i++) zig += `L${(400 - (i + 1) * (400 / 28)).toFixed(2)} ${i % 2 ? 537.08 : 552}`;
@@ -13,7 +13,7 @@ zig += 'Z';
 <section class="tyh" aria-labelledby="tyh-h" data-m-section data-m-hero>
   <div class="wrap tyh-in">
     <div class="tyh-copy">
-      <Eyebrow text="Message received" tone="deep" dot />
+      <Eyebrow look="page" text="Message received" tone="deep" dot />
       <h1 id="tyh-h" class="tyh-h1" data-t="2">Thanks.<br /> Mike's Got It.</h1>
       <p class="tyh-p" data-t="3">Your request is in. Mike will get back to you about your free estimate.</p>
       <a class="tyh-home" href="/" data-t="3">Back to the homepage <span aria-hidden="true">→</span></a>

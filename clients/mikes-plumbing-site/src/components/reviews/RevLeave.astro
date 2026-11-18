@@ -3,11 +3,11 @@
 // hex-nut button (double outline, drop shadow) "★★★★★ Review us on Yelp →" with Mike's badge stamped in ink above it.
 // The footer's wave rises into the bottom of this section (footer colour #151410, Figma).
 import { SITE } from '../../data/site';
-import Wave from '../kit-b4/Wave.astro';
-import Stamp from '../kit-b4/Stamp.astro';
+import Wave from '../kit/Wave.astro';
+import Stamp from '../kit/Stamp.astro';
 ---
 <section class="rv" aria-labelledby="rv-h" data-m-section>
-  <Wave d={{ a: 16.5, L: 540 }} m={{ a: 10.3, L: 300.5 }} fill="#D2C5A6" above="#1C1A16" />
+  <Wave z={1} d={{ a: 16.5, L: 540 }} m={{ a: 10.3, L: 300.5 }} fill="#D2C5A6" above="#1C1A16" />
   <div class="wrap rv-in">
     <h2 id="rv-h" class="rv-h2" data-t="2">Worked with Mike? <span class="dk">Tell people.</span></h2>
     <a class="rv-hex" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="4" data-fx="scale">
@@ -22,7 +22,7 @@ import Stamp from '../kit-b4/Stamp.astro';
     </a>
     <Stamp w={138} deg={-20} color="#36322A" class="rv-stamp" />
   </div>
-  <Wave d={{ a: 16.5, L: 520 }} m={{ a: 10.95, L: 315.5 }} fill="var(--footer-bg, #151410)" above="#D2C5A6" class="rv-foot" />
+  <Wave z={1} d={{ a: 16.5, L: 520 }} m={{ a: 10.95, L: 315.5 }} fill="var(--footer-bg, #151410)" above="#D2C5A6" class="rv-foot" />
 </section>
 <style>
   .rv { position: relative; height: 578px; background: var(--tan); color: var(--ink); overflow-x: clip; }

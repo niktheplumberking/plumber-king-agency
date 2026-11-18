@@ -11,9 +11,9 @@ export const SERVICE_PAGES = [
   { name: 'Emergency plumbing', href: '/emergency-plumber' },
 ] as const;
 export const FAMILIES = [
-  { name: 'Drains & sewer lines', href: '/services#drains' },
-  { name: 'Leaks & water lines', href: '/services#leaks' },
-  { name: 'Water heaters', href: '/services#water-heaters' },
-  { name: 'Around the house', href: '/services#around-the-house' },
-  { name: 'Commercial', href: '/services#commercial' },
+  { name: 'Drains & sewer lines', href: '/drain-cleaning' },
+  { name: 'Leaks & water lines', href: '/services' },
+  { name: 'Water heaters', href: '/water-heaters' },
+  { name: 'Around the house', href: '/services' },
+  { name: 'Commercial', href: '/services' },
 ] as const;

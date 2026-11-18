@@ -5,15 +5,15 @@
 import Img from '../ui/Img.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Wave from '../kit/Wave.astro';
-import Marquee from './Marquee.astro';
+import Marquee from '../kit/Marquee.astro';
 import { SITE } from '../../data/site';
 const ROWS = [
   { n: '01', t: 'Drain cleaning', tag: 'Sinks · main lines · hydro jetting', href: '/drain-cleaning', img: 'crawlspace-pipe-press-fittings-riverside', alt: 'Press tool on a supply line in a Riverside crawl space', cap: 'Drain job · Mike\'s Instagram', blurb: 'Sinks, main lines and hydro jetting.', call: 'Call about a drain' },
   { n: '02', t: 'Water heaters', tag: 'Repair first · replace only if needed', href: '/water-heaters', img: 'water-heater-gas-valve-small', alt: 'Water heater gas control valve on a job by Mike\'s Plumbing Services', cap: 'Water heater job · Mike\'s Instagram', blurb: 'Repair first. Replace only when it makes sense.', call: 'Call about a water heater' },
-  { n: '03', t: 'Sewer lines', tag: 'Roots · backups · broken lines', href: '/services#drains', img: 'tree-roots-in-sewer-line', alt: 'Tree roots wrapped around an opened sewer line in a trench', cap: 'Sewer line job · Mike\'s Instagram', blurb: 'Roots, backups and broken lines.', call: 'Call about a sewer line' },
-  { n: '04', t: 'Leak detection', tag: 'Wet walls · slab leaks · repairs', href: '/services#leaks', img: 'leak-repair-wall-opened', alt: 'Exterior wall opened to reach a leaking water line', cap: 'Leak repair · Mike\'s Instagram', blurb: 'Wet walls, slab leaks and repairs.', call: 'Call about a leak' },
-  { n: '05', t: 'Toilets & faucets', tag: 'Running · dripping · rocking', href: '/services#around-the-house', img: 'new-kitchen-faucet-install', alt: 'Gloved hands with a red pipe wrench on a flush valve', cap: 'Toilet job · Mike\'s Instagram', blurb: 'Running, dripping or rocking.', call: 'Call about a toilet or faucet' },
-  { n: '06', t: 'Commercial', tag: 'Restaurants · interceptors · gas lines', href: '/services#commercial', img: 'commercial-plumbing-job-vans', alt: 'Mike\'s van and a pickup parked at a commercial plumbing job', cap: 'Commercial job · Mike\'s Instagram', blurb: 'Restaurants, interceptors and gas lines.', call: 'Call about a commercial job' },
+  { n: '03', t: 'Sewer lines', tag: 'Roots · backups · broken lines', href: '/drain-cleaning', img: 'tree-roots-in-sewer-line', alt: 'Tree roots wrapped around an opened sewer line in a trench', cap: 'Sewer line job · Mike\'s Instagram', blurb: 'Roots, backups and broken lines.', call: 'Call about a sewer line' },
+  { n: '04', t: 'Leak detection', tag: 'Wet walls · slab leaks · repairs', href: '/services', img: 'leak-repair-wall-opened', alt: 'Exterior wall opened to reach a leaking water line', cap: 'Leak repair · Mike\'s Instagram', blurb: 'Wet walls, slab leaks and repairs.', call: 'Call about a leak' },
+  { n: '05', t: 'Toilets & faucets', tag: 'Running · dripping · rocking', href: '/services', img: 'new-kitchen-faucet-install', alt: 'Gloved hands with a red pipe wrench on a flush valve', cap: 'Toilet job · Mike\'s Instagram', blurb: 'Running, dripping or rocking.', call: 'Call about a toilet or faucet' },
+  { n: '06', t: 'Commercial', tag: 'Restaurants · interceptors · gas lines', href: '/services', img: 'commercial-plumbing-job-vans', alt: 'Mike\'s van and a pickup parked at a commercial plumbing job', cap: 'Commercial job · Mike\'s Instagram', blurb: 'Restaurants, interceptors and gas lines.', call: 'Call about a commercial job' },
 ];
 const ALSO = ['Hydro jetting', 'Garbage disposals', 'Water filtration', 'Water heater install', 'Pressure washing', 'Emergency services'];
 const WORDS = ['Fair price', 'Same day', 'Excellent communicator', 'Very clean', 'Upfront and honest', 'Reasonably priced', 'Polite and courteous', 'Detailed & patient'];

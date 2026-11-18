@@ -1,6 +1,6 @@
 // Object entrances (fix round 1, B12): the few entrances that belong to one object and that the generic engine in
 // motion.ts (data-t / data-fx) does not have: tags that drop and swing from their pipe, review stubs that tear in, a
-// nameplate whose bolts pop, index rows whose rule draws before the text rises. Map of which section uses which entrance:
+// nameplate whose bolts pop, index rows whose rule draws before the text rises, tickets that drop in with a turn. Map of which section uses which entrance:
 // MOTION.md "Entrance map".
 //
 // Rules (MOTION.md B1): the CSS start state under html.motion equals frame 0 of the timeline (each component writes it),
@@ -101,4 +101,13 @@ export function plate(el: HTMLElement, bolts: Element[], from = -60) {
   return gsap.timeline()
     .fromTo(el, { x: from, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.75, ease: 'power2.inOut' })
     .fromTo(bolts, { scale: 0, rotation: -90, transformOrigin: '50% 50%' }, { scale: 1, rotation: 0, duration: 0.45, ease: 'back.out(1.6)', stagger: 0.08 }, 0.55);
+}
+
+/** Tickets: each drops in from above with a slight turn and settles straight (its tilt is the CSS `rotate`, not touched). */
+export function drop(els: HTMLElement[], stagger = 0.1) {
+  const tl = gsap.timeline();
+  els.forEach((e, i) => {
+    tl.fromTo(e, { y: -60, rotation: i % 2 ? -6 : 6, autoAlpha: 0 }, { y: 0, rotation: 0, autoAlpha: 1, duration: 0.8, ease: 'power2.inOut' }, i * stagger);
+  });
+  return tl;
 }

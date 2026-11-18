@@ -2,10 +2,19 @@
 // 1.6 Around the house (Figma 669:539 y 4120 h 760, tan; mobile y 5150 h 1082). His faucet post in a tilted phone frame, eyebrow
 // 04, H2, his caption line as a quote, and the receipt list (zigzag bottom, dotted leaders, red ticks).
 // Scroll moment: the receipt "prints" its lines in order (each tick lights and pops as the scroll reaches it).
+// B17 (fix round 1): a big play button on the phone. The repo has NO clip file (only a still from his post) and we never
+// rip video from Instagram, so CLIP below decides what the button does, in this order:
+//   CLIP.file  his own clip (public/ path): plays natively inside the phone; on end, or a click while it plays, it replays.
+//   CLIP.post  the post's permalink (instagram.com/p/... or /reel/...): the official embed loads inside the phone on the
+//              first click (nothing from Instagram loads before it).
+//   neither    (today) the button opens his Instagram in a new tab. Both are on README "Mike to confirm".
+const CLIP = { file: '', poster: '', post: '' };
+const embed = CLIP.post ? CLIP.post.replace(/\/?(\?.*)?$/, '') + '/embed' : '';
 import Wave from '../kit/Wave.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
 import { ab } from './shared/ab';
+import { SITE } from '../../data/site';
 const items = ['Toilets, sinks & faucets', 'Garbage disposal', 'Water filtration', 'Shower valves', 'Pressure washing'];
 // zigzag bottom: teeth `t` wide and `d` deep under a body `h` tall (desktop 560 x 316 + 10, mobile 350 x 282 + 9)
 const zig = (w: number, h: number, t: number, d: number) => {
@@ -20,6 +29,10 @@ const zig = (w: number, h: number, t: number, d: number) => {
     <figure class="ho-phone-w" data-t="3">
       <div class="ho-phone" data-ab style={ab(170, 90, 300, 600, -4)}>
         <div class="ho-scr sv-photo"><Img name="new-kitchen-faucet-install" alt="Mike's Instagram post of a new faucet install, with his caption" sizes="(min-width: 768px) 276px, 202px" box={276 / 576} boxM={202 / 422} /></div>
+        <div class="ho-player" data-ho-player data-file={CLIP.file || undefined} data-poster={CLIP.poster || undefined} data-embed={embed || undefined} aria-live="polite"></div>
+        {CLIP.file || embed
+          ? <button type="button" class="ho-play" data-ho-play aria-label="Play Mike's faucet clip"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></button>
+          : <a class="ho-play" href={SITE.social.instagram} target="_blank" rel="noopener" aria-label="Watch Mike's clips on Instagram (opens in a new tab)"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></a>}
         <i class="ho-notch" aria-hidden="true"></i>
       </div>
       <figcaption class="ho-cap" data-ab style={ab(190, 712)}>His post, his caption</figcaption>
@@ -47,6 +60,19 @@ const zig = (w: number, h: number, t: number, d: number) => {
   .ho-phone-w { margin: 0; }
   .ho-phone { border-radius: 44px; background: var(--ink); box-shadow: 0 30px 50px -12px rgba(0, 0, 0, .5); }
   .ho-scr { position: absolute; inset: 12px; border-radius: 34px; }
+  /* B17 play button: a big tan disc centred on the screen, ring pulse on hover; the player covers the screen once started */
+  .ho-play { position: absolute; z-index: 2; left: 50%; top: 50%; display: grid; place-items: center; width: 88px; height: 88px; margin: -44px 0 0 -44px;
+    border: 0; border-radius: 50%; background: var(--tan); color: var(--ink); cursor: pointer; box-shadow: 0 0 0 8px rgba(14, 13, 11, .28), 0 14px 26px -8px rgba(0, 0, 0, .55);
+    transition: scale .4s cubic-bezier(.45, 0, .55, 1), box-shadow .4s cubic-bezier(.45, 0, .55, 1), opacity .4s cubic-bezier(.45, 0, .55, 1); }
+  .ho-play svg { margin-left: 4px; }
+  .ho-play:focus-visible { outline: 3px solid var(--ink); outline-offset: 6px; }
+  @media (hover: hover) and (pointer: fine) { .ho-play:hover { scale: 1.08; box-shadow: 0 0 0 14px rgba(14, 13, 11, .2), 0 18px 30px -8px rgba(0, 0, 0, .55); } }
+  .ho-player { position: absolute; inset: 12px; z-index: 1; border-radius: 34px; overflow: hidden; background: var(--ink); display: none; }
+  .ho-player.is-on { display: block; }
+  .ho-player :global(video), .ho-player :global(iframe) { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; background: var(--ink); }
+  .ho-phone.is-playing .ho-play { opacity: 0; scale: .8; }
+  .ho-phone.is-playing .ho-play:focus-visible, .ho-phone.is-ended .ho-play { opacity: 1; scale: 1; }
+  .ho-phone.is-embed .ho-play { display: none; }
   .ho-notch { position: absolute; left: 110px; top: 22px; width: 80px; height: 22px; border-radius: 11px; background: var(--ink); }
   .ho-cap { font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .12em; text-transform: uppercase; color: #6b5c3e; }
   .ho-h { margin: 0; font-size: 52px; line-height: 1.06; }
@@ -82,7 +108,8 @@ const zig = (w: number, h: number, t: number, d: number) => {
     .ho { padding: 60px 0 61px; }
     .ho-phone-w { height: 450px; }
     .ho-phone { left: 58px; top: 0; width: 220px; height: 440px; rotate: 4deg; transform-origin: 0 0; border-radius: 34px; box-shadow: 0 20px 36px -8px rgba(0, 0, 0, .5); }
-    .ho-scr { inset: 9px; border-radius: 26px; }
+    .ho-scr, .ho-player { inset: 9px; border-radius: 26px; }
+    .ho-play { width: 68px; height: 68px; margin: -34px 0 0 -34px; } .ho-play svg { width: 24px; height: 24px; }
     .ho-notch { left: 80px; top: 16px; width: 60px; height: 16px; border-radius: 8px; }
     .ho-cap { display: none; }
     .ho :global(.ho-eb) { margin-top: 29px; }
@@ -98,3 +125,32 @@ const zig = (w: number, h: number, t: number, d: number) => {
     .ho-rc-l svg { width: 13px; height: 14px; margin-left: 4px; }
   }
 </style>
+<script>
+  // B17 player (see CLIP in the frontmatter). Nothing loads until the click.
+  document.querySelectorAll<HTMLElement>('[data-ho-player]').forEach((box) => {
+    const phone = box.closest<HTMLElement>('.ho-phone');
+    const btn = phone?.querySelector<HTMLButtonElement>('button[data-ho-play]');
+    if (!phone || !btn) return;
+    let video: HTMLVideoElement | null = null;
+    btn.addEventListener('click', () => {
+      const { file, poster, embed } = box.dataset;
+      if (file) {
+        if (!video) {
+          video = document.createElement('video');
+          video.src = file; video.playsInline = true; video.preload = 'auto'; video.controls = false;
+          if (poster) video.poster = poster;
+          video.setAttribute('aria-label', "Mike's faucet clip");
+          video.addEventListener('ended', () => { phone.classList.remove('is-playing'); phone.classList.add('is-ended'); btn.setAttribute('aria-label', 'Replay the clip'); });
+          box.append(video); box.classList.add('is-on');
+        }
+        // A click while it plays (or after it ended) starts it again from the top.
+        video.currentTime = 0; void video.play();
+        phone.classList.add('is-playing'); phone.classList.remove('is-ended'); btn.setAttribute('aria-label', 'Replay the clip');
+      } else if (embed && !box.querySelector('iframe')) {
+        const f = document.createElement('iframe');
+        f.src = embed; f.title = "Mike's Instagram post"; f.loading = 'eager'; f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.setAttribute('allowfullscreen', '');
+        box.append(f); box.classList.add('is-on'); phone.classList.add('is-embed'); f.focus();
+      }
+    });
+  });
+</script>

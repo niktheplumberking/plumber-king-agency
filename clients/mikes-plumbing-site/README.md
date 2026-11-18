@@ -51,4 +51,7 @@ Never on the site until Mike confirms: licence, insured, warranty, prices, respo
     gas line work, "most asked" service.
 11. **15% off terms** (who qualifies, any limits).
 12. **Privacy and terms:** legal review, effective date, privacy request email, analytics/cookies used.
-13. **Map:** OpenStreetMap image today; swap for a Google Maps screenshot if wanted.
+13. **Instagram clip file for the 'Around the house' phone** (we only embed the official post until he sends the file). Today we
+    also lack the post's link, so the play button opens his Instagram; set `CLIP.file` (or `CLIP.post`) in
+    `src/components/services/House.astro` when either arrives.
+14. **Map:** OpenStreetMap image today; swap for a Google Maps screenshot if wanted.

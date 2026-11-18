@@ -1,7 +1,7 @@
 ---
 // 11.3 Still asking (Figma 670:3208 y 2959-3499 / 670:5203 y 3048-3508). Split field: tan half = call (big number), ink half =
 // Instagram DM ("DM me a picture", his words). A riveted bone plate "Didn't see your question? Ask Mike." straddles the
-// seam. Each half is one link. Two half-width waves (tan / ink) bite into the paper above (desktop); one tan wave on phones.
+// seam (entrance, B12 "nameplate": objects.ts plate(), it slides in, then its four rivets pop). Each half is one link. Two half-width waves (tan / ink) bite into the paper above (desktop); one tan wave on phones.
 import { SITE } from '../../data/site';
 import Wave from '../kit/Wave.astro';
 const rivet = 'M2.58.5h11.84l2.08 6-2.08 6H2.58L.5 6.5z';
@@ -10,7 +10,7 @@ const arrowHex = 'M8.32 0h47.36L64 24l-8.32 24H8.32L0 24z';
 <section class="fa" aria-labelledby="fa-h" data-m-section>
   <Wave z={1} d={{ a: 18.52, L: 521, phi: -3.12, x0: 0, x1: 780 }} m={{ a: 12.35, L: 301 }} fill="#D2C5A6" above="#F3ECDD" class="fa-wl" />
   <Wave z={1} d={{ a: 18.52, L: 521, phi: 0.77, x0: 720, x1: 1440 }} fill="#0E0D0B" above="#F3ECDD" class="fa-wr" />
-  <div class="fa-plate" data-t="2">
+  <div class="fa-plate" data-fa-plate>
     <h2 id="fa-h" class="fa-h">Didn't see your question? <span>Ask Mike.</span></h2>
     {[0, 1, 2, 3].map((i) => <svg class={`fa-rv fa-rv${i}`} viewBox="0 0 17 13" aria-hidden="true"><path d={rivet} /></svg>)}
   </div>
@@ -30,6 +30,8 @@ const arrowHex = 'M8.32 0h47.36L64 24l-8.32 24H8.32L0 24z';
   .fa-h { font-family: var(--f-display); font-weight: 400; font-size: 34px; line-height: 46px; color: var(--ink); text-align: center; }
   .fa-h span { color: var(--red); }
   .fa-rv { position: absolute; width: 17px; height: 13px; } .fa-rv path { fill: var(--tan); stroke: var(--ink); stroke-linejoin: round; }
+  html.motion .fa-plate { opacity: 0; visibility: hidden; transform: translateX(-60px); }
+  html.motion .fa-rv { transform: scale(0) rotate(-90deg); }
   .fa-rv0 { left: 15.5px; top: 13.5px; } .fa-rv1 { right: 15.5px; top: 13.5px; } .fa-rv2 { left: 15.5px; bottom: 13.5px; } .fa-rv3 { right: 15.5px; bottom: 13.5px; }
   .fa-half { position: relative; display: flex; flex-direction: column; padding: 270px 0 0 120px; }
   .fa-call { color: var(--ink); } .fa-dm { color: var(--paper); }
@@ -69,3 +71,8 @@ const arrowHex = 'M8.32 0h47.36L64 24l-8.32 24H8.32L0 24z';
     .fa-ar { display: none; }
   }
 </style>
+<script>
+  import { enter, plate } from '../../scripts/objects';
+  const el = document.querySelector<HTMLElement>('[data-fa-plate]');
+  enter(el, () => plate(el!, Array.from(el!.querySelectorAll('.fa-rv'))), 'top 88%');
+</script>

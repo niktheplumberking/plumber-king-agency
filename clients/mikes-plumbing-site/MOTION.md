@@ -248,6 +248,29 @@ when it is 40 % done: G1 (H1 lines, lead, photo), G2 0.24 s later (rating pill, 
 G3 0.24 s after that (seals, the stripe underline `data-draw` 0.7 s, the swoosh 0.8 s). Measured: hero settled 1.27 s
 after the handoff on a plain load or curtain, 1.6 s after the loader handoff (header beat included). Only one hero per page.
 
+## 2b. Entrance map (fix round 1, B12)
+
+Paul's engine, the three groups (G1 +0, G2 +0.15 s, G3 +0.3 s) and the no-flash rules stay. On top, a section whose main
+object has its own way of arriving uses that entrance. At most two types per section; neighbouring sections differ. The
+object entrances that the engine has no `data-fx` for live in `src/scripts/objects.ts` (`enter()` builds them after the
+handoff, plays once at their line, puts objects above the viewport in their end state, Tab finishes them). Each one owns
+`transform` + `opacity` of its elements; hover keeps `translate`, idle keeps `rotate`/`scale`.
+
+| Object | Entrance | Where |
+|---|---|---|
+| Tags on the pipe | drop, swing on the string, settle (`swing`) | Home "Family" (tags) |
+| Map | unfolds (circle clip) from the Riverside pin, then the routes draw one by one (`kit/RouteMap`) | Home "Areas", every town page "Close" |
+| Dial | the needle sweeps (scrub, `data-scrub-turn`) | Home "Emergency" |
+| Valve wheel | spins as stop 02 lights (`home/flow.ts`) | Home "Process" |
+| Tickets | drop in with a 6deg turn and settle (`drop`) | Emergency "What counts" |
+| Polaroids, tickets, notes | tossed in (`data-fx="toss"`) | Home Areas ticket, Diagnosis verdict, FAQ note, Final CTA ticket; Reviews hero slip stack |
+| Review stubs | tear in from the top edge (`tearIn`) | Water heaters "Slips" |
+| Nameplate | slides in, then its rivets pop (`plate`) | FAQ "Still asking" plate |
+| Index rows | the rule draws, then the number and text rise (`ruleRise`) | Contact "What happens next" |
+| Bands / strips | slide in from the side (`data-fx="right"`) | Our work hero (film strip) |
+| Stamps | pop (`data-fx="pop"`) | Our work hero, Emergency call log, Home Areas and Process, Slips badge, Final CTA |
+| Everything else | the engine default: headings `lines`, photos `frame`, copy `up` | all pages |
+
 ## 3. Loader and curtain (the handoff)
 
 - **Loader** (`components/global/Loader.astro`, first visit per session only): one beat at a time, each starting when the

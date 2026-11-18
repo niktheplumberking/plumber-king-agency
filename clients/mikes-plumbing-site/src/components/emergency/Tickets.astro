@@ -25,7 +25,7 @@ const zig = (w: number, half: number, d: number) => {
   <div class="tk-in">
     <Eyebrow look="figma" tone="tan" class="tk-eb" data-ab style={ab(119.5, 99)}>The calls</Eyebrow>
     <h2 id="tk-h" class="sv-h tk-h lh-abril" data-t="2" data-ab style={ab(120, 132)}>What counts as <em>an emergency?</em></h2>
-    <ul class="tk-row" role="list" data-t="3" data-stagger>
+    <ul class="tk-row" role="list" data-tk-row>
       {tickets.map((t, i) => (
         <li class="tk-t" data-ab style={`${ab(120 + 244 * i, 290, 224, 400, t.rot)};--tr:${-t.rot}deg`}>
           <div class="tk-p">
@@ -49,6 +49,9 @@ const zig = (w: number, half: number, d: number) => {
   .tk-h { margin: 0; font-size: 58px; color: var(--paper); white-space: nowrap; }
   .tk-row { margin: 0; padding: 0; list-style: none; }
   .tk-t { filter: drop-shadow(0 18px 15px rgba(0, 0, 0, .45)); }
+  /* B12 entrance "ticket" (objects.ts drop): frame 0 = 60 px up, turned 6deg (alternating), hidden */
+  html.motion .tk-t { opacity: 0; visibility: hidden; transform: translateY(-60px) rotate(6deg); }
+  html.motion .tk-t:nth-child(even) { transform: translateY(-60px) rotate(-6deg); }
   .tk-p { position: absolute; inset: 0; background: var(--bone); clip-path: var(--zd); }
   .tk-ph { position: absolute; left: 12px; top: 22px; width: 200px; height: 150px; }
   .tk-gas { background: var(--tan); text-align: center; font-family: var(--f-display); font-size: 64px; line-height: 86px; padding-top: 30px; box-sizing: border-box; color: rgba(14, 13, 11, .9); }
@@ -108,3 +111,8 @@ const zig = (w: number, half: number, d: number) => {
     .tk-swipe { margin-top: 4px; margin-bottom: 8px; } /* B6: clears the wave by 16 */
   }
 </style>
+<script>
+  import { enter, drop } from '../../scripts/objects';
+  const row = document.querySelector<HTMLElement>('[data-tk-row]');
+  enter(row, () => drop(Array.from(row!.querySelectorAll<HTMLElement>(':scope > li')), 0.1), 'top 85%');
+</script>

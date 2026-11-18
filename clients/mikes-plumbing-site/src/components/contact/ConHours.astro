@@ -2,7 +2,12 @@
 // 10.3 Hours + area (Figma 669:438 y 1800-2540 / 670:1594 y 2438-3301). Ink field. Left: "Based in Riverside, CA" and the
 // outlined IE | OC | LA plate. Right: the OPEN sign hangs off a pipe that drops in from the section above (desktop; on phones
 // a straight pipe), then "We come to you. No walk-in shop." + payments (Yelp) + service areas link.
-// Scroll moment (data-scrub): water runs down and along the pipe; the coupling swells and the sign swings as it passes.
+// Scroll moment (data-scrub): water runs down and along the pipe; the coupling swells as it passes.
+// B30 (fix round 1): the sign hangs straight on TWO vertical cables (the extra pair drawn in the SVG is gone, and so is the
+// 2deg tilt). Its old scrubbed "pop" (scale + rotate tied to the scroll, which jerked left/right whenever the scroll turned)
+// is replaced by ONE motion: a time-based pendulum that settles (about 3 deg, damped over 2.6 s, pivot at the cable tops),
+// played when the water reaches the sign (either scroll direction, not while one is still swinging) and as its idle gesture.
+// Writer: GSAP `rotation` (transform) on .hs-sign, nothing else touches it. Reduced motion: hangs still.
 import { SITE } from '../../data/site';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Wave from '../kit/Wave.astro';
@@ -17,7 +22,6 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
     <path class="hs-water" d={pipe} pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".38" stroke-width="5" stroke-linecap="round" data-scrub-path />
     <path d={pipe} fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(-1.5 -1.5)" />
     <g data-stop data-rot="0" data-scale="1.12"><path d="M767.42 28h25.16l4.42 14-4.42 14h-25.16L763 42z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" stroke-linejoin="round" /></g>
-    <path d="M870.75 75V202M1210.75 75V202" stroke="#D2C5A6" stroke-width="1.5" />
   </svg>
   <div class="wrap hs-in">
     <div class="hs-plate" data-t="2">
@@ -31,7 +35,7 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
       </ul>
     </div>
     <div class="hs-hang">
-      <div class="hs-sign" data-stop data-rot="2.5" data-scale="1" data-at=".3" data-at-m=".2">
+      <div class="hs-sign" data-hs-sign>
         <span class="hs-hole" aria-hidden="true"></span><span class="hs-hole hs-hole2" aria-hidden="true"></span>
         <span class="hs-dot" aria-hidden="true"><i data-lit></i></span>
         <p class="hs-open"><span class="hs-o">Open</span> <span class="hs-hrs">24 hours</span> <span class="hs-y">(Yelp)</span></p>
@@ -50,7 +54,6 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
 <style>
   .hs { position: relative; height: 740px; background: var(--ink); color: var(--paper); overflow-x: clip; }
   .hs-pipe { position: absolute; z-index: 2; left: 0; top: -60px; width: 1440px; height: 300px; pointer-events: none; overflow: visible; }
-  .hs-water { stroke-dasharray: 1; stroke-dashoffset: 0; }
   html:not(.motion) .hs-water { visibility: hidden; }
   .hs-in { position: relative; z-index: 3; height: 100%; }
   .hs-plate { position: absolute; left: 30px; top: 210px; }
@@ -62,7 +65,7 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
   .hs-reg abbr { display: block; font-family: var(--f-display); font-size: 110px; line-height: 110px; text-decoration: none; color: transparent; -webkit-text-stroke: 2px var(--tan); }
   .hs-rn { position: absolute; left: 3px; top: 116px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); white-space: nowrap; }
   .hs-bar { margin: 20px 22px 0 0; font-family: var(--f-display); font-size: 70px; line-height: 94px; color: var(--red); }
-  .hs-hang { position: absolute; left: 680px; top: 186px; width: 480px; height: 190px; rotate: 2deg; transform-origin: 0 0; }
+  .hs-hang { position: absolute; left: 680px; top: 186px; width: 480px; height: 190px; }
   .hs-sign { position: relative; height: 100%; border-radius: 14px; background: var(--bone); color: var(--ink); transform-origin: 50% -111px; box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .5); }
   .hs-sign::before { content: ''; position: absolute; inset: 10px; border: 2px solid var(--ink); border-radius: 8px; }
   .hs-sign::after { content: ''; position: absolute; left: 70px; right: 69.25px; top: -111px; height: 108px; border: solid var(--tan); border-width: 0 1.5px; }
@@ -110,7 +113,7 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
     .hs-rn { top: 83px; font-size: 8.64px; line-height: 13px; }
     .hs-reg { padding-bottom: 17px; }
     .hs-hang { position: relative; left: auto; top: auto; width: 340px; max-width: 100%; height: 140px; margin: 123px auto 0; rotate: none; }
-    .hs-sign { rotate: 2deg; transform-origin: 50% -26px; border-radius: 12px; box-shadow: 0 16px 30px -8px rgba(0, 0, 0, .5); }
+    .hs-sign { transform-origin: 50% -26px; border-radius: 12px; box-shadow: 0 16px 30px -8px rgba(0, 0, 0, .5); }
     .hs-sign::before { inset: 8px; border-radius: 7px; }
     .hs-sign::after { left: 50px; right: 49.25px; top: -24px; height: 24px; }
     .hs-hole { left: 44px; width: 12px; height: 12px; } .hs-hole2 { left: auto; right: 44px; }
@@ -129,3 +132,36 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
     .hs-a { margin-top: 14px; font-size: 15px; line-height: 16px; }
   }
 </style>
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { registerIdle } from '../kit/idle';
+  import { afterHandoff } from '../../scripts/objects';
+  gsap.registerPlugin(ScrollTrigger);
+  const sign = document.querySelector<HTMLElement>('[data-hs-sign]');
+  const sec = sign?.closest<HTMLElement>('.hs');
+  if (sign && sec && document.documentElement.classList.contains('motion')) afterHandoff(() => {
+    const lit = sign.querySelector<HTMLElement>('[data-lit]');
+    let swing: gsap.core.Timeline | null = null;
+    // A damped pendulum: each half swing ~0.6 of the one before, ease-in-out, ends exactly at rest.
+    const pendulum = (amp: number, dir = 1) => {
+      const tl = gsap.timeline(); // (idle sets its own onComplete, so 'busy' is read from isActive())
+      const steps = [1, -0.62, 0.38, -0.2, 0.08, 0];
+      steps.forEach((k, i) => tl.to(sign, { rotation: dir * amp * k, duration: i === 0 ? 0.45 : 0.42 + i * 0.02, ease: 'sine.inOut' }));
+      return tl;
+    };
+    const kick = (dir: number) => {
+      if (swing?.isActive()) return; // one at a time: never restarted mid-swing
+      swing = pendulum(3, dir);
+      if (lit) gsap.fromTo(lit, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1.4, duration: 0.3, ease: 'sine.inOut', yoyo: true, repeat: 1 });
+      (window as any).__hsSwings = ((window as any).__hsSwings || 0) + 1;
+    };
+    // The water reaches the sign about 30 % into the section's scrub (desktop 'top 80%' -> 'top 15%'; phones 20 % into
+    // 'top 20%' -> 'top -30%'), so the swing starts on that line.
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 768px)', () => { const st = ScrollTrigger.create({ trigger: sec, start: 'top 60%', onEnter: () => kick(1), onLeaveBack: () => kick(-1) }); return () => st.kill(); });
+    mm.add('(max-width: 767px)', () => { const st = ScrollTrigger.create({ trigger: sec, start: 'top 10%', onEnter: () => kick(1), onLeaveBack: () => kick(-1) }); return () => st.kill(); });
+    // Idle: a smaller nudge of the same pendulum (same writer, so it can never fight the scroll swing).
+    registerIdle(sign, () => { if (swing?.isActive()) return gsap.timeline(); swing = pendulum(1.6, Math.random() < 0.5 ? 1 : -1); return swing; }, 4);
+  });
+</script>

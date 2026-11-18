@@ -1,6 +1,9 @@
 ---
-// 10.4 What happens next (Figma 669:438 y 2540-3154 / 670:1594 y 3301-3761). Paper field; the three steps run on as one
-// statement (red Oswald numbers, Abril text, step 2 in tan-dark, step 3 underlined), then the tan call button.
+// 10.4 What happens next (Figma 669:438 y 2540-3154 / 670:1594 y 3301-3761). Paper field; the three steps as one clean
+// numbered list (fix round 1 B30d: was a run-on line that read "1 01 02 03"): desktop three aligned columns, each a red
+// Oswald number on a rule, then the Abril step (step 2 in tan-dark, step 3 underlined); phones a stacked list with the
+// numbers in their own column. Then the tan call button.
+// Entrance (B12 "index rows", objects.ts ruleRise): each step's rule draws left to right, then its number and text rise.
 // Scroll moment (data-scrub): as the statement scrolls through, 01, 02, 03 light up in order, swell to 1.08 and turn a little.
 import { SITE } from '../../data/site';
 import Eyebrow from '../kit/Eyebrow.astro';
@@ -12,9 +15,9 @@ const steps = ["You tell us what's going on.", 'We talk it through with you.', '
   <div class="wrap cn-in">
     <Eyebrow look="page" text="After you send it" tone="deep" />
     <h2 id="cn-h" class="cn-h2" data-t="2">What happens next.</h2>
-    <ol class="cn-run" role="list" data-t="3">
+    <ol class="cn-run" role="list" data-cn-run>
       {steps.map((s, i) => (
-        <li class={`cn-s cn-s${i + 1}`}>{i > 0 && <span class="cn-ar" aria-hidden="true">→ </span>}<span class="cn-n" data-stop data-rot={i % 2 ? '-4' : '4'}><i data-lit aria-hidden="true"></i>0{i + 1}</span>{'\u00a0 '}<span class="cn-t">{s}</span>{' '}</li>
+        <li class={`cn-s cn-s${i + 1}`}><i class="cn-rule" data-rule aria-hidden="true"></i><span class="cn-hd" aria-hidden="true"><span class="cn-n" data-stop data-rot={i % 2 ? '-4' : '4'}><i data-lit></i>0{i + 1}</span></span><span class="cn-t"><span class="sr-only">Step {i + 1}: </span>{s}</span></li>
       ))}
     </ol>
     <a class="cn-btn" href={SITE.tel} data-t="4">
@@ -27,12 +30,15 @@ const steps = ["You tell us what's going on.", 'We talk it through with you.', '
   .cn { position: relative; height: 614px; background: var(--paper); color: var(--ink); overflow-x: clip; }
   .cn-in { position: relative; padding-top: 129px; }
   .cn-h2 { margin-top: 12px; font-family: var(--f-display); font-weight: 400; font-size: 52px; line-height: 70px; }
-  .cn-run { margin: 38px 0 0; padding: 0; font-family: var(--f-display); font-size: 46px; line-height: 56.12px; }
-  .cn-s { display: inline; }
-  .cn-ar, .cn-n { font-family: var(--f-label); font-weight: 600; font-size: 25px; letter-spacing: .06em; color: var(--red); }
-  .cn-ar { line-height: 0; }
-  .cn-n { position: relative; display: inline-block; line-height: 0; }
-  .cn-n i { position: absolute; inset: -6px -8px; z-index: -1; border-radius: 4px; background: rgba(217, 65, 43, .14); opacity: 0; }
+  .cn-run { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 48px; margin: 44px 0 0; padding: 0; list-style: none; }
+  .cn-s { display: flex; flex-direction: column; gap: 14px; }
+  .cn-rule { display: block; height: 2px; margin-bottom: 4px; background: rgba(14, 13, 11, .18); }
+  .cn-hd { display: block; }
+  html.motion .cn-rule { transform: scaleX(0); transform-origin: 0 50%; }
+  html.motion .cn-s > :not(.cn-rule) { opacity: 0; visibility: hidden; transform: translateY(18px); }
+  .cn-n { position: relative; display: inline-block; font-family: var(--f-label); font-weight: 600; font-size: 28px; line-height: 36px; letter-spacing: .06em; color: var(--red); }
+  .cn-n i { position: absolute; inset: -2px -8px; z-index: -1; border-radius: 4px; background: rgba(217, 65, 43, .14); opacity: 0; }
+  .cn-t { font-family: var(--f-display); font-size: 34px; line-height: 1.2; }
   .cn-s2 .cn-t { color: var(--tan-dark); }
   .cn-s3 .cn-t { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 7px; }
   .cn-btn { display: grid; grid-template-columns: 1fr auto; align-content: start; width: 360px; height: 64px; margin-top: 48px; padding: 8px 16px 0 22px; border-radius: 6px; background: var(--tan); color: var(--ink); transition: background-color var(--dur-2); }
@@ -44,15 +50,24 @@ const steps = ["You tell us what's going on.", 'We talk it through with you.', '
   @media (min-width: 768px) and (max-width: 1279px) {
     .cn { height: auto; padding-bottom: 120px; }
     .cn-in { padding-top: 120px; }
-    .cn-run { font-size: clamp(32px, 3.8vw, 46px); line-height: 1.22; }
+    .cn-run { column-gap: 32px; }
+    .cn-t { font-size: clamp(24px, 2.9vw, 34px); }
   }
   @media (max-width: 767px) {
     .cn { height: auto; padding-bottom: 60px; }
     .cn-in { padding-top: 63px; }
     .cn-h2 { margin-top: 12px; font-size: 34px; line-height: 46px; }
-    .cn-run { margin-top: 24px; font-size: 28px; line-height: 34.16px; }
-    .cn-ar, .cn-n { font-size: 15px; }
+    .cn-run { grid-template-columns: 1fr; row-gap: 22px; margin-top: 28px; }
+    .cn-s { display: grid; grid-template-columns: 44px 1fr; gap: 0; align-items: baseline; }
+    .cn-rule { grid-column: 1 / -1; margin-bottom: 14px; }
+    .cn-n { font-size: 18px; line-height: 24px; }
+    .cn-t { font-size: 24px; line-height: 1.22; }
     .cn-s3 .cn-t { text-decoration-thickness: 2px; text-underline-offset: 5px; }
     .cn-btn { width: 100%; margin-top: 36px; padding-left: 20px; }
   }
 </style>
+<script>
+  import { enter, ruleRise } from '../../scripts/objects';
+  const run = document.querySelector<HTMLElement>('[data-cn-run]');
+  enter(run, () => ruleRise(Array.from(run!.querySelectorAll<HTMLElement>(':scope > li')), 0.15), 'top 85%');
+</script>

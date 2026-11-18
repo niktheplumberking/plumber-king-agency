@@ -55,7 +55,7 @@ const REG = [
       </svg>
       <ul class="tags">
         {R.map((r, i) => { const t = town(r.s); return (
-          <li data-rm-tag={i} style={`--dl:${r.d.tag[0]}px;--dt:${r.d.tag[1]}px;--ml:${r.m.tag[0]};--mt:${r.m.tag[1]}px`}><a href={t.href}>{t.name}<span class="sr-only"> plumber</span></a></li>
+          <li data-rm-tag={i} data-rm-fit style={`--dl:${r.d.tag[0]}px;--dt:${r.d.tag[1]}px;--ml:${r.m.tag[0]};--mt:${r.m.tag[1]}px`}><a href={t.href}>{t.name}<span class="sr-only"> plumber</span></a></li>
         ); })}
       </ul>
       <p class="base" aria-hidden="true"><svg viewBox="0 0 158 56"><path d="M21.28 1H136.72L157 23L136.72 45H21.28L1 23Z" /><path d="M71.1 44.5H87.1L79.1 53.5Z" class="ptr" /></svg><span>Riverside · Base</span></p>
@@ -102,7 +102,7 @@ const REG = [
   .dt { fill: var(--ink); stroke: var(--bone); stroke-width: 3; }
   .rs { fill: var(--red); stroke: var(--bone); stroke-width: 4; }
   .tags { margin: 0; padding: 0; list-style: none; }
-  .tags li { position: absolute; left: var(--dl); top: var(--dt); }
+  .tags li { position: absolute; left: var(--dl); top: var(--dt); margin-left: var(--fit, 0px); }
   .tags a { display: block; height: 28px; padding: 0 10px; background: var(--ink); border-radius: 2px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 28px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); white-space: nowrap; transition: background .25s, color .25s; }
   .tags a:hover { background: var(--red); color: var(--paper); }
   .base { position: absolute; left: 968px; top: 235px; display: grid; place-items: center; width: 156px; height: 44px; font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 21px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); }
@@ -142,8 +142,11 @@ const REG = [
     .map { inset: 0 0 auto; height: 301px; overflow: hidden; }
     .map-img { left: -4.36%; right: auto; width: 124.6%; }
     .rts-d, .pl { display: none; }
-    .base { left: calc(279 / 390 * 100%); top: 65px; width: 112px; height: 24px; font-size: 10px; line-height: 15px; letter-spacing: .08em; }
-    .base svg { width: 114px; height: 31px; }
+    /* round 2 re-look: the base tag sat on the right edge with its text past the hex. Now the hex is wider (104 px drawn)
+       and centred 20 px left of the pin, its pointer moved back under the pin (20 px / 0.66 scale = 30 units). */
+    .base { left: calc(85.9% - 80px); top: 62px; width: 120px; height: 26px; font-size: 9.5px; line-height: 14px; letter-spacing: .07em; }
+    .base svg { width: 122px; height: 37px; }
+    .base svg .ptr { translate: 30px 0; }
     .base svg path { stroke-width: 1.5; }
     .rts-m { display: block; }
     .map { --rm-ox: 85.9%; --rm-oy: 34.88%; }

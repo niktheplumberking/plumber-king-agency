@@ -141,6 +141,37 @@ export function initRouteMaps() {
   settled().then(() => requestRefresh(0));
 }
 
+/* Tag fit (round 2 re-look, with or without motion): a tag marked [data-rm-fit] that would cross its map frame (6 px
+   inset) is nudged back inside through --fit (the component adds it to the tag's left offset). Measured without the tag's
+   own entrance `translate`; re-run on resize and when fonts swap in. */
+const FIT_PAD = 6;
+function fitTags() {
+  const jobs: [HTMLElement, number][] = [];
+  document.querySelectorAll<HTMLElement>('[data-routemap]').forEach((m) => {
+    if (!m.getClientRects().length) return;
+    const fr = m.getBoundingClientRect();
+    m.querySelectorAll<HTMLElement>('[data-rm-fit]').forEach((t) => {
+      if (!t.getClientRects().length) return;
+      const cur = parseFloat(t.style.getPropertyValue('--fit')) || 0;
+      const tx = parseFloat(getComputedStyle(t).translate) || 0;
+      const q = t.getBoundingClientRect(); const l = q.left - tx - cur, r = q.right - tx - cur;
+      let f = 0;
+      if (r > fr.right - FIT_PAD) f = fr.right - FIT_PAD - r;
+      if (l + f < fr.left + FIT_PAD) f = fr.left + FIT_PAD - l;
+      jobs.push([t, Math.round(f)]);
+    });
+  });
+  jobs.forEach(([t, f]) => { if (f) t.style.setProperty('--fit', `${f}px`); else t.style.removeProperty('--fit'); });
+}
+if (document.querySelector('[data-rm-fit]')) {
+  let raf = 0; const again = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fitTags); };
+  again();
+  document.fonts?.addEventListener?.('loadingdone', again);
+  document.fonts?.ready.then(again);
+  window.addEventListener('load', again, { once: true });
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(again); document.querySelectorAll('[data-routemap]').forEach((m) => ro.observe(m)); }
+}
+
 if (html.classList.contains('motion')) {
   window.addEventListener('pbp:handoff', () => requestAnimationFrame(initRouteMaps), { once: true });
   window.setTimeout(initRouteMaps, 4500);

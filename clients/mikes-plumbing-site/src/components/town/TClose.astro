@@ -47,8 +47,8 @@ const up = t.name.toUpperCase();
         <span class="tc-rip tc-pt" style={v('r')} data-rm-ripple aria-hidden="true"></span>
         <span class="tc-dot tc-dot--base tc-pt" style={v('r')} data-rm-base aria-hidden="true"></span>
         <span class="tc-dot tc-dot--town tc-pt" style={v('t')} data-rm-dot="0" aria-hidden="true"></span>
-        <span class:list={['tc-tag tc-pt', D.flipR && 'is-flip', M.flipR && 'is-flip-m']} style={v('r')}>Riverside<span class="tc-base"> · Base</span></span>
-        <span class:list={['tc-tag tc-pt', D.flipT && 'is-flip', M.flipT && 'is-flip-m']} style={v('t')} data-rm-tag="0">{up}</span>
+        <span class:list={['tc-tag tc-pt', D.flipR && 'is-flip', M.flipR && 'is-flip-m']} style={v('r')} data-rm-fit>Riverside<span class="tc-base">&nbsp;· Base</span></span>
+        <span class:list={['tc-tag tc-pt', D.flipT && 'is-flip', M.flipT && 'is-flip-m']} style={v('t')} data-rm-tag="0" data-rm-fit>{up}</span>
         <span class="tc-screw" style="left:13px;top:13px" aria-hidden="true"></span><span class="tc-screw" style="right:13px;top:13px" aria-hidden="true"></span>
         <span class="tc-screw" style="left:13px;bottom:13px" aria-hidden="true"></span><span class="tc-screw" style="right:13px;bottom:13px" aria-hidden="true"></span>
       </div>
@@ -83,7 +83,7 @@ const up = t.name.toUpperCase();
   .tc-dot { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 3px solid var(--paper); }
   .tc-dot--base { background: var(--ink); width: 24px; height: 24px; margin: -12px 0 0 -12px; }
   .tc-dot--town { background: var(--red); width: 26px; height: 26px; margin: -13px 0 0 -13px; box-shadow: 0 0 0 7px rgba(217, 65, 43, .22); }
-  .tc-tag { position: absolute; margin: -45px 0 0 21px; padding: 0 10px; height: 27px; display: flex; align-items: center; white-space: nowrap; background: var(--ink); color: var(--paper); font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; }
+  .tc-tag { position: absolute; margin: -45px 0 0 calc(21px + var(--fit, 0px)); padding: 0 10px; height: 27px; display: flex; align-items: center; white-space: nowrap; background: var(--ink); color: var(--paper); font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; }
   .tc-tag.is-flip { transform: translateX(calc(-100% - 42px)); }
   .tc-screw { position: absolute; width: 18px; height: 14px; margin: -7px -9px; background: var(--tan); clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
   .tc-screw { background: var(--ink); }
@@ -107,6 +107,10 @@ const up = t.name.toUpperCase();
     .tc-h { width: auto; font-size: clamp(42px, 4.6vw, 56px); line-height: 1; }
     .tc-body { width: auto; }
     .tc-q { position: static; width: auto; height: auto; margin-top: 32px; }
+    /* round 2 re-look: the map is 330-460 px wide here, so the tags take the phone size and the town name alone */
+    .tc-tag { height: 22px; font-size: 10px; padding: 0 8px; margin: -36px 0 0 calc(12px + var(--fit, 0px)); }
+    .tc-tag.is-flip { transform: translateX(calc(-100% - 24px)); }
+    .tc-base { display: none; }
   }
   @media (max-width: 767px) {
     .tc { height: auto; padding: 51px 0 56px; }
@@ -122,7 +126,7 @@ const up = t.name.toUpperCase();
     .tc-q p { font-size: 19px; line-height: 24px; }
     .tc-q footer { margin-top: 10px; font-size: 10.5px; }
     .tc-cap { margin-top: 8px; font-size: 9px; line-height: 10px; }
-    .tc-tag { height: 22px; font-size: 10px; padding: 0 8px; margin: -36px 0 0 12px; }
+    .tc-tag { height: 22px; font-size: 10px; padding: 0 8px; margin: -36px 0 0 calc(12px + var(--fit, 0px)); }
     .tc-tiles { left: var(--lm); top: var(--tm); width: var(--wm); height: var(--hm); }
     .tc-pt { left: var(--xm); top: var(--ym); }
     .tc-base { display: none; }

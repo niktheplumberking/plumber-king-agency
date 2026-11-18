@@ -33,7 +33,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
         <details class="row" data-acc name="home-faq" open={i === 0} data-faq-row>
           <summary>
             <span class="n">{String(i + 1).padStart(2, '0')}</span>
-            <span class="q">{x.q}</span>
+            <span class="q" data-acc-title>{x.q}</span>
             <span class="tg" aria-hidden="true"><svg viewBox="0 0 42 34"><path d={hexW} /></svg><span class="pl">+</span><span class="x">×</span></span>
           </summary>
           <div class="acc-body">
@@ -70,7 +70,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
   });
 </script>
 <style>
-  .fq { position: relative; z-index: 1; height: 1120px; background: var(--bone); color: var(--ink); overflow-x: clip; }
+  .fq { position: relative; z-index: 1; height: 1184px; /* round 2: +64 for the taller open row */ background: var(--bone); color: var(--ink); overflow-x: clip; }
   .fq-top { position: relative; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding-top: 95px; }
   .eb { display: flex; align-items: center; gap: 10px; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
   .eb svg { width: 18px; height: 13px; fill: none; stroke: var(--tan-dark); stroke-width: 1.6; stroke-linejoin: round; }
@@ -113,14 +113,15 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
   .acc-body a { display: inline-block; margin-top: 18px; font-weight: 700; font-size: 15px; color: var(--tan); }
   .acc-body a:hover { text-decoration: underline; text-underline-offset: 3px; }
   /* open row: floods ink edge to edge; question big, answer to its right, a hex "×" at the far right */
-  .row[open]:not(.acc-off) { margin-top: -1px; border-bottom-color: transparent; background: var(--ink); box-shadow: 0 0 0 100vmax var(--ink); clip-path: inset(0 -100vmax); min-height: 200px; }
-  .row[open]:not(.acc-off) summary { align-items: start; grid-template-columns: 80px 460px; min-height: 200px; padding-top: 38px; }
+  .row[open]:not(.acc-off) { margin-top: -1px; border-bottom-color: transparent; background: var(--ink); box-shadow: 0 0 0 100vmax var(--ink); clip-path: inset(0 -100vmax); min-height: 264px; }
+  /* round 2 (review 2): the open row's question, answer and × stay inside the 880 px list column, clear of the note */
+  .row[open]:not(.acc-off) summary { align-items: start; grid-template-columns: 80px 380px; min-height: 264px; padding-top: 38px; }
   .row[open]:not(.acc-off) .n { margin-top: 10px; font-size: 16px; color: var(--tan); }
   .row[open]:not(.acc-off) .q { font-family: var(--f-display); font-weight: 400; font-size: 40px; line-height: 44px; color: var(--bone); text-decoration: none; }
-  .row[open]:not(.acc-off) .tg { position: absolute; left: 1152px; top: 46px; width: 48px; height: 36px; color: var(--tan); font-size: 24px; }
+  .row[open]:not(.acc-off) .tg { position: absolute; left: 832px; top: 46px; width: 48px; height: 36px; color: var(--tan); font-size: 24px; }
   .row[open]:not(.acc-off) .tg svg { width: 50px; height: 38px; stroke: var(--tan); stroke-width: 1.6; }
   .row[open]:not(.acc-off) .tg .pl { display: none; } .row[open]:not(.acc-off) .tg .x { display: block; }
-  .row[open]:not(.acc-off) .acc-body { position: absolute; left: 620px; top: 44px; width: 440px; }
+  .row[open]:not(.acc-off) .acc-body { position: absolute; left: 488px; top: 44px; width: 320px; }
   .note { position: absolute; left: 948px; top: 370px; width: 270px; height: 250px; padding: 30px 22px 0; background: var(--tan); rotate: 3deg; box-shadow: 0 16px 30px -10px rgba(14,13,11,.4); }
   .tape { position: absolute; left: 95px; top: -6px; width: 80px; height: 22px; background: rgba(251,248,242,.8); }
   .n-h { font-family: var(--f-script); font-size: 32px; line-height: 47px; }
@@ -136,8 +137,8 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
     .n2 { left: 68%; }
     .fq-in { margin-top: 60px; }
     .srch, .rows { width: calc(100% - 300px); }
-    .row[open]:not(.acc-off) .tg { left: auto; right: -280px; }
-    .row[open]:not(.acc-off) summary { grid-template-columns: 64px minmax(0, 1fr); }
+    .row[open]:not(.acc-off) .tg { left: auto; right: 0; }
+    .row[open]:not(.acc-off) summary { grid-template-columns: 64px minmax(0, 1fr); padding-right: 64px; }
     .row[open]:not(.acc-off) .acc-body { position: static; width: auto; padding: 0 0 30px 64px; }
     .row[open]:not(.acc-off) summary { min-height: 0; padding-bottom: 14px; }
     .row[open]:not(.acc-off) { min-height: 0; }
@@ -146,7 +147,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
   @media (max-width: 1023px) {
     .srch, .rows { width: 100%; }
     .intro { position: static; width: auto; margin-top: 18px; }
-    .row[open]:not(.acc-off) .tg { right: 0; top: 28px; }
+    .row[open]:not(.acc-off) .tg { top: 28px; }
     .note { position: relative; top: auto; margin: 60px auto 0; }
   }
   @media (max-width: 767px) {

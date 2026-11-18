@@ -85,19 +85,25 @@ function build(map: HTMLElement, svg: SVGSVGElement): Rec {
 
   // Scrub by hand, so the routes can wait for the unfold: target = scroll progress, capped at the pulse until unfolded.
   const lag = num(map.dataset.lag, 0.8);
-  let target = 0; let open = false; let tw: gsap.core.Tween | null = null;
+  let target = 0; let open = false; let tw: gsap.core.Tween | null = null; let release = false;
   const push = (instant = false) => {
     const p = Math.min(target, open ? 1 : PULSE);
     tw?.kill();
     if (instant) { tl.progress(p); return; }
-    tw = gsap.to(tl, { progress: p, duration: lag, ease: 'power3.out' });
+    // Round 2 (review 12): a big gap (the hold released after the unfold, or a fast scroll) is caught up over a time that
+    // grows with the gap (2.5 s per full map, never less than the lag), so the routes keep drawing continuously instead
+    // of jumping 0.08 -> 0.35 in ~0.1 s.
+    const gap = Math.abs(p - tl.progress());
+    // the first push after the unfold (the hold let go) starts from rest: ease in and out over 4 s per full map
+    tw = release ? gsap.to(tl, { progress: p, duration: Math.max(lag, gap * 4), ease: 'sine.inOut', onComplete: () => { release = false; } })
+      : gsap.to(tl, { progress: p, duration: Math.max(lag, gap * 2.5), ease: 'power2.out' });
   };
   const st = ScrollTrigger.create({
     trigger: map, start: map.dataset.start || 'top 75%', end: map.dataset.end || 'center 40%',
     onUpdate: (self) => { target = self.progress; push(); },
   });
   target = st.progress;
-  unfold(map, () => { open = true; push(); });
+  unfold(map, () => { open = true; release = true; push(); });
   push(true);
   debug.push({ svg, tl, st });
   return { st, tl };

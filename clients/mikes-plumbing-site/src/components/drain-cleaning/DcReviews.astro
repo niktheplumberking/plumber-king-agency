@@ -17,12 +17,15 @@ const q1 = ['One thing of note, the entire time he was working he was ', 'extrem
 const a = pick('Stuart W.', q1.join(''), 'Water service line leak');
 const q2 = 'Very clean, professional, and great communication skills. Highly recommend!';
 const b = pick('Sydney H.', q2, 'Kitchen faucet replacement');
+// QA round 2: the heading quotes Sydney H. exactly (a true substring, ending on her comma + an ellipsis), checked here.
+const hq = 'Very clean, professional,';
+pick('Sydney H.', hq, 'heading');
 ---
 <section class="dr2 sv-sec sv-tan sv-abs" style="--sh:717px" aria-labelledby="dr2-h" data-m-section>
   <Wave fill="var(--tan)" top={-34} topM={-24} />
   <div class="dr2-in">
     <Eyebrow look="figma" tone="ink" class="dr2-eb" data-ab style={ab(119.5, 109)}>On Yelp</Eyebrow>
-    <h2 id="dr2-h" class="sv-h dr2-h lh-abril" data-t="2" data-ab style={ab(120, 140)}>“Very clean, professional.” <em>In their words.</em></h2>
+    <h2 id="dr2-h" class="sv-h dr2-h lh-abril" data-t="2" data-ab style={ab(120, 140)}>“{hq}…” <em>In their words.</em></h2>
     <span class="dr2-mark" data-ab style={ab(100, 150)} aria-hidden="true">“</span>
     <figure class="dr2-q" data-t="3" data-ab style={ab(120, 220, 1200)}>
       <blockquote><p><span class="dr2-m">“</span>{q1[0]}<u>{q1[1]}</u>{q1[2]}”<span aria-hidden="true">*</span></p></blockquote>

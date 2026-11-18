@@ -7,7 +7,8 @@
 //   CLIP.file  his own clip (public/ path): plays natively inside the phone; on end, or a click while it plays, it replays.
 //   CLIP.post  the post's permalink (instagram.com/p/... or /reel/...): the official embed loads inside the phone on the
 //              first click (nothing from Instagram loads before it).
-//   neither    (today) the button opens his Instagram in a new tab. Both are on README "Mike to confirm".
+//   neither    (today) a labelled "Watch on Instagram ↗" pill opens his Instagram in a new tab (review 8: no bare
+//              play triangle that leaves the site). Both are on README "Mike to confirm".
 const CLIP = { file: '', poster: '', post: '' };
 const embed = CLIP.post ? CLIP.post.replace(/\/?(\?.*)?$/, '') + '/embed' : '';
 import Wave from '../kit/Wave.astro';
@@ -32,7 +33,7 @@ const zig = (w: number, h: number, t: number, d: number) => {
         <div class="ho-player" data-ho-player data-file={CLIP.file || undefined} data-poster={CLIP.poster || undefined} data-embed={embed || undefined} aria-live="polite"></div>
         {CLIP.file || embed
           ? <button type="button" class="ho-play" data-ho-play aria-label="Play Mike's faucet clip"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></button>
-          : <a class="ho-play" href={SITE.social.instagram} target="_blank" rel="noopener" aria-label="Watch Mike's clips on Instagram (opens in a new tab)"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></a>}
+          : <a class="ho-play ho-play--ig" href={SITE.social.instagram} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg><span>Watch on Instagram <span aria-hidden="true">↗</span><span class="sr-only">(opens in a new tab)</span></span></a>}
         <i class="ho-notch" aria-hidden="true"></i>
       </div>
       <figcaption class="ho-cap" data-ab style={ab(190, 712)}>His post, his caption</figcaption>
@@ -65,6 +66,11 @@ const zig = (w: number, h: number, t: number, d: number) => {
     border: 0; border-radius: 50%; background: var(--tan); color: var(--ink); cursor: pointer; box-shadow: 0 0 0 8px rgba(14, 13, 11, .28), 0 14px 26px -8px rgba(0, 0, 0, .55);
     transition: scale .4s cubic-bezier(.45, 0, .55, 1), box-shadow .4s cubic-bezier(.45, 0, .55, 1), opacity .4s cubic-bezier(.45, 0, .55, 1); }
   .ho-play svg { margin-left: 4px; }
+  /* round 2 (review 8): until Mike sends the clip or the post link, the button says where it goes */
+  .ho-play--ig { display: flex; align-items: center; gap: 10px; width: max-content; height: 56px; margin: 0; left: 50%; top: auto; bottom: 64px; translate: -50% 0; padding: 0 22px 0 16px; border-radius: 28px;
+    font-family: var(--f-sans); font-weight: 700; font-size: 15px; white-space: nowrap; text-decoration: none; }
+  .ho-play--ig svg { flex: none; width: 22px; height: 22px; margin: 0; }
+  @media (hover: hover) and (pointer: fine) { .ho-play--ig:hover { scale: 1; translate: -50% -4px; } }
   .ho-play:focus-visible { outline: 3px solid var(--ink); outline-offset: 6px; }
   @media (hover: hover) and (pointer: fine) { .ho-play:hover { scale: 1.08; box-shadow: 0 0 0 14px rgba(14, 13, 11, .2), 0 18px 30px -8px rgba(0, 0, 0, .55); } }
   .ho-player { position: absolute; inset: 12px; z-index: 1; border-radius: 34px; overflow: hidden; background: var(--ink); display: none; }
@@ -110,6 +116,7 @@ const zig = (w: number, h: number, t: number, d: number) => {
     .ho-phone { left: 58px; top: 0; width: 220px; height: 440px; rotate: 4deg; transform-origin: 0 0; border-radius: 34px; box-shadow: 0 20px 36px -8px rgba(0, 0, 0, .5); }
     .ho-scr, .ho-player { inset: 9px; border-radius: 26px; }
     .ho-play { width: 68px; height: 68px; margin: -34px 0 0 -34px; } .ho-play svg { width: 24px; height: 24px; }
+    .ho-play--ig { width: max-content; height: 44px; margin: 0; bottom: 44px; gap: 6px; padding: 0 12px 0 10px; font-size: 12px; } .ho-play--ig svg { width: 16px; height: 16px; }
     .ho-notch { left: 80px; top: 16px; width: 60px; height: 16px; border-radius: 8px; }
     .ho-cap { display: none; }
     .ho :global(.ho-eb) { margin-top: 29px; }

@@ -68,8 +68,10 @@ export function swing(tags: HTMLElement[], stagger = 0.12) {
   const tl = gsap.timeline();
   tags.forEach((t, i) => {
     const s = i % 2 ? -1 : 1;
-    tl.fromTo(t, { y: -36, autoAlpha: 0, rotation: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease: 'power2.inOut' }, i * stagger)
-      .to(t, { keyframes: [{ rotation: 7 * s, duration: 0.3 }, { rotation: -4.5 * s, duration: 0.3 }, { rotation: 2 * s, duration: 0.25 }, { rotation: 0, duration: 0.25 }], ease: 'sine.inOut' }, i * stagger + 0.1);
+    // GSAP folds a CSS `rotate` tilt into its transform, so the swing is written around that tilt and settles on it
+    const o = parseFloat(getComputedStyle(t).rotate) || 0;
+    tl.fromTo(t, { y: -36, autoAlpha: 0, rotation: o }, { y: 0, autoAlpha: 1, duration: 0.45, ease: 'power2.inOut' }, i * stagger)
+      .to(t, { keyframes: [{ rotation: o + 7 * s, duration: 0.3 }, { rotation: o - 4.5 * s, duration: 0.3 }, { rotation: o + 2 * s, duration: 0.25 }, { rotation: o, duration: 0.25 }], ease: 'sine.inOut' }, i * stagger + 0.1);
   });
   return tl;
 }

@@ -74,9 +74,9 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
   .hs-dot { position: absolute; left: 57px; top: 86px; width: 18px; height: 18px; border-radius: 50%; background: var(--red); }
   .hs-dot i { position: absolute; inset: -9px; border-radius: 50%; background: rgba(217, 65, 43, .28); opacity: 0; }
   .hs-open { margin: 0; }
-  .hs-o { position: absolute; left: 92px; top: 42px; font-family: var(--f-display); font-size: 76px; line-height: 103px; text-transform: uppercase; }
-  .hs-hrs { position: absolute; left: 344px; top: 66px; font-family: var(--f-label); font-weight: 600; font-size: 24px; line-height: 36px; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
-  .hs-y { position: absolute; left: 344px; top: 100px; font-family: var(--f-label); font-size: 16px; line-height: 24px; letter-spacing: .1em; color: var(--tan-dark); }
+  .hs-o { position: absolute; left: 84px; top: 42px; font-family: var(--f-display); font-size: 76px; line-height: 103px; text-transform: uppercase; }
+  .hs-hrs { position: absolute; left: 326px; top: 66px; font-family: var(--f-label); font-weight: 600; font-size: 24px; line-height: 36px; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+  .hs-y { position: absolute; left: 326px; top: 100px; font-family: var(--f-label); font-size: 16px; line-height: 24px; letter-spacing: .1em; color: var(--tan-dark); }
   .hs-mpipe { display: none; }
   .hs-txt { position: absolute; left: 680px; top: 429px; }
   .hs-h3 { margin-top: 16px; font-family: var(--f-display); font-weight: 400; font-size: 40px; line-height: 44.8px; color: var(--paper); }
@@ -119,8 +119,8 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
     .hs-hole { left: 44px; width: 12px; height: 12px; } .hs-hole2 { left: auto; right: 44px; }
     .hs-dot { left: 33px; top: 63px; width: 14px; height: 14px; }
     .hs-o { left: 58px; top: 28px; font-size: 54px; line-height: 73px; }
-    .hs-hrs { left: 232px; top: 48px; font-size: 17px; line-height: 25px; letter-spacing: .1em; }
-    .hs-y { left: 232px; top: 72px; font-size: 13px; line-height: 19px; letter-spacing: .08em; }
+    .hs-hrs { left: auto; right: 24px; top: 48px; font-size: 17px; line-height: 25px; letter-spacing: .1em; }
+    .hs-y { left: auto; right: 24px; min-width: 90px; top: 72px; font-size: 13px; line-height: 19px; letter-spacing: .08em; }
     .hs-mpipe { display: block; position: absolute; left: 15px; right: 15px; top: -31.5px; height: 11px; border-radius: 6px; background: #6B5C3E; overflow: hidden;
       box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .2); }
     .hs-mw { position: absolute; left: 0; top: 3px; width: 100%; height: 5px; border-radius: 3px; background: rgba(243, 236, 221, .38); transform-origin: 0 50%; }
@@ -130,6 +130,9 @@ const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.
     .hs-no { margin-top: 8px; font-size: 15px; line-height: 16px; }
     .hs-pay { margin-top: 8px; font-size: 13px; line-height: 16px; }
     .hs-a { margin-top: 14px; font-size: 15px; line-height: 16px; }
+  }
+  @media (max-width: 380px) { /* round 2: on 360 px phones the sign is narrower; keep 24 HOURS inside its frame */
+    .hs-o { left: 50px; font-size: 46px; } .hs-hrs { font-size: 15px; letter-spacing: .08em; } .hs-dot { left: 28px; }
   }
 </style>
 <script>

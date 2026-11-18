@@ -30,14 +30,14 @@ const ALL = [...ROW1, ...ROW2];
   <nav class="ts-rods ts-rods--d" aria-label={`Plumbing services in ${t.name}`}>
     {[ROW1, ROW2].map((row) => (
       <div class="ts-rod" data-t="4" data-stagger>
-        {row.map((n) => <a class:list={['nut', n.d && 'nut--dark']} href={n.href}><span>{n.l}</span><span class="nut-ar" aria-hidden="true">→</span></a>)}
+        {row.map((n) => <a class:list={['nut', n.d && 'nut--dark']} href={n.href} data-hover="lift"><span>{n.l}</span><span class="nut-ar" aria-hidden="true">→</span></a>)}
       </div>
     ))}
   </nav>
   <nav class="ts-rods ts-rods--m" aria-label={`Plumbing services in ${t.name} (mobile)`}>
     {MROWS.map((row) => (
       <div class="ts-rod" data-t="4">
-        {row.map((i) => <a class:list={['nut', ALL[i].m && 'nut--dark']} href={ALL[i].href}><span>{ALL[i].l}</span></a>)}
+        {row.map((i) => <a class:list={['nut', ALL[i].m && 'nut--dark']} href={ALL[i].href} data-hover="lift"><span>{ALL[i].l}</span></a>)}
       </div>
     ))}
   </nav>
@@ -57,14 +57,15 @@ const ALL = [...ROW1, ...ROW2];
     background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 42'%3E%3Cpath d='M8 1h16l7 10v20l-7 10H8L1 31V11z' fill='%23D2C5A6' stroke='%230E0D0B' stroke-width='1.2'/%3E%3C/svg%3E") left center / 30px 40px no-repeat,
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 42'%3E%3Cpath d='M8 1h16l7 10v20l-7 10H8L1 31V11z' fill='%23D2C5A6' stroke='%230E0D0B' stroke-width='1.2'/%3E%3C/svg%3E") right center / 30px 40px no-repeat; }
   .ts-rods { position: relative; isolation: isolate; }
-  .nut { --c: 22px; position: relative; display: inline-flex; align-items: center; gap: 4px; height: 62px; padding: 0 30px; font-family: var(--f-label); font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; color: var(--ink); isolation: isolate; filter: drop-shadow(0 10px 8px rgba(60, 48, 25, .28)); transition: transform var(--dur-2) var(--ease-out); }
+  .nut { --c: 22px; position: relative; display: inline-flex; align-items: center; gap: 4px; height: 62px; padding: 0 30px; font-family: var(--f-label); font-weight: 600; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; color: var(--ink); isolation: isolate; filter: drop-shadow(0 10px 8px rgba(60, 48, 25, .28)); transition: translate .35s cubic-bezier(.45, 0, .55, 1); }
   .nut::before, .nut::after { content: ''; position: absolute; z-index: -1; clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% 50%, calc(100% - var(--c)) 100%, var(--c) 100%, 0 50%); }
   .nut::before { inset: 0; background: var(--ink); }
   .nut::after { inset: 1.5px; background: var(--tan); transition: background-color var(--dur-2); }
   .nut--dark { color: var(--tan); }
   .nut--dark::after { background: var(--ink); }
   .nut-ar { font-family: var(--f-sans); font-size: 14px; transition: transform var(--dur-2) var(--ease-out); }
-  .nut:hover { transform: translateY(-3px); }
+  /* hover lift = kit [data-hover=lift] (translate, so the entrance's transform never blocks it); the nut keeps its own shadow */
+  .nut[data-hover]:hover { box-shadow: none; }
   .nut:hover .nut-ar { transform: translateX(3px); }
   .nut:not(.nut--dark):hover::after { background: #E2D7BC; }
   .nut--dark:hover::after { background: #2A2620; }

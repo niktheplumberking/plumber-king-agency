@@ -76,7 +76,7 @@ const tabs = Array.from({ length: 10 }, (_, i) => i);
   }
   @media (max-width: 767px) {
     .ft { padding-top: 60px; z-index: 2; }
-    .ft-in { width: 350px; height: 560px; zoom: min(1, calc((100vw - 40px) / 350px)); }
+    .ft-in { width: 350px; height: 640px; zoom: min(1, calc((100vw - 40px) / 350px)); }
     .ft-fly { left: 0; top: 0; width: 350px; height: 410px; box-shadow: 0 20px 30px -8px rgba(0, 0, 0, .6); }
     .ft-logo { left: 20px; top: 24px; width: 120px; height: 78px; }
     .ft-h { left: 150px; top: 30px; font-size: 46px; }
@@ -93,7 +93,7 @@ const tabs = Array.from({ length: 10 }, (_, i) => i);
     .ft-txt { left: 14px; top: 160px; width: 150px; }
     .ft-k { font-size: 9px; line-height: 13px; letter-spacing: .08em; }
     .ft-num { font-size: 16px; line-height: 24px; letter-spacing: .03em; }
-    .ft-torn { left: 230px; top: 440px; width: 70px; height: 170px; rotate: -12deg; box-shadow: 0 10px 16px -6px rgba(0, 0, 0, .5); }
+    .ft-torn { left: 230px; top: 420px; width: 70px; height: 170px; rotate: -12deg; /* round 2: whole strip 16+ px clear of the bone wave */ box-shadow: 0 10px 16px -6px rgba(0, 0, 0, .5); }
     .ft-take { left: 20px; top: 470px; font-size: 32px; }
   }
 </style>

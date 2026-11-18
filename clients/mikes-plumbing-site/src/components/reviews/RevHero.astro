@@ -1,12 +1,11 @@
 ---
-// 9.1 Reviews hero (Figma 670:11578 y 180-1022 / 671:1096 y 164-904; fix round 1 B24: proof in the hero). Ink field; eyebrow
-// + two-tone H1 + rating line + two buttons left; right, a stack of Mike's paper slips with six real Yelp reviews, word for
-// word (initials, name, town, date), that turns every 5 s (the idea of 21st.dev "Hero Preview Walls" 9228, a rotating card
-// stack, in Mike's slips): the top slip slides off to the left and tucks in at the back while the others step forward
-// (0.9 s ease-in-out). Pauses on hover / focus; the Next button (and the stack itself, Enter) turns it by hand. Reduced
-// motion: a still stack, no auto-turn. The black 5.0 / 20 reviews badge stays, pinned on the stack (idle: shake).
-// Writer: the stack script owns `transform` / `opacity` / z-index of .rh-slip; hover uses the badge's `translate`.
-// No AggregateRating anywhere.
+// 9.1 Reviews hero (Figma 670:11578 y 180-1022 / 671:1096 y 164-904; fix round 1 B24 + round 2 reviews 1 and 7).
+// Its own structure on the site: a wall of Mike's paper review slips (six real Yelp reviews, word for word, with initials,
+// name, town and date) in two columns either side of a centred copy column: eyebrow, H1, rating line, the black 5.0 / 20
+// reviews badge and the two buttons. Everything sits in a grid, so the badge never covers a slip and no slip covers
+// text. 768-1279 px: copy on top, the slips in rows of three under it. Phones: copy, badge, buttons, then three slips
+// stacked full width (the rest are on the list below). Entrance: the slips stagger in (engine); hover: a slip lifts
+// (kit [data-hover=lift]); idle: the badge shakes. No AggregateRating anywhere.
 import { SITE } from '../../data/site';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
@@ -14,75 +13,67 @@ import { REVIEWS } from '../../data/reviews';
 import { place, when, initials } from './fmt';
 const R = SITE.rating;
 // Six short reviews shown whole (word for word, from REVIEWS).
-const SLIPS = ['Brandon A.', 'Janeth H.', 'Robert U.', 'Erik N.', 'Julian T.', 'Isaiah C.'].map((n) => {
-  const r = REVIEWS.find((x) => x.name === n);
-  if (!r) throw new Error(`RevHero: no review from ${n}`);
-  return { r };
-});
-const TILT = [-2, 1.5, -1, 2, -1.5, 1];
+const pick = (n: string) => { const r = REVIEWS.find((x) => x.name === n); if (!r) throw new Error(`RevHero: no review from ${n}`); return r; };
+const LEFT = ['Brandon A.', 'Janeth H.', 'Erik N.'].map(pick);
+const RIGHT = ['Julian T.', 'Isaiah C.', 'Robert U.'].map(pick);
+const TILT = [-1.6, 1.2, -0.8, 1.4, -1.2, 0.9];
 const star = 'M12 1.6l3.1 7.1 7.7.7-5.8 5.1 1.7 7.6L12 18.1l-6.7 4 1.7-7.6-5.8-5.1 7.7-.7z';
 const stars = [-6, 4, -2, 5, -4];
 ---
 <section class="rh on-ink" aria-labelledby="rh-h" data-m-section data-m-hero>
-  <div class="wrap rh-in">
-    <div class="rh-copy">
-      <Eyebrow look="page" text="Reviews · Yelp" />
-      <h1 id="rh-h" class="rh-h1" data-t="2">Mike's Plumbing <span class="nowrap">Services <span class="tn">Reviews</span></span></h1>
-      <p class="rh-sub" data-t="3" data-fx="nudge">{R.value} on {R.source} · {R.count} reviews. Checked {R.checked}.</p>
-    </div>
-    <div class="rh-art" data-t="4" data-fx="toss">
-      <ul class="rh-stack" role="list" aria-label="Six of Mike's Yelp reviews, word for word" tabindex="0" data-rh-stack>
-        {SLIPS.map((c, i) => (
-          <li class="rh-slip" style={`--d:${i};--r:${TILT[i % TILT.length]}deg;z-index:${SLIPS.length - i}`} aria-hidden={i ? 'true' : undefined}>
+  <div class="rh-in">
+    {[LEFT, RIGHT].map((col, c) => (
+      <ul class:list={['rh-col', c ? 'rh-col--r' : 'rh-col--l']} role="list" aria-label={c ? 'More Yelp reviews, word for word' : 'Yelp reviews, word for word'} data-t="4" data-stagger>
+        {col.map((r, i) => (
+          <li class="rh-slip" style={`--r:${TILT[c * 3 + i]}deg`} data-hover="lift">
             <figure>
-              <blockquote><p>“{c.r.text}”</p></blockquote>
-              <figcaption><span class="rh-av" aria-hidden="true">{initials(c.r.name)}</span><span class="rh-who"><b>{c.r.name}</b>{place(c.r.town)} · {when(c.r.date)}</span><span class="rh-st"><span aria-hidden="true">★★★★★</span><span class="sr-only">5 stars on Yelp</span></span></figcaption>
+              <blockquote><p>“{r.text}”</p></blockquote>
+              <figcaption><span class="rh-av" aria-hidden="true">{initials(r.name)}</span><span class="rh-who"><b>{r.name}</b>{place(r.town)} · {when(r.date)}</span><span class="rh-st"><span aria-hidden="true">★★★★★</span><span class="sr-only">5 stars on Yelp</span></span></figcaption>
             </figure>
           </li>
         ))}
       </ul>
-      <p class="rh-ctl" aria-hidden="true"><button type="button" class="rh-next" tabindex="-1" data-rh-next>Next review <span>→</span></button></p>
-      <a class="rh-badge" href={SITE.social.yelp} target="_blank" rel="noopener" data-idle="shake" aria-label={`${R.value}, ${R.count} reviews on ${R.source} (out of 5). Read them on Yelp (opens in a new tab)`}>
+    ))}
+    <div class="rh-copy">
+      <Eyebrow look="page" text="Reviews · Yelp" />
+      <h1 id="rh-h" class="rh-h1" data-t="2">Mike's Plumbing Services <span class="tn">Reviews</span></h1>
+      <p class="rh-sub" data-t="3" data-fx="nudge">{R.value} on {R.source} · {R.count} reviews. Checked {R.checked}.</p>
+      <a class="rh-badge" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="5" data-fx="pop" data-idle="shake" aria-label={`${R.value}, ${R.count} reviews on ${R.source} (out of 5). Read them on Yelp (opens in a new tab)`}>
         <svg viewBox="0 0 250 160" preserveAspectRatio="none" aria-hidden="true"><path d="M32 1h186l31 79-31 79H32L1 80z" fill="#0E0D0B" stroke="#D2C5A6" stroke-width="2" vector-effect="non-scaling-stroke" /><path d="M40 10h170l27 70-27 70H40L13 80z" fill="none" stroke="#D2C5A6" stroke-opacity=".35" stroke-width="1.2" vector-effect="non-scaling-stroke" /></svg>
         <span class="rh-bv" aria-hidden="true">{R.value}</span>
         <span class="rh-stars" aria-hidden="true">{stars.map((d) => <svg viewBox="0 0 24 24" style={`rotate:${d}deg`}><path d={star} fill="#D2C5A6" /></svg>)}</span>
         <span class="rh-count" aria-hidden="true">{R.count} reviews on {R.source}</span>
       </a>
-    </div>
-    <div class="rh-btns" data-t="3">
-      <Btn look="bar" href={SITE.social.yelp} external w={260} arrow>Read them on Yelp</Btn>
-      <Btn look="bar" href="/contact" v="line" w={230}>Get a free estimate</Btn>
+      <div class="rh-btns" data-t="3">
+        <Btn look="bar" href={SITE.social.yelp} external w={260} arrow>Read them on Yelp</Btn>
+        <Btn look="bar" href="/contact" v="line" w={230}>Get a free estimate</Btn>
+      </div>
     </div>
   </div>
 </section>
 <style>
-  .rh { position: relative; height: 842px; background: var(--ink); overflow-x: clip; }
-  .rh-in { position: relative; height: 100%; }
-  .rh-copy { position: absolute; left: 0; top: 190px; width: 560px; z-index: 1; }
-  .rh-h1 { margin-top: 13px; font-family: var(--f-display); font-weight: 400; font-size: 68px; line-height: 69.36px; letter-spacing: 0; color: var(--paper); }
+  .rh { position: relative; background: var(--ink); overflow-x: clip; padding: 150px 0 110px; }
+  /* desktop: slips | copy | slips. The side columns are offset (left lower, right higher) so it reads as a wall. */
+  .rh-in { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr) minmax(0, 330px); grid-template-areas: 'l c r'; column-gap: 48px; align-items: center;
+    width: min(1360px, calc(100% - 80px)); margin: 0 auto; }
+  .rh-col { display: grid; gap: 26px; margin: 0; padding: 0; list-style: none; }
+  .rh-col--l { grid-area: l; padding-top: 40px; } .rh-col--r { grid-area: r; padding-bottom: 40px; }
+  .rh-copy { grid-area: c; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .rh-h1 { margin-top: 14px; font-family: var(--f-display); font-weight: 400; font-size: 68px; line-height: 1.03; color: var(--paper); }
   .tn { color: var(--tan); }
-  .rh-sub { margin-top: 21px; font-size: 18px; line-height: 28px; color: #CAC4B7; }
-  .rh-btns { position: absolute; left: 0; top: 458px; display: flex; gap: 16px; z-index: 1; }
-  .rh-art { position: absolute; left: 610px; top: 150px; width: 620px; height: 560px; }
-  .rh-stack { position: relative; width: 500px; height: 340px; margin: 60px 0 0 40px; padding: 0; list-style: none; }
-  .rh-stack:focus-visible { outline: 2px solid var(--tan); outline-offset: 10px; }
-  /* depth d: each slip behind steps right/down, turns its own tilt and shrinks a little (same values as the script's frame 0) */
-  .rh-slip { position: absolute; inset: 0; transform: translate(calc(var(--d) * 18px), calc(var(--d) * 16px)) rotate(var(--r)) scale(calc(1 - var(--d) * .04)); transform-origin: 50% 100%; }
-  .rh-slip:nth-child(n+5) { opacity: 0; }
-  .rh-slip figure { display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; height: 100%; margin: 0; padding: 34px 36px 26px; background: var(--bone); border-top: 7px solid var(--tan); box-shadow: 0 26px 40px -18px rgba(0, 0, 0, .7); }
+  .rh-sub { margin-top: 18px; font-size: 18px; line-height: 28px; color: #CAC4B7; }
+  .rh-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 30px; }
+  .rh-slip { rotate: var(--r); }
+  .rh-slip figure { margin: 0; padding: 20px 22px 16px; background: var(--bone); border-top: 6px solid var(--tan); box-shadow: 0 22px 32px -18px rgba(0, 0, 0, .75); }
   .rh-slip blockquote { margin: 0; }
-  .rh-slip p { font-family: var(--f-display); font-size: 26px; line-height: 1.25; color: var(--ink); }
-  .rh-slip figcaption { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; column-gap: 14px; }
-  .rh-av { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--tan); font-family: var(--f-label); font-weight: 600; font-size: 15px; letter-spacing: .06em; }
-  .rh-who { display: grid; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 17px; letter-spacing: .1em; text-transform: uppercase; color: #6b5c3e; }
-  .rh-who b { font-weight: 600; font-size: 15px; color: var(--ink); }
-  .rh-st { font-size: 14px; letter-spacing: .12em; color: var(--red); }
-  .rh-ctl { position: absolute; left: 40px; top: 470px; margin: 0; }
-  .rh-next { display: none; }
-  html.motion .rh-next { display: inline-flex; gap: 10px; align-items: center; padding: 8px 0; background: none; border: 0; color: var(--tan); cursor: pointer; font-family: var(--f-label); font-weight: 500; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; }
-  html.motion .rh-next span { transition: translate .4s cubic-bezier(.45, 0, .55, 1); }
-  html.motion .rh-next:hover span { translate: 6px 0; }
-  .rh-badge { position: absolute; left: 420px; top: 0; z-index: 10; display: grid; justify-items: center; align-content: center; width: 220px; height: 140px; rotate: 6deg; color: var(--tan); text-decoration: none;
+  .rh-slip p { font-family: var(--f-display); font-size: 17px; line-height: 1.3; color: var(--ink); }
+  .rh-slip figcaption { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; column-gap: 10px; margin-top: 14px; }
+  .rh-av { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--tan); font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .06em; }
+  .rh-who { display: grid; font-family: var(--f-label); font-weight: 500; font-size: 10.5px; line-height: 15px; letter-spacing: .1em; text-transform: uppercase; color: #6b5c3e; }
+  .rh-who b { font-weight: 600; font-size: 13px; color: var(--ink); }
+  .rh-st { font-size: 12px; letter-spacing: .1em; color: var(--red); }
+  /* the badge is part of the copy column (in flow): it can never sit on a slip */
+  .rh-badge { position: relative; display: grid; justify-items: center; align-content: center; width: 220px; height: 140px; margin-top: 30px; rotate: -4deg; color: var(--tan); text-decoration: none;
     filter: drop-shadow(0 16px 20px rgba(0, 0, 0, .55)); transition: translate .4s cubic-bezier(.45, 0, .55, 1); }
   .rh-badge > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .rh-badge > span { position: relative; }
@@ -92,73 +83,24 @@ const stars = [-6, 4, -2, 5, -4];
   .rh-count { margin-top: 6px; font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 14px; letter-spacing: .16em; text-transform: uppercase; }
   @media (hover: hover) and (pointer: fine) { .rh-badge:hover { translate: 0 -5px; } }
   @media (min-width: 768px) and (max-width: 1279px) {
-    .rh { height: auto; padding: 120px 0 150px; }
-    .rh-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: 'copy art' 'btns art'; column-gap: 32px; align-items: center; }
-    .rh-copy { grid-area: copy; align-self: end; } .rh-art { grid-area: art; } .rh-btns { grid-area: btns; align-self: start; margin-top: 40px; }
-    .rh-copy, .rh-art, .rh-btns { position: relative; left: auto; top: auto; width: auto; }
-    .rh-h1 { font-size: clamp(48px, 5.4vw, 68px); line-height: 1.03; }
-    .rh-art { height: 480px; }
-    .rh-stack { width: auto; max-width: 440px; height: 320px; margin: 70px 40px 0 0; }
-    .rh-badge { left: auto; right: 0; }
-    .rh-ctl { top: 420px; left: 0; }
-    .rh-btns { flex-wrap: wrap; }
+    .rh { padding: 120px 0 120px; }
+    .rh-in { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: 'c c c' 'l l l' 'r r r'; row-gap: 28px; column-gap: 20px; width: calc(100% - 2 * var(--gutter)); }
+    .rh-col { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; padding: 0; }
+    .rh-col--l { margin-top: 32px; }
+    .rh-h1 { font-size: clamp(48px, 6vw, 68px); }
   }
   @media (max-width: 767px) {
-    .rh { height: auto; padding: 48px 0 66px; }
-    .rh-copy, .rh-art, .rh-btns { position: relative; left: auto; top: auto; width: auto; }
-    .rh-h1 { margin-top: 13px; font-size: 42px; line-height: 44px; }
+    .rh { padding: 48px 0 66px; }
+    .rh-in { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'c' 'l'; row-gap: 36px; }
+    .rh-col--r { display: none; }
+    .rh-col--l { padding: 0 6px; gap: 18px; }
+    .rh-h1 { margin-top: 13px; font-size: 40px; line-height: 1.06; }
     .rh-sub { margin-top: 11px; font-size: 15px; line-height: 20px; }
-    .rh-art { height: 430px; margin-top: 30px; }
-    .rh-stack { width: auto; height: 300px; margin: 64px 22px 0 0; }
-    .rh-slip { transform: translate(calc(var(--d) * 9px), calc(var(--d) * 10px)) rotate(var(--r)) scale(calc(1 - var(--d) * .04)); }
-    .rh-slip figure { padding: 24px 22px 18px; }
-    .rh-slip p { font-size: 20px; }
-    .rh-slip figcaption { grid-template-columns: 36px 1fr; column-gap: 10px; }
-    .rh-av { width: 36px; height: 36px; font-size: 13px; }
-    .rh-st { grid-column: 2; }
-    .rh-who b { font-size: 13px; } .rh-who { font-size: 10.5px; line-height: 15px; }
-    .rh-badge { left: auto; right: -4px; top: 0; width: 150px; height: 96px; }
-    .rh-bv { font-size: 36px; } .rh-stars svg { width: 12px; height: 12px; } .rh-stars { gap: 4px; } .rh-count { font-size: 8.5px; letter-spacing: .12em; }
-    .rh-ctl { top: 388px; left: 0; }
-    .rh-btns { display: grid; gap: 12px; margin-top: 28px; }
+    .rh-badge { width: 170px; height: 108px; margin-top: 22px; }
+    .rh-bv { font-size: 40px; } .rh-stars svg { width: 13px; height: 13px; } .rh-stars { gap: 4px; } .rh-count { font-size: 9px; letter-spacing: .12em; }
+    .rh-btns { display: grid; width: 100%; gap: 12px; margin-top: 24px; }
     .rh-btns :global(.bb) { width: 100%; justify-content: center; min-height: 58px; }
     .rh-btns :global(.bb + .bb) { min-height: 54px; }
+    .rh-slip p { font-size: 17px; }
   }
 </style>
-<script>
-  // B24 stack: every 5 s the top slip slides out to the left and tucks in at the back; the others step forward.
-  import { gsap } from 'gsap';
-  const stack = document.querySelector<HTMLElement>('[data-rh-stack]');
-  const next = document.querySelector<HTMLButtonElement>('[data-rh-next]');
-  if (stack && document.documentElement.classList.contains('motion')) {
-    const slips = Array.from(stack.querySelectorAll<HTMLElement>('.rh-slip'));
-    const n = slips.length; const phone = () => window.matchMedia('(max-width: 767px)').matches;
-    const pose = (d: number, i: number) => ({ x: d * (phone() ? 9 : 18), y: d * (phone() ? 10 : 16), rotation: [-2, 1.5, -1, 2, -1.5, 1][i % 6], scale: 1 - d * 0.04, autoAlpha: d < 4 ? 1 : 0 });
-    let order = slips.map((_, i) => i); // order[d] = index of the slip at depth d
-    // frame 0 = the CSS state, now owned by GSAP (no visible change)
-    slips.forEach((s, i) => { s.style.transform = ''; gsap.set(s, { ...pose(i, i), transformOrigin: '50% 100%' }); });
-    let busy = false;
-    const turn = () => {
-      if (busy) return; busy = true;
-      const top = order[0]; const el = slips[top];
-      order = [...order.slice(1), top];
-      const tl = gsap.timeline({ defaults: { duration: 0.9, ease: 'power2.inOut' }, onComplete: () => { busy = false; } });
-      tl.to(el, { x: phone() ? -160 : -280, y: 30, rotation: -12, duration: 0.45, ease: 'power2.in' }, 0)
-        .add(() => { slips.forEach((s) => { s.style.zIndex = String(n - order.indexOf(slips.indexOf(s))); s.setAttribute('aria-hidden', order.indexOf(slips.indexOf(s)) ? 'true' : 'false'); }); }, 0.45)
-        .to(el, { ...pose(n - 1, top), duration: 0.45, ease: 'power2.out' }, 0.45);
-      order.slice(0, n - 1).forEach((idx, d) => tl.to(slips[idx], pose(d, idx), 0));
-      (window as any).__rhTurns = ((window as any).__rhTurns || 0) + 1;
-    };
-    let paused = false; let timer = 0;
-    const loop = () => { clearTimeout(timer); timer = window.setTimeout(() => { if (!paused && !document.hidden) turn(); loop(); }, 5000); };
-    const art = stack.closest('.rh-art') as HTMLElement;
-    art.addEventListener('pointerenter', () => { paused = true; });
-    art.addEventListener('pointerleave', () => { paused = art.contains(document.activeElement); });
-    art.addEventListener('focusin', () => { paused = true; });
-    art.addEventListener('focusout', () => { paused = art.matches(':hover'); });
-    stack.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); turn(); } });
-    if (next) { next.tabIndex = 0; next.closest('[aria-hidden]')?.removeAttribute('aria-hidden'); next.addEventListener('click', () => turn()); }
-    window.addEventListener('pbp:handoff', loop, { once: true });
-    window.setTimeout(() => { if (!timer) loop(); }, 4500);
-  }
-</script>

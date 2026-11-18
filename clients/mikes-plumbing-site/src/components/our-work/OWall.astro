@@ -27,7 +27,8 @@ const ITEMS: It[] = [
   { t: 'Descaling.', cats: 'wh', d: [2, 5, 150], m: [1, 7, 118], r: -0.5, rm: 1, x: true },
   { t: 'Crawl-space supply line.', img: 'crawlspace-pipe-press-fittings-riverside', cats: 'leaks', d: [3, 1, 394, 340], m: [2, 2, 272, 210] },
   { t: '4-inch gas line rework.', cats: 'leaks', d: [3, 2, 150], m: [2, 8, 118], r: -1.1, rm: -1, x: true },
-  { t: 'New cleanout in the yard.', img: 'new-sewer-cleanout-in-yard', cats: 'drains', d: [3, 3, 354, 300], m: [2, 5, 252, 190] },
+  // round 2 (review 7): the cleanout photo now leads the hero's film strip, so here it is a job ticket (no photo twice on a page)
+  { t: 'New cleanout in the yard.', cats: 'drains', d: [3, 3, 150], m: [2, 5, 118], r: 0.7, rm: 1 },
   { t: 'Pressure regulator on the supply line.', img: 'water-pressure-regulator-replacement', cats: 'leaks fix', d: [3, 4, 384, 330], m: [1, 5, 262, 200] },
   { t: 'ADU rough-in.', img: 'bathroom-plumbing-rough-in', cats: 'leaks', d: [4, 1, 354, 300], m: [1, 6, 252, 190], x: true },
   { t: 'On a commercial job.', img: 'commercial-plumbing-job-vans', cats: 'com', d: [4, 2, 274, 220], m: [2, 7, 212, 150], x: true },
@@ -48,11 +49,11 @@ const st = (i: It) => `--c:${i.d[0]};--o:${i.d[1]};--h:${i.d[2]}px;--sd:${i.d[2]
     </div>
     <ul class="ow-grid is-short" role="list" data-ow-grid aria-live="polite">
       {ITEMS.map((i) => i.img ? (
-        <li class:list={['ow-tile', i.x && 'ow-x']} style={st(i)} data-cats={i.cats}>
+        <li class:list={['ow-tile', i.x && 'ow-x']} style={st(i)} data-cats={i.cats} data-hover="tilt">
           <figure><div class="ow-ph"><Img name={i.img} alt="" sizes="(min-width: 768px) 264px, 46vw" widths={[264, 400, 528]} /></div><figcaption>{i.t}</figcaption></figure>
         </li>
       ) : (
-        <li class:list={['ow-tk', i.x && 'ow-x']} style={st(i)} data-cats={i.cats}>
+        <li class:list={['ow-tk', i.x && 'ow-x']} style={st(i)} data-cats={i.cats} data-hover="tilt">
           <span class="ow-tk-l">Job ticket · From his Instagram</span>
           <p class="ow-tk-t">{i.t}</p>
           <Image class="ow-tk-s" src={logoCream} alt="" widths={[96, 192]} sizes="96px" />

@@ -1,11 +1,11 @@
 ---
-// 8.1 Hero (Figma 670:4232 / 670:9461; fix round 1 B28: redesigned, unique on the site). Copy left on coal; right, a strip
-// of 35 mm film run in from the right edge, tilted, with sprocket holes and edge print: frame 01 Mike loading the van
-// (Riverside), frame 02 Mike with the drain camera at a restaurant (both his real photos, from his Instagram, used nowhere
-// else on this page), frame 03 his cream hex stamp on black, frame 04 unexposed. The red "Est 2025" stamp lands across
-// frames 02-03: every job gets the stamp. No other hero on the site uses a film strip (home: framed photo; reviews: slip
-// stack; town/service heroes: framed photo or type). Entrances: the strip slides in from the right (motion.ts `right`,
-// side column), the stamp pops last (G3); idle: the stamp re-thumps. Hover: a frame lifts (`translate`).
+// 8.1 Hero (Figma 670:4232 / 670:9461; fix round 1 B28, round 2 review 7: its own structure, not the Home/Corona split).
+// A contact sheet: the copy is centred on top, full width; under it a strip of 35 mm film runs edge to edge across the
+// hero, tilted, with sprocket holes and edge print. Frames: 01 the new sewer cleanout in a yard, 02 Mike with the drain
+// camera at a restaurant (both his real photos, from his Instagram; neither is used on Home or anywhere else on this
+// page), 03 his cream hex stamp on black, 04-06 unexposed. The red "Est 2025" stamp lands across frames 02-03: every job
+// gets the stamp. Entrances: the strip slides in from the right (motion.ts `right`), the stamp pops last (G3); idle: the
+// stamp re-thumps. Hover: a frame lifts (`translate`).
 import { Image } from 'astro:assets';
 import logoCream from '../../assets/brand/logo-cream.png';
 import Eyebrow from '../kit/Eyebrow.astro';
@@ -14,10 +14,10 @@ import Stamp from '../kit/Stamp.astro';
 import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
 const FR = [
-  { img: 'mike-navarro-loading-plumbing-van-riverside', alt: 'Mike Navarro loading the back of his white plumbing van in Riverside, CA', cap: 'Loading the van · Riverside' },
+  { img: 'new-sewer-cleanout-in-yard', alt: 'A new sewer cleanout Mike installed in a front yard', cap: 'New cleanout · Yard' },
   { img: 'mike-drain-camera-inspection-restaurant', alt: 'Mike running a drain camera through a floor drain in a restaurant kitchen', cap: 'Drain camera · Restaurant' },
 ];
-const holes = Array.from({ length: 22 }, (_, i) => i);
+const holes = Array.from({ length: 34 }, (_, i) => i);
 ---
 <section class="oh on-ink" aria-labelledby="oh-h1" data-m-section data-m-hero>
   <div class="oh-in">
@@ -37,96 +37,99 @@ const holes = Array.from({ length: 22 }, (_, i) => i);
           {FR.map((f, i) => (
             <li class="oh-fr">
               <figure>
-                <div class="oh-ph"><Img name={f.img} alt={f.alt} sizes="(min-width: 768px) 220px, 120px" widths={[240, 440]} box={220 / 300} focus="50% 45%" /></div>
+                <div class="oh-ph"><Img name={f.img} alt={f.alt} sizes="(min-width: 768px) 190px, 120px" widths={[240, 440]} box={190 / 250} focus="50% 50%" /></div>
                 <figcaption><span aria-hidden="true">0{i + 1}A ▸ </span>{f.cap}</figcaption>
               </figure>
             </li>
           ))}
           <li class="oh-fr oh-fr--stamp">
             <figure>
-              <div class="oh-ph oh-ph--logo"><Image src={logoCream} alt="Mike's Plumbing Services hex stamp, Est 2025" widths={[200, 400]} sizes="200px" /></div>
+              <div class="oh-ph oh-ph--logo"><Image src={logoCream} alt="Mike's Plumbing Services hex stamp, Est 2025" widths={[200, 400]} sizes="160px" /></div>
               <figcaption><span aria-hidden="true">03A ▸ </span>Every job gets the stamp</figcaption>
             </figure>
           </li>
-          <li class="oh-fr oh-fr--blank" aria-hidden="true"><figure><div class="oh-ph"></div><figcaption>04A ▸</figcaption></figure></li>
+          {[4, 5, 6].map((n) => <li class="oh-fr oh-fr--blank" aria-hidden="true"><figure><div class="oh-ph"></div><figcaption>0{n}A ▸</figcaption></figure></li>)}
         </ol>
         <span class="oh-holes oh-holes--b" aria-hidden="true">{holes.map(() => <i></i>)}</span>
         <span class="oh-edge" aria-hidden="true">MIKE'S PLUMBING SERVICES · EST 2025 · IE | OC | LA ▸ 400</span>
       </div>
-      <span class="oh-stampw" data-idle="thump"><Stamp w={250} deg={-14} class="oh-stamp" fx="pop" /></span>
+      <span class="oh-stampw" data-idle="thump"><Stamp w={230} deg={-14} class="oh-stamp" fx="pop" /></span>
     </div>
   </div>
 </section>
 <style>
-  .oh { position: relative; height: 820px; background: var(--coal); overflow: hidden; }
+  .oh { position: relative; height: 990px; background: var(--coal); overflow: hidden; }
   .oh-in { position: relative; width: 1440px; height: 100%; margin: 0 auto; }
-  .oh-copy { position: absolute; left: 120px; top: 169px; width: 560px; z-index: 2; }
+  /* the copy: centred, full width, on top */
+  .oh-copy { position: absolute; left: 50%; top: 150px; width: 960px; margin-left: -480px; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; }
   .oh-h1 { margin-top: 15px; font-family: var(--f-display); font-weight: 400; font-size: 76px; line-height: 1.02; color: var(--paper); }
   .oh .tone { color: var(--tan); }
-  .oh-body { margin-top: 24px; font-size: 19px; line-height: 1.5; color: rgba(243, 236, 221, .8); }
-  .oh-btns { display: flex; gap: 16px; margin-top: 40px; }
-  .oh-ig { display: flex; align-items: center; width: 300px; height: 64px; padding: 0 22px; border-radius: 6px; background: var(--tan); color: var(--ink); font-weight: 700; font-size: 16px; white-space: nowrap; transition: background-color var(--dur-2) var(--ease-out); }
+  .oh-body { margin-top: 22px; font-size: 19px; line-height: 1.5; color: rgba(243, 236, 221, .8); }
+  .oh-btns { display: flex; justify-content: center; gap: 16px; margin-top: 34px; }
+  .oh-ig { display: flex; align-items: center; justify-content: center; width: 300px; height: 64px; padding: 0 22px; border-radius: 6px; background: var(--tan); color: var(--ink); font-weight: 700; font-size: 16px; white-space: nowrap; transition: background-color var(--dur-2) var(--ease-out); }
   .oh-ig:hover { background: #e0d5bb; }
   .oh-btns :global(.gb) { width: 230px; border-radius: 6px; }
   .oh-btns :global(.gb-l) { font-weight: 700; }
 
-  /* the film strip: one tilted band, sprocket holes top and bottom, four frames */
-  .oh-art { position: absolute; inset: 0; }
-  .oh-strip { position: absolute; left: 720px; top: 170px; width: 1060px; height: 420px; rotate: -6deg; transform-origin: 0 50%; background: #0B0A08;
+  /* the film strip: one band across the whole hero, sprocket holes top and bottom, six frames centred */
+  .oh-art { position: absolute; left: 0; right: 0; top: 560px; height: 380px; }
+  .oh-strip { position: absolute; left: -100px; top: 20px; width: 1640px; height: 330px; rotate: -3deg; transform-origin: 50% 50%; background: #0B0A08;
     box-shadow: 0 40px 60px -20px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(210, 197, 166, .08); }
-  .oh-holes { position: absolute; left: 14px; right: 0; display: flex; gap: 26px; }
-  .oh-holes--t { top: 14px; } .oh-holes--b { bottom: 14px; }
-  .oh-holes i { flex: none; width: 22px; height: 16px; border-radius: 3px; background: var(--coal); box-shadow: inset 0 1px 2px rgba(0, 0, 0, .6); }
-  .oh-frames { position: absolute; left: 30px; top: 48px; display: flex; gap: 26px; margin: 0; padding: 0; list-style: none; }
-  .oh-fr { flex: none; width: 220px; transition: translate .4s cubic-bezier(.45, 0, .55, 1); }
+  .oh-holes { position: absolute; left: 12px; right: 0; display: flex; gap: 22px; overflow: hidden; }
+  .oh-holes--t { top: 12px; } .oh-holes--b { bottom: 12px; }
+  .oh-holes i { flex: none; width: 18px; height: 13px; border-radius: 3px; background: var(--coal); box-shadow: inset 0 1px 2px rgba(0, 0, 0, .6); }
+  .oh-frames { position: absolute; left: 0; right: 0; top: 40px; display: flex; justify-content: center; gap: 22px; margin: 0; padding: 0; list-style: none; }
+  .oh-fr { flex: none; width: 190px; transition: translate .4s cubic-bezier(.45, 0, .55, 1); }
   .oh-fr figure { margin: 0; }
-  .oh-ph { position: relative; width: 220px; height: 300px; overflow: hidden; background: #1E1C18; box-shadow: 0 0 0 1px rgba(210, 197, 166, .12); }
+  .oh-ph { position: relative; width: 190px; height: 216px; overflow: hidden; background: #1E1C18; box-shadow: 0 0 0 1px rgba(210, 197, 166, .12); }
   .oh-ph--logo { display: grid; place-items: center; background: var(--ink); }
-  .oh-ph--logo :global(img) { width: 170px; height: auto; rotate: 8deg; }
+  .oh-ph--logo :global(img) { width: 150px; height: auto; rotate: 8deg; }
   .oh-fr--blank .oh-ph { background: linear-gradient(160deg, #2A2620, #12110E); }
-  .oh-fr figcaption { margin-top: 10px; font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); white-space: nowrap; }
-  .oh-edge { position: absolute; right: 40px; top: -2px; font-family: var(--f-label); font-weight: 500; font-size: 9px; letter-spacing: .3em; color: rgba(210, 197, 166, .6); }
-  .oh-stampw { position: absolute; left: 1075px; top: 445px; z-index: 3; display: block; }
+  .oh-fr figcaption { margin-top: 9px; font-family: var(--f-label); font-weight: 500; font-size: 10.5px; line-height: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); white-space: nowrap; }
+  .oh-edge { position: absolute; right: 120px; top: -2px; font-family: var(--f-label); font-weight: 500; font-size: 9px; letter-spacing: .3em; color: rgba(210, 197, 166, .75); }
+  /* the stamp lands across the photos of frames 02 and 03 (their join sits at x 508), clear of the captions */
+  .oh-stampw { position: absolute; left: 393px; top: 80px; z-index: 3; display: block; }
   .oh-stampw :global(.oh-stamp) { filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .35)); }
   @media (hover: hover) and (pointer: fine) { .oh-fr:hover { translate: 0 -8px; } }
 
   @media (max-width: 1279px) {
     .oh { height: auto; padding: 47px 0 0; }
     .oh-in { width: calc(100% - 2 * var(--gutter)); max-width: 760px; height: auto; }
-    .oh-copy { position: static; width: auto; }
+    .oh-copy { position: static; width: auto; margin: 0; }
     .oh-copy :global(.eb) { font-size: 12px; line-height: 18px; }
     .oh-h1 { margin-top: 11px; font-size: 42px; line-height: 1.04; }
     .oh-body { margin-top: 16px; font-size: 16px; }
-    .oh-btns { flex-direction: column; gap: 12px; margin-top: 28px; }
-    .oh-ig { width: 100%; height: 58px; justify-content: center; font-size: 15px; }
+    .oh-btns { flex-direction: column; align-self: stretch; gap: 12px; margin-top: 28px; }
+    .oh-ig { width: 100%; height: 58px; font-size: 15px; }
     .oh-btns :global(.gb) { width: 100%; height: 54px; }
     .oh-btns :global(.gb-l) { font-size: 15px; }
-    .oh-art { position: relative; inset: auto; height: 340px; margin: 10px calc(-1 * var(--gutter)) 0; }
-    .oh-strip { left: 18px; top: 50px; width: 640px; height: 250px; rotate: -5deg; }
-    .oh-holes { gap: 16px; left: 10px; } .oh-holes i { width: 14px; height: 10px; }
-    .oh-holes--t { top: 9px; } .oh-holes--b { bottom: 9px; }
-    .oh-frames { left: 18px; top: 30px; gap: 14px; }
-    .oh-fr { width: 124px; } .oh-ph { width: 124px; height: 168px; }
-    .oh-ph--logo :global(img) { width: 96px; }
-    .oh-fr figcaption { margin-top: 6px; font-size: 7.5px; letter-spacing: .1em; }
+    .oh-art { position: relative; left: auto; right: auto; top: auto; height: 330px; margin: 18px calc(-1 * var(--gutter)) 0; }
+    .oh-strip { left: -60px; right: -60px; top: 50px; width: auto; height: 220px; rotate: -3deg; }
+    .oh-holes { gap: 14px; left: 10px; } .oh-holes i { width: 12px; height: 9px; }
+    .oh-holes--t { top: 8px; } .oh-holes--b { bottom: 8px; }
+    .oh-frames { top: 28px; gap: 12px; justify-content: flex-start; padding-left: 70px; }
+    .oh-fr { width: 100px; } .oh-ph { width: 100px; height: 128px; }
+    .oh-ph--logo :global(img) { width: 88px; }
+    .oh-fr figcaption { margin-top: 6px; font-size: 7.5px; line-height: 10px; letter-spacing: .1em; white-space: normal; }
     .oh-edge { display: none; }
-    .oh-stampw { left: auto; right: 10px; top: 150px; }
-    .oh-stampw :global(.oh-stamp) { width: 130px; }
+    .oh-stampw { left: 168px; top: 96px; }
+    .oh-stampw :global(.oh-stamp) { width: 120px; }
   }
   @media (min-width: 768px) and (max-width: 1279px) {
     .oh { padding-top: 90px; }
     .oh-h1 { font-size: clamp(48px, 6.5vw, 72px); }
-    .oh-btns { flex-direction: row; }
+    .oh-btns { flex-direction: row; align-self: center; }
     .oh-ig { width: 300px; height: 64px; }
     .oh-btns :global(.gb) { width: 230px; height: 64px; }
-    .oh-art { height: 520px; margin: 0; }
-    .oh-strip { left: 0; top: 60px; width: 1060px; height: 420px; }
-    .oh-holes { gap: 26px; left: 14px; } .oh-holes i { width: 22px; height: 16px; }
-    .oh-frames { left: 30px; top: 48px; gap: 26px; }
-    .oh-fr { width: 220px; } .oh-ph { width: 220px; height: 300px; }
-    .oh-ph--logo :global(img) { width: 170px; }
-    .oh-fr figcaption { font-size: 11px; }
-    .oh-stampw { right: 40px; top: 330px; }
-    .oh-stampw :global(.oh-stamp) { width: 220px; }
+    .oh-art { height: 420px; margin: 20px 0 0; }
+    .oh-in { max-width: none; }
+    .oh-strip { left: -80px; right: -80px; top: 50px; height: 330px; }
+    .oh-holes { gap: 22px; left: 12px; } .oh-holes i { width: 18px; height: 13px; }
+    .oh-frames { top: 40px; gap: 22px; justify-content: flex-start; padding-left: calc(80px + var(--gutter)); }
+    .oh-fr { width: 190px; } .oh-ph { width: 190px; height: 216px; }
+    .oh-ph--logo :global(img) { width: 150px; }
+    .oh-fr figcaption { font-size: 10.5px; line-height: 14px; white-space: nowrap; }
+    .oh-stampw { left: calc(var(--gutter) + 316px); top: 110px; }
+    .oh-stampw :global(.oh-stamp) { width: 200px; }
   }
 </style>

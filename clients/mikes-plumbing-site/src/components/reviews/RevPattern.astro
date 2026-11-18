@@ -1,7 +1,8 @@
 ---
 // 9.2 What people keep saying (Figma 670:11578 y 1022-1822 / 671:1096 y 904-1730). Tan field; three ink pipe-marker tapes
 // wrapped round a drawn pipe, the customers' own words printed on them. The pipe runs off the left edge, turns down at the
-// right (desktop) past a hex nut into the spotlight section; on phones it runs down the middle behind stacked tapes.
+// right (desktop) past a hex nut and ends in a capped stub with a drip, well above the seam (round 2, review 5: it used to
+// run through the wave and stop flat inside Spotlight); on phones it runs down the middle behind stacked tapes.
 // Scroll moment (data-scrub): water runs along the pipe as you scroll; each tape lights up and swells as the water
 // reaches it, then the nut. Quotes are copied word for word from REVIEWS (checked in code, never retyped).
 import Eyebrow from '../kit/Eyebrow.astro';
@@ -25,16 +26,20 @@ const tapes = [
     </div>
   </div>
   <svg class="rp-pipe rp-pipe-d" viewBox="0 0 1440 940" aria-hidden="true" focusable="false" data-scrub-track>
-    <path d="M-20 518H1308a42 42 0 0 1 42 42V938" fill="none" stroke="#6B5C3E" stroke-width="84" />
-    <path d="M-20 493.5H1308a23.5 23.5 0 0 1 23.5 23.5V908" fill="none" stroke="#F3ECDD" stroke-opacity=".25" stroke-width="4" stroke-linecap="round" />
-    <path class="rp-water" d="M-20 518H1308a42 42 0 0 1 42 42V938" pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".32" stroke-width="30" data-scrub-path />
+    <path d="M-20 518H1308a42 42 0 0 1 42 42V700" fill="none" stroke="#6B5C3E" stroke-width="84" />
+    <path d="M-20 493.5H1308a23.5 23.5 0 0 1 23.5 23.5V690" fill="none" stroke="#F3ECDD" stroke-opacity=".25" stroke-width="4" stroke-linecap="round" />
+    <path class="rp-water" d="M-20 518H1308a42 42 0 0 1 42 42V700" pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".32" stroke-width="30" data-scrub-path />
     <!-- B25: the nut sits on the pipe's turn: centred on the vertical leg (x 1350, the pipe's centreline) right where the elbow ends (y 560) -->
     <g data-stop data-rot="4" data-idle="nut" style="transform-origin:1350px 590px"><path d="M1311 561h78l15 29-15 29h-78l-15-29z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="2" /><path data-lit opacity="0" d="M1311 561h78l15 29-15 29h-78l-15-29z" fill="#F3ECDD" stroke="#0E0D0B" stroke-width="2" /></g>
+    <!-- end cap + a drip: the run ends here, 60+ px above the Spotlight wave -->
+    <rect x="1300" y="696" width="100" height="22" rx="5" fill="#57492F" stroke="#0E0D0B" stroke-width="2" />
+    <path class="rp-drip" d="M1350 728c-4 6-7 10-7 13.5a7 7 0 0 0 14 0c0-3.5-3-7.5-7-13.5z" fill="#F3ECDD" fill-opacity=".55" />
   </svg>
   <svg class="rp-pipe rp-pipe-m" viewBox="0 0 390 520" preserveAspectRatio="xMidYMin meet" aria-hidden="true" focusable="false">
-    <rect x="167" y="0" width="56" height="504" fill="#6B5C3E" />
-    <rect class="rp-water-m" x="183" y="0" width="24" height="504" fill="#F3ECDD" fill-opacity=".32" data-scrub-fill data-axis="y" />
-    <g data-stop data-rot="4" style="transform-origin:195px 474px"><path d="M180 455h30l15 19-15 19h-30l-15-19z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" /><path data-lit opacity="0" d="M180 455h30l15 19-15 19h-30l-15-19z" fill="#F3ECDD" stroke="#0E0D0B" stroke-width="1.5" /></g>
+    <rect x="167" y="0" width="56" height="440" fill="#6B5C3E" />
+    <rect x="160" y="436" width="70" height="14" rx="4" fill="#57492F" stroke="#0E0D0B" stroke-width="1.5" />
+    <rect class="rp-water-m" x="183" y="0" width="24" height="436" fill="#F3ECDD" fill-opacity=".32" data-scrub-fill data-axis="y" />
+    <g data-stop data-rot="4" style="transform-origin:195px 311px"><path d="M180 292h30l15 19-15 19h-30l-15-19z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" /><path data-lit opacity="0" d="M180 292h30l15 19-15 19h-30l-15-19z" fill="#F3ECDD" stroke="#0E0D0B" stroke-width="1.5" /></g>
   </svg>
   <ul class="wrap rp-tapes" role="list" data-t="4" data-stagger>
     {tapes.map((t, i) => (
@@ -57,7 +62,6 @@ const tapes = [
   .rp-pipe { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: visible; }
   .rp-pipe-d { width: 1440px; height: 940px; }
   .rp-pipe-m { display: none; }
-  .rp-water { stroke-dasharray: 1; stroke-dashoffset: 0; }
   .rp-water-m { transform-origin: 50% 0; transform-box: fill-box; }
   .rp-tapes { position: absolute; left: 0; right: 0; top: 456px; z-index: 4; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 0 auto; padding: 0; }
   .rp-tape { position: relative; height: 124px; padding: 26px 20px 0; background: var(--ink); color: var(--paper);

@@ -8,7 +8,7 @@ const { w, deg = 0, fill = 'var(--ink)', tone = 'cream', class: cls, ...rest } =
 ---
 <span class:list={['bdg', cls]} style={`--w:${w}px;--deg:${deg}deg;--fill:${fill || 'transparent'}`} aria-hidden="true" {...rest}>
   <span class="bdg-in">
-    <Image src={tone === 'ink' ? ink : cream} alt="" width={Math.round(w * 2)} loading="lazy" />
+    <Image src={tone === 'ink' ? ink : cream} alt="" width={Math.round(w * 2)} loading="lazy" fetchpriority="low" />
   </span>
 </span>
 <style>

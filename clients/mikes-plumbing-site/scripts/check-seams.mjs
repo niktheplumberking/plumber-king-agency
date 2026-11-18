@@ -6,8 +6,11 @@
 //   (background, border edges, shadow: cards, bubbles, frame lines).
 // Bands of repeating words ([data-marquee], kit/marquee.ts) are named seam objects: they may cross a section boundary, but
 //   the wave curve must clear the band by 12 px, and content must clear the band by 16 px.
-// A card that crosses a seam in front of the wave (the curve runs through it with full clearance above and below) does not
-//   touch it and passes; it is listed as "crosses in front".
+// Designed crossers (fix round 2, review 13): the three cards Figma draws ACROSS a seam, in front of the wave, are named in
+//   SEAM_CROSSERS below and in README's deviation log ("Named seam objects"). Only those may cross, and only in front: the
+//   curve must run through the card with full clearance above and below, AND the card must paint above the wave there
+//   (paint order read with elementsFromPoint at the curve points inside the card, fix round 2 / review 4). Any other box
+//   the curve runs through is a hit, and so is a named card found behind the wave.
 // Allowed to cross: named seam objects only, marked `data-seam` (pipes, tape, valve, the flyer, stamps) and the bands.
 // Pages are measured under reduced motion (every element in its final place), at scroll 0. Exit 1 on any hit.
 import { createRequire } from 'node:module';
@@ -34,7 +37,14 @@ const SEAM_OBJECTS = [
   '.fh-q',
 ].join(', ');
 
-function measure(SEAM_OBJECTS) {
+// The designed crossers, by name (README deviation log, "Named seam objects"): Figma shows / site does / why is logged there.
+const SEAM_CROSSERS = [
+  { name: 'Contact form card', sel: 'form.ch-form' },          // /contact hero: the estimate form rides over the hero's wave
+  { name: 'About photo card', sel: 'figure.ah-card' },         // /about hero: the polaroid of the commercial job
+  { name: 'FAQ "Ask Mike" plate', sel: '.fa-plate' },          // /faq: the nameplate over the tan / ink waves
+];
+
+function measure({ SEAM_OBJECTS, SEAM_CROSSERS }) {
   const W = innerWidth, mob = W < 768, CLEAR = mob ? 16 : 24, BAND_WAVE = 12, BAND_CLEAR = 16, STEP = 8;
   const sy = scrollY;
   const vis = (el) => {
@@ -90,7 +100,7 @@ function measure(SEAM_OBJECTS) {
           prev = cur;
         }
       }
-      if (pts.length) curves.push({ id: `${wv.closest('section, footer')?.id || wv.closest('section')?.className.split(' ')[0] || 'wave'}#${wi}`, pts, kind: wv.dataset.wave });
+      if (pts.length) curves.push({ id: `${wv.closest('section, footer')?.id || wv.closest('section')?.className.split(' ')[0] || 'wave'}#${wi}`, pts, kind: wv.dataset.wave, wv });
     });
   });
 
@@ -156,23 +166,42 @@ function measure(SEAM_OBJECTS) {
     });
   });
 
-  // A card that CROSSES a seam in front of the wave (opaque, the curve runs through it with the full clearance above and
-  // below at every x it covers: the about polaroid, the contact form) does not touch the wave: it and its content pass.
-  // A card whose edge sits near the curve (the leaks DM bubble) still fails.
+  // A NAMED crosser (SEAM_CROSSERS) whose box the curve runs through with the full clearance above and below at every x it
+  // covers, and which paints in front of the wave there, does not touch the wave: it and its content pass. Anything else the
+  // curve runs through stays a box and is a hit below (distance 0); a named card that is behind the wave is a hit too.
+  const hits = [];
+  const named = (el) => SEAM_CROSSERS.find((c) => el.matches(c.sel));
+  // Paint order at page point (x, y): 1 = `card` paints above the wave `wv` there, -1 = below it, 0 = the card is not at that
+  // point (a tilted card's empty bounding-box corner). Hit-testing ignores pointer-events: none, so it is switched on for the
+  // probe; the page is scrolled to bring the point into the viewport, then put back.
+  const pe = document.createElement('style'); pe.textContent = '* { pointer-events: auto !important; }';
+  const front = (card, wv, x, y) => {
+    window.scrollTo({ top: Math.max(0, y - innerHeight / 2), behavior: 'instant' });
+    const st = [...document.elementsFromPoint(x, y - scrollY)];
+    const ic = st.findIndex((e) => card.contains(e)), iw = st.findIndex((e) => wv.contains(e));
+    return ic < 0 ? 0 : iw < 0 || ic < iw ? 1 : -1;
+  };
   const crossers = new Set(); const crossInfo = [];
+  document.head.appendChild(pe);
   for (const b of boxes) {
     if (!['box', 'img'].includes(b.what)) continue;
+    const nm = named(b.el); if (!nm) continue;
     for (const cv of curves) {
       const pts = cv.pts.filter((p) => p[0] >= b.r.left && p[0] <= b.r.right);
       if (pts.length < 2) continue;
-      if (pts.every((p) => p[1] >= b.r.top + CLEAR && p[1] <= b.r.bottom - CLEAR)) { crossers.add(b.el); crossInfo.push(`${desc(b.el)} crosses ${cv.id}`); }
+      if (!pts.every((p) => p[1] >= b.r.top + CLEAR && p[1] <= b.r.bottom - CLEAR)) continue;
+      const probe = pts.filter((_, i) => i % Math.max(1, Math.floor(pts.length / 8)) === 0).map((p) => [p, front(b.el, cv.wv, p[0], p[1])]);
+      const behind = probe.filter((q) => q[1] < 0).map((q) => q[0]);
+      if (!probe.some((q) => q[1] > 0) && !behind.length) behind.push(probe[0][0]); // never seen at the curve: not proven in front
+      if (behind.length) { hits.push({ kind: 'crosser-behind', wave: cv.id, el: `${nm.name}: ${desc(b.el)}`, what: b.what, d: 0, need: CLEAR, x: Math.round(behind[0][0]), y: Math.round(behind[0][1]) }); continue; }
+      crossers.add(b.el); crossInfo.push(`${nm.name} (${desc(b.el).slice(0, 50)}) crosses ${cv.id} in front`);
     }
   }
+  pe.remove(); window.scrollTo({ top: sy, behavior: 'instant' });
   const crossed = (el) => [...crossers].some((c) => c.contains(el));
   for (let i = boxes.length - 1; i >= 0; i--) if (crossed(boxes[i].el)) boxes.splice(i, 1);
 
   const dist = (p, r) => Math.hypot(Math.max(r.left - p[0], 0, p[0] - r.right), Math.max(r.top - p[1], 0, p[1] - r.bottom));
-  const hits = [];
   const seen = new Set();
   // Content vs wave curves.
   for (const cv of curves) {
@@ -225,11 +254,11 @@ for (const w of widths) {
     await p.goto(srv.url + pg, { waitUntil: 'networkidle' });
     await p.evaluate(() => document.fonts.ready);
     await p.waitForTimeout(250);
-    const r = await p.evaluate(measure, SEAM_OBJECTS);
+    const r = await p.evaluate(measure, { SEAM_OBJECTS, SEAM_CROSSERS });
     total += r.hits.length;
     report.push({ page: pg, w, ...r });
     console.log(`${pg} @${w}: ${r.waves} wave curves (${r.samples} samples), ${r.bands} bands -> ${r.hits.length} hits`);
-    r.crossers.forEach((c) => console.log(`   (ok, crosses in front) ${c}`));
+    r.crossers.forEach((c) => console.log(`   (ok, named seam object) ${c}`));
     r.hits.forEach((h) => console.log(`   ${h.kind} ${h.wave || h.band} | ${h.el} (${h.what || ''}) d=${h.d} < ${h.need} at x${h.x} y${h.y}`));
   }
   await ctx.close();

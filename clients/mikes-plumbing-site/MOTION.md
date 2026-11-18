@@ -121,12 +121,16 @@ headline, and the lead/buttons starting within half a viewport of it) shares ONE
 round 3: controlled, not everything moving); an element whose box is already **above** the viewport when its tween is built
 is set to its end state (anchor jump, reload mid-page); anything on screen or below animates.
 
-| Trigger (United) | Used for |
+| Trigger (fix round 2, QA D6; United's in brackets) | Used for |
 |---|---|
-| `top 88%` | single elements, section heads, split headlines |
-| `top 85%` | `data-stagger` groups (rails, grids, lists) |
-| `top 92%` | `data-draw` underlines, swoosh edges |
-| `top 90%` | counters, the water meter |
+| `top 96%` (88 %) | single elements, section heads, split headlines |
+| `top 95%` (85 %) | `data-stagger` groups (rails, grids, lists); `objects.ts` `enter()` default (tickets, FAQ plate) |
+| `top 97%` (92 %) | `data-draw` underlines, swoosh edges |
+| `top 96%` (90 %) | counters, the water meter |
+
+Why (QA D6, fix round 2): at a 750 px/s reading pace, United's 12 % band below the trigger line plus the group delay left
+eyebrows ~0.4 s invisible while in view (116 elements at 1440, 151 at 390). With the line just inside the bottom edge and
+the smaller delays below, the sampler (`qa3/d6.cjs`) finds nothing in view hidden > 0.3 s.
 
 **Effects (United's table, `fromTo` with explicit end values, `immediateRender: true`):**
 
@@ -144,14 +148,16 @@ is set to its end state (anchor jump, reload mid-page); anything on screen or be
 | `nudge` | `y 24` (plain load: never hidden, LCP) | 0.9 s | the hero lead only; outside a hero it is `up` |
 
 **Nick's groups = small delays on top of each element's own trigger** (`G_DELAY`): **G1 +0** (headline, lead/body,
-main photo, big cards), **G2 +0.15 s** (eyebrow, pills, buttons, chips, captions, patches, small cards, lists),
-**G3 +0.3 s** (seals, stamps, script flourishes, underlines, swooshes, counters, meters). Inside a section head, items of
+main photo, big cards), **G2 +0.1 s** (eyebrow, pills, buttons, chips, captions, patches, small cards, lists),
+**G3 +0.15 s** (seals, stamps, script flourishes, underlines, swooshes, counters, meters) (fix round 2, QA D6: were 0.15 /
+0.3 s; the order is unchanged). Inside a section head, items of
 one group start 0.1 s apart in DOM order (max +0.2 s). `groupOf()` is unchanged from round 3; `data-g` still overrides.
 
-**Hero** (United `heroTimeline`): one ordered timeline at the handoff: items in group order, 0.12 s apart, a split
-headline holds the next item for 0.12 s per line, each new group adds 0.15 s, G3 (stripe underline 0.8 s, swoosh 0.9 s)
-last. Under the loader or curtain the header settles first (top bar fade 0.5 s; logo tab, nav items and header buttons
-drop `y -24`, 0.6 s, 0.05 s apart); the hero starts 0.25 s in. On in-site navigation both run **1.5x**. On a plain load
+**Hero** (United `heroTimeline`): one ordered timeline at the handoff: items in group order, 0.08 s apart (`HERO_STEP`,
+fix round 2, was 0.12), a split headline holds the next item for 0.08 s per line + 0.06, each new group adds 0.08 s
+(`HERO_BEAT`, was 0.15), G3 (stripe underline 0.8 s, swoosh 0.9 s) last; the town hero sign now shows < 0.3 s in. Under the
+loader or curtain the header settles first (the top bar's CONTENTS fade 0.5 s, the bar itself is painted from load; logo
+tab, nav items and header buttons drop `y -24`, 0.6 s, 0.05 s apart); the hero starts 0.05 s in (fix round 2, was 0.25). On in-site navigation both run **1.5x**. On a plain load
 there is no header beat (it would flash) and the LCP photo is not animated.
 
 **Build**: the hero at the handoff; everything else right after it, in idle slices of ~12 ms (tweens and SplitText line
@@ -250,7 +256,7 @@ after the handoff on a plain load or curtain, 1.6 s after the loader handoff (he
 
 ## 2b. Entrance map (fix round 1, B12)
 
-Paul's engine, the three groups (G1 +0, G2 +0.15 s, G3 +0.3 s) and the no-flash rules stay. On top, a section whose main
+Paul's engine, the three groups (G1 +0, G2 +0.1 s, G3 +0.15 s since fix round 2) and the no-flash rules stay. On top, a section whose main
 object has its own way of arriving uses that entrance. At most two types per section; neighbouring sections differ. The
 object entrances that the engine has no `data-fx` for live in `src/scripts/objects.ts` (`enter()` builds them after the
 handoff, plays once at their line, puts objects above the viewport in their end state, Tab finishes them). Each one owns
@@ -279,10 +285,21 @@ handoff, plays once at their line, puts objects above the viewport in their end 
   Transparent · Proficient" bottom left, a 3-digit slat counter in the middle (every digit a 3 x 7 grid of tan and bone
   2:1 slats that read as pipe sections; a number is drawn by sliding the bars sideways onto the lit cells, so the count
   shunts and never fades). Timing: slats grow in (0.3 s), the count runs 000 -> 100 over ~1.3 s with surges and stalls
-  while the page loads (it holds at 99 until `load`, 100 is forced at 1.8 s), the last shunt lands (0.46 s), then the
-  exit (~0.7 s): the stage fades (0.25 s) and the **8 blinds** slide off alternately left / right (0.6 s
-  `power2.inOut`, stagger 0.012 s). The hero takes its start states while still fully covered; the hero timeline, the
-  header and Lenis start only in the exit's `onComplete`. Max 3.4 s; measured 3.13-3.19 s to `intro` removed on a fast
+  while the page loads (it holds at 99 until `load`, 100 is forced at 1.8 s), the last shunt lands (0.52 s), then the
+  exit (~0.85 s): the stage fades (0.2 s) and from 0.15 s the **8 blinds** slide off alternately left / right (0.6 s
+  `power2.inOut`, stagger 0.012 s); each blind's moving edge carries a 10 px band in the slats' tan / bone, so the exit
+  reads on an ink hero. The top-right `NNN / 100` shows the number the slats have LANDED on (it follows each shunt by
+  0.52 s), so it never reads 100 while the slats still read 08x (fix round 2, review 14). The hero takes its start states
+  while still fully covered; the hero timeline, the header and Lenis start at the **handoff, when the blinds are ~75 % off**
+  (0.6 s into the exit), so the H1 starts as the cover clears (measured: H1 starts 125 ms / 59 ms BEFORE the blinds clear
+  at 1440 / 390; fix round 2, review 3). Cleanup (`intro` off, loader hidden) runs at the exit's `onComplete`.
+- **First paint under the loader (fix round 2, QA D12)**: the hero headline, lead and main photo are NOT held at opacity 0
+  under the loader (the cover hides them; their entrance writes transform / clip from the hero timeline), so the LCP
+  element paints at first paint. `html.cv` (added with `intro` by the Base.astro head script) puts `content-visibility:
+  auto` on everything below the hero while the loader runs, so the first layout is the hero only and below-the-fold font
+  weights are not requested before first paint; after `load` the sections are let back in one per 40 ms (small tasks),
+  and at 100 the rest at once. The 3.5 s safety removes `cv` too. Lighthouse mobile LCP: home 3.28 -> ~2.0 s,
+  water-heaters 2.64 -> ~1.7 s, reviews 2.36 -> ~1.8 s. Max 3.4 s; measured 3.13-3.19 s to `intro` removed on a fast
   network. Any click, tap or key skips to 100 and exits (measured 1.93 s). If the JS has not booted by 3.5 s (very slow
   networks), the Base.astro safety removes `html.intro` and the page shows without the loader.
 - **Curtain** (fix round 1, B2; `components/kit/Curtain.astro` + `kit/curtain.ts`): the same 8-blind family. One channel,
@@ -290,7 +307,10 @@ handoff, plays once at their line, puts objects above the viewport in their end 
   `power2.inOut`, stagger 0.012 s; measured cover 0 -> 1 monotonic in ~0.48 s), THEN navigates. The next page starts
   covered (`html.pt-in`, the CSS rest state is covering), goes to the top under the cover (`history.scrollRestoration =
   'manual'`, `lenis.scrollTo(0, { immediate: true })`), then the blinds slide off (0.6 s; measured 1 -> 0 monotonic in
-  0.5 s); the hero plays once the last blind is off, and `scrollRestoration` returns to `'auto'` (back/forward keep
+  0.5 s). Fix round 2 (review 3): the curtain blinds are tan / bone (alternating, the slats' colours), so cover and reveal
+  read on an ink hero; the header and utility bar backgrounds stay painted under the cover (only their contents fade in),
+  so no bone strip shows after the blinds; the hero handoff fires at ~75 % of the blind travel (H1 starts 74 / 98 ms before
+  the cover clears at 1440 / 390), and `scrollRestoration` returns to `'auto'` at the end (back/forward keep
   the native restore, measured 2500 -> 2500). A cross-page link drops its `#hash`. Skipped for new tabs, modifier
   clicks, downloads, same-page hash links and `data-no-curtain` links.
 - Blinds move by xPercent of their own width, so they stay exact under the wide-screen zoom.

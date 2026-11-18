@@ -37,7 +37,7 @@ function build(j: Job) {
 }
 
 /** Register an object entrance. `make` returns a timeline whose frame 0 equals the component's CSS start state. */
-export function enter(el: Element | null, make: () => gsap.core.Timeline, start = 'top 85%') {
+export function enter(el: Element | null, make: () => gsap.core.Timeline, start = 'top 95%') { // fix round 2 (QA D6): was 85 %
   if (!el || !MOTION()) return;
   const j = { el, make, start };
   if (ready) build(j); else jobs.push(j);
@@ -101,15 +101,19 @@ export function ruleRise(rows: HTMLElement[], stagger = 0.08) {
 /** Nameplate: the plate slides in from the side, then its bolts pop (a small turn as they seat). */
 export function plate(el: HTMLElement, bolts: Element[], from = -60) {
   return gsap.timeline()
-    .fromTo(el, { x: from, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.75, ease: 'power2.inOut' })
+    .fromTo(el, { x: from }, { x: 0, duration: 0.75, ease: 'power2.inOut' }, 0)
+    .fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, 0) // fix round 2 (QA D6): shows as it starts to move
     .fromTo(bolts, { scale: 0, rotation: -90, transformOrigin: '50% 50%' }, { scale: 1, rotation: 0, duration: 0.45, ease: 'back.out(1.6)', stagger: 0.08 }, 0.55);
 }
 
 /** Tickets: each drops in from above with a slight turn and settles straight (its tilt is the CSS `rotate`, not touched). */
-export function drop(els: HTMLElement[], stagger = 0.1) {
+// Fix round 2 (QA D6): the opacity has its own quick ease-out (it was on the 0.8 s inOut, ~0.25 s near 0), so a ticket shows
+// as soon as it starts to fall; the fall itself is unchanged.
+export function drop(els: HTMLElement[], stagger = 0.05) {
   const tl = gsap.timeline();
   els.forEach((e, i) => {
-    tl.fromTo(e, { y: -60, rotation: i % 2 ? -6 : 6, autoAlpha: 0 }, { y: 0, rotation: 0, autoAlpha: 1, duration: 0.8, ease: 'power2.inOut' }, i * stagger);
+    tl.fromTo(e, { y: -60, rotation: i % 2 ? -6 : 6 }, { y: 0, rotation: 0, duration: 0.8, ease: 'power2.inOut' }, i * stagger)
+      .fromTo(e, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, i * stagger);
   });
   return tl;
 }

@@ -4,8 +4,8 @@
 //   cover(url)        an in-site link: the blinds close in from both sides in one ease-in-out move (full coverage), THEN
 //                     navigate.
 //   reveal(onHandoff) the page we arrived at (html.pt-in): it starts covered (CSS, no transform), the page is put at the top
-//                     under the cover, then the blinds slide off. onHandoff fires in the reveal's onComplete, once the last
-//                     blind is fully off-screen (B3 handoff rule: header + hero start only then).
+//                     under the cover, then the blinds slide off. onHandoff fires when the blinds are ~75 % across (no
+//                     dead time between the cover clearing and the H1; fix round 2).
 // Navigation rule (B4): a page reached through an in-site link always opens at the top. history.scrollRestoration is
 // 'manual' only while we arrive (so the browser cannot restore a stale position under the cover), and back to 'auto' after
 // the reveal, so back/forward keep the browser's native restore. Same-page # links are not ours (Lenis scrolls them).
@@ -58,16 +58,19 @@ export function reveal(onHandoff: () => void, onDone: () => void = () => {}): bo
   try { history.scrollRestoration = 'manual'; } catch (e) { /* old browsers */ }
   toTop();
   gsap.set(blinds, { xPercent: 0 });
+  // The handoff (header + hero) fires while the blinds are ~75 % across, so the H1 starts as the cover clears, with no
+  // dead time (fix round 2, review 3); the curtain is released at the end.
   gsap.timeline({
     delay: 0.05,
     onComplete: () => {
       html.classList.remove('pt-in');
       try { history.scrollRestoration = 'auto'; } catch (e) { /* old browsers */ }
-      onHandoff(); onDone();
+      onDone();
     },
   })
     .fromTo(pt.querySelector('.pt-mark'), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.25, ease: 'sine.inOut' }, 0)
-    .to(blinds, { xPercent: off, duration: DUR, ease: EASE, stagger: STAGGER }, 0.1);
+    .to(blinds, { xPercent: off, duration: DUR, ease: EASE, stagger: STAGGER }, 0.1)
+    .add(onHandoff, 0.1 + DUR * 0.75);
   return true;
 }
 

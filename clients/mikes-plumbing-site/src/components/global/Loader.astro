@@ -19,7 +19,7 @@ const SLOTS = 3;
       ))}
       <span class="ld-pct">%</span>
     </div>
-    <span class="ld-badge"><Image src={logo} alt="" width={160} height={102} loading="eager" /></span>
+    <span class="ld-badge"><Image src={logo} alt="" width={216} height={138} loading="eager" fetchpriority="low" /></span>
     <p class="ld-hud ld-tr"><span class="ld-dot"></span><span>Riverside, CA</span><br /><span class="ld-num">000 / 100</span></p>
     <p class="ld-hud ld-bl">Friendly <span>·</span> Transparent <span>·</span> Proficient</p>
     <i class="ld-mark ld-m1"></i><i class="ld-mark ld-m2"></i>
@@ -30,7 +30,11 @@ const SLOTS = 3;
   .ld { display: none; }
   :global(html.intro) .ld { display: block; position: fixed; inset: 0; z-index: var(--z-loader); color: var(--paper); overflow: hidden; }
   .ld-blinds { position: absolute; inset: 0; display: flex; flex-direction: column; }
-  .ld-blind { flex: 1 1 0; margin-bottom: -1px; background: var(--ink); will-change: transform; }
+  .ld-blind { position: relative; flex: 1 1 0; margin-bottom: -1px; background: var(--ink); will-change: transform; }
+  /* The moving edge of each blind (fix round 2): a band in the slats' tan / bone, just outside the blind, so it is off-screen
+     while the poster shows and sweeps across the page as the blinds leave (left-going rows: right edge; right-going: left). */
+  .ld-blind::after { content: ''; position: absolute; top: 0; bottom: 0; left: 100%; width: 10px; background: var(--tan); }
+  .ld-blind:nth-child(even)::after { left: auto; right: 100%; background: var(--paper); }
   .ld-stage { position: absolute; inset: 0; display: grid; place-items: center; }
   .ld-count {
     --dh: min(34vh, 28vw); --g: calc(var(--dh) * .024); --h: calc((var(--dh) - 6 * var(--g)) / 7); --w: calc(var(--h) * 2);

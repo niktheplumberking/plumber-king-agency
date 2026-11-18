@@ -46,7 +46,18 @@ a[href^="tel:"] { white-space: nowrap; }
 
 /* ---------- motion pre-states (MOTION.md). Only under html.motion; released by .m-built; 3.5 s safety in Base.astro. ---------- */
 html.motion [data-m-section] [data-t]:not(.m-built):not([data-fx="frame"]):not([data-fx="nudge"]) { opacity: 0; }
-html.motion.intro [data-m-section][data-m-hero] [data-t]:not(.m-built), html.motion.pt-in [data-m-section][data-m-hero] [data-t]:not(.m-built) { opacity: 1; }
+/* Under the loader the hero's LCP candidates (headline, lead, photo) stay painted so the LCP is taken at the first paint;
+   the hero's other items (eyebrows, buttons, chips, badges, stamps) wait at their start state (opacity 0), which also keeps
+   their web-font swap out of CLS (fix round 2, QA D12). Under the curtain the whole hero is hidden by motion.ts. */
+html.motion.intro [data-m-section][data-m-hero] [data-t]:not(.m-built):is(h1, .lead, [data-fx="frame"], :has(h1, img, picture)),
+html.motion.pt-in [data-m-section][data-m-hero] [data-t]:not(.m-built) { opacity: 1; }
+/* Under the loader / curtain the bars stay painted (no body colour can show above the fold), their contents wait for the
+   handoff (motion.ts introChrome). Opacity 0 also keeps their web-font swap out of CLS (fix round 2, review 3 + QA D12). */
+html.motion.intro :is([data-intro="topbar"], .es) > *, html.motion.pt-in :is([data-intro="topbar"], .es) > *,
+html.motion.intro :is([data-intro="brand"], .hdr .nav-list > li, .hdr .cta > *), html.motion.pt-in :is([data-intro="brand"], .hdr .nav-list > li, .hdr .cta > *) { opacity: 0; }
+/* First visit, under the loader only (Base.astro adds .cv with .intro, kit/loader.ts removes it at 100): everything below
+   the hero skips layout, so the first paint and LCP do not wait for the whole page (fix round 2, QA D12). */
+html.cv main > :not([data-m-hero]), html.cv body > footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }

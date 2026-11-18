@@ -24,7 +24,7 @@ const cur = (href: string) => path === href || path.startsWith(href + '/') || (h
   <div class="hdr-bar">
     <div class="hdr-in">
       <a href="/" class="hdr-logo" data-intro="brand" aria-label={`${SITE.name}, home`}>
-        <Image src={logo} alt="" width={216} height={138} loading="eager" />
+        <Image src={logo} alt="" width={216} height={138} loading="eager" fetchpriority="low" />
       </a>
       <nav class="nav" aria-label="Main">
         <ul role="list" class="nav-list">

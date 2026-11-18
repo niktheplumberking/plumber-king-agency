@@ -55,6 +55,18 @@ const ga = import.meta.env.PUBLIC_GA_ID as string | undefined;
 // The site-wide Plumber entity carries the same image on every page (entity data stays constant).
 const entityImg = await getImage({ src: photos['/src/assets/photos/mike-navarro-loading-plumbing-van-riverside.jpg'].default, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 78 });
 const is404 = path === '/404';
+// The script face is preloaded only where a hero uses it (fix round 2, QA D12: every early byte counts against the LCP).
+const scriptHero = ['/services', '/water-heaters', '/drain-cleaning', '/emergency-plumber', '/contact', '/faq', '/about', '/thank-you'].includes(path);
+// Other weights painted in the first viewport while the loader covers the page (measured, fix round 2): preloaded so they
+// are in before the first paint and never swap under the reader (CLS 0). Everything else loads on use.
+const FIRST_VIEW: Record<string, string[]> = {
+  '/water-heaters': ['oswald-latin-700-normal'],
+  '/our-work': ['oswald-latin-500-normal'], '/drain-cleaning': ['oswald-latin-500-normal'], '/contact': ['oswald-latin-500-normal'],
+  '/faq': ['oswald-latin-500-normal', 'archivo-latin-500-normal', 'archivo-latin-600-normal', 'archivo-latin-700-normal'],
+  '/privacy': ['oswald-latin-500-normal', 'archivo-latin-500-normal', 'archivo-latin-600-normal', 'archivo-latin-700-normal'],
+  '/terms': ['oswald-latin-500-normal', 'archivo-latin-500-normal', 'archivo-latin-600-normal', 'archivo-latin-700-normal'],
+};
+const extraFonts = FIRST_VIEW[path] ?? [];
 // Graph on every page: the business, the site, and this page (isPartOf the site, about the business). A page type the page
 // sends itself (AboutPage, ContactPage, CollectionPage) becomes the page node; noindex pages get no page node.
 const ownPage = jsonld.find(isPageNode);
@@ -79,7 +91,8 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
   <link rel="preload" href="/fonts/abril-fatface-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/archivo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/oswald-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/yesteryear-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  {scriptHero && <link rel="preload" href="/fonts/yesteryear-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />}
+  {extraFonts.map((f) => <link rel="preload" href={`/fonts/${f}.woff2`} as="font" type="font/woff2" crossorigin />)}
   <meta property="og:type" content={type} />
   <meta property="og:site_name" content={SITE.name} />
   <meta property="og:locale" content="en_US" />
@@ -134,9 +147,11 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
       var hist = nav && nav.type === 'back_forward';
       var seen = false, internal = false;
       try { seen = sessionStorage.getItem('mps-intro') === '1'; internal = sessionStorage.getItem('mps-nav') === '1'; sessionStorage.removeItem('mps-nav'); } catch (e) {}
-      if (!seen && !hist && d.getAttribute('data-loader') !== 'off') d.classList.add('intro');
+      // .cv (first visit, under the loader only): sections below the hero skip layout until the count reaches 100, so the
+      // first paint (the LCP) is not held up by the whole page and its extra font weights (fix round 2, QA D12).
+      if (!seen && !hist && d.getAttribute('data-loader') !== 'off') d.classList.add('intro', 'cv');
       else if (internal && !hist) { d.classList.add('pt-in'); try { history.scrollRestoration = 'manual'; } catch (e) {} }
-      setTimeout(function () { if (!window.__pbpMotion) d.classList.remove('motion', 'intro', 'pt-in'); }, 3500);
+      setTimeout(function () { d.classList.remove('cv'); if (!window.__pbpMotion) d.classList.remove('motion', 'intro', 'pt-in'); }, 3500);
     })();
   </script>
   {gtm && <script is:inline define:vars={{ gtm }}>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);</script>}

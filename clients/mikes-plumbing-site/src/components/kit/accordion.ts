@@ -9,6 +9,12 @@
 // The open look stays styled on [open] in each component, so the page is right before this script runs and without JS;
 // components only add `:not(.acc-off)` to their [open] rules. aria-expanded on the summary mirrors the state.
 // Reduced motion (no html.motion): instant, native toggle.
+// Title layers (fix round 2, review 11): a title whose open look is another face / colour (e.g. Home FAQ: sans ink on bone ->
+// serif bone on ink) carries `data-acc-title`. During a switch it is drawn twice: a snapshot of the old look (absolute, at
+// its old place) and the title in its new look. Both stay at full opacity (a half-faded title is what lost contrast); a
+// quick left-to-right wipe (70 ms) hands the old layer over to the new one while the background passes its middle, in the
+// band where both ink and bone text read on it at >= 3:1 (measured: ink alpha 0.45 -> 0.66 of the row's colour tween, so
+// an opening row wipes at 0.37 s, a closing one at 0.33 s). No frame shows the font swap or a half-faded title.
 import { gsap } from 'gsap';
 
 const html = document.documentElement;
@@ -27,6 +33,18 @@ const isOpen = (d: Row) => d.open && !d.classList.contains('acc-off');
 const aria = (d: Row) => sumOf(d)?.setAttribute('aria-expanded', String(isOpen(d)));
 
 const running = new Map<Row[], gsap.core.Timeline>();
+const ghosts = new Map<Row, HTMLElement>();
+const titleOf = (d: Row) => sumOf(d)?.querySelector<HTMLElement>('[data-acc-title]') ?? null;
+const SNAP = ['fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'lineHeight', 'letterSpacing', 'textTransform', 'color', 'textAlign'] as const;
+/** The title as it looks now: a fixed copy of its old look, laid exactly over its old place in the summary. */
+function snapshot(d: Row): { el: HTMLElement; css: Partial<CSSStyleDeclaration>; box: DOMRect; host: DOMRect } | null {
+  const t = titleOf(d); if (!t) return null;
+  const cs = getComputedStyle(t); const css: Partial<CSSStyleDeclaration> = {};
+  SNAP.forEach((k) => { (css as any)[k] = cs[k]; });
+  (css as any).opacity = cs.opacity;
+  return { el: t, css, box: t.getBoundingClientRect(), host: sumOf(d).getBoundingClientRect() };
+}
+function dropGhost(d: Row) { ghosts.get(d)?.remove(); ghosts.delete(d); const t = titleOf(d); if (t) gsap.set(t, { clearProps: 'opacity,transition,clipPath' }); }
 
 /** Open `target` (or close it when it is open) inside its group, as one continuous timeline. */
 function toggleRow(target: Row) {
@@ -39,8 +57,10 @@ function toggleRow(target: Row) {
   // Native exclusivity would close rows the moment another opens: hold the names off until the timeline ends.
   group.forEach((d) => d.removeAttribute('name'));
   const moving = group.filter((d) => want.get(d) !== isOpen(d) || d.style.height);
-  // 1. start heights (current, mid-animation included)
+  // 1. start heights (current, mid-animation included), and the titles' old look
   const h0 = new Map(moving.map((d) => [d, d.offsetHeight]));
+  const snaps = new Map(moving.map((d) => [d, snapshot(d)]));
+  moving.forEach(dropGhost);
   // 2. end heights: apply the end state with transitions off, measure, then go back to the start state
   const startState = new Map(moving.map((d) => [d, { open: d.open, off: d.classList.contains('acc-off') }]));
   const endState = (d: Row) => { if (want.get(d)) { d.open = true; d.classList.remove('acc-off'); } else { d.open = false; d.classList.remove('acc-off'); } };
@@ -58,7 +78,7 @@ function toggleRow(target: Row) {
     onComplete: () => {
       moving.forEach((d) => {
         if (!want.get(d)) { d.open = false; d.classList.remove('acc-off'); }
-        d.classList.remove('acc-anim'); gsap.set([d, ...bodyOf(d)], { clearProps: 'height,opacity,overflow' }); aria(d);
+        d.classList.remove('acc-anim'); gsap.set([d, ...bodyOf(d)], { clearProps: 'height,opacity,overflow' }); dropGhost(d); aria(d);
       });
       group.forEach((d) => { if (d.dataset.accName) d.setAttribute('name', d.dataset.accName); });
       running.delete(key);
@@ -73,7 +93,27 @@ function toggleRow(target: Row) {
     const from = inline ? parseFloat(inline) : s0.open && !s0.off ? 1 : 0;
     if (want.get(d)) tl.fromTo(body, { opacity: from }, { opacity: 1, duration: DUR - 0.15, ease: 'sine.inOut', immediateRender: true }, 0.15);
     else tl.to(body, { opacity: 0, duration: 0.3, ease: 'sine.inOut' }, 0);
+    // Title layers: one wipe line in summary coordinates; left of it the new look, right of it the old one (no fades).
+    const s = snaps.get(d);
+    if (s) {
+      const g = s.el.cloneNode(true) as HTMLElement;
+      g.removeAttribute('data-acc-title'); g.removeAttribute('id'); g.setAttribute('aria-hidden', 'true'); g.classList.add('acc-ghost');
+      Object.assign(g.style, s.css, { position: 'absolute', margin: '0', left: `${s.box.left - s.host.left}px`, top: `${s.box.top - s.host.top}px`, width: `${s.box.width}px`, transition: 'none', pointerEvents: 'none', textDecoration: 'none' });
+      sumOf(d).append(g); ghosts.set(d, g);
+      gsap.set(s.el, { transition: 'none' });
+      const host = sumOf(d).getBoundingClientRect(); const nb = s.el.getBoundingClientRect();
+      const gx = s.box.left - s.host.left, gw = s.box.width, nx = nb.left - host.left, nw = nb.width;
+      const x0 = Math.min(gx, nx), x1 = Math.max(gx + gw, nx + nw);
+      const wipe = { x: x0 };
+      const paint = () => {
+        g.style.clipPath = `inset(-30% 0 -30% ${Math.max(0, wipe.x - gx)}px)`;
+        s.el.style.clipPath = `inset(-30% ${Math.max(0, nx + nw - wipe.x)}px -30% 0)`;
+      };
+      paint();
+      tl.to(wipe, { x: x1, duration: 0.07, ease: 'none', onUpdate: paint }, want.get(d) ? 0.37 : 0.33);
+    }
   });
+  tl.eventCallback('onInterrupt', () => moving.forEach(dropGhost));
   running.set(group, tl);
 }
 

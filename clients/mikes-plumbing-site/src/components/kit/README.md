@@ -60,7 +60,10 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
 - `cover(href)` slides every blind to 0 (0.6 s `power2.inOut`, stagger 0.012 s, alternating sides), THEN navigates.
 - `reveal(onHandoff, onDone)` handles a page that arrives covered (`html.pt-in`): `history.scrollRestoration = 'manual'`,
   the page goes to the top under the cover, then the blinds slide off to alternating sides (0.6 s `power2.inOut`);
-  `onHandoff` (hero timeline) fires when the last blind is off. scrollRestoration returns to `'auto'` afterwards.
+  `onHandoff` (hero timeline) fires at ~75 % of the blind travel, so the H1 starts as the cover clears (fix round 2,
+  review 3); `onDone` (scrollRestoration back to `'auto'`, `pt-in` off) when the last blind is off.
+- Colours (fix round 2, review 3): the blinds are tan / bone alternating (the loader slats' colours), so cover and reveal
+  read on ink heroes too.
 - `interceptLinks()` covers for in-site links to another page, and drops a cross-page `#hash` so a new page always
   opens at the top. Same-page `#` links stay with Lenis (smooth). New tabs, modifier clicks, downloads and
   `data-no-curtain` are skipped.
@@ -86,6 +89,11 @@ Runs only in view and under `html.motion`; reduced motion = static first copy. C
 - `data-acc="row"` (default): FLIP height, one 0.7 s `power2.inOut` timeline per switch. The closing row's colours
   ease back while it shrinks (`.acc-off`: styled closed, still rendered). The opening answer fades in after 0.15 s.
   A click mid-animation re-targets from the current heights, so the latest click wins.
+- Title layers (fix round 2, review 11): a title whose open look is another face or colour (Home FAQ: sans ink on bone ->
+  serif bone on ink) carries `data-acc-title`. During a switch a snapshot of its old look (`.acc-ghost`, aria-hidden,
+  absolute at the old place) and the title in its new look are both at full opacity; a 70 ms left-to-right wipe hands one
+  over to the other while the row's background passes its middle, where ink and bone text both read on it (>= 3:1).
+  No font jump at frame 0, no half-faded title. The ghost is removed at the end or on a re-target.
 - `data-acc="pop"`: a floating dropdown list fades and slides (0.5 s). It closes on Escape or an outside click.
 - `aria-expanded` on the summary mirrors the state. Reduced motion (no `html.motion`) gives the instant native toggle.
 - Component CSS: style the open look on `[open]:not(.acc-off)`.
@@ -178,6 +186,7 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 | `details[data-acc]` | `height`, `overflow`, `open`, classes `.acc-off` / `.acc-anim`, `name` (held off during a switch) | `accordion.ts` |
 | `details[data-acc]` body children | `opacity` (row); `opacity`, `visibility`, `transform` (pop) | `accordion.ts` |
 | `summary` of a `[data-acc]` row | `aria-expanded` | `accordion.ts` |
+| `[data-acc-title]`, `.acc-ghost` | `clip-path`, `transition` (during a switch) | `accordion.ts` |
 | colours of an accordion row | `background-color`, `color`, `border-color`, `fill`, `stroke`, … | CSS transitions (`kit.css`) |
 | `[data-t]` entrance items, parallax | `opacity`, `transform` | `motion.ts` |
 | `[data-marquee-track]` | `transform` (x) | `marquee.ts` |

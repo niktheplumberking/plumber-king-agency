@@ -114,5 +114,5 @@ const zig = (w: number, half: number, d: number) => {
 <script>
   import { enter, drop } from '../../scripts/objects';
   const row = document.querySelector<HTMLElement>('[data-tk-row]');
-  enter(row, () => drop(Array.from(row!.querySelectorAll<HTMLElement>(':scope > li')), 0.1), 'top 85%');
+  enter(row, () => drop(Array.from(row!.querySelectorAll<HTMLElement>(':scope > li'))));
 </script>

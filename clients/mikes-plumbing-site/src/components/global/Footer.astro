@@ -70,7 +70,10 @@ const year = new Date().getFullYear();
   .ft-h { margin: 6px 0 10px; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); }
   .ft-col ul { margin: 0; padding: 0; display: grid; gap: 0; }
   .ft-col li { font-size: 15px; line-height: 32px; }
-  .ft-col a { transition: color .25s; }
+  /* Tap targets (fix round 2): each link's box is the full 32 px row (inline-block takes the li's line-height), and the
+     legal links get 5 px of padding taken back by the same negative margin: >= 24 px tall, nothing moves. */
+  .ft-col a { display: inline-block; transition: color .25s; }
+  .ft-legal a { display: inline-block; padding-block: 5px; margin-block: -5px; }
   .ft-col a:hover, .ft-legal a:hover { color: var(--tan); text-decoration: underline; text-underline-offset: 4px; }
   .ft-bar { background: #151410; }
   .ft-bar-in { display: flex; align-items: center; justify-content: space-between; height: 60px; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; font-size: 13px; color: #A39B8A; }
@@ -88,10 +91,11 @@ const year = new Date().getFullYear();
     .ft-col { margin-top: 22px; }
     nav.ft-col:first-of-type { margin-top: 38px; }
     .ft-h { margin: 0 0 4px; font-size: 12px; line-height: 18px; }
-    .ft-col ul { display: block; font-size: 14px; line-height: 22px; }
-    .ft-col li { display: inline; font-size: 14px; line-height: 22px; }
+    .ft-col ul { display: block; font-size: 14px; line-height: 24px; }
+    .ft-col li { display: inline; font-size: 14px; line-height: 24px; } /* 22 -> 24 (fix round 2): rows of 24 px tap targets that never overlap */
     .ft-col li + li::before { content: ' · '; color: #A9A293; }
-    .ft-col a { display: inline; padding: 0; }
+    /* Inline links in a running line: vertical padding on an inline box grows its hit area, not the line (>= 24 px). */
+    .ft-col a { display: inline; padding: 4.5px 0; }
     .ft-bar-in { height: 56px; font-size: 12px; flex-wrap: wrap; align-content: center; gap: 2px 16px; }
     .ft-legal { margin-right: 0; }
   }

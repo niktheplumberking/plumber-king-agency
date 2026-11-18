@@ -24,19 +24,22 @@ const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
  * comes into view (United's per-element model), with United's effects, durations and easing. Nick's three priority groups
  * are small delays on top of that trigger, so when several things enter together the message leads:
  *   G1 headline, lead/body, main photo, big cards        +0
- *   G2 eyebrow, pills, buttons, chips, captions, patches  +0.15 s
- *   G3 seals, stamps, underlines, swooshes, counters      +0.3 s
+ *   G2 eyebrow, pills, buttons, chips, captions, patches  +0.1 s
+ *   G3 seals, stamps, underlines, swooshes, counters      +0.15 s
  * A section head (eyebrow + headline + lead + buttons) shares ONE trigger and is ordered inside by its groups; photos,
  * rails, grids and cards keep their own triggers. No fast-scroll speed-ups, no instant finishes: an element only skips
  * its entrance when it is already above the viewport when its tween is built (anchor jump, reload mid-page). */
 const EASE = 'power3.out';          // loader, curtain mark, header bits
 const SOFT = 'power2.out';          // header top-bar fade
-const G_DELAY = [0, 0.15, 0.3];     // G1 / G2 / G3
+const G_DELAY = [0, 0.1, 0.15];     // G1 / G2 / G3 (fix round 2, QA D6: was 0.15 / 0.3)
 const HEAD_STEP = 0.1;              // items of one group inside a section head, DOM order
-const START = { one: 'top 88%', group: 'top 85%', draw: 'top 92%', count: 'top 90%' }; // United's trigger points
+// Trigger points (fix round 2, QA D6): United's 88 / 85 % left an eyebrow ~0.4 s invisible in view at a 750 px/s reading
+// pace (12 % of the viewport to scroll + its group delay). Now just inside the bottom edge, so an element starts as it shows.
+const START = { one: 'top 96%', group: 'top 95%', draw: 'top 97%', count: 'top 96%' };
 const KID_GAP = 0.09;               // children of a data-stagger group (United)
 const LINE_GAP = 0.1;               // headline lines on scroll (United data-split); hero 0.12
-const HERO_STEP = 0.12;             // hero items (United heroTimeline)
+const HERO_STEP = 0.08;             // hero items (United heroTimeline 0.12; fix round 2, QA D6: last item in by ~0.3 s)
+const HERO_BEAT = 0.08;             // the beat between hero groups (was G_DELAY[1])
 type Fx = 'up' | 'left' | 'right' | 'scale' | 'fade' | 'clip' | 'pop' | 'lines' | 'toss' | 'spin' | 'write' | 'nudge';
 /** United's effect table. `d` = duration on scroll, `h` = duration in the hero. */
 const FX: Record<string, { d: number; h: number; ease: string }> = {
@@ -267,7 +270,7 @@ function onScroll(tl: gsap.core.Timeline, trigger: Element, start: string, above
 }
 
 /* QA 18 Nov (frame sampler): when the scroll STOPS with an element already on screen but still below its trigger line (the
- * bottom 12 % band under `top 88%`), it would sit invisible in view until the next scroll. On scroll end, any such entrance
+ * bottom 4 % band under `top 96%`), it would sit invisible in view until the next scroll. On scroll end, any such entrance
  * plays normally (same tween, no instant finish). Elements only peeking in (less than half shown, top in the last 3 %) wait. */
 const pending = new Map<ScrollTrigger, { tl: gsap.core.Timeline; trigger: Element }>();
 let lastCatch = 0;
@@ -362,7 +365,7 @@ function buildRest(done: () => void) {
 
 /** The hero: one ordered timeline played at the handoff (United heroTimeline). Items in group order (G1, G2, G3), DOM
  *  order inside a group, HERO_STEP apart; a split headline holds the next item until its lines have started; each new
- *  group adds a 0.15 s beat. The stripe underline and the swoosh ribbons run with G3. */
+ *  group adds a 0.08 s beat (HERO_BEAT). The stripe underline and the swoosh ribbons run with G3. */
 function buildHeroTl(): gsap.core.Timeline | null {
   const sec = document.querySelector<HTMLElement>('[data-m-section][data-m-hero]');
   if (!sec) return null;
@@ -375,13 +378,13 @@ function buildHeroTl(): gsap.core.Timeline | null {
   built.push(tl);
   let t = 0, last = 1;
   order.forEach(({ el, g }) => {
-    if (g !== last) { t += G_DELAY[1]; last = g; }
+    if (g !== last) { t += HERO_BEAT; last = g; }
     const e = entrance(el, sec, true);
     tl.add(e, t);
     const n = el.dataset.t === '2' && !el.dataset.fx ? Math.max(1, $$('.hl', el).length || 2) : 0;
-    t += n ? HERO_STEP * n + 0.08 : HERO_STEP;
+    t += n ? HERO_STEP * n + 0.06 : HERO_STEP;
   });
-  if (last !== 3) t += G_DELAY[1];
+  if (last !== 3) t += HERO_BEAT;
   if (draws.length) tl.fromTo(draws, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.8, ease: 'power2.inOut', stagger: 0.06, immediateRender: true }, t);
   sw.forEach((svg) => { svg.dataset.mDone = '1'; tl.add(swooshIn(svg, 0.9), t + 0.05); });
   return tl;
@@ -622,9 +625,11 @@ function pointer() {
 /** The header settles first (United heroTimeline): top bar fades in, the logo tab, nav items and header buttons drop in
  *  (y -24, 0.6 s, 0.05 s apart). Only built when a cover (loader or curtain) hides the page, so nothing flashes. */
 function introChrome(tl: gsap.core.Timeline) {
-  const bar = document.querySelector('[data-intro="topbar"]');
+  // Fix round 2 (review 3): the bars themselves (utility bar, header, emergency strip) stay painted from the first frame, so
+  // no body background ever shows above the fold; only their contents fade / drop in (CSS pre-state in global.css).
+  const bar = $$('[data-intro="topbar"] > *, .es > *').filter(shown);
   const bits = $$('[data-intro="brand"], .hdr .nav-list > li, .hdr .cta > *').filter(shown);
-  if (bar) tl.fromTo(bar, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: SOFT, immediateRender: true, clearProps: 'opacity,visibility' }, 0);
+  if (bar.length) tl.fromTo(bar, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, ease: SOFT, immediateRender: true, clearProps: 'opacity,visibility' }, 0);
   if (bits.length) {
     gsap.set(bits, { transition: 'none' });
     tl.fromTo(bits, { y: -24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: EASE, stagger: 0.05, immediateRender: true }, 0.08);
@@ -699,7 +704,9 @@ function boot() {
     chrome.play();
     const hero = heroTl;
     // The header leads; the hero starts 0.25 s in (United: hero items from 0.25 s).
-    if (hero) { if (chrome.duration() > 0.02) gsap.delayedCall(ptIn ? 0.17 : 0.25, () => { hero.play(); }); else hero.play(); }
+    // Fix round 2: the handoff now fires while the cover is ~75 % off, so the hero starts with the header (0.05 s), and the
+    // H1 begins as the cover clears (no dead time).
+    if (hero) { if (chrome.duration() > 0.02) gsap.delayedCall(0.05, () => { hero.play(); }); else hero.play(); }
     window.dispatchEvent(new CustomEvent('pbp:handoff'));
     // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front, as
     // United does, so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
@@ -708,7 +715,10 @@ function boot() {
   };
   // Arrived through an in-site link: the page starts covered and at the top (kit/curtain.ts reveal), the hero is hidden
   // under the cover, then the panel lifts. Otherwise the loader (first visit) or a plain start.
-  if (html.classList.contains('pt-in') && document.querySelector('[data-pt]')) { hideHero(); reveal(handoff); }
+  if (html.classList.contains('pt-in') && document.querySelector('[data-pt]')) {
+    // Build the hero (its line splits need the fonts) while the cover is down, so the handoff can start it at once.
+    hideHero(); fontsIn().then(() => { buildHero(); reveal(handoff); });
+  }
   else runLoader({ onCover: buildHero, onDone: handoff });
   // Fonts, images and the zoom change line breaks and positions: re-measure once they have all settled.
   settled().then(() => requestRefresh(0));

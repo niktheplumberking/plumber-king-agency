@@ -19,6 +19,7 @@ html.motion [data-scrub] [data-scrub-fill][data-rev] { transform: none; }
    timeline (0.7 s ease-in-out), and min-heights let go so the height tween owns the box. .acc-off = still rendered (open)
    but styled closed: components write their open look as [open]:not(.acc-off). */
 details[data-acc].acc-anim { min-height: 0 !important; }
+details[data-acc].acc-anim [data-acc-title], details[data-acc] .acc-ghost { transition: none !important; }
 details[data-acc].acc-anim, details[data-acc].acc-anim * {
   transition-property: background-color, color, border-color, box-shadow, fill, stroke, font-size, line-height, letter-spacing, padding;
   transition-duration: .7s; transition-timing-function: cubic-bezier(.45, 0, .55, 1);

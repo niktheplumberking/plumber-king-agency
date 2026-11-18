@@ -19,6 +19,17 @@ const log = [
   line('Sal C.', 'Mike was able helped me out with a slab leak on short notice, rerouted water lines and new showers valves installed.', 'Jul 25, 2026', 'Sal C., Corona, CA', 'Sal C., Corona, CA', -2),
   line('Erik N.', 'Great service responded fast and did the work same day', 'Sep 4, 2025', 'Erik N., Buena Park, CA', 'Erik N., Buena Park, CA', 3),
 ];
+// B20: two more emergency-type reviews, word for word, pinned under the Yelp badge (left column).
+const slip = (name: string, q: string) => {
+  const x = REVIEWS.find((y) => y.name === name);
+  if (!x || !x.text.includes(q)) throw new Error(`CallLog: "${q}" is not in ${name}'s review`);
+  const [m, d, y] = x.date.split(' ');
+  return { q, name: x.name, town: x.town, date: `${m} ${d}, ${y}` };
+};
+const pins = [
+  slip('Jared K.', 'Answered my late night call and was at my door by 8am the next day.'),
+  slip('Martha B.', "On a Friday, I called three plumbers and they couldn't come over until Monday. Mike actually called me instead of back and forth messaging."),
+];
 const r = SITE.rating;
 ---
 <section class="cl sv-sec sv-paper sv-abs" style="--sh:900px" aria-labelledby="cl-h" data-m-section>
@@ -27,14 +38,25 @@ const r = SITE.rating;
     <Eyebrow look="figma" tone="deep" class="cl-eb" data-ab style={ab(119.5, 119)}>On Yelp</Eyebrow>
     <h2 id="cl-h" class="sv-h sv-h--red cl-h" data-t="2" data-ab style={ab(120, 152, 540)}>When it couldn't <em>wait until morning.</em></h2>
     <p class="cl-body" data-t="3" data-ab style={ab(120, 300, 440)}>Four lines from real Yelp reviews, word for word.<span class="cl-m"> Checked {r.checked}.</span></p>
-    <div class="cl-seal" data-t="3" data-ab style={ab(120, 410, 260, 180, -4)} role="img" aria-label={`${r.value} out of 5 on ${r.source}, ${r.count} reviews`}>
-      <svg viewBox="0 0 260 180" preserveAspectRatio="none" aria-hidden="true"><path d="M34 0H226L260 90 226 180H34L0 90Z" fill="#0E0D0B" /><path class="cl-in2" d="M42.7 10.6H217.3L248 90 217.3 169.4H42.7L12 90Z" fill="none" stroke="rgba(210,197,166,.5)" stroke-width="1.2" stroke-linejoin="round" vector-effect="non-scaling-stroke" /></svg>
-      <span class="cl-v" aria-hidden="true">{r.value}</span>
-      <span class="cl-st" aria-hidden="true">★★★★★</span>
-      <span class="cl-n" aria-hidden="true">{r.count} <span class="cl-d">reviews </span>on {r.source}</span>
+    <div class="cl-proof" data-ab style={ab(120, 360, 520, 470)}>
+      <ul class="cl-pins" role="list" data-t="3" data-stagger>
+        {pins.map((p, i) => (
+          <li class:list={['cl-pin', `cl-pin--${i + 1}`]}>
+            <figure>
+              <blockquote><p>“{p.q}”</p></blockquote>
+              <figcaption><b>{p.name}</b> {p.town} · {p.date} <span class="cl-pst"><span aria-hidden="true">★★★★★</span><span class="sr-only">5 stars on Yelp</span></span></figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <a class="cl-seal" href={SITE.social.yelp} target="_blank" rel="noopener" data-t="3" data-fx="pop" data-idle="shake" aria-label={`${r.value} out of 5 on ${r.source}, ${r.count} reviews, checked ${r.checked}. Read them on Yelp (opens in a new tab)`}>
+        <svg viewBox="0 0 260 180" preserveAspectRatio="none" aria-hidden="true"><path d="M34 0H226L260 90 226 180H34L0 90Z" fill="#0E0D0B" /><path class="cl-in2" d="M42.7 10.6H217.3L248 90 217.3 169.4H42.7L12 90Z" fill="none" stroke="rgba(210,197,166,.5)" stroke-width="1.2" stroke-linejoin="round" vector-effect="non-scaling-stroke" /></svg>
+        <span class="cl-v" aria-hidden="true">{r.value}</span>
+        <span class="cl-st" aria-hidden="true">★★★★★</span>
+        <span class="cl-n" aria-hidden="true">{r.count} reviews on {r.source}</span>
+      </a>
+      <p class="cl-chk">Checked {r.checked} · <a class="cl-all" href={SITE.social.yelp} target="_blank" rel="noopener"><u>Read all {r.count} on Yelp</u>&nbsp;<span aria-hidden="true">→</span></a></p>
     </div>
-    <p class="cl-chk" data-ab style={ab(132, 612)}>Checked {r.checked}</p>
-    <a class="cl-all" href={SITE.social.yelp} target="_blank" rel="noopener" data-ab style={ab(120, 650)}><u>Read all {r.count} on Yelp</u>&nbsp;&nbsp;<span aria-hidden="true">→</span></a>
 
     <div class="cl-board" data-t="3" data-scrub data-start="top 65%" data-end="bottom 75%" data-start-m="top 70%" data-end-m="bottom 80%" data-ab style={ab(690, 90, 600, 712, 2)}>
       <i class="cl-sheet" aria-hidden="true"></i>
@@ -60,15 +82,33 @@ const r = SITE.rating;
   .cl-h em { display: block; }
   .cl-body { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
   .cl-m, .cl-mm { display: none; }
-  .cl-seal { color: var(--tan); text-align: center; }
+  /* B20: the badge is pinned onto two emergency-type Yelp slips; it is a link (hover: it lifts and straightens; idle: shake) */
+  .cl-proof { position: relative; }
+  .cl-pins { margin: 0; padding: 0; list-style: none; }
+  .cl-pin { position: absolute; transition: translate .4s cubic-bezier(.45, 0, .55, 1), rotate .4s cubic-bezier(.45, 0, .55, 1); }
+  .cl-pin--1 { left: 224px; top: 30px; width: 300px; rotate: 1.5deg; }
+  .cl-pin--2 { left: 18px; top: 214px; width: 430px; rotate: -1.2deg; }
+  .cl-pin figure { margin: 0; padding: 22px 24px 18px; background: var(--bone); border-top: 5px solid var(--red); box-shadow: 0 14px 26px -12px rgba(0, 0, 0, .3); }
+  .cl-pin blockquote { margin: 0; }
+  .cl-pin p { margin: 0; font-weight: 500; font-size: 16px; line-height: 1.45; color: var(--ink); }
+  .cl-pin figcaption { margin-top: 10px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .08em; text-transform: uppercase; color: #6b5c3e; }
+  .cl-pin figcaption b { font-weight: 600; color: var(--ink); }
+  .cl-pst { margin-left: 4px; letter-spacing: .1em; color: var(--red); }
+  .cl-seal { position: absolute; left: 0; top: 0; z-index: 2; display: block; width: 210px; height: 146px; color: var(--tan); text-align: center; text-decoration: none; rotate: -6deg;
+    filter: drop-shadow(0 14px 18px rgba(14, 13, 11, .3)); transition: translate .4s cubic-bezier(.45, 0, .55, 1), rotate .4s cubic-bezier(.45, 0, .55, 1), filter .4s cubic-bezier(.45, 0, .55, 1); }
   .cl-seal svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .cl-seal > span { position: absolute; left: 0; right: 0; }
-  .cl-v { top: 20px; font-family: var(--f-display); font-size: 60px; line-height: 81px; }
-  .cl-st { top: 102px; font-family: var(--f-sans); font-weight: 700; font-size: 15px; line-height: 16px; letter-spacing: .2em; }
-  .cl-n { top: 128px; font-family: var(--f-label); font-weight: 500; font-size: 10.5px; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; color: var(--paper); }
-  .cl-chk { margin: 0; font-size: 12px; line-height: 13px; color: var(--ink-2); }
-  .cl-all { font-family: var(--f-sans); font-weight: 700; font-size: 15px; line-height: 16px; color: var(--ink); text-decoration: none; }
+  .cl-v { top: 14px; font-family: var(--f-display); font-size: 50px; line-height: 68px; }
+  .cl-st { top: 84px; font-family: var(--f-sans); font-weight: 700; font-size: 13px; line-height: 14px; letter-spacing: .2em; color: var(--red); }
+  .cl-n { top: 104px; font-family: var(--f-label); font-weight: 500; font-size: 10.5px; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; color: var(--paper); }
+  .cl-seal:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
+  .cl-chk { position: absolute; left: 18px; top: 420px; margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-2); }
+  .cl-all { font-family: var(--f-sans); font-weight: 700; font-size: 14px; color: var(--ink); text-decoration: none; }
   .cl-all u { text-decoration-thickness: 1.5px; text-underline-offset: 3px; } .cl-all:hover u { text-decoration-thickness: 3px; }
+  @media (hover: hover) and (pointer: fine) {
+    .cl-seal:hover { translate: 0 -6px; rotate: -1deg; filter: drop-shadow(0 22px 22px rgba(14, 13, 11, .36)); }
+    .cl-pin:hover { translate: 0 -4px; rotate: 0deg; }
+  }
 
   .cl-board { border-radius: 18px; background: #6b5c3e; box-shadow: 0 30px 50px -12px rgba(0, 0, 0, .4); }
   .cl-sheet { position: absolute; left: 30px; top: 56px; width: 540px; height: 620px; border-radius: 2px; background: var(--bone); }
@@ -91,21 +131,23 @@ const r = SITE.rating;
 
   @media (max-width: 1279px) {
     .cl-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }
-    .cl-chk, .cl-sub { display: none; } .cl-m { display: inline; }
-    .cl-seal, .cl-board { position: relative; }
+    .cl-sub { display: none; } .cl-m { display: inline; }
+    .cl-board { position: relative; }
+    .cl-proof { width: 100%; max-width: 560px; margin-top: 30px; }
+    .cl-seal { position: relative; }
+    .cl-pins { display: grid; gap: 16px; margin-top: -40px; padding-left: 40px; }
+    .cl-pin { position: relative; left: auto; top: auto; width: auto; }
+    .cl-chk { position: static; margin-top: 18px; }
     .cl-board { order: 9; rotate: -1deg; transform-origin: 0 0; }
-    .cl-all { order: 10; }
     .cl-log { position: relative; left: auto; top: auto; width: auto; }
   }
   @media (min-width: 768px) and (max-width: 1279px) {
     .cl { padding: 110px 0 100px; }
     .cl-h { margin-top: 12px; font-size: clamp(42px, 5vw, 58px); }
     .cl-body { margin-top: 20px; max-width: 440px; }
-    .cl-seal { width: 260px; height: 180px; margin-top: 30px; rotate: 4deg; }
     .cl-board { width: 600px; margin-top: 48px; padding: 178px 60px 40px; box-sizing: border-box; }
     .cl-board .cl-log { margin: 0; }
     .cl-sheet { height: auto; bottom: 26px; }
-    .cl-all { margin-top: 36px; }
   }
   @media (max-width: 767px) {
     .cl { padding: 49px 0 54px; }
@@ -113,12 +155,18 @@ const r = SITE.rating;
     .cl-h { margin-top: 8px; font-size: 34px; line-height: 1.06; }
     .cl-h em { display: inline; }
     .cl-d { display: none; } .cl-mm { display: inline; }
-    .cl-body { order: 3; position: absolute; left: 170px; top: 133px; width: calc(100% - 170px); margin: 0; font-size: 13px; line-height: 1.45; }
-    .cl-seal { width: 150px; height: 96px; margin-top: 20px; rotate: 4deg; transform-origin: 0 0; }
+    .cl-body { margin-top: 14px; font-size: 15px; line-height: 1.45; }
+    .cl-proof { margin-top: 22px; }
+    .cl-seal { width: 150px; height: 104px; rotate: -4deg; }
+    .cl-pins { margin-top: -26px; padding-left: 18px; gap: 12px; }
+    .cl-pin figure { padding: 18px 18px 14px; }
+    .cl-pin p { font-size: 14px; }
+    .cl-pin figcaption { font-size: 11px; line-height: 16px; }
+    .cl-chk { font-size: 12px; }
     .cl-in2 { display: none; }
-    .cl-v { top: 10px; font-size: 34px; line-height: 46px; }
-    .cl-st { top: 54px; font-size: 10px; line-height: 11px; letter-spacing: .16em; }
-    .cl-n { top: 70px; font-size: 10px; line-height: 15px; letter-spacing: .12em; }
+    .cl-v { top: 10px; font-size: 36px; line-height: 48px; }
+    .cl-st { top: 58px; font-size: 10px; line-height: 11px; letter-spacing: .16em; }
+    .cl-n { top: 74px; font-size: 9.5px; line-height: 15px; letter-spacing: .1em; }
     .cl-board { width: calc(100% + 8px); margin: 34px 0 0 -4px; padding: 108px 18px 20px; box-sizing: border-box; border-radius: 14px; box-shadow: 0 20px 30px -8px rgba(0, 0, 0, .4); }
     .cl-sheet { left: 16px; right: 16px; top: 40px; bottom: 10px; width: auto; height: auto; }
     .cl-clip { left: calc(50% - 60px); top: 10px; width: 120px; height: 50px; border-radius: 8px; }
@@ -130,6 +178,5 @@ const r = SITE.rating;
     .cl-stamp { position: relative; top: 0; display: block; width: 100px; height: 26px; padding-top: 4px; border-width: 1.5px; font-size: 11.5px; line-height: 17px; }
     .cl-log blockquote { margin-top: 12px; } .cl-log blockquote p { width: auto; font-size: 14px; }
     .cl-meta { margin-top: 6px; font-size: 11px; line-height: 16px; }
-    .cl-all { margin-top: 30px; }
   }
 </style>

@@ -32,7 +32,7 @@ const zig = (w: number, half: number, d: number) => {
             {t.img ? <div class="tk-ph sv-photo"><Img name={t.img} alt={t.alt} sizes="(min-width: 768px) 200px, 154px" box={200 / 150} boxM={154 / 116} /></div>
               : <div class="tk-ph tk-gas" aria-hidden="true">GAS</div>}
             <span class="tk-wo">WO-0{i + 1}</span>
-            <h3>{t.h}</h3>
+            <h3><span class="tk-u">{t.h}</span></h3>
             <i class="tk-ln" aria-hidden="true"></i>
             <a class="tk-call" href={SITE.tel} aria-label={`Call ${SITE.phone} about ${t.h.toLowerCase()}`}>Call {SITE.phone}&nbsp;&nbsp;<span aria-hidden="true">→</span></a>
           </div>
@@ -60,6 +60,21 @@ const zig = (w: number, half: number, d: number) => {
   .tk-call::after { content: ''; position: absolute; inset: -12px -8px; }
   .tk-pin { position: absolute; left: 103px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--red); box-shadow: 0 3px 4px rgba(0, 0, 0, .4); }
   .tk-swipe { display: none; }
+  /* B21 hover (fine pointers) and keyboard focus: the ticket lifts, its pin pushes in, the emergency's name gets a red
+     underline that draws left to right. CSS transitions on `translate` / `scale` / `background-size` (ease-in-out 0.4 s);
+     the entrance owns `transform`, the desktop tilt is `rotate`, so nothing fights. */
+  .tk-t { transition: translate .4s cubic-bezier(.45, 0, .55, 1), filter .4s cubic-bezier(.45, 0, .55, 1); }
+  .tk-u { background: linear-gradient(var(--red), var(--red)) 0 100% / 0 2px no-repeat; padding-bottom: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size .45s cubic-bezier(.45, 0, .55, 1); }
+  .tk-pin { transition: scale .4s cubic-bezier(.45, 0, .55, 1), box-shadow .4s cubic-bezier(.45, 0, .55, 1); }
+  .tk-wo { transition: letter-spacing .4s cubic-bezier(.45, 0, .55, 1); }
+  .tk-t:focus-within { translate: 0 -10px; }
+  .tk-t:focus-within .tk-u { background-size: 100% 2px; }
+  @media (hover: hover) and (pointer: fine) {
+    .tk-t:hover { translate: 0 -10px; filter: drop-shadow(0 28px 20px rgba(0, 0, 0, .5)); }
+    .tk-t:hover .tk-u { background-size: 100% 2px; }
+    .tk-t:hover .tk-pin { scale: .85; box-shadow: 0 1px 2px rgba(0, 0, 0, .4); }
+    .tk-t:hover .tk-wo { letter-spacing: .2em; }
+  }
 
   @media (max-width: 1279px) {
     .tk-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; display: flex; flex-direction: column; align-items: flex-start; }

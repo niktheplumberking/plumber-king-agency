@@ -3,6 +3,12 @@
 // now.", the ink call button and a row of tear-off phone tabs, one already torn off and lying beside it ("Take one.").
 // Positions are Figma px for the 1440 frame (desktop; scaled down on tablets) and the 390 frame (phones), so the flyer keeps
 // its proportions: it is one drawn object, not a text layout.
+// B22 mini-game: every strip has a perforated tear line. Click, tap or Enter tears a strip: it bends at the perforation,
+// comes off with a small turn and drop and fades (0.6 s, ease-in-out); torn strips stay gone. When the last one is torn they
+// all come back gently, one by one (fade + 0.95 -> 1). Strip text: "Call now · (951) 809-9533" or "Open 24 hours (Yelp) ·
+// Free estimate" (never "24/7"). The strips are tel: links: without JS or under reduced motion a tap calls and nothing
+// tears; with motion a long press (0.6 s) still calls, and the ink call button and the "Take one" slip always call.
+// Writer: the tear script owns `transform` / `opacity` / `visibility` of .ft-tab; hover uses `rotate` (CSS).
 import { Image } from 'astro:assets';
 import logoInk from '../../assets/brand/logo-ink.png';
 import Wave from '../kit/Wave.astro';
@@ -19,11 +25,18 @@ const tabs = Array.from({ length: 10 }, (_, i) => i);
       <p class="ft-sub">Open 24 hours (Yelp). Free estimate.</p>
       <div class="ft-btn"><Btn look="figma" v="ink" title={`Call ${SITE.phone}`} sub="Tap to call" w={360} /></div>
       <i class="ft-cut" aria-hidden="true"></i>
-      <ul class="ft-tabs" role="list" aria-hidden="true">
-        {tabs.map((i) => <li class:list={['ft-tab', { 'is-gone': i === 3, 'is-m-gone': i === 2, 'is-m-out': i > 4 }]} style={`--i:${i}`}><span class="ft-num">{SITE.phone}</span><span class="ft-mike">Mike</span></li>)}
+      <ul class="ft-tabs" role="list" aria-label="Tear-off strips" data-tear-row>
+        {tabs.map((i) => (
+          <li class:list={['ft-slot', { 'is-gone': i === 3, 'is-m-gone': i === 2, 'is-m-out': i > 4 }]} style={`--i:${i}`}>
+            <a class="ft-tab" href={SITE.tel} aria-label={i % 2 ? `Open 24 hours (Yelp), free estimate: call ${SITE.phone}` : `Call now: ${SITE.phone}`} data-label={i % 2 ? 'Open 24 hours (Yelp) · Free estimate' : `Call now · ${SITE.phone}`}>
+              <span class="ft-txt" aria-hidden="true">{i % 2 ? <><span class="ft-k">Open 24 hours (Yelp)</span><span class="ft-num">Free estimate</span></> : <><span class="ft-k">Call now</span><span class="ft-num">{SITE.phone}</span></>}</span>
+            </a>
+          </li>
+        ))}
       </ul>
+      <p class="sr-only" aria-live="polite" data-tear-status></p>
     </div>
-    <a class="ft-torn" href={SITE.tel} aria-label={`Call ${SITE.phone}`} data-t="3"><span class="ft-num">{SITE.phone}</span></a>
+    <a class="ft-torn" href={SITE.tel} aria-label={`Call ${SITE.phone}`} data-t="3"><span class="ft-txt" aria-hidden="true"><span class="ft-k">Call now</span><span class="ft-num">{SITE.phone}</span></span></a>
     <p class="ft-take sv-script lh-yest" data-t="3" aria-hidden="true">Take one.</p>
   </div>
 </section>
@@ -37,16 +50,23 @@ const tabs = Array.from({ length: 10 }, (_, i) => i);
   .ft-sub { position: absolute; left: 314px; top: 150px; margin: 0; font-family: var(--f-sans); font-weight: 700; font-size: 20px; line-height: 22px; color: var(--ink); white-space: nowrap; }
   .ft-btn { position: absolute; left: 314px; top: 196px; width: 360px; }
   .ft-btn :global(.sv-btn) { width: 100%; }
-  .ft-cut { position: absolute; left: 0; right: 0; top: 300px; height: 1.5px; background: repeating-linear-gradient(90deg, var(--ink) 0 6px, transparent 6px 12px); }
+  /* the perforation: a row of punched dots across the flyer (the tear line) */
+  .ft-cut { position: absolute; left: 0; right: 0; top: 297px; height: 6px; background: radial-gradient(circle at 3px 3px, var(--coal) 0 2.2px, transparent 2.6px) 0 0 / 10px 6px repeat-x; }
   .ft-tabs { position: absolute; left: 0; top: 300px; width: 100%; height: 220px; margin: 0; padding: 0; list-style: none; }
-  .ft-tab { position: absolute; left: calc(var(--i) * 100px); top: 0; width: 100px; height: 220px; }
-  .ft-tab:not(:first-child)::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1.2px; background: repeating-linear-gradient(180deg, var(--ink) 0 3px, transparent 3px 7px); }
-  .ft-tab.is-gone { background: var(--coal); top: 1px; }
-  .ft-tab.is-gone::before, .ft-tab.is-gone > * { display: none; }
-  .ft-tab.is-gone + .ft-tab::before { display: block; }
-  .ft-num { position: absolute; left: 35px; top: 156px; width: 136px; height: 30px; rotate: -90deg; transform-origin: 0 0; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .04em; color: var(--ink); white-space: nowrap; }
-  .ft-mike { position: absolute; left: 61px; top: 45px; width: 25px; height: 16px; rotate: -90deg; transform-origin: 0 0; font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
-  .ft-torn { position: absolute; left: 1230px; top: 320px; width: 100px; height: 220px; rotate: -14deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 12px 20px -6px rgba(0, 0, 0, .5); text-decoration: none; transition: rotate .4s var(--ease-out); }
+  .ft-slot { position: absolute; left: calc(var(--i) * 100px); top: 0; width: 100px; height: 220px; }
+  .ft-slot:not(:first-child)::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1.2px; background: repeating-linear-gradient(180deg, var(--ink) 0 3px, transparent 3px 7px); z-index: 1; pointer-events: none; }
+  .ft-tab { position: absolute; inset: 0; display: block; background: var(--tan); color: var(--ink); text-decoration: none; transform-origin: 50% 0; cursor: pointer; -webkit-touch-callout: none; user-select: none;
+    transition: rotate .35s cubic-bezier(.45, 0, .55, 1), background-color .35s cubic-bezier(.45, 0, .55, 1); }
+  .ft-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: -5px; }
+  .ft-slot.is-gone { background: var(--coal); top: 1px; }
+  .ft-slot.is-gone::before, .ft-slot.is-gone > * { display: none; }
+  .ft-slot.is-gone + .ft-slot::before { display: block; }
+  .ft-slot.is-torn::before { opacity: 0; transition: opacity .6s cubic-bezier(.45, 0, .55, 1); }
+  .ft-txt { position: absolute; left: 24px; top: 200px; display: grid; width: 180px; rotate: -90deg; transform-origin: 0 0; white-space: nowrap; }
+  .ft-k { font-family: var(--f-label); font-weight: 500; font-size: 11px; line-height: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+  .ft-num { font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .04em; color: var(--ink); }
+  @media (hover: hover) and (pointer: fine) { html.motion .ft-tab:hover { rotate: 3deg; background-color: #DCD0B3; } }
+  .ft-torn { position: absolute; left: 1230px; top: 320px; width: 100px; height: 220px; rotate: -14deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 12px 20px -6px rgba(0, 0, 0, .5); color: var(--ink); text-decoration: none; transition: rotate .4s cubic-bezier(.45, 0, .55, 1); }
   .ft-torn:hover { rotate: -10deg; }
   .ft-take { position: absolute; left: 1210px; top: 220px; margin: 0; font-size: 40px; color: var(--tan); white-space: nowrap; }
 
@@ -62,17 +82,68 @@ const tabs = Array.from({ length: 10 }, (_, i) => i);
     .ft-h { left: 150px; top: 30px; font-size: 46px; }
     .ft-sub { left: 20px; top: 118px; font-size: 15px; line-height: 16px; }
     .ft-btn { left: 20px; top: 152px; width: 310px; }
-    .ft-cut { top: 240px; }
+    .ft-cut { top: 237px; }
     .ft-tabs { top: 240px; height: 170px; }
-    .ft-tab { left: calc(var(--i) * 70px); width: 70px; height: 170px; }
-    .ft-tab.is-m-out { display: none; }
-    .ft-tab.is-gone { background: none; top: 0; }
-    .ft-tab.is-gone::before, .ft-tab.is-gone > * { display: block; }
-    .ft-tab.is-m-gone { background: var(--coal); top: 1px; }
-    .ft-tab.is-m-gone::before, .ft-tab.is-m-gone > * { display: none; }
-    .ft-mike { display: none !important; }
-    .ft-num { left: 23px; top: 121px; width: 107px; height: 24px; font-size: 16px; line-height: 24px; letter-spacing: .03em; }
+    .ft-slot { left: calc(var(--i) * 70px); width: 70px; height: 170px; }
+    .ft-slot.is-m-out { display: none; }
+    .ft-slot.is-gone { background: none; top: 0; }
+    .ft-slot.is-gone::before, .ft-slot.is-gone > * { display: block; }
+    .ft-slot.is-m-gone { background: var(--coal); top: 1px; }
+    .ft-slot.is-m-gone::before, .ft-slot.is-m-gone > * { display: none; }
+    .ft-txt { left: 14px; top: 160px; width: 150px; }
+    .ft-k { font-size: 9px; line-height: 13px; letter-spacing: .08em; }
+    .ft-num { font-size: 16px; line-height: 24px; letter-spacing: .03em; }
     .ft-torn { left: 230px; top: 440px; width: 70px; height: 170px; rotate: -12deg; box-shadow: 0 10px 16px -6px rgba(0, 0, 0, .5); }
     .ft-take { left: 20px; top: 470px; font-size: 32px; }
   }
 </style>
+<script>
+  // B22 tear-off game (see the header comment). Only under html.motion; otherwise the strips are plain call links.
+  import { gsap } from 'gsap';
+  const row = document.querySelector<HTMLElement>('[data-tear-row]');
+  const status = document.querySelector<HTMLElement>('[data-tear-status]');
+  if (row && document.documentElement.classList.contains('motion')) {
+    const slots = Array.from(row.querySelectorAll<HTMLElement>('.ft-slot'));
+    // strips on the flyer at this width (a pre-torn slot hides its strip with display: none, so it has no box)
+    const live = () => slots.filter((s) => s.querySelector('.ft-tab')!.getClientRects().length > 0);
+    let busy = false;
+    const say = (t: string) => { if (status) status.textContent = t; };
+    const tabs = slots.map((s) => s.querySelector<HTMLAnchorElement>('.ft-tab')!);
+    tabs.forEach((a, i) => {
+      a.setAttribute('role', 'button');
+      a.setAttribute('aria-label', `Tear off strip ${i + 1}: ${a.dataset.label}. Long press to call.`);
+      let pressT = 0; let longPress = false;
+      a.addEventListener('pointerdown', () => { longPress = false; pressT = window.setTimeout(() => { longPress = true; window.location.href = a.href; }, 600); });
+      const cancel = () => clearTimeout(pressT);
+      a.addEventListener('pointerup', cancel); a.addEventListener('pointerleave', cancel); a.addEventListener('pointercancel', cancel);
+      a.addEventListener('contextmenu', (e) => e.preventDefault());
+      a.addEventListener('click', (e) => { e.preventDefault(); if (longPress) return; tear(a); });
+      a.addEventListener('keydown', (e) => { if (e.key === ' ') { e.preventDefault(); tear(a); } });
+    });
+    const tear = (a: HTMLAnchorElement) => {
+      const slot = a.parentElement!;
+      if (slot.classList.contains('is-torn')) return;
+      const i = tabs.indexOf(a); const s = i % 2 ? -1 : 1;
+      slot.classList.add('is-torn');
+      a.setAttribute('tabindex', '-1');
+      gsap.timeline({ defaults: { ease: 'power2.inOut' }, onComplete: () => { gsap.set(a, { visibility: 'hidden' }); after(a); } })
+        .to(a, { rotation: 6 * s, skewX: -3 * s, duration: 0.18 })
+        .to(a, { y: 90, x: 18 * s, rotation: 22 * s, skewX: 0, autoAlpha: 0, duration: 0.42 });
+      (window as any).__tears = ((window as any).__tears || 0) + 1;
+    };
+    const after = (a: HTMLAnchorElement) => {
+      if (busy) return;
+      const left = live().filter((s) => !s.classList.contains('is-torn'));
+      // focus moves to the next strip still on the flyer (keyboard players keep playing)
+      if (document.activeElement === a || document.activeElement === document.body) left[0]?.querySelector<HTMLElement>('.ft-tab')?.focus({ preventScroll: true });
+      if (left.length) { say(`Strip torn off. ${left.length} left.`); return; }
+      busy = true;
+      say('All strips torn. They are coming back.');
+      const torn = live().map((s) => s.querySelector<HTMLAnchorElement>('.ft-tab')!);
+      gsap.timeline({ delay: 0.5, onComplete: () => { busy = false; say('The strips are back.'); } })
+        .set(torn, { x: 0, y: 0, rotation: 0, skewX: 0, scale: 0.95, autoAlpha: 0 })
+        .add(() => torn.forEach((t) => t.parentElement!.classList.remove('is-torn')))
+        .to(torn, { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'sine.inOut', stagger: 0.12, onComplete: () => torn.forEach((t) => t.removeAttribute('tabindex')) });
+    };
+  }
+</script>

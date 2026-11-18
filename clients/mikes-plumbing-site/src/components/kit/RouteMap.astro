@@ -1,0 +1,18 @@
+---
+// RouteMap start states + module (fix round 1 B13 / B33). Put <RouteMap /> once in any component that holds a
+// [data-routemap]. The CSS below is frame 0 of kit/RouteMap.ts under html.motion (routes empty, town dots and tags hidden,
+// the map folded into its Riverside pin); without motion everything shows complete. Line style for every route map:
+// 3 px ink, dash 10 / 8 (class rm-line on the visible dashed path).
+---
+<style is:global>
+  .rm-line { fill: none; stroke: var(--ink); stroke-width: 3; stroke-dasharray: 10 8; stroke-linecap: butt; stroke-linejoin: round; }
+  [data-rm-route] { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  [data-rm-dot], [data-rm-base], [data-rm-ripple] { transform-box: fill-box; transform-origin: 50% 50%; }
+  [data-rm-ripple] { opacity: 0; }
+  html.motion [data-rm-route] { stroke-dashoffset: 1; }
+  html.motion [data-rm-dot] { scale: 0; opacity: 0; }
+  html.motion [data-rm-tag] { opacity: 0; translate: -14px 0; }
+  html.motion [data-rm-tag][data-rm-from="14"] { translate: 14px 0; }
+  html.motion [data-rm-unfold] { clip-path: circle(0% at var(--rm-ox, 50%) var(--rm-oy, 50%)); }
+</style>
+<script>import './RouteMap';</script>

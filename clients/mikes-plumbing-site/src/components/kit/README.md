@@ -117,6 +117,24 @@ sway). SVG children: the scheduler sets `transform-box: fill-box` so the origin 
   `transform`, so they combine with entrances. Cards/rows/tags/stamps/strips that are links get `lift` by default from
   `kit.css` selectors; add the attribute on anything else.
 
+### `RouteMap.astro` + `RouteMap.ts`: dashed driving routes out of Riverside (builder P, B13 / B33)
+Used by the Home route map (`home/Areas.astro`) and every town map (`town/TClose.astro`). Put `<RouteMap />` once in the
+component (it holds the CSS start states and loads the module). One scrubbed timeline per **visible** map svg (desktop and
+phone each their own, `gsap.matchMedia`). Sequence: the map unfolds from the Riverside pin (circle clip, 0.9 s
+power2.inOut, once; routes wait for it), Riverside pulses, then route 1 draws, its town dot pops and its tag slides out,
+then route 2 ... in `data-rm-route` order (by distance). Scrub 0.8 s from `top 75%` to `center 40%` by default.
+
+| Attribute | On | Meaning |
+|---|---|---|
+| `data-routemap` (+ `data-start`, `data-end`, `data-lag`) | the trigger box | one route map |
+| `data-rm-unfold` (+ CSS vars `--rm-ox`, `--rm-oy`) | the box that unfolds (may be the same element) | circle clip from the pin |
+| `data-rm-svg` | each layout's svg | builds only while visible |
+| `data-rm-route="i"` | a `pathLength="1"` path (or the mask path that reveals a dashed `.rm-line`) | drawn by `drawTo` |
+| `data-rm-dot="i"` / `data-rm-tag="i"` (`data-rm-from="14"` = slide from the right) | town dot / town tag | pop / slide in after route i |
+| `data-rm-base` / `data-rm-ripple` | the Riverside dot / a ring around it | pulse / ripple |
+
+Line style: class `rm-line` = 3 px ink, dash 10 / 8. QA hook: `window.__rm` lists `{ svg, tl, st }` per built map.
+
 ## One writer per property
 
 Each animated property of an element has exactly one owner. If a second module needs to move the same element, it

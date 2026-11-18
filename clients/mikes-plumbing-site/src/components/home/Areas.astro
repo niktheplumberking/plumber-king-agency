@@ -6,24 +6,26 @@
 import Img from '../ui/Img.astro';
 import Badge from './Badge.astro';
 import Wave from '../kit/Wave.astro';
+import RouteMap from '../kit/RouteMap.astro';
 import { SITE } from '../../data/site';
 import { TOWNS } from '../../data/towns';
 
 const town = (slug: string) => TOWNS.find((x) => x.slug === slug)!;
 // d: desktop route (x, y = its svg box), dot/tag positions in stage px; m: the same for the mobile strip.
+// Ordered by driving distance from Riverside (B13): the routes draw one after another in this order (kit/RouteMap.ts).
 const R = [
-  { s: 'west-hollywood', d: { x: 99, y: 176, p: 'M947.47 138.699C640.526 34.3631 325.119 -10.5727 1.25002 3.89164', dot: [90, 170], tag: [115, 164] },
-    m: { x: 18, y: 56, p: 'M317.71 49.6086C215.835 8.15852 110.198 -6.89148 0.800049 4.4586', dot: [13, 55], tag: [27, 39] } },
-  { s: 'los-angeles', d: { x: 217, y: 211, p: 'M829.353 103.168C559.884 13.1431 283.849 -17.2421 1.25009 12.0125', dot: [208, 213], tag: [233, 208] },
-    m: { x: 57, y: 67, p: 'M278.15 38.8721C188.618 2.18892 96.1679 -7.98775 0.800171 8.34214', dot: [52, 69], tag: [66, 73] } },
-  { s: 'buena-park', d: { x: 502, y: 311, p: 'M544.331 3.07822C348.461 -8.83716 167.434 37.3825 1.25015 141.737', dot: [493, 443], tag: [518, 438] },
-    m: { x: 153, y: 104, p: 'M182.69 2.18297C116.487 -4.16383 55.8573 11.3162 0.800049 48.623', dot: [148, 146], tag: [162, 142] } },
   { s: 'corona', d: { x: 872, y: 313, p: 'M174.574 1.25049C103.55 17.2562 45.775 54.0608 1.25006 111.664', dot: [863, 415], tag: [888, 410] },
     m: { x: 277, y: 105, p: 'M58.85 0.799805C35.0624 6.16047 15.7124 18.4871 0.800049 37.7798', dot: [272, 137], tag: [286, 133] } },
   { s: 'moreno-valley', d: { x: 1046, y: 313, p: 'M1.25 1.25C34.1344 28.0745 71.7949 41.3413 114.231 41.0503', dot: [1149, 344], tag: [1174, 339] },
     m: { x: 335, y: 105, p: 'M0.800049 0.799805C11.8138 9.78394 24.4271 14.2273 38.64 14.1298', dot: [368, 113], tag: [286, 104] } },
   { s: 'murrieta', d: { x: 1046, y: 313, p: 'M1.25 1.25C7.51534 173.187 67.8577 323.401 182.277 451.892', dot: [1218, 755], tag: [1242, 750] },
     m: { x: 335, y: 105, p: 'M0.800049 0.799805C2.89845 58.3854 23.1084 108.695 61.43 151.73', dot: [385, 251], tag: [333, 247] } },
+  { s: 'buena-park', d: { x: 502, y: 311, p: 'M544.331 3.07822C348.461 -8.83716 167.434 37.3825 1.25015 141.737', dot: [493, 443], tag: [518, 438] },
+    m: { x: 153, y: 104, p: 'M182.69 2.18297C116.487 -4.16383 55.8573 11.3162 0.800049 48.623', dot: [148, 146], tag: [162, 142] } },
+  { s: 'los-angeles', d: { x: 217, y: 211, p: 'M829.353 103.168C559.884 13.1431 283.849 -17.2421 1.25009 12.0125', dot: [208, 213], tag: [233, 208] },
+    m: { x: 57, y: 67, p: 'M278.15 38.8721C188.618 2.18892 96.1679 -7.98775 0.800171 8.34214', dot: [52, 69], tag: [66, 73] } },
+  { s: 'west-hollywood', d: { x: 99, y: 176, p: 'M947.47 138.699C640.526 34.3631 325.119 -10.5727 1.25002 3.89164', dot: [90, 170], tag: [115, 164] },
+    m: { x: 18, y: 56, p: 'M317.71 49.6086C215.835 8.15852 110.198 -6.89148 0.800049 4.4586', dot: [13, 55], tag: [27, 39] } },
 ];
 const REG = [
   { k: 'Inland Empire', towns: ['riverside', 'corona', 'moreno-valley', 'murrieta'] },
@@ -33,25 +35,27 @@ const REG = [
 ---
 <section class="ar" aria-labelledby="ar-h" data-m-section>
   <div class="st">
-    <div class="map" data-t="1" data-fx="fade">
+    <div class="map" data-routemap data-rm-unfold data-start="top 75%" data-end="center 40%" data-lag="0.8">
       <div class="map-img"><Img name="map-inland-empire-orange-county-los-angeles" alt="Street map of the Inland Empire, Orange County and Los Angeles with Mike's routes out of Riverside" sizes="(min-width: 768px) 1440px, 486px" widths={[486, 972, 1129]} /></div>
-      <svg class="rts rts-d" viewBox="0 0 1440 900" aria-hidden="true" data-scrub data-start="top 80%" data-end="center 30%" data-lag="0.8">
-        <defs>{R.map((r, i) => <mask id={`rmd${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width="1600" height="1000"><path d={r.d.p} class="rm" pathLength="1" data-scrub-path data-win={`${(i * 0.06).toFixed(2)},${(0.7 + i * 0.06).toFixed(2)}`} /></mask>)}</defs>
+      <svg class="rts rts-d" viewBox="0 0 1440 900" aria-hidden="true" data-rm-svg>
+        <defs>{R.map((r, i) => <mask id={`rmd${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width="1600" height="1000"><path d={r.d.p} class="rm" pathLength="1" data-rm-route={i} /></mask>)}</defs>
         <circle cx="1046" cy="313" r="110" class="pl a" /><circle cx="1045" cy="313" r="75" class="pl a" /><circle cx="1046" cy="313" r="42" class="pl b" />
-        {R.map((r, i) => <path d={r.d.p} transform={`translate(${r.d.x} ${r.d.y})`} class="rt" mask={`url(#rmd${i})`} />)}
-        {R.map((r) => <circle cx={r.d.dot[0] + 9} cy={r.d.dot[1] + 9} r="7.5" class="dt" />)}
-        <circle cx="1045" cy="313" r="9" class="rs" />
+        {R.map((r, i) => <path d={r.d.p} transform={`translate(${r.d.x} ${r.d.y})`} class="rt rm-line" mask={`url(#rmd${i})`} />)}
+        {R.map((r, i) => <circle cx={r.d.dot[0] + 9} cy={r.d.dot[1] + 9} r="7.5" class="dt" data-rm-dot={i} />)}
+        <circle cx="1045" cy="313" r="9" class="rip" data-rm-ripple />
+        <circle cx="1045" cy="313" r="9" class="rs" data-rm-base />
       </svg>
-      <svg class="rts rts-m" viewBox="0 0 390 301" preserveAspectRatio="none" aria-hidden="true" data-scrub data-start="top 80%" data-end="center 30%" data-lag="0.8">
-        <defs>{R.map((r, i) => <mask id={`rmm${i}`} maskUnits="userSpaceOnUse" x="-40" y="-40" width="480" height="380"><path d={r.m.p} class="rm" pathLength="1" data-scrub-path data-win={`${(i * 0.06).toFixed(2)},${(0.7 + i * 0.06).toFixed(2)}`} /></mask>)}</defs>
+      <svg class="rts rts-m" viewBox="0 0 390 301" preserveAspectRatio="none" aria-hidden="true" data-rm-svg>
+        <defs>{R.map((r, i) => <mask id={`rmm${i}`} maskUnits="userSpaceOnUse" x="-40" y="-40" width="480" height="380"><path d={r.m.p} class="rm" pathLength="1" data-rm-route={i} /></mask>)}</defs>
         <circle cx="335" cy="105" r="34" class="pl a" /><circle cx="335" cy="105" r="18" class="pl b" />
-        {R.map((r, i) => <path d={r.m.p} transform={`translate(${r.m.x} ${r.m.y})`} class="rt" mask={`url(#rmm${i})`} />)}
-        {R.map((r) => <circle cx={r.m.dot[0] + 5} cy={r.m.dot[1] + 5} r="4" class="dt" />)}
-        <circle cx="335" cy="105" r="4.75" class="rs" />
+        {R.map((r, i) => <path d={r.m.p} transform={`translate(${r.m.x} ${r.m.y})`} class="rt rm-line" mask={`url(#rmm${i})`} />)}
+        {R.map((r, i) => <circle cx={r.m.dot[0] + 5} cy={r.m.dot[1] + 5} r="4" class="dt" data-rm-dot={i} />)}
+        <circle cx="335" cy="105" r="4.75" class="rip" data-rm-ripple />
+        <circle cx="335" cy="105" r="4.75" class="rs" data-rm-base />
       </svg>
       <ul class="tags">
-        {R.map((r) => { const t = town(r.s); return (
-          <li style={`--dl:${r.d.tag[0]}px;--dt:${r.d.tag[1]}px;--ml:${r.m.tag[0]};--mt:${r.m.tag[1]}px`}><a href={t.href}>{t.name}<span class="sr-only"> plumber</span></a></li>
+        {R.map((r, i) => { const t = town(r.s); return (
+          <li data-rm-tag={i} style={`--dl:${r.d.tag[0]}px;--dt:${r.d.tag[1]}px;--ml:${r.m.tag[0]};--mt:${r.m.tag[1]}px`}><a href={t.href}>{t.name}<span class="sr-only"> plumber</span></a></li>
         ); })}
       </ul>
       <p class="base" aria-hidden="true"><svg viewBox="0 0 158 56"><path d="M21.28 1H136.72L157 23L136.72 45H21.28L1 23Z" /><path d="M71.1 44.5H87.1L79.1 53.5Z" class="ptr" /></svg><span>Riverside · Base</span></p>
@@ -79,6 +83,7 @@ const REG = [
   </div>
   <Wave only="d" class="ar-wb" z={2} top={862} d={{ path: 'M0 18C100 42 200 42 300 18C400 -6 500 -6 600 18C700 42 800 42 900 18C1000 -6 1100 -6 1200 18C1300 42 1400 42 1500 18V44H0V18Z', h: 44 }} fill="#FBF8F2" />
   <Wave only="m" class="ar-wb" z={2} topM={934} m={{ path: 'M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z', h: 30, w: 390 }} fill="#FBF8F2" />
+  <RouteMap />
 </section>
 <style>
   .ar { position: relative; z-index: 0; overflow: hidden; background: var(--paper); color: var(--ink); }
@@ -90,8 +95,10 @@ const REG = [
   .rts { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
   .rts-m { display: none; }
   .pl.a { fill: rgba(107,92,62,.1); } .pl.b { fill: rgba(107,92,62,.2); }
-  .rt { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2 7; }
-  .rm { fill: none; stroke: #fff; stroke-width: 10; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  /* routes: kit/RouteMap (3 px ink, dash 10/8, drawn one after another by distance, B13) */
+  .map { --rm-ox: 72.57%; --rm-oy: 34.78%; }
+  .rm { fill: none; stroke: #fff; stroke-width: 12; }
+  .rip { fill: none; stroke: var(--red); stroke-width: 2; }
   .dt { fill: var(--ink); stroke: var(--bone); stroke-width: 3; }
   .rs { fill: var(--red); stroke: var(--bone); stroke-width: 4; }
   .tags { margin: 0; padding: 0; list-style: none; }
@@ -139,8 +146,8 @@ const REG = [
     .base svg { width: 114px; height: 31px; }
     .base svg path { stroke-width: 1.5; }
     .rts-m { display: block; }
-    .rts-m .rt { stroke-width: 1.6; stroke-dasharray: 1.5 4.5; }
-    .rts-m .rm { stroke-width: 6; }
+    .map { --rm-ox: 85.9%; --rm-oy: 34.88%; }
+    .rts-m .rm { stroke-width: 8; }
     .rts-m .dt { stroke-width: 2; }
     .rts-m .rs { stroke-width: 2.5; }
     .rts-m .pl { display: inline; }

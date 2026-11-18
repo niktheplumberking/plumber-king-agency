@@ -52,12 +52,13 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
         <h2 id="fm-h" class="h2" data-t="2">An organized van <span class="tn">creates an organized mind.</span></h2>
       </div>
       <p class="lead" data-t="3"><span class="dk-only">Mike's Plumbing Services is </span>Mike Navarro's family business, started in Riverside in 2025. In his words: “professionalism starts before the first wrench is turned.”</p>
-      <ul role="list" class="tags" data-t="4" data-stagger tabindex="0" aria-labelledby="fm-h">
+      <ul role="list" class="tags" data-tags tabindex="0" aria-labelledby="fm-h">
         {TAGS.map((t) => (
-          <li class:list={['tag', t.dark && 'dk']} style={`--deg:${t.deg}deg`}>
+          <li class:list={['tag', t.dark && 'dk']} style={`--deg:${t.deg}deg`} data-idle="sway" data-idle-origin="50% -30px">
+            <span class="ring" aria-hidden="true"></span>
             <span class="tag-in">
               <span class="hole" aria-hidden="true"></span>
-              <span class="tag-n">{t.n}</span>
+              <span class="tag-n" aria-hidden="true">{t.n}</span>
               <span class="tag-h">{t.h}</span>
               <span class="tag-q">{t.q}</span>
             </span>
@@ -70,7 +71,7 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
   </div>
 </section>
 <style>
-  .fm { position: relative; background: var(--paper); color: var(--ink); height: 880px; }
+  .fm { position: relative; background: var(--paper); color: var(--ink); height: 960px; }
   .only-d { display: block; }
   .pipe-m, .nut-m { display: none; }
   .pipe { position: absolute; left: 680px; top: -106px; width: 640px; height: 656px; overflow: visible; z-index: 3; pointer-events: none; }
@@ -100,19 +101,23 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
   .h2 .tn { display: block; color: var(--tan-dark); }
   .lead { margin-top: 30px; max-width: 540px; font-size: 17px; line-height: 26px; color: var(--ink-2); }
   .tags { display: grid; grid-template-columns: 180px 170px 177px; gap: 0 12px; margin: 102px 0 0 8px; padding: 0; width: 570px; }
-  .tag { position: relative; rotate: var(--deg); }
-  .tag::before { content: ''; position: absolute; left: 50%; top: -46px; width: 1px; height: 46px; background: #6B6455; }
-  .tag-in { position: relative; display: grid; align-content: start; min-height: 182px; padding: 38px 16px 14px 14px; background: var(--ink); clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%, 0 22px); }
+  /* B15: the string starts on the pipe's centreline (500 px in the section; tags start at 532), behind the pipe, and a
+     small ring wraps the pipe there. The tag turns about that point (static tilt = CSS rotate, swing = GSAP rotation). */
+  .tag { position: relative; rotate: var(--deg); transform-origin: 50% -32px; --str: 32px; }
+  .tag::before { content: ''; position: absolute; left: 50%; top: calc(-1 * var(--str)); width: 1.5px; height: var(--str); margin-left: -.75px; background: #6B6455; }
+  .ring { position: absolute; left: 50%; top: calc(-1 * var(--str) + 1px); width: 13px; height: 13px; margin-left: -6.5px; border: 2px solid #3F3A32; border-radius: 50%; }
+  html.motion .tag { opacity: 0; visibility: hidden; transform: translateY(-36px); }
+  .tag-in { position: relative; display: grid; align-content: start; min-height: 182px; padding: 34px 16px 16px 14px; background: var(--ink); clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%, 0 22px); }
   .tag-in::before { content: ''; position: absolute; inset: 1.5px; background: var(--bone); clip-path: polygon(21px 0, calc(100% - 21px) 0, 100% 21px, 100% 100%, 0 100%, 0 21px); }
   .tag.dk .tag-in::before { background: var(--ink); }
   .tag-in > * { position: relative; }
   .hole { position: absolute; left: 50%; top: 14px; width: 11px; height: 11px; margin-left: -5px; border-radius: 50%; border: 1.5px solid #6B6455; background: var(--paper); }
-  .tag-n { font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .1em; color: var(--tan-dark); }
-  .tag-h { margin-top: 6px; font-weight: 700; font-size: 16px; line-height: 20px; color: var(--ink); }
+  .tag-n { margin-left: -2px; font-family: var(--f-display); font-weight: 400; font-size: 96px; line-height: 84px; letter-spacing: -.01em; color: transparent; -webkit-text-stroke: 1.5px var(--tan-dark); }
+  .tag-h { margin-top: 10px; font-weight: 700; font-size: 16px; line-height: 20px; color: var(--ink); }
   .tag-q { margin-top: 10px; font-size: 13px; line-height: 18px; color: var(--ink-2); }
-  .tag.dk .tag-n { color: var(--tan); } .tag.dk .tag-h { color: var(--paper); } .tag.dk .tag-q { color: var(--tan); }
+  .tag.dk .tag-n { -webkit-text-stroke-color: var(--tan); } .tag.dk .tag-h { color: var(--paper); } .tag.dk .tag-q { color: var(--tan); }
   .swipe { display: none; }
-  .fm-links { display: flex; align-items: center; gap: 48px; margin-top: 66px; }
+  .fm-links { display: flex; align-items: center; gap: 48px; margin-top: 48px; }
   .tl { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
   .tl:hover { color: var(--tan-dark); }
   .or { font-size: 16px; color: var(--ink-2); }
@@ -156,12 +161,18 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
     .lead .dk-only { display: none; }
     .tags { display: flex; gap: 16px; width: auto; margin: 32px calc(-1 * var(--gutter)) 0; padding: 36px var(--gutter) 14px 24px; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 0; }
     .tag { flex: 0 0 160px; scroll-snap-align: start; }
-    .tag::before { top: -36px; height: 36px; }
-    .tag-in { min-height: 170px; padding: 34px 14px 12px; }
-    .tag-n { font-size: 12px; } .tag-h { margin-top: 2px; font-size: 15px; line-height: 19px; } .tag-q { margin-top: 8px; font-size: 11.5px; line-height: 15.5px; }
+    .tag { --str: 28px; transform-origin: 50% -28px; }
+    .tag-in { min-height: 170px; padding: 30px 14px 12px; }
+    .tag-n { font-size: 72px; line-height: 64px; -webkit-text-stroke-width: 1.2px; } .tag-h { margin-top: 2px; font-size: 15px; line-height: 19px; } .tag-q { margin-top: 8px; font-size: 11.5px; line-height: 15.5px; }
     .tags { scrollbar-width: none; }
     .swipe { display: block; margin-top: 18px; font-family: var(--f-label); font-size: 11px; letter-spacing: .14em; color: var(--mute); }
     .fm-links { margin-top: 12px; }
     .or { display: none; }
   }
 </style>
+<script>
+  // B15: the tags drop from the pipe and swing on their strings, settling in ~1.2 s (scripts/objects.ts swing).
+  import { enter, swing } from '../../scripts/objects';
+  const ul = document.querySelector<HTMLElement>('.fm [data-tags]');
+  if (ul) enter(ul, () => swing(Array.from(ul.querySelectorAll<HTMLElement>('.tag'))), 'top 88%');
+</script>

@@ -109,7 +109,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
     <svg class="drip dr2" style="left:290px;top:62px" viewBox="0 0 14 21"><path d={drip} /></svg>
   </div>
   <Wave only="d" class="dg-wb" z={2} top={1086} d={{ path: 'M0 16C86.6667 -5.33333 173.333 -5.33333 260 16C346.667 37.3333 433.333 37.3333 520 16C606.667 -5.33333 693.333 -5.33333 780 16C866.667 37.3333 953.333 37.3333 1040 16C1126.67 -5.33333 1213.33 -5.33333 1300 16C1386.67 37.3333 1473.33 37.3333 1560 16V40H0V16Z', h: 40 }} fill="#D2C5A6" />
-  <Wave only="m" class="dg-wb" z={2} topM={1392} m={{ path: 'M0 10C43.3333 -3.33333 86.6667 -3.33333 130 10C173.333 23.3333 216.667 23.3333 260 10C303.333 -3.33333 346.667 -3.33333 390 10C433.333 23.3333 476.667 23.3333 520 10V28H0V10Z', h: 28, w: 390 }} fill="#D2C5A6" />
+  <Wave only="m" class="dg-wb" z={2} topM={1398} m={{ path: 'M0 10C43.3333 -3.33333 86.6667 -3.33333 130 10C173.333 23.3333 216.667 23.3333 260 10C303.333 -3.33333 346.667 -3.33333 390 10C433.333 23.3333 476.667 23.3333 520 10V28H0V10Z', h: 28, w: 390 }} fill="#D2C5A6" />
 </section>
 <style>
   .dg { position: relative; z-index: 3; height: 1120px; background: var(--bone); color: var(--ink); overflow-x: clip; }
@@ -167,7 +167,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
   blockquote { margin: 8px 0 0; max-width: 360px; }
   blockquote p { font-weight: 500; font-size: 16px; line-height: 24px; color: var(--ink-2); }
   blockquote b { font-weight: 800; color: var(--ink); }
-  blockquote footer { margin-top: 12px; font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .08em; text-transform: uppercase; color: var(--tan-dark); }
+  blockquote footer { margin-top: 10px; /* B6: -2 px, clears the wave by 24 */ font-family: var(--f-label); font-weight: 500; font-size: 12px; line-height: 18px; letter-spacing: .08em; text-transform: uppercase; color: var(--tan-dark); }
 
   @media (max-width: 1279px) {
     .dg { height: auto; padding-bottom: 150px; }
@@ -192,7 +192,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
   @media (max-width: 767px) {
     .d { display: none; }
     .m { display: inline; }
-    .dg { padding-bottom: 31px; }
+    .dg { padding-bottom: 37px; } /* B6: +6 px with the wave (topM +6) so the last quote clears it by 16 */
     .vs-m { display: block; top: -50px; left: auto; right: 0; width: 390px; height: 120px; }
     .ds-m { display: block; top: auto; bottom: -34px; width: 390px; height: 90px; left: auto; right: 0; }
     .dg :global(.dg-wb.wave--only-m) { top: auto !important; bottom: -6px; }

@@ -195,8 +195,10 @@ function callBar() {
   const est = $<HTMLAnchorElement>('a.mb-est[href="#estimate"]', bar); // safety net if a page forgets Base's `estimate`
   if (est && !document.getElementById('estimate')) est.href = document.getElementById('request') ? '#request' : '/contact'; // a cross-page link opens at the top (fix round 1, B4)
   const first = $('main section'); const cta = $('#estimate') ?? $('#request');
-  let pastHero = false, atCta = false;
-  const sync = () => bar.classList.toggle('is-on', pastHero && !atCta);
+  let pastHero = false, atCta = false, atEnd = false;
+  const sync = () => bar.classList.toggle('is-on', pastHero && !atCta && !atEnd);
+  // The footer's giant "MIKE'S" closes the page (B10d): the bar steps aside so it is never covered.
+  const end = $('.ft-big'); if (end) new IntersectionObserver(([e]) => { atEnd = e.isIntersecting; sync(); }).observe(end);
   if (first) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe(first);
   else { pastHero = true; sync(); }
   if (cta) new IntersectionObserver(([e]) => { atCta = e.isIntersecting; sync(); }, { threshold: 0.25 }).observe(cta);

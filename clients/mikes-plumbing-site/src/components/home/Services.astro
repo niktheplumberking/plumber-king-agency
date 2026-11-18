@@ -121,7 +121,7 @@ const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M
 </script>
 <style>
   .sv { position: relative; background: var(--ink); color: var(--paper); padding: 0 0 80px; overflow-x: clip; }
-  .sv :global(.sv-band) { position: absolute; left: -40px; right: -40px; top: 4px; z-index: 4; rotate: 1.62deg; }
+  .sv :global(.sv-band) { position: absolute; left: -40px; right: -40px; top: 20px; z-index: 4; rotate: 1.62deg; } /* B6: lowered 16 px, clears the wave by 12+ px */
   .sv-in { position: relative; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding-top: 130px; }
   .sv-head { display: grid; grid-template-columns: 1fr 420px; align-items: start; }
   .h2 { margin-top: 20px; font-family: var(--f-display); font-weight: 400; font-size: 64px; line-height: 69px; color: var(--paper); }
@@ -176,8 +176,8 @@ const arrow = '<svg viewBox="0 0 50 36" aria-hidden="true"><path class="hx" d="M
   }
   @media (max-width: 767px) {
     .sv { padding-bottom: 66px; }
-    .sv :global(.sv-band) { top: -18px; rotate: 1.62deg; }
-    .sv-in { padding-top: 70px; }
+    .sv :global(.sv-band) { top: 11px; rotate: 1.62deg; } /* B6: lowered 29 px */
+    .sv-in { padding-top: 76px; } /* B6: +6 px so the lowered band clears the eyebrow by 16 px */
     .sv-head { display: block; }
     .h2 { margin-top: 17px; font-size: 38px; line-height: 40px; }
     .h2 .tn { display: inline; }

@@ -11,6 +11,7 @@ import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import Lenis from 'lenis';
 import { park, reveal, interceptLinks } from '../components/kit/curtain';
 import { runLoader } from '../components/kit/loader';
+import { initMarquees } from '../components/kit/marquee';
 import { settled, requestRefresh } from '../components/kit/settle';
 
 declare global { interface Window { __pbpMotion?: boolean; __pbpLenis?: Lenis } }
@@ -662,7 +663,7 @@ function boot() {
     // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front, as
     // United does, so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
     const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));
-    buildRest(() => { signatures(); pointer(); requestRefresh(0); idle(() => { parallax(); requestRefresh(0); }, 600); });
+    buildRest(() => { signatures(); pointer(); initMarquees(); requestRefresh(0); idle(() => { parallax(); requestRefresh(0); }, 600); });
   };
   // Arrived through an in-site link: the page starts covered and at the top (kit/curtain.ts reveal), the hero is hidden
   // under the cover, then the panel lifts. Otherwise the loader (first visit) or a plain start.

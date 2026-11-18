@@ -10,7 +10,7 @@ import { SITE } from '../../data/site';
 const jobs = ['100-gallon heater, restaurant', 'Grease interceptor baffle tee', '4-inch gas line rework', 'ADU rough-in', '100-gallon heater, restaurant'];
 ---
 <section id="emergency" class="ec sv-sec sv-bone sv-abs" style="--sh:330px" aria-labelledby="ec-h" data-m-section>
-  <div class="ec-tape" aria-hidden="true"><p>{jobs.map((j, i) => (<>{i > 0 && <svg viewBox="0 0 16 14" class="ec-hx"><path d="M4 0h8l4 7-4 7H4L0 7z" fill="#D9412B" /></svg>}<span>{j}</span></>))}</p></div>
+  <div class="ec-tape" aria-hidden="true" data-marquee>{[0, 1].map(() => (<p data-marquee-track>{jobs.slice(0, 4).map((j) => (<><span>{j}</span><svg viewBox="0 0 16 14" class="ec-hx"><path d="M4 0h8l4 7-4 7H4L0 7z" fill="#D9412B" /></svg></>))}</p>))}</div>
   <div class="ec-in">
     <div class="ec-siren" data-t="2" aria-hidden="true">
       <svg class="ec-d" viewBox="0 0 128 128" data-ab style={ab(186, 126, 128, 128)}>
@@ -35,8 +35,9 @@ const jobs = ['100-gallon heater, restaurant', 'Grease interceptor baffle tee', 
 
 <style>
   .ec { overflow-x: clip; overflow-y: visible; }
-  .ec-tape { position: absolute; z-index: 4; left: -60px; top: -20px; width: 1600px; height: 58px; rotate: 2.2deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 10px 20px -8px rgba(0, 0, 0, .4); overflow: hidden; pointer-events: none; }
-  .ec-tape p { position: absolute; left: 60px; top: 15px; margin: 0; display: flex; align-items: center; gap: 18px; white-space: nowrap; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .ec-tape { position: absolute; z-index: 4; left: -60px; top: -20px; width: 1600px; height: 58px; rotate: 2.2deg; transform-origin: 0 0; background: var(--tan); box-shadow: 0 10px 20px -8px rgba(0, 0, 0, .4); overflow: hidden; pointer-events: auto; display: flex; align-items: center; }
+  :global(html:not(.motion)) .ec-tape { padding-left: 42px; } /* static tape: the first job starts in view, as in Figma */
+  .ec-tape p { flex: none; margin: 0; padding-left: 18px; display: flex; align-items: center; gap: 18px; will-change: transform; white-space: nowrap; font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 30px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
   .ec-hx { width: 16px; height: 14px; flex: none; }
   .ec-in { position: relative; }
   .ec-m { display: none; }
@@ -71,7 +72,8 @@ const jobs = ['100-gallon heater, restaurant', 'Grease interceptor baffle tee', 
   @media (max-width: 767px) {
     .ec { padding: 64px 0 42px; }
     .ec-tape { left: -40px; top: -26px; width: 620px; height: 44px; rotate: 3deg; }
-    .ec-tape p { left: 30px; top: 11px; gap: 12px; font-size: 15px; line-height: 22px; letter-spacing: .06em; }
+    :global(html:not(.motion)) .ec-tape { padding-left: 18px; }
+    .ec-tape p { padding-left: 12px; gap: 12px; font-size: 15px; line-height: 22px; letter-spacing: .06em; }
     .ec-hx { width: 12px; height: 11px; }
     .ec-in { column-gap: 0; grid-template-columns: 116px 1fr; }
     .ec-siren svg.ec-d { display: none; } .ec-siren svg.ec-m { display: block; width: 92px; height: 92px; margin-left: -2px; }

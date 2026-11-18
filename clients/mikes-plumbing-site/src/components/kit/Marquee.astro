@@ -1,25 +1,20 @@
 ---
-// Tilted tan band of short review words (Figma: "band · review words" and "review ticker"). A slow CSS marquee that
-// pauses on hover / focus; reduced motion: static. Decorative copy only (the words come from the Yelp reviews).
+// Tilted tan band of short review words (Figma: "band · review words" and "review ticker"). Driven by kit/marquee.ts (the one
+// GSAP marquee engine, fix round 1 B8): ~40 s loop, scroll velocity boosts it and it eases back over 1.2 s, pauses on hover
+// and focus, two seamless copies, static under reduced motion. Decorative copy only (the words come from the Yelp reviews).
 interface Props { words: string[]; star?: string; class?: string; size?: 'lg' | 'sm' }
 const { words, star = '#D9412B', class: cls } = Astro.props;
 const run = [...words, ...words];
 ---
-<div class:list={['mq', cls]} style={`--star:${star}`} aria-hidden="true">
-  <div class="mq-track">
-    {[0, 1].map(() => (
-      <span class="mq-set">{run.map((w) => <span class="mq-w">{w}<i>★</i></span>)}</span>
-    ))}
-  </div>
+<div class:list={['mq', cls]} style={`--star:${star}`} aria-hidden="true" data-marquee>
+  {[0, 1].map(() => (
+    <div class="mq-track" data-marquee-track>{run.map((w) => <span class="mq-w">{w}<i>★</i></span>)}</div>
+  ))}
 </div>
 <style>
   .mq { height: 61px; background: var(--tan); overflow: hidden; display: flex; align-items: center; box-shadow: 0 10px 20px -12px rgba(0, 0, 0, .5); pointer-events: auto; }
-  .mq-track { display: flex; flex: none; animation: mq 80s linear infinite; }
-  .mq:hover .mq-track { animation-play-state: paused; }
-  .mq-set { display: flex; flex: none; }
+  .mq-track { display: flex; flex: none; will-change: transform; }
   .mq-w { display: inline-flex; align-items: center; flex: none; font-family: var(--f-label); font-weight: 600; font-size: 24px; line-height: 1; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
   .mq-w i { font-style: normal; margin: 0 24px 0 25px; font-size: 22px; color: var(--star); }
-  @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  @media (prefers-reduced-motion: reduce) { .mq-track { animation: none; transform: translateX(-120px); } }
   @media (max-width: 767px) { .mq { height: 44px; } .mq-w { font-size: 17px; } .mq-w i { margin: 0 14px; font-size: 15px; } }
 </style>

@@ -1,6 +1,10 @@
 ---
 // Footer (Figma Home 631:2037 y 10720, 440 px; mobile 640:437 y 13850, 588 px): flyer rule on top, logo + script
 // tagline + one line, three link columns, copyright bar. On phones the columns become dotted inline lists (Figma).
+// Fix round 1 B10: 64 px (desktop) / 40 px (mobile) of coal above the wavy rule; one colour (#151410) for the whole footer
+// incl. the bar; Privacy · Terms end on the grid (x 1320); the giant "MIKE'S" (Abril, tan on coal, aria-hidden) closes the
+// page, cut in half by the bottom edge (an SVG whose viewBox shows the top half of the caps, so it is full-bleed at any width
+// with no horizontal scroll).
 import { Image } from 'astro:assets';
 import logo from '../../assets/brand/logo-cream.png';
 import WaveRule from '../kit/WaveRule.astro';
@@ -52,10 +56,11 @@ const year = new Date().getFullYear();
       <p class="ft-legal"><a href="/privacy">Privacy</a> <span aria-hidden="true">·</span> <a href="/terms">Terms</a></p>
     </div>
   </div>
+  <svg class="ft-big" viewBox="-2 -74 339 37" preserveAspectRatio="xMidYMin meet" aria-hidden="true" focusable="false"><text x="0" y="0" textLength="335" lengthAdjust="spacingAndGlyphs">MIKE’S</text></svg>
 </footer>
 <style>
-  .ft { background: #151410; color: #CFC8B8; }
-  .ft-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding: 8px 0 0; height: 380px; }
+  .ft { background: #151410; color: #CFC8B8; overflow: hidden; }
+  .ft-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding: 64px 0 0; height: 436px; }
   .ft :global(.ft-rule) { margin-top: 0; }
   .ft-grid { display: grid; grid-template-columns: 440px 250px 250px 1fr; margin-top: 46px; }
   .ft-logo { display: block; width: 150px; margin-left: 0; }
@@ -67,13 +72,14 @@ const year = new Date().getFullYear();
   .ft-col li { font-size: 15px; line-height: 32px; }
   .ft-col a { transition: color .25s; }
   .ft-col a:hover, .ft-legal a:hover { color: var(--tan); text-decoration: underline; text-underline-offset: 4px; }
-  .ft-bar { background: var(--ink); }
+  .ft-bar { background: #151410; }
   .ft-bar-in { display: flex; align-items: center; justify-content: space-between; height: 60px; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; font-size: 13px; color: #A39B8A; }
-  .ft-legal { margin-right: 26px; }
+  .ft-legal { margin-right: 0; }
+  .ft-big { display: block; width: 100%; height: auto; margin-top: clamp(16px, 2.2vw, 32px); font-family: var(--f-display); font-size: 100px; fill: var(--tan); pointer-events: none; user-select: none; }
   .ft-legal span { margin: 0 4px; }
   @media (max-width: 1279px) { .ft-in { height: auto; padding-bottom: 48px; } .ft-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 24px; } }
   @media (max-width: 767px) {
-    .ft-in { padding: 0 0 32px; }
+    .ft-in { padding: 40px 0 32px; }
     .ft :global(.ft-rule) { margin-top: 0; }
     .ft-grid { display: block; margin-top: 30px; }
     .ft-logo { width: 116px; }

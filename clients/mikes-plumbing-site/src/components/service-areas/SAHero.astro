@@ -34,7 +34,7 @@ const xy = (k: string) => { const [x, y] = at(k), [xm, ym] = atm(k); return `--x
     </div>
     <figure class="sh-mapwrap" data-t="4" data-fx="nudge">
       <div class="sh-plate" aria-hidden="true"></div>
-      <div class="sh-hex" data-scrub data-start="top 60%" data-end="bottom 30%"><div class="sh-in">
+      <div class="sh-hex" data-scrub data-start="top 260px" data-start-m="top 60%" data-end="bottom 30%"><div class="sh-in">
         <div class="sh-tiles" style={`--x:${pc(OX, W)};--y:${pc(OY, H)};--w:${pc(1129 * S, W)};--h:${pc(701 * S, H)};--xm:${pc(OXM, WM)};--ym:${pc(OYM, HM)};--wm:${pc(1129 * SM, WM)};--hm:${pc(701 * SM, HM)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="Map of the Inland Empire, Orange County and Los Angeles with Mike's base in Riverside and the towns he serves" sizes="(min-width: 768px) 830px, 420px" widths={[420, 830, 1129]} priority /></div>
         <svg class="sh-routes sh-routes--d" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
           {DOTS.map(({ p }) => <path d={`M${rx.toFixed(1)} ${ry.toFixed(1)} L${p[0].toFixed(1)} ${p[1].toFixed(1)}`} pathLength="1" data-scrub-path />)}

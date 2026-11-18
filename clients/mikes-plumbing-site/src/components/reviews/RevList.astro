@@ -142,7 +142,7 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
   .rc-fig { position: relative; display: flex; flex-direction: column; width: 100%; margin: 0; padding: 63px 26px 16px 32px; border-radius: 2px; }
   .t-tan .rc-fig { background: var(--tan); --tag-c: var(--tan); --meta: #514C41; --mark: rgba(14, 13, 11, .22); }
   .t-paper .rc-fig { background: var(--bone); --tag-c: var(--bone); --meta: #6B675E; --mark: rgba(14, 13, 11, .2); }
-  .t-red .rc-fig { background: var(--red); --tag-c: var(--red); --meta: #3A130C; --mark: rgba(14, 13, 11, .25); }
+  .t-red .rc-fig { background: var(--red-hi); --tag-c: var(--red-hi); --meta: #230C07; --mark: rgba(14, 13, 11, .25); }
   .t-coal .rc-fig { background: #2A2722; color: var(--paper); --tag-bg: var(--paper); --tag-c: var(--ink); --hex-bg: var(--paper); --hex-c: var(--ink); --meta: var(--mute); --mark: rgba(243, 236, 221, .22); }
   .rc-fig { color: var(--ink); }
   /* B27: reading-line highlight (opacity on the figure, the entrance owns the li) + the key phrase's underline */
@@ -165,7 +165,7 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
   .rc-L .rc-by, .rc-F .rc-by { margin-top: 23px; }
   .rc-hex { flex: none; display: grid; place-items: center; width: 40px; height: 33px; background: var(--hex-bg, var(--ink)); color: var(--hex-c, var(--tan));
     clip-path: polygon(22% 0, 78% 0, 100% 50%, 78% 100%, 22% 100%, 0 50%); font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .04em; }
-  .t-paper .rc-hex { color: var(--paper); } .t-red .rc-hex { color: var(--red); }
+  .t-paper .rc-hex { color: var(--paper); } .t-red .rc-hex { color: var(--red-hi); }
   .rc-who { display: grid; gap: 2px; padding-top: 0; }
   .rc-who b { font-weight: 600; font-size: 16px; line-height: 20px; }
   .rc-who span { font-size: 13px; line-height: 18px; color: var(--meta); }
@@ -201,7 +201,7 @@ const count = (k: string) => (k === 'all' ? cards.length : cards.filter((c) => c
     .rc-fig { padding: 20px 20px 22px; }
     .m-tan .rc-fig { background: var(--tan); --tag-bg: var(--ink); --tag-c: var(--tan); --hex-bg: var(--ink); --hex-c: var(--tan); --meta: #514C41; color: var(--ink); }
     .m-paper .rc-fig { background: var(--bone); --tag-bg: var(--ink); --tag-c: var(--bone); --hex-bg: var(--ink); --hex-c: var(--bone); --meta: #6B675E; color: var(--ink); }
-    .m-red .rc-fig { background: var(--red); --tag-bg: var(--ink); --tag-c: var(--red); --hex-bg: var(--ink); --hex-c: var(--red); --meta: #3A130C; color: var(--ink); }
+    .m-red .rc-fig { background: var(--red-hi); --tag-bg: var(--ink); --tag-c: var(--red-hi); --hex-bg: var(--ink); --hex-c: var(--red-hi); --meta: #230C07; color: var(--ink); }
     .m-tan .rc-k, .m-red .rc-k { --ul: var(--ink); } .m-paper .rc-k, .m-coal .rc-k { --ul: var(--tan); }
     .m-paper .rc-k { --ul: var(--tan-dark); }
     .m-coal .rc-fig { background: #2A2722; color: var(--paper); --tag-bg: var(--tan); --tag-c: var(--ink); --hex-bg: var(--paper); --hex-c: var(--ink); --meta: var(--mute); }

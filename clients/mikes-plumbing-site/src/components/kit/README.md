@@ -51,18 +51,34 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
 - `home/flow.ts` (the "How a job goes" pipe with its bead, stops, chevrons and gauge) is the one bespoke scrub. It uses
   `drawTo`, `settled` and `requestRefresh` from here.
 
-### `curtain.ts`: page transitions (one channel: GSAP `yPercent` on `.pt-panel`)
-- `park()` (at boot) sets yPercent 100, unless this page arrived under the curtain. It also resets the curtain on a
-  bfcache restore.
-- `cover(href)` covers in one ease-in-out move (current → 0, 0.6 s), then navigates.
-- `reveal(onHandoff, onDone)` handles a page that arrives covered (`html.pt-in`). It sets
-  `history.scrollRestoration = 'manual'`, puts the page at the top (window + `lenis.scrollTo(0, { immediate: true })`),
-  then lifts the panel 0 → -100 (0.75 s). `onHandoff` fires once the panel has cleared the header. scrollRestoration
-  returns to `'auto'` afterwards.
+### `curtain.ts`: page transitions (fix round 1, B2: the loader's 8 blinds; one channel: GSAP `xPercent` per `.pt-blind`)
+- The curtain is the same family as the loader: 8 full-width horizontal blinds (`Curtain.astro`), even ones park off to
+  the left (xPercent -101), odd ones to the right (+101). The CSS resting state is "covering", so a page that arrives
+  under the curtain is covered before paint.
+- `park()` (at boot) parks the blinds off-screen, unless this page arrived under the curtain. It also resets the curtain
+  on a bfcache restore.
+- `cover(href)` slides every blind to 0 (0.6 s `power2.inOut`, stagger 0.012 s, alternating sides), THEN navigates.
+- `reveal(onHandoff, onDone)` handles a page that arrives covered (`html.pt-in`): `history.scrollRestoration = 'manual'`,
+  the page goes to the top under the cover, then the blinds slide off to alternating sides (0.6 s `power2.inOut`);
+  `onHandoff` (hero timeline) fires when the last blind is off. scrollRestoration returns to `'auto'` afterwards.
 - `interceptLinks()` covers for in-site links to another page, and drops a cross-page `#hash` so a new page always
   opens at the top. Same-page `#` links stay with Lenis (smooth). New tabs, modifier clicks, downloads and
   `data-no-curtain` are skipped.
 - `toTop()`.
+
+### `loader.ts`: the first-visit loader (fix round 1, B3; markup `global/Loader.astro`)
+`runLoader({ onCover, onDone })`. Base: 21st.dev "Swiss Poster Counter Preloader" (id 35248), vanilla TS + GSAP, 3.1 KB
+minified. A 3 x 7 slat counter counts 000 -> 100 while the page loads (100 forced at 1.8 s), then 8 blinds slide off
+alternately (0.6 s). `onCover` runs while still fully covered (hero start states), `onDone` when the last blind is off
+(hero timeline, header, Lenis). Once per session (`sessionStorage mps-intro`), skippable (click, tap, key), max 3.4 s,
+never under reduced motion. The slats move only through their CSS custom properties `--x --y --s` (CSS transition).
+
+### `marquee.ts`: the one marquee engine (fix round 1, B8)
+`[data-marquee]` holds two `[data-marquee-track]` copies (`Marquee.astro`, or hand markup like `services/Callout.astro`).
+`initMarquees()` (motion.ts, after the handoff): each copy is filled with clones until it is wider than the band (no gap
+360-1920), one GSAP ticker loop moves both tracks by `x` so one period takes ~40 s at any width, scroll velocity boosts it
+(up to 3x, `|v| / 500`) and the boost eases back over ~1.2 s, hover or keyboard focus eases it to a stop (~0.4 s) and back.
+Runs only in view and under `html.motion`; reduced motion = static first copy. Check: `node scripts/check-marquees.mjs`.
 
 ### `accordion.ts`: the one controller for every `<details data-acc>`
 - Markup: `<details data-acc [name="group"]><summary>…</summary>…body…</details>`. Rows sharing a `name` are one group,
@@ -76,13 +92,13 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
 - `setOpen(row, open)` opens or closes a row from code, with the same timeline as a click.
 - `initAccordions(root?)` is called by `ui.ts`.
 
-### `marquee.ts` (API, wired in Phase 2), `idle.ts` (API), `hover.ts` (pointer check)
-- `marquee(band)` / `initMarquees()`. Markup: `[data-marquee]` holds two `[data-marquee-track]` copies. It loops in
-  ~40 s, the scroll velocity boosts it and it eases back in ~1.2 s, and it pauses on hover or focus. It only runs in view
-  and under motion.
-- `registerIdle(el, gesture, priority)` / `startIdle()` play one gesture every 5–7 s on one in-view element, never the
-  same element twice. It pauses while scrolling, on hover, on form focus, when the tab is hidden and under reduced
-  motion.
+### `idle.ts`, `hover.ts` (pointer check)
+- `startIdle()` (motion.ts, at idle time after the handoff) collects every `[data-idle]`. `registerIdle(el, play,
+  priority)` adds a custom gesture: `play()` returns a WAAPI Animation or a gsap animation (used by the contact sign).
+  One gesture every 5-7 s on one element at least half in view, lowest priority first (ties random), never the same
+  element twice in a row. Paused while scrolling and 0.8 s after, while the pointer is over the object or any clickable,
+  on form focus, when the tab is hidden, under the loader / curtain and under reduced motion. A `[data-idle]` inside
+  another `[data-idle]` is skipped (the wrapper owns it).
 - `finePointer()`: hover effects run only on `(hover: hover) and (pointer: fine)`.
 
 ### `data-idle`: put an idle gesture on an object (any builder may add it, no script needed)
@@ -142,7 +158,9 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 
 | Element | Property | Owner |
 |---|---|---|
-| `.pt-panel` | `transform` (yPercent) | `curtain.ts` |
+| `.pt-blind` | `transform` (xPercent) | `curtain.ts` |
+| `.ld-blind` / `.ld-stage`, `.ld-skip` | `transform` (xPercent) / `opacity`, `visibility` | `loader.ts` |
+| `.ld-slat` | `--x`, `--y`, `--s` (CSS transition on `transform`) | `loader.ts` |
 | `.pt-mark` | `opacity`, `visibility` | `curtain.ts` |
 | `history.scrollRestoration` | | `curtain.ts` (plus the Base.astro head script, `manual` when arriving under the curtain) |
 | window scroll position | | Lenis (`motion.ts`); `curtain.ts toTop()` only under the cover |
@@ -162,7 +180,8 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 | `summary` of a `[data-acc]` row | `aria-expanded` | `accordion.ts` |
 | colours of an accordion row | `background-color`, `color`, `border-color`, `fill`, `stroke`, … | CSS transitions (`kit.css`) |
 | `[data-t]` entrance items, parallax | `opacity`, `transform` | `motion.ts` |
-| `[data-marquee-track]` | `transform` (translate3d x) | `marquee.ts` (Phase 2) |
+| `[data-marquee-track]` | `transform` (x) | `marquee.ts` |
 | hover lift | `translate` (CSS transition) | component CSS, `finePointer()` |
+| cover photo in a clipping frame (`img[data-drift]`) | `scale` (1.14, set once), `translate` (scrub) | `motion.ts photoDrift()` |
 | idle gesture | `rotate` / `scale` / `translate` (WAAPI, `composite: 'add'`, so it adds to any transform) | `idle.ts` |
 | hover lift / tilt (`data-hover`) | `translate` / `rotate` / `scale` (CSS transition) | `kit.css` |

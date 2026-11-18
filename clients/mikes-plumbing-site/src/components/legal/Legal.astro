@@ -42,7 +42,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
     <ol class="lb-list" role="list">
       {sections.map((s, i) => (
         <li class="ls" id={s.id}>
-          <span class="ls-nut" aria-hidden="true"><svg viewBox="0 0 50 38"><path d="M6.89.65h35.52l6.24 18-6.24 18H6.89L.65 18.65z" /></svg><span>{nn(i)}</span></span>
+          <span class="ls-nut" aria-hidden="true"><svg viewBox="0 0 50 38" data-idle="nut"><path d="M6.89.65h35.52l6.24 18-6.24 18H6.89L.65 18.65z" /></svg><span>{nn(i)}</span></span>
           <h2 class="ls-t">{s.t}</h2>
           <p class="ls-a" set:html={html(s.a)} />
         </li>
@@ -93,7 +93,7 @@ const html = (s: string) => s.replace(SITE.phone, tel);
   .lb-mark { position: absolute; z-index: 1; left: -5px; top: 38px; width: 26px; height: 20px; transition: transform .5s var(--ease-out); }
   .lb-rail ul { margin: 9px 0 0; padding: 0; }
   .lb-t { display: flex; align-items: center; height: 42px; padding-left: 32px; font-weight: 500; font-size: 15px; line-height: 16px; color: var(--ink-2); transition: color var(--dur-2); }
-  .lb-t span { width: 30px; flex: none; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; color: var(--mute); }
+  .lb-t span { width: 30px; flex: none; font-family: var(--f-label); font-weight: 600; font-size: 13px; line-height: 19px; color: var(--mute-lt); }
   .lb-t:hover { color: var(--ink); }
   .lb-t.is-on { font-weight: 700; color: var(--ink); } .lb-t.is-on span { color: var(--ink); }
   .lb-pill { display: none; }

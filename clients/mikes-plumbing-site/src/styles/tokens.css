@@ -24,9 +24,16 @@
   --paper: #F3ECDD;    /* light sections, text on ink */
   --bone: #FBF8F2;     /* lightest surface */
   --tan: #D2C5A6;      /* flyer tan: accent on ink, buttons (ink text on it) */
-  --tan-dark: #6B5C3E; /* small text / second line on paper (5.4:1) */
-  --red: #D9412B;      /* live dots only */
+  --tan-dark: #5F5137; /* small text / second line on paper and tan (fix r1 contrast: was #6B5C3E, 3.8:1 on tan; now 4.5:1 on tan, 6.9:1 on paper) */
+  --red: #D9412B;      /* live dots, rules, fills, large type */
+  /* Contrast variants of the red (fix round 1, axe 0): the brand red sits at 4.2-4.4:1 against every text colour, so
+     small text uses the nearest shade that passes AA (README deviation log). */
+  --red-text: #C33722;  /* red small text on bone / paper (5.1 / 4.6:1) */
+  --red-deep: #992B1B;  /* red small text on tan / sand (4.5:1) */
+  --red-btn: #D53C26;   /* red fill under white text (4.7:1) */
+  --red-hi: #DC4A34;    /* red on ink, and ink text on a red card (4.7:1) */
   --mute: #A79D88;     /* meta on ink */
+  --mute-lt: #746A56;  /* meta on paper / bone (4.5:1; the mute is 2.3:1 there) */
   --ink-2: #4A443A;    /* body text on paper */
   --line-d: #3A352C;   /* hairlines on ink (Figma hex outlines, chip borders) */
 

@@ -76,7 +76,7 @@ const xy = (k: string) => { const [x, y] = at(k), [xm, ym] = atm(k); return `--x
   .sh-pin { position: absolute; width: 40px; height: 32px; margin: -16px 0 0 -20px; background: var(--red); clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); box-shadow: 0 0 0 9px rgba(217, 65, 43, .25); }
   .sh-pin::before { content: ''; position: absolute; left: -12px; top: -14px; width: 64px; height: 60px; }
   .sh-tag { position: absolute; padding: 0 12px; height: 29px; display: flex; align-items: center; white-space: nowrap; background: var(--ink); color: var(--paper); font-family: var(--f-label); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; border-radius: 2px; }
-  .sh-cap { position: absolute; right: 22px; bottom: -26px; font-size: 10px; color: var(--ink-2); }
+  .sh-cap { position: absolute; right: 22px; bottom: -26px; padding: 0 4px; font-size: 10px; color: var(--ink-2); background: var(--paper); } /* contrast: the plate shadow sat behind it */
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .sh { height: auto; padding: 72px 0 110px; }

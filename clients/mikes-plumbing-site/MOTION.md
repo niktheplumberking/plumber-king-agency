@@ -273,22 +273,27 @@ handoff, plays once at their line, puts objects above the viewport in their end 
 
 ## 3. Loader and curtain (the handoff)
 
-- **Loader** (`components/global/Loader.astro`, first visit per session only): one beat at a time, each starting when the
-  previous is ~70 % done: the ring draws round the seal (0.8 s), the seal settles, the three livery stripes slide in, the
-  words, then the pipe, which fills with water while the page loads (at least 1.8 s, at most 3.4 s). Then the navy panel
-  lifts with the van's swoosh as its trailing edge; the hero sequence starts 0.45 s into the lift (the panel uncovers the
-  page from the bottom, so the hero top is revealed last). Any click, tap or key skips it. The hero photo loads (and
-  paints, so LCP is taken) underneath it; the hero's start states are applied only as the panel starts to lift.
-- **Curtain** (`components/kit/Curtain.astro` + `kit/curtain.ts`; fix round 1 A-3/B4): one channel, GSAP `yPercent` on
-  `.pt-panel` (no CSS transform on it). A click on an in-site link covers the page in one continuous `0.6 s power2.inOut`
-  move (yPercent 100 to 0, the panel is one wave-edge taller at each end so 0 is full coverage), THEN navigates. The next
-  page starts covered (`html.pt-in`, set before paint), is put at the top under the cover (`history.scrollRestoration =
-  'manual'` while arriving, `lenis.scrollTo(0, { immediate: true })`), then the panel lifts to yPercent -100 in
-  `0.75 s power2.inOut`; the hero plays once the panel has cleared the header, and `scrollRestoration` returns to
-  `'auto'` after the lift so back/forward keep the browser's native restore. A cross-page link drops its `#hash`
-  (a new page always opens at the top). Skipped for new tabs, modifier clicks, downloads, hash links on the same page
-  (Lenis scrolls those smoothly), and `data-no-curtain` links.
-- Both panels travel their own layout height (`offsetHeight`), so they stay exact under the wide-screen zoom.
+- **Loader** (fix round 1, B3; `components/global/Loader.astro` + `kit/loader.ts`, first visit per session only, never under
+  reduced motion). Base: 21st.dev "Swiss Poster Counter Preloader" (id 35248), re-built in vanilla TS + GSAP (3.1 KB
+  minified). An ink poster: Mike's hex badge top left, "Riverside, CA" and `000 / 100` top right, "Friendly ·
+  Transparent · Proficient" bottom left, a 3-digit slat counter in the middle (every digit a 3 x 7 grid of tan and bone
+  2:1 slats that read as pipe sections; a number is drawn by sliding the bars sideways onto the lit cells, so the count
+  shunts and never fades). Timing: slats grow in (0.3 s), the count runs 000 -> 100 over ~1.3 s with surges and stalls
+  while the page loads (it holds at 99 until `load`, 100 is forced at 1.8 s), the last shunt lands (0.46 s), then the
+  exit (~0.7 s): the stage fades (0.25 s) and the **8 blinds** slide off alternately left / right (0.6 s
+  `power2.inOut`, stagger 0.012 s). The hero takes its start states while still fully covered; the hero timeline, the
+  header and Lenis start only in the exit's `onComplete`. Max 3.4 s; measured 3.13-3.19 s to `intro` removed on a fast
+  network. Any click, tap or key skips to 100 and exits (measured 1.93 s). If the JS has not booted by 3.5 s (very slow
+  networks), the Base.astro safety removes `html.intro` and the page shows without the loader.
+- **Curtain** (fix round 1, B2; `components/kit/Curtain.astro` + `kit/curtain.ts`): the same 8-blind family. One channel,
+  GSAP `xPercent` per `.pt-blind`. A click on an in-site link slides the blinds in from alternating sides (0.6 s
+  `power2.inOut`, stagger 0.012 s; measured cover 0 -> 1 monotonic in ~0.48 s), THEN navigates. The next page starts
+  covered (`html.pt-in`, the CSS rest state is covering), goes to the top under the cover (`history.scrollRestoration =
+  'manual'`, `lenis.scrollTo(0, { immediate: true })`), then the blinds slide off (0.6 s; measured 1 -> 0 monotonic in
+  0.5 s); the hero plays once the last blind is off, and `scrollRestoration` returns to `'auto'` (back/forward keep
+  the native restore, measured 2500 -> 2500). A cross-page link drops its `#hash`. Skipped for new tabs, modifier
+  clicks, downloads, same-page hash links and `data-no-curtain` links.
+- Blinds move by xPercent of their own width, so they stay exact under the wide-screen zoom.
 
 You never call either one. Use `Base.astro`; `loader={false}` turns the loader off for a page (404, thank-you).
 
@@ -321,7 +326,7 @@ You never call either one. Use `Base.astro`; `loader={false}` turns the loader o
 | `data-parallax`, `data-parallax-wrap` | (retired) | ignored: parallax is automatic since round 3 (section 4b). Remove when you next touch the markup |
 | `data-no-px` | on a frame | keeps that photo's media column out of the parallax |
 | `data-pipe` + `data-pipe-fill` (+ `data-pipe-fill-v`) | Process pipe | water follows the scroll: across on desktop, down the left on mobile |
-| `data-marquee` | `TownBand.astro` | endless loop at 38 px/s; scroll speed nudges it faster, then it eases back |
+| `data-marquee` | `kit/Marquee.astro` and every band / tape (fix round 1, B8) | one GSAP engine (`kit/marquee.ts`): two seamless copies filled to the band width (no gap 360-1920), one period ~40 s (measured 38 s; 114 px/s on the Home bands at 1440, 64 px/s on the Services tape), scroll velocity boosts it up to 3x and it eases back over ~1.2 s, hover / focus pauses it (eased), static under reduced motion. Check: `node scripts/check-marquees.mjs` |
 | `data-draw-map`, `data-route` | `PinellasMap.astro` | the county outline draws; the dashed truck route then flows once and rests |
 | `data-magnetic` | primary buttons (default on `pri`/`priN`) | the button leans toward the pointer (fine pointers only) |
 | (every `.btn`) | buttons | the hover fill grows from where the pointer entered |
@@ -354,6 +359,38 @@ the viewport (`top bottom` -> `bottom top`, `scrub 0.5`, driven by the same Leni
 - Triggers are measured without the drift (`refreshInit` clears it, `refresh` repaints), so band start points never move.
 - Measured (frame-strip probe, Home/about 1440, water-heaters 390): 0 off-grid samples, photo offset inside its frame
   constant (1 value per column across the whole scroll), no inline transform on any img, no step jump.
+
+### Fix round 1, B5: ranges now, and United's in-frame photo drift
+
+The table above is the round-3 design; the ranges in force since fix round 1 (motion.ts `parallax()`):
+media columns +-16 px (hero 0 -> +32 px), `.shead` +10 -> -10 px (headings never more than 10 px), lone
+stamps / seals / accents +14 -> -14 px; under 6 px of room a target stays still.
+
+**In-frame drift** (`photoDrift()`, United's `initAutoParallax`): every cover photo that fills a clipping frame drifts
+inside it. The img gets CSS `scale: 1.14` (set once; the photo overfills its frame by 7 % per side) and a scrub writes
+only its `translate` from `0 -5%` to `0 5%` (`top bottom` -> `bottom top`, scrub 0.6). The hero photo is still at load
+and drifts 0 -> 5 % only as the hero scrolls away (`top top`). Skipped: carousels and tracks (`[data-carousel]`,
+`[data-track]`), marquees, maps, cut-outs (PNG or not `object-fit: cover`), photos under 160 x 120, anything with its own
+`scale` / `translate`, `[data-no-px]` and `[data-drift-off]`. The frames are found once per layout band
+(`gsap.matchMedia`: phone / tablet / desktop) and the tweens follow ScrollTrigger's own deferred refresh, so nothing is
+measured or refreshed during a scroll. Measured: Home 11 drifting photos at 1440 (5 at 390), Services 6, About 4; 0
+samples where a frame edge showed.
+
+## 4c. Idle life and hover (fix round 1, B11)
+
+- **Idle** (`kit/idle.ts`, started at idle time after the handoff): every 5-7 s (random) ONE gesture of 0.4-0.8 s plays
+  on ONE object at least half in view: priority Yelp badge shake (1), stamp re-thump (2), hex nut 60 deg (3), valve
+  quarter turn (4), drip (5), dial twitch (6), tag sway (7); ties random; never the same element twice in a row; never
+  text. Paused while scrolling (and 0.8 s after), while the pointer is over the object or any clickable, on form focus,
+  when the tab is hidden, under the loader / curtain and under reduced motion. The gestures run on WAAPI with
+  `composite: 'add'` on the individual `rotate` / `translate` properties, so they add to whatever an entrance, a scrub or
+  the parallax writes and end exactly where they started. Markup: `data-idle` (kit/README.md). Measured on Home 1440:
+  gestures at 5.5 s, 11.0 s, 17.1 s, 22.5 s, alternating nut / drip; 0 under reduced motion.
+- **Hover**: every clickable answers a fine pointer (component CSS, plus `kit.css`: `data-hover="lift|tilt|nut"`, the
+  footer badge lift, an underline for class-less inline links, a brighten for dot buttons). Lifts use `translate` /
+  `rotate` / `scale`, 0.35 s ease-in-out; under reduced motion only the colour / opacity part stays.
+- **Menus** (B9): the mega menus and the mobile menu open and close with ease-in-out tweens of 0.5-0.6 s (were 0.38 s
+  ease-out open, 0.22 s ease-out close); the menu groups use the kit accordion (0.7 s ease-in-out).
 
 ## 5. Interface attributes (`ui.ts`, work with or without motion)
 

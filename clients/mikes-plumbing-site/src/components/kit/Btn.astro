@@ -28,7 +28,7 @@ const mv = v ?? 'call';
 const mLink = href ?? (mv === 'text' ? SITE.sms : SITE.tel);
 const mT = title ?? (mv === 'text' ? 'Text Mike a photo' : SITE.phone);
 const mPhone = mT === SITE.phone;
-const mLabel = mPhone ? `Call ${SITE.phone}${sub ? `, ${sub}` : ''}` : undefined;
+// Accessible name = "Call " (screen readers only) + the visible text, so it contains the label (WCAG 2.5.3, axe 0).
 // look="call"
 const cSub = sub === undefined ? 'Free estimate · tap to call' : sub;
 // look="ghost"
@@ -43,9 +43,9 @@ const fSr = [fHref.startsWith('tel:') && !`${fL1} ${sub || ''}`.includes(SITE.ph
 const arrowSvg = '<path d="M4 12h16"/><path d="m14 6 6 6-6 6"/>';
 ---
 {look === 'main' && (
-  <a href={mLink} class:list={['mb', `mb-${mv}`, cls]} aria-label={mLabel} data-t={t || undefined} {...ext} {...rest}>
+  <a href={mLink} class:list={['mb', `mb-${mv}`, cls]} data-t={t || undefined} {...ext} {...rest}>
     <span class="mb-txt">
-      <span class:list={['mb-t', mPhone && 'mb-ph']}>{mT}</span>
+      <span class:list={['mb-t', mPhone && 'mb-ph']}>{mPhone && <span class="sr-only">Call </span>}{mT}</span>
       {sub && <span class="mb-s">{sub}</span>}
     </span>
     {(mv === 'call' || mv === 'dark') && (
@@ -169,6 +169,7 @@ const arrowSvg = '<path d="M4 12h16"/><path d="m14 6 6 6-6 6"/>';
   .sv-btn-l1 { font-family: var(--f-sans); font-weight: 700; font-size: 16px; line-height: 17px; white-space: nowrap; }
   .sv-btn-big { font-family: var(--f-label); font-weight: 600; font-size: 22px; line-height: 33px; letter-spacing: .02em; }
   .sv-btn-l2 { font-family: var(--f-sans); font-weight: 400; font-size: 12px; line-height: 13px; margin-top: 7px; white-space: nowrap; opacity: .8; }
+  .sv-btn--red .sv-btn-l2 { opacity: 1; } /* contrast: 3.3:1 at .8 on red */
   .sv-btn-big + .sv-btn-l2 { margin-top: -2px; font-weight: 500; }
   .sv-btn--out, .sv-btn--outInk { padding-top: 10.5px; padding-left: 20.5px; border: 1.5px solid currentColor; }
   .sv-btn-disc { flex: none; display: grid; place-items: center; width: 36px; height: 36px; margin-top: 6px; border-radius: 50%; transition: transform .35s var(--ease-out); }
@@ -180,7 +181,7 @@ const arrowSvg = '<path d="M4 12h16"/><path d="m14 6 6 6-6 6"/>';
   .sv-btn--ink { background: var(--ink); color: var(--tan); }
   .sv-btn--ink .sv-btn-disc { background: var(--tan); color: var(--ink); }
   .sv-btn--ink:hover { background: #2a2620; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
-  .sv-btn--red { background: var(--red); color: #fff; }
+  .sv-btn--red { background: var(--red-btn); color: #fff; }
   .sv-btn--red .sv-btn-disc { background: #fff; color: var(--red); }
   .sv-btn--red:hover { background: #c3361f; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
   .sv-btn--out { color: var(--tan); }

@@ -50,19 +50,19 @@ const rows = [
   .cf-m { display: none; }
   .cf-back { position: absolute; left: 30px; top: 0; width: 780px; height: 540px; }
   .cf-front { position: absolute; left: 0; top: 30px; width: 800px; height: 530px; background: #e3cf9e; box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .6); }
-  .cf-tab { position: absolute; left: 60px; top: 8px; margin: 0; font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 21px; letter-spacing: .14em; text-transform: uppercase; color: #6b5c3e; }
+  .cf-tab { position: absolute; left: 60px; top: 8px; margin: 0; font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 21px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
   .cf-rows { position: absolute; left: 44px; top: 84px; width: 470px; margin: 0; }
   .cf-row { height: 70px; margin-bottom: 22px; border-bottom: 1px solid rgba(14, 13, 11, .3); box-sizing: border-box; transform-origin: 0 50%; --pop-r: -1deg; }
-  .cf-row dt { font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .14em; text-transform: uppercase; color: #6b5c3e; }
+  .cf-row dt { font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan-dark); }
   .cf-row dd { margin: 3px 0 0; font-family: var(--f-sans); font-weight: 700; font-size: 24px; line-height: 26px; color: var(--ink); }
-  .cf-row.is-red dd { font-size: 28px; line-height: 30px; color: var(--red); }
+  .cf-row.is-red dd { font-size: 28px; line-height: 30px; color: var(--red-text); }
   .cf-row:last-child dd { width: 470px; }
   .cf-pol { position: absolute; left: 540px; top: 60px; width: 230px; height: 290px; rotate: -4deg; transform-origin: 0 0; margin: 0; box-shadow: 0 12px 24px -6px rgba(0, 0, 0, .3); }
   .cf-ph { position: absolute; left: 10px; top: 10px; width: 210px; height: 232px; }
   .cf-pol figcaption { position: absolute; left: 10px; top: 258px; font-family: var(--f-label); font-weight: 500; font-size: 10.5px; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; color: #4a443a; white-space: nowrap; }
   .cf-clip { position: absolute; left: 607px; top: 39px; width: 20px; height: 72px; }
   .cf-stamp { position: absolute; left: 500px; top: 410px; width: 260px; height: 74px; box-sizing: border-box; margin: 0; border: 4px solid var(--red); border-radius: 6px; rotate: 12deg; transform-origin: 0 0; opacity: .9;
-    text-align: center; padding-top: 5px; font-family: var(--f-label); font-weight: 700; font-size: 40px; line-height: 59px; letter-spacing: .1em; text-transform: uppercase; color: var(--red); --pop-r: 14deg; }
+    text-align: center; padding-top: 5px; font-family: var(--f-label); font-weight: 700; font-size: 40px; line-height: 59px; letter-spacing: .1em; text-transform: uppercase; color: var(--red-text); --pop-r: 14deg; }
   /* the stamp's pop must keep its tilt: animate scale only */
   :global(.is-scrub) .cf-stamp.is-on { animation-name: cf-thud; }
   @keyframes cf-thud { 0% { scale: 1.35; } 60% { scale: .96; } 100% { scale: 1; } }

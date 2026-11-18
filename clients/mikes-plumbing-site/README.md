@@ -55,3 +55,26 @@ Never on the site until Mike confirms: licence, insured, warranty, prices, respo
     also lack the post's link, so the play button opens his Instagram; set `CLIP.file` (or `CLIP.post`) in
     `src/components/services/House.astro` when either arrives.
 14. **Map:** OpenStreetMap image today; swap for a Google Maps screenshot if wanted.
+
+## Fix round 1: where the site differs from Figma (builder S: site-wide items)
+What Figma shows / what the site does now / why.
+
+| Item | Figma shows | Site does now | Why |
+|---|---|---|---|
+| Loader (B3) | Seal, livery stripes and a water pipe on navy | Ink poster with a 000 -> 100 slat counter and 8 blinds that slide off | Nick's brief: 21st.dev Swiss Poster Counter Preloader, translated to Mike |
+| Curtain (B2) | One panel with a wave edge | The loader's 8 blinds, alternating sides | Nick: curtain and loader are one family |
+| Footer wordmark (B10/B31) | Home frame 595:438 has no legible giant "MIKE'S" at the cached render size | Abril "MIKE'S" in tan on coal, cut by the bottom edge, built from the brief's spec | Figma render not legible (cache: `handoff/figma-cache/footer-mikes/NOTE.md`) |
+| Footer (B10/B23) | Two tones, less room above the wavy rule | One colour (#151410), 64 px / 40 px above the rule, Privacy · Terms right-aligned to x 1320 | Nick's brief |
+| Services "Residential & commercial" (B7) | The photo stops above an ink wave | The photo runs up under an inverse tan wave filled above the curve, with an ink fade at the top | The photo and the wave now meet with no sliver |
+| Wave clearance (B6) | Some objects sit on or near the wave lines | 24 px desktop / 16 px mobile from every wave: Services `#leaks` DM bubble section +32 px, Services hero +28 px (mobile frame lines moved), Home "What Mike fixes" band lowered 16 px (desktop) / 29 px (mobile), FAQ band tick moved 48 px, Diagnosis +6 px, Areas credit/board/ticket a few px, RootsProof Polaroid -40 px, our-work DM +14 px, smaller nudges on SAProof, Tickets, AQuote, FaqAsk, ConOther | `scripts/check-seams.mjs` (D2) |
+| Seam allowances | | The FAQ "Ask Mike" plate, the about IG card, the contact form and the emergency tear-off cross a wave in front of it by design (full clearance on both sides) and pass as "crosses in front"; `.fh-q` question marks are seam objects | Intended overlaps, not collisions |
+| Marquees (B8) | Bands as static strips | Every band and the Services tape run on one GSAP engine (~40 s loop) | Nick's brief |
+| Photos (B5) | Static | Cover photos drift inside their frames (scale 1.14, -5 % -> 5 %), headings +-10 px, columns +-16 px | United's parallax |
+| `--tan-dark` | #6B5C3E | #5F5137 | 3.8:1 on tan; 4.5:1 now (axe) |
+| Red small text | #D9412B on bone / paper / sand | `--red-text` #C33722 on bone / paper, `--red-deep` #992B1B on tan / sand | The brand red is 4.2:1 on bone; the nearest shade that passes AA |
+| White on red (buttons, Process "Price" flag, Home "View" disc, estimate submit) | #D9412B fill, paper or pink second line | `--red-btn` #D53C26 fill, white text, second line at full opacity | White on #D9412B is 4.4:1 |
+| Reviews red cards, red on ink | #D9412B | `--red-hi` #DC4A34, meta line #230C07 | Ink on #D9412B is 4.4:1 |
+| Meta text on light (`--mute` #A79D88) | FAQ numbers, Home review counts, legal contents numbers, DM placeholder, Family swipe hint | `--mute-lt` #746A56 | #A79D88 is 2.3:1 on paper |
+| Small greys | Final CTA "Customer copy" ink 50 %, contact caption 70 %, our-work edge text tan 45 % | 58 %, 80 %, 60 % | AA |
+| Service areas map credit | Ink-2 text over the plate's shadow | Same text on a small paper chip | 1.5:1 over the shadow |
+| Call buttons' accessible name | aria-label "Call (951) 809-9533, ..." | Visible text + a screen-reader-only "Call " | WCAG 2.5.3 (label in name) |

@@ -5,7 +5,7 @@ import logo from '../../assets/brand/logo-ink.png';
 interface Props { w: number; color?: string; deg?: number; class?: string; opacity?: number; t?: string | false; fx?: string; }
 const { w, color = 'var(--red)', deg = 0, class: cls, opacity = 1, t = '5', fx } = Astro.props;
 ---
-<span class:list={['stamp', cls]} aria-hidden="true" data-t={t || undefined} data-fx={fx}
+<span class:list={['stamp', cls]} aria-hidden="true" data-t={t || undefined} data-fx={fx} data-idle="thump"
   style={`--w:${w}px;--c:${color};--deg:${deg}deg;--o:${opacity};--logo:url(${logo.src})`}></span>
 <style>
   .stamp { display: block; width: var(--w); aspect-ratio: 760 / 484; background: var(--c); opacity: var(--o); rotate: var(--deg);

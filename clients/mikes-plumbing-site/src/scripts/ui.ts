@@ -36,7 +36,7 @@ function mega() {
     if (!k) return;
     const p = panel(k); const b = btn(k);
     // Fade out (B1: nothing disappears in one frame); reopening mid-fade cancels it.
-    if (p) { if (MOTION()) { p.getAnimations().forEach((a) => a.cancel()); p.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'cubic-bezier(.37,0,.63,1)' }).onfinish = () => { if (openKey !== k) p.hidden = true; }; } else p.hidden = true; }
+    if (p) { if (MOTION()) { p.getAnimations().forEach((a) => a.cancel()); p.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: 'cubic-bezier(.65,0,.35,1)' }).onfinish = () => { if (openKey !== k) p.hidden = true; }; } else p.hidden = true; }
     b?.setAttribute('aria-expanded', 'false');
     if (focus) b?.focus();
     if (openKey === k) openKey = null;
@@ -47,8 +47,8 @@ function mega() {
     p.getAnimations().forEach((a) => a.cancel());
     p.hidden = false; btn(k)?.setAttribute('aria-expanded', 'true'); openKey = k;
     if (MOTION()) {
-      p.animate([{ opacity: 0, transform: 'translateY(-10px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.16,1,.3,1)' });
-      $$('[data-mg-col]', p).forEach((c, i) => c.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 480, delay: 60 + i * 55, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }));
+      p.animate([{ opacity: 0, transform: 'translateY(-10px)' }, { opacity: 1, transform: 'none' }], { duration: 560, easing: 'cubic-bezier(.65,0,.35,1)' }); // B9: ease-in-out, 0.5-0.7 s
+      $$('[data-mg-col]', p).forEach((c, i) => c.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 60 + i * 55, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' }));
     }
   };
   btns.forEach((b) => {
@@ -117,7 +117,7 @@ function mobileMenu() {
       const r = openBtn.getBoundingClientRect();
       const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
       menu.animate([{ clipPath: `circle(0px at ${cx}px ${cy}px)` }, { clipPath: `circle(${Math.hypot(innerWidth, innerHeight) * 1.05}px at ${cx}px ${cy}px)` }], { duration: 620, easing: 'cubic-bezier(.65,0,.35,1)' });
-      $$('[data-mn-item]', menu).forEach((li, i) => li.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: 160 + i * 45, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }));
+      $$('[data-mn-item]', menu).forEach((li, i) => li.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 160 + i * 45, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' }));
     }
     closeBtn?.focus();
   };
@@ -129,7 +129,7 @@ function mobileMenu() {
       document.removeEventListener('keydown', onKey);
       if (restore) openBtn.focus();
     };
-    if (MOTION()) menu.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: 'ease-out' }).onfinish = done; else done();
+    if (MOTION()) menu.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: 'cubic-bezier(.65,0,.35,1)' }).onfinish = done; else done(); // B9: ease-in-out
   };
   openBtn.addEventListener('click', open);
   closeBtn?.addEventListener('click', () => close());

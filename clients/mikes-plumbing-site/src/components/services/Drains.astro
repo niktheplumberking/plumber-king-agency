@@ -40,7 +40,7 @@ const drip = 'M7 0C7 0 14 9 14 13C14 17.4 10.9 20 7 20C3.1 20 0 17.4 0 13C0 9 7 
         ))}
       </ul>
       {[[878, 186, 1], [882, 280, 0.8], [875, 370, 0.6]].map(([x, y, o]) => (
-        <svg class="dr-drip" style={`left:${x}px;top:${y}px;opacity:${o}`} viewBox="0 0 14 20" width="14" height="20" aria-hidden="true"><path d={drip} fill="#6B5C3E" /></svg>
+        <svg class="dr-drip" data-idle="drip" style={`left:${x}px;top:${y}px;opacity:${o}`} viewBox="0 0 14 20" width="14" height="20" aria-hidden="true"><path d={drip} fill="#6B5C3E" /></svg>
       ))}
     </div>
 

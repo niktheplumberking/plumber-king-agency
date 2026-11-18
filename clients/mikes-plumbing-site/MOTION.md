@@ -1,3 +1,19 @@
+# Motion system rule (read first; fix round 1, B1)
+
+**Every animated change is a tween with ease-in-out** (`sine.inOut` or `power2.inOut`, 0.5 to 0.9 s). That covers
+background and text colour, height, position and opacity, and when one change moves several of them (an accordion row
+that grows and turns from paper to ink) they run **in the same timeline**. Banned:
+- `display` toggles mid-animation (keep the element rendered until its tween ends, then hide it);
+- class swaps that change colour with no transition (the class may flip, but a CSS `transition` or a tween carries it);
+- `.set()` jumps that can be seen (a `set` is only allowed off-screen, under a cover, or to the value already showing);
+- CSS defaults that differ from the JS start state (the CSS under `html.motion` must equal frame 0 of the timeline, so
+  nothing flashes or snaps when the script builds).
+
+One writer per property: each animated property of an element has exactly one owner (a kit module or one component
+script). The table and the kit API: `src/components/kit/README.md`. Scroll-scrubbed moments, the accordion, the curtain
+and the re-measure all live in `src/components/kit/`; components configure them with data attributes and never write
+their own copy.
+
 # Motion grammar (Plumbing By Paul v3)
 
 One grammar for every page. You do not write animation code: you put data attributes on markup, and
@@ -240,9 +256,15 @@ after the handoff on a plain load or curtain, 1.6 s after the loader handoff (he
   lifts with the van's swoosh as its trailing edge; the hero sequence starts 0.45 s into the lift (the panel uncovers the
   page from the bottom, so the hero top is revealed last). Any click, tap or key skips it. The hero photo loads (and
   paints, so LCP is taken) underneath it; the hero's start states are applied only as the panel starts to lift.
-- **Curtain** (`components/global/Curtain.astro`): a click on an in-site link drops a navy panel with the swoosh on its
-  top edge (0.65 s), then navigates. The next page lowers it away and plays its hero.
-  Skipped for new tabs, modifier clicks, downloads, hash links on the same page, and `data-no-curtain` links.
+- **Curtain** (`components/kit/Curtain.astro` + `kit/curtain.ts`; fix round 1 A-3/B4): one channel, GSAP `yPercent` on
+  `.pt-panel` (no CSS transform on it). A click on an in-site link covers the page in one continuous `0.6 s power2.inOut`
+  move (yPercent 100 to 0, the panel is one wave-edge taller at each end so 0 is full coverage), THEN navigates. The next
+  page starts covered (`html.pt-in`, set before paint), is put at the top under the cover (`history.scrollRestoration =
+  'manual'` while arriving, `lenis.scrollTo(0, { immediate: true })`), then the panel lifts to yPercent -100 in
+  `0.75 s power2.inOut`; the hero plays once the panel has cleared the header, and `scrollRestoration` returns to
+  `'auto'` after the lift so back/forward keep the browser's native restore. A cross-page link drops its `#hash`
+  (a new page always opens at the top). Skipped for new tabs, modifier clicks, downloads, hash links on the same page
+  (Lenis scrolls those smoothly), and `data-no-curtain` links.
 - Both panels travel their own layout height (`offsetHeight`), so they stay exact under the wide-screen zoom.
 
 You never call either one. Use `Base.astro`; `loader={false}` turns the loader off for a page (404, thank-you).

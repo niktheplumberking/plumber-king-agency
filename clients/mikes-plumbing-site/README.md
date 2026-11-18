@@ -2,7 +2,7 @@
 
 Astro 5 static site, built 1:1 from the approved VFACT Figma (file QbPRX8MU5AA6peTerdP5gg, page 626:1943; frame map
 `handoff/FIGMA-FRAMES.md`). Spec and rules: `handoff/BUILD-BRIEF.md`. Motion: `MOTION.md` (entrances, United/Paul model)
-plus each page's scroll-scrubbed moments (`src/components/*/scrub.ts`). Off-page plan: `SEO-OFFPAGE.md`.
+plus the shared motion kit (`src/components/kit/`, API in its README: scrubbed moments, accordion, curtain, waves). Off-page plan: `SEO-OFFPAGE.md`.
 
 ```bash
 npm ci               # node 22

@@ -19,14 +19,14 @@ const rows = [
     <Eyebrow look="figma" tone="tan" class="cf-eb" data-ab style={ab(119.5, 119)}>Case file · 75-gallon gas heater</Eyebrow>
     <h2 id="cf-h" class="sv-h cf-h" data-t="2" data-ab style={ab(120, 152, 760)}>Told to replace it. <em>It needed one part.</em></h2>
 
-    <div class="cf-file" data-sv-scrub data-start="top 70%" data-end="bottom 75%" data-t="3" data-ab style={ab(110, 330, 820, 560, -2)}>
+    <div class="cf-file" data-scrub data-start="top 70%" data-end="bottom 75%" data-t="3" data-ab style={ab(110, 330, 820, 560, -2)}>
       <svg class="cf-back cf-d" viewBox="0 0 780 540" aria-hidden="true"><path d="M0 18C0 6 6 0 18 0H230C239.3 0 246 4.7 250 14L262 40H762C774 40 780 46 780 58V540H0Z" fill="#C9B37E" /></svg>
       <svg class="cf-back cf-m" viewBox="0 0 340 540" aria-hidden="true"><path d="M0 12C0 4 4 0 12 0H120C125.3 0 129.3 2.7 132 8L140 26H330C336.7 26 340 29.3 340 36V540H0Z" fill="#C9B37E" /></svg>
       <i class="cf-front" aria-hidden="true"></i>
       <p class="cf-tab">Case file &nbsp;·&nbsp; No. 75-gal</p>
       <dl class="cf-rows">
         {rows.map((r, i) => (
-          <div class:list={['cf-row', { 'is-red': r.red }]} data-sv-stop data-at={(0.12 + i * 0.2).toFixed(2)}><dt>{r.k}</dt><dd>{r.v}</dd></div>
+          <div class:list={['cf-row', { 'is-red': r.red }]} data-stop data-dim data-at={(0.12 + i * 0.2).toFixed(2)}><dt>{r.k}</dt><dd>{r.v}</dd></div>
         ))}
       </dl>
       <figure class="cf-pol sv-polaroid">
@@ -34,7 +34,7 @@ const rows = [
         <figcaption>Exhibit A · gas <span class="cf-dn">control </span>valve</figcaption>
       </figure>
       <svg class="cf-clip" viewBox="0 0 20 72" aria-hidden="true"><path d="M1.5 71.2 3.6 11.3C3.8 4.6 6.3 1.3 10.9 1.5 15.6 1.7 17.8 5.1 17.6 11.7L15.9 59.7C15.8 63.7 14 65.7 10.7 65.5 7.4 65.4 5.8 63.4 5.9 59.4L7.4 17.4" fill="none" stroke="#8A8A8A" stroke-width="3" /></svg>
-      <p class="cf-stamp" data-sv-stop data-at="0.94" aria-label="Diagnosed">Diagnosed</p>
+      <p class="cf-stamp" data-stop data-dim data-at="0.94" aria-label="Diagnosed">Diagnosed</p>
     </div>
 
     <p class="cf-k" data-t="3" data-ab style={ab(990, 360)}>Mike's post, word for word</p>
@@ -64,7 +64,7 @@ const rows = [
   .cf-stamp { position: absolute; left: 500px; top: 410px; width: 260px; height: 74px; box-sizing: border-box; margin: 0; border: 4px solid var(--red); border-radius: 6px; rotate: 12deg; transform-origin: 0 0; opacity: .9;
     text-align: center; padding-top: 5px; font-family: var(--f-label); font-weight: 700; font-size: 40px; line-height: 59px; letter-spacing: .1em; text-transform: uppercase; color: var(--red); --pop-r: 14deg; }
   /* the stamp's pop must keep its tilt: animate scale only */
-  :global(.sv-scrub-on) .cf-stamp.is-lit { animation-name: cf-thud; }
+  :global(.is-scrub) .cf-stamp.is-on { animation-name: cf-thud; }
   @keyframes cf-thud { 0% { scale: 1.35; } 60% { scale: .96; } 100% { scale: 1; } }
   .cf-k { margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 19px; letter-spacing: .14em; text-transform: uppercase; color: var(--tan); }
   .cf-qt { margin: 0; font-family: var(--f-label); font-weight: 700; font-size: 30px; line-height: 44px; letter-spacing: .04em; text-transform: uppercase; color: var(--paper); }

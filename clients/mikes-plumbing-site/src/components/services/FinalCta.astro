@@ -16,14 +16,14 @@ const nuts = [
 ---
 <section class="fc sv-sec sv-ink sv-abs" style="--sh:700px" aria-labelledby={id} data-m-section>
   <Wave fill="var(--ink)" top={-34} topM={-24} />
-  <div class="fc-in" data-sv-scrub data-start="top 85%" data-end="center 55%">
+  <div class="fc-in" data-scrub data-start="top 85%" data-end="center 55%">
     <div class="fc-deco" aria-hidden="true">
       <i class="fc-ln" data-ab style={ab(0, 349.25, 180, 1.5)}></i><i class="fc-ln" data-ab style={ab(1260, 349.25, 180, 1.5)}></i>
       <i class="fc-ln fc-ln2" data-ab style={ab(330, 349.25, 40, 1.5)}></i><i class="fc-ln fc-ln2" data-ab style={ab(1070, 349.25, 40, 1.5)}></i>
       {nuts.map((n) => [n.x, 1440 - n.x - n.w].map((x) => (
-        <svg class="fc-nut" data-sv-stop data-at={n.at} viewBox={`0 0 ${n.w + 1.4} ${n.h + 1.4}`} data-ab style={ab(x - 0.7, n.y - 0.7, n.w + 1.4, n.h + 1.4)}><path d={n.d} fill="none" stroke="#D2C5A6" stroke-opacity={n.o} stroke-width="1.4" stroke-linejoin="round" /></svg>
+        <svg class="fc-nut" data-stop data-dim data-at={n.at} viewBox={`0 0 ${n.w + 1.4} ${n.h + 1.4}`} data-ab style={ab(x - 0.7, n.y - 0.7, n.w + 1.4, n.h + 1.4)}><path d={n.d} fill="none" stroke="#D2C5A6" stroke-opacity={n.o} stroke-width="1.4" stroke-linejoin="round" /></svg>
       )))}
-      <svg class="fc-hex fc-d" viewBox="0 0 703 523" data-ab style={ab(368.5, 88.5, 703, 523)}><path data-sv-draw d="M155.5 1.5H547.5L701.5 261.5L547.5 521.5H155.5L1.5 261.5Z" fill="none" stroke="#D2C5A6" stroke-width="3" stroke-linejoin="round" /></svg>
+      <svg class="fc-hex fc-d" viewBox="0 0 703 523" data-ab style={ab(368.5, 88.5, 703, 523)}><path pathLength="1" data-scrub-path d="M155.5 1.5H547.5L701.5 261.5L547.5 521.5H155.5L1.5 261.5Z" fill="none" stroke="#D2C5A6" stroke-width="3" stroke-linejoin="round" /></svg>
       <svg class="fc-hex-i fc-d" viewBox="0 0 665 489" data-ab style={ab(387.5, 105.5, 665, 489)}><path d="M146.58.5H518.42L664.5 244.5 518.42 488.5H146.58L.5 244.5Z" fill="none" stroke="#D2C5A6" stroke-opacity=".4" stroke-linejoin="round" /></svg>
     </div>
     <div class="fc-box">

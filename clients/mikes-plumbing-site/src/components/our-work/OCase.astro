@@ -27,19 +27,19 @@ const PX = 740, PY = 110, n = PINS.length;
       <a class="oc-link" href="/water-heaters">Read the full story <span aria-hidden="true">→</span></a>
       <span class="oc-stamp" aria-hidden="true" style={`--logo:url(${logoCream.src})`}></span>
     </div>
-    <div class="oc-stage" data-b3-scrub data-b3-start="top 75%" data-b3-end="bottom 65%">
+    <div class="oc-stage" data-scrub data-start="top 75%" data-end="bottom 65%">
       <figure class="oc-photo" data-t="4">
         <Img name="water-heater-gas-valve-riverside" alt="The 75-gallon gas water heater and its gas control valve" sizes="(min-width: 768px) 560px, 92vw" box={560 / 660} boxM={362 / 420} />
         {PINS.map((p, i) => (
-          <span class="oc-pin" style={`left:${(p.p[0] / 5.6).toFixed(2)}%;top:${(p.p[1] / 6.6).toFixed(2)}%`} data-b3-stop={((i + 0.15) / n).toFixed(3)} aria-hidden="true"><span class="oc-dot">{i + 1}</span></span>
+          <span class="oc-pin" style={`left:${(p.p[0] / 5.6).toFixed(2)}%;top:${(p.p[1] / 6.6).toFixed(2)}%`} data-stop data-at={((i + 0.15) / n).toFixed(3)} aria-hidden="true"><span class="oc-dot">{i + 1}</span></span>
         ))}
       </figure>
       <svg class="oc-leaders" viewBox="0 0 1440 880" aria-hidden="true">
-        {PINS.map((p, i) => <path d={`M${PX + p.p[0]} ${PY + p.p[1]} L${p.line[0]} ${p.line[1]}`} pathLength="1" data-b3-path data-b3-from={((i + 0.15) / n).toFixed(3)} data-b3-to={((i + 0.75) / n).toFixed(3)} />)}
+        {PINS.map((p, i) => <path d={`M${PX + p.p[0]} ${PY + p.p[1]} L${p.line[0]} ${p.line[1]}`} pathLength="1" data-scrub-path data-win={`${((i + 0.15) / n).toFixed(3)},${((i + 0.75) / n).toFixed(3)}`} />)}
       </svg>
       <ol class="oc-tags" role="list" aria-label="Callouts on the photo">
         {PINS.map((p, i) => (
-          <li class:list={['oc-tag', `oc-tag--${p.dir}`]} style={`--x:${p.tag[0]}px;--y:${p.tag[1]}px`} data-b3-stop={((i + 0.75) / n).toFixed(3)}>
+          <li class:list={['oc-tag', `oc-tag--${p.dir}`]} style={`--x:${p.tag[0]}px;--y:${p.tag[1]}px`} data-stop data-at={((i + 0.75) / n).toFixed(3)}>
             <span class="oc-n">{i + 1}</span><span class="oc-tt">{p.t}</span>
           </li>
         ))}

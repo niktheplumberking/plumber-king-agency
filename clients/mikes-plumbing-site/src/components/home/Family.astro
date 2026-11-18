@@ -17,17 +17,17 @@ const bolt = '<svg viewBox="0 0 22 18" aria-hidden="true"><path d="M5.5 1h11l4.5
   <Wave only="d" z={2} top={-42} d={{ path: 'M0 20C116.667 46.6667 233.333 46.6667 350 20C466.667 -6.66667 583.333 -6.66667 700 20C816.667 46.6667 933.333 46.6667 1050 20C1166.67 -6.66667 1283.33 -6.66667 1400 20C1516.67 46.6667 1633.33 46.6667 1750 20V48H0V20Z', h: 48 }} fill="#F3ECDD" />
   <Wave only="m" z={2} topM={-26} m={{ path: 'M0 12C53.3333 28 106.667 28 160 12C213.333 -4 266.667 -4 320 12C373.333 28 426.667 28 480 12V32H0V12Z', h: 32, w: 390 }} fill="#F3ECDD" />
   <!-- pipe seam: from the Services footer down the right edge, under the text, to the tags -->
-  <svg class="pipe only-d" viewBox="0 0 640 656" aria-hidden="true" data-seam-pipe>
+  <svg data-scrub data-start="top 92%" data-end="bottom 45%" data-lag="0.8" class="pipe only-d" viewBox="0 0 640 656" aria-hidden="true" data-seam-pipe>
     <path class="p-body" d="M620 0 V586 Q620 606 600 606 H40" />
-    <path class="p-fill" d="M620 0 V586 Q620 606 600 606 H40" pathLength="1" data-pipe-water />
+    <path class="p-fill" d="M620 0 V586 Q620 606 600 606 H40" pathLength="1" data-scrub-path />
     <path class="p-hi" d="M616 0 V584 Q616 602 598 602 H40" />
   </svg>
   <span class="nut-d n1" aria-hidden="true" set:html={bolt}></span>
   <span class="nut-d n2" aria-hidden="true" set:html={bolt}></span>
   <span class="nut-d n3" aria-hidden="true" set:html={bolt}></span>
-  <svg class="pipe-m" viewBox="0 0 361 858" aria-hidden="true">
+  <svg data-scrub data-start="top 92%" data-end="bottom 45%" data-lag="0.8" class="pipe-m" viewBox="0 0 361 858" aria-hidden="true">
     <path class="p-body m" d="M355.5 5.5V828.5C355.5 844.5 347.5 852.5 331.5 852.5H5.5" />
-    <path class="p-fill m" d="M355.5 5.5V828.5C355.5 844.5 347.5 852.5 331.5 852.5H5.5" pathLength="1" data-pipe-water />
+    <path class="p-fill m" d="M355.5 5.5V828.5C355.5 844.5 347.5 852.5 331.5 852.5H5.5" pathLength="1" data-scrub-path />
     <path class="p-hi m" d="M353 3V826C353 842 345 850 329 850H3" />
   </svg>
   <span class="nut-m" style="right:6px;top:-97px" aria-hidden="true" set:html={bolt}></span>

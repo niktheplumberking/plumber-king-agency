@@ -83,12 +83,12 @@ const CM = [[110, 3, 1], [276, 173, -1], [110, 343, 1], [276, 513, -1], [110, 68
       <p class="b-l">Call<span aria-hidden="true">  ·  </span><span class="sr-only">, </span>or text Mike a photo of the problem</p>
       <a class="b-btn" href={SITE.sms}>Text a photo <span aria-hidden="true">→</span></a>
     </div>
-    <span class="dial-pipe" aria-hidden="true"><svg viewBox="0 0 20 170" preserveAspectRatio="none"><rect width="20" height="170" rx="2" fill="#6B5C3E" /><path class="dp-water" d="M10 0V170" pathLength="1" data-pipe-water /><rect x="9" width="2" height="170" fill="rgba(255,255,255,.2)" /></svg><span class="dp-nut"></span><span class="dp-line"></span></span>
+    <span class="dial-pipe" aria-hidden="true"><svg data-scrub data-start="top 92%" data-end="bottom 45%" data-lag="0.8" viewBox="0 0 20 170" preserveAspectRatio="none"><rect width="20" height="170" rx="2" fill="#6B5C3E" /><path class="dp-water" d="M10 0V170" pathLength="1" data-scrub-path /><rect x="9" width="2" height="170" fill="rgba(255,255,255,.2)" /></svg><span class="dp-nut"></span><span class="dp-line"></span></span>
   </div>
   <Wave only="d" class="pr-wb" z={2} top={922} d={{ path: 'M0 18C106.667 42 213.333 42 320 18C426.667 -6 533.333 -6 640 18C746.667 42 853.333 42 960 18C1066.67 -6 1173.33 -6 1280 18C1386.67 42 1493.33 42 1600 18V44H0V18Z', h: 44 }} fill="#1C1A16" />
   <Wave only="m" class="pr-wb" z={2} topM={1260} m={{ path: 'M0 11C50 25.6667 100 25.6667 150 11C200 -3.66667 250 -3.66667 300 11C350 25.6667 400 25.6667 450 11V30H0V11Z', h: 30, w: 390 }} fill="#1C1A16" />
 </section>
-<script>import './scrub';</script>
+<script>import './flow';</script>
 <style>
   .pr { position: relative; z-index: 2; background: var(--tan); color: var(--ink); }
   .st { position: relative; width: 1440px; height: 960px; margin-inline: auto; }
@@ -102,10 +102,13 @@ const CM = [[110, 3, 1], [276, 173, -1], [110, 343, 1], [276, 513, -1], [110, 68
   .pw-m { display: none; }
   .pw-body { fill: none; stroke: #6B5C3E; stroke-width: 20; stroke-linejoin: round; }
   .pw-water { fill: none; stroke: #EDE3CB; stroke-width: 5; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; opacity: .7; }
+  /* motion start state = the flow's JS start (kit/README.md: CSS defaults = JS start): empty pipe, needle at rest */
+  :global(html.motion) .pw-water { stroke-dashoffset: 1; }
+  :global(html.motion) .g-n { transform: rotate(-160deg); }
   .pw-hi { fill: none; stroke: rgba(255,255,255,.25); stroke-width: 3; stroke-linejoin: round; }
   .chev path { fill: none; stroke: var(--tan); stroke-width: 2; stroke-linejoin: round; }
   .chev { transition: opacity .4s; }
-  .is-scrub .chev:not(.is-on) { opacity: .45; }
+  :global(html.motion) .chev:not(.is-on) { opacity: .45; }
   .pw-head { opacity: 0; transition: opacity .3s; }
   .ph-glow { fill: rgba(243,236,221,.35); }
   .ph-dot { fill: var(--paper); stroke: #6B5C3E; stroke-width: 1.5; }
@@ -129,9 +132,9 @@ const CM = [[110, 3, 1], [276, 173, -1], [110, 343, 1], [276, 513, -1], [110, 68
   .hx-n.lit { color: var(--ink); }
   .hx-glow { position: absolute; inset: -18px -22px; border-radius: 50%; background: radial-gradient(closest-side, rgba(251,248,242,.85), rgba(251,248,242,0)); }
   .hx-lit, .hx-n.lit, .hx-glow { opacity: 1; transition: opacity .35s ease-out; }
-  .is-scrub .stp:not(.is-lit) .hx-lit, .is-scrub .stp:not(.is-lit) .hx-n.lit, .is-scrub .stp:not(.is-lit) .hx-glow { opacity: 0; }
+  :global(html.motion) .stp:not(.is-lit) .hx-lit, :global(html.motion) .stp:not(.is-lit) .hx-n.lit, :global(html.motion) .stp:not(.is-lit) .hx-glow { opacity: 0; }
   .hx-in { transform: scale(1.08) rotate(-3deg); }
-  .is-scrub .stp:not(.is-lit) .hx-in { transform: none; transition: transform .3s ease-out; }
+  :global(html.motion) .stp:not(.is-lit) .hx-in { transform: none; transition: transform .3s ease-out; }
   .is-scrub .stp.is-lit .hx-in { animation: lit .62s cubic-bezier(.3,1.4,.5,1) both; }
   @keyframes lit { 0% { transform: none; } 45% { transform: scale(1.14) rotate(-7deg); } 100% { transform: scale(1.08) rotate(-3deg); } }
   .t { margin-top: 16px; font-weight: 700; font-size: 18px; line-height: 20px; }

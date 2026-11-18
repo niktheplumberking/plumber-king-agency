@@ -26,13 +26,13 @@ const drip = 'M7 0C7 0 14 9 14 13C14 17.4 10.9 20 7 20C3.1 20 0 17.4 0 13C0 9 7 
     <h2 id="dr-h" class="sv-h dr-h" data-t="2" data-ab style={ab(120, 142, 700, 118)}>Slow drain? Backed-up line? <em>Let's clear it.</em></h2>
     <p class="dr-body" data-t="3" data-ab style={ab(880, 150, 440)}>From a kitchen sink that won't drain to a main sewer line full of roots, we clean it, repair it, or put in new. When a line keeps clogging, hydro jetting scours it clean instead of just poking a hole through.</p>
 
-    <div class="dr-run" data-sv-scrub data-start="top 80%" data-end="bottom 55%" data-start-m="top 85%" data-end-m="bottom 60%" data-t="4" data-ab style={ab(-20, 330, 892, 206)}>
+    <div class="dr-run" data-scrub data-start="top 80%" data-end="bottom 55%" data-start-m="top 85%" data-end-m="bottom 60%" data-t="4" data-ab style={ab(-20, 330, 892, 206)}>
       {[160, 420, 680].map((x) => (<><i class="dr-rod" style={`left:${x + 20}px`} aria-hidden="true"></i><i class="dr-strap" style={`left:${x + 6}px`} aria-hidden="true"></i></>))}
-      <div class="dr-pipe" aria-hidden="true"><i class="dr-hi"></i><i class="dr-lo"></i><i class="dr-shade" data-sv-fill data-rev data-axis-m="y"></i></div>
+      <div class="dr-pipe" aria-hidden="true"><i class="dr-hi"></i><i class="dr-lo"></i><i class="dr-shade" data-scrub-fill data-rev data-axis-m="y"></i></div>
       <span class="dr-flange" aria-hidden="true"><i></i><i></i></span>
       <ul class="dr-marks" role="list">
         {markers.map((mk, i) => (
-          <li class:list={['dr-mk', `dr-mk--${mk.tone}`]} data-sv-stop data-at={[0.16, 0.4, 0.64, 0.88][i]} style={`--i:${i}`}>
+          <li class:list={['dr-mk', `dr-mk--${mk.tone}`]} data-stop data-dim data-at={[0.16, 0.4, 0.64, 0.88][i]} style={`--i:${i}`}>
             <i class="dr-mk-bg" aria-hidden="true"></i>
             <span class="dr-mk-t dr-d"><b>{mk.d[0]}</b><span>{mk.d[1]}</span></span>
             <span class="dr-mk-t dr-m"><b>{mk.m[0]}</b>{mk.m[1] && <span>{mk.m[1]}</span>}</span>

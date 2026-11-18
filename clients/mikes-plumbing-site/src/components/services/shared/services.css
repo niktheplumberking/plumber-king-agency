@@ -47,23 +47,14 @@ a.sv-chip:hover .sv-chip-o i, a.sv-chip:hover .sv-chip-o { color: var(--tan); }
 .sv-stamp img { width: 100%; height: auto; }
 
 
-/* scroll moments (kit/scrub.ts): the final state is the CSS default; only under html.motion do fills start empty */
-html.motion [data-sv-scrub] [data-sv-fill] { transform: scaleX(0); }
-html.motion [data-sv-scrub] [data-sv-fill][data-axis="y"] { transform: scaleY(0); }
-@media (max-width: 767px) {
-  html.motion [data-sv-scrub] [data-sv-fill][data-axis-m="y"] { transform: scaleY(0); }
-  html.motion [data-sv-scrub] [data-sv-fill][data-axis-m="x"] { transform: scaleX(0); }
-}
-/* fills with data-rev are shades: hidden in the final (static) state, full before the scrub starts */
-[data-sv-fill][data-rev] { transform: scaleX(0); }
-html.motion [data-sv-scrub] [data-sv-fill][data-rev] { transform: none; }
-/* stops: the CSS default is the lit Figma look. While the scrub runs, a stop the water has not reached is dimmed (never
-   hidden); reaching it pops it to 1.08 with a small turn, then it settles. */
-[data-sv-stop] { transition: opacity .35s ease; }
-.sv-scrub-on [data-sv-stop]:not(.is-lit) { opacity: .42; }
-.sv-scrub-on [data-sv-stop].is-lit { animation: sv-pop .7s cubic-bezier(.34, 1.56, .64, 1); }
+/* scroll moments (kit/scrub.ts; start states in kit/kit.css). Stops with data-dim: the CSS default is the lit Figma look;
+   under motion a stop the water has not reached is dimmed (never hidden) from first paint (= the scrub's start state);
+   reaching it pops it to 1.08 with a small turn, then it settles. */
+[data-dim] { transition: opacity .35s ease; }
+html.motion [data-scrub] [data-stop][data-dim]:not(.is-on) { opacity: .42; }
+.is-scrub [data-stop][data-dim].is-on { animation: sv-pop .7s cubic-bezier(.37, 0, .63, 1); }
 @keyframes sv-pop { 0% { scale: 1; rotate: 0deg; } 45% { scale: 1.08; rotate: var(--pop-r, -2deg); } 100% { scale: 1; rotate: 0deg; } }
-@media (prefers-reduced-motion: reduce) { .sv-scrub-on [data-sv-stop].is-lit { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .is-scrub [data-stop][data-dim].is-on { animation: none; } }
 
 /* ---------- Figma placement (kit/ab.ts). >= 1280 px: every [data-ab] sits at its Figma x/y inside a fixed-height section. */
 @media (min-width: 1280px) {

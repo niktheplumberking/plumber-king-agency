@@ -24,7 +24,7 @@ const jetsM = [-70, -35, 0, 35, 70];
     <Eyebrow look="figma" tone="deep" class="js-eb" data-ab style={ab(999.5, 209)}>Hydro jetting</Eyebrow>
     <h2 id="js-h" class="sv-h sv-h--red js-h" data-t="2" data-ab style={ab(1000, 240, 400)}>When a drain keeps clogging, <em>jet it.</em></h2>
 
-    <div class="js-dia js-d" aria-hidden="true" data-sv-scrub data-start="top 75%" data-end="center 40%">
+    <div class="js-dia js-d" aria-hidden="true" data-scrub data-start="top 75%" data-end="center 40%">
       <i class="js-wall" data-ab style={ab(0, 142, 1440, 28)}></i>
       <i class="js-wall" data-ab style={ab(0, 550, 1440, 28)}></i>
       <i class="js-hi" data-ab style={ab(0, 142, 1440, 5)}></i>
@@ -34,21 +34,21 @@ const jetsM = [-70, -35, 0, 35, 70];
       <i class="js-clean" data-ab style={ab(640, 170, 800, 380)}></i>
       <i class="js-hose" data-ab style={ab(700, 356, 240, 8)}></i>
       <svg class="js-jets" data-ab style={ab(370, 210, 260, 300)} viewBox="0 0 260 300">
-        {jets.map((dy) => <path data-sv-draw d={`M260 150L0 ${150 + dy}`} />)}
+        {jets.map((dy) => <path pathLength="1" data-scrub-path d={`M260 150L0 ${150 + dy}`} />)}
       </svg>
       <svg data-ab style={ab(629.25, 341.25, 71.5, 37.5)} viewBox="0 0 71.5 37.5"><path d="M.75.75H50.75L70.75 18.75 50.75 36.75H.75Z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" /></svg>
       <span class="js-lab" data-ab style={ab(40, 106)}>Before · grease and buildup</span>
       <span class="js-lab" data-ab style={ab(680, 106)}>After · jetted clean</span>
     </div>
 
-    <div class="js-dia js-m" aria-hidden="true" data-sv-scrub data-start-m="top 80%" data-end-m="center 45%">
+    <div class="js-dia js-m" aria-hidden="true" data-scrub data-start-m="top 80%" data-end-m="center 45%">
       <span class="js-mlab js-mlab--l">Before</span><span class="js-mlab js-mlab--r">After · clean</span>
       <i class="js-mwall js-mwall--t"></i><i class="js-mwall js-mwall--b"></i>
       <div class="js-mcake">
         {[0, 1, 2, 3, 4, 5].map((i) => <><i class="js-mg js-mg--t" style={`right:${170 - 34 * i}px`}></i><i class="js-mg js-mg--b" style={`right:${157 - 32 * i}px`}></i></>)}
       </div>
       <i class="js-mclean"></i>
-      <svg class="js-mjets" viewBox="0 0 135 140">{jetsM.map((dy) => <path data-sv-draw d={`M135 70L0 ${70 + dy}`} />)}</svg>
+      <svg class="js-mjets" viewBox="0 0 135 140">{jetsM.map((dy) => <path pathLength="1" data-scrub-path d={`M135 70L0 ${70 + dy}`} />)}</svg>
       <i class="js-mhose"></i>
       <svg class="js-mnoz" viewBox="0 0 51.2 29.2"><path d="M.6.6H36.3L50.6 14.6 36.3 28.6H.6Z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.2" /></svg>
     </div>

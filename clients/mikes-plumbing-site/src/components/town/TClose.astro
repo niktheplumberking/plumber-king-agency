@@ -27,7 +27,7 @@ const up = t.name.toUpperCase();
   <Wave d="t1d" m="t1m" hostY={1000} hostYM={1466} />
   <div class="wrap tc-grid">
     <figure class="tc-mapwrap" data-t="4">
-      <div class="tc-map" data-b3-scrub data-no-px>
+      <div class="tc-map" data-scrub data-start="top 85%" data-end="bottom 55%" data-no-px>
         <div class="tc-tiles" style={`--l:${D.tiles[0]};--t:${D.tiles[1]};--w:${D.tiles[2]};--h:${D.tiles[3]};--lm:${M.tiles[0]};--tm:${M.tiles[1]};--wm:${M.tiles[2]};--hm:${M.tiles[3]}`}>
           <Img name="map-inland-empire-orange-county-los-angeles" alt={`Map of the drive from Riverside to ${t.name}, ${t.county}`} sizes="(min-width: 768px) 1100px, 600px" widths={[600, 1129]} />
         </div>
@@ -35,14 +35,14 @@ const up = t.name.toUpperCase();
           <svg class:list={['tc-route', i ? 'tc-route--m' : 'tc-route--d']} viewBox={`0 0 ${g.W} ${g.H}`} preserveAspectRatio="none" aria-hidden="true">
             <path d={g.d} class="tc-pipe-o" />
             <path d={g.d} class="tc-pipe-i" />
-            <path d={g.d} class="tc-water" pathLength="1" data-b3-path />
+            <path d={g.d} class="tc-water" pathLength="1" data-scrub-path />
           </svg>
         ))}
         <span class="tc-dot tc-dot--base tc-pt" style={v('r')} aria-hidden="true"></span>
-        <span class="tc-nut tc-pt" style={v('c')} data-b3-stop={D.elbow.toFixed(3)} aria-hidden="true">
+        <span class="tc-nut tc-pt" style={v('c')} data-stop data-at={D.elbow.toFixed(3)} aria-hidden="true">
           <svg viewBox="0 0 34 26"><path d="M8.5 1h17L33 13l-7.5 12h-17L1 13z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" /></svg>
         </span>
-        <span class="tc-dot tc-dot--town tc-pt" style={v('t')} data-b3-stop="0.98" aria-hidden="true"></span>
+        <span class="tc-dot tc-dot--town tc-pt" style={v('t')} data-stop data-at="0.98" aria-hidden="true"></span>
         <span class:list={['tc-tag tc-pt', D.flipR && 'is-flip', M.flipR && 'is-flip-m']} style={v('r')}>Riverside<span class="tc-base"> · Base</span></span>
         <span class:list={['tc-tag tc-pt', D.flipT && 'is-flip', M.flipT && 'is-flip-m']} style={v('t')}>{up}</span>
         <span class="tc-screw" style="left:13px;top:13px" aria-hidden="true"></span><span class="tc-screw" style="right:13px;top:13px" aria-hidden="true"></span>
@@ -88,7 +88,7 @@ const up = t.name.toUpperCase();
   .tc-screw::after { content: ''; position: absolute; inset: 1.5px; background: #CFC2A2; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
   .tc-cap { margin-top: 10px; font-size: 10px; line-height: 14px; color: var(--ink-2); }
 
-  /* scroll moment states (b3kit/scrub.ts): a stop lights up, grows to 1.08 and turns a little when the water reaches it */
+  /* scroll moment states (kit/scrub.ts): a stop lights up, grows to 1.08 and turns a little when the water reaches it */
   .tc-nut.is-on { transform: scale(1.08) rotate(-6deg); }
   .tc-dot--town.is-on { transform: scale(1.08); box-shadow: 0 0 0 7px rgba(217, 65, 43, .25); }
 

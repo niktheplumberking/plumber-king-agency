@@ -14,7 +14,7 @@ import Header from '../components/global/Header.astro';
 import Footer from '../components/global/Footer.astro';
 import MobileCallBar from '../components/global/MobileCallBar.astro';
 import Loader from '../components/global/Loader.astro';
-import Curtain from '../components/global/Curtain.astro';
+import Curtain from '../components/kit/Curtain.astro';
 import EmergencyStrip from '../components/global/EmergencyStrip.astro';
 
 interface Props {
@@ -120,8 +120,10 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
       document.addEventListener('DOMContentLoaded', function () { fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(d); });
     })();
   </script>
-  {/* Decide before first paint (MOTION.md): motion on? loader this visit? curtain lift after an in-site click?
-     Safety: if the motion module never boots within 3.5 s, show everything. */}
+  {/* Decide before first paint (MOTION.md): motion on? loader this visit? curtain lift after an in-site click? (then the
+     browser must not restore an old scroll position under the cover: kit/curtain.ts puts the page at the top and sets
+     scrollRestoration back to 'auto' after the lift, so back/forward stay native). Safety: if the motion module never
+     boots within 3.5 s, show everything. */}
   <script is:inline>
     (function () {
       var d = document.documentElement; d.classList.add('js');
@@ -133,7 +135,7 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
       var seen = false, internal = false;
       try { seen = sessionStorage.getItem('mps-intro') === '1'; internal = sessionStorage.getItem('mps-nav') === '1'; sessionStorage.removeItem('mps-nav'); } catch (e) {}
       if (!seen && !hist && d.getAttribute('data-loader') !== 'off') d.classList.add('intro');
-      else if (internal && !hist) d.classList.add('pt-in');
+      else if (internal && !hist) { d.classList.add('pt-in'); try { history.scrollRestoration = 'manual'; } catch (e) {} }
       setTimeout(function () { if (!window.__pbpMotion) d.classList.remove('motion', 'intro', 'pt-in'); }, 3500);
     })();
   </script>
@@ -154,6 +156,6 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
   <main id="main" tabindex="-1"><slot /></main>
   <Footer />
   <MobileCallBar estimate={estimate} />
-  <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion';</script>
+  <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion'; import '../components/kit/scrub';</script>
 </body>
 </html>

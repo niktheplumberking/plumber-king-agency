@@ -37,7 +37,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
 
   <!-- top seam: pipe from the work wall, couplings, the shut-off valve dripping, the "Diagnose first." tag -->
   <div class="vs vs-d" aria-hidden="true">
-    <svg class="vs-pipe" viewBox="0 0 1440 200"><path class="p-body" d="M0 48 H1352 Q1382 48 1382 78 V92" /><path class="p-water" d="M0 48 H1352 Q1382 48 1382 78 V92" pathLength="1" data-pipe-water /><path class="p-hi" d="M0 45.5 H1352" /></svg>
+    <svg data-scrub data-start="top 92%" data-end="bottom 45%" data-lag="0.8" class="vs-pipe" viewBox="0 0 1440 200"><path class="p-body" d="M0 48 H1352 Q1382 48 1382 78 V92" /><path class="p-water" d="M0 48 H1352 Q1382 48 1382 78 V92" pathLength="1" data-scrub-path /><path class="p-hi" d="M0 45.5 H1352" /></svg>
     <svg class="nut" style="left:283px;top:35px" viewBox="0 0 34 26"><path d={nut} /></svg>
     <svg class="nut" style="left:803px;top:35px" viewBox="0 0 34 26"><path d={nut} /></svg>
     <span class="str"></span>
@@ -49,7 +49,7 @@ const drip = 'M7 0C7 0 14 9 14 14C14 18 11 21 7 21C3 21 0 18 0 14C0 9 7 0 7 0Z';
     <svg class="drip dr2" style="left:1375px;top:182px" viewBox="0 0 14 21"><path d={drip} /></svg>
   </div>
   <div class="vs vs-m" aria-hidden="true">
-    <svg class="vs-pipe" viewBox="0 0 390 120"><path class="p-body m" d="M0 27 H331 Q352 27 352 48 V58" /><path class="p-water m" d="M0 27 H331 Q352 27 352 48 V58" pathLength="1" data-pipe-water /></svg>
+    <svg data-scrub data-start="top 92%" data-end="bottom 45%" data-lag="0.8" class="vs-pipe" viewBox="0 0 390 120"><path class="p-body m" d="M0 27 H331 Q352 27 352 48 V58" /><path class="p-water m" d="M0 27 H331 Q352 27 352 48 V58" pathLength="1" data-scrub-path /></svg>
     <svg class="nut" style="left:107px;top:17px;width:26px;height:20px" viewBox="0 0 34 26"><path d={nut} /></svg>
     <svg class="nut" style="left:344px;top:56px;width:26px;height:20px" viewBox="0 0 34 26"><path d={nut} /></svg>
     <span class="box" style="left:345px;top:78px;width:24px;height:18px"></span>

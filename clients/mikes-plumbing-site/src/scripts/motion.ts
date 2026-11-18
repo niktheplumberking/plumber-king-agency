@@ -9,6 +9,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import Lenis from 'lenis';
+import { park, reveal, interceptLinks } from '../components/kit/curtain';
+import { settled, requestRefresh } from '../components/kit/settle';
 
 declare global { interface Window { __pbpMotion?: boolean; __pbpLenis?: Lenis } }
 
@@ -546,36 +548,7 @@ function signatures() {
   $$('[data-draw-map]').forEach((p) => gsap.fromTo(p, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.4, ease: 'power2.inOut', scrollTrigger: { trigger: p.closest('svg'), start: 'top 95%', once: true } }));
   // The dashed truck route flows once after the outline has drawn, then rests (no endless loop).
   $$('[data-route]').forEach((p) => gsap.to(p, { strokeDashoffset: -112, duration: 2, ease: 'power1.inOut', delay: 1.1, scrollTrigger: { trigger: p.closest('svg'), start: 'top 95%', once: true } }));
-  // Process pipe: the water follows the scroll. Horizontal on desktop, down the left on mobile.
-  const mm = gsap.matchMedia();
-  $$('[data-pipe]').forEach((pipe) => {
-    const sec = pipe.closest('section') ?? pipe;
-    const run = pipe.querySelector('[data-pipe-fill]'); const v = pipe.querySelector('[data-pipe-fill-v]');
-    mm.add('(min-width: 1024px)', () => {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top 70%', end: 'bottom 75%', scrub: 0.6 } });
-      if (run) tl.fromTo(run, { scaleX: 0 }, { scaleX: 1, ease: 'none', duration: 0.85 });
-      if (v) tl.fromTo(v, { scaleY: 0 }, { scaleY: 1, ease: 'none', duration: 0.15 });
-    });
-    mm.add('(max-width: 1023px)', () => {
-      if (run) gsap.fromTo(run, { scaleY: 0, scaleX: 1 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top 60%', end: 'bottom 70%', scrub: 0.6 } });
-    });
-  });
-  // Marquee: the second track trails the first; period = one copy. Scroll velocity nudges the speed, then it eases back.
-  $$('[data-marquee]').forEach((clip) => {
-    const tracks = $$('.tb-track, [data-marquee-track]', clip);
-    if (tracks.length < 2) return;
-    let period = tracks[1].offsetWidth; let x = 0; let boost = 0; let on = false;
-    const speed = 38; // px per second at rest
-    window.addEventListener('resize', () => { period = tracks[1].offsetWidth; });
-    ScrollTrigger.create({ trigger: clip, start: 'top bottom', end: 'bottom top', onToggle: (s) => { on = s.isActive; }, onUpdate: (s) => { boost = Math.min(6, Math.abs(s.getVelocity()) / 300); } });
-    gsap.ticker.add((_, dt) => {
-      if (!on || !period) return;
-      boost *= 0.94;
-      x -= (speed * (1 + boost) * dt) / 1000;
-      if (-x >= period) x += period;
-      tracks.forEach((t) => { t.style.transform = `translate3d(${x}px,0,0)`; });
-    });
-  });
+  // Pipes and other scrubbed fills: kit/scrub.ts. Marquees: kit/marquee.ts.
 }
 
 /* ------------------------------------------------------------------ pointer: magnetic + fill origin */
@@ -664,45 +637,6 @@ function runLoader(onHandoff: () => void, onLift: () => void = () => {}) {
   window.addEventListener('keydown', skip, { once: true });
 }
 
-function runCurtainIn(onHandoff: () => void, onLift: () => void = () => {}) {
-  const pt = document.querySelector<HTMLElement>('[data-pt]');
-  if (!pt || !html.classList.contains('pt-in')) return false;
-  const panel = pt.querySelector<HTMLElement>('.pt-panel')!;
-  const edge = pt.querySelector<SVGElement>('.pt-edge');
-  // The curtain lifts at once; only the hero waits for the fonts (handoff -> play). onLift hides the hero first, unseen.
-  onLift();
-  const h = panel.offsetHeight + ((edge as any)?.clientHeight || 120) + 8; // layout px (see runLoader)
-  gsap.timeline({ delay: 0.05, onComplete: () => { html.classList.remove('pt-in'); gsap.set(panel, { clearProps: 'transform' }); } })
-    .to(pt.querySelector('.pt-mark'), { autoAlpha: 0, y: 20, duration: 0.3, ease: 'power2.in' })
-    .to(panel, { y: h, duration: 0.9, ease: 'power3.inOut' }, 0.1)
-    .add(onHandoff, 0.38);
-  return true;
-}
-
-function curtainOut() {
-  const pt = document.querySelector<HTMLElement>('[data-pt]');
-  if (!pt) return;
-  const panel = pt.querySelector<HTMLElement>('.pt-panel')!;
-  document.addEventListener('click', (e) => {
-    const a = (e.target as Element).closest?.('a');
-    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    if (a.target && a.target !== '_self') return;
-    if (a.hasAttribute('download') || a.dataset.noCurtain !== undefined) return;
-    const url = new URL(a.href, location.href);
-    if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return;
-    if (url.pathname === location.pathname && url.search === location.search) return; // same page / hash
-    e.preventDefault();
-    try { sessionStorage.setItem('mps-nav', '1'); } catch (err) { /* no storage: the next page simply shows without the lift */ }
-    pt.classList.add('is-on');
-    const markEl = pt.querySelector('.pt-mark');
-    gsap.timeline({ onComplete: () => { location.href = url.href; } })
-      .fromTo(panel, { yPercent: 105 }, { yPercent: 0, duration: 0.65, ease: 'power3.inOut' })
-      .fromTo(markEl, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: EASE }, 0.4);
-  });
-  // Back/forward cache restore: never leave the curtain down.
-  window.addEventListener('pageshow', (ev) => { if (ev.persisted) { pt.classList.remove('is-on'); gsap.set(panel, { clearProps: 'all' }); } });
-}
-
 /* ------------------------------------------------------------------ boot */
 
 function boot() {
@@ -726,10 +660,13 @@ function boot() {
   // Re-measure when the page geometry changes without a window resize: the wide-screen zoom on <html> (Base.astro sets
   // style.zoom, also from a ResizeObserver when the scrollbar comes or goes) and content height changes (accordions,
   // late images, the mobile menu). Debounced so a burst of changes costs one refresh.
-  let rt = 0, lastZoom = html.style.zoom, lastH = 0;
-  const remeasure = () => { clearTimeout(rt); rt = window.setTimeout(() => { lenis.resize(); ScrollTrigger.refresh(); }, 180); };
-  new MutationObserver(() => { if (html.style.zoom !== lastZoom) { lastZoom = html.style.zoom; remeasure(); } }).observe(html, { attributes: true, attributeFilter: ['style'] });
-  if ('ResizeObserver' in window) new ResizeObserver(() => { const h = document.body.scrollHeight; if (Math.abs(h - lastH) > 2) { lastH = h; remeasure(); } }).observe(document.body);
+  // kit/settle.ts requestRefresh(): debounced, and never during a scroll (fix round 1, A-2: a body resize mid-scroll used
+  // to re-measure every trigger under the reader's eyes; now it waits for the scroll to stop).
+  let lastZoom = html.style.zoom, lastH = 0;
+  new MutationObserver(() => { if (html.style.zoom !== lastZoom) { lastZoom = html.style.zoom; requestRefresh(180); } }).observe(html, { attributes: true, attributeFilter: ['style'] });
+  if ('ResizeObserver' in window) new ResizeObserver(() => { const h = document.body.scrollHeight; if (Math.abs(h - lastH) > 2) { lastH = h; requestRefresh(180); } }).observe(document.body);
+  // ScrollTrigger's own refresh on window 'load' could land mid-scroll; the kit refreshes once everything has settled.
+  ScrollTrigger.config({ autoRefreshEvents: 'visibilitychange,DOMContentLoaded,resize' });
 
   let heroTl: gsap.core.Timeline | null = null;
   const intro = html.classList.contains('intro');
@@ -743,12 +680,13 @@ function boot() {
   // applied when the cover starts to lift, while the panel still hides the page.
   let heroBuilt = false;
   const buildHero = () => { if (heroBuilt) return; heroBuilt = true; heroTl = buildHeroTl(); };
-  // Curtain: hide the hero at once (the panel lifts without waiting for fonts); the timeline is built at the handoff.
+  // Curtain: hide the hero at once, under the cover (the panel lifts without waiting for fonts); the timeline is built at the handoff.
   const hideHero = () => {
     const sec = document.querySelector('[data-m-section][data-m-hero]');
     if (sec) gsap.set($$('[data-t]', sec).filter(shown), { autoAlpha: 0 });
   };
-  curtainOut();
+  park();
+  interceptLinks();
 
   let handed = false;
   const handoff = () => {
@@ -768,11 +706,14 @@ function boot() {
     // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front, as
     // United does, so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
     const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));
-    buildRest(() => { signatures(); pointer(); ScrollTrigger.refresh(); idle(() => { parallax(); ScrollTrigger.refresh(); }, 600); });
+    buildRest(() => { signatures(); pointer(); requestRefresh(0); idle(() => { parallax(); requestRefresh(0); }, 600); });
   };
-  if (!runCurtainIn(handoff, hideHero)) runLoader(handoff, buildHero);
-  // Fonts change line breaks: re-measure triggers once they are in.
-  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+  // Arrived through an in-site link: the page starts covered and at the top (kit/curtain.ts reveal), the hero is hidden
+  // under the cover, then the panel lifts. Otherwise the loader (first visit) or a plain start.
+  if (html.classList.contains('pt-in') && document.querySelector('[data-pt]')) { hideHero(); reveal(handoff); }
+  else runLoader(handoff, buildHero);
+  // Fonts, images and the zoom change line breaks and positions: re-measure once they have all settled.
+  settled().then(() => requestRefresh(0));
 }
 
 boot();

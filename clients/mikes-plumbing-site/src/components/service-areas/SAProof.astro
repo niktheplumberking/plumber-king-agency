@@ -34,14 +34,14 @@ const RM = [1.5, -1.5, 1, -1, 1.5];                                // mobile car
     <Eyebrow look="town">On Yelp</Eyebrow>
     <h2 id="sp-h" class="sp-h" data-t="2">Customers from <span class="tone">all three regions.</span></h2>
     <figure class="sp-fig">
-      <div class="sp-board" data-t="4" data-b3-scrub data-b3-start="top 75%" data-b3-end="bottom 70%">
+      <div class="sp-board" data-t="4" data-scrub data-start="top 75%" data-end="bottom 70%">
         <span class="sp-nail" style="left:10px;top:10px" aria-hidden="true"></span><span class="sp-nail" style="right:10px;top:10px" aria-hidden="true"></span>
         <span class="sp-nail" style="left:10px;bottom:10px" aria-hidden="true"></span><span class="sp-nail" style="right:10px;bottom:10px" aria-hidden="true"></span>
         <div class="sp-area"><div class="sp-map">
           <div class="sp-tiles sp-tiles--d" style={`left:${pc(OX, W)};top:${pc(OY, H)};width:${pc(1129 * S, W)};height:${pc(701 * S, H)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="Map of Southern California with the towns Mike's Yelp reviewers are from" sizes="1360px" widths={[1129]} /></div>
           <div class="sp-tiles sp-tiles--m" style={`left:${pc(OXM, WM)};top:${pc(OYM, HM)};width:${pc(1129 * SM, WM)};height:${pc(701 * SM, HM)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="" sizes="430px" widths={[600]} /></div>
           <svg class="sp-strings" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-            {P.map((p, i) => { const [x, y] = at(p.k, S, OX, OY); return <path d={`M${x.toFixed(1)} ${y.toFixed(1)} L${p.pin[0]} ${p.pin[1]}`} pathLength="1" data-b3-path data-b3-from={(i / n).toFixed(3)} data-b3-to={((i + 0.8) / n).toFixed(3)} />; })}
+            {P.map((p, i) => { const [x, y] = at(p.k, S, OX, OY); return <path d={`M${x.toFixed(1)} ${y.toFixed(1)} L${p.pin[0]} ${p.pin[1]}`} pathLength="1" data-scrub-path data-win={`${(i / n).toFixed(3)},${((i + 0.8) / n).toFixed(3)}`} />; })}
           </svg>
           {P.map((p, i) => { const [x, y] = at(p.k, S, OX, OY), [xm, ym] = at(p.k, SM, OXM, OYM); return (
             <span class="sp-dot" style={`--x:${pc(x, W)};--y:${pc(y, H)};--xm:${pc(xm, WM)};--ym:${pc(ym, HM)}`} aria-hidden="true"><span class="sp-num">{i + 1}</span></span>
@@ -51,7 +51,7 @@ const RM = [1.5, -1.5, 1, -1, 1.5];                                // mobile car
         </div>
         <ol class="sp-tags" role="list">
           {P.map((p, i) => (
-            <li class="sp-tag" style={`--tx:${pc(p.tag[0], W)};--ty:${pc(p.tag[1], H)};--r:${p.tag[2]}deg;--rm:${RM[i]}deg`} data-b3-stop={((i + 0.8) / n).toFixed(3)}>
+            <li class="sp-tag" style={`--tx:${pc(p.tag[0], W)};--ty:${pc(p.tag[1], H)};--r:${p.tag[2]}deg;--rm:${RM[i]}deg`} data-stop data-at={((i + 0.8) / n).toFixed(3)}>
               <span class="sp-pin" style={`--px:${p.pin[0] - p.tag[0]}px;--py:${p.pin[1] - p.tag[1]}px`} aria-hidden="true"></span>
               <span class="sp-n" aria-hidden="true">{i + 1}</span>
               <p class="sp-town">{p.town}</p>

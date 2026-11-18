@@ -34,15 +34,15 @@ const xy = (k: string) => { const [x, y] = at(k), [xm, ym] = atm(k); return `--x
     </div>
     <figure class="sh-mapwrap" data-t="4" data-fx="nudge">
       <div class="sh-plate" aria-hidden="true"></div>
-      <div class="sh-hex" data-b3-scrub data-b3-start="top 60%" data-b3-end="bottom 30%"><div class="sh-in">
+      <div class="sh-hex" data-scrub data-start="top 60%" data-end="bottom 30%"><div class="sh-in">
         <div class="sh-tiles" style={`--x:${pc(OX, W)};--y:${pc(OY, H)};--w:${pc(1129 * S, W)};--h:${pc(701 * S, H)};--xm:${pc(OXM, WM)};--ym:${pc(OYM, HM)};--wm:${pc(1129 * SM, WM)};--hm:${pc(701 * SM, HM)}`}><Img name="map-inland-empire-orange-county-los-angeles" alt="Map of the Inland Empire, Orange County and Los Angeles with Mike's base in Riverside and the towns he serves" sizes="(min-width: 768px) 830px, 420px" widths={[420, 830, 1129]} priority /></div>
         <svg class="sh-routes sh-routes--d" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-          {DOTS.map(({ p }) => <path d={`M${rx.toFixed(1)} ${ry.toFixed(1)} L${p[0].toFixed(1)} ${p[1].toFixed(1)}`} pathLength="1" data-b3-path />)}
+          {DOTS.map(({ p }) => <path d={`M${rx.toFixed(1)} ${ry.toFixed(1)} L${p[0].toFixed(1)} ${p[1].toFixed(1)}`} pathLength="1" data-scrub-path />)}
         </svg>
         <svg class="sh-routes sh-routes--m" viewBox={`0 0 ${WM} ${HM}`} preserveAspectRatio="none" aria-hidden="true">
-          {DOTS.map(({ k }) => { const q = atm(k); return <path d={`M${rxm.toFixed(1)} ${rym.toFixed(1)} L${q[0].toFixed(1)} ${q[1].toFixed(1)}`} pathLength="1" data-b3-path />; })}
+          {DOTS.map(({ k }) => { const q = atm(k); return <path d={`M${rxm.toFixed(1)} ${rym.toFixed(1)} L${q[0].toFixed(1)} ${q[1].toFixed(1)}`} pathLength="1" data-scrub-path />; })}
         </svg>
-        {DOTS.map(({ k }, i) => <span class="sh-dot" style={xy(k)} data-b3-stop={(0.25 + i * 0.2).toFixed(2)} aria-hidden="true"></span>)}
+        {DOTS.map(({ k }, i) => <span class="sh-dot" style={xy(k)} data-stop data-at={(0.25 + i * 0.2).toFixed(2)} aria-hidden="true"></span>)}
         <span class="sh-pin" style={xy('riverside')} aria-hidden="true"></span>
       </div></div>
       <span class="sh-tag" style={`left:calc(4px + ${((rx - 69) / W).toFixed(4)} * (100% - 8px));top:calc(3px + ${((ry - 61) / H).toFixed(4)} * (100% - 6px))`} aria-hidden="true">Riverside · Base</span>

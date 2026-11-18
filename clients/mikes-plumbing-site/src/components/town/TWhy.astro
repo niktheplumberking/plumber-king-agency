@@ -15,9 +15,9 @@ const COLS = [
   <div class="wrap">
     <Eyebrow look="town" tone="ink">The way we work</Eyebrow>
     <h2 id="tw-h" class="sr-only">Friendly. Transparent. Proficient.</h2>
-    <ol class="tw-cols" role="list" data-b3-scrub data-b3-start="top 80%" data-b3-end="bottom 70%">
+    <ol class="tw-cols" role="list" data-scrub data-start="top 80%" data-end="bottom 70%">
       {COLS.map((c, i) => (
-        <li class="tw-col" data-b3-stop={(0.12 + i * 0.36).toFixed(2)}>
+        <li class="tw-col" data-stop data-at={(0.12 + i * 0.36).toFixed(2)}>
           <p class="tw-word" aria-hidden="true">{c.w}<span class="tw-dot">.</span></p>
           <span class="tw-n">0{i + 1}</span>
           <div class="tw-proof" data-t="3">
@@ -47,7 +47,7 @@ const COLS = [
   .tw-rule { display: block; width: 40px; height: 3px; background: var(--red); transform-origin: left; transition: transform .6s var(--ease-out); }
   .tw-q { margin-top: 18px; font-weight: 700; font-size: 20px; line-height: 27px; }
   .tw-by { margin-top: 12px; font-family: var(--f-label); font-weight: 500; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan-dark); }
-  /* scroll moment (b3kit/scrub.ts) */
+  /* scroll moment (kit/scrub.ts) */
   :global(html.motion) .tw-col:not(.is-on) .tw-rule { transform: scaleX(.25); }
   .tw-col.is-on .tw-n { color: var(--red); transform: scale(1.08) rotate(-4deg); }
 

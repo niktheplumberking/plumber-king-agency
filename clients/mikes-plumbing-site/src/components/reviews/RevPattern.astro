@@ -15,7 +15,7 @@ const tapes = [
   { label: 'Clean', words: [q('extremely conscientious about my lawn and cleaning up any mess'), q('Very clean')] },
 ];
 ---
-<section class="rp" aria-labelledby="rp-h" data-m-section data-scrub data-start="top 55%" data-end="bottom 35%" data-start-m="top 40%" data-end-m="bottom 60%">
+<section class="rp" aria-labelledby="rp-h" data-m-section data-scrub data-stop-mode="pop" data-start="top 55%" data-end="bottom 35%" data-start-m="top 40%" data-end-m="bottom 60%">
   <Wave z={1} d={{ a: 16.5, L: 560.5 }} m={{ a: 10.3, L: 300.5 }} fill="#D2C5A6" above="#0E0D0B" />
   <div class="wrap rp-in">
     <div class="rp-head">
@@ -27,7 +27,7 @@ const tapes = [
   <svg class="rp-pipe rp-pipe-d" viewBox="0 0 1440 940" aria-hidden="true" focusable="false" data-scrub-track>
     <path d="M-20 518H1308a42 42 0 0 1 42 42V938" fill="none" stroke="#6B5C3E" stroke-width="84" />
     <path d="M-20 493.5H1308a23.5 23.5 0 0 1 23.5 23.5V908" fill="none" stroke="#F3ECDD" stroke-opacity=".25" stroke-width="4" stroke-linecap="round" />
-    <path class="rp-water" d="M-20 518H1308a42 42 0 0 1 42 42V938" pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".32" stroke-width="30" data-scrub-fill />
+    <path class="rp-water" d="M-20 518H1308a42 42 0 0 1 42 42V938" pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".32" stroke-width="30" data-scrub-path />
     <g data-stop data-rot="4" style="transform-origin:1370px 698px"><path d="M1331 669h78l15 29-15 29h-78l-15-29z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="2" /><path data-lit opacity="0" d="M1331 669h78l15 29-15 29h-78l-15-29z" fill="#F3ECDD" stroke="#0E0D0B" stroke-width="2" /></g>
   </svg>
   <svg class="rp-pipe rp-pipe-m" viewBox="0 0 390 520" preserveAspectRatio="xMidYMin meet" aria-hidden="true" focusable="false">
@@ -94,5 +94,5 @@ const tapes = [
 </style>
 <style is:global>
   /* The water only exists while motion runs (scrub.ts); static views show the pipe exactly as in the frame. */
-  html:not(.motion) [data-scrub-fill] { visibility: hidden; }
+  html:not(.motion) [data-scrub-fill], html:not(.motion) [data-scrub-path] { visibility: hidden; }
 </style>

@@ -1,7 +1,7 @@
 ---
 // Areas route map (Figma 631:2037 "areas · route map" y 7700-8600; mobile 640:437 y 10164-11122).
 // The real OpenStreetMap image, dashed routes out of Riverside (Figma vectors) that draw with the scroll
-// (scrub.ts [data-route-scrub] on each route's mask), town tags linking to the town pages, the route board, the service
+// (kit/scrub.ts: each route mask is a [data-scrub-path] in its map's [data-scrub]), town tags linking to the town pages, the route board, the service
 // ticket. Desktop is a 1440 x 900 stage in Figma px; mobile has its own 390 x 301 map strip (its own Figma vectors).
 import Img from '../ui/Img.astro';
 import Badge from './Badge.astro';
@@ -35,15 +35,15 @@ const REG = [
   <div class="st">
     <div class="map" data-t="1" data-fx="fade">
       <div class="map-img"><Img name="map-inland-empire-orange-county-los-angeles" alt="Street map of the Inland Empire, Orange County and Los Angeles with Mike's routes out of Riverside" sizes="(min-width: 768px) 1440px, 486px" widths={[486, 972, 1129]} /></div>
-      <svg class="rts rts-d" viewBox="0 0 1440 900" aria-hidden="true">
-        <defs>{R.map((r, i) => <mask id={`rmd${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width="1600" height="1000"><path d={r.d.p} class="rm" pathLength="1" data-route-scrub /></mask>)}</defs>
+      <svg class="rts rts-d" viewBox="0 0 1440 900" aria-hidden="true" data-scrub data-start="top 80%" data-end="center 30%" data-lag="0.8">
+        <defs>{R.map((r, i) => <mask id={`rmd${i}`} maskUnits="userSpaceOnUse" x="-60" y="-60" width="1600" height="1000"><path d={r.d.p} class="rm" pathLength="1" data-scrub-path data-win={`${(i * 0.06).toFixed(2)},${(0.7 + i * 0.06).toFixed(2)}`} /></mask>)}</defs>
         <circle cx="1046" cy="313" r="110" class="pl a" /><circle cx="1045" cy="313" r="75" class="pl a" /><circle cx="1046" cy="313" r="42" class="pl b" />
         {R.map((r, i) => <path d={r.d.p} transform={`translate(${r.d.x} ${r.d.y})`} class="rt" mask={`url(#rmd${i})`} />)}
         {R.map((r) => <circle cx={r.d.dot[0] + 9} cy={r.d.dot[1] + 9} r="7.5" class="dt" />)}
         <circle cx="1045" cy="313" r="9" class="rs" />
       </svg>
-      <svg class="rts rts-m" viewBox="0 0 390 301" preserveAspectRatio="none" aria-hidden="true">
-        <defs>{R.map((r, i) => <mask id={`rmm${i}`} maskUnits="userSpaceOnUse" x="-40" y="-40" width="480" height="380"><path d={r.m.p} class="rm" pathLength="1" data-route-scrub /></mask>)}</defs>
+      <svg class="rts rts-m" viewBox="0 0 390 301" preserveAspectRatio="none" aria-hidden="true" data-scrub data-start="top 80%" data-end="center 30%" data-lag="0.8">
+        <defs>{R.map((r, i) => <mask id={`rmm${i}`} maskUnits="userSpaceOnUse" x="-40" y="-40" width="480" height="380"><path d={r.m.p} class="rm" pathLength="1" data-scrub-path data-win={`${(i * 0.06).toFixed(2)},${(0.7 + i * 0.06).toFixed(2)}`} /></mask>)}</defs>
         <circle cx="335" cy="105" r="34" class="pl a" /><circle cx="335" cy="105" r="18" class="pl b" />
         {R.map((r, i) => <path d={r.m.p} transform={`translate(${r.m.x} ${r.m.y})`} class="rt" mask={`url(#rmm${i})`} />)}
         {R.map((r) => <circle cx={r.m.dot[0] + 5} cy={r.m.dot[1] + 5} r="4" class="dt" />)}

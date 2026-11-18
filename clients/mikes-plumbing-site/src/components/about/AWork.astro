@@ -20,23 +20,23 @@ const n = 3;
   <div class="aw-in">
     <Eyebrow look="town">The way we work</Eyebrow>
     <h2 id="aw-h" class="aw-h" data-t="2">We don't cut corners, <span class="tone">we clean them!</span></h2>
-    <ol class="aw-rows" role="list" data-b3-scrub data-b3-start="top 70%" data-b3-end="bottom 60%">
-      <li class="aw-row" data-b3-stop={(0.9 / n).toFixed(3)}>
+    <ol class="aw-rows" role="list" data-scrub data-start="top 70%" data-end="bottom 60%">
+      <li class="aw-row" data-stop data-at={(0.9 / n).toFixed(3)}>
         <span class="aw-num" aria-hidden="true">1</span>
-        <h3 class="aw-t">Diagnose first.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-b3-path data-b3-from="0" data-b3-to={(0.9 / n).toFixed(3)} /></svg></h3>
+        <h3 class="aw-t">Diagnose first.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-scrub-path data-win={`0,${(0.9 / n).toFixed(3)}`} /></svg></h3>
         <p class="aw-p">“DIAGNOSIS MATTERS.” On a 75-gallon gas heater someone was told to replace, the problem was simply the gas control valve.</p>
         <figure class="aw-snap aw-snap--1"><div class="aw-ph"><Img name="water-heater-gas-valve-small" alt="Gas control valve on a water heater" sizes="(min-width: 768px) 136px, 86px" widths={[136, 272]} /></div><figcaption>Gas control valve · Mike's IG</figcaption></figure>
       </li>
-      <li class="aw-row" data-b3-stop={(1.9 / n).toFixed(3)}>
+      <li class="aw-row" data-stop data-at={(1.9 / n).toFixed(3)}>
         <span class="aw-rule" aria-hidden="true"><span class="aw-wv"></span><svg class="aw-nut" viewBox="0 0 30 20"><path d="M4.39 0.75H25.11L28.75 9.75L25.11 18.75H4.39L0.75 9.75Z" /></svg><span class="aw-wv"></span></span>
         <span class="aw-num" aria-hidden="true">2</span>
-        <h3 class="aw-t">Say it straight.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-b3-path data-b3-from={(1 / n).toFixed(3)} data-b3-to={(1.9 / n).toFixed(3)} /></svg></h3>
+        <h3 class="aw-t">Say it straight.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-scrub-path data-win={`${(1 / n).toFixed(3)},${(1.9 / n).toFixed(3)}`} /></svg></h3>
         <p class="aw-p aw-p--w">Customers on Yelp call his pricing <b>“{has('Bruce H.', 'fair and competitive')}”</b> (Bruce H.) and <b>“{has('Sal C.', 'upfront and honest')}”</b> (Sal C.).</p>
       </li>
-      <li class="aw-row" data-b3-stop={(2.9 / n).toFixed(3)}>
+      <li class="aw-row" data-stop data-at={(2.9 / n).toFixed(3)}>
         <span class="aw-rule" aria-hidden="true"><span class="aw-wv"></span><svg class="aw-nut" viewBox="0 0 30 20"><path d="M4.39 0.75H25.11L28.75 9.75L25.11 18.75H4.39L0.75 9.75Z" /></svg><span class="aw-wv"></span></span>
         <span class="aw-num" aria-hidden="true">3</span>
-        <h3 class="aw-t">Leave it clean.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-b3-path data-b3-from={(2 / n).toFixed(3)} data-b3-to={(2.9 / n).toFixed(3)} /></svg></h3>
+        <h3 class="aw-t">Leave it clean.<svg class="aw-ul" viewBox="0 0 325 8" aria-hidden="true"><path d={UL} pathLength="1" data-scrub-path data-win={`${(2 / n).toFixed(3)},${(2.9 / n).toFixed(3)}`} /></svg></h3>
         <p class="aw-p">“{has('Stuart W.', 'extremely conscientious about my lawn and cleaning up any mess')}” (Stuart W.)</p>
         <figure class="aw-snap aw-snap--3"><div class="aw-ph"><Img name="new-sewer-cleanout-in-yard" alt="New sewer cleanout installed in a yard" sizes="(min-width: 768px) 136px, 86px" widths={[136, 272]} /></div><figcaption>New cleanout, yard · Mike's IG</figcaption></figure>
       </li>

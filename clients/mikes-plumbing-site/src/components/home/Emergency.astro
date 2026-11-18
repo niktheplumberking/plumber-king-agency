@@ -1,7 +1,7 @@
 ---
 // Emergency 24h dial (Figma 631:2037 "emergency · 24h dial" y 6880-7700; mobile 640:437 y 8919-10164).
 // The dial is one SVG in the desktop frame's units (428 box), so it scales to the mobile 300 box. Its needle sweeps
-// with the scroll (scrub.ts [data-dial]); without motion it rests where Figma has it. "24 hours" is only ever said
+// with the scroll (kit/scrub.ts [data-scrub-turn]); without motion it rests where Figma has it. "24 hours" is only ever said
 // with Yelp next to it (facts rule). Owns the coal wave lip that overlaps the route map below.
 import Btn from '../kit/Btn.astro';
 import Wave from '../kit/Wave.astro';
@@ -28,7 +28,7 @@ const STEPS = [
         <Btn v="text" sub="He'll tell you what it is" class="em-ghost" />
       </div>
     </div>
-    <figure class="dial" data-dial data-t="2" data-fx="scale">
+    <figure class="dial" data-t="2" data-fx="scale" data-scrub data-start="top 85%" data-end="center 45%" data-lag="0.8">
       <svg viewBox="0 0 428 428" role="img" aria-label="A 24-hour dial: Yelp lists Mike as open 24 hours">
         <circle cx="214" cy="214" r="211" class="bz" />
         <circle cx="214" cy="214" r="195.25" class="fc" />
@@ -36,7 +36,7 @@ const STEPS = [
         <g class="nm"><text x="213.5" y="110">24</text><text x="318" y="214">6</text><text x="214" y="318">12</text><text x="110" y="214">18</text></g>
         <text x="214" y="255" class="op">OPEN</text>
         <text x="214" y="276" class="hr">24 HOURS</text>
-        <g class="nd" data-dial-needle data-from="-300" data-to="0" data-origin="214 214"><path d="M151 78L229.46 235.6L221.3 239.4Z" /></g>
+        <g class="nd" data-scrub-turn="-300,0" data-origin="214 214"><path d="M151 78L229.46 235.6L221.3 239.4Z" /></g>
         <path d="M198.72 198H231.28L237 215L231.28 232H198.72L193 215Z" class="hub" /><circle cx="214" cy="214" r="5" fill="#0E0D0B" />
       </svg>
       <figcaption>Yelp lists Mike as open 24 hours.</figcaption>

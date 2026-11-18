@@ -1,5 +1,6 @@
 /* Base + shared primitives for Mike's site. Component styles live in each component's <style>. */
 @import './tokens.css';
+@import '../components/kit/kit.css';
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 24px); background: var(--ink); }

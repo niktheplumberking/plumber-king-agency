@@ -1,6 +1,6 @@
 ---
 // Town page template (Figma 670:3403 desktop / 670:8484 mobile, PAGES-COPY section 5 + 5.9). One entry per town in
-// src/data/town-pages.ts. Sections 5.1-5.8; the waves between sections are the traced Figma seams (b3kit/Wave).
+// src/data/town-pages.ts. Sections 5.1-5.8; the waves between sections are the traced Figma seams (kit/Wave, keys in kit/waves.ts).
 import Base from '../../layouts/Base.astro';
 import THero from './THero.astro';
 import TClose from './TClose.astro';
@@ -40,4 +40,3 @@ const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', it
   <TFaq t={t} />
   <TCta t={t} />
 </Base>
-<script>import '../b3kit/scrub';</script>

@@ -10,11 +10,11 @@ const pipe = 'M780 -40V50C780 63.3 786.67 70 800 70H1300';
 const regions = [['IE', 'Inland Empire'], ['OC', 'Orange County'], ['LA', 'Los Angeles']];
 const pay = SITE.payments.slice(0, -1).join(', ') + ' or ' + SITE.payments[SITE.payments.length - 1];
 ---
-<section class="hs on-ink" aria-labelledby="hs-h" data-m-section data-scrub data-start="top 80%" data-end="top 15%" data-start-m="top 20%" data-end-m="top -30%">
+<section class="hs on-ink" aria-labelledby="hs-h" data-m-section data-scrub data-stop-mode="pop" data-start="top 80%" data-end="top 15%" data-start-m="top 20%" data-end-m="top -30%">
   <Wave z={1} d={{ a: 18.59, L: 600.5 }} m={{ a: 12.82, L: 300 }} fill="#0E0D0B" above="#F3ECDD" />
   <svg class="hs-pipe" viewBox="0 -60 1440 300" aria-hidden="true" focusable="false">
     <path d={pipe} fill="none" stroke="#6B5C3E" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />
-    <path class="hs-water" d={pipe} pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".38" stroke-width="5" stroke-linecap="round" data-scrub-fill />
+    <path class="hs-water" d={pipe} pathLength="1" fill="none" stroke="#F3ECDD" stroke-opacity=".38" stroke-width="5" stroke-linecap="round" data-scrub-path />
     <path d={pipe} fill="none" stroke="#fff" stroke-opacity=".2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(-1.5 -1.5)" />
     <g data-stop data-rot="0" data-scale="1.12"><path d="M767.42 28h25.16l4.42 14-4.42 14h-25.16L763 42z" fill="#D2C5A6" stroke="#0E0D0B" stroke-width="1.5" stroke-linejoin="round" /></g>
     <path d="M870.75 75V202M1210.75 75V202" stroke="#D2C5A6" stroke-width="1.5" />

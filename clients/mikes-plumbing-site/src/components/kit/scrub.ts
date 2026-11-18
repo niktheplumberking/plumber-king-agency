@@ -39,11 +39,11 @@ export function drawTo(path: SVGGeometryElement, p: number) { path.style.strokeD
 /** Distance (0-1) along a path closest to a screen point. Build-time only (layout read). */
 function along(path: SVGGeometryElement, cx: number, cy: number) {
   const m = path.getScreenCTM(); if (!m) return NaN;
+  // Coarse to fine (round 2, TBT): 48 samples, then 24 around the best one (72 geometry calls instead of 240, finer result).
   const L = path.getTotalLength(); let best = Infinity, at = 0;
-  for (let k = 0; k <= 240; k++) {
-    const q = path.getPointAtLength((L * k) / 240).matrixTransform(m);
-    const d = (q.x - cx) ** 2 + (q.y - cy) ** 2; if (d < best) { best = d; at = k / 240; }
-  }
+  const test = (t: number) => { const q = path.getPointAtLength(L * t).matrixTransform(m); const d = (q.x - cx) ** 2 + (q.y - cy) ** 2; if (d < best) { best = d; at = t; } };
+  for (let k = 0; k <= 48; k++) test(k / 48);
+  const c = at; for (let k = -12; k <= 12; k++) if (k) test(Math.min(1, Math.max(0, c + k / (48 * 12))));
   return at;
 }
 
@@ -66,9 +66,11 @@ function build(root: HTMLElement, phone: boolean) {
   const p0 = paths.find(vis); const f0 = fills[0];
   const r0 = f0?.getBoundingClientRect(); const ax0 = f0 ? axisOf(f0) : 'x';
   const tr = track.getBoundingClientRect();
+  const given = (s: HTMLElement) => !Number.isNaN(num((phone && s.dataset.atM) || s.dataset.at, NaN)) && !s.dataset.atEl;
+  const needGeo = stops.some((s) => s.dataset.atEl); // geo only feeds the piecewise water; a stop with its own data-at skips the search
   const marks = stops.map((s, i) => {
     const r = s.getBoundingClientRect(); const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    let geo = p0 ? along(p0, cx, cy) : r0 && r0.width ? (ax0 === 'x' ? (cx - r0.left) / r0.width : (cy - r0.top) / r0.height) : NaN;
+    let geo = !needGeo && given(s) ? 0 : p0 ? along(p0, cx, cy) : r0 && r0.width ? (ax0 === 'x' ? (cx - r0.left) / r0.width : (cy - r0.top) / r0.height) : NaN;
     if (Number.isNaN(geo)) geo = (i + 1) / (stops.length + 1);
     let at = num((phone && s.dataset.atM) || s.dataset.at, NaN);
     const el = s.dataset.atEl ? document.querySelector(s.dataset.atEl) : null;

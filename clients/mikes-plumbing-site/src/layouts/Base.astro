@@ -16,6 +16,7 @@ import MobileCallBar from '../components/global/MobileCallBar.astro';
 import Loader from '../components/global/Loader.astro';
 import Curtain from '../components/kit/Curtain.astro';
 import EmergencyStrip from '../components/global/EmergencyStrip.astro';
+import { lateCss } from '../scripts/late-fonts';
 
 interface Props {
   title: string; description: string; path: string; og?: string; ogAlt?: string; jsonld?: object[];
@@ -67,6 +68,8 @@ const FIRST_VIEW: Record<string, string[]> = {
   '/terms': ['oswald-latin-500-normal', 'archivo-latin-500-normal', 'archivo-latin-600-normal', 'archivo-latin-700-normal'],
 };
 const extraFonts = FIRST_VIEW[path] ?? [];
+// Home paints none of the late faces in its first viewport: they are added after load there (scripts/late-fonts-load.ts).
+const lateOnLoad = path === '/';
 // Graph on every page: the business, the site, and this page (isPartOf the site, about the business). A page type the page
 // sends itself (AboutPage, ContactPage, CollectionPage) becomes the page node; noindex pages get no page node.
 const ownPage = jsonld.find(isPageNode);
@@ -74,7 +77,7 @@ const pageNode = noindex || is404 ? [] : [webPageSchema({ path, title, descripti
 const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), websiteSchema(), ...pageNode, ...jsonld.filter((o) => o !== ownPage)];
 ---
 <!doctype html>
-<html lang="en-US" data-loader={loader ? undefined : 'off'}>
+<html lang="en-US" data-loader={loader ? undefined : 'off'} data-late-fonts={lateOnLoad ? '' : undefined}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -92,6 +95,7 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
   <link rel="preload" href="/fonts/archivo-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/oswald-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
   {scriptHero && <link rel="preload" href="/fonts/yesteryear-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />}
+  {!lateOnLoad && <style is:inline set:html={lateCss()} />}
   {extraFonts.map((f) => <link rel="preload" href={`/fonts/${f}.woff2`} as="font" type="font/woff2" crossorigin />)}
   <meta property="og:type" content={type} />
   <meta property="og:site_name" content={SITE.name} />
@@ -171,6 +175,6 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
   <main id="main" tabindex="-1"><slot /></main>
   <Footer />
   <MobileCallBar estimate={estimate} />
-  <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion'; import '../components/kit/scrub';</script>
+  <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion'; import '../components/kit/scrub'; import '../scripts/late-fonts-load';</script>
 </body>
 </html>

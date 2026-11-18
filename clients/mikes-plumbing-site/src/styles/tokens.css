@@ -1,18 +1,13 @@
 /* Mike's Plumbing Services design tokens. Source: handoff/BUILD-BRIEF.md + plan/DESIGN-SYSTEM-AND-HOME-SHEET.md (VFACT Figma).
    Colours from his flyer and logo only. Red = live dots only. Never tan text on paper/bone, never paper text on tan. */
+/* Faces every page may paint first. The late faces (lighter/heavier weights, italics, the script face) live in
+   src/scripts/late-fonts.ts: Base.astro writes them into <head>, or on home adds them after load. */
 @font-face { font-family: 'Abril Fatface'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/abril-fatface-latin-400-normal.woff2') format('woff2'); }
-@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/oswald-latin-400-normal.woff2') format('woff2'); }
-@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/oswald-latin-500-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Oswald'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/oswald-latin-600-normal.woff2') format('woff2'); }
-@font-face { font-family: 'Oswald'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/oswald-latin-700-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/archivo-latin-400-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/archivo-latin-500-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/archivo-latin-600-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Archivo'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/archivo-latin-700-normal.woff2') format('woff2'); }
-@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 800; font-display: swap; src: url('/fonts/archivo-latin-800-normal.woff2') format('woff2'); }
-@font-face { font-family: 'Archivo'; font-style: italic; font-weight: 400 500; font-display: swap; src: url('/fonts/archivo-latin-400-italic.woff2') format('woff2'); }
-@font-face { font-family: 'Archivo'; font-style: italic; font-weight: 600 800; font-display: swap; src: url('/fonts/archivo-latin-600-italic.woff2') format('woff2'); }
-@font-face { font-family: 'Yesteryear'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/yesteryear-latin-400-normal.woff2') format('woff2'); }
 /* Metric-ish fallbacks so the swap does not shift layout (CLS). */
 @font-face { font-family: 'Abril Fallback'; src: local('Georgia'); size-adjust: 108%; ascent-override: 92%; descent-override: 24%; }
 @font-face { font-family: 'Archivo Fallback'; src: local('Arial'); size-adjust: 100%; ascent-override: 88%; descent-override: 21%; }

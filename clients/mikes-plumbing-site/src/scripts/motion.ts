@@ -355,7 +355,8 @@ function buildRest(done: () => void) {
   const step = (dl?: IdleDeadline) => {
     const t0 = performance.now();
     while (secs.length && (performance.now() - t0 < 12 || (dl && dl.timeRemaining() > 8))) {
-      const batch = secs.splice(0, 3).map(planSection); // read phase for a few sections, then their writes
+      // One section per pass (was three): a three-section batch ran 100-150 ms at 4x CPU, one long task each (fix round 2, TBT).
+      const batch = secs.splice(0, 1).map(planSection); // read phase, then its writes
       batch.forEach(buildSection);
     }
     if (secs.length) idle(step); else done();

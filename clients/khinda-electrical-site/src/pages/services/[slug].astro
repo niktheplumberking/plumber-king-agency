@@ -1,23 +1,53 @@
 ---
-// Service pages (Figma 03 Panel upgrades is the template; builders 2-3 build them out). H1s and titles: SEO-PLAN.md.
-import Stub from '../../components/stub/Stub.astro';
-import { SERVICES } from '../../data/site';
-import { serviceSchema } from '../../lib/schema';
-const META: Record<string, { title: string; h1: [string, string]; lead: string }> = {
-  'panel-upgrades': { title: 'Panel & 200A Service Upgrades in Surrey · Khinda', h1: ['Panel Upgrades in', 'Surrey, BC'], lead: '100A to 200A, full panels, and adding space for an EV charger or a heat pump. Done on a permit, with every circuit labelled on the door.' },
-  'ev-charger-installation': { title: 'EV Charger Installation in Surrey, BC · Khinda', h1: ['EV Charger Installation', 'in Surrey'], lead: 'EV chargers, on a permit. Rebates may apply.' },
-  'lighting-pot-lights': { title: 'Pot Lights & Lighting Installation Surrey · Khinda', h1: ['Pot Lights & Lighting', 'in Surrey'], lead: 'Pot lights, chandeliers, soffit lights.' },
-  'new-construction-wiring': { title: 'New Home & Suite Wiring in Surrey · Khinda', h1: ['New Construction Wiring', 'in Surrey'], lead: 'Rough-in to finish, new builds too.' },
-  'renovations-basement-suites': { title: 'Renovation & Basement Suite Wiring Surrey', h1: ['Renovation Electrical', 'in Surrey'], lead: 'Rough-in to finish for renos and basement suites.' },
-  'commercial-electrical': { title: 'Commercial Electrician in Surrey, BC · Khinda', h1: ['Commercial Electrical', 'in Surrey'], lead: 'Shop fit-outs, barbershops, fire alarm.' },
-  'fire-alarm-systems': { title: 'Fire Alarm Electrical Work in Surrey · Khinda', h1: ['Fire Alarm', 'Systems'], lead: 'Fire alarm panels for shops and commercial spaces in Surrey.' },
-  'repairs-troubleshooting': { title: 'Electrical Repairs in Surrey, BC · Khinda', h1: ['Electrical Repairs', '& Troubleshooting'], lead: 'Tripping breakers, flicker, dead outlets.' },
-};
-export function getStaticPaths() { return SERVICES.map((s) => ({ params: { slug: s.slug } })); }
-const s = SERVICES.find((x) => x.slug === Astro.params.slug)!;
-const m = META[s.slug];
-const description = `${m.lead} Khinda Electrical, Surrey, BC. Call or text 236-818-2664.`.slice(0, 155);
+// Service pages: Figma 03 Panel upgrades is the template (1:1 on /services/panel-upgrades/); the other seven reuse it with
+// copy from PAGE-SHEET Facts + SEO-PLAN only (src/data/service-pages.ts). A section a service cannot source is left out;
+// when two light sections end up side by side, the second one switches white / panel grey so the join still reads.
+import Base from '../../layouts/Base.astro';
+import Endings from '../../components/endings/Endings.astro';
+import SvHero from '../../components/service-template/SvHero.astro';
+import SvQuick from '../../components/service-template/SvQuick.astro';
+import SvSigns from '../../components/service-template/SvSigns.astro';
+import SvDiy from '../../components/service-template/SvDiy.astro';
+import SvProcess from '../../components/service-template/SvProcess.astro';
+import SvCompare from '../../components/service-template/SvCompare.astro';
+import SvPricing from '../../components/service-template/SvPricing.astro';
+import SvSignoff from '../../components/service-template/SvSignoff.astro';
+import SvWhy from '../../components/service-template/SvWhy.astro';
+import SvPrevent from '../../components/service-template/SvPrevent.astro';
+import SvFaq from '../../components/service-template/SvFaq.astro';
+import SvRelated from '../../components/service-template/SvRelated.astro';
+import SvCta from '../../components/service-template/SvCta.astro';
+import '../../components/service-template/sv.css';
+import { SERVICE_PAGES } from '../../data/service-pages';
+import { serviceSchema, faqSchema, breadcrumbSchema } from '../../lib/schema';
+export function getStaticPaths() { return SERVICE_PAGES.map((p) => ({ params: { slug: p.slug } })); }
+const p = SERVICE_PAGES.find((x) => x.slug === Astro.params.slug)!;
+const path = `/services/${p.slug}/`;
+// background per section (Figma) and the light-on-light switch
+const plan: [string, any, string][] = [
+  ['quick', SvQuick, 'p'], ['signs', p.signs && SvSigns, 'w'], ['diy', p.diy && SvDiy, 'd'], ['process', SvProcess, 'p'],
+  ['compare', p.compare && SvCompare, 'd'], ['pricing', p.pricing && SvPricing, 'w'], ['signoff', p.signoff && SvSignoff, 'p'],
+  ['why', SvWhy, 'd'], ['prevent', p.prevent && SvPrevent, 'w'], ['faq', SvFaq, 'p'], ['related', SvRelated, 'd'], ['cta', SvCta, 'd'],
+];
+let prev = 'd';
+const secs = plan.filter(([, C]) => C).map(([k, C, b]) => {
+  let cls: string | undefined;
+  if (b !== 'd' && b === prev) { b = b === 'w' ? 'p' : 'w'; cls = b === 'w' ? 'bg-w' : 'bg-p'; }
+  prev = b;
+  return { k, C, cls };
+});
+const ans = p.quick.answer;
 ---
-<Stub title={m.title} path={s.href} description={description} eyebrow={`${s.name} · Surrey, BC`} h1={m.h1} lead={m.lead} navPath="/services/"
-  crumbs={[{ name: 'Services', path: '/services/' }, { name: s.name, path: s.href }]}
-  jsonld={[serviceSchema({ name: s.name, path: s.href, description: m.lead })]} />
+<Base title={p.title} description={p.description} path={path} navPath="/services/" og={p.hero.plate?.name ?? 'residential-electrical-panel-finished-labelled-surrey'}
+  ogAlt={p.hero.plate?.alt}
+  jsonld={[
+    breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }, { name: p.name, path }]),
+    serviceSchema({ name: p.name, path, description: ans }),
+    faqSchema(p.faq.items.map((f) => ({ q: f.q, a: f.a }))),
+  ]}
+  preload={{ name: p.hero.bg.name, sizes: '(min-width: 1024px) 330px, 100vw', widths: [390, 660, 780] }}>
+  <SvHero p={p} />
+  {secs.map(({ C, cls }) => <C p={p} bg={cls} />)}
+  <Endings slot="end" />
+</Base>
+<script>import '../../components/service-template/sv.ts';</script>

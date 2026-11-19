@@ -1,0 +1,54 @@
+---
+// 3.9 Why · 4 wire nuts (Figma 757:437, 1440x780; mobile 764:562). Four wire nuts are the menu. STATE "wire-nut selector":
+// picking one twists it a quarter turn onto its wires, the wires run into the plate on the right, and that reason and its
+// source crossfade in. One plate, one reason (connection 02 at rest, as drawn).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Screw from '../kit/Screw.astro';
+import n1 from '../../art/svt/nut1.svg?raw';
+import n2 from '../../art/svt/nut2.svg?raw';
+import n3 from '../../art/svt/nut3.svg?raw';
+import n4 from '../../art/svt/nut4.svg?raw';
+import { pad } from './dm';
+import type { SvcPage } from '../../data/service-pages';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const w = p.why;
+const NUTS = [n1, n2, n3, n4];
+const AT = 1;
+---
+<section class:list={['svw sec on-dark', bg]} style="--h:780px" data-m-section aria-labelledby="svw-h">
+  <div class="sv-hd ab" style="--x:120px;--y:96px;--w:620px">
+    <Eyebrow text="Why Khinda" data-t="1" />
+    <h2 class="h2" id="svw-h" data-t="2"><span class="l1">{w.h2[0]}</span><span class="l2">{w.h2[1]}</span></h2>
+  </div>
+  <p class="lead sv-lead svw-lead ab" style="--x:820px;--y:150px;--w:500px" data-t="3">{w.lead}</p>
+  <div class="svw-g ab" style="--x:120px;--y:262px;--w:1200px" data-nuts>
+    <div class="svw-rows" role="tablist" aria-label="Four reasons" data-t="3" data-stagger>
+      {w.items.map((it, i) => (
+        <button type="button" role="tab" class:list={['svw-r', i === AT && 'on']} id={`svw-t${i}`} aria-selected={i === AT ? 'true' : 'false'} aria-controls="svw-plate" tabindex={i === AT ? 0 : -1} data-nut={i}>
+          <span class="sv-k">Connection {pad(i + 1)}<span class="svw-tt"> · tight</span></span>
+          <span class="svw-n">{it.k}</span>
+          <span class="svw-nut" aria-hidden="true" set:html={NUTS[i]} />
+        </button>
+      ))}
+      <span class="svw-wires" aria-hidden="true" style={`--r:${AT}`}><i></i><i></i></span>
+    </div>
+    <div class="svw-plate" id="svw-plate" role="tabpanel" aria-labelledby={`svw-t${AT}`} tabindex="0" data-t="4" data-fx="frame">
+      <Screw s={14} rot={30} class="s1" /><Screw s={14} rot={80} class="s2" /><Screw s={14} rot={120} class="s3" /><Screw s={14} rot={15} class="s4" />
+      {w.items.map((it, i) => (
+        <div class="svw-pc" hidden={i !== AT} data-pc={i}>
+          <p class="sv-k svw-pk">Connection {pad(i + 1)} · twisted tight</p>
+          <h3 class="svw-pt">{it.t}</h3>
+          <p class="svw-pb">{it.b}</p>
+          <p class="sv-k svw-sk">Where it comes from</p>
+          <p class="svw-src">{it.src}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="svw-cta ab" style="--x:120px;--y:670px" data-t="4">
+    <Btn v="call" />
+    <Btn v="text" tone="dark" sub={p.hero.breaker ? 'Of your panel · WhatsApp' : 'Of the job · WhatsApp'} />
+  </div>
+</section>

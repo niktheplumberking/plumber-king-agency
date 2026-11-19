@@ -1,0 +1,39 @@
+---
+// 2.9 CTA (Figma 742:437, 1440x620; mobile 750:578, 390x1120). A phone with a WhatsApp chat: the customer sends a panel
+// photo, the reply comes in, typing dots. The phone breaks out of the amber band (into 2.8 / F), so this section sits above F.
+import { Image } from 'astro:assets';
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Toggle from '../kit/Toggle.astro';
+import { PICS } from './hub-data';
+import { SITE } from '../../data/site';
+import mark from '../../assets/brand/logo-mark-K-bolt.png';
+---
+<section class="hc sec" style="--h:620px" data-m-section aria-labelledby="hc-h">
+  <div class="hc-l ab" style="--x:120px;--y:130px;--w:680px">
+    <Eyebrow text="Not sure what to book" data-t="1" />
+    <h2 class="hc-h" id="hc-h" data-t="2"><span class="l1">Not sure what it’s called?</span><span class="l2"><span>Text a photo.</span></span></h2>
+    <p class="hc-lead" data-t="3">Snap the panel, the fixture or the outlet and send it to <span class="nw">{SITE.phone}</span> by text or WhatsApp. He looks at it and tells you what the job is.</p>
+    <div class="hc-cta" data-t="4" data-stagger>
+      <a class="hc-b hc-deep" href={SITE.whatsapp} rel="noopener"><Toggle kind="btn" /><span class="bt"><span class="b1">Text a photo</span><span class="b2">WhatsApp · {SITE.phone}</span></span></a>
+      <a class="hc-b hc-out" href={SITE.tel}><span class="bt"><span class="b1">Call instead</span><span class="b2">Tap to call · same number</span></span></a>
+    </div>
+    <p class="hc-steps tech">1 Snap it <span aria-hidden="true">·</span> 2 Send it <span aria-hidden="true">·</span> 3 Talk it through</p>
+  </div>
+  <figure class="hc-ph ab" style="--x:1030px;--y:-80px;--w:320px" data-chat aria-label="Example WhatsApp chat: a customer sends a photo of their panel">
+    <div class="hc-sc">
+      <div class="hc-top">
+        <span class="hc-av"><Image src={mark} alt="" width={36} height={36} loading="lazy" /></span>
+        <span class="hc-who"><b>{SITE.name}</b><span>WhatsApp · {SITE.phone}</span></span>
+      </div>
+      <span class="hc-day tech dn-m">Today</span>
+      <div class="hc-me" data-msg="1">
+        <span class="hc-pic"><Img name={PICS.ig39.name} alt={PICS.ig39.alt} sizes="(min-width: 1024px) 186px, 136px" box={186 / 250} boxM={136 / 180} widths={[180, 280, 380]} /></span>
+        <p><span class="dn-m">This is my panel. Is there room for an EV charger?</span><span class="dn-d">This is my panel. Room for an EV charger?</span></p>
+      </div>
+      <p class="hc-re" data-msg="2">Got it. Looking at the photo now.</p>
+      <span class="hc-dots dn-m" data-msg="3" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="hc-in" aria-hidden="true">Message<i></i></span>
+    </div>
+  </figure>
+</section>

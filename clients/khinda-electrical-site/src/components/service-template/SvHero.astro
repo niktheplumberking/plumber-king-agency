@@ -1,0 +1,78 @@
+---
+// 3.1 Hero (Figma 03 Panel upgrades 753:472, 1440x760; mobile 760:456). Panel upgrades: the old 100A main beside the new
+// 200A main (the new one flips ON as the hero plays). The other services: a framed photo of his own job in the same spot.
+// The quick-request card straddles 3.1 / 3.2 (z above both): name, phone, two chip groups (real checkboxes), photo, send.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Toggle from '../kit/Toggle.astro';
+import Screw from '../kit/Screw.astro';
+import D from './D.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage }
+const { p } = Astro.props;
+const { form } = p;
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const brk = (cls: string, label: string, amp: string, on: boolean) => ({ cls, label, amp, on });
+---
+<section class="svh sec on-dark" style="--h:760px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="svh-ph ab" style="--x:680px;--y:0px;--w:330px">
+    <Img name={p.hero.bg.name} alt={p.hero.bg.alt} sizes="(min-width: 1024px) 330px, 100vw" box={330 / 760} boxM={390 / 420} widths={[390, 660, 780]} priority />
+    <span class="svh-shade"></span>
+  </div>
+  <div class="svh-l ab" style="--x:120px;--y:56px;--w:560px">
+    <nav class="svh-cr tech" aria-label="Breadcrumb"><ol role="list"><li><a href="/services/">Services</a></li><li><span aria-current="page">{p.name}</span></li></ol></nav>
+    <Eyebrow text={p.eyebrow} data-t="1" class="svh-eb" />
+    <h1 class="h1 svh-h" id="h1" data-t="2"><span class="l1">{p.h1[0]}</span><span class="l2">{p.h1[1]}</span></h1>
+    <p class="lead svh-lead" data-t="3"><D v={p.lead} /></p>
+    <div class="svh-cta" data-t="4" data-stagger>
+      <Btn v="call" class="svh-call" />
+      <Btn v="text" tone="dark" sub={p.hero.breaker ? 'Of your panel · WhatsApp' : 'Of the job · WhatsApp'} class="svh-text" />
+    </div>
+    <dl class="svh-facts" data-t="4" data-stagger>
+      {p.facts.map((f) => <div class="svh-f"><dt class="tech">{f.k}</dt><dd>{f.v}</dd></div>)}
+    </dl>
+  </div>
+  {p.hero.breaker ? (
+    <div class="svh-brk ab" style="--x:640px;--y:170px;--w:426px" aria-hidden="true">
+      {[brk('old', 'Old main', '100', true), brk('new', 'Main · 2P', '200', false)].map((b) => (
+        <div class:list={['bk', `bk-${b.cls}`]} data-bk={b.cls}>
+          <span class="bk-l tech">{b.label}</span>
+          <span class="bk-slot"><i class="bk-h" data-bk-h={b.cls}><b></b><b></b></i></span>
+          <span class="bk-on tech">On</span><span class="bk-off tech">Off</span>
+          <span class="bk-a">{b.amp}</span>
+          <Screw s={10} rot={30} class="bk-s1" /><Screw s={10} rot={120} class="bk-s2" />
+        </div>
+      ))}
+      <svg class="bk-arr" viewBox="0 0 58 22" width="58" height="22"><path d="M0 11h52M44 2l9 9-9 9" fill="none" stroke="#F5A833" stroke-width="4" stroke-linejoin="round"/></svg>
+      <span class="bk-c bk-c1 tech">Before · 100A</span>
+      <span class="bk-c bk-c2 tech">After · 200A</span>
+    </div>
+  ) : (
+    <figure class="svh-plate ab" style="--x:760px;--y:150px;--w:300px" data-t="3" data-fx="frame">
+      <div class="svh-pf"><Img name={p.hero.plate!.name} alt={p.hero.plate!.alt} sizes="(min-width: 1024px) 276px, 240px" box={276 / 330} boxM={240 / 280} widths={[280, 480, 560]} /></div>
+      <figcaption class="tech">{p.hero.plate!.cap}</figcaption>
+    </figure>
+  )}
+  <form class="svh-form ab" style="--x:1090px;--y:90px;--w:290px" data-estimate-form method="post" action="/thank-you/" enctype="multipart/form-data" novalidate aria-labelledby="svh-ft" data-t="4" data-fx="frame">
+    <input type="hidden" name="service" value={p.name} />
+    <p class="ff-t tech" id="svh-ft">{form.title}</p>
+    <label class="fl tech" for="svh-name">Name</label>
+    <input class="fi" id="svh-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+    <label class="fl tech" for="svh-phone">Phone</label>
+    <input class="fi" id="svh-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Your phone number" required />
+    {[form.g1, form.g2].map((g, gi) => (
+      <fieldset class:list={['fc', `fc-${gi + 1}`]}>
+        <legend class="fl tech">{g.label}</legend>
+        <div class="fcs">{g.opts.map((o) => <label class="chip"><input type="checkbox" name={slug(g.label)} value={o} /><span>{o}</span></label>)}</div>
+      </fieldset>
+    ))}
+    <label class="fph"><input type="file" name="photo" accept="image/*" data-photo /><span data-photo-label>{form.photo}</span></label>
+    <Btn v="call" type="submit" main="Send it" sub="He takes it from there" class="fsend" />
+    <p class="fnote">Your number is only used for this job.</p>
+    <p class="fmsg" data-form-msg role="status"></p>
+    <p class="for tech dn-m">Or call</p>
+    <a class="fnum dn-m" href={SITE.tel}>{SITE.phone}</a>
+  </form>
+</section>

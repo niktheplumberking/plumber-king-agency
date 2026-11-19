@@ -1,0 +1,71 @@
+---
+// 2.4 Families (Figma 737:437, 1440x840; mobile 749:437, 390x908). Four junction boxes: the open one shows its photo, the
+// family and three wires out to the service pages; the others stand closed as rails with the name up the cover. Hover or
+// focus a rail (desktop) / tap a bar (touch) and it opens while the rest fold (STATE 2.4). The 3 seam cables leave box 04
+// and run down into 2.5, ending in the "ALL 9 ON" breaker there.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Screw from '../kit/Screw.astro';
+import Art from '../kit/Art.astro';
+import { FAMILIES } from './hub-data';
+import { SITE } from '../../data/site';
+import seamD from '../../art/svh/seam-d.svg?raw';
+import seamM from '../../art/svh/seam-m.svg?raw';
+const pad = (n: number) => String(n).padStart(2, '0');
+const WIRES = ['#C8362F', '#2C5FB8', '#C47A45'];
+// wire shapes from the box edge to each link (desktop: out of the right side; mobile: down and right)
+const WD = ['M0 6C26 6 30 14 58 14', 'M0 10H58', 'M0 16C26 16 30 6 58 6'];
+---
+<section class="hf sec" style="--h:840px" data-m-section aria-labelledby="hf-h">
+  <div class="hf-hd ab sv-c" style="--x:120px;--y:96px;--w:1200px">
+    <Eyebrow text="Service families" data-t="1" />
+    <h2 class="h2 hf-h" id="hf-h" data-t="2"><span class="l1">Four families.</span><span class="l2">Every job sits on one.</span></h2>
+    <p class="lead hf-lead" data-t="3"><span class="dn-m">Four families of work. Each box has its wires out to the service pages, and every one ends the same way: call or text a photo.</span><span class="dn-d">Tap a box and it opens: the wires inside run to each service page. Every one ends with call or text a photo.</span></p>
+  </div>
+  <div class="hf-row ab" style="--x:120px;--y:320px;--w:1200px" data-fams data-t="4" data-stagger>
+    {FAMILIES.map((f, i) => (
+      <div class:list={['hf-f', i === 0 && 'open']} id={`family-${i + 1}`} data-fam={i}>
+        <button type="button" class="hf-rail" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`hf-p${i}`} data-fam-btn={i}>
+          <span class="hf-rc">
+            <Screw s={10} rot={30} class="hf-rs1" />
+            <span class="hf-tag tech">Box {pad(i + 1)}</span>
+            <span class="hf-rn">{f.name}</span>
+            <span class="hf-r3 tech">3 services</span>
+            <span class="hf-stub" aria-hidden="true">{WIRES.map((c) => <i style={`background:${c}`}></i>)}</span>
+            <Screw s={10} rot={120} class="hf-rs2" />
+          </span>
+        </button>
+        <div class="hf-open" id={`hf-p${i}`}>
+          <div class="hf-box">
+            <span class="hf-lid" aria-hidden="true"><Screw s={10} rot={40} class="hf-ls1" /><Screw s={10} rot={110} class="hf-ls2" /></span>
+            <span class="hf-in"><Img name={f.pic.name} alt={f.pic.alt} sizes="(min-width: 1024px) 352px, 140px" box={352 / 412} boxM={140 / 108} widths={[280, 360, 540, 720]} /></span>
+            <span class="hf-hinge h1" aria-hidden="true"></span><span class="hf-hinge h2" aria-hidden="true"></span>
+            <span class="hf-btag tech">Box {pad(i + 1)} · Open</span>
+          </div>
+          <p class="hf-k tech dn-m">Family {pad(i + 1)} · 3 services</p>
+          <h3 class="hf-n">{f.name}</h3>
+          <p class="hf-d dn-m">{f.desc}</p>
+          <ul class="hf-w" role="list">
+            {f.links.map((l, j) => (
+              <li>
+                <svg class="hf-wd dn-m" viewBox="0 0 64 20" width="64" height="20" aria-hidden="true"><path d={WD[j]} stroke={WIRES[j]} /><circle cx="61" cy={j === 1 ? 10 : j === 0 ? 14 : 6} r="2.5" fill="#C47A45" /></svg>
+                <a href={l.h}>{l.t}</a>
+              </li>
+            ))}
+          </ul>
+          <svg class="hf-wm dn-d" viewBox="0 0 104 130" width="104" height="130" aria-hidden="true">
+            <path d="M18 0V18C18 34 22 38 38 38H100" stroke="#C8362F" />
+            <path d="M26 0V58C26 74 30 78 46 78H100" stroke="#2C5FB8" />
+            <path d="M10 0V98C10 114 14 118 30 118H100" stroke="#C47A45" />
+          </svg>
+          <p class="hf-x"><a href={SITE.tel}>Call</a><span aria-hidden="true">·</span><a href={SITE.sms}>Text a photo →</a></p>
+        </div>
+      </div>
+    ))}
+  </div>
+  <span class="hl-brk ab" style="--x:1262px;--y:886px;--w:64px" aria-hidden="true"><i></i><b class="tech">All 9 on</b></span>
+  <span class="hf-gland ab dn-m" style="--x:1316px;--y:440px;--w:22px" aria-hidden="true"></span>
+  <span class="hf-gland ab dn-d" aria-hidden="true"></span>
+  <Art svg={seamD} class="hf-seam dn-m" data-draw />
+  <Art svg={seamM} class="hf-seam-m dn-d" data-draw />
+</section>

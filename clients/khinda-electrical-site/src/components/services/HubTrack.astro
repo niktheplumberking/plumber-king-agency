@@ -1,0 +1,62 @@
+---
+// 2.7 Reviews track (Figma 741:437, 1440x1100; mobile 750:437, 390x1060). No reviews yet (PAGE-SHEET): three jobs from his
+// Instagram stack under a track light as you scroll: each card rises, arrives tilted and lands flat on the pile under the
+// centre head; the counter and the list track "Job n / 3" (STATE 2.7). The list rows are buttons too (keyboard / no motion).
+// Default = the Figma frame: job 1 landed, job 2 arriving, job 3 waiting.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Art from '../kit/Art.astro';
+import { JOBS } from './hub-data';
+import { SITE } from '../../data/site';
+import h1d from '../../art/svh/head1-d.svg?raw';
+import h2d from '../../art/svh/head2-d.svg?raw';
+import h3d from '../../art/svh/head3-d.svg?raw';
+import h1m from '../../art/svh/head1-m.svg?raw';
+import h2m from '../../art/svh/head2-m.svg?raw';
+const pad = (n: number) => String(n).padStart(2, '0');
+const ST = ['Landed', 'Arriving', 'Next'];
+---
+<section class="ht sec on-dark" style="--h:1100px" data-m-section aria-labelledby="ht-h" data-track data-n="2">
+  <div class="ht-hd ab sv-c" style="--x:120px;--y:96px;--w:1200px">
+    <Eyebrow text="What customers say" data-t="1" />
+    <h2 class="h2 ht-h" id="ht-h" data-t="2"><span class="l1">Reviews are on the way.</span><span class="l2">The work is already lit.</span></h2>
+    <p class="lead ht-lead" data-t="3"><span class="dn-m">His Google reviews come next. Until they land, three jobs from his Instagram sit under the lights, each with what was done.</span><span class="dn-d">His Google reviews come next. Until then, jobs from his Instagram sit under the lights.</span></p>
+  </div>
+  <div class="ht-rig" aria-hidden="true">
+    <i class="ht-can c1"></i><i class="ht-can c2"></i><i class="ht-rod c1"></i><i class="ht-rod c2"></i>
+    <i class="ht-rail"></i>
+    <i class="ht-ad a1"></i><i class="ht-ad a2"></i><i class="ht-ad a3"></i>
+    <i class="ht-stem a1"></i><i class="ht-stem a2"></i><i class="ht-stem a3"></i>
+    <span class="ht-head hd1 dn-m" set:html={h1d} /><span class="ht-head hd2 dn-m" set:html={h2d} /><span class="ht-head hd3 dn-m" set:html={h3d} />
+    <span class="ht-head hm1 dn-d" set:html={h1m} /><span class="ht-head hm2 dn-d" set:html={h2m} />
+  </div>
+  <p class="ht-ctr tech" aria-hidden="true">Job <span data-tn>2</span> / 3 · Scroll to stack</p>
+  <div class="ht-stage" data-stage>
+    {JOBS.map((j, i) => (
+      <article class:list={['ht-card', `c${i + 1}`]} data-card={i}>
+        <span class="ht-ph"><Img name={j.pic.name} alt={j.pic.alt} focus={j.pic.focus} sizes="(min-width: 1024px) 340px, 290px" box={340 / 210} boxM={290 / 190} widths={[300, 340, 580, 680]} /></span>
+        <p class="ht-k tech">{j.k}</p>
+        <h3 class="ht-t">{j.t}</h3>
+        <p class="ht-d">{j.d}</p>
+        <p class="ht-f"><span>Surrey area</span><span class="ht-chip tech">Review next</span></p>
+      </article>
+    ))}
+    <i class="ht-cone" aria-hidden="true"></i>
+  </div>
+  <div class="ht-prog ab dn-m" style="--x:150px;--y:560px;--w:330px">
+    <p class="tech ht-pk">Now on the track</p>
+    <p class="ht-pn" aria-live="polite">Job <span data-tn>2</span> / 3</p>
+    <ol class="ht-list" role="list">
+      {JOBS.map((j, i) => (
+        <li><button type="button" class:list={['ht-row', i === 0 ? 'landed' : i === 1 ? 'arriving' : 'next']} data-row={i} aria-current={i === 1 ? 'step' : undefined}>
+          <span class="tech ht-rn">{pad(i + 1)}</span><span class="ht-rt">{j.t}</span><span class="tech ht-rs" data-rs>{ST[i]}</span>
+        </button></li>
+      ))}
+    </ol>
+  </div>
+  <div class="ht-cta ab" style="--x:479px;--y:1000px" data-t="4" data-stagger>
+    <Btn v="call" class="ht-call" />
+    <Btn v="text" tone="dark" main="See his Instagram" sub={`${SITE.igHandle} · ${SITE.igPosts} posts`} href={SITE.social.instagram} class="ht-ig" rel="noopener" />
+  </div>
+</section>

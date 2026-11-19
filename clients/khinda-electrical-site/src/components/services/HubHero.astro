@@ -1,0 +1,66 @@
+---
+// 2.1 Hero + form (Figma 02 Services hub 736:472, 1440x740; mobile 744:456, 390x1340). The quick request is a 3-rocker
+// switch plate (736:505) that breaks into 2.3: each field filled flips its rocker ON and fills one progress bar; "Switch it
+// on" stays unlit (white, amber outline) until all three are ON, then lights amber (STATE 2.1).
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Tape from '../kit/Tape.astro';
+import Toggle from '../kit/Toggle.astro';
+import Screw from '../kit/Screw.astro';
+import { JUMPS, PICS } from './hub-data';
+import { SITE } from '../../data/site';
+const rockers = [
+  { k: '01 · Name', name: 'name', type: 'text', ac: 'name', ph: 'Your name' },
+  { k: '02 · Phone', name: 'phone', type: 'tel', ac: 'tel', ph: 'Your phone number' },
+  { k: '03 · Job', name: 'job', type: 'text', ac: 'off', ph: 'e.g. panel upgrade, pot lights' },
+];
+---
+<section class="hh sec on-dark" style="--h:740px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="hh-ph ab" style="--x:1010px;--y:0px;--w:430px">
+    <Img name={PICS.ig01.name} alt={PICS.ig01.alt} sizes="(min-width: 1024px) 430px, 100vw" box={430 / 740} boxM={390 / 300} widths={[390, 640, 860]} focus="40% 50%" priority />
+    <span class="hh-shade"></span>
+  </div>
+  <div class="hh-l ab" style="--x:120px;--y:92px;--w:620px">
+    <Eyebrow text="Services · Surrey, BC" data-t="1" />
+    <h1 class="h1 hh-h" id="h1" data-t="2"><span class="l1">Electrical Services</span><span class="l2">in Surrey</span></h1>
+    <Tape text="Homes, suites and shops." size={22} rot={-2} class="hh-tape" data-t="3" data-fx="nudge" />
+    <p class="lead hh-lead" data-t="3">Panels, lighting, EV chargers, renos and commercial fit-outs across Surrey. Pick the job below, or flip the three switches<span class="dn-m"> and leave your number</span>.</p>
+    <div class="hh-cta" data-t="4" data-stagger>
+      <Btn v="call" class="hh-call" />
+      <Btn v="text" tone="dark" class="hh-text" />
+    </div>
+    <p class="hh-jl tech" id="hh-jl">Jump to a family</p>
+    <ul class="hh-jump" role="list" aria-labelledby="hh-jl" data-t="4" data-stagger>
+      {JUMPS.map((j) => <li><a href={`#family-${j.fam}`} data-jump={j.fam}><i style={`background:${j.c}`}></i>{j.label}</a></li>)}
+    </ul>
+  </div>
+
+  <form class="hp ab" style="--x:790px;--y:112px;--w:384px" data-estimate-form data-rockers method="post" action="/thank-you/" enctype="multipart/form-data" novalidate aria-labelledby="hp-t" data-t="4" data-fx="frame">
+    <input type="hidden" name="service" value="Services hub · quick request" />
+    <Tape text="Three switches. Done." size={20} rot={-5} class="hp-tape" aria-hidden="true" />
+    <Screw s={12} rot={20} class="hp-s1" /><Screw s={12} rot={140} class="hp-s2" />
+    <div class="hp-top">
+      <p class="hp-t tech" id="hp-t">Quick request</p>
+      <span class="hp-bars" aria-hidden="true"><i class="on"></i><i></i><i></i></span>
+      <p class="hp-n tech" data-hp-n aria-live="polite">0 / 3 on</p>
+    </div>
+    {rockers.map((r, i) => (
+      <div class="hp-r" data-rk={i}>
+        <div class="hp-pad">
+          <label class="hp-k tech" for={`hp-${r.name}`}>{r.k}</label>
+          <span class="hp-st tech" data-st aria-hidden="true">{i === 0 ? 'Next' : 'Off'}</span>
+          <input class="hp-in" id={`hp-${r.name}`} name={r.name} type={r.type} autocomplete={r.ac} inputmode={r.type === 'tel' ? 'tel' : undefined} placeholder={r.ph} required={i < 2} />
+        </div>
+      </div>
+    ))}
+    <button class="hp-go" type="submit" data-hp-go>
+      <Toggle kind="btn" on={false} />
+      <span class="bt"><span class="b1">Switch it on</span><span class="b2" data-hp-sub>Flip 3 more switches to send.</span></span>
+    </button>
+    <p class="hp-note">Your number is only used to reach you about this job.</p>
+    <p class="hp-msg" data-form-msg role="status"></p>
+    <p class="hp-or tech">Or call</p>
+    <a class="hp-num" href={SITE.tel}>{SITE.phone}</a>
+  </form>
+</section>

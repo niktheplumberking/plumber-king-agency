@@ -1,0 +1,60 @@
+---
+// 3.7 Pricing (Figma 756:437, 1440x880; mobile 764:471). A load-calculation sheet on a clipboard (the clip crosses the
+// 3.6 / 3.7 join): the factors that change the price, no numbers on purpose. STATE "panel-size slider": four stops; the
+// handle is a breaker toggle, the track turns amber up to it, each stop ticks the rows that matter and the readout reads
+// "HE CHECKS N OF 5 THINGS".
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import clipD from '../../art/svt/clip-d.svg?raw';
+import clipM from '../../art/svt/clip-m.svg?raw';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const pr = p.pricing!;
+const STOPS = [['100A', 3], ['125A', 3], ['200A', 4], ['Full panel', 5]] as const;
+const init = pr.slider ? 2 : -1;
+const ticked = (i: number) => (pr.slider ? i < STOPS[init][1] : true);
+const tick = '<svg viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><rect class="bx" x="1" y="9" width="24" height="24" rx="3" fill="#fff" stroke="#15174A" stroke-width="2"/><path class="ck" d="M6 20l7 7L31 2" fill="none" stroke="#15174A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+---
+<section class:list={['svr sec', bg]} style="--h:880px" data-m-section aria-labelledby="svr-h">
+  <div class="sv-hd ab" style="--x:120px;--y:130px;--w:460px">
+    <Eyebrow text="How pricing works" data-t="1" />
+    <h2 class="h2" id="svr-h" data-t="2"><span class="l1">What changes</span><span class="l2">the price.</span></h2>
+    <p class="lead sv-lead svr-lead" data-t="3">{pr.lead}</p>
+    <div class="svr-btn" data-t="4"><Btn v="call" main="Get your price" sub={p.hero.breaker ? 'Text a photo of the panel' : 'Text a photo of the job'} href={SITE.sms} /></div>
+    <p class="sv-k svr-np" data-t="4">No numbers on this page, on purpose.</p>
+    {pr.slider && (
+      <div class="svr-sl" data-t="4" data-slider>
+        <label class="sv-k svr-sll" for="svr-r">Slide to your panel size</label>
+        <p class="svr-ro tech" aria-hidden="true" data-ro>200A · he checks 4 of 5 things</p>
+        <div class="svr-tr" style={`--v:${init}`}>
+          <input id="svr-r" type="range" min="0" max="3" step="1" value={init} aria-valuetext="200A: he checks 4 of 5 things" data-range />
+          <span class="svr-fill" aria-hidden="true"></span>
+          {STOPS.map((_, i) => <span class="svr-tk" style={`--i:${i}`} aria-hidden="true"></span>)}
+          <span class="svr-th" aria-hidden="true"><i></i></span>
+        </div>
+        <p class="svr-st tech" aria-hidden="true">{STOPS.map(([s], i) => <span class:list={[i === init && 'on']} data-stop={i}>{s === 'Full panel' ? <><span class="dn-m">Full panel</span><span class="dn-d">Full</span></> : s}</span>)}</p>
+      </div>
+    )}
+  </div>
+  <div class="svr-cb ab" style="--x:640px;--y:60px;--w:680px" data-t="3" data-fx="frame">
+    <div class="svr-clip" aria-hidden="true"><span class="dn-m" set:html={clipD} /><span class="dn-d" set:html={clipM} /></div>
+    <div class="svr-sh">
+      <div class="svr-hd"><p class="tech svr-t1">Load calculation</p><p class="sv-k">What changes the price</p><p class="sv-k svr-who dn-m">Khinda Electrical · Surrey</p></div>
+      <table class="svr-tb">
+        <caption class="sr-only">What changes the price</caption>
+        <thead class="dn-m"><tr><th scope="col" class="sv-k">✓</th><th scope="col" class="sv-k">Factor</th><th scope="col" class="sv-k">Why it changes the price</th></tr></thead>
+        <tbody>{pr.rows.map((r, i) => (
+          <tr class:list={['svr-r', !ticked(i) && 'off']} data-row={i}>
+            <td class="svr-c"><span set:html={tick} /><span class="sr-only" data-sr>{ticked(i) ? 'Checked' : 'Not needed at this size'}</span></td>
+            <th scope="row" class="svr-f">{r.t}</th>
+            <td class="svr-w">{r.b}</td>
+          </tr>
+        ))}</tbody>
+      </table>
+      <p class="svr-foot">{p.hero.breaker ? 'The price comes after he sees your panel, and before any work starts.' : 'The price comes after he sees the job, and before any work starts.'}</p>
+      <p class="sv-k svr-sig">Price agreed</p>
+    </div>
+  </div>
+</section>

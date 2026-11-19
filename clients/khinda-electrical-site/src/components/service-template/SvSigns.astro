@@ -1,0 +1,44 @@
+---
+// 3.3 Six signs (Figma 754:462, 1440x1210; mobile 763:437). Uneven bento of receptacle plates (the most common sign gets
+// the big tile). STATE "magnified bento": the hovered / tapped card lifts onto white, a loupe magnifies its plate (follows the
+// pointer over the plate) and the call / text chip turns amber. One card is always lit (sign 03 at rest, as drawn).
+import Eyebrow from '../kit/Eyebrow.astro';
+import { bare, pad } from './dm';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+const raw = import.meta.glob<string>('../../art/svt/plate*.svg', { query: '?raw', import: 'default', eager: true });
+const art = (n: number, v: 'd' | 'm') => raw[`../../art/svt/plate${n}-${v}.svg`];
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const s = p.signs!;
+// desktop bento (Figma card rects)
+const R = [[120, 300, 792, 556], [936, 300, 384, 266], [936, 590, 384, 266], [120, 880, 384, 266], [528, 880, 384, 266], [936, 880, 384, 266]];
+const what = p.slug === 'panel-upgrades' ? 'your panel' : 'the problem';
+---
+<section class:list={['svs sec', bg]} style="--h:1210px" data-m-section aria-labelledby="svs-h">
+  <div class="sv-hd ab" style="--x:120px;--y:100px;--w:720px">
+    <Eyebrow text={p.slug === 'panel-upgrades' ? 'Signs you need one' : 'Signs to call'} data-t="1" />
+    <h2 class="h2" id="svs-h" data-t="2">{p.slug === 'panel-upgrades' ? <><span class="l1">Six signs your panel</span><span class="l2">is asking for help.</span></> : <><span class="l1">Six signs the power</span><span class="l2">is asking for help.</span></>}</h2>
+  </div>
+  <p class="lead sv-lead svs-lead ab" style="--x:860px;--y:170px;--w:460px" data-t="3">{s.lead}</p>
+  <ul class="svs-g" role="list" data-signs data-stagger data-t="4">
+    {s.items.map((it, i) => (
+      <li class:list={['svs-c', i === 0 && 'big', i === 2 && 'on']} style={`--x:${R[i][0]}px;--y:${R[i][1]}px;--w:${R[i][2]}px;--hh:${R[i][3]}px`} data-sign>
+        <div class="svs-pl" data-plate>
+          <span class="dn-m" set:html={art(it.plate, 'd')} />
+          <span class="dn-d" set:html={art(it.plate, 'm')} />
+          {it.tag && <span class="svs-tag tech" aria-hidden="true">Insp.</span>}
+          <span class="svs-lp" aria-hidden="true"><span class="svs-lpi"><span class="dn-m" set:html={bare(art(it.plate, 'd'))} /><span class="dn-d" set:html={bare(art(it.plate, 'm'))} /></span></span>
+        </div>
+        <div class="svs-tx">
+          <p class="sv-k">Sign {pad(i + 1)}</p>
+          <h3 class="svs-t">{it.t}</h3>
+          <p class="svs-b">{it.b}</p>
+          {i === 0 && it.more && <p class="svs-m dn-m">{it.more}</p>}
+        </div>
+        {i === 0 && <p class="sv-k svs-mc dn-m">The most common sign</p>}
+        <a class="svs-a" href={SITE.sms}>Call / text a photo of {what} →</a>
+      </li>
+    ))}
+  </ul>
+</section>

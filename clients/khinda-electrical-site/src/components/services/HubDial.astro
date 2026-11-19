@@ -1,0 +1,69 @@
+---
+// 2.3 Symptom picker (Figma 736:551, 1440x960; mobile 744:531, 390x1380). A rotary timer dial with 8 symptoms around it:
+// pick one (tap a label, drag the knob, or arrow keys) and the pointer turns to it, a lead wire runs to the service card,
+// and the card shows the matching service with its call button. Default = Figma frame (02 Lights flicker).
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Tape from '../kit/Tape.astro';
+import { SYMPTOMS, DIAL_START } from './hub-data';
+import { SITE } from '../../data/site';
+const pad = (n: number) => String(n).padStart(2, '0');
+// inactive label boxes (Figma), alignment of the number + text
+const POS: [number, number, number, 'c' | 'l' | 'r'][] = [
+  [454, 395, 92, 'c'], [666, 449, 142, 'l'], [718, 632, 167, 'l'], [654, 804, 91, 'l'],
+  [426, 868, 148, 'c'], [204, 804, 142, 'r'], [113, 632, 169, 'r'], [172, 459, 174, 'r'],
+];
+const NUM_M: [number, number][] = [[186, 334], [277, 372], [316, 464], [277, 555], [186, 594], [94, 555], [56, 464], [94, 372]];
+const cur = SYMPTOMS[DIAL_START].card;
+const pics = [...new Map(SYMPTOMS.map((s) => [s.card.pic.name, s.card])).values()];
+const data = SYMPTOMS.map((s) => ({ svc: s.card.svc, href: s.card.href, title: s.card.title, body: s.card.body, call: s.card.call, pic: s.card.pic.name }));
+const ang = DIAL_START * 45;
+---
+<section class="hd sec" style="--h:960px" data-m-section aria-labelledby="hd-h" data-dial={DIAL_START}>
+  <div class="hd-hd ab" style="--x:120px;--y:150px;--w:640px">
+    <Eyebrow text="Symptom picker" data-t="1" />
+    <h2 class="h2 hd-h" id="hd-h" data-t="2"><span class="l1">Tell us what you see.</span><span class="l2">We’ll match the job.</span></h2>
+    <p class="lead hd-lead" data-t="3"><span class="dn-m">Turn the dial to what is going on at your place. The card shows which service it is, then call or text a photo.</span><span class="dn-d">Turn the dial to what is going on. The card shows which service it is.</span></p>
+  </div>
+  <svg class="hd-wire dn-m" viewBox="0 0 1440 960" width="1440" height="960" aria-hidden="true"><path data-wire d="M812 488C870 488 862 560 914 560" /><circle data-wire-end cx="920" cy="560" r="6" /></svg>
+  <div class="hd-rig ab" style="--x:320px;--y:470px;--w:360px" data-t="3" data-fx="frame">
+    <div class="hd-dial" style={`--a:${ang}deg`}>
+      <span class="hd-bz"></span><span class="hd-face"></span>
+      {SYMPTOMS.map((_, i) => <i class:list={['hd-tick', i === DIAL_START && 'on']} style={`--t:${i * 45}deg`} data-tick={i}></i>)}
+      <span class="hd-knob" data-knob aria-hidden="true">
+        <span class="hd-cap"></span>
+        <svg class="hd-ptr" viewBox="0 0 156 156" width="156" height="156"><line x1="78" y1="78" x2="78" y2="14" /></svg>
+        <span class="hd-hub"></span>
+      </span>
+      <span class="hd-turn tech dn-m">Turn to match</span>
+    </div>
+    {NUM_M.map(([x, y], i) => <span class:list={['hd-mn tech dn-d', i === DIAL_START && 'on']} style={`--x:${x - 85}px;--y:${y - 360}px`} aria-hidden="true">{pad(i + 1)}</span>)}
+  </div>
+  <div class="hd-sy" role="radiogroup" aria-label="What do you see?">
+    {SYMPTOMS.map((s, i) => {
+      const [x, y, w, al] = POS[i];
+      return (
+        <button type="button" role="radio" class:list={['hd-s', `al-${al}`]} aria-checked={i === DIAL_START ? 'true' : 'false'} tabindex={i === DIAL_START ? 0 : -1} data-sym={i} style={`--x:${x}px;--y:${y}px;--w:${w}px`}>
+          <span class="hd-sn tech">{pad(i + 1)}</span><span class="hd-st">{s.label}</span>
+        </button>
+      );
+    })}
+  </div>
+  <article class="hd-card ab" style="--x:920px;--y:430px;--w:420px" aria-live="polite" data-t="4" data-fx="frame">
+    <Tape text="Most likely" size={18} rot={4} class="hd-tape" aria-hidden="true" />
+    <div class="hd-ph">
+      {pics.map((c) => <Img name={c.pic.name} alt={c.pic.alt} focus={c.pic.focus} sizes="(min-width: 1024px) 420px, calc(100vw - 40px)" box={420 / 210} boxM={350 / 170} widths={[360, 540, 720, 840]} data-pic={c.pic.name} hidden={c.pic.name !== cur.pic.name} />)}
+    </div>
+    <div class="hd-cb">
+      <p class="hd-m tech">Matches · CCT <span data-c-n>{pad(DIAL_START + 1)}</span></p>
+      <h3 class="hd-ct"><a href={cur.href} data-c-link><span data-c-title>{cur.title}</span></a></h3>
+      <p class="hd-cd" data-c-body>{cur.body}</p>
+      <div class="hd-cta">
+        <Btn v="call" main={cur.call} sub={`${SITE.phone} · tap to call`} class="hd-call" data-c-call />
+        <a class="sv-link dn-m" href={SITE.sms}>Text a photo →</a>
+      </div>
+    </div>
+  </article>
+  <script type="application/json" data-dial-json set:html={JSON.stringify(data)} />
+</section>

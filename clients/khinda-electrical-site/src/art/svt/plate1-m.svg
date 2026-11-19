@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="358.962 710.822 20.660 27.977" width="96" height="130" fill="none" aria-hidden="true" focusable="false" overflow="visible"><g>
+<rect x="360.753" y="712.614" width="14.4948" height="23.9638" rx="2.0444" fill="white"/>
+<rect x="360.753" y="712.614" width="14.4948" height="23.9638" rx="2.0444" stroke="#C9CDD6"/>
+<g>
+<rect x="363.551" y="715.627" width="8.89944" height="6.31698" rx="1.614" fill="#E7E9EC"/>
+<rect x="363.551" y="715.627" width="8.89944" height="6.31698" rx="1.614" stroke="#C9CDD6"/>
+<rect x="366.064" y="716.848" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<rect x="369.077" y="716.848" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<ellipse cx="368.001" cy="720.615" rx="0.645616" ry="0.753218" fill="#14152B"/>
+</g>
+<g>
+<rect x="363.551" y="727.248" width="8.89944" height="6.31698" rx="1.614" fill="#E7E9EC"/>
+<rect x="363.551" y="727.248" width="8.89944" height="6.31698" rx="1.614" stroke="#C9CDD6"/>
+<rect x="366.064" y="728.47" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<rect x="369.077" y="728.47" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<ellipse cx="368.001" cy="732.236" rx="0.645616" ry="0.753218" fill="#14152B"/>
+</g>
+<g>
+<circle cx="368.243" cy="724.034" r="0.43041" transform="rotate(-20 368.243 724.034)" fill="#D7DAE0" stroke="#8F95A3"/>
+<rect x="367.636" y="724.026" width="1.13628" height="0.43041" transform="rotate(-20 367.636 724.026)" fill="#6B7282"/>
+</g>
+<ellipse cx="368.862" cy="716.848" rx="4.3041" ry="3.01287" fill="#6B4426" fill-opacity="0.38"/>
+<ellipse cx="368.646" cy="716.526" rx="1.93685" ry="1.39883" fill="#4A2E18" fill-opacity="0.55"/>
+</g>
+</svg>

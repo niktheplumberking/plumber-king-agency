@@ -1,0 +1,47 @@
+---
+// 3.11 FAQ · extension-cord reel (Figma 757:551, 1440x860; mobile 766:482). Questions hang from the unwinding cord as tall
+// tags. STATE "tags pull out sideways": clicking one pulls it out wide and its answer shows (amber pull edge); the others stay
+// narrow with vertical labels. Hover swings a tag 3 deg on its tie. Mobile: stacked tags open downwards.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Art from '../kit/Art.astro';
+import D from './D.astro';
+import reelD from '../../art/svt/reel-d.svg?raw';
+import reelM from '../../art/svt/reel-m.svg?raw';
+import cordD from '../../art/svt/cord-d.svg?raw';
+import cordM from '../../art/svt/cord-m.svg?raw';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const f = p.faq;
+---
+<section class:list={['svf sec', bg]} style="--h:860px" data-m-section aria-labelledby="svf-h">
+  <div class="sv-hd ab" style="--x:120px;--y:96px;--w:760px">
+    <Eyebrow text={f.eyebrow} data-t="1" />
+    <h2 class="h2" id="svf-h" data-t="2"><span class="l1">{f.h2[0]}</span><span class="l2">{f.h2[1]}</span></h2>
+  </div>
+  <div class="svf-reel ab" style="--x:1040px;--y:170px;--w:290px" aria-hidden="true">
+    <span class="dn-m" set:html={reelD} /><span class="dn-d" set:html={reelM} /><span class="svf-ft tech">50 ft</span>
+  </div>
+  <Art svg={cordD} class="dn-m svf-cord" data-draw="rev" />
+  <Art svg={cordM} class="dn-d svf-cord" data-draw="rev" />
+  <div class="svf-tags ab" style="--x:120px;--y:360px;--w:900px" data-tags data-t="3" data-stagger>
+    {f.items.map((it, i) => (
+      <div class:list={['svf-t', i === 0 && 'open']} data-tag>
+        <h3 class="svf-q"><button type="button" class="svf-b" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`svf-a${i}`} id={`svf-b${i}`}>
+          <span class="sv-k svf-n">Q{i + 1}<span class="svf-o"> · open</span></span>
+          <span class="svf-qt">{it.q}</span>
+          <span class="svf-pm" aria-hidden="true">+</span>
+        </button></h3>
+        <div class="svf-a" id={`svf-a${i}`} role="region" aria-labelledby={`svf-b${i}`}>
+          <div><p>{it.a}</p>{it.link && <a class="sv-link" href={it.link.href}><D v={it.link.t} /></a>}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+  <div class="svf-cta ab" style="--x:120px;--y:730px" data-t="4">
+    <Btn v="call" />
+    <a class="sv-link" href={SITE.sms}>{p.hero.breaker ? 'Or text a photo of the panel →' : 'Or text a photo of the job →'}</a>
+  </div>
+</section>

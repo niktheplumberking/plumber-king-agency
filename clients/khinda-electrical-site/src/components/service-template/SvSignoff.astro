@@ -1,0 +1,51 @@
+---
+// 3.8 Reviews · job sign-off sheet (Figma 756:495, 1440x920; mobile 764:522). One sign-off sheet per Instagram job,
+// stacked like a clipboard pile, his photo clipped to the top one. STATE "flick through the pile": drag / flick the top
+// sheet sideways (or press the sheet counter): it slides out under the pile and the next job comes up. No reviews are shown
+// until Khinda has real ones ("Review next").
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import D from './D.astro';
+import binderD from '../../art/svt/binder-d.svg?raw';
+import binderM from '../../art/svt/binder-m.svg?raw';
+import type { SvcPage } from '../../data/service-pages';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const jobs = p.signoff!.jobs;
+const n = jobs.length;
+---
+<section class:list={['svo sec', bg]} style="--h:920px" data-m-section aria-labelledby="svo-h">
+  <div class="sv-hd sv-c ab" style="--x:120px;--y:96px;--w:1200px">
+    <Eyebrow text="What customers say" data-t="1" />
+    <h2 class="h2" id="svo-h" data-t="2"><span class="l1">One job, signed off.</span><span class="l2">Reviews land here next.</span></h2>
+  </div>
+  <div class="svo-pile ab" style="--x:230px;--y:282px;--w:1030px" data-t="3" data-fx="frame" data-pile data-n={n}>
+    <div class="svo-p3" aria-hidden="true"><p class="tech svo-pt">Job sign-off</p><p class="sv-k">Sheet 3 of {n} · next job from his Instagram</p></div>
+    <div class="svo-p2" aria-hidden="true"><p class="tech svo-pt">Job sign-off</p><p class="sv-k">Sheet 2 of {n} · next job from his Instagram</p></div>
+    <div class="svo-top" data-sheet>
+      {jobs.map((j, i) => (
+        <div class="svo-j" hidden={i > 0} data-job={i}>
+          <div class="svo-jh"><p class="tech svo-pt">Job sign-off</p><p class="sv-k">Khinda Electrical · Surrey, BC</p></div>
+          <dl class="svo-dl">
+          <div class="svo-row"><dt class="sv-k">Job</dt><dd class="svo-b">{j.job}</dd></div>
+          <div class="svo-row"><dt class="sv-k">Type</dt><dd>{j.type}</dd></div>
+          <div class="svo-row"><dt class="sv-k"><span class="dn-m">Work done</span><span class="dn-d">Work</span></dt><dd>{j.work}</dd></div>
+          <div class="svo-row"><dt class="sv-k">Town</dt><dd>Surrey area</dd></div>
+          <div class="svo-row svo-rv"><dt class="sv-k"><span class="dn-m">Customer<br />review</span><span class="dn-d">Review</span></dt><dd><span class="svo-slot tech">Review next</span></dd></div>
+          </dl>
+        </div>
+      ))}
+      <p class="sv-k svo-s1"><span class="dn-m">Customer sign-off</span><span class="dn-d">Customer</span></p>
+      <p class="sv-k svo-s2"><span class="dn-m">Khinda Electrical</span><span class="dn-d">Khinda</span></p>
+    </div>
+    <figure class="svo-ph">
+      <div class="svo-pi">{jobs.map((j, i) => <div class="svo-pim" hidden={i > 0} data-jph={i}><Img name={j.photo.name} alt={j.photo.alt} sizes="(min-width: 1024px) 270px, 210px" box={270 / 330} boxM={210 / 236} widths={[270, 420, 540]} /></div>)}</div>
+      <figcaption class="tech">{jobs.map((j, i) => <span hidden={i > 0} data-jcap={i}><D v={j.cap} /></span>)}</figcaption>
+    </figure>
+    <span class="svo-clip" aria-hidden="true"><span class="dn-m" set:html={binderD} /><span class="dn-d" set:html={binderM} /></span>
+    <button type="button" class="svo-ct tech dn-m" data-next aria-label={`Sheet 1 of ${n}. Show the next job.`}>Sheet <b data-cur>1</b> of {n}</button>
+    <button type="button" class="svo-nx tech dn-d" data-next aria-label={`Sheet 1 of ${n}. Show the next job.`}>Next sheet →</button>
+  </div>
+  <div class="svo-cta ab" style="--x:602px;--y:820px" data-t="4"><Btn v="call" /></div>
+</section>

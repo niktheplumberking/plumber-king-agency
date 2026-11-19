@@ -1,0 +1,33 @@
+---
+// 2.5 Full list (Figma 738:437, 1440x760; mobile 749:539, 390x1150). Nine label-maker strips over a grid, one per service
+// page. Hover / focus lifts a strip (rotation to 0, deeper shadow, URL + arrow under the name) and the other eight drop to
+// 40 % (STATE 2.5 focus cards). Touch: the first tap lifts, the second opens. The seam cables from 2.4 end in the breaker.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import { STRIPS } from './hub-data';
+import { SITE } from '../../data/site';
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="hl sec on-dark" style="--h:760px" data-m-section aria-labelledby="hl-h">
+  <span class="hl-grid ab dn-m" style="--x:600px;--y:150px;--w:720px" aria-hidden="true"></span>
+  <div class="hl-hd ab" style="--x:120px;--y:150px;--w:440px">
+    <Eyebrow text="All services · 9 pages" data-t="1" />
+    <h2 class="h2 hl-h" id="hl-h" data-t="2"><span class="l1">Nine services.</span><span class="l2">One page each.</span></h2>
+    <p class="lead hl-lead" data-t="3"><span class="dn-m">Printed like the labels in his panels. Each strip opens its own page with the details, the permit side and the questions people ask.</span><span class="dn-d">Printed like the labels in his panels. Each strip opens its own page.</span></p>
+    <div class="hl-cta" data-t="4">
+      <Btn v="call" class="hl-call" />
+      <a class="sv-link amb hl-np" href={SITE.sms}>Not on the list? Text a photo →</a>
+    </div>
+  </div>
+  <ul class="hl-strips" role="list" data-strips data-t="4" data-stagger>
+    {STRIPS.map((s, i) => (
+      <li class:list={['hl-s', s.tape && 'tape', i === 0 && 'lift']} style={`--x:${s.d[0]}px;--y:${s.d[1]}px;--w:${s.d[2]}px;--r:${-s.d[3]}deg;--mx:${s.m[0]}px;--my:${s.m[1]}px;--mw:${s.m[2]}px;--mr:${-s.m[3]}deg`}>
+        <a href={s.h} data-strip>
+          <span class="hl-n tech">{pad(i + 1)}</span>
+          <span class="hl-tx"><span class="hl-t tech">{s.t}</span><span class="hl-u" aria-hidden="true">{s.h}</span></span>
+          <svg class="hl-ar" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M1 8h12M8.5 3.5 13 8l-4.5 4.5" /></svg>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>

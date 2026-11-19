@@ -1,0 +1,49 @@
+---
+// 3.4 DIY vs pro (Figma 754:589, 1440x940; mobile 763:558). A panel dead-front: the cover in front ("You can") and the
+// closed side behind it ("Licensed + permit"). STATE "torch reveal": the pointer is a torch, a soft-edged circle (CSS mask, no
+// glow) that shows his wiring photo behind the cover. Touch: tap the cover side to open a fixed torch circle. The list stays
+// readable at all times.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Screw from '../kit/Screw.astro';
+import type { SvcPage } from '../../data/service-pages';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const CAN = [
+  ['Reset a breaker once.', 'If it trips again, leave it off and call.'],
+  ['Note what was running.', 'The kettle, the dryer, the heater: it helps him find the circuit.'],
+  ['Take a photo.', p.hero.breaker ? 'Of the panel and the label inside the door, then text it.' : 'Of the job, the panel and the label inside the door, then text it.'],
+];
+const PRO = [
+  ['Anything inside the panel.', 'Only a licensed electrician opens it up.'],
+  ['Permit first.', 'A licensed contractor applies; in Surrey the City issues it.'],
+  ['Strata owners too.', 'Strata owners can’t get a homeowner permit, so a contractor has to.'],
+];
+const tick = '<svg viewBox="0 0 30 30" width="30" height="30" aria-hidden="true"><rect x=".5" y=".5" width="29" height="29" rx="4" fill="#fff" stroke="#C9CDD6"/><path d="M7 15.5l5.5 5.5L23.5 9" fill="none" stroke="#15174A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const cross = '<svg viewBox="0 0 30 30" width="30" height="30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" rx="4" fill="none" stroke="#AEB4C6" stroke-opacity=".6" stroke-width="1.5"/><path d="M9 9l12 12M21 9L9 21" stroke="#F5A833" stroke-width="3" stroke-linecap="round"/></svg>';
+---
+<section class:list={['svd sec on-dark', bg]} style="--h:940px" data-m-section aria-labelledby="svd-h">
+  <div class="sv-hd sv-c ab" style="--x:120px;--y:96px;--w:1200px">
+    <Eyebrow text="DIY vs pro" data-t="1" />
+    <h2 class="h2" id="svd-h" data-t="2"><span class="l1">What you can do.</span><span class="l2">What needs a licence.</span></h2>
+  </div>
+  <div class="svd-df ab" style="--x:120px;--y:270px;--w:1200px" data-t="3" data-fx="frame">
+    <div class="svd-cv">
+      <p class="sv-k">In front of the cover</p>
+      <h3 class="svd-t">You can</h3>
+      <ul role="list" class="svd-l">{CAN.map(([a, b]) => <li><span set:html={tick} /><p><b>{a}</b><span>{b}</span></p></li>)}</ul>
+      <Screw s={14} rot={20} class="sc1" /><Screw s={14} rot={70} class="sc2" /><Screw s={14} rot={130} class="sc3" /><Screw s={14} rot={10} class="sc4" />
+    </div>
+    <div class="svd-bh" data-torch tabindex="0" role="button" aria-pressed="false" aria-label="Torch: look behind the cover at his wiring photo">
+      <div class="svd-ph" aria-hidden="true"><Img name={p.diy!.photo.name} alt="" sizes="(min-width: 1024px) 580px, 350px" box={580 / 520} boxM={350 / 402} widths={[360, 600, 900]} /></div>
+      <span class="svd-ring" aria-hidden="true"></span>
+      <p class="sv-k svd-k">Behind it</p>
+      <h3 class="svd-t svd-t2">Licensed + permit</h3>
+      <ul role="list" class="svd-l svd-l2">{PRO.map(([a, b]) => <li><span set:html={cross} /><p><b>{a}</b><span>{b}</span></p></li>)}</ul>
+      <p class="sv-k svd-hint dn-m">Move the torch to look behind</p>
+      <Screw s={14} rot={20} class="sc1" /><Screw s={14} rot={70} class="sc2" /><Screw s={14} rot={130} class="sc3" /><Screw s={14} rot={10} class="sc4" />
+    </div>
+  </div>
+  <div class="svd-cta ab" style="--x:602px;--y:830px" data-t="4"><Btn v="call" sub="Before you open anything" /></div>
+</section>

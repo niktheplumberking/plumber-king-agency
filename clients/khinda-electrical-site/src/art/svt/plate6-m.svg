@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="358.962 924.736 20.660 27.977" width="96" height="130" fill="none" aria-hidden="true" focusable="false" overflow="visible"><g>
+<rect x="360.753" y="926.528" width="14.4948" height="23.9638" rx="2.0444" fill="white"/>
+<rect x="360.753" y="926.528" width="14.4948" height="23.9638" rx="2.0444" stroke="#C9CDD6"/>
+<g>
+<rect x="363.551" y="929.541" width="8.89944" height="6.31698" rx="1.614" fill="#E7E9EC"/>
+<rect x="363.551" y="929.541" width="8.89944" height="6.31698" rx="1.614" stroke="#C9CDD6"/>
+<rect x="366.064" y="930.762" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<rect x="369.077" y="930.762" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<ellipse cx="368.001" cy="934.528" rx="0.645616" ry="0.753218" fill="#14152B"/>
+</g>
+<g>
+<rect x="363.551" y="941.162" width="8.89944" height="6.31698" rx="1.614" fill="#E7E9EC"/>
+<rect x="363.551" y="941.162" width="8.89944" height="6.31698" rx="1.614" stroke="#C9CDD6"/>
+<rect x="366.064" y="942.383" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<rect x="369.077" y="942.383" width="0.860821" height="2.58246" rx="0.2152" fill="#14152B"/>
+<ellipse cx="368.001" cy="946.15" rx="0.645616" ry="0.753218" fill="#14152B"/>
+</g>
+<g>
+<circle cx="368.243" cy="937.948" r="0.43041" transform="rotate(-20 368.243 937.948)" fill="#D7DAE0" stroke="#8F95A3"/>
+<rect x="367.636" y="937.941" width="1.13628" height="0.43041" transform="rotate(-20 367.636 937.941)" fill="#6B7282"/>
+</g>
+</g>
+</svg>

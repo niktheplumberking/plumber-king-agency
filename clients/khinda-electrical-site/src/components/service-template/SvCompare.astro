@@ -1,0 +1,32 @@
+---
+// 3.6 Every circuit labelled (Figma 755:543, 1440x1000; mobile 764:437). His own rough-in and finished panel behind a
+// cover plate; a breaker-handle drag bar compares them (desktop left / right, mobile top / bottom). Keyboard: arrows.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Screw from '../kit/Screw.astro';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const c = p.compare!;
+---
+<section class:list={['svc sec on-dark', bg]} style="--h:1000px" data-m-section aria-labelledby="svc-h">
+  <div class="sv-hd sv-c ab" style="--x:120px;--y:96px;--w:1200px">
+    <Eyebrow text="The equipment · his own panels" data-t="1" />
+    <h2 class="h2" id="svc-h" data-t="2"><span class="l1">Rough-in to finished.</span><span class="l2">Every circuit labelled.</span></h2>
+  </div>
+  <div class="svc-cp ab" style="--x:170px;--y:270px;--w:1100px" data-t="3" data-fx="frame">
+    <Screw s={12} rot={30} class="s1" /><Screw s={12} rot={110} class="s2" /><Screw s={12} rot={70} class="s3" /><Screw s={12} rot={150} class="s4" />
+    <div class="svc-w" data-compare style="--p:50%">
+      <div class="svc-a"><Img name={c.after.name} alt={`After: ${c.after.alt}`} sizes="(min-width: 1024px) 1072px, 334px" box={1072 / 592} boxM={334 / 518} widths={[340, 680, 1072, 1600]} /></div>
+      <div class="svc-b"><Img name={c.before.name} alt={`Before: ${c.before.alt}`} sizes="(min-width: 1024px) 1072px, 334px" box={1072 / 592} boxM={334 / 518} widths={[340, 680, 1072, 1600]} /></div>
+      <span class="svc-lb tech">Before · rough-in</span>
+      <span class="svc-la tech"><span class="dn-m">After · finished, labelled</span><span class="dn-d">After · finished</span></span>
+      <button type="button" class="svc-h" role="slider" aria-label="Compare before and after" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="Half before, half after" data-handle>
+        <span class="svc-k" aria-hidden="true"><i></i></span><span class="tech">Drag</span>
+      </button>
+    </div>
+  </div>
+  <p class="svc-n ab" style="--x:170px;--y:916px;--w:600px" data-t="4">Both photos are his own jobs, posted on @khinda__electrical.</p>
+  <a class="sv-link amb svc-l ab" style="--x:870px;--y:916px" href={SITE.tel} data-t="4">Want yours like this? Call {SITE.phone} →</a>
+</section>

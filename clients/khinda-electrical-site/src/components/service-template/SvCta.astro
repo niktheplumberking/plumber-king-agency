@@ -1,0 +1,33 @@
+---
+// 3.13 CTA · camera viewfinder (Figma 758:470, 1440x660; mobile 766:561). Text a photo of the job: a viewfinder framing a
+// panel outline, the shot he needs.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Toggle from '../kit/Toggle.astro';
+import D from './D.astro';
+import outlineD from '../../art/svt/outline-d.svg?raw';
+import outlineM from '../../art/svt/outline-m.svg?raw';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const c = p.cta;
+---
+<section class:list={['svx sec', bg]} style="--h:660px" data-m-section aria-labelledby="svx-h">
+  <div class="ab" style="--x:120px;--y:130px;--w:600px">
+    <Eyebrow text={c.eyebrow} data-t="1" />
+    <h2 class="svx-h" id="svx-h" data-t="2"><span class="l1">{c.h2[0]}</span><span class="l2">{c.h2[1]}</span></h2>
+    <svg class="svx-u" viewBox="0 0 386 12" width="386" height="12" aria-hidden="true"><path d="M3 9C120 3 260 2 383 5" fill="none" stroke="#0D0F33" stroke-width="6" stroke-linecap="round"/></svg>
+    <p class="svx-lead" data-t="3">{c.lead}</p>
+  </div>
+  <div class="svx-vf ab" style="--x:820px;--y:70px;--w:500px" aria-hidden="true" data-t="3" data-fx="frame">
+    <i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i>
+    <span class="svx-dash"></span>
+    <span class="svx-ol"><span class="dn-m" set:html={outlineD} /><span class="dn-d" set:html={outlineM} /></span>
+    <span class="tech svx-ex">1/60  ·  F2.0</span>
+    <span class="tech svx-fr"><D v={c.frame} /></span>
+  </div>
+  <div class="svx-cta ab" style="--x:120px;--y:450px" data-t="4" data-stagger>
+    <a class="svx-b svx-deep" href={SITE.sms}><Toggle kind="btn" /><span class="bt"><span class="b1">{c.btn}</span><span class="b2">WhatsApp · {SITE.phone}</span></span></a>
+    <a class="svx-b svx-out" href={SITE.tel}><span class="bt"><span class="b1">Call instead</span><span class="b2">Tap to call · same number</span></span></a>
+  </div>
+</section>

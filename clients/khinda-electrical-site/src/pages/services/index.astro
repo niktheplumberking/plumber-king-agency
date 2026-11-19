@@ -1,16 +1,37 @@
 ---
-import Stub from '../../components/stub/Stub.astro';
-import { SERVICES } from '../../data/site';
+// Services hub (Figma 02 Services hub desktop 1440 / mobile 390, figma/v5/02-services-hub-*.png). Endings: F, G5, G6.
+import Base from '../../layouts/Base.astro';
+import Endings from '../../components/endings/Endings.astro';
+import HubHero from '../../components/services/HubHero.astro';
+import HubDial from '../../components/services/HubDial.astro';
+import HubFamilies from '../../components/services/HubFamilies.astro';
+import HubList from '../../components/services/HubList.astro';
+import HubPromises from '../../components/services/HubPromises.astro';
+import HubTrack from '../../components/services/HubTrack.astro';
+import HubFuses from '../../components/services/HubFuses.astro';
+import HubCta from '../../components/services/HubCta.astro';
+import '../../components/service-template/sv.css';
+import '../../components/services/hub.css';
+import { FUSES, STRIPS } from '../../components/services/hub-data';
+import { breadcrumbSchema, faqSchema, abs } from '../../lib/schema';
+const list = {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: 'Electrical services in Surrey, BC',
+  itemListElement: STRIPS.filter((s) => s.h.startsWith('/services/')).map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.t, url: abs(s.h) })),
+};
 ---
-<Stub title="Electrical Services in Surrey, BC · Khinda Electrical" path="/services/"
-  description="Panels, lighting, EV chargers, renos and commercial fit-outs across Surrey, BC. Call or text Khinda Electrical at 236-818-2664."
-  eyebrow="Services · Surrey, BC" h1={['Electrical Services', 'in Surrey']} crumbs={[{ name: 'Services', path: '/services/' }]}
-  lead="Panels, lighting, EV chargers, renos and commercial fit-outs across Surrey. Pick the job below, or text a photo of it.">
-  <ul class="st-list ab" role="list" style="--x:920px;--y:150px;--w:400px">{SERVICES.map((s) => <li><a href={s.href}>{s.name}</a></li>)}</ul>
-</Stub>
-<style>
-  .st-list { display: grid; gap: 12px; margin: 0; padding: 0; }
-  .st-list a { font-weight: 600; font-size: 18px; line-height: 24px; color: #fff; }
-  .st-list a:hover { color: var(--amber); }
-  @media (max-width: 1023px) { .st-list { margin-top: 36px; } }
-</style>
+<Base title="Electrical Services in Surrey, BC · Khinda Electrical" path="/services/"
+  description="Panels, lighting, EV chargers, renos and commercial fit-outs across Surrey, BC. Pick the job, or call or text a photo to Khinda Electrical at 236-818-2664."
+  og="commercial-electrical-control-panel-surrey" ogAlt="Commercial electrical control panel wired by Khinda Electrical"
+  preload={{ name: 'commercial-electrical-control-panel-surrey', sizes: '(min-width: 1024px) 430px, 100vw', widths: [390, 640, 860] }}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }]), list, faqSchema(FUSES.map((f) => ({ q: f.q, a: f.a })))]}>
+  <HubHero />
+  <HubDial />
+  <HubFamilies />
+  <HubList />
+  <HubPromises />
+  <HubTrack />
+  <HubFuses />
+  <HubCta />
+  <Endings slot="end" />
+</Base>
+<script>import '../../components/services/hub.ts';</script>

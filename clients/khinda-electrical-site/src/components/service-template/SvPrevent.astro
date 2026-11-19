@@ -1,0 +1,52 @@
+---
+// 3.10 Prevention · power bar (Figma 757:509, 1440x800; mobile 766:440). Three habits as tabs. STATE "the plug is the tab
+// indicator": picking a tip slides the plug along the power bar into that outlet; the tip above it lights (white card,
+// amber top edge). The bar's cord runs on into 3.11 to the reel (drawn on scroll).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Art from '../kit/Art.astro';
+import outlet from '../../art/svt/outlet.svg?raw';
+import recept from '../../art/svt/recept-m.svg?raw';
+import reelD from '../../art/svt/reelcord-d.svg?raw';
+import reelM from '../../art/svt/reelcord-m.svg?raw';
+import { pad } from './dm';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const what = p.hero.breaker ? 'a panel' : 'your panel';
+const TIPS = [
+  { t: 'Don’t stack power bars', b: 'One bar plugged into another overloads the outlet behind them. Need more outlets? That is a new circuit.' },
+  { t: 'A warm outlet means call', b: 'Warm, buzzing or brown around the slots: unplug what is in it and call.' },
+  { t: 'Keep the panel door clear', b: 'Boxes and shelves in front of the panel slow down every fix and aren’t safe.' },
+];
+---
+<section class:list={['svv sec', bg]} style="--h:800px" data-m-section aria-labelledby="svv-h">
+  <div class="sv-hd ab" style="--x:120px;--y:96px;--w:620px">
+    <Eyebrow text="Prevention" data-t="1" />
+    <h2 class="h2" id="svv-h" data-t="2"><span class="l1">Three habits</span><span class="l2">that save {what}.</span></h2>
+  </div>
+  <p class="lead sv-lead svv-lead ab" style="--x:820px;--y:150px;--w:500px" data-t="3">Small things at home that keep a panel from working too hard. Each one ends with the same fix: or call Khinda.</p>
+  <div class="svv-g ab" style="--x:0px;--y:270px;--w:1440px;--t:0" data-tabs>
+    <div class="svv-tl" role="group" aria-label="Three habits" data-t="3" data-stagger>
+      {TIPS.map((t, i) => (
+        <div class:list={['svv-c', i === 0 && 'on']} style={`--i:${i}`} data-tip={i}>
+          <button type="button" class="svv-b" id={`svv-t${i}`} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`svv-p${i}`}>
+            <span class="sv-k">Tip {pad(i + 1)}</span><span class="svv-t">{t.t}</span>
+          </button>
+          <p class="svv-p" id={`svv-p${i}`}>{t.b}</p>
+          <a class="sv-link svv-a" href={SITE.tel}>or call Khinda →</a>
+          <span class="svv-pt" aria-hidden="true"></span>
+        </div>
+      ))}
+    </div>
+    <div class="svv-bar" aria-hidden="true" data-t="4" data-fx="frame">
+      <span class="svv-io"><i></i><b class="tech">I/O</b></span>
+      {[0, 1, 2].map((i) => <span class="svv-o" style={`--i:${i}`}><span class="dn-m" set:html={outlet} /><span class="dn-d" set:html={recept} /></span>)}
+      <span class="svv-r tech dn-m">15A · 125V</span><span class="svv-r tech dn-d">15A<br />125V</span>
+      <span class="svv-plug"><i></i><i></i><b class="tech">On</b></span>
+    </div>
+    <svg class="svv-cord dn-m" viewBox="0 0 420 160" width="420" height="160" aria-hidden="true"><path data-cord d="M0 146 H250 C350 146 380 130 380 84" fill="none" stroke="#15174A" stroke-width="8" stroke-linecap="round"/></svg>
+  </div>
+  <Art svg={reelD} class="dn-m svv-reel" data-draw />
+  <Art svg={reelM} class="dn-d svv-reel" data-draw />
+</section>

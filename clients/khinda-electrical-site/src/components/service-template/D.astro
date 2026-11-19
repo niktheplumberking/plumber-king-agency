@@ -1,0 +1,7 @@
+---
+// Figma's two wordings of one line: [desktop, mobile]. A plain string is the same on both.
+import type { DM } from '../../data/service-pages';
+interface Props { v: DM }
+const { v } = Astro.props;
+---
+{Array.isArray(v) ? (v[0] === v[1] ? v[0] : <><span class="dn-m">{v[0]}</span><span class="dn-d">{v[1]}</span></>) : v}

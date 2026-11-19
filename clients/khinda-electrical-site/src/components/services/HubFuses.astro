@@ -1,0 +1,60 @@
+---
+// 2.8 FAQ (Figma 741:658, 1440x800; mobile 750:491, 390x1249). A cartridge fuse block: each fuse holds one question, the
+// pulled one shows its answer. The label maker filters live: matching fuses get an amber band and outline, the rest stay in
+// their slots dimmed (never hidden); the sleeves do the same in one tap (STATE 2.8). Default = Figma frame ("PHOTO", Q3 open).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Screw from '../kit/Screw.astro';
+import D from '../service-template/D.astro';
+import { FUSES, FUSE_START, SLEEVES } from './hub-data';
+import { SITE } from '../../data/site';
+const q0 = SLEEVES[1].q;
+const hit = (k: string) => k.split(' ').some((w) => w.startsWith(q0));
+---
+<section class="hq sec" style="--h:800px" data-m-section aria-labelledby="hq-h" data-fuses>
+  <div class="hq-hd ab" style="--x:120px;--y:120px;--w:470px">
+    <Eyebrow text="Questions" data-t="1" />
+    <h2 class="h2 hq-h" id="hq-h" data-t="2"><span class="l1">Four fuses.</span><span class="l2">Pull one for the answer.</span></h2>
+    <p class="lead hq-lead" data-t="3"><span class="dn-m">Each fuse holds one question. Type a word on the label maker and the fuse that matches lights amber. It pulls open with the answer.</span><span class="dn-d">Each fuse holds one question. Type a word and the matching fuse lights amber.</span></p>
+    <div class="hq-cta" data-t="4">
+      <Btn v="call" sub="Ask about your job" class="hq-call" />
+      <a class="sv-link dn-m" href={SITE.sms}>Or text a photo →</a>
+    </div>
+  </div>
+  <div class="hq-lm ab" style="--x:120px;--y:584px;--w:400px" role="search">
+    <label class="hq-lk tech" for="hq-q">Search the fuses</label>
+    <div class="hq-tape">
+      <span class="tech hq-ty" aria-hidden="true">Type:</span>
+      <input id="hq-q" class="hq-in" type="search" value={q0} placeholder="permit, photo…" autocomplete="off" spellcheck="false" aria-describedby="hq-mn" data-q />
+      <span class="tech hq-mn" id="hq-mn" aria-live="polite" data-mn>1 match</span>
+    </div>
+    <div class="hq-sl" role="group" aria-label="Topics">
+      {SLEEVES.map((s, i) => <button type="button" class:list={['hq-sv tech', i === 1 && 'on']} aria-pressed={i === 1 ? 'true' : 'false'} data-sleeve={s.q}>{s.t}</button>)}
+    </div>
+  </div>
+  <div class="hq-blk ab" style="--x:590px;--y:110px;--w:730px" data-t="4" data-fx="frame">
+    <Screw s={12} rot={30} class="hq-s1" /><Screw s={12} rot={120} class="hq-s2" /><Screw s={12} rot={80} class="hq-s3" /><Screw s={12} rot={150} class="hq-s4" />
+    <p class="hq-bk tech"><span>Fuse block · 4 questions</span><span class="dn-m">Pull one to read it</span></p>
+    <ul class="hq-fs" role="list">
+      {FUSES.map((f, i) => {
+        const m = hit(f.keys), open = i === FUSE_START;
+        return (
+          <li class:list={['hq-f', m && 'match', open && 'open', !m && 'dim']} data-fuse={i} data-keys={f.keys}>
+            <span class="hq-cl l" aria-hidden="true"></span><span class="hq-cl r" aria-hidden="true"></span>
+            <button type="button" class="hq-b" aria-expanded={open ? 'true' : 'false'} aria-controls={`hq-a${i}`} id={`hq-q${i}`}>
+              <span class="hq-tag tech">Q{i + 1} · <span data-fs>{open ? 'Open' : '250V'}</span><span class="hq-mt" data-mt>{m ? ' · Match' : ''}</span></span>
+              <span class="hq-qt">{f.q}</span>
+              <span class="hq-pull" aria-hidden="true"><i></i></span>
+            </button>
+            <div class="hq-a" id={`hq-a${i}`} role="region" aria-labelledby={`hq-q${i}`} hidden={!open}>
+              <p class="hq-at">{f.q}</p>
+              <p class="hq-ad"><D v={[f.a, f.am ?? f.a]} /></p>
+              <a class="sv-link" href={f.link.tel ? SITE.tel : SITE.sms}><D v={[f.link.t.replace(/ →$/, ''), f.link.m]} /> →</a>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+  <span class="hq-spare ab dn-m" style="--x:480px;--y:700px;--w:210px" aria-hidden="true"><i class="c1"></i><b class="tech">Spare</b><i class="c2"></i></span>
+</section>

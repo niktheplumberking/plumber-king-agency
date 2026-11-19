@@ -1,0 +1,43 @@
+---
+// 3.5 Process (Figma 755:438, 1440x860; mobile 763:616). One NMD90 cable pulled through five drilled studs, one step per
+// hole. STATE "pinned scroll timeline": the section pins while you scroll (desktop), the cable is pulled through the next
+// stud, that step drops in and the readout counts STEP 0X / 05; steps not reached wait at 28 %. Mobile: the cable runs
+// down the studs. Reduced motion / no JS: the finished run, all five steps.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Art from '../kit/Art.astro';
+import nmdM from '../../art/svt/nmd-m.svg?raw';
+import { pad } from './dm';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const pr = p.process;
+const PRINT = 'NMD90 12/2  ·  300V  ·  FT2';
+---
+<section class:list={['svp sec', bg]} style="--h:860px" data-m-section aria-labelledby="svp-h" data-process>
+  <div class="svp-pin">
+    <div class="sv-hd ab" style="--x:120px;--y:96px;--w:720px">
+      <Eyebrow text="The cable run · 5 studs" data-t="1" />
+      <h2 class="h2" id="svp-h" data-t="2"><span class="l1">{pr.h2[0]}</span><span class="l2">{pr.h2[1]}</span></h2>
+    </div>
+    <p class="lead sv-lead svp-lead ab" style="--x:860px;--y:150px;--w:460px" data-t="3">{pr.lead}</p>
+    <div class="svp-btn ab" style="--x:860px;--y:226px" data-t="4"><Btn v="call" main="Start step 1" sub={`Text a photo · ${SITE.phone}`} href={SITE.sms} /></div>
+    <div class="svp-rig ab" style="--x:0px;--y:300px;--w:1440px" data-rig>
+      <span class="svp-plate svp-top" aria-hidden="true"></span>
+      <span class="svp-plate svp-bot" aria-hidden="true"></span>
+      <ol class="svp-st" role="list">
+        {pr.steps.map((s, i) => (
+          <li class="svp-s" style={`--i:${i}`} data-step-i={i}>
+            <span class="svp-stud" aria-hidden="true"><span class="svp-hole"></span><span class:list={['svp-tag', i === 4 && 'last']}>{pad(i + 1)}</span></span>
+            <div class="svp-tx"><h3 class="svp-t"><span class="sr-only">Step {i + 1}: </span>{s.t}</h3><p class="svp-b">{s.b}</p></div>
+          </li>
+        ))}
+      </ol>
+      <span class="svp-cab" aria-hidden="true"><span class="svp-pr tech">{Array.from({ length: 6 }, () => <i>{PRINT}</i>)}</span></span>
+    </div>
+    <p class="sv-k svp-foot ab" style="--x:120px;--y:820px">{pr.foot}</p>
+    <p class="svp-ro tech ab dn-m" style="--x:1026px;--y:814px;--w:294px" aria-hidden="true">Step <b data-ro>05</b> / 05</p>
+  </div>
+  <Art svg={nmdM} class="dn-d svp-seam" data-draw />
+</section>

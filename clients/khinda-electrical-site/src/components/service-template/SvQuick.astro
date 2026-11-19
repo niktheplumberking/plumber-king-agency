@@ -1,0 +1,43 @@
+---
+// 3.2 Quick answer (Figma 753:574, 1440x720; mobile 760:552). The short answer in a box; the job-facts spec label pinned
+// on a panel door. STATE "spec rows open in place": each row is a button that opens its source in place (one at a time).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Art from '../kit/Art.astro';
+import D from './D.astro';
+import doorD from '../../art/svt/door-d.svg?raw';
+import doorM from '../../art/svt/door-m.svg?raw';
+import { words } from './dm';
+import type { SvcPage } from '../../data/service-pages';
+import { SITE } from '../../data/site';
+interface Props { p: SvcPage; bg?: string }
+const { p, bg } = Astro.props;
+const q = p.quick;
+---
+<section class:list={['svq sec', bg]} style="--h:720px" data-m-section aria-labelledby="svq-h">
+  <div class="svq-hd sv-hd ab" style="--x:120px;--y:110px;--w:640px">
+    <Eyebrow text="Quick answer" data-t="1" />
+    <h2 class="h2" id="svq-h" data-t="2"><span class="l1">{q.h2[0]}</span><span class="l2">{q.h2[1]}</span></h2>
+  </div>
+  <div class="svq-box ab" style="--x:120px;--y:290px;--w:600px" data-t="3">
+    <p class="sv-k">The short answer · {words(q.answer)} words</p>
+    <p class="svq-a">{q.answer}</p>
+    <a class="sv-link" href={SITE.tel}><D v={q.ask} /></a>
+  </div>
+  <div class="svq-door ab" style="--x:800px;--y:60px;--w:470px" aria-hidden="true">
+    <Art svg={doorD} class="dn-m" style="position:static" /><Art svg={doorM} class="dn-d" style="position:static" />
+  </div>
+  <div class="svq-lbl ab" style="--x:690px;--y:150px;--w:480px" data-t="4" data-fx="frame" data-spec>
+    <p class="svq-band"><span class="tech">{q.label}</span><span class="tech dn-m">Surrey, BC</span></p>
+    <dl class="svq-rows">
+      {q.rows.map((r, i) => (
+        <div class:list={['svq-r', i === 0 && 'open']}>
+          <dt><button type="button" class="svq-b" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`svq-s${i}`} id={`svq-b${i}`}>
+            <span class="sv-k">{r.k}</span><span class="svq-v"><D v={r.v} /></span><span class="svq-pm" aria-hidden="true"></span>
+          </button></dt>
+          <dd class="svq-s" id={`svq-s${i}`}><div><p class="svq-si"><span class="sv-k">Source</span>{r.src}</p></div></dd>
+        </div>
+      ))}
+    </dl>
+    <p class="sv-k svq-src dn-m">{q.sources}</p>
+  </div>
+</section>

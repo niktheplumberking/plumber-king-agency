@@ -36,7 +36,7 @@ const rows = [['Base', 'Surrey, BC'], [d.N, d.where], ['Permits', d.issuer]];
   <div class="c2-l ab" style="--x:120px;--y:170px;--w:440px">
     <Eyebrow text="Distance from the base" data-t="1" />
     <h2 class="h2 c2-h" id="c2-h" data-t="2"><span class="l1">From the Surrey base</span><span class="l2">to your street.</span></h2>
-    <p class="lede c2-p" data-t="3">{d.surrey ? `${d.N} sits inside Surrey, the same city he works out of. Same permit office, same code, no crossing into another town.` : `${d.N} is the next city over from his Surrey base. Same code across BC; the electrical permit there comes from Technical Safety BC.`}</p>
+    <p class="lede c2-p" data-t="3">{d.distLede}</p>
     <dl class="c2-rows" data-t="4">{rows.map(([k, v]) => <div><dt class="tech">{k}</dt><dd>{v}</dd></div>)}</dl>
     <div class="c2-b" data-t="3"><Btn v="call" main={`Call from ${d.N}`} sub={`${SITE.phone} · tap to call`} /><a class="lk c2-lk" href={SITE.sms}>Text a photo →</a></div>
   </div>

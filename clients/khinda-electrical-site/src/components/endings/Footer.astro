@@ -52,7 +52,7 @@ const CO = [['About', '/about/'], ['Our work', '/our-work/'], ['Reviews', '/revi
     <p class="tech ft-band2 dn-d">Text a photo any time</p>
     <a class="dn-m" href={SITE.tel}>{SITE.phone} →</a>
   </div>
-  <i class="ft-rule ab dn-m" style="--x:120px;--y:864px;--w:1200px" aria-hidden="true"></i>
+  <i class="ft-rule ab" style="--x:120px;--y:864px;--w:1200px" aria-hidden="true"></i>
   <div class="ft-base ab" style="--x:120px;--y:882px;--w:1200px">
     <p class="ft-lic tech dn-m"><Bolt w={9} h={12} />TSBC licence #</p>
     <p class="ft-copy">© 2026 {SITE.name} · Surrey, BC</p>
@@ -106,8 +106,8 @@ const CO = [['About', '/about/'], ['Our work', '/our-work/'], ['Reviews', '/revi
   .ft-legal { display: flex; gap: 24px; }
   .ft-legal a:hover { color: #fff; }
   @media (max-width: 1023px) {
-    .ft { padding: 70px 20px 40px; }
-    .ft-cover { position: relative; height: auto; padding: 38px 26px 48px; border-radius: 14px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+    .ft { padding: 70px 20px 140px; /* Figma: 140 px under the © row, clear of the sticky call bar */ }
+    .ft-cover { position: relative; height: auto; padding: 38px 26px 35px; border-radius: 14px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
     :global(.fts) { width: 14px; height: 14px; } :global(.fts1), :global(.fts3) { left: 12px; } :global(.fts2), :global(.fts4) { right: 12px; } :global(.fts1), :global(.fts2) { top: 12px; } :global(.fts3), :global(.fts4) { bottom: 12px; }
     .ft-id, .ft-dir, .ft-towns, .ft-co { position: static; width: auto; }
     .ft-id, .ft-dir { grid-column: 1 / -1; }
@@ -123,15 +123,17 @@ const CO = [['About', '/about/'], ['Our work', '/our-work/'], ['Reviews', '/revi
     .ft-dir li:first-child a { height: 40px; }
     .br { width: 11px; height: 18px; margin-right: 7px; } .br i { width: 7px; height: 6px; left: 2px; top: 2px; transform: translateY(8px); }
     .no { width: 28px; font-size: 11px; letter-spacing: 0; }
-    .ft-towns, .ft-co { margin-top: 30px; }
+    .ft-towns, .ft-co { margin-top: 18px; }
     .ft-towns a, .ft-co a { font-size: 13px; line-height: 21px; min-height: 21px; }
-    .ft-wm { position: relative; margin-top: 16px; height: calc(66 / 350 * (100vw - 40px)); }
-    .ft-wm span { left: 1px; top: calc(-39 / 350 * (100vw - 40px)); font-size: calc(94 / 350 * (100vw - 40px)); line-height: 1.574; }
+    .ft-towns li, .ft-co li { line-height: 21px; } /* rows at the Figma 21 px pitch (review m13: the li took the body line height) */
+    .ft-wm { position: relative; margin-top: 16px; height: calc(66 / 350 * (var(--vw100) - 40px)); }
+    .ft-wm span { left: 1px; top: calc(-39 / 350 * (var(--vw100) - 40px)); font-size: calc(94 / 350 * (var(--vw100) - 40px)); line-height: 1.574; }
     .ft-floor { display: block; position: relative; }
     .ft-band { position: relative; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px; height: 62px; margin-top: 16px; padding: 0 16px; }
     .ft-band p { gap: 11px; font-size: 11px; line-height: 16px; }
     .ft-band2 { padding-left: 18px; color: var(--mist); }
-    .ft-base { position: relative; margin-top: 68px; font-size: 12px; line-height: 15px; }
+    .ft-rule { display: block; position: relative; margin-top: 24px; } /* the divider above the © row (review m13) */
+    .ft-base { position: relative; margin-top: 43px; font-size: 12px; line-height: 15px; }
     .ft-copy { position: static; }
     .ft-legal { gap: 20px; }
   }

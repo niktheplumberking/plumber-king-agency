@@ -85,23 +85,33 @@ const ld = [businessSchema(logoUrl, new URL(entityImg.src, Astro.site).href), we
   <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
   {/* Zoom fit (Mike's Base): from 1024 px up the whole 1440 Figma layout is scaled with CSS zoom = width / 1440, so every
      desktop width keeps Figma proportions (1024-1279 = the tablet pass, same layout smaller). Below 1024: the 390 frames,
-     fluid 360-390; 391-1023 renders the 390 layout scaled up (zoom = width / 390), because the mobile art layers are drawn to
-     the 390 frame and drift from the reflowed copy on a wider column. Pages with fit390 (the service template, whose
-     mobile drawing is fixed at 390) also scale 360-389 down the same way, so nothing clips or scrolls sideways. */}
+     fluid 360-390. Tablet 431-1023 (review M3): the 390 layout zoomed at most 1.35 (type stays at phone-to-tablet size,
+     never the 2x of before) in a centred column of at most 480 css px; each band's own background colour runs out to the
+     screen edges (--band, global.css), so it reads as one page, not a phone on a tablet. --vw100 = the column width, used
+     by the mobile rules that size art to the frame width. Pages with fit390 (the service template, whose mobile drawing is
+     fixed at 390) also scale 360-389 down with zoom = width / 390, so nothing clips or scrolls sideways. */}
   <script is:inline>
     (function () {
-      var d = document.documentElement, sb = 0;
+      var d = document.documentElement, sb = 0, COL = 480, ZMAX = 1.35;
       try { var o = d.style.overflowY; d.style.overflowY = 'scroll'; sb = Math.max(0, window.innerWidth - d.clientWidth); d.style.overflowY = o; } catch (e) {}
       function fit() {
         var w = d.clientWidth || window.innerWidth;
         if (!document.body) w = window.innerWidth - sb;
-        var z = w >= 1024 ? Math.round(w / 1440 * 10000) / 10000 : (w > 390 || (w < 390 && d.hasAttribute('data-fit390'))) ? Math.round(w / 390 * 10000) / 10000 : 1;
+        var tab = w > 430 && w < 1024;
+        var z = w >= 1024 ? Math.round(w / 1440 * 10000) / 10000 : w > 390 ? Math.min(ZMAX, Math.round(w / 390 * 10000) / 10000) : (w < 390 && d.hasAttribute('data-fit390')) ? Math.round(w / 390 * 10000) / 10000 : 1;
         var s = z !== 1 ? String(z) : '';
+        var col = tab ? Math.min(COL, w / z) : 0;
         if (d.style.zoom !== s) { d.style.zoom = s; d.style.setProperty('--zoom', String(z)); }
+        if (tab) d.style.setProperty('--vw100', col.toFixed(2) + 'px'); else d.style.removeProperty('--vw100');
+        if (tab !== d.hasAttribute('data-tab')) d.toggleAttribute('data-tab', tab);
+      }
+      function bands() {
+        var els = document.querySelectorAll('.ub, .hdr-bar, .es, main > *, body > section, body > footer');
+        for (var i = 0; i < els.length; i++) els[i].style.setProperty('--band', getComputedStyle(els[i]).backgroundColor);
       }
       fit();
       window.addEventListener('resize', fit);
-      document.addEventListener('DOMContentLoaded', function () { fit(); if (window.ResizeObserver) new ResizeObserver(fit).observe(d); });
+      document.addEventListener('DOMContentLoaded', function () { fit(); bands(); if (window.ResizeObserver) new ResizeObserver(fit).observe(d); });
     })();
   </script>
   {/* Motion on? loader this visit (once per session)? curtain lift after an in-site click? 3.5 s safety: show everything. */}

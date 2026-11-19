@@ -11,11 +11,7 @@ import { SITE } from '../../data/site';
 import type { TownData } from '../../data/towns';
 interface Props { d: TownData }
 const { d } = Astro.props;
-const CARDS = [
-  ['The suite needs its own circuits', `A basement suite gets its own circuits for the kitchen and laundry. That is regulated work: permit from ${d.surrey ? 'the City of Surrey' : 'Technical Safety BC'}.`],
-  ['No room in the panel for an EV charger', 'He checks the panel first. If it is full, the panel or the load gets sorted before the charger goes in.'],
-  ['Old lights to pot lights', 'Dated fixtures swapped for pot lights, like the living room on his Instagram.'],
-];
+const CARDS = d.problems;
 const CALL = [[236, 84], [612, 360], [330, 384]];
 const CALLM = [[106, 47], [275, 161], [148, 172]];
 const h2 = d.newton ? ['What Newton homes', 'call him about.'] : [`Jobs for ${d.N} homes,`, 'marked on the plan.'];

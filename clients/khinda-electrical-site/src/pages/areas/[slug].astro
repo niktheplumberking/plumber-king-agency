@@ -25,7 +25,7 @@ export function getStaticPaths() { return TOWNS.map((t) => ({ params: { slug: t.
 const d = townData(Astro.params.slug!);
 const og = PHOTO[d.set.band];
 ---
-<Base title={d.title} description={d.description} path={d.t.href} navPath="/areas/" og={og.name} ogAlt={og.alt}
+<Base title={d.title} description={d.description} path={d.t.href} noindex={d.noindex} navPath="/areas/" og={og.name} ogAlt={og.alt}
   jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Areas', path: '/areas/' }, { name: d.N, path: d.t.href }]), faqSchema(d.faq.map((f) => ({ q: f.q, a: f.a.join(' ') })))]}>
   <Hero d={d} />
   <Distance d={d} />

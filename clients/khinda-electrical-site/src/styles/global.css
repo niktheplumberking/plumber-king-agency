@@ -83,3 +83,24 @@ html.lenis, html.lenis body { height: auto; }
   :is(.ub-r, .g5-call, .p3c a, .ft-legal a, .ft-ph, .ft-ig, .ft-towns a, .ft-co a, .p3s a.lk:not(.c3-c .lk)) { position: relative; }
   :is(.ub-r, .g5-call, .p3c a, .ft-legal a, .ft-ph, .ft-ig, .ft-towns a, .ft-co a, .p3s a.lk:not(.c3-c .lk))::before { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 44px; translate: 0 -50%; }
 }
+
+/* Tablet 431-1023 (Base.astro fit): the zoomed 390 layout sits in a centred column of at most 480 css px; every band
+   paints its own background colour out to the screen edges with a border-image outset (no layout change, nothing clipped). */
+@media (min-width: 431px) and (max-width: 1023px) {
+  body > :is(aside, header, main, section, footer) { max-width: 480px; margin-inline: auto; }
+  :is(.ub, .hdr-bar, .es, main > *, body > section, body > footer) {
+    border-image: linear-gradient(90deg, var(--band, transparent) 1000px, transparent 1000px calc(100% - 1000px), var(--band, transparent) calc(100% - 1000px)) 0 fill / 0 / 0 1000px;
+  }
+  .mbar { left: 0; right: 0; max-width: 480px; margin-inline: auto; }
+}
+
+/* Review m9: more 44 px hit areas at phone / tablet widths, look unchanged. Static links get position: relative for the
+   halo; absolutely placed ones keep their position. Parts whose ::before is already drawn use ::after. */
+@media (max-width: 1023px) {
+  :is(.rt, .pr-call, .ab-story, .wk-call, .ap-l, .ft-dir a, .hp-num, .th-al, .a3-lk, .a7-lk, .fq2-lk, .sv-link, .m-call) { position: relative; }
+  :is(.rt, .pr-call, .ab-story, .wk-call, .ap-l, .ft-dir a, .hp-num, .th-al, .a3-lk, .a7-lk, .fq2-lk, .sv-link, .m-call,
+      .pk-c, .chip, .ac-chip, .svs-a, .svo-nx, .th-stop, .c2-cta, .c5-a, .c6-al, .c4-tag, .c4-cp, .r4-call, .r5-stk, .ow-lk, .fq2-tab)::before {
+    content: ''; position: absolute; left: -2px; right: -2px; top: 50%; height: 44px; translate: 0 -50%;
+  }
+  :is(.lg-r, .ab4-pin)::after { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 44px; min-width: 44px; translate: 0 -50%; }
+}

@@ -51,7 +51,7 @@ const run = (k: number) => TOWNS.map((t, i) => `<a href="${t.href}" data-town="$
   .g5-call { font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); z-index: 2; }
   .g5-call:hover { text-decoration: underline; text-underline-offset: 3px; }
   @media (max-width: 1023px) {
-    .g5 { container-type: inline-size; height: calc(372 / 390 * 100vw); padding: 0; }
+    .g5 { container-type: inline-size; height: calc(372 / 390 * var(--vw100)); padding: 0; }
     .g5-head { position: absolute; left: 5.128cqi; top: 7.18cqi; z-index: 2; }
     .g5-m { position: absolute; inset: 0; }
     .g5-mlist { position: absolute; inset: 0; margin: 0; padding: 0; z-index: 2; }

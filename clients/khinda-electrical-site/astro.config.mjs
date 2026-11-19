@@ -7,7 +7,8 @@ export default defineConfig({
   trailingSlash: 'always',
   build: { format: 'directory', inlineStylesheets: 'auto' },
   compressHTML: true,
-  integrations: [sitemap({ filter: (p) => !/\/(thank-you|404)\/?$/.test(p) })],
+  // Town pages kept noindex after launch (review M7, src/data/towns.ts NOINDEX) stay out of the sitemap too.
+  integrations: [sitemap({ filter: (p) => !/\/(thank-you|404|areas\/(fleetwood|guildford|cloverdale|south-surrey|city-centre))\/?$/.test(p) })],
   image: { responsiveStyles: false },
   devToolbar: { enabled: false },
 });

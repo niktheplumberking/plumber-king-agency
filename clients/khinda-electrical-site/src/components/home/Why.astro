@@ -16,7 +16,7 @@ const T = [
   { k: 'Homes, suites and shops', t: 'Homes, suites and shops', b: 'Khinda Electrical is based in Surrey, BC, and comes to you: homes, basement suites and shops.' },
   { k: 'A photo before the visit', t: 'A photo before the visit', b: `${SITE.phone}. A photo of the panel or fixture helps.` },
 ];
-const lamp = (on: boolean) => `<svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8.4" fill="${on ? '#F5A833' : '#4D5275'}" stroke="${on ? '#B9761C' : '#AEB4C6'}" stroke-width="1.5"/>${on ? '<circle cx="11" cy="11" r="6.2" fill="#FFD27F" fill-opacity=".9"/>' : ''}<circle cx="6.8" cy="6" r="2.9" fill="#fff" fill-opacity=".55"/></svg>`;
+const lamp = (on: boolean) => `<svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8.4" fill="${on ? '#F5A833' : '#4D5275'}" stroke="${on ? '#B9761C' : '#AEB4C6'}" stroke-width="1.5"/>${on ? '<circle cx="11" cy="11" r="6.2" fill="#FFD27F" fill-opacity=".9"/>' : ''}<path d="M9 7.2v7.6M13 7.2v7.6" stroke="#B9761C" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".85"/><circle cx="6.8" cy="6" r="2.9" fill="#fff" fill-opacity=".55"/></svg>`; // filaments: dimmed amber when off (review m3, Figma off-lamp)
 ---
 <section class="why sec" style="--h:800px" data-m-section aria-labelledby="why-h">
   <Art svg={d} class="dn-m" />
@@ -85,7 +85,7 @@ const lamp = (on: boolean) => `<svg viewBox="0 0 22 22" aria-hidden="true"><circ
   .why-cta { display: flex; gap: 14px; }
   .why-cta :global(.w-call) { width: 235px; } .why-cta :global(.w-text) { width: 200px; }
   @media (max-width: 1023px) {
-    .why { padding: 56px 20px 76px; display: flex; flex-direction: column; }
+    .why { padding: 56px 20px 93px; display: flex; flex-direction: column; }
     .why :global(.why-mart) { height: 100%; } .why :global(.why-mart svg) { height: auto; }
     .why .h2 { margin-top: 10px; width: 240px; }
     .why-lead { margin-top: 16px; width: 320px; max-width: 100%; }

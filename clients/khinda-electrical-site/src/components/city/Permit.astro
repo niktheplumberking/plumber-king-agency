@@ -13,9 +13,7 @@ interface Props { d: TownData }
 const { d } = Astro.props;
 const ph = PHOTO[d.set.encl];
 const rows = [['Who issues it', d.issuer], ['Who applies', 'A licensed contractor'], ['Strata owners', 'Can’t get a homeowner permit'], ['Code', 'CEC 26th edition, from 4 Mar 2025']];
-const lede = d.surrey
-  ? `Yes, for regulated electrical work. ${d.N} is in Surrey, and the City of Surrey issues its own electrical permits (Bylaw 15596). A licensed contractor applies for it.`
-  : `Yes, for regulated electrical work. ${d.N} is its own city, and Technical Safety BC issues the electrical permits there. A licensed contractor applies for it.`;
+const lede = d.permitLede;
 ---
 <section class="c6 sec p3s" style="--h:820px" data-m-section aria-labelledby="c6-h">
   <div class="c6-l ab" style="--x:120px;--y:110px;--w:540px">

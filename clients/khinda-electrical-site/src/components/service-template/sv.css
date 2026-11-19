@@ -351,6 +351,14 @@
 .svc-a, .svc-b { position: absolute; inset: 0; }
 .svc-b { clip-path: inset(0 calc(100% - var(--p)) 0 0); }
 .svc-b::after { content: ''; position: absolute; top: 0; bottom: 0; left: calc(var(--p) - 2px); width: 4px; background: #fff; }
+/* Desktop (review M2): each photo fills its own side of the handle, as in Figma, so at rest each half shows the whole
+   panel (no 2x crop of a full-width photo). Dragging moves the split; each side re-frames in its own box. */
+@media (min-width: 1024px) {
+  .svc-b { inset: 0 auto 0 0; width: var(--p); clip-path: none; z-index: 1; }
+  .svc-a { inset: 0 0 0 auto; width: calc(100% - var(--p)); }
+  .svc-b::after { left: auto; right: -2px; }
+  .svc-lb, .svc-la, .svc-h { z-index: 2; }
+}
 .svc-lb, .svc-la { position: absolute; top: 20px; padding: 9px 12px; border-radius: 4px; font-size: 10px; line-height: 14px; pointer-events: none; }
 .svc-lb { left: 20px; background: var(--deep); color: #fff; }
 .svc-la { right: 20px; background: var(--amber); color: var(--ink); }
@@ -364,6 +372,7 @@
 @media (max-width: 1023px) {
   .svc { padding-bottom: 64px; }
   .svc .sv-hd .h2 { margin-top: 11px; }
+  .svc .sv-hd .eyebrow { letter-spacing: .05em; white-space: nowrap; } /* one line as in Figma 3.6 mobile (review m4) */
   .svc-cp { height: 540px; margin-top: 64px; padding: 8px; border-radius: 10px; }
   .svc-cp .screw { width: 10px; height: 10px; }
   .svc-w { border-radius: 4px; touch-action: pan-x; }
@@ -419,8 +428,9 @@
 .svr-r.off .ck { stroke-dashoffset: 44; }
 .svr-f { padding-right: 16px; font-family: var(--f-display); font-weight: 800; font-size: 19px; line-height: 30px; color: var(--indigo); }
 .svr-w { font-size: 15px; line-height: 22px; padding-top: 18px; }
-.svr-r.off .svr-f, .svr-r.off .svr-w { opacity: .38; }
-.svr-r .svr-f, .svr-r .svr-w { transition: opacity .3s; }
+/* off rows dim to --steel (6:1 on white), not to 38 % opacity (review m8: 2.4:1); the empty box still marks them off */
+.svr-r.off .svr-f, .svr-r.off .svr-w { color: var(--steel); }
+.svr-r .svr-f, .svr-r .svr-w { transition: color .3s; }
 .svr-foot { margin-top: 34px; font-weight: 500; font-size: 15px; line-height: 19px; }
 .svr-sig { position: absolute; left: 32px; bottom: 16px; width: 240px; padding-top: 6px; border-top: 1px solid var(--ink); }
 @media (max-width: 1023px) {

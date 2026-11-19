@@ -162,7 +162,7 @@ export const SERVICE_PAGES: SvcPage[] = [
     h1: ['EV Charger Installation', 'in Surrey'], eyebrow: 'EV chargers · Surrey, BC',
     lead: 'Home EV chargers in Surrey need a permit, and a licensed contractor applies. The BC Hydro rebate (up to 50%, max $350) asks for a licensed electrician and that permit. Panel space comes first.',
     facts: [{ k: 'Permit', v: 'City of Surrey' }, { k: 'Rebate', v: 'BC Hydro, max $350' }, { k: 'Code', v: 'CEC 26th ed.' }],
-    hero: { bg: PH.ig01, plate: { ...PH.ig49, cap: 'Outdoor cable run · Surrey area' } },
+    hero: { bg: PH.ig01, plate: { ...PH.ig61, cap: 'Finished panel · Surrey area' } }, // review m11: a panel, not the garden cable, until Khinda sends an EV charger photo
     form: FORM_GENERIC('Price your charger', 'Panel today', ['100A', '125A', '200A', 'Not sure'], 'Home', ['House', 'Townhouse', 'Strata', 'Not sure'], '+ Add a photo of the panel'),
     quick: {
       h2: ['Do you need a permit', 'for an EV charger?'],
@@ -175,7 +175,7 @@ export const SERVICE_PAGES: SvcPage[] = [
         ROW.code],
       sources: 'Sources · City of Surrey · BC Hydro · CEC',
     },
-    diy: { photo: PH.ig39 },
+    diy: { photo: PH.ig03 },
     process: {
       h2: ['From a photo', 'to a charger on the wall.'], lead: 'One cable, pulled through five studs the way he does it on a rough-in. Each hole is one step.',
       steps: [{ t: 'Photo or visit', b: 'Text a photo of the panel and where the charger goes, or he comes to look.' },
@@ -203,7 +203,7 @@ export const SERVICE_PAGES: SvcPage[] = [
         { q: 'Are Tesla chargers covered by the rebate?', a: 'Not at this time: BC Hydro’s guide of 15 Jul 2026 says Tesla-manufactured EV chargers are not eligible.' },
       ],
     },
-    related: { h2: ['Planning more', 'than the charger?'], items: [{ ...REL.panel, photo: PH.ig61 }, { ...REL.newc, photo: PH.ig11 }, { ...REL.repairs, photo: PH.ig45 }], towns: true },
+    related: { h2: ['Planning more', 'than the charger?'], items: [{ ...REL.panel, photo: PH.ig39 }, { ...REL.newc, photo: PH.ig11 }, { ...REL.repairs, photo: PH.ig45 }], towns: true },
     cta: { eyebrow: 'Not sure your panel can take it', h2: ['Send a photo', 'of your panel.'], lead: 'Frame the whole panel and the label inside the door. He reads the size and the spaces from the photo and tells you what the charger needs.', frame: ['Frame the panel + door label', 'Panel + door label'], btn: 'Text a photo of your panel' },
   },
   {

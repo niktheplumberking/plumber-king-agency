@@ -258,6 +258,9 @@ if (fz) {
       f.classList.toggle('dim', words.length > 0 && !m);
       $('[data-mt]', f)!.textContent = m ? ' · Match' : '';
     });
+    // an open fuse that does not match closes, so only the match stays pulled (review m5)
+    const stale = fs.findIndex((f) => f.classList.contains('open') && f.classList.contains('dim'));
+    if (stale >= 0) open(stale);
     mn.textContent = words.length ? `${c} match${c === 1 ? '' : 'es'}` : '';
     sl.forEach((s) => { const on = words.length === 1 && words[0] === s.dataset.sleeve; s.classList.toggle('on', on); s.setAttribute('aria-pressed', String(on)); });
   };

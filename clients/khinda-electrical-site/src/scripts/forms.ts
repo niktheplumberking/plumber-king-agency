@@ -25,6 +25,11 @@ function schedule(form: HTMLFormElement) {
   let cur = 0;
   form.classList.add('js-steps');
   const key = (r: HTMLElement) => r.querySelector('.rk')?.textContent ?? '';
+  // A row closed with nothing in it (photo skipped, nothing picked) reads "Skipped", not "Added" (review m6).
+  const blank = (r: HTMLElement) => {
+    const ins = Array.from(r.querySelectorAll<HTMLInputElement>('input:not([type="hidden"]), textarea, select'));
+    return ins.length > 0 && ins.every((x) => x.type === 'file' ? !x.files?.length : x.type === 'checkbox' || x.type === 'radio' ? !x.checked : !x.value.trim());
+  };
   const paint = () => {
     const done = rows.filter((r) => r.classList.contains('done')).length;
     rows.forEach((r, i) => {
@@ -33,7 +38,7 @@ function schedule(form: HTMLFormElement) {
       (r as any).inert = st === 'pending';
       r.querySelector('.rbk')?.classList.toggle('is-on', st === 'done');
       const rs = r.querySelector<HTMLElement>('[data-rs]');
-      if (rs) rs.textContent = st === 'done' ? 'Added' : st === 'pending' && i === cur + 1 ? 'NEXT' : '';
+      if (rs) rs.textContent = st === 'done' ? (blank(r) ? 'Skipped' : 'Added') : st === 'pending' && i === cur + 1 ? 'NEXT' : '';
     });
     if (ro) ro.textContent = `${pad(done)} / 06 ON`;
     sec?.querySelectorAll('.ro-bk i').forEach((b, i) => b.classList.toggle('on', i < done));

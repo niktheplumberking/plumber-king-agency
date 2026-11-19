@@ -1,0 +1,83 @@
+---
+// Reviews hero (Figma 727:437 "Hero" y 172 h 620 / 729:539 y 158 h 640). Two count plates, one per Google profile, each
+// dated; the counts are never added up (BUILD-BRIEF 7).
+import '../contact/cx.css';
+import Crumbs from '../contact/Crumbs.astro';
+import Stars from '../contact/Stars.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { SITE } from '../../data/site';
+const g = SITE.google;
+const plates = [
+  { n: 1, p: g.a, shadow: 'var(--pdeep)' },
+  { n: 2, p: g.b, shadow: 'var(--ink)' },
+];
+---
+<section class="cx-sec cx-white rh" data-m-section data-m-hero aria-labelledby="rh-h">
+  <div class="wrap rh-g">
+    <div>
+      <Crumbs label="Reviews" />
+      <Eyebrow text={`Google reviews · read ${g.checked}`} tone="pdeep" class="rh-eb" />
+      <h1 id="rh-h" class="cx-h rh-h" data-t="2"><span class="ln">What Pinellas Says</span> <span class="ln tone">About Glass Plumbing</span></h1>
+      <p class="rh-lead lead" data-t="3" data-fx="nudge"><span class="d">Glass Plumbing has two Google profiles. Both show 5.0. We list each count as Google shows it, dated, and never add them up.</span><span class="m">Two Google profiles, both 5.0. Each count as Google shows it, dated, never added up.</span></p>
+    </div>
+    <ul class="rh-plates" role="list" data-t="4" data-stagger>
+      {plates.map(({ n, p, shadow }) => (
+        <li class="rh-p" style={`--sh:${shadow}`}>
+          <span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span>
+          <p class="rh-pl"><span class="d">Google profile {n} · read {g.checked}</span><span class="m">Google profile {n} · {g.checked}</span></p>
+          <p class="rh-c"><span class="rh-n">{p.count}</span> <span class="rh-r">reviews</span></p>
+          <p class="rh-v"><span class="rh-s">{p.value}</span><span class="sr-only"> out of 5 stars</span><Stars w={95} class="rh-st" /></p>
+          <a class="rh-a cx-link" href={p.url} target="_blank" rel="noopener">Open on Google →<span class="sr-only"> (profile {n}, opens in a new tab)</span></a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .rh { padding: 44px 0 70px; }
+  .rh-g { display: grid; grid-template-columns: 1fr 440px; column-gap: 60px; }
+  .rh :global(.rh-eb) { margin-top: 29px; }
+  .rh-h { --fs: 64px; --fs-m: 29px; margin-top: 16px; }
+  .rh-lead { margin-top: 24px; max-width: 560px; font: 400 18px/1.5 var(--f-b); color: var(--ink); }
+  .rh-lead .m { display: none; }
+  .rh-plates { margin: 36px 0 0; padding: 0; list-style: none; display: grid; gap: 30px; }
+  .rh-p { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto auto; height: 220px; padding: 28px 32px 0; background: var(--steel);
+    border: 1px solid var(--steel2); border-radius: 6px; box-shadow: 10px 10px 0 var(--sh); }
+  .rv { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-child(1) { left: 9px; top: 9px; } .rv:nth-child(2) { right: 9px; top: 9px; } .rv:nth-child(3) { left: 9px; bottom: 9px; } .rv:nth-child(4) { right: 9px; bottom: 9px; }
+  .rh-pl { grid-column: 1 / -1; margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .rh-pl .m { display: none; }
+  .rh-c { display: flex; align-items: flex-end; gap: 12px; margin: -3px 0 0; }
+  .rh-n { font: 800 96px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .rh-r { margin-bottom: 19px; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; }
+  .rh-v { position: absolute; left: 260px; top: 61px; margin: 0; }
+  .rh-s { display: block; font: 800 52px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .rh-v :global(.rh-st) { margin: 10px 0 0 2px; }
+  .rh-a { grid-column: 1 / -1; justify-self: start; margin-top: 2px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rh-g { grid-template-columns: 1fr; }
+    .rh-plates { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .rh-n { font-size: 80px; }
+    .rh-v { left: auto; right: 40px; }
+  }
+  @media (max-width: 767px) {
+    .rh { padding: 24px 0 48px; }
+    .rh-g { grid-template-columns: 1fr; }
+    .rh :global(.rh-eb) { margin-top: 15px; }
+    .rh-h { margin-top: 10px; }
+    .rh-lead { margin-top: 14px; font-size: 16px; }
+    .rh-lead .d { display: none; } .rh-lead .m { display: inline; }
+    .rh-plates { margin-top: 28px; gap: 24px; padding-right: 8px; }
+    .rh-p { height: 170px; padding: 21px 20px 0; box-shadow: 8px 8px 0 var(--sh); }
+    .rv { width: 8px; height: 8px; } .rv:nth-child(1) { left: 7px; top: 7px; } .rv:nth-child(2) { right: 7px; top: 7px; } .rv:nth-child(3) { left: 7px; bottom: 7px; } .rv:nth-child(4) { right: 7px; bottom: 7px; }
+    .rh-pl { font-size: 9px; line-height: 12px; }
+    .rh-pl .d { display: none; } .rh-pl .m { display: inline; }
+    .rh-c { margin-top: 6px; gap: 10px; }
+    .rh-n { font-size: 72px; }
+    .rh-r { font-size: 9px; line-height: 12px; margin-bottom: 15px; }
+    .rh-v { left: 218px; top: 47px; }
+    .rh-s { font-size: 40px; }
+    .rh-v :global(.rh-st) { width: 80px; height: 13px; margin-top: 8px; }
+    .rh-a { font-size: 14px; margin-top: 0; }
+  }
+</style>

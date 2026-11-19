@@ -1,0 +1,57 @@
+---
+// Process (Figma 719:437 y 3248 h 620 / mobile y 3569 h 768): six steps, each a little frost sight glass that fills a bit
+// more per step (the Figma's levels) over a steel plate. Phone: a vertical list, gauge left of each plate.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+const S = [
+  { k: '01 Photo or visit', d: 'Text the label, or we come look.', f: 0.13 },
+  { k: '02 Price', d: 'You hear it before work.', f: 0.256 },
+  { k: '03 Permit', d: 'We file it with the right office.', f: 0.385 },
+  { k: '04 Install day', d: 'Often the next day.', f: 0.513 },
+  { k: '05 Old unit out', d: 'We haul the old one.', f: 0.64 },
+  { k: '06 Test', d: 'Hot water, no leaks, clean floor.', f: 0.77 },
+];
+---
+<section class="ps" data-m-section>
+  <div class="wrap">
+    <Eyebrow text="How the job goes" />
+    <h2 class="h2 ps-h" data-t="2" style="--h2:52px;--h2m:28px">From a photo<br /><span class="tone">to hot water.</span></h2>
+    <ol class="ps-list" role="list" data-t="3" data-stagger>
+      {S.map((s) => (
+        <li class="ps-it">
+          <Housing w={40} h={64} wm={28} hm={50} r={20} rm={14} cap={14} tone="frost" fill={s.f} class="ps-g" />
+          <div class="ps-pl">
+            <i></i><i></i><i></i><i></i>
+            <h3 class="ps-k">{s.k}</h3>
+            <p class="ps-d">{s.d}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .ps { background: var(--white); padding: 120px 0 145px; }
+  .ps-h { margin-top: 16px; }
+  .ps-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; margin: 42px 0 0; padding: 0; list-style: none; }
+  .ps-it { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+  .ps-pl { position: relative; width: 100%; min-height: 91px; padding: 16px 14px 16px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2); transition: box-shadow .35s var(--ease-io), translate .35s var(--ease-io); }
+  .ps-it:first-child .ps-pl, .ps-it:hover .ps-pl { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--powder); }
+  .ps-list:hover .ps-it:first-child:not(:hover) .ps-pl { box-shadow: inset 0 0 0 1px var(--steel2); }
+  .ps-pl i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .ps-pl i:nth-child(1) { left: 6px; top: 6px; } .ps-pl i:nth-child(2) { right: 6px; top: 6px; }
+  .ps-pl i:nth-child(3) { left: 6px; bottom: 6px; } .ps-pl i:nth-child(4) { right: 6px; bottom: 6px; }
+  .ps-k { padding-bottom: 3px; border-bottom: 1px solid rgba(22,19,15,.3); font-family: var(--f-m); font-weight: 800; font-size: 11px; line-height: 15px; letter-spacing: .1em; text-transform: uppercase; }
+  .ps-d { margin-top: 6px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 1.5; letter-spacing: .04em; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ps-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 24px; }
+  }
+  @media (max-width: 767px) {
+    .ps { padding: 64px 0 62px; }
+    .ps-h { margin-top: 10px; }
+    .ps-list { grid-template-columns: minmax(0, 1fr); gap: 22px; margin-top: 28px; }
+    .ps-it { flex-direction: row; align-items: center; gap: 12px; }
+    .ps-pl { min-height: 70px; padding: 14px 12px 14px; }
+    .ps-k { padding-bottom: 2px; }
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+// /areas/seminole "Local home problems" (Figma y 1647 h 720 / mobile y 1555 h 612). White, meniscus dip from the frost
+// section above. Three cards with a frost housing each, filled 54/74, 32/74 and 14/74 (Figma), copy and sources as framed.
+import Head from '../areas/Head.astro';
+import Housing from '../kit/Housing.astro';
+import Seam from '../kit/Seam.astro';
+const cards = [
+  { t: 'Hard county water', d: 'Pinellas water averages 217 ppm hardness. It leaves crust on fixtures and scale in water heaters.', m: '217 ppm hardness on average. Crust on fixtures, scale in heaters.', s: 'Source: PCU 2025 report', f: 54 / 74 },
+  { t: '1970s and 80s homes', d: 'Many homes here are that age, so supply lines and drains are often original.', m: 'Supply lines and drains are often original.', s: 'Source: Inferred from county housing age', f: 32 / 74 },
+  { t: 'Storm season', d: 'Know where your main shut-off is before June. Close it first if a pipe bursts.', m: 'Know your main shut-off before June.', s: 'Source: Pinellas County advice', f: 14 / 74 },
+];
+---
+<section class="tprob" data-m-section aria-labelledby="tprob-h">
+  <Seam from="var(--frost)" to="var(--white)" />
+  <div class="wrap">
+    <Head eyebrow="Seminole homes" l1="What we see" l2="in Seminole homes." id="tprob-h" />
+    <ul class="tp-grid" role="list" data-t="4" data-stagger>
+      {cards.map((c) => (
+        <li class="tp">
+          <Housing w={56} h={86} wm={34} hm={52} r={14} rm={8} tone="frost" fill={c.f} class="tp-jar" />
+          <div class="tp-txt">
+            <h3 class="tp-h">{c.t}</h3>
+            <p class="tp-p"><span class="d">{c.d}</span><span class="m">{c.m}</span></p>
+            <p class="tp-src">{c.s}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .tprob { position: relative; background: var(--white); padding: 110px 0 90px; }
+  .tp-grid { display: grid; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin-top: 52px; }
+  .tp { display: flex; flex-direction: column; height: 330px; padding: 28px 26px 27px 28px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--white); }
+  .tp-txt { display: flex; flex-direction: column; flex: 1; margin-top: 26px; }
+  .tp-h { font-family: var(--f-h); font-weight: 800; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .tp-p { margin-top: 15px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .tp-src { margin-top: auto; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .01em; color: var(--pdeep); }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tprob { padding: 96px 0 80px; }
+    .tp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .tp { height: auto; min-height: 330px; }
+  }
+  @media (max-width: 767px) {
+    .tprob { padding: 64px 0 56px; }
+    .tp-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
+    .tp { flex-direction: row; gap: 16px; height: 120px; padding: 18px 14px 13px 16px; }
+    .tp-txt { margin-top: -2px; }
+    .tp-h { font-size: 18px; }
+    .tp-p { margin-top: 8px; font-size: 14px; }
+    .tp-src { font-size: 8px; line-height: 11px; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

@@ -1,0 +1,45 @@
+---
+// /areas/seminole "Nearby towns" (Figma y 5943 h 260 / mobile y 5518 h 306). White. Three cards, straight-line miles from
+// towns.ts, each to its row on /areas (no town pages yet besides Seminole).
+import { TOWNS } from '../../data/towns';
+const near = ['largo', 'pinellas-park', 'madeira-beach'].map((s) => TOWNS.find((t) => t.slug === s)!);
+---
+<section class="tnear" data-m-section aria-labelledby="tnear-h">
+  <div class="wrap">
+    <h2 id="tnear-h" class="tn-k" data-t="1">Nearby towns</h2>
+    <ul class="tn-grid" role="list" data-t="3" data-stagger>
+      {near.map((t) => (
+        <li><a class="tn" href={t.page ?? `/areas#town-${t.slug}`}>
+          <span class="tn-t">Plumber in {t.name}</span>
+          <span class="tn-mi">{t.mi} mi from base<span class="sr-only"> (straight line)</span></span>
+          <svg class="tn-ar" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true"><path d="M1 5h10M7 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </a></li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .tnear { position: relative; background: var(--white); padding: 60px 0 68px; }
+  .tn-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .tn-grid { display: grid; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin-top: 21px; }
+  .tn { position: relative; display: flex; flex-direction: column; height: 96px; padding: 20px 24px; border: 1.5px solid var(--ink); border-radius: 4px; color: var(--ink); text-decoration: none; transition: background-color .3s var(--ease-io); }
+  .tn:hover { background: var(--frost); }
+  .tn:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  .tn-t { font-family: var(--f-h); font-weight: 800; font-size: 20px; line-height: 1.04; letter-spacing: -.02em; }
+  .tn-mi { margin-top: 15px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
+  .tn-ar { position: absolute; right: 24px; top: 26px; transition: translate .3s var(--ease-io); }
+  .tn:hover .tn-ar { translate: 4px 0; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tn-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .tn { height: auto; min-height: 96px; padding-right: 44px; }
+  }
+  @media (max-width: 767px) {
+    .tnear { padding: 32px 0 40px; }
+    .tn-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 13px; }
+    .tn { height: 62px; padding: 12px 16px; }
+    .tn-t { font-size: 16px; }
+    .tn-mi { margin-top: 9px; font-size: 9px; line-height: 12px; }
+    .tn-ar { right: 18px; top: 26px; }
+  }
+</style>

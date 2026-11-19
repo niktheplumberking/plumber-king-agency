@@ -1,0 +1,129 @@
+---
+// FAQ (Figma 719:437 y 7492 h 1022 / mobile y 8087 h 834): big outlined numbers. Hover a row: its number fills powder-deep and
+// a small job photo follows the cursor (tilted -5 deg, eases in); desktop with a fine pointer only, no preview on touch.
+// Tap opens the answer under the question; one open at a time (kit accordion, one `name` group); + rotates to −.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Img from '../ui/Img.astro';
+import { WH_FAQ, WH_SMS } from './data';
+---
+<section class="wf" data-m-section data-wf>
+  <div class="wrap">
+    <div class="wf-top">
+      <div>
+        <Eyebrow text="Water heater questions" />
+        <h2 class="h2 wf-h" data-t="2" style="--h2:52px;--h2m:36px">Asked a lot<br /><span class="tone">in Pinellas.</span></h2>
+      </div>
+      <p class="wf-lead" data-t="3">Hover a question to see the job. Tap to open.</p>
+    </div>
+    <div class="wf-list" data-t="3">
+      {WH_FAQ.map((f, i) => (
+        <details class="wf-row" data-acc name="wh-faq" open={i === 0} data-wf-row={i}>
+          <summary class="wf-q">
+            <span class="wf-n" aria-hidden="true">0{i + 1}</span>
+            <span class="wf-qt">{f.q}</span>
+            <i class="wf-pm" aria-hidden="true"></i>
+          </summary>
+          <div class="wf-a">
+            <p>{f.a}</p>
+            {i === 0 && (
+              <dl class="wf-pl">
+                <div><dt>Also see</dt><dd><a href="#types">Tank vs tankless</a></dd></div>
+                <div><dt>Ask</dt><dd><a href={WH_SMS}>Text a photo of your label</a></dd></div>
+              </dl>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+    <div class="wf-prevs" aria-hidden="true" data-wf-prevs>
+      {WH_FAQ.map((f, i) => (
+        <div class="wf-prev" data-wf-prev={i}><Img name={f.photo} alt="" sizes="200px" box={200 / 150} widths={[200, 400]} /></div>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .wf { position: relative; background: var(--white); padding: 110px 0 128px; overflow: clip; }
+  .wf-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; }
+  .wf-h { margin-top: 16px; }
+  .wf-lead { width: 420px; margin-top: 50px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+  .wf-list { margin-top: 48px; border-bottom: 1.5px solid rgba(22,19,15,.2); }
+  .wf-row { position: relative; border-top: 1.5px solid rgba(22,19,15,.2); }
+  .wf-row:first-child { border-top-color: var(--ink); }
+  .wf-q { display: grid; grid-template-columns: 140px minmax(0, 820px) 1fr; align-items: start; min-height: 110px; padding: 26px 0 24px; cursor: pointer; list-style: none; }
+  .wf-q::-webkit-details-marker { display: none; }
+  .wf-q:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  .wf-n { font-family: var(--f-h); font-weight: 900; font-size: 60px; line-height: 1; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 1.5px var(--ink); transition: color .3s var(--ease-io), -webkit-text-stroke-color .3s var(--ease-io); }
+  .wf-qt { padding-top: 12px; font-family: var(--f-h); font-weight: 800; font-size: 30px; line-height: 1.04; letter-spacing: -.02em; transition: color .3s var(--ease-io); }
+  .wf-row[open]:not(.acc-off) .wf-n { color: var(--pdeep); -webkit-text-stroke-color: var(--pdeep); }
+  @media (hover: hover) and (pointer: fine) {
+    .wf-q:hover .wf-n { color: var(--pdeep); -webkit-text-stroke-color: var(--pdeep); }
+    .wf-q:hover .wf-qt { color: var(--pdeep); }
+  }
+  .wf-pm { justify-self: end; position: relative; width: 56px; height: 56px; margin-top: 4px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); transition: background-color .3s var(--ease-io), rotate .4s var(--ease-io); }
+  .wf-pm::before, .wf-pm::after { content: ''; position: absolute; left: 18px; top: 27px; width: 20px; height: 2px; background: var(--ink); transition: background-color .3s var(--ease-io), rotate .4s var(--ease-io); }
+  .wf-pm::after { rotate: 90deg; }
+  .wf-row[open]:not(.acc-off) .wf-pm { background: var(--ink); rotate: 180deg; }
+  .wf-row[open]:not(.acc-off) .wf-pm::before, .wf-row[open]:not(.acc-off) .wf-pm::after { background: var(--white); }
+  .wf-row[open]:not(.acc-off) .wf-pm::after { rotate: 0deg; }
+  .wf-a { display: flex; gap: 60px; align-items: flex-start; padding: 0 0 78px 140px; margin-top: -10px; }
+  .wf-a p { max-width: 560px; font-size: 18px; line-height: 1.5; color: var(--muted); }
+  .wf-pl { flex: none; width: 300px; margin: 0; padding: 14px 12px 13px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2); font-family: var(--f-m); font-size: 10px; line-height: 13px; }
+  .wf-pl div { display: grid; grid-template-columns: 80px 1fr; }
+  .wf-pl div + div { margin-top: 18px; }
+  .wf-pl dt { font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: rgba(22,19,15,.7); }
+  .wf-pl dd { margin: 0; font-weight: 700; letter-spacing: .04em; }
+  .wf-pl a { position: relative; text-decoration: underline; text-underline-offset: 2px; }
+  .wf-pl a::after { content: ''; position: absolute; inset: -15px -4px; }
+  .wf-pl a:hover { color: var(--pdeep); }
+  .wf-prevs { display: none; }
+  @media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+    .wf-prevs { display: block; position: absolute; left: 0; top: 0; pointer-events: none; z-index: 2; }
+    .wf-prev { position: absolute; left: 0; top: 0; width: 200px; height: 150px; border-radius: 6px; overflow: hidden; box-shadow: inset 0 0 0 2px var(--ink), 6px 6px 0 var(--powder); opacity: 0; scale: .85; rotate: -5deg; translate: var(--x, 0) var(--y, 0); transition: opacity .3s var(--ease-io), scale .3s var(--ease-io); }
+    .wf-prev::after { content: ''; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 0 2px var(--ink); }
+    .wf-prev.on { opacity: 1; scale: 1; }
+  }
+  @media (max-width: 767px) {
+    .wf { padding: 64px 0 98px; }
+    .wf-top { flex-direction: column; gap: 0; }
+    .wf-h { margin-top: 12px; }
+    .wf-lead { display: none; }
+    .wf-list { margin-top: 28px; }
+    .wf-q { grid-template-columns: 66px minmax(0, 1fr) 40px; min-height: 84px; padding: 18px 0 18px; }
+    .wf-n { font-size: 40px; -webkit-text-stroke-width: 1.2px; padding-top: 2px; }
+    .wf-qt { padding-top: 4px; padding-right: 18px; font-size: 19px; line-height: 1.15; }
+    .wf-pm { width: 40px; height: 40px; margin-top: 0; }
+    .wf-pm::before, .wf-pm::after { left: 13px; top: 19px; width: 14px; }
+    .wf-a { flex-direction: column; gap: 16px; padding: 6px 0 22px; margin-top: 0; }
+    .wf-a p { font-size: 15px; }
+    .wf-pl { width: 100%; }
+  }
+</style>
+<script>
+  // Cursor-follow preview (fine pointers, 1024+ wide, motion on): eased toward the pointer each frame.
+  const root = document.querySelector<HTMLElement>('[data-wf]');
+  const fine = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
+  if (root) {
+    const prevs = [...root.querySelectorAll<HTMLElement>('[data-wf-prev]')];
+    let on: HTMLElement | null = null, tx = 0, ty = 0, x = 0, y = 0, raf = 0;
+    const box = () => root.getBoundingClientRect();
+    const loop = () => {
+      const k = document.documentElement.classList.contains('motion') ? 0.18 : 1;
+      x += (tx - x) * k; y += (ty - y) * k;
+      prevs.forEach((p) => { p.style.setProperty('--x', `${x}px`); p.style.setProperty('--y', `${y}px`); });
+      raf = on || Math.abs(tx - x) > 0.5 ? requestAnimationFrame(loop) : 0;
+    };
+    const move = (e: PointerEvent) => { const b = box(); tx = e.clientX - b.left + 24; ty = e.clientY - b.top - 150; if (!raf) raf = requestAnimationFrame(loop); };
+    root.querySelectorAll<HTMLElement>('[data-wf-row]').forEach((row) => {
+      const q = row.querySelector<HTMLElement>('summary')!;
+      const p = prevs[+row.dataset.wfRow!];
+      q.addEventListener('pointerenter', (e) => {
+        if (!fine.matches || e.pointerType !== 'mouse') return;
+        if (!on) { const b = box(); x = tx = e.clientX - b.left + 24; y = ty = e.clientY - b.top - 150; }
+        on?.classList.remove('on'); on = p; p.classList.add('on'); move(e);
+      });
+      q.addEventListener('pointermove', (e) => { if (on === p) move(e); });
+      q.addEventListener('pointerleave', () => { if (on === p) { p.classList.remove('on'); on = null; } });
+    });
+  }
+</script>

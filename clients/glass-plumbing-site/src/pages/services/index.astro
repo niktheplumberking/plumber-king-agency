@@ -1,0 +1,35 @@
+---
+// /services hub (Figma 718:522 desktop 1440, 718:1276 mobile 390). Sections 3-11 of figma-cache/INDEX.md, one component
+// each; utility bar, header, emergency strip, footer and mobile call bar come from Base.astro (shared builder).
+import Base from '../../layouts/Base.astro';
+import SvHero from '../../components/services/SvHero.astro';
+import SvSymptoms from '../../components/services/SvSymptoms.astro';
+import SvFamilies from '../../components/services/SvFamilies.astro';
+import SvFullList from '../../components/services/SvFullList.astro';
+import SvPromises from '../../components/services/SvPromises.astro';
+import SvReviews from '../../components/services/SvReviews.astro';
+import SvFaq from '../../components/services/SvFaq.astro';
+import SvCta from '../../components/services/SvCta.astro';
+import TownsStrip from '../../components/global/TownsStrip.astro';
+import { FAQ_TABS } from '../../components/services/data';
+import '../../components/services/sv.css';
+const faq = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: FAQ_TABS.flatMap((t) => t.items).map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base title="Plumbing Services in Largo & Pinellas · Glass Plumbing"
+  description="Water heaters, leaks, water lines, repipes, drains, fixtures, remodels and commercial work across Pinellas County. One licensed crew in Largo, FL."
+  path="/services" jsonld={[faq]} og="tankless-pair" ogAlt="Two tankless water heaters mounted on a brick wall">
+  <div class="sv">
+    <SvHero />
+    <SvSymptoms />
+    <SvFamilies />
+    <SvFullList />
+    <SvPromises />
+    <SvReviews />
+    <SvFaq />
+    <SvCta />
+    <TownsStrip />
+  </div>
+</Base>

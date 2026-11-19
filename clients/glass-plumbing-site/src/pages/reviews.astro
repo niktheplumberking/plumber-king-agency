@@ -1,0 +1,23 @@
+---
+// /reviews (Figma 727:437 desktop, 729:539 mobile). BreadcrumbList; no Review / AggregateRating markup (Nick's rule).
+import Base from '../layouts/Base.astro';
+import RevHero from '../components/reviews/RevHero.astro';
+import RevMention from '../components/reviews/RevMention.astro';
+import RevList from '../components/reviews/RevList.astro';
+import RevOwner from '../components/reviews/RevOwner.astro';
+import RevLeave from '../components/reviews/RevLeave.astro';
+import TownsStrip from '../components/global/TownsStrip.astro';
+import { crumbsLd } from '../components/contact/ld';
+const path = '/reviews';
+---
+<Base title="Reviews · Glass Plumbing Services, Largo FL"
+  description="All 16 Google reviews we read, word for word. Two Google profiles, 5.0 with 104 reviews and 5.0 with 77, read 17 Nov 2026 and never added up."
+  path={path} og="crew-selfie" ogAlt="The Glass Plumbing crew on a job"
+  jsonld={[crumbsLd('Reviews', path)]} estimate="/contact#estimate">
+  <RevHero />
+  <RevMention />
+  <RevList />
+  <RevOwner />
+  <RevLeave />
+  <TownsStrip />
+</Base>

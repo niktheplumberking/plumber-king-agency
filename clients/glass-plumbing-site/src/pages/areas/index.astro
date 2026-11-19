@@ -1,0 +1,28 @@
+---
+// /areas (Figma 721:525 desktop / 722:445 mobile): every section between the emergency strip and the footer.
+// SEO-PLAN: title "Plumber Serving Pinellas County · Glass Plumbing", H1 = the Figma H1. BreadcrumbList (Breadcrumbs.astro)
+// and FAQPage (AreasFaq.astro, the three visible texts) are emitted by their components.
+import Base from '../../layouts/Base.astro';
+import AreasHero from '../../components/areas/AreasHero.astro';
+import AreasBase from '../../components/areas/AreasBase.astro';
+import AreasTowns from '../../components/areas/AreasTowns.astro';
+import AreasDistance from '../../components/areas/AreasDistance.astro';
+import AreasFacts from '../../components/areas/AreasFacts.astro';
+import AreasReviews from '../../components/areas/AreasReviews.astro';
+import AreasFaq from '../../components/areas/AreasFaq.astro';
+import AreasCheck from '../../components/areas/AreasCheck.astro';
+import TownsStrip from '../../components/global/TownsStrip.astro';
+---
+<Base title="Plumber Serving Pinellas County · Glass Plumbing"
+  description="One licensed crew, based in Largo, in the middle of Pinellas. Homes, rentals and businesses from Tarpon Springs to St. Pete Beach."
+  path="/areas" og="van-night" ogAlt="The Glass Plumbing Services van at night with the phone number on its side" estimate="#estimate">
+  <AreasHero />
+  <AreasBase />
+  <AreasTowns />
+  <AreasDistance />
+  <AreasFacts />
+  <AreasReviews />
+  <AreasFaq />
+  <AreasCheck />
+  <TownsStrip />
+</Base>

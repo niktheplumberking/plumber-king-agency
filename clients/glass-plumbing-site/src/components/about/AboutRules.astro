@@ -1,0 +1,98 @@
+---
+// /about "Four house rules" (Figma y 2833 h 1254 / mobile y 2746 h 1037). Frost, meniscus dip from the white crew section.
+// Editorial zig-zag: huge outlined numbers (Schibsted Black 170, pdeep 2 px outline), 01 / 03 left with text at x 420,
+// 02 / 04 right with right-aligned text ending at x 1020. Every quote is a customer's own words (checked against
+// reviews.ts at build). INTERACTION note: each rule slides in from its own side (x +-80) as it scrolls in; the quote types
+// in, then the number fills powder-deep. Reduced motion / no JS: everything shown, numbers filled.
+import Head from '../areas/Head.astro';
+import Seam from '../kit/Seam.astro';
+import { quote } from '../areas/reviews';
+const rules = [
+  { t: 'On time', by: 'John Rooney', q: quote('John Rooney', 'shows up when he says he’s going to') },
+  { t: 'Explain everything first', by: 'Michael Marks', q: quote('Michael Marks', 'explained everything in detail') },
+  { t: 'Fair price before work', by: 'Emily Van Den Langenberg', q: quote('Emily Van Den Langenberg', 'their prices are always fair') },
+  { t: 'Clean up after', by: 'Jacob Gars', q: quote('Jacob Gars', 'clean the bathroom spotless after') },
+];
+---
+<section class="brules" data-m-section aria-labelledby="brules-h">
+  <Seam from="var(--white)" to="var(--frost)" />
+  <div class="wrap">
+    <Head eyebrow="How we work" l1="Four house rules." l2="Said by customers, not us." sizeM={34} id="brules-h" />
+    <ol class="br-list" role="list">
+      {rules.map((r, i) => (
+        <li class:list={['br', i % 2 ? 'is-r' : 'is-l']} data-rule>
+          <span class="br-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="br-t"><span class="sr-only">Rule {i + 1}: </span>{r.t}</h3>
+          <blockquote class="br-q"><p><span class="br-full">“{r.q}”</span><span class="br-typed" aria-hidden="true" data-text={`“${r.q}”`}></span></p></blockquote>
+          <p class="br-by">{r.by} · Google</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<script>
+  import { onEnter } from '../areas/inview';
+  // Slide in from its side, then type the quote (about 35 ms a letter), then fill the number. The full quote stays in the
+  // DOM for screen readers; the typed copy is decorative. If html.motion goes away (the 3.5 s safety), CSS shows it all.
+  document.querySelectorAll<HTMLElement>('[data-rule]').forEach((row) => {
+    onEnter(row, () => {
+      row.classList.add('is-in');
+      const typed = row.querySelector<HTMLElement>('.br-typed');
+      const text = typed?.dataset.text ?? '';
+      if (!typed || !document.documentElement.classList.contains('motion')) { row.classList.add('is-filled'); return; }
+      let n = 0;
+      const step = () => {
+        n += 1;
+        typed.textContent = text.slice(0, n);
+        if (n < text.length) setTimeout(step, 35);
+        else row.classList.add('is-typed', 'is-filled');
+      };
+      setTimeout(step, 550);
+    }, '0px 0px -10% 0px');
+  });
+</script>
+
+<style>
+  @font-face { font-family: 'Schibsted Grotesk'; font-style: normal; font-weight: 900; font-display: swap; src: url('/fonts/schibsted-grotesk-latin-900-normal.woff2') format('woff2'); }
+  .brules { position: relative; background: var(--frost); padding: 120px 0 120px; overflow-x: clip; }
+  .br-list { margin-top: 56px; }
+  .br { display: grid; height: 190px; column-gap: 0; transition: translate .9s var(--ease-io), opacity .9s var(--ease-io); }
+  .br + .br { margin-top: 20px; }
+  .is-l { grid-template-columns: 300px 640px; grid-template-areas: 'n t' 'n q' 'n b'; grid-template-rows: auto auto 1fr; }
+  .is-r { grid-template-columns: 260px 640px 1fr; grid-template-areas: '. t n' '. q n' '. b n'; grid-template-rows: auto auto 1fr; text-align: right; }
+  .br-n { grid-area: n; font-family: var(--f-h); font-weight: 900; font-size: 170px; line-height: 1; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 2px var(--pdeep); transition: color .7s var(--ease-io); }
+  .is-r .br-n { justify-self: end; }
+  .br-t { grid-area: t; padding-top: 22px; font-family: var(--f-h); font-weight: 800; font-size: 36px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .br-q { grid-area: q; margin: 12px 0 0; font-family: var(--f-h); font-weight: 600; font-size: 26px; line-height: 1.18; letter-spacing: -.01em; color: var(--pdeep); }
+  .br-by { grid-area: b; margin-top: 14px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
+  .br-typed { display: none; }
+  /* motion: start off to the side; type the quote; fill the number at the end. No motion: all shown and filled. */
+  :global(html:not(.motion)) .br-n, .is-filled .br-n { color: var(--pdeep); }
+  :global(html.motion) .br:not(.is-in) { opacity: 0; }
+  :global(html.motion) .is-l:not(.is-in) { translate: -80px 0; }
+  :global(html.motion) .is-r:not(.is-in) { translate: 80px 0; }
+  :global(html.motion) .br:not(.is-typed) .br-full { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :global(html.motion) .br:not(.is-typed) .br-typed { display: inline; }
+  :global(html.motion) .br:not(.is-typed) .br-q p { min-height: 1.18em; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .is-l { grid-template-columns: minmax(180px, .3fr) minmax(0, 1fr); }
+    .is-r { grid-template-columns: minmax(0, .15fr) minmax(0, 1fr) minmax(180px, .3fr); }
+    .br-n { font-size: clamp(120px, 14vw, 170px); }
+    .br { height: auto; min-height: 190px; }
+  }
+  @media (max-width: 767px) {
+    .brules { padding: 80px 0 93px; }
+    .br-list { margin-top: 36px; }
+    .br, .is-l, .is-r { height: auto; grid-template-columns: 110px minmax(0, 1fr); grid-template-areas: 'n t' 'q q' 'b b'; grid-template-rows: 80px auto auto; text-align: left; }
+    .br + .br { margin-top: 33px; }
+    .is-r .br-n { justify-self: start; }
+    .br-n { font-size: 80px; -webkit-text-stroke-width: 1.5px; }
+    .br-t { padding-top: 8px; font-size: 22px; }
+    .br-q { margin-top: 16px; font-size: 20px; }
+    .br-by { margin-top: 10px; font-size: 10px; line-height: 13px; }
+    :global(html.motion) .is-l:not(.is-in) { translate: -40px 0; }
+    :global(html.motion) .is-r:not(.is-in) { translate: 40px 0; }
+  }
+</style>

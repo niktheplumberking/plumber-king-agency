@@ -1,0 +1,150 @@
+---
+// /areas hero (Figma 721:565 desktop y 172 h 683 / 722:445 mobile y 158 h 870). Ink. Breadcrumbs, eyebrow, H1 (= SEO H1),
+// lead, the "Is my town covered?" call-back form (red "Call me back" = a call ask, so red is allowed), and the van photo
+// in a lying housing (cap band + port + highlight) with the "Glass van" spec plate (desktop only).
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Plate from '../kit/Plate.astro';
+import Img from '../ui/Img.astro';
+import { TOWNS } from '../../data/towns';
+const towns = [...TOWNS].sort((a, b) => a.name.localeCompare(b.name));
+---
+<section class="ahero on-ink" data-m-section data-m-hero aria-labelledby="ahero-h">
+  <div class="wrap ahero-grid">
+    <div class="ahero-copy">
+      <Breadcrumbs items={[{ label: 'Areas', href: '/areas' }]} dark class="ahero-crumbs" />
+      <Eyebrow text="One licensed crew · based in Largo" tone="light" t="1" class="ahero-eb ahero-eb--d" />
+      <Eyebrow text="One crew · based in Largo" tone="light" t="1" class="ahero-eb ahero-eb--m" />
+      <h1 id="ahero-h" class="ahero-h" data-t="2">Plumber Serving Largo<br /><span class="tone">&amp; Pinellas County</span></h1>
+      <p class="ahero-lead" data-t="3" data-fx="nudge">
+        <span class="d">One licensed crew, based in Largo, in the middle of Pinellas. Homes, rentals and businesses from Tarpon Springs to St. Pete Beach.</span>
+        <span class="m">One licensed crew, based in the middle of Pinellas. From Tarpon Springs to St. Pete Beach.</span>
+      </p>
+    </div>
+
+    <figure class="ahero-media" data-t="4" data-fx="frame">
+      <span class="vh-port" aria-hidden="true"></span>
+      <span class="vh-cap" aria-hidden="true"></span>
+      <div class="vh-glass">
+        <Img name="van-night" alt="The Glass Plumbing Services van at night, with the mascot and (727) 512-0673 on the side" priority
+          sizes="(min-width:1280px) 500px, (min-width:768px) 42vw, 86vw" box={500 / 360} boxM={334 / 220} widths={[340, 500, 680, 1000]} />
+        <span class="vh-hl" aria-hidden="true"></span>
+      </div>
+      <div class="vh-plate">
+        <Plate title="Glass van" rows={[['Base', 'Largo, FL'], ['Answers', '24/7'], ['Covers', 'All of Pinellas']]} w={240} pad={12} size={10} tsize={12} kx={72} pitch={19} shadow="ink" />
+      </div>
+    </figure>
+
+    <form class="ahero-form" id="estimate" action="/thank-you" method="get" data-estimate-form data-t="4" aria-labelledby="ahero-fh" novalidate>
+      <p id="ahero-fh" class="af-h">Is my town covered? Ask us</p>
+      <div class="af-row">
+        <label class="sr-only" for="af-name">Name</label>
+        <input id="af-name" class="af-in" name="name" type="text" autocomplete="name" placeholder="Name" required />
+        <label class="sr-only" for="af-phone">Phone</label>
+        <input id="af-phone" class="af-in" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Phone" required />
+        <label class="sr-only" for="af-town">Your town</label>
+        <span class="af-sel">
+          <select id="af-town" class="af-in" name="town" data-placeholder>
+            <option value="" selected>Your town</option>
+            {towns.map((t) => <option value={t.name}>{t.name}</option>)}
+            <option value="Other">Somewhere else</option>
+          </select>
+          <svg class="af-chev" viewBox="0 0 14 8" width="14" height="8" aria-hidden="true"><path d="M.9.9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </span>
+      </div>
+      <input type="hidden" name="form" value="areas-hero" />
+      <Btn look="call" type="submit" label="Call me back" block hm={54} class="af-btn" />
+      <p class="af-msg" data-form-msg role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .ahero { position: relative; background: var(--ink); color: var(--white); padding: 48px 0 110px; }
+  .ahero-grid { display: grid; grid-template-columns: 700px 500px; justify-content: space-between; grid-template-areas: 'copy media' 'form media'; align-items: start; }
+  .ahero-copy { grid-area: copy; }
+  .ahero-media { grid-area: media; }
+  .ahero-form { grid-area: form; }
+
+  /* Breadcrumbs: Figma "Home  /  Areas" JetBrains Mono Medium 11, +2 %, white 80 % */
+  .ahero :global(.ahero-crumbs ol) { font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; text-transform: none; color: rgb(255 255 255 / .8); gap: 9px; }
+  .ahero :global(.ahero-crumbs li) { gap: 9px; }
+  .ahero :global(.ahero-crumbs a) { padding: 0; text-decoration: none; color: inherit; }
+  .ahero :global(.ahero-crumbs a:hover) { text-decoration: underline; }
+  .ahero :global(.ahero-crumbs [aria-current]) { color: inherit; }
+  .ahero :global(.ahero-eb) { margin-top: 29px; }
+  .ahero :global(.ahero-eb--m) { display: none; }
+
+  .ahero-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -.02em; color: var(--white); }
+  .ahero-h .tone { color: var(--powder); }
+  .ahero-lead { margin-top: 22px; max-width: 580px; font-size: 19px; line-height: 1.5; color: var(--white); }
+  .m { display: none; }
+
+  /* call-back form card (620 x 192, powder offset 10/10) */
+  .ahero-form { position: relative; width: 620px; margin-top: 36px; padding: 22px 24px 24px; background: var(--white); border-radius: 6px; box-shadow: 10px 10px 0 var(--powder); color: var(--ink); }
+  .af-h { font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .af-row { display: grid; grid-template-columns: 170px 170px 208px; gap: 12px; margin-top: 11px; }
+  .af-in { width: 100%; height: 50px; padding: 0 13px; background: var(--frost); border: 1px solid var(--frost3); border-radius: 4px; font-family: var(--f-b); font-size: 15px; line-height: 1.5; color: var(--ink); appearance: none; -webkit-appearance: none; transition: border-color .3s, background-color .3s; }
+  .af-in::placeholder { color: var(--muted); opacity: 1; }
+  .af-in:hover { border-color: var(--muted2); }
+  .af-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 1px; background: var(--white); }
+  .af-in[aria-invalid='true'] { border-color: var(--red); }
+  select.af-in { padding-right: 40px; cursor: pointer; }
+  select.af-in:has(option[value='']:checked) { color: var(--muted); }
+  .af-sel { position: relative; display: block; }
+  .af-chev { position: absolute; right: 15px; top: 21px; color: var(--ink); pointer-events: none; }
+  .ahero-form :global(.af-btn) { margin-top: 16px; }
+  .af-msg { font-size: 14px; line-height: 1.4; color: var(--red); }
+  .af-msg:empty { display: none; }
+  .af-msg:not(:empty) { margin-top: 10px; }
+
+  /* lying housing: photo 500 x 360 r 28, white 2 px edge, powder offset 12/12; cap 532 x 28 at -16/-14; port 140 x 12 */
+  .ahero-media { position: relative; width: 500px; margin: 48px 0 0; }
+  .vh-glass { position: relative; height: 360px; border-radius: 28px; overflow: hidden; box-shadow: 12px 12px 0 var(--powder); background: var(--ink2); }
+  .vh-glass::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--white); border-radius: inherit; pointer-events: none; }
+  .vh-glass :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .vh-cap { position: absolute; z-index: 2; left: -16px; top: -14px; width: 532px; height: 28px; background: var(--steel2); border-radius: 4px; }
+  .vh-port { position: absolute; z-index: 2; left: 180px; top: -24px; width: 140px; height: 12px; background: var(--steel2); border-radius: 2px 2px 0 0; }
+  .vh-hl { position: absolute; left: 40px; top: 30px; width: 10px; height: 300px; border-radius: 5px; background: rgb(255 255 255 / .3); pointer-events: none; }
+  .vh-plate { position: absolute; z-index: 3; left: 280px; top: 300px; }
+
+  /* tablet: one column, photo beside nothing (stacked) */
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ahero { padding: 40px 0 96px; }
+    .ahero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); column-gap: 40px; }
+    .ahero-h { font-size: clamp(40px, 5.2vw, 56px); }
+    .ahero-media { width: 100%; }
+    .vh-glass { height: auto; aspect-ratio: 500 / 360; }
+    .vh-cap { left: -3%; width: 106%; }
+    .vh-port { left: 36%; width: 28%; }
+    .vh-plate { left: auto; right: -20px; top: auto; bottom: -48px; }
+    .ahero-form { width: 100%; grid-column: 1 / -1; }
+    .ahero-grid { grid-template-areas: 'copy media' 'form form'; }
+    .af-row { grid-template-columns: 1fr 1fr 1.2fr; }
+  }
+
+  @media (max-width: 767px) {
+    .ahero { padding: 24px 0 64px; }
+    .ahero-grid { display: block; }
+    .ahero :global(.ahero-crumbs ol) { font-size: 10px; line-height: 13px; letter-spacing: .01em; gap: 4px; }
+    .ahero :global(.ahero-crumbs li) { gap: 4px; }
+    .ahero :global(.ahero-eb) { margin-top: 15px; }
+    .ahero :global(.ahero-eb--d) { display: none; }
+    .ahero :global(.ahero-eb--m) { display: flex; }
+    .ahero-h { margin-top: 10px; font-size: 31px; line-height: 1.02; }
+    .ahero-lead { margin-top: 12px; font-size: 16px; }
+    .d { display: none; } .m { display: inline; }
+    .ahero-media { width: calc(100% - 16px); margin: 40px auto 0; }
+    .vh-glass { height: auto; aspect-ratio: 334 / 220; border-radius: 20px; box-shadow: 8px 8px 0 var(--powder); }
+    .vh-cap { left: -10px; top: -10px; width: calc(100% + 20px); height: 20px; border-radius: 3px; }
+    .vh-port { left: 36%; top: -18px; width: 94px; height: 10px; }
+    .vh-hl, .vh-plate { display: none; }
+    .ahero-form { width: 100%; margin-top: 30px; padding: 18px 18px 18px; box-shadow: 8px 8px 0 var(--powder); }
+    .af-h { font-size: 9px; line-height: 12px; }
+    .af-row { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+    .af-in { height: 48px; }
+    .af-chev { top: 20px; }
+    .ahero-form :global(.af-btn) { margin-top: 14px; }
+  }
+</style>

@@ -1,0 +1,234 @@
+---
+// Reviews by job (Figma 718:522 "Reviews" y 5086 h 1208 / mobile y 4897 h 1485). Job tabs filter the 16 Google reviews; the
+// active tab slides as an ink pill; the featured quote cross-fades with its photo; tickets tear in (the perforation draws)
+// as they scroll in. Quotes are exact substrings of reviews.ts (checked at build time below). Default tab = the Figma's
+// (Leaks & mains). Phone: the chip row scrolls sideways with the active chip first.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { REVIEWS } from '../../data/reviews';
+import { STARS } from './glyphs';
+
+type Ticket = { job: string; tag: string; by: string; q: string };
+type Panel = { k: string; tab: string; photo: string; alt: string; focus?: string; by: string; q: string; tickets: Ticket[] };
+const P: Panel[] = [
+  { k: 'all', tab: 'All', photo: 'van-night', alt: 'The Glass Plumbing van parked at night', by: 'Michael Marks',
+    q: 'Glass plumbing was fantastic from first contact to completion.  Zak and Chase were on time, explained everything in detail, made solid recommendations, and did the little extras (cleaning up, performance & look) that turn a really good outcome into a great one.',
+    tickets: [
+      { job: 'Plumbing work', tag: 'On time', by: 'Cary Cannon', q: 'He showed up on time, explained everything clearly, and did excellent work without overcharging.' },
+      { job: 'Big and small', tag: 'Go-to plumbers', by: 'Emily Van Den Langenberg', q: 'Through multiple moves, Kody and Zak are our go-to plumbers.' },
+    ] },
+  { k: 'hot', tab: 'Hot water', photo: 'water-heater-tank', alt: 'A newly installed tank water heater', by: 'Kevin Kelleman',
+    q: 'Needed a new Water Heater, called and had one installed the next day at a great price.',
+    tickets: [{ job: 'Water softener', tag: 'Same-day estimate', by: 'Parker L', q: 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.' }] },
+  { k: 'leaks', tab: 'Leaks & mains', photo: 'corroded-pipe', alt: 'A corroded pipe and valve before the repair', by: 'Jacob Gars',
+    q: 'My cousin broke my toilet and it started to spray everywhere like a fountain. My bathroom started to flood and I didn’t know what to do. Luckily, Kody Glass came in no time and fixed everything before it became disastrous!',
+    tickets: [
+      { job: 'Valve', tag: 'Next day', by: 'Jen James', q: 'I took a few pictures of the valve that needed replaced and he was at my home the next day !!' },
+      { job: 'Water main', tag: 'Emergency', by: 'Eduardo “EddieZoRz” Perea', q: 'As soon as he got here, he found the city water main and turned that off stopping the water leak inside.' },
+    ] },
+  { k: 'drains', tab: 'Drains & fixtures', photo: 'tub-job', alt: 'A bathtub and shower after a plumbing job', by: 'Cody Weaver',
+    q: 'Kody came out and fixed my shower in Seminole that refused to drain.',
+    tickets: [{ job: 'Shower faucet', tag: 'Same day', by: 'Seth Nye', q: 'Hired glass plumbing services for a leaky shower faucet, Mr. Glass was here same day to replace pipes/ fittings and new kit and left here good as new!' }] },
+  { k: 'remodel', tab: 'Remodel & commercial', photo: 'manifold-install', alt: 'A new water manifold installed on a remodel', by: 'Peter Van Buskirk',
+    q: 'These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.',
+    tickets: [
+      { job: 'New construction', tag: 'Contractor', by: 'John Rooney', q: 'He always does a great job and shows up when he says he’s going to, with the right equipment and attitude.' },
+      { job: 'Homes & rentals', tag: 'Commercial too', by: 'David Peek', q: 'These guys know their stuff - commercial or residential.' },
+      { job: 'New home', tag: 'Detail', by: 'Nelson Whitesell', q: 'His attention to detail has been excellent on my new home.' },
+    ] },
+];
+const byName = (n: string) => { const r = REVIEWS.find((x) => x.name === n); if (!r) throw new Error(`SvReviews: no review by ${n}`); return r; };
+const squash = (s: string) => s.replace(/\s+/g, ' ');
+for (const p of P) for (const [n, q] of [[p.by, p.q], ...p.tickets.map((t) => [t.by, t.q])]) {
+  if (!squash(byName(n).text).includes(squash(q))) throw new Error(`SvReviews: quote by ${n} is not word for word`);
+}
+const count = (p: Panel) => (p.k === 'all' ? REVIEWS.length : 1 + p.tickets.length);
+const ACTIVE = 'leaks';
+---
+<section class="rv seam-host" data-m-section data-rv>
+  <Seam from="var(--frost)" to="var(--white)" d={48} dm={32} />
+  <div class="wrap">
+    <div class="rv-top">
+      <div>
+        <Eyebrow text="Reviews by job" />
+        <h2 class="h2 rv-h" data-t="2" style="--h2:52px;--h2m:36px">Find your job.<br /><span class="tone">Read what they said.</span></h2>
+      </div>
+      <p class="rv-lead" data-t="3"><span class="d">We sorted the 16 Google reviews by the job each one talks about. Tap a job.</span><span class="m">The 16 Google reviews, sorted by the job each one talks about.</span></p>
+    </div>
+    <div class="rv-tabs" role="tablist" aria-label="Reviews by job" data-t="3" data-rv-tabs>
+      <span class="rv-pill" aria-hidden="true" data-rv-pill></span>
+      {P.map((p) => (
+        <button class:list={['rv-tab', p.k === ACTIVE && 'is-first']} type="button" role="tab" id={`rv-t-${p.k}`} aria-controls={`rv-p-${p.k}`}
+          aria-selected={p.k === ACTIVE ? 'true' : 'false'} tabindex={p.k === ACTIVE ? 0 : -1} data-rv-tab={p.k}>{p.tab} · {count(p)}</button>
+      ))}
+    </div>
+    <div class="rv-stage" data-rv-stage data-t="4">
+      {P.map((p) => (
+        <div class="rv-panel" id={`rv-p-${p.k}`} role="tabpanel" aria-labelledby={`rv-t-${p.k}`} hidden={p.k !== ACTIVE} data-rv-panel={p.k}>
+          <figure class="rv-feat">
+            <div class="rv-ph">
+              <Img name={p.photo} alt={p.alt} focus={p.focus} sizes="(min-width:1280px) 440px, (min-width:768px) 40vw, 92vw" box={440 / 400} boxM={350 / 240} widths={[360, 540, 720, 960]} />
+              <span class="rv-chip">Photo from the crew’s posts</span>
+            </div>
+            <div class="rv-qw">
+              <span class="rv-stars" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
+              <blockquote class="rv-q"><p>“{squash(p.q)}”</p></blockquote>
+              <figcaption class="rv-by">{p.by} · Google<span class="d"> review</span> · {byName(p.by).when}</figcaption>
+            </div>
+          </figure>
+          <ul class="rv-tks" role="list">
+            {p.tickets.map((t) => (
+              <li class="tk" data-tk>
+                <div class="tk-stub">
+                  <p class="tk-k">Job</p>
+                  <p class="tk-job">{t.job}</p>
+                  <p class="tk-tag">{t.tag}</p>
+                </div>
+                <span class="tk-perf" aria-hidden="true"></span><i class="tk-n tk-n1" aria-hidden="true"></i><i class="tk-n tk-n2" aria-hidden="true"></i>
+                <blockquote class="tk-body"><p class="tk-q">“{squash(t.q)}”</p><footer class="tk-by">{t.by} · Google</footer></blockquote>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <a class="sv-link rv-all" href="/reviews">All 16 reviews <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+<style>
+  .rv { position: relative; background: var(--white); padding: 110px 0 97px; }
+  .rv-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; }
+  .rv-h { margin-top: 16px; }
+  .rv-lead { width: 420px; margin-top: 42px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+  .rv-tabs { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 40px; padding: 4px; height: 56px; border-radius: 28px; background: var(--frost); }
+  .rv-pill { position: absolute; left: 0; top: 4px; height: 48px; width: var(--pw, 232px); translate: var(--px, 484px) 0; border-radius: 24px; background: var(--ink); transition: translate .45s var(--ease-io), width .45s var(--ease-io); }
+  .rv-tab { position: relative; z-index: 1; height: 48px; border: 0; border-radius: 24px; background: none; font-family: var(--f-b); font-weight: 700; font-size: 15px; line-height: 1.5; color: var(--ink); cursor: pointer; white-space: nowrap; transition: color .3s var(--ease-io); }
+  .rv-tab[aria-selected='true'] { color: var(--white); }
+  .rv-tab:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  html:not(.js) .rv-tab[aria-selected='true'] { background: var(--ink); }
+  .rv-stage { position: relative; margin-top: 48px; }
+  .rv-panel[hidden] { display: none; }
+  .rv-feat { display: grid; grid-template-columns: 440px minmax(0, 700px); justify-content: space-between; align-items: start; margin: 0; }
+  .rv-ph { position: relative; height: 400px; border-radius: 8px; overflow: hidden; box-shadow: 10px 10px 0 var(--powder); }
+  .rv-ph::after { content: ''; position: absolute; inset: 0; border-radius: 8px; box-shadow: inset 0 0 0 1.5px var(--ink); pointer-events: none; }
+  .rv-chip { position: absolute; left: 20px; bottom: 23px; height: 33px; padding: 0 14px; display: inline-flex; align-items: center; border-radius: 16.5px; background: var(--white); box-shadow: inset 0 0 0 1.2px var(--ink); font-weight: 600; font-size: 13px; line-height: 1.5; }
+  .rv-qw { padding-top: 8px; }
+  .rv-stars { display: block; width: 105px; height: 18px; }
+  .rv-stars :global(svg) { display: block; width: 100%; height: auto; }
+  .rv-q { margin: 18px 0 0; font-family: var(--f-h); font-weight: 700; font-size: 30px; line-height: 1.22; letter-spacing: -.02em; text-wrap: pretty; }
+  .rv-by { margin-top: 24px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
+  .rv-tks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 20px; margin: 56px 0 0; padding: 0; list-style: none; }
+
+  .tk { position: relative; display: grid; grid-template-columns: 170px minmax(0, 1fr); min-height: 200px; border-radius: 6px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .tk-stub { display: flex; flex-direction: column; padding: 28px 16px 30px 24px; }
+  .tk-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .tk-job { margin-top: 9px; font-family: var(--f-h); font-weight: 800; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; }
+  .tk-tag { margin-top: auto; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .tk-perf { position: absolute; left: 170px; top: 14px; bottom: 14px; width: 0; border-left: 1.5px dashed var(--ink); transform-origin: 50% 0; transition: scale .8s var(--ease-io); }
+  .tk-n { position: absolute; left: 158px; width: 24px; height: 24px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); clip-path: inset(50% 0 0 0); }
+  .tk-n1 { top: -12px; }
+  .tk-n2 { bottom: -12px; clip-path: inset(0 0 50% 0); }
+  .tk-body { margin: 0; padding: 28px 30px 28px 30px; display: flex; flex-direction: column; }
+  .tk-q { font-weight: 500; font-size: 17px; line-height: 1.45; }
+  .tk-by { margin-top: auto; padding-top: 16px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
+  :global(html.motion) .tk:not(.in) .tk-perf { scale: 1 0; }
+  .rv-all { display: inline-block; margin-top: 30px; padding: 10px 0; margin-bottom: -10px; font-weight: 700; font-size: 15px; line-height: 1.5; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rv-top { flex-direction: column; gap: 0; }
+    .rv-lead { width: auto; max-width: 560px; margin-top: 20px; }
+    .rv-tabs { display: flex; height: auto; overflow-x: auto; scrollbar-width: none; gap: 4px; }
+    .rv-tab { flex: none; padding: 0 18px; }
+    .rv-feat { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 40px; }
+    .rv-q { font-size: 24px; }
+    .rv-tks { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 767px) {
+    .rv { padding: 90px 0 87px; }
+    .rv-top { flex-direction: column; gap: 0; }
+    .rv-h { margin-top: 12px; }
+    .rv-lead { width: auto; margin-top: 14px; font-size: 15px; }
+    .rv-tabs { display: flex; gap: 8px; height: 44px; margin: 22px calc(-1 * var(--gutter)) 0 0; padding: 5px var(--gutter) 5px 0; border-radius: 0; background: none; overflow-x: auto; scrollbar-width: none; }
+    .rv-tabs::-webkit-scrollbar { display: none; }
+    .rv-pill { display: none; }
+    .rv-tab { flex: none; order: 1; height: 34px; padding: 0 14px; border-radius: 17px; background: var(--frost); box-shadow: inset 0 0 0 1.2px var(--frost3); font-weight: 600; font-size: 14px; position: relative; }
+    .rv-tab::after { content: ''; position: absolute; left: 0; right: 0; top: -5px; bottom: -5px; }
+    .rv-tab.is-first { order: 0; }
+    .rv-tab[aria-selected='true'] { background: var(--ink); box-shadow: inset 0 0 0 1.2px var(--ink); }
+    .rv-stage { margin-top: 24px; }
+    .rv-feat { grid-template-columns: minmax(0, 1fr); }
+    .rv-ph { height: 240px; box-shadow: 6px 6px 0 var(--powder); }
+    .rv-chip { left: 12px; bottom: 16px; height: 32px; border-radius: 16px; font-size: 12px; }
+    .rv-qw { padding-top: 28px; }
+    .rv-stars { width: 95px; height: 16px; }
+    .rv-q { margin-top: 14px; font-size: 21px; line-height: 1.24; }
+    .rv-by { margin-top: 14px; font-size: 10px; line-height: 13px; }
+    .rv-tks { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 31px; }
+    .tk { grid-template-columns: minmax(0, 1fr); grid-template-rows: 70px auto; min-height: 207px; }
+    .tk-stub { display: grid; grid-template-columns: 1fr auto; grid-template-rows: 14px auto; column-gap: 12px; padding: 18px 18px 0; }
+    .tk-k { font-size: 10px; line-height: 13px; }
+    .tk-job { grid-column: 1; grid-row: 2; margin-top: 1px; font-size: 20px; }
+    .tk-tag { grid-column: 2; grid-row: 2; align-self: center; margin: 0; font-size: 10px; line-height: 13px; }
+    .tk-perf { left: 14px; right: 14px; top: 70px; bottom: auto; width: auto; height: 0; border-left: 0; border-top: 1.5px dashed var(--ink); transform-origin: 0 50%; }
+    :global(html.motion) .tk:not(.in) .tk-perf { scale: 0 1; }
+    .tk-n { left: auto; top: 50px; bottom: auto; width: 26px; height: 40px; border-radius: 0 20px 20px 0; }
+    .tk-n1 { left: -13px; clip-path: inset(0 0 0 50%); border-radius: 50%; width: 26px; height: 26px; top: 57px; }
+    .tk-n2 { right: -13px; clip-path: inset(0 50% 0 0); border-radius: 50%; width: 26px; height: 26px; top: 57px; }
+    .tk-body { padding: 20px 18px 20px; }
+    .tk-q { font-weight: 400; font-size: 16px; line-height: 1.45; }
+    .tk-by { font-size: 10px; line-height: 13px; padding-top: 14px; }
+    .rv-all { margin-top: 22px; }
+  }
+</style>
+<script>
+  const root = document.querySelector<HTMLElement>('[data-rv]');
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-rv-tab]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-rv-panel]')];
+    const stage = root.querySelector<HTMLElement>('[data-rv-stage]')!;
+    const pill = root.querySelector<HTMLElement>('[data-rv-pill]')!;
+    const tabsEl = root.querySelector<HTMLElement>('[data-rv-tabs]')!;
+    const motion = () => document.documentElement.classList.contains('motion') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const place = () => {
+      const t = tabs.find((b) => b.getAttribute('aria-selected') === 'true'); if (!t) return;
+      pill.style.setProperty('--px', `${t.offsetLeft}px`); pill.style.setProperty('--pw', `${t.offsetWidth}px`);
+    };
+    // Tickets: the perforation draws when each ticket scrolls in.
+    const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io!.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' }) : null;
+    const watch = (p: HTMLElement) => p.querySelectorAll('[data-tk]').forEach((t) => (io ? io.observe(t) : t.classList.add('in')));
+    panels.forEach(watch);
+    let busy = false;
+    const select = (b: HTMLButtonElement, focus = false) => {
+      const cur = panels.find((p) => !p.hidden)!;
+      const next = panels.find((p) => p.dataset.rvPanel === b.dataset.rvTab)!;
+      tabs.forEach((t) => { const on = t === b; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      if (focus) b.focus();
+      place();
+      if (next === cur || busy) { if (next !== cur) { cur.hidden = true; next.hidden = false; } return; }
+      if (!motion()) { cur.hidden = true; next.hidden = false; return; }
+      busy = true;
+      const h0 = stage.offsetHeight;
+      cur.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: 'ease-in-out' }).onfinish = () => {
+        cur.hidden = true; next.hidden = false;
+        const h1 = stage.offsetHeight;
+        stage.animate([{ height: `${h0}px` }, { height: `${h1}px` }], { duration: 350, easing: 'cubic-bezier(.65,0,.35,1)' });
+        const a = next.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 350, easing: 'cubic-bezier(.65,0,.35,1)' });
+        a.onfinish = () => { busy = false; };
+      };
+    };
+    tabs.forEach((b, i) => {
+      b.addEventListener('click', () => { select(b); if (tabsEl.scrollWidth > tabsEl.clientWidth) b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: motion() ? 'smooth' : 'auto' }); });
+      b.addEventListener('keydown', (e) => {
+        const vis = [...tabs].sort((x, y) => x.offsetLeft - y.offsetLeft); const j = vis.indexOf(b);
+        let n = -1;
+        if (e.key === 'ArrowRight') n = (j + 1) % vis.length; else if (e.key === 'ArrowLeft') n = (j - 1 + vis.length) % vis.length;
+        else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = vis.length - 1;
+        if (n < 0) return; e.preventDefault(); select(vis[n], true);
+      });
+    });
+    place();
+    addEventListener('resize', place, { passive: true });
+    document.fonts?.ready.then(place);
+  }
+</script>

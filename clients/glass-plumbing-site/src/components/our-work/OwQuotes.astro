@@ -1,0 +1,42 @@
+---
+// Reviews strip (Figma "Reviews strip" y 4788 h 300 / mobile y 4052 h 484). Short quotes cut from reviews.ts, word for word.
+import '../contact/cx.css';
+import Stars from '../contact/Stars.astro';
+import { REVIEWS } from '../../data/reviews';
+const Q = [
+  { who: 'Peter Van Buskirk', q: 'These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.' },
+  { who: 'Nelson Whitesell', q: 'His attention to detail has been excellent on my new home.' },
+  { who: 'Greg Letsch', q: 'Zach was very professional and well versed in his knowledge.' },
+];
+// Guard: every quote must appear in the review word for word.
+Q.forEach(({ who, q }) => { const r = REVIEWS.find((x) => x.name === who); if (!r || !r.text.replace(/\s+/g, ' ').includes(q)) throw new Error(`OwQuotes: "${q}" is not in ${who}'s review`); });
+---
+<section class="cx-sec cx-ink2 oq on-ink" data-m-section aria-label="What customers say">
+  <ul class="wrap oq-l" role="list" data-t="3" data-stagger>
+    {Q.map((x) => (
+      <li class="oq-i">
+        <Stars w={75} label="5 out of 5 stars" />
+        <blockquote><p>“{x.q}”</p><footer>{x.who} · Google</footer></blockquote>
+      </li>
+    ))}
+  </ul>
+</section>
+<style>
+  .oq { padding: 66px 0 0; height: 300px; }
+  .oq-l { display: grid; grid-template-columns: repeat(3, 1fr); gap: 38px; margin: 0 auto; padding: 0; list-style: none; }
+  .oq-i { display: flex; flex-direction: column; height: 172px; }
+  .oq-i blockquote { margin: 16px 0 0; display: flex; flex-direction: column; flex: 1; }
+  .oq-i p { margin: 0; font: 500 17px/1.5 var(--f-b); color: var(--white); max-width: 370px; }
+  .oq-i footer { margin-top: auto; font: 500 11px/15px var(--f-m); letter-spacing: .01em; color: var(--powder); }
+  @media (min-width: 768px) and (max-width: 1279px) { .oq { height: auto; padding-bottom: 60px; } .oq-l { gap: 24px; } .oq-i p { font-size: 16px; } }
+  @media (max-width: 767px) {
+    .oq { height: auto; padding: 48px 0 35px; }
+    .oq-l { grid-template-columns: 1fr; gap: 0; }
+    .oq-i { height: auto; padding: 27px 0 15px; border-top: 1px solid rgba(255, 255, 255, .2); }
+    .oq-i:first-child { padding-top: 0; border-top: 0; }
+    .oq-i:last-child { padding-bottom: 0; }
+    .oq-i blockquote { margin-top: 12px; }
+    .oq-i p { font-size: 16px; }
+    .oq-i footer { margin-top: 12px; font-size: 10px; line-height: 13px; }
+  }
+</style>

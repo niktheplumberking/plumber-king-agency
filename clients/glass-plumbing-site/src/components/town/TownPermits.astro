@@ -1,0 +1,45 @@
+---
+// /areas/seminole "Local permits" (Figma y 3397 h 440 / mobile y 3167 h 405). White. Permit answer + "Pinellas permit
+// types" plate (phones: 3 rows, as the frame) + its source line. The Kody-to-confirm note stays off the site.
+import Plate from '../kit/Plate.astro';
+const rows: [string, string][] = [['Water heater swap', 'Permit needed'], ['Interior repipe', 'Permit needed'], ['Sewer / water service', 'Permit needed'], ['Who files', 'Glass Plumbing']];
+---
+<section class="tperm" data-m-section aria-labelledby="tperm-h">
+  <div class="wrap tq-grid">
+    <div>
+      <h2 id="tperm-h" class="tq-h" data-t="2">Do you need a plumbing<br /><span class="tone">permit in Seminole?</span></h2>
+      <p class="tq-p" data-t="3"><span class="d">Most replacement jobs, like a water heater or a repipe, need one. Which office issues it depends on the address: your city’s building office, or Pinellas County for unincorporated areas. We check the address and file it for you.</span><span class="m">Most replacement jobs, like a water heater or a repipe, need one. Your city or Pinellas County issues it, depending on the address. We check and file it.</span></p>
+    </div>
+    <div class="tq-side" data-t="4">
+      <Plate title="Pinellas permit types" rows={rows} w={460} pad={20} size={12} tsize={13} kx={220} pitch={22} shadow="ink" class="tq-plate d-b" />
+      <Plate title="Pinellas permit types" rows={rows.filter((r) => !r[0].startsWith('Sewer'))} wm={350} pad={14} size={10} tsize={12} kx={164} pitch={19} shadow="ink" class="tq-plate m-b" />
+      <p class="tq-src">Source: pinellas.gov/express-permits, read 17 Nov 2026</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tperm { position: relative; background: var(--white); padding: 110px 0 102px; }
+  .tq-grid { display: grid; grid-template-columns: 640px 460px; justify-content: space-between; align-items: start; }
+  .tq-h { font-family: var(--f-h); font-weight: 800; font-size: 44px; line-height: 1.02; letter-spacing: -.02em; color: var(--ink); }
+  .tq-h .tone { color: var(--pdeep); }
+  .tq-p { margin-top: 24px; max-width: 620px; font-size: 18px; line-height: 1.5; color: var(--ink); }
+  .tq-src { margin-top: 61px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .01em; color: var(--muted); }
+  .m { display: none; }
+  .tq-side :global(.m-b) { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tq-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); column-gap: 40px; }
+    .tq-h { font-size: clamp(34px, 4.2vw, 44px); }
+  }
+  @media (max-width: 767px) {
+    .tperm { padding: 56px 0 48px; }
+    .tq-grid { display: block; }
+    .tq-h { font-size: 26px; }
+    .tq-p { margin-top: 14px; font-size: 15px; }
+    .d { display: none; } .m { display: inline; }
+    .tq-side { margin-top: 24px; }
+    .tq-side :global(.d-b) { display: none; }
+    .tq-side :global(.m-b) { display: block; }
+    .tq-src { margin-top: 18px; font-size: 9px; line-height: 12px; }
+  }
+</style>

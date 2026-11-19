@@ -1,0 +1,121 @@
+---
+// /areas "Towns grouped" (Figma 721:525 y 1635 h 860 / mobile y 1787 h 752). Every town in towns.ts, in its group, with an
+// anchor id="town-<slug>" (other pages link /areas#town-<slug>). Underlined + arrow = the town has its own built page
+// (towns.ts `page`); the rest are plain text. Desktop: four columns. Mobile: an accordion (Central open, as in the frame);
+// a #town-<slug> link opens the group that holds it.
+import Head from './Head.astro';
+import { TOWNS, type Town } from '../../data/towns';
+const GROUPS: { key: Town['group']; label: string }[] = [
+  { key: 'North', label: 'North' }, { key: 'Central', label: 'Central' }, { key: 'South', label: 'South' }, { key: 'Beaches', label: 'Beaches' },
+];
+// Figma order inside each column (towns.ts is sorted by miles); any town not listed here keeps its towns.ts order after these.
+const ORDER = ['dunedin', 'palm-harbor', 'safety-harbor', 'oldsmar', 'tarpon-springs', 'largo', 'belleair', 'belleair-bluffs', 'clearwater', 'seminole',
+  'pinellas-park', 'kenneth-city', 'st-petersburg', 'gulfport', 'indian-rocks-beach', 'belleair-beach', 'madeira-beach', 'redington-shores', 'treasure-island', 'st-pete-beach'];
+const rank = (t: Town) => { const i = ORDER.indexOf(t.slug); return i < 0 ? 100 + TOWNS.indexOf(t) : i; };
+const groups = GROUPS.map((g) => ({ ...g, towns: TOWNS.filter((t) => t.group === g.key).sort((a, b) => rank(a) - rank(b)) }));
+const arrow = '<path d="M.9 5.9h12M7.9 10.9l5-5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
+---
+<section class="atowns" id="towns" data-m-section aria-labelledby="atowns-h">
+  <div class="wrap">
+    <Head eyebrow="Towns we serve" l1="Four parts of Pinellas." l2="One crew." id="atowns-h" />
+    <div class="tg-grid" data-towns>
+      {groups.map((g) => (
+        <div class:list={['tg', g.key === 'Central' && 'is-open']} data-tg data-t="4">
+          <h3 class="tg-h">
+            <span class="tg-name">{g.label}</span>
+            <span class="tg-n">{g.towns.length} towns</span>
+            <button class="tg-btn" type="button" aria-expanded={g.key === 'Central' ? 'true' : 'false'} aria-controls={`tg-${g.key.toLowerCase()}`} data-tg-btn>
+              <span class="sr-only">{g.label} towns</span><span class="tg-pm" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="tg-body" id={`tg-${g.key.toLowerCase()}`}>
+            <ul class="tg-list" role="list">
+              {g.towns.map((t) => (
+                <li class="tg-row" id={`town-${t.slug}`}>
+                  {t.page
+                    ? <a class="tg-link" href={t.page}><span>{t.name}</span><svg class="tg-ar" viewBox="0 0 14 12" width="14" height="12" aria-hidden="true" set:html={arrow} /></a>
+                    : <span class="tg-town">{t.name}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="tg-note" data-t="3"><span class="d">Underlined towns have their own page. The rest: call and ask, we likely cover you.</span><span class="m">Underlined towns have their own page.</span></p>
+  </div>
+</section>
+
+<script>
+  // Mobile accordion (< 768 px). Desktop shows every column open; the toggle buttons are display:none there.
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-tg]')];
+  const set = (g: HTMLElement, open: boolean) => {
+    g.classList.toggle('is-open', open);
+    g.querySelector('[data-tg-btn]')?.setAttribute('aria-expanded', String(open));
+  };
+  groups.forEach((g) => g.querySelector('[data-tg-btn]')?.addEventListener('click', () => set(g, !g.classList.contains('is-open'))));
+  // A /areas#town-<slug> link opens the group that holds the town (instant: no tween before the jump).
+  const reveal = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id.startsWith('town-')) return;
+    const row = document.getElementById(id);
+    const g = row?.closest<HTMLElement>('[data-tg]');
+    if (!row || !g || g.classList.contains('is-open')) return;
+    g.classList.add('tg-now'); set(g, true);
+    requestAnimationFrame(() => { g.classList.remove('tg-now'); row.scrollIntoView({ block: 'center' }); });
+  };
+  reveal();
+  window.addEventListener('hashchange', reveal);
+</script>
+
+<style>
+  .atowns { position: relative; background: var(--white); padding: 110px 0 77px; }
+  .tg-grid { display: grid; grid-template-columns: repeat(4, 282px); justify-content: space-between; margin-top: 52px; align-items: start; }
+  .tg { border-top: 6px solid var(--pdeep); border-radius: 2px 2px 0 0; }
+  .tg-h { position: relative; display: flex; align-items: flex-start; height: 66px; padding-top: 16px; border-bottom: 1px solid rgb(22 19 15 / .2); }
+  .tg-name { font-family: var(--f-h); font-weight: 800; font-size: 28px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .tg-n { position: absolute; left: 200px; top: 26px; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .tg-btn { display: none; }
+  .tg-body { display: grid; grid-template-rows: 1fr; }
+  .tg-list { min-height: 0; overflow: hidden; }
+  .tg-row { border-bottom: 1px solid rgb(22 19 15 / .2); scroll-margin-top: calc(var(--header-h) + 80px); }
+  .tg-town, .tg-link { display: flex; align-items: center; justify-content: space-between; min-height: 45px; padding: 11px 0 10px; font-size: 16px; line-height: 24px; color: var(--ink); }
+  .tg-link { font-weight: 700; }
+  .tg-link span { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; transition: color .35s; }
+  .tg-ar { flex: none; margin-right: 6px; color: var(--pdeep); transition: translate .35s var(--ease-io); }
+  .tg-link:hover span { color: var(--pdeep); }
+  .tg-link:hover .tg-ar { translate: 4px 0; }
+  .tg-row:target { background: linear-gradient(90deg, var(--frost), transparent); }
+  .tg-note { margin-top: 65px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .m { display: none; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .atowns { padding: 96px 0 72px; }
+    .tg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 32px; }
+  }
+  @media (max-width: 767px) {
+    .atowns { padding: 64px 0 64px; }
+    .tg-grid { display: block; margin-top: 24px; border-top: 1px solid rgb(22 19 15 / .2); }
+    .tg { border: 0; border-bottom: 1px solid rgb(22 19 15 / .2); border-radius: 0; }
+    .tg-h { height: 57px; padding-top: 15px; border: 0; }
+    .tg-name { font-size: 22px; }
+    .tg-n { left: 130px; top: 23px; font-size: 9px; line-height: 12px; }
+    .tg-btn { display: block; position: absolute; inset: 0; width: 100%; border-radius: 0; }
+    .tg-pm { position: absolute; right: 2px; top: 23px; width: 14px; height: 14px; }
+    .tg-pm::before, .tg-pm::after { content: ''; position: absolute; left: 0; top: 6px; width: 14px; height: 2.6px; border-radius: 1px; background: var(--pdeep); transition: rotate .6s var(--ease-io); }
+    .tg-pm::after { rotate: 90deg; }
+    .is-open .tg-pm::after { rotate: 0deg; }
+    .tg-body { grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows .6s var(--ease-io), visibility 0s linear .6s; }
+    .is-open .tg-body { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows .6s var(--ease-io), visibility 0s; }
+    .tg-now .tg-body { transition: none; }
+    .tg-list { padding: 0 4px 0 12px; }
+    .is-open .tg-list { padding-bottom: 10px; }
+    .tg-row { border: 0; }
+    .tg-town, .tg-link { min-height: 34px; padding: 0 0 11px; font-size: 15px; line-height: 23px; }
+    .tg-ar { margin-right: 0; }
+    .tg-link { position: relative; }
+    .tg-link::after { content: ''; position: absolute; inset: -5px 0; } /* 44 px tap height on a 34 px row */
+    .tg-note { margin-top: 15px; font-size: 13px; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

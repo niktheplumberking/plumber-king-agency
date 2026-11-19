@@ -1,0 +1,202 @@
+---
+// Home reviews (Figma 712:448 "Reviews" y 852 h 880; mobile 715:560 y 1094 h 1474). On top, straddling the hero edge, the
+// "What's going on?" call-back bar (a real form: problem chips = radios, name, phone, town -> forms.ts). Then the two Google
+// profiles as two housings (104 and 77, each its own count, never added), the Eduardo quote, three review slips (a swipe
+// row on phones) and the link to every review.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Housing from '../kit/Housing.astro';
+import { STARS, CHEVRON, quote } from './fig';
+import { SITE } from '../../data/site';
+import { TOWNS } from '../../data/towns';
+const g = SITE.google;
+const chips = ['Leak', 'Clogged drain', 'No hot water', 'Water heater', 'Sewer smell', 'Something else'];
+const lead = quote('Eduardo “EddieZoRz” Perea', 'As soon as he got here, he found the city water main and turned that off stopping the water leak inside.');
+const slips = [
+  quote('Cary Cannon', 'He showed up on time, explained everything clearly, and did excellent work without overcharging.'),
+  quote('Jordan Carlson', 'Zak was professional, punctual, and very friendly. They were able to fix our plumbing issue within 30 minutes!'),
+  quote('Emily Van Den Langenberg', 'Through multiple moves, Kody and Zak are our go-to plumbers. They are efficient, knowledgeable, and their prices are always fair.'),
+];
+const profiles = [
+  { n: g.a.count, v: g.a.value, url: g.a.url, label: 'Google profile 1' },
+  { n: g.b.count, v: g.b.value, url: g.b.url, label: 'Google profile 2' },
+];
+---
+<section class="rv" aria-labelledby="rv-h" data-m-section>
+  <div class="wrap">
+    <form class="cb" action="/thank-you" method="get" data-estimate-form aria-labelledby="cb-h" data-t="4" novalidate>
+      <div class="cb-chips">
+        <p id="cb-h" class="cb-h">What's going on?</p>
+        <div class="cb-opts" role="radiogroup" aria-labelledby="cb-h">
+          {chips.map((c) => (
+            <label class="chip"><input type="radio" name="problem" value={c} /><span>{c}</span></label>
+          ))}
+        </div>
+      </div>
+      <div class="cb-row">
+        <label class="sr-only" for="cb-name">Your name</label>
+        <input id="cb-name" class="cb-in" type="text" name="name" autocomplete="name" placeholder="Your name" required />
+        <label class="sr-only" for="cb-phone">Phone number</label>
+        <input id="cb-phone" class="cb-in" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="Phone number" required />
+        <label class="sr-only" for="cb-town">Town</label>
+        <span class="cb-sel">
+          <select id="cb-town" class="cb-in" name="town" data-placeholder>
+            <option value="" selected>Town</option>
+            {TOWNS.map((t) => <option value={t.name}>{t.name}</option>)}
+            <option value="Other">Somewhere else</option>
+          </select>
+          <Fragment set:html={CHEVRON} />
+        </span>
+        <Btn type="submit" label="Call me back" size="s" w={296} wm={310} hm={52} shadow="powder" class="cb-btn" />
+      </div>
+      <p class="cb-msg" data-form-msg role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="rv-grid">
+      <div class="rv-head">
+        <Eyebrow tone="pdeep" t="1" text="Google reviews · read 17 Nov 2026" />
+        <h2 id="rv-h" class="h2 rv-h" data-t="2">Two Google profiles. <span class="tone">Both 5.0.</span></h2>
+        <p class="rv-lead" data-t="3">Same crew, two Google listings. We show both, exactly as Google does, and never add them together.</p>
+      </div>
+      <figure class="rv-q" data-t="3">
+        <blockquote><p>“{lead.text}”</p></blockquote>
+        <figcaption>{lead.name} · Google<span class="d"> · burst water main</span></figcaption>
+      </figure>
+      <ul class="cans" role="list" data-t="4" data-stagger>
+        {profiles.map((p) => (
+          <li>
+            <a href={p.url} target="_blank" rel="noopener" class="can-a">
+              <Housing w={216} h={330} wm={166} hm={236} fill={128.9 / 309} cap={23} capm={17} fluid class="pcan">
+                <span class="pnum"><b data-count={p.n}>{p.n}</b><span class="pk">reviews</span></span>
+                <span class="prate"><b>{p.v}</b><Fragment set:html={STARS(85, 14)} /></span>
+              </Housing>
+              <span class="plabel">{p.label}<span class="sr-only">: {p.v} stars from {p.n} reviews on Google (opens in a new tab)</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="slips-wrap" data-carousel>
+        <ul class="slips" role="list" data-track data-t="4" data-stagger>
+          {slips.map((s) => (
+            <li class="slip" data-slide>
+              <Fragment set:html={STARS(80, 13)} />
+              <blockquote><p>“{s.text}”</p></blockquote>
+              <p class="sn">{s.name}</p>
+              <p class="sg">Google</p>
+            </li>
+          ))}
+        </ul>
+        <div class="dots" aria-hidden="true">{slips.map((_, i) => <span class:list={['dot', { on: i === 0 }]} data-dot></span>)}<span class="swipe">Swipe for more</span></div>
+      </div>
+      <a class="more" href="/reviews" data-t="3">Read every review on Google →</a>
+    </div>
+  </div>
+</section>
+<style>
+  .rv { position: relative; z-index: 3; display: flow-root; background: var(--frost); padding-bottom: 66px; }
+  /* call-back bar: Figma x 120, y -72, 1200 x 156 */
+  .cb { position: relative; margin-top: -72px; height: 156px; padding: 20px 32px 0; background: var(--ink); border-radius: 6px; box-shadow: 10px 10px 0 var(--powder); color: var(--white); }
+  .cb-chips { display: flex; align-items: center; height: 34px; }
+  .cb-opts { display: flex; gap: 10px; }
+  .cb-h { flex: none; width: 218px; font-family: var(--f-h); font-weight: 800; font-size: 22px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); }
+  .chip { position: relative; display: inline-flex; align-items: center; height: 34px; padding: 0 13px; border: 1.2px solid var(--white); border-radius: 17px; font-family: var(--f-b); font-weight: 600; font-size: 14px; line-height: 21px; color: var(--white); cursor: pointer; transition: background-color .35s ease-in-out, color .35s ease-in-out; white-space: nowrap; }
+  .chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .chip:hover { background: rgb(255 255 255 / .12); }
+  .chip:has(input:checked) { background: var(--white); color: var(--ink); }
+  .chip:has(input:focus-visible) { outline: 3px solid var(--powder); outline-offset: 3px; }
+  .cb-row { display: flex; gap: 12px; margin-top: 30px; }
+  .cb-in { width: 300px; height: 48px; padding: 0 16px; border: 0; border-radius: 4px; background: var(--white); color: var(--ink); font-family: var(--f-b); font-size: 15px; line-height: 23px; }
+  .cb-in::placeholder { color: var(--muted); opacity: 1; }
+  .cb-in[aria-invalid='true'] { outline: 2px solid var(--red); outline-offset: 2px; }
+  .cb-sel { position: relative; display: block; }
+  .cb-sel select { width: 200px; appearance: none; -webkit-appearance: none; padding-right: 40px; }
+  .cb-sel select:has(option[value='']:checked) { color: var(--muted); }
+  .cb-sel :global(svg) { position: absolute; right: 18px; top: 20px; pointer-events: none; color: var(--ink); }
+  .cb-row :global(.cb-btn) { margin-left: 4px; }
+  .cb-msg { position: absolute; left: 32px; bottom: 4px; font-size: 13px; line-height: 18px; color: var(--powder); }
+  .cb-msg:empty { display: none; }
+
+  .rv-grid { display: grid; grid-template-columns: 520px 680px; grid-template-areas: 'head quote' 'cans slips' 'cans more'; margin-top: 66px; }
+  .rv-head { grid-area: head; } .rv-q { grid-area: quote; } .cans { grid-area: cans; } .slips-wrap { grid-area: slips; } .more { grid-area: more; }
+  .cans, .slips-wrap { margin-top: 65px; }
+  .rv-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 46px; line-height: 1.02; letter-spacing: -.02em; color: var(--ink); }
+  .rv-h .tone { display: block; color: var(--pdeep); }
+  .rv-lead { margin-top: 16px; width: 470px; font-size: 17px; line-height: 1.5; color: var(--ink); }
+  .rv-q { margin-top: 26px; }
+  .rv-q p { font-family: var(--f-h); font-weight: 700; font-size: 32px; line-height: 1.2; letter-spacing: -.02em; color: var(--ink); }
+  .rv-q figcaption { margin-top: 60px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+
+  .cans { display: flex; align-self: start; gap: 32px; margin: 65px 0 0; padding: 0; list-style: none; }
+  .cans li { width: 216px; }
+  .can-a { display: block; color: var(--ink); }
+  .can-a :global(.pcan) { transition: translate .35s ease-in-out; }
+  .can-a:hover :global(.pcan) { translate: 0 -4px; }
+  .pnum, .prate { position: absolute; left: 48px; z-index: 2; display: grid; }
+  .pnum { top: 31px; }
+  .pnum b { font-family: var(--f-h); font-weight: 800; font-size: 72px; line-height: 1.04; letter-spacing: -.02em; }
+  .pk { margin-top: 9px; margin-left: 2px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .prate { top: 191px; }
+  .prate b { font-family: var(--f-h); font-weight: 800; font-size: 40px; line-height: 1.04; letter-spacing: -.02em; }
+  .prate :global(.stars) { margin: 10px 0 0 2px; }
+  .plabel { display: block; margin-top: 24px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+
+  .slips { display: flex; gap: 16px; margin: 0; padding: 0; list-style: none; }
+  .slip { position: relative; width: 216px; height: 330px; flex: none; padding: 28px 19px 0; background: var(--white); border: 1px solid var(--frost3); border-radius: 4px; overflow: hidden; }
+  .slip::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--powder); }
+  .slip blockquote p { margin-top: 15px; font-size: 15px; line-height: 1.48; color: var(--ink); }
+  .sn { position: absolute; left: 20px; top: 248px; width: 176px; font-weight: 700; font-size: 14px; line-height: 21px; }
+  .sg { position: absolute; left: 20px; bottom: 21px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .slip:has(.sn) .sg { top: auto; }
+  .dots { display: none; }
+  .more { justify-self: start; margin-top: 29px; font-weight: 700; font-size: 15px; line-height: 23px; color: var(--pdeep); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .more:hover { color: var(--ink); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .cb { height: auto; padding-bottom: 24px; }
+    .cb-chips { flex-wrap: wrap; height: auto; row-gap: 10px; }
+    .cb-opts { flex-wrap: wrap; }
+    .cb-row { flex-wrap: wrap; }
+    .cb-in { width: calc(50% - 6px); }
+    .cb-sel { width: calc(50% - 6px); } .cb-sel select { width: 100%; }
+    .rv-grid { grid-template-columns: 1fr; grid-template-areas: 'head' 'quote' 'cans' 'slips' 'more'; }
+    .rv-q { margin-top: 40px; }
+    .rv-lead { width: auto; }
+    .slips-wrap { overflow-x: auto; scroll-snap-type: x mandatory; }
+    .slip { scroll-snap-align: start; }
+  }
+  @media (max-width: 767px) {
+    .rv-q figcaption .d { display: none; }
+    .rv { padding-bottom: 80px; }
+    .cb { height: auto; margin-top: -72px; padding: 20px 20px 24px; box-shadow: 8px 8px 0 var(--powder); }
+    .cb-chips { display: block; height: auto; }
+    .cb-h { width: auto; margin: 0 0 18px; font-size: 20px; }
+    .cb-opts { flex-wrap: wrap; gap: 8px; }
+    .chip { height: 44px; padding: 0 11px; border-radius: 22px; font-size: 13px; line-height: 20px; }
+    .cb-row { flex-direction: column; gap: 10px; margin-top: 21px; }
+    .cb-in { width: 100%; }
+    .cb-sel { display: none; }
+    .cb-row :global(.cb-btn) { margin: 0; }
+    .cb-msg { position: static; margin-top: 8px; }
+    .rv-grid { display: flex; flex-direction: column; margin-top: 48px; }
+    .rv-h { margin-top: 12px; font-size: 34px; }
+    .rv-lead { width: auto; margin-top: 12px; font-size: 15px; }
+    .cans { order: 1; align-self: stretch; gap: 16px; margin-top: 40px; }
+    .rv-q { order: 2; margin-top: 40px; }
+    .rv-q p { font-size: 24px; line-height: 1.22; }
+    .rv-q figcaption { margin-top: 12px; font-size: 10px; line-height: 13px; }
+    .cans li { width: calc(50% - 8px); }
+    .pnum { left: 24.1%; top: 15%; } .prate { left: 24.1%; top: 64.5%; }
+    .pnum b { font-size: 52px; } .pk { margin-top: 4px; font-size: 10px; line-height: 13px; }
+    .prate b { font-size: 30px; } .prate :global(.stars) { width: 70px; height: auto; margin-top: 6px; }
+    .plabel { margin-top: 14px; font-size: 10px; line-height: 13px; }
+    .slips-wrap { order: 3; margin: 32px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+    .slips-wrap::-webkit-scrollbar { display: none; }
+    .slip { width: 280px; height: 250px; padding: 26px 20px 0; scroll-snap-align: start; }
+    .sn { top: 190px; } .sg { bottom: 20px; font-size: 9px; }
+    .dots { display: flex; align-items: center; gap: 6px; margin-top: 16px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--frost3); transition: background-color .35s ease-in-out; }
+    .dot.on, .dot[aria-current='true'] { background: var(--ink); }
+    .swipe { margin-left: 10px; font-family: var(--f-m); font-weight: 500; font-size: 9px; line-height: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .more { order: 4; margin-top: 18px; }
+  }
+</style>

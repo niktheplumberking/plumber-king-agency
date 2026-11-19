@@ -1,0 +1,70 @@
+---
+// /areas "Distance" (Figma 721:525 y 2495 h 640 / mobile y 2539 h 550). Ink2. Five towns as water tubes, straight-line
+// miles from towns.ts (Census points, NOT driving miles: the lead says so). Signature: each tube fills with water as it
+// enters (clip from the left, 1.2 s ease-in-out, 0.12 s apart). Tube scale: 15.2 mi = full (Figma: 596 px for 15.2 mi).
+import Head from './Head.astro';
+import { TOWNS } from '../../data/towns';
+const pick = ['largo', 'clearwater', 'seminole', 'dunedin', 'st-petersburg'];
+const rows = pick.map((s) => TOWNS.find((t) => t.slug === s)!).filter(Boolean);
+const FULL = 15.2;
+---
+<section class="adist" data-m-section aria-labelledby="adist-h">
+  <div class="wrap adist-grid">
+    <div class="adist-copy">
+      <Head eyebrow="As the crow flies" l1="Largo sits in the" l2="middle of Pinellas." dark id="adist-h" />
+      <p class="adist-lead" data-t="3"><span class="d">Straight-line miles from our Largo base, measured on Census map points. Not driving miles, and not a promise of arrival time.</span><span class="m">Straight-line miles from our base on Census map points. Not driving miles or arrival times.</span></p>
+    </div>
+    <ul class="adist-list" role="list" data-tubes>
+      {rows.map((t, i) => (
+        <li class="dt" style={`--w:${Math.min(1, t.mi / FULL).toFixed(4)};--i:${i}`}>
+          <span class="dt-name">{t.name}</span>
+          <span class="dt-mi">{t.mi} mi<span class="sr-only"> in a straight line from Largo</span></span>
+          <span class="dt-tube" aria-hidden="true"><span class="dt-water"><span class="dt-shine"></span></span></span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<script>
+  import { onEnter } from './inview';
+  document.querySelectorAll<HTMLElement>('[data-tubes]').forEach((l) => onEnter(l, () => l.classList.add('is-in')));
+</script>
+
+<style>
+  .adist { position: relative; background: var(--ink2); color: var(--white); padding: 110px 0 72px; }
+  .adist-grid { display: grid; grid-template-columns: 500px 600px; justify-content: space-between; align-items: start; }
+  .adist-lead { margin-top: 42px; font-size: 16px; line-height: 1.5; color: rgb(255 255 255 / .9); }
+  .m { display: none; }
+  .adist-list { margin-top: 10px; }
+  .dt { position: relative; display: grid; grid-template-columns: 1fr 40px; padding-top: 0; }
+  .dt + .dt { margin-top: 32px; }
+  .dt-name { font-family: var(--f-h); font-weight: 800; font-size: 20px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); }
+  .dt-mi { justify-self: start; padding-top: 4px; font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 16px; letter-spacing: .06em; color: var(--powder); white-space: nowrap; }
+  .dt-tube { grid-column: 1 / -1; position: relative; display: block; height: 30px; margin-top: 13px; background: var(--ink); border: 2px solid var(--steel2); border-radius: 15px; }
+  .dt-water { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--w) * 100%); min-width: 26px; border-radius: 13px; background: var(--powder);
+    transition: clip-path 1.2s var(--ease-io) calc(var(--i) * .12s); clip-path: inset(0 0 0 0 round 13px); }
+  .dt-shine { position: absolute; left: 10px; right: 10px; top: 4px; height: 3px; background: rgb(255 255 255 / .6); }
+  :global(html.motion) .adist-list:not(.is-in) .dt-water { clip-path: inset(0 100% 0 0 round 13px); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .adist { padding: 96px 0 80px; }
+    .adist-grid { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); column-gap: 48px; }
+  }
+  @media (max-width: 767px) {
+    .adist { padding: 48px 0 20px; }
+    .adist-grid { display: flex; flex-direction: column; }
+    .adist-copy { display: contents; }
+    .adist-lead { order: 3; margin-top: 18px; font-size: 13px; }
+    .d { display: none; } .m { display: inline; }
+    .adist-list { order: 2; align-self: stretch; margin-top: 28px; }
+    .dt { grid-template-columns: 1fr 50px; }
+    .dt + .dt { margin-top: 18px; }
+    .dt-name { font-size: 16px; }
+    .dt-mi { justify-self: end; padding-top: 3px; font-size: 10px; line-height: 13px; }
+    .dt-tube { height: 22px; margin-top: 9px; border-radius: 11px; }
+    .dt-water { min-width: 18px; border-radius: 9px; clip-path: inset(0 0 0 0 round 9px); }
+    :global(html.motion) .adist-list:not(.is-in) .dt-water { clip-path: inset(0 100% 0 0 round 9px); }
+    .dt-shine { display: none; }
+  }
+</style>

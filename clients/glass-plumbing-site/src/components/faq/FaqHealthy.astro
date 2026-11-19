@@ -1,0 +1,129 @@
+---
+// "Keep it healthy" (Figma y 3791 h 874 / mobile y 2697 h 1167). Ink band, meniscus rise from the white Questions band.
+// INTERACTION note (884:628): each glyph draws itself (stroke dash, 1 s) as its card scrolls in; hover lifts the card and
+// turns its call line underlined. The draw runs only with motion on (html.motion); reduced motion / no JS = drawn.
+// Card 02 is powder (ink type), 01 and 03 are ink2 with a hairline. Glyph paths are the Figma vectors.
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Seam from '../kit/Seam.astro';
+import { SITE } from '../../data/site';
+const cards = [
+  { n: '01', t: 'Before storm season', d: 'Find your main shut-off and label it.', q: 'Can’t find it or it won’t turn?', g: 'storm' },
+  { n: '02', t: 'Hard water', d: 'Scale builds up fast at 217 ppm.', q: 'Tank popping or running out of hot water?', g: 'scale', powder: true },
+  { n: '03', t: 'Cold nights under 32°F', d: 'Open sink cabinets and let outdoor faucets drip.', q: 'Pipe split anyway?', g: 'cold' },
+];
+---
+<section class="cx-sec cx-ink fk on-ink" data-m-section aria-labelledby="fk-h">
+  <Seam from="var(--white)" to="var(--ink)" flip />
+  <div class="wrap">
+    <div class="shead">
+      <Eyebrow text="Keep it healthy" tone="light" />
+      <h2 id="fk-h" class="cx-h fk-h" data-t="2"><span class="ln">Three habits.</span> <span class="ln tone">Then call us.</span></h2>
+    </div>
+    <ul class="fk-l" role="list" data-t="3" data-stagger>
+      {cards.map((c) => (
+        <li class:list={['fk-c', c.powder && 'is-powder']}>
+          <p class="fk-n" aria-hidden="true">{c.n}</p>
+          {c.g === 'storm' && (
+            <svg class="fk-g" viewBox="0 0 122 122" aria-hidden="true" data-draw>
+              <path pathLength="1" d="M15.6132 54.6996C-3.58676 54.6996 -3.58676 23.4996 18.0132 23.4996C20.4132 -0.500391 56.4132 -7.70039 66.0132 16.2996C90.0132 11.4996 104.413 33.0996 90.0132 54.6996H15.6132Z" />
+              <path pathLength="1" d="M13.5 1.50049L1.5 23.1005H18.3L6.3 44.7005" />
+            </svg>
+          )}
+          {c.g === 'scale' && (
+            <svg class="fk-g" viewBox="0 0 122 122" aria-hidden="true" data-draw>
+              <path pathLength="1" d="M39.9 1.5C39.9 1.5 1.5 49.5 1.5 73.5C1.5 95.1 18.3 109.5 39.9 109.5C61.5 109.5 78.3 95.1 78.3 73.5C78.3 49.5 39.9 1.5 39.9 1.5Z" />
+              <rect class="f" x="37.5" y="73.5" width="48" height="3.6" rx="1.8" />
+              <rect class="f" x="39.9" y="85.5" width="43.2" height="3.6" rx="1.8" />
+              <rect class="f" x="42.3" y="97.5" width="38.4" height="3.6" rx="1.8" />
+            </svg>
+          )}
+          {c.g === 'cold' && (
+            <svg class="fk-g" viewBox="0 0 120 120" aria-hidden="true" data-draw>
+              <rect pathLength="1" x="49.5" y="6.3" width="21" height="76.2" rx="10.5" />
+              <circle pathLength="1" cx="60" cy="96" r="22.5" />
+              <circle class="f" cx="60" cy="96" r="12" />
+              <rect class="f" x="56.4" y="36" width="7.2" height="52.8" rx="3" />
+              <rect class="f" x="76.8" y="14.4" width="12" height="3" />
+              <rect class="f" x="76.8" y="28.8" width="12" height="3" />
+              <rect class="f" x="76.8" y="43.2" width="12" height="3" />
+              <rect class="f" x="76.8" y="57.6" width="12" height="3" />
+            </svg>
+          )}
+          <h3 class="fk-t">{c.t}</h3>
+          <p class="fk-d">{c.d}</p>
+          <div class="fk-f">
+            <p class="fk-q">{c.q}</p>
+            <a class="fk-call" href={SITE.tel}>{`Call ${SITE.phone} `}<span aria-hidden="true">→</span></a>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <p class="fk-src" data-t="4"><span class="d">Cold-night steps: Pinellas County and the Florida Division of Emergency Management. Freeze warning = below 32°F (National Weather Service).</span><span class="m">Sources: Pinellas County, Florida Division of Emergency Management, National Weather Service.</span></p>
+  </div>
+</section>
+<script>
+  // Glyphs draw in (1 s stroke dash) when their card enters. Without html.motion the CSS shows them drawn.
+  const glyphs = document.querySelectorAll<SVGElement>('.fk-g[data-draw]');
+  if (glyphs.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-drawn'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -15% 0px' });
+    glyphs.forEach((g) => io.observe(g));
+  } else glyphs.forEach((g) => g.classList.add('is-drawn'));
+</script>
+<style>
+  .fk { padding: 120px 0 0; height: 874px; box-sizing: border-box; }
+  .fk-h { --fs: 52px; --fs-m: 34px; margin-top: 16px; }
+  .fk-l { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 48px 0 0; padding: 0; list-style: none; }
+  .fk-c { position: relative; display: flex; flex-direction: column; height: 420px; padding: 28px 28px 21px; box-sizing: border-box; border-radius: 10px;
+    background: var(--ink2); box-shadow: inset 0 0 0 1px #322e27; color: var(--white); transition: translate .3s var(--ease-out, ease); }
+  .fk-c.is-powder { background: var(--powder); box-shadow: none; color: var(--ink); }
+  .fk-n { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; color: var(--powder); }
+  .is-powder .fk-n { color: var(--ink); }
+  .fk-g { position: absolute; right: 28px; top: 28px; width: 120px; height: 120px; overflow: visible; }
+  .fk-g path, .fk-g rect:not(.f), .fk-g circle:not(.f) { fill: none; stroke: var(--powder); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .fk-g .f { fill: var(--powder); }
+  .is-powder .fk-g path, .is-powder .fk-g rect:not(.f), .is-powder .fk-g circle:not(.f) { stroke: var(--ink); }
+  .is-powder .fk-g .f { fill: var(--ink); }
+  :global(html.motion) .fk-g [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1s var(--ease-io, ease-in-out); }
+  :global(html.motion) .fk-g .f { opacity: 0; transition: opacity .4s .7s; }
+  :global(html.motion) .fk-g.is-drawn [pathLength] { stroke-dashoffset: 0; }
+  :global(html.motion) .fk-g.is-drawn .f { opacity: 1; }
+  .fk-t { margin: 137px 0 0; min-height: 60px; max-width: 320px; font: 800 28px/1.06 var(--f-h); letter-spacing: -0.02em; }
+  .fk-d { margin: 20px 0 0; max-width: 320px; font: 400 16px/1.5 var(--f-b); opacity: .9; }
+  .fk-f { margin-top: auto; padding-top: 13px; border-top: 1px solid rgba(255, 255, 255, .3); }
+  .is-powder .fk-f { border-top-color: rgba(22, 19, 15, .3); }
+  .fk-q { margin: 0; font: 600 14px/1.5 var(--f-b); opacity: .8; }
+  .fk-call { display: inline-flex; align-items: center; align-self: flex-start; min-height: 44px; margin: 2px 0 -10px; font: 700 15px/1.5 var(--f-b); color: var(--powder);
+    text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+  .is-powder .fk-call { color: var(--ink); }
+  .fk-call:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) {
+    .fk-call { text-decoration-color: transparent; transition: text-decoration-color .2s; }
+    .fk-c:hover { translate: 0 -6px; }
+    .fk-c:hover .fk-call, .fk-call:focus-visible { text-decoration-color: currentColor; }
+  }
+  .fk-src { margin: 28px 0 0; font: 500 10px/13px var(--f-m); letter-spacing: .02em; color: rgba(255, 255, 255, .6); }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fk { height: auto; padding-bottom: 100px; }
+    .fk-l { gap: 16px; }
+    .fk-c { padding: 22px; }
+    .fk-g { right: 22px; top: 22px; width: 88px; height: 88px; }
+    .fk-t { margin-top: 110px; font-size: 24px; }
+  }
+  @media (max-width: 767px) {
+    .fk { height: auto; padding: 80px 0 90px; }
+    .fk-h { margin-top: 12px; }
+    .fk-l { grid-template-columns: 1fr; gap: 14px; margin-top: 28px; }
+    .fk-c { height: auto; padding: 20px 20px 15px; }
+    .fk-n { font-size: 10px; line-height: 13px; }
+    .fk-g { right: 20px; top: 20px; width: 80px; height: 80px; }
+    .fk-t { margin-top: 83px; min-height: 0; max-width: 300px; font-size: 22px; line-height: 1.04; }
+    .fk-d { margin-top: 10px; font-size: 15px; line-height: 23px; }
+    .fk-f { margin-top: 14px; padding-top: 0; border-top: 0; }
+    .fk-q { font-size: 13px; line-height: 20px; }
+    .fk-call { margin: 1px 0 -10px; min-height: 44px; }
+    .d { display: none; } .m { display: inline; }
+    .fk-src { margin-top: 28px; font-size: 9px; line-height: 12px; letter-spacing: .01em; }
+  }
+</style>

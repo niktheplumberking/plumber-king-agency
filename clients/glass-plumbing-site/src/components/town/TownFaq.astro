@@ -1,0 +1,69 @@
+---
+// /areas/seminole "City FAQ" (Figma y 5027 h 916 / mobile y 4618 h 900). Frost. Three answer rows, each with a big outlined
+// one-word answer (Schibsted Black, 2 px stroke: ink, "217 ppm" pdeep). INTERACTION note: each word draws its outline in
+// (stroke dash, 1.2 s) when its row scrolls in, then fills powder-deep on hover. Reduced motion / no JS: drawn, static.
+// Phones put the word above the question. FAQPage JSON-LD = exactly the visible questions and answers.
+import Head from '../areas/Head.astro';
+import { FAQ } from './data';
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQ.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) };
+---
+<section class="tfaq" data-m-section aria-labelledby="tfaq-h">
+  <div class="wrap">
+    <Head eyebrow="Seminole questions" l1="Three things" l2="Seminole asks." sizeM={34} id="tfaq-h" />
+    <dl class="tq-list" data-t="4">
+      {FAQ.map((f, i) => (
+        <div class:list={['tq-row', `is-${f.tone}`]} data-word-row>
+          <dt class="tq-q">{f.q}</dt>
+          <dd class="tq-word" style={`--s:${f.s}px;--sm:${f.sm}px;--ww:${f.w};--wm:${Math.round(f.w * f.sm / f.s) + 8}px`}>
+            <svg viewBox={`0 0 ${f.w + 8} ${f.s + 8}`} aria-hidden="true"><text x="4" y={Math.round(f.s * 0.86) + 4}>{f.word}</text></svg>
+            <span class="sr-only">In short: {f.word}.</span>
+          </dd>
+          <dd class="tq-a">{f.a}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</section>
+
+<script>
+  import { onEnter } from '../areas/inview';
+  document.querySelectorAll<HTMLElement>('[data-word-row]').forEach((row) => onEnter(row, () => row.classList.add('is-in'), '0px 0px -12% 0px'));
+</script>
+
+<style>
+  @font-face { font-family: 'Schibsted Grotesk'; font-style: normal; font-weight: 900; font-display: swap; src: url('/fonts/schibsted-grotesk-latin-900-normal.woff2') format('woff2'); }
+  .tfaq { position: relative; background: var(--frost); padding: 110px 0 108px; }
+  .tq-list { margin: 48px 0 0; border-bottom: 2px solid rgb(22 19 15 / .3); }
+  .tq-row { display: grid; grid-template-columns: 60px 400px 1fr; column-gap: 0; grid-template-areas: 'n q w' 'n a w'; grid-template-rows: auto 1fr; height: 170px; padding-top: 24px; border-top: 2px solid rgb(22 19 15 / .3); }
+  .tq-list { counter-reset: tq; }
+  .tq-row { counter-increment: tq; }
+  .tq-row::before { content: counter(tq, decimal-leading-zero) / ''; grid-area: n; padding-top: 6px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; color: var(--pdeep); }
+  .tq-q { grid-area: q; font-family: var(--f-h); font-weight: 800; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .tq-a { grid-area: a; margin: 45px 0 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .tq-word { grid-area: w; margin: -18px 0 0 100px; }
+  .tq-word svg { display: block; width: calc(var(--ww) * 1px + 8px); height: calc(var(--s) + 8px); max-width: 100%; overflow: visible; }
+  .tq-word text { font-family: var(--f-h); font-weight: 900; font-size: var(--s); letter-spacing: -.02em; fill: transparent; stroke: var(--ink); stroke-width: 2px; paint-order: stroke;
+    stroke-dasharray: 900; stroke-dashoffset: 0; transition: fill .4s var(--ease-io); }
+  .is-pdeep .tq-word text { stroke: var(--pdeep); }
+  .tq-row:hover .tq-word text { fill: var(--pdeep); }
+  :global(html.motion) .tq-row:not(.is-in) .tq-word text { stroke-dashoffset: 900; }
+  :global(html.motion) .tq-row .tq-word text { transition: stroke-dashoffset 1.2s var(--ease-io), fill .4s var(--ease-io); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tq-row { grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1.1fr); height: auto; padding-bottom: 32px; }
+    .tq-word { margin-left: 24px; }
+    .tq-word svg { width: 100%; height: auto; }
+  }
+  @media (max-width: 767px) {
+    .tfaq { padding: 66px 0 90px; }
+    .tq-list { margin-top: 28px; }
+    .tq-row { display: flex; flex-direction: column; height: auto; padding: 17px 0 29px; }
+    .tq-word { order: -1; }
+    .tq-row::before { display: none; }
+    .tq-word { margin: 0 0 14px; }
+    .tq-word svg { width: var(--wm); height: calc(var(--sm) + 8px); margin: -4px 0 -4px -4px; max-width: none; }
+    .tq-q { font-size: 20px; }
+    .tq-a { margin-top: 8px; }
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+// /areas/seminole "CTA Seminole price" (Figma y 6203 h 734 / mobile y 5824 h 700). Ink, meniscus rise over the white
+// nearby-towns band. Price request form (#estimate, forms.ts) with name, phone, street, job and an ink "Send to Kody"
+// button; desktop also has the lead and the call button (phones: neither, as the frame).
+import Head from '../areas/Head.astro';
+import Btn from '../kit/Btn.astro';
+import Seam from '../kit/Seam.astro';
+---
+<section class="tcta on-ink" data-m-section aria-labelledby="tcta-h">
+  <Seam from="var(--white)" to="var(--ink)" flip />
+  <div class="wrap tc-grid">
+    <div class="tc-copy">
+      <Head eyebrow="Seminole" l1="Get a price" l2="in Seminole." size={60} sizeM={32} dark id="tcta-h" />
+      <p class="tc-lead" data-t="3">Tell us the job and your street. Kody or the crew will call you back.</p>
+      <Btn look="call" sub="Or call · 24/7" size="l" w={300} t="3" class="tc-call" />
+    </div>
+    <form class="tc-form" id="estimate" action="/thank-you" method="get" data-estimate-form data-t="4" aria-labelledby="tc-fh" novalidate>
+      <p id="tc-fh" class="tc-fh">Seminole price request</p>
+      <label class="tc-l" for="tc-name">Name</label>
+      <input id="tc-name" class="tc-in" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+      <label class="tc-l" for="tc-phone">Phone</label>
+      <input id="tc-phone" class="tc-in" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(727) 000-0000" required />
+      <label class="tc-l" for="tc-street">Street in Seminole</label>
+      <input id="tc-street" class="tc-in" name="street" type="text" autocomplete="address-line1" placeholder="e.g. near Bardmoor" />
+      <label class="tc-l" for="tc-job">What’s going on?</label>
+      <input id="tc-job" class="tc-in" name="job" type="text" placeholder="Describe the job" />
+      <input type="hidden" name="form" value="seminole-price" />
+      <input type="hidden" name="town" value="Seminole" />
+      <Btn look="ink" type="submit" label="Send to Kody" block h={60} hm={58} class="tc-send" />
+      <p class="tc-msg" data-form-msg role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .tcta { position: relative; background: var(--ink); color: var(--white); padding: 110px 0 110px; }
+  .tc-grid { display: grid; grid-template-columns: 560px 560px; justify-content: space-between; align-items: start; }
+  .tc-copy { padding-top: 20px; }
+  .tc-lead { margin-top: 36px; max-width: 480px; font-size: 18px; line-height: 1.5; color: var(--white); }
+  .tcta :global(.tc-call) { margin-top: 26px; }
+  .tc-form { display: flex; flex-direction: column; padding: 32px 28px 24px; background: var(--white); border-radius: 6px; box-shadow: 12px 12px 0 var(--powder); color: var(--ink); }
+  .tc-fh { font-family: var(--f-h); font-weight: 800; font-size: 22px; line-height: 1.04; letter-spacing: -.02em; }
+  .tc-l { margin-top: 16px; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .tc-fh + .tc-l { margin-top: 25px; }
+  .tc-in { width: 100%; height: 50px; margin-top: 7px; padding: 0 15px; background: var(--frost); border: 1px solid var(--frost3); border-radius: 4px; font-family: var(--f-b); font-size: 15px; line-height: 1.5; color: var(--ink); appearance: none; transition: border-color .3s, background-color .3s; }
+  .tc-in::placeholder { color: var(--muted); opacity: 1; }
+  .tc-in:hover { border-color: var(--muted2); }
+  .tc-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 1px; background: var(--white); }
+  .tc-in[aria-invalid='true'] { border-color: var(--red); }
+  .tc-form :global(.tc-send) { margin-top: 22px; }
+  .tc-msg { font-size: 14px; line-height: 1.4; color: var(--red); }
+  .tc-msg:empty { display: none; }
+  .tc-msg:not(:empty) { margin-top: 10px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tc-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
+  }
+  @media (max-width: 767px) {
+    .tcta { padding: 56px 0 64px; }
+    .tc-grid { display: block; }
+    .tc-copy { padding-top: 0; }
+    .tc-lead, .tcta :global(.tc-call) { display: none; }
+    .tc-form { margin-top: 24px; padding: 22px 18px 20px; box-shadow: 8px 8px 0 var(--powder); }
+    .tc-fh { font-size: 19px; }
+    .tc-fh + .tc-l { margin-top: 20px; }
+    .tc-l { margin-top: 14px; font-size: 9px; line-height: 12px; }
+    .tc-in { height: 48px; margin-top: 6px; padding: 0 13px; }
+    .tc-form :global(.tc-send) { margin-top: 18px; }
+  }
+</style>

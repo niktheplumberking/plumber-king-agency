@@ -1,0 +1,117 @@
+---
+// "Send us the job" form + "What happens next" (Figma "Form and next steps" y 1512 h 794 / mobile y 1300 h 1042).
+// Ink band; a meniscus seam rises into the white band above. The form is data-estimate-form (forms.ts).
+// The three housings fill with water as they enter (Housing data-fill); 01 / 02 / 03 = 24 / 54 / 83 % as in the frame.
+import './cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+import Seam from '../kit/Seam.astro';
+import { TOWNS } from '../../data/towns';
+const towns = [...TOWNS].sort((a, b) => a.name.localeCompare(b.name));
+const steps = [
+  { n: '01', t: 'We read it', d: 'Kody or the crew reads every message.', f: 0.24 },
+  // Figma body is "." (extraction finding, BUILD-BRIEF 11): the lead's line.
+  { n: '02', t: 'We call you back', d: 'Leave your name and number. We call you back on it.', f: 0.54 },
+  { n: '03', t: 'Price before work', d: 'You hear the price before we start.', f: 0.83 },
+];
+---
+<section id="estimate" class="cx-sec cx-ink cf on-ink" data-m-section aria-labelledby="cf-h">
+  <Seam from="var(--white)" to="var(--ink)" flip />
+  <div class="wrap cf-g">
+    <form class="cf-card" data-estimate-form action="/thank-you" method="post" enctype="multipart/form-data" novalidate data-t="4" data-fx="up">
+      <h2 id="cf-h" class="cf-title">Send us the job</h2>
+      <div class="cf-row">
+        <div class="cf-f"><label for="cf-name">Name</label><input id="cf-name" name="name" type="text" autocomplete="name" placeholder="Your name" required /></div>
+        <div class="cf-f"><label for="cf-phone">Phone</label><input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(727) 000-0000" required /></div>
+      </div>
+      <div class="cf-f"><label for="cf-town">Town</label>
+        <span class="cf-sel"><select id="cf-town" name="town" data-placeholder>
+          <option value="">Choose your town</option>
+          {towns.map((t) => <option value={t.name}>{t.name}</option>)}
+          <option value="Other">Somewhere else in Pinellas</option>
+        </select><svg width="14" height="8" viewBox="0 0 14 8" aria-hidden="true"><path d="M.9.9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="cf-f"><label for="cf-job">What’s going on?</label><textarea id="cf-job" name="message" rows="4" placeholder="Describe the job"></textarea></div>
+      <label class="cf-photo">
+        <input type="file" name="photo" accept="image/*,video/*" data-photo class="sr-only" />
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><rect x=".8" y="5.3" width="16.4" height="10.1" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10.08" r="2.44" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5.4" y="2.16" width="7.2" height="2.52" rx="1" fill="currentColor"/></svg>
+        <span data-photo-label><span class="d">Add a photo or video (optional)</span><span class="m">Add a photo or video</span></span>
+      </label>
+      <button type="submit" class="cf-send">Send to Kody</button>
+      <p class="cf-msg" data-form-msg role="status" aria-live="polite"></p>
+    </form>
+    <div class="cf-next">
+      <Eyebrow text="What happens next" tone="light" />
+      <ol class="cf-steps" role="list">
+        {steps.map((s) => (
+          <li class="cf-s" data-t="3">
+            <Housing w={60} h={96} wm={44} hm={70} fill={s.f} tone="ink" class="cf-hs" />
+            <div>
+              <p class="cf-n" aria-hidden="true">{s.n}</p>
+              <h3 class="cf-st">{s.t}</h3>
+              <p class="cf-sd">{s.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+<style>
+  .cf { padding: 110px 0 110px; }
+  .cf-g { display: grid; grid-template-columns: 620px 1fr; column-gap: 60px; align-items: start; }
+  .cf-card { position: relative; background: var(--white); color: var(--ink); border-radius: 6px; box-shadow: 12px 12px 0 var(--powder); padding: 32px 28px 28px; }
+  .cf-title { margin: 0 0 27px; font: 800 24px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cf-f { display: grid; gap: 7px; margin-bottom: 16px; }
+  .cf-f label { font: 700 10px/13px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .cf-f input, .cf-f select, .cf-f textarea { width: 100%; height: 50px; padding: 0 14px; border: 1px solid var(--frost3); border-radius: 4px; background: var(--frost);
+    font: 400 15px/1.5 var(--f-b); color: var(--ink); transition: border-color .3s var(--ease-io), background-color .3s var(--ease-io); }
+  .cf-f textarea { height: 110px; padding: 13px 14px; resize: vertical; display: block; }
+  .cf-f ::placeholder { color: var(--muted); opacity: 1; }
+  .cf-f :is(input, select, textarea):focus { border-color: var(--pdeep); background: var(--white); outline: none; box-shadow: 0 0 0 2px var(--pdeep); }
+  .cf-f [aria-invalid='true'] { border-color: var(--red); }
+  .cf-sel { position: relative; display: block; }
+  .cf-sel select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer; }
+  .cf-sel :global(select.is-empty) { color: var(--muted); }
+  .cf-sel svg { position: absolute; right: 20px; top: 21px; pointer-events: none; color: var(--ink); }
+  .cf-photo { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 18px; border: 1.5px dashed var(--pdeep); border-radius: 4px; color: var(--pdeep);
+    font: 700 15px/1.5 var(--f-b); cursor: pointer; transition: background-color .3s var(--ease-io); }
+  .cf-photo:hover { background: var(--frost); }
+  .cf-photo:has(input:focus-visible) { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .cf-photo .m { display: none; }
+  .cf-send { display: flex; align-items: center; width: 100%; height: 60px; margin-top: 24px; padding: 0 18px; border-radius: 4px; background: var(--ink); color: var(--white);
+    font: 700 16px/1.3 var(--f-b); transition: background-color .3s var(--ease-io); }
+  .cf-send:hover { background: var(--ink3); }
+  .cf-msg { margin: 0; font: 600 14px/1.4 var(--f-b); color: var(--red); }
+  .cf-msg:empty { display: none; }
+  .cf-msg:not(:empty) { margin-top: 12px; }
+  .cf-steps { margin: 34px 0 0; padding: 0; list-style: none; display: grid; gap: 54px; }
+  .cf-s { display: grid; grid-template-columns: 60px 1fr; column-gap: 24px; }
+  .cf-n { margin: 8px 0 0; font: 800 20px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--powder); }
+  .cf-st { margin: 7px 0 0; font: 800 24px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--white); }
+  .cf-sd { margin: 11px 0 0; font: 400 15px/1.5 var(--f-b); color: rgba(255, 255, 255, .8); max-width: 420px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .cf-g { grid-template-columns: 1fr; row-gap: 56px; }
+  }
+  @media (max-width: 767px) {
+    .cf { padding: 48px 0 66px; }
+    .cf-g { grid-template-columns: 1fr; }
+    .cf-card { padding: 22px 18px 24px; box-shadow: 8px 8px 0 var(--powder); }
+    .cf-title { font-size: 20px; margin-bottom: 21px; }
+    .cf-row { grid-template-columns: 1fr; gap: 0; }
+    .cf-f { gap: 6px; margin-bottom: 14px; }
+    .cf-f label { font-size: 9px; line-height: 12px; }
+    .cf-f input, .cf-f select { height: 48px; }
+    .cf-f textarea { height: 96px; }
+    .cf-photo { height: 56px; gap: 10px; font-size: 14px; }
+    .cf-photo .d { display: none; } .cf-photo .m { display: inline; }
+    .cf-send { height: 58px; margin-top: 20px; }
+    .cf-next { margin-top: 40px; }
+    .cf-steps { margin-top: 20px; gap: 26px; }
+    .cf-s { grid-template-columns: 44px 1fr; column-gap: 20px; }
+    .cf-n { display: none; }
+    .cf-st { margin-top: 8px; font-size: 18px; }
+    .cf-sd { margin-top: 9px; font-size: 14px; }
+  }
+</style>

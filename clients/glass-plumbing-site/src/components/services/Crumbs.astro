@@ -1,0 +1,25 @@
+---
+// Breadcrumb line as the Figma draws it ("Home  /  Services", JetBrains Mono Medium 11 px, muted) + BreadcrumbList JSON-LD.
+// items: [{ label, href }] without Home; the last one is the current page.
+import { abs } from '../../lib/schema';
+interface Props { items: { label: string; href: string }[]; class?: string }
+const { items, class: cls } = Astro.props;
+const all = [{ label: 'Home', href: '/' }, ...items];
+const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: all.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: abs(c.href) })) };
+---
+<nav class:list={['cr', cls]} aria-label="Breadcrumb" data-t="1">
+  <ol role="list">
+    {all.map((c, i) => (
+      <li>{i < all.length - 1 ? <><a href={c.href}>{c.label}</a><span class="cr-s" aria-hidden="true">/</span></> : <span aria-current="page">{c.label}</span>}</li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />
+<style>
+  .cr ol { display: flex; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
+  .cr li { display: inline-flex; align-items: center; white-space: nowrap; }
+  .cr-s { margin: 0 14px; }
+  .cr a { color: inherit; padding: 6px 0; margin: -6px 0; transition: color .3s var(--ease-io); }
+  .cr a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 767px) { .cr ol { font-size: 10px; line-height: 13px; letter-spacing: .01em; } .cr-s { margin: 0 9px; } }
+</style>

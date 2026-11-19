@@ -1,0 +1,75 @@
+---
+// Full list (Figma 718:522 "Full list" y 3350 h 940 / mobile y 3005 h 894): the "parts list" of 15 jobs. Each row is one
+// link (its page, or its family card); the last three are "call" items (tel:). Phone: no "Covers" column.
+import Eyebrow from '../kit/Eyebrow.astro';
+import { SITE } from '../../data/site';
+import { JOBS } from './data';
+import { ARROW } from './glyphs';
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="fl" data-m-section>
+  <div class="wrap fl-grid">
+    <div class="fl-l">
+      <Eyebrow text="The full list" />
+      <h2 class="h2 fl-h" data-t="2" style="--h2:52px;--h2m:30px">Every job we do.<br /><span class="tone">In one list.</span></h2>
+      <p class="fl-lead" data-t="3">Fifteen jobs, all done under one Florida licence. Not on the list? Call and ask.</p>
+    </div>
+    <div class="fl-tab" data-t="3">
+      <p class="fl-head" aria-hidden="true"><span>No.</span><span>Job</span><span>Covers</span></p>
+      <ol class="fl-list" role="list" data-stagger>
+        {JOBS.map((j, i) => (
+          <li>
+            <a class="fl-row" href={j.href ?? SITE.tel}>
+              <span class="fl-n" aria-hidden="true">{pad(i + 1)}</span>
+              <span class="fl-job">{j.name}</span>
+              <span class="fl-cov">{j.covers}</span>
+              {j.href ? <span class="fl-ar" set:html={ARROW} /> : <span class="fl-call">Call<span class="sr-only"> {SITE.phone}</span></span>}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+<style>
+  .fl { background: var(--white); padding: 110px 0 105px; }
+  .fl-grid { display: grid; grid-template-columns: 420px 760px; justify-content: space-between; align-items: start; }
+  .fl-h { margin-top: 16px; }
+  .fl-lead { margin-top: 28px; max-width: 380px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+  .fl-head, .fl-row { display: grid; grid-template-columns: 56px 284px minmax(0, 1fr) auto; align-items: start; }
+  .fl-head { padding-bottom: 11px; border-bottom: 2px solid var(--ink); font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .fl-head span:last-child { grid-column: 3; }
+  .fl-list { margin: 0; padding: 0; list-style: none; }
+  .fl-list li:first-child .fl-row { padding-top: 14px; }
+  .fl-row { min-height: 46px; padding: 13px 6px 9px 0; border-bottom: 1px solid rgba(22,19,15,.1); color: var(--ink); transition: background-color .3s var(--ease-io); }
+  .fl-n { padding-top: 3px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; color: var(--pdeep); }
+  .fl-job { font-family: var(--f-h); font-weight: 800; font-size: 18px; line-height: 1.04; letter-spacing: -.02em; }
+  .fl-cov { margin-top: 1px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .fl-ar { width: 12px; height: 10px; margin-top: 6px; transition: translate .3s var(--ease-io); }
+  .fl-ar :global(svg) { display: block; width: 12px; height: 10px; }
+  .fl-call { margin-top: 2px; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .fl-row:hover { background: var(--frost); }
+  .fl-row:hover .fl-ar { translate: 6px 0; }
+  .fl-row:hover .fl-job { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fl-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .fl-head, .fl-row { grid-template-columns: 56px minmax(0, 1fr) minmax(0, 1fr) auto; }
+  }
+  @media (max-width: 767px) {
+    .fl { padding: 56px 0 58px; }
+    .fl-grid { grid-template-columns: minmax(0, 1fr); }
+    .fl-h { margin-top: 10px; }
+    .fl-lead, .fl-cov { display: none; }
+    .fl-tab { margin-top: 24px; }
+    .fl-head { padding: 0; height: 0; overflow: hidden; border-bottom-width: 2px; }
+    .fl-head span { visibility: hidden; }
+    .fl-head, .fl-row { grid-template-columns: 40px minmax(0, 1fr) auto; }
+    .fl-row { min-height: 44px; padding: 11px 2px 14px 0; }
+    .fl-list li:first-child .fl-row { padding-top: 17px; }
+    .fl-n { padding-top: 4px; font-size: 10px; line-height: 13px; }
+    .fl-job { font-size: 16px; }
+    .fl-ar { margin-top: 5px; }
+    .fl-call { margin-top: 4px; margin-right: 4px; font-size: 9px; line-height: 12px; }
+  }
+</style>

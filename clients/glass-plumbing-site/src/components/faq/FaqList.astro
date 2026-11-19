@@ -1,0 +1,121 @@
+---
+// Questions (Figma "Questions" y 682 h 3109 / mobile y 740 h 1957).
+// Desktop: sticky "Jump to" rail (group + count, the group in view is ink with the pdeep bar), a divider, "Not here? A real
+// plumber picks up." + the red call button; on the right five groups of <details data-acc> rows (kit/accordion.ts), all
+// open as in the frame (circle with a minus; a closed row shows a plus). Phones: no rail; only the first row of each group
+// starts open (as the 390 frame: "–" on the first, "+" on the rest), source lines show under open answers.
+import '../contact/cx.css';
+import Btn from '../kit/Btn.astro';
+import { SITE } from '../../data/site';
+import { FAQ_GROUPS } from './data';
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="cx-sec cx-white fl" data-m-section aria-label="Questions and answers">
+  <div class="wrap fl-g">
+    <aside class="fl-rail" aria-label="Jump to a group">
+      <p class="fl-rt" data-t="2">Jump to</p>
+      <ol class="fl-nav" role="list" data-t="2" data-stagger>
+        {FAQ_GROUPS.map((g, i) => (
+          <li><a href={`#faq-${g.id}`} data-rail={g.id} aria-current={i === 0 ? 'true' : undefined} class:list={[i === 0 && 'is-on']}><span>{g.name}</span><span class="fl-c" aria-label={`${g.items.length} questions`}>{g.items.length}</span></a></li>
+        ))}
+      </ol>
+      <div class="fl-help" data-t="3">
+        <p>Not here? A real plumber picks up.</p>
+        <Btn look="call" label={SITE.phone} sub="Call · 24/7" href={SITE.tel} w={260} />
+      </div>
+    </aside>
+    <div class="fl-list">
+      {FAQ_GROUPS.map((g, gi) => (
+        <section class="fl-grp" id={`faq-${g.id}`} aria-labelledby={`faq-${g.id}-h`} data-grp={g.id}>
+          <h2 class="fl-gh" id={`faq-${g.id}-h`} data-t="2">{pad(gi + 1)} · {g.name}</h2>
+          <div class="fl-rows" data-t="3" data-stagger>
+            {g.items.map((x, i) => (
+              <details class="fl-r" data-acc open data-first={i === 0 ? '' : undefined}>
+                <summary><h3 class="fl-q">{x.q}</h3><span class="fl-i" aria-hidden="true"><i></i><i class="v"></i></span></summary>
+                <div class="fl-a">
+                  <p>{x.a}</p>
+                  {x.src && <p class="fl-src">{x.src}</p>}
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+  <script is:inline>
+    // Phones: only the first row of each group starts open (the 390 frame). Runs before paint, so nothing jumps.
+    if (matchMedia('(max-width: 767px)').matches) document.querySelectorAll('.fl-r:not([data-first])').forEach(function (d) { d.open = false; });
+  </script>
+</section>
+<script>
+  // Rail scroll-spy: the group whose top passed 40 % of the viewport is the current one.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.fl-nav a[data-rail]')];
+  const groups = [...document.querySelectorAll<HTMLElement>('.fl-grp[data-grp]')];
+  if (links.length && groups.length) {
+    let cur = '';
+    const set = (id: string) => {
+      if (id === cur) return; cur = id;
+      links.forEach((a) => { const on = a.dataset.rail === id; a.classList.toggle('is-on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    };
+    const pick = () => {
+      const line = innerHeight * 0.4; let id = groups[0].dataset.grp!;
+      for (const g of groups) if (g.getBoundingClientRect().top <= line) id = g.dataset.grp!;
+      set(id);
+    };
+    let raf = 0;
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; pick(); }); }, { passive: true });
+    addEventListener('resize', pick); pick();
+  }
+</script>
+<style>
+  .fl { padding: 96px 0 100px; }
+  .fl-g { display: grid; grid-template-columns: 260px 1fr; column-gap: 100px; align-items: start; }
+  .fl-rail { position: sticky; top: calc(var(--header-h) + 32px); }
+  .fl-rt { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .fl-nav { margin: 7px 0 0; padding: 0; list-style: none; }
+  .fl-nav a { position: relative; display: flex; align-items: center; justify-content: space-between; height: 44px; margin-bottom: 4px; padding: 0 18px;
+    font: 600 17px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--muted); text-decoration: none; }
+  .fl-nav a::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 4px; background: var(--pdeep); scale: 1 0; transition: scale .3s var(--ease-out, ease); }
+  .fl-nav a.is-on { color: var(--ink); font-weight: 800; }
+  .fl-nav a.is-on::before { scale: 1 1; }
+  .fl-nav a:hover { color: var(--ink); }
+  .fl-c { font: 700 10px/13px var(--f-m); letter-spacing: .06em; color: var(--pdeep); }
+  .fl-help { margin-top: 42px; padding-top: 21px; border-top: 1px solid rgba(22, 19, 15, .2); }
+  .fl-help p { margin: 0 0 14px; max-width: 240px; font: 600 15px/1.5 var(--f-b); color: var(--ink); }
+  .fl-grp + .fl-grp { margin-top: 65px; }
+  .fl-gh { margin: 0; padding-bottom: 15px; border-bottom: 2px solid var(--ink); font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .fl-r { border-bottom: 1px solid rgba(22, 19, 15, .2); }
+  .fl-r summary { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 26px 0 0; list-style: none; cursor: pointer; }
+  .fl-r summary::-webkit-details-marker { display: none; }
+  .fl-r:not([open]) summary, .fl-r.acc-off summary { padding-bottom: 26px; }
+  .fl-q { margin: 0; max-width: 760px; font: 800 22px/23px var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .fl-i { position: relative; flex: none; width: 28px; height: 28px; margin: 2px 0 -7px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--frost3); transition: box-shadow .2s; }
+  .fl-i i { position: absolute; left: 8px; top: 13px; width: 12px; height: 2px; background: var(--pdeep); transition: rotate .3s var(--ease-out, ease); }
+  .fl-i i.v { rotate: 90deg; }
+  .fl-r[open]:not(.acc-off) .fl-i i.v { rotate: 0deg; }
+  .fl-r summary:hover .fl-i { box-shadow: inset 0 0 0 1.5px var(--pdeep); }
+  .fl-r summary:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 4px; }
+  .fl-a { padding: 12px 0 26px; }
+  .fl-a p { margin: 0; max-width: 680px; font: 400 17px/26px var(--f-b); color: var(--ink); }
+  .fl-a .fl-src { margin-top: 12px; font: 500 11px/15px var(--f-m); letter-spacing: .01em; color: var(--muted); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fl-g { grid-template-columns: 220px 1fr; column-gap: 48px; }
+    .fl-help :global(.btn) { width: 100%; }
+  }
+  @media (max-width: 767px) {
+    .fl { padding: 48px 0 40px; }
+    .fl-g { grid-template-columns: 1fr; }
+    .fl-rail { display: none; }
+    .fl-grp + .fl-grp { margin-top: 45px; }
+    .fl-gh { padding-bottom: 11px; font-size: 10px; line-height: 13px; }
+    .fl-r summary { gap: 16px; padding-top: 20px; }
+    .fl-r:not([open]) summary, .fl-r.acc-off summary { padding-bottom: 20px; }
+    .fl-q { max-width: 302px; font-size: 18px; line-height: 19px; }
+    .fl-i { width: 16px; height: 19px; margin: 0 2px 0 0; box-shadow: none !important; }
+    .fl-i i { left: 2px; top: 9px; width: 12px; height: 2.5px; }
+    .fl-a { padding: 10px 0 20px; }
+    .fl-a p { font-size: 15px; line-height: 23px; }
+    .fl-a .fl-src { margin-top: 10px; font-size: 10px; line-height: 13px; }
+  }
+</style>

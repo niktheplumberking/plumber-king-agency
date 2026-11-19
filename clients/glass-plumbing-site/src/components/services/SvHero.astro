@@ -1,0 +1,101 @@
+---
+// /services hero (Figma 718:522 "Hero" y 172 h 646 / mobile 718:1276 y 158 h 864): crumbs, eyebrow, H1, lead, four family
+// chips (jump to the family cards), steel "Get a price · any job" plate with the call-back form (forms.ts).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Crumbs from './Crumbs.astro';
+import { SITE } from '../../data/site';
+import { JOBS, FAMILIES } from './data';
+---
+<section class="sh" data-m-section data-m-hero>
+  <div class="wrap sh-grid">
+    <div class="sh-l">
+      <Crumbs items={[{ label: 'Services', href: '/services' }]} />
+      <Eyebrow class="sh-eb"><span class="d">Licensed plumber · FL CFC1432488</span><span class="m">Licensed plumber · CFC1432488</span></Eyebrow>
+      <h1 class="h1 sh-h" data-t="2">Plumbing Services in<br /><span class="tone">Largo, FL</span></h1>
+      <p class="sh-lead" data-t="3" data-fx="nudge">Homes, rentals and businesses across Pinellas County. One licensed crew, from a dripping faucet to a new water main.</p>
+      <ul class="sh-chips" role="list" data-t="3" data-stagger>
+        {FAMILIES.map((f) => (
+          <li><a class="sv-chip" href={`#${f.id}`}><span class="d">{f.chip}</span><span class="m">{f.chipM}</span>&nbsp;↓</a></li>
+        ))}
+      </ul>
+    </div>
+    <div class="sh-plate" id="estimate" data-t="4">
+      <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
+      <form class="sh-form" data-estimate-form novalidate aria-labelledby="sh-ft">
+        <p class="sh-ft" id="sh-ft">Get a price · any job</p>
+        <label class="sh-lab" for="sh-name">Name</label>
+        <input class="sh-in" id="sh-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+        <label class="sh-lab" for="sh-phone">Phone</label>
+        <input class="sh-in" id="sh-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(727) 000-0000" required />
+        <label class="sh-lab" for="sh-job">What’s the job?</label>
+        <div class="sh-sel">
+          <select class="sh-in" id="sh-job" name="job" data-placeholder>
+            <option value="" selected>Choose a service</option>
+            {JOBS.map((j) => <option>{j.name}</option>)}
+          </select>
+          <svg viewBox="0 0 14 8" width="14" height="8" aria-hidden="true"><path d="M1 1l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </div>
+        <Btn look="call" type="submit" label="Call me back" block h={60} hm={58} class="sh-btn" />
+        <p class="sh-msg" data-form-msg role="status" aria-live="polite"></p>
+        <p class="sh-or">or call <a href={SITE.tel}>{SITE.phone}</a> any hour</p>
+      </form>
+    </div>
+  </div>
+</section>
+<style>
+  .sh { background: var(--frost); padding: 48px 0 112px; }
+  .sh-grid { display: grid; grid-template-columns: 700px 500px; justify-content: space-between; align-items: start; }
+  .sh-l :global(.eb) { margin-top: 29px; }
+  .sh-h { --h1: 60px; --h1m: 31px; line-height: 1; margin-top: 16px; }
+  .sh-lead { margin-top: 24px; max-width: 560px; font-size: 19px; line-height: 1.5; }
+  .sh-chips { display: flex; flex-wrap: wrap; gap: 14px 10px; margin: 32px 0 0; padding: 0; list-style: none; max-width: 530px; }
+  .sh-chips :global(.sv-chip) { padding: 0 14px; }
+
+  .sh-plate { position: relative; margin-top: 16px; padding: 32px 32px 0; height: 470px; background: var(--steel); border-radius: 4px; box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--ink); }
+  .rv { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-of-type(1) { left: 10px; top: 10px; } .rv:nth-of-type(2) { right: 12px; top: 10px; }
+  .rv:nth-of-type(3) { left: 10px; bottom: 10px; } .rv:nth-of-type(4) { right: 12px; bottom: 10px; }
+  .sh-form { display: flex; flex-direction: column; }
+  .sh-ft { font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(22,19,15,.3); }
+  .sh-lab { margin-top: 16px; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .sh-ft + .sh-lab { margin-top: 19px; }
+  .sh-in { display: block; width: 100%; height: 52px; margin-top: 7px; padding: 0 15px; border: 0; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1px var(--steel2); font-family: var(--f-b); font-size: 15px; line-height: 23px; color: var(--ink); appearance: none; -webkit-appearance: none; }
+  .sh-in::placeholder { color: var(--muted); opacity: 1; }
+  .sh-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  .sh-in[aria-invalid='true'] { box-shadow: inset 0 0 0 2px var(--red); }
+  .sh-lab + .sh-in { margin-top: 7px; }
+  .sh-sel { position: relative; margin-top: 7px; }
+  .sh-sel .sh-in { margin-top: 0; padding-right: 44px; cursor: pointer; }
+  .sh-sel select:invalid, .sh-sel select:has(option[value='']:checked) { color: var(--muted); }
+  .sh-sel svg { position: absolute; right: 16px; top: 50%; margin-top: -4px; color: var(--ink); pointer-events: none; }
+  .sh-form :global(.sh-btn) { margin-top: 20px; }
+  .sh-msg { min-height: 0; font-size: 13px; line-height: 1.4; color: var(--red); }
+  .sh-msg:not(:empty) { margin-top: 8px; }
+  .sh-or { margin-top: 16px; text-align: center; font-size: 14px; line-height: 21px; }
+  .sh-or a { white-space: nowrap; }
+  .sh-or a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sh-grid { grid-template-columns: minmax(0, 1fr) minmax(340px, 440px); gap: 40px; }
+  }
+  @media (max-width: 767px) {
+    .sh { padding: 24px 0 64px; }
+    .sh-grid { grid-template-columns: minmax(0, 1fr); }
+    .sh-l :global(.eb) { margin-top: 15px; }
+    .sh-h { line-height: 1.02; margin-top: 10px; }
+    .sh-lead { margin-top: 14px; font-size: 16px; }
+    .sh-chips { margin-top: 20px; gap: 9px 8px; }
+    .sh-chips :global(.sv-chip) { height: 44px; border-radius: 22px; padding: 0 11px; font-size: 13px; line-height: 20px; }
+    .sh-plate { margin-top: 31px; height: auto; padding: 22px 20px 20px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); }
+    .rv { width: 8px; height: 8px; }
+    .rv:nth-of-type(1) { left: 8px; top: 8px; } .rv:nth-of-type(2) { right: 8px; top: 8px; }
+    .rv:nth-of-type(3) { left: 8px; bottom: 8px; } .rv:nth-of-type(4) { right: 8px; bottom: 8px; }
+    .sh-ft { font-size: 11px; line-height: 15px; padding-bottom: 7px; }
+    .sh-lab, .sh-ft + .sh-lab { margin-top: 15px; font-size: 9px; line-height: 12px; }
+    .sh-in { height: 50px; padding: 0 15px; }
+    .sh-lab + .sh-in, .sh-sel { margin-top: 6px; }
+    .sh-form :global(.sh-btn) { margin-top: 18px; }
+    .sh-or { margin-top: 16px; font-size: 13px; line-height: 20px; }
+  }
+</style>

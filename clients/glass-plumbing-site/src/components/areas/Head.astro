@@ -1,0 +1,28 @@
+---
+// Section head used by /areas, /areas/seminole and /about: eyebrow (kit Eyebrow) + two-tone headline (line 2 in .tone).
+// Figma: eyebrow JetBrains Mono Bold 12 / +8 % at y 0, headline Schibsted Grotesk ExtraBold, 102 % line height, -2 %,
+// 16 px below the eyebrow (desktop) / 10 px (mobile). Sizes come from each frame: `size` desktop px, `sizeM` mobile px.
+import Eyebrow from '../kit/Eyebrow.astro';
+interface Props {
+  eyebrow?: string; l1: string; l2?: string; size?: number; sizeM?: number; lh?: number; dark?: boolean;
+  as?: 'h1' | 'h2'; id?: string; class?: string; gap?: number; gapM?: number; br?: boolean;
+}
+const { eyebrow, l1, l2, size = 52, sizeM = 28, lh = 1.02, dark = false, as: Tag = 'h2', id, class: cls, gap = 16, gapM = 10, br = true } = Astro.props;
+---
+<div class:list={['ah', dark && 'ah--dark', cls]} style={`--ah-s:${size}px;--ah-sm:${sizeM}px;--ah-lh:${lh};--ah-g:${gap}px;--ah-gm:${gapM}px`}>
+  {eyebrow && <Eyebrow text={eyebrow} tone={dark ? 'light' : 'pdeep'} t="1" class="ah-eb" />}
+  <Tag class="ah-h" id={id} data-t="2">{l1}{l2 && (br ? <><br /><span class="tone">{l2}</span></> : <> <span class="tone">{l2}</span></>)}</Tag>
+</div>
+<style>
+  .ah-h { margin-top: var(--ah-g); font-family: var(--f-h); font-weight: 800; font-size: var(--ah-s); line-height: var(--ah-lh); letter-spacing: -.02em; color: var(--ink); }
+  .ah-h .tone { color: var(--pdeep); }
+  .ah--dark .ah-h { color: var(--white); }
+  .ah--dark .ah-h .tone { color: var(--powder); }
+  .ah :global(.ah-eb) { margin: 0; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ah-h { font-size: clamp(var(--ah-sm), calc(var(--ah-s) * .82), var(--ah-s)); }
+  }
+  @media (max-width: 767px) {
+    .ah-h { margin-top: var(--ah-gm); font-size: var(--ah-sm); }
+  }
+</style>

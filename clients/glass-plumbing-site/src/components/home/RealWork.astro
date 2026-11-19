@@ -1,0 +1,83 @@
+---
+// Home real work (Figma 712:448 "Real work" y 4094 h 1003; mobile 715:560 y 4939 h 822). A 12 px powder band on top, head +
+// lead, four job photos from Kody's Instagram at staggered heights, each with its spec plate hanging off the bottom; on
+// phones a swipe row with dots. Then the Instagram link.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Plate from '../kit/Plate.astro';
+import { SITE } from '../../data/site';
+type Job = { photo: string; alt: string; top: number; h: number; title: string; rows: [string, string][]; mHide?: number; focus?: string };
+const jobs: Job[] = [
+  { photo: 'tankless-pair', alt: 'Two Rinnai tankless water heaters mounted side by side on a brick wall', top: 0, h: 420, title: 'Tankless pair', rows: [['Units', 'Rinnai RE199E × 2'], ['Setup', 'Primary + secondary']] },
+  { photo: 'water-heater-softener', alt: 'A Rheem tank water heater on a platform above a Northstar water softener', top: 60, h: 380, title: 'Heater over softener', rows: [['Heater', 'Rheem 40 gal'], ['Base', 'Holdrite platform'], ['Below', 'Northstar softener']], mHide: 2 },
+  { photo: 'water-filters', alt: 'Blue whole-house water filter housings on a garage wall', top: 0, h: 350, title: 'Whole-house filters', rows: [['Why', 'Hard Pinellas water']], focus: '50% 30%' },
+  { photo: 'manifold-install', alt: 'A newly installed tankless unit with copper and PEX lines in an open cabinet', top: 80, h: 360, title: 'Recent install', rows: [['From', SITE.social.instagramHandle]] },
+];
+---
+<section class="wk" aria-labelledby="wk-h" data-m-section>
+  <span class="band" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="wk-head">
+      <div>
+        <Eyebrow text="Recent jobs · from our Instagram" />
+        <h2 id="wk-h" class="h2 wk-h" data-t="2">Real jobs. <span class="tone">Real photos.</span></h2>
+      </div>
+      <p class="wk-lead" data-t="3">Every photo on this site is a real Glass Plumbing job<span class="d">, straight from our Instagram</span>. No stock photos.</p>
+    </div>
+    <div class="rail" data-carousel>
+      <ul class="jobs" role="list" data-track data-t="4" data-stagger>
+        {jobs.map((j) => (
+          <li class="job" style={`--top:${j.top}px;--h:${j.h}px`} data-slide>
+            <div class="ph"><Img name={j.photo} alt={j.alt} sizes="(min-width: 768px) 282px, 248px" widths={[248, 282, 500, 564]} box={282 / j.h} boxM={248 / 330} focus={j.focus} /></div>
+            <div class:list={['jp', j.mHide != null && 'jp-hide']}>
+              <Plate title={j.title} rows={j.rows} w={250} wm={224} pad={12} size={10} kx={76} pitch={19} padm={10} sizem={9} tsizem={10} kxm={66} pitchm={18} />
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div class="dots" aria-hidden="true">{jobs.map((_, i) => <span class:list={['dot', { on: i === 0 }]} data-dot></span>)}<span class="swipe">Swipe · 4 jobs</span></div>
+    </div>
+    <a class="ig" href={SITE.social.instagram} target="_blank" rel="noopener" data-t="3">Follow {SITE.social.instagramHandle}<span class="d"> on Instagram</span> →<span class="sr-only"> (opens in a new tab)</span></a>
+  </div>
+</section>
+<style>
+  .wk { position: relative; background: var(--white); padding: 100px 0 111px; }
+  .band { position: absolute; left: 0; right: 0; top: 0; height: 12px; background: var(--powder); }
+  .m { display: none; }
+  .wk-head { display: grid; grid-template-columns: 680px 520px; }
+  .wk-h { margin-top: 16px; } .wk-h .tone { display: block; }
+  .wk-lead { margin-top: 46px; font-size: 17px; line-height: 1.5; }
+  .jobs { display: flex; gap: 24px; height: 516px; margin: 74px 0 0; padding: 0; list-style: none; }
+  .job { position: relative; width: 282px; flex: none; margin-top: var(--top); }
+  .ph { height: var(--h); border-radius: 4px; overflow: hidden; }
+  .jp { position: relative; z-index: 1; margin: -36px 0 0 16px; }
+  .dots { display: none; }
+  .ig { display: inline-block; margin-top: 33px; font-weight: 700; font-size: 15px; line-height: 23px; color: var(--pdeep); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .ig:hover { color: var(--ink); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .wk-head { grid-template-columns: 1fr; } .wk-lead { margin-top: 20px; max-width: 560px; }
+    .rail { margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); }
+    .job { scroll-snap-align: start; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; }
+    .wk { padding: 64px 0 80px; }
+    .band { height: 10px; }
+    .wk-head { display: block; }
+    .wk-h { margin-top: 10px; }
+    .wk-lead { margin-top: 12px; font-size: 15px; }
+    .rail { margin: 32px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+    .rail::-webkit-scrollbar { display: none; }
+    .jobs { gap: 16px; height: auto; margin: 0; }
+    .job { width: 248px; margin-top: 0; scroll-snap-align: start; }
+    .ph { height: 330px; }
+    .jp { margin: -40px 0 0 12px; }
+    .jp-hide :global(.pl-row:nth-child(2)) { display: none; }
+    .dots { display: flex; align-items: center; gap: 6px; margin-top: 70px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--frost3); transition: background-color .35s ease-in-out; }
+    .dot.on, .dot[aria-current='true'] { background: var(--ink); }
+    .swipe { margin-left: 10px; font-family: var(--f-m); font-weight: 500; font-size: 9px; line-height: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .ig { margin-top: 16px; }
+  }
+</style>

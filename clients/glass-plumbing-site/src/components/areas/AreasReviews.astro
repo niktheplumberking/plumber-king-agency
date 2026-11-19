@@ -1,0 +1,66 @@
+---
+// /areas "Reviews by town" (Figma 721:525 y 3985 h 680 / mobile y 3861 h 460). Frost, meniscus seam rising over the white
+// section above. Three real Google review excerpts (checked word for word against reviews.ts at build). Mobile: a
+// clipped scroll-snap rail with dots (ui.ts data-carousel).
+import Head from './Head.astro';
+import Seam from '../kit/Seam.astro';
+import { quote, STARS } from './reviews';
+const cards = [
+  { chip: 'Seminole', name: 'Cody Weaver', q: quote('Cody Weaver', 'Kody came out and fixed my shower in Seminole that refused to drain.') },
+  { chip: 'Tampa / St. Pete', name: 'Peter Van Buskirk', q: quote('Peter Van Buskirk', "I wouldn't think of working with anyone else in the Tampa / St. Pete area.") },
+  { chip: 'Rentals & family homes', name: 'David Peek', q: quote('David Peek', 'I’ve had them do work for me in my own home, my daughter’s home, rental properties, my in-laws’ properties and estate properties.') },
+];
+---
+<section class="arev" data-m-section aria-labelledby="arev-h">
+  <Seam from="var(--white)" to="var(--frost)" flip />
+  <div class="wrap">
+    <Head eyebrow="Reviews by town" l1="From Seminole" l2="to St. Pete." id="arev-h" />
+    <div class="arev-rail" data-carousel>
+      <ul class="arev-track" role="list" data-track data-t="4" data-stagger>
+        {cards.map((c) => (
+          <li class="rc" data-slide>
+            <figure>
+              <span class="rc-chip">{c.chip}</span>
+              <svg class="rc-stars" viewBox="0 0 80 13" width="80" height="13" fill="#F9B50D" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
+              <blockquote class="rc-q"><p>“{c.q}”</p></blockquote>
+              <figcaption class="rc-by">{c.name} · Google</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <div class="arev-dots" aria-hidden="true">{cards.map((_, i) => <span class:list={['dot', i === 0 && 'on']} data-dot></span>)}</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .arev { position: relative; background: var(--frost); padding: 110px 0 80px; }
+  .arev-track { display: grid; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin-top: 52px; }
+  .rc figure { position: relative; display: flex; flex-direction: column; height: 300px; margin: 0; padding: 24px 24px 27px; background: var(--white); border: 1px solid var(--frost3); border-radius: 6px; }
+  .rc-chip { align-self: flex-start; padding: 6.5px 12px; background: var(--ink); border-radius: 16.5px; font-size: 13px; line-height: 20px; font-weight: 600; color: var(--white); }
+  .rc-stars { display: block; margin-top: 19px; }
+  .rc-q { margin: 15px 0 0; font-size: 16px; line-height: 1.48; color: var(--ink); }
+  .rc-by { margin-top: auto; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+  .arev-dots { display: none; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .arev { padding: 96px 0 80px; }
+    .arev-track { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .rc figure { height: 100%; min-height: 300px; }
+  }
+  @media (max-width: 767px) {
+    .arev { padding: 48px 0 40px; }
+    .arev-rail { margin: 24px calc(-1 * var(--gutter)) 0; overflow: hidden; }
+    .arev-track { display: flex; gap: 16px; margin: 0; padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
+    .arev-track::-webkit-scrollbar { display: none; }
+    .rc { flex: none; width: 280px; scroll-snap-align: start; }
+    .rc figure { height: 240px; padding: 18px 18px 21px; }
+    .rc-chip { padding: 7px 10px; font-size: 12px; line-height: 18px; }
+    .rc-stars { width: 75px; height: 12px; margin-top: 14px; }
+    .rc-q { margin-top: 12px; font-size: 15px; }
+    .rc-by { font-size: 9px; line-height: 12px; }
+    .arev-dots { display: flex; gap: 6px; margin: 16px 0 0 var(--gutter); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--frost3); transition: background-color .5s var(--ease-io); }
+    .dot.on { background: var(--ink); }
+  }
+</style>

@@ -1,0 +1,39 @@
+---
+// Reviews strip (Figma 719:437 y 5428 h 420 / mobile y 5796 h 395): two water-heater reviews on ink2, word for word from
+// reviews.ts (checked at build time).
+import { REVIEWS } from '../../data/reviews';
+import { STARS } from '../services/glyphs';
+const R = [
+  { by: 'Kevin Kelleman', q: 'Needed a new Water Heater, called and had one installed the next day at a great price.', meta: 'Water heater · next day' },
+  { by: 'Parker L', q: 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.', meta: 'Same-day estimate' },
+];
+for (const r of R) { const t = REVIEWS.find((x) => x.name === r.by)?.text ?? ''; if (!t.includes(r.q)) throw new Error(`WhReviews: quote by ${r.by} is not word for word`); }
+---
+<section class="wr" data-m-section aria-label="Water heater reviews">
+  <div class="wrap wr-grid" data-t="2" data-stagger>
+    {R.map((r) => (
+      <figure class="wr-it">
+        <span class="wr-stars" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
+        <blockquote class="wr-q"><p>“{r.q}”</p></blockquote>
+        <figcaption class="wr-by">{r.by} · Google<span class="d"> · {r.meta}</span></figcaption>
+      </figure>
+    ))}
+  </div>
+</section>
+<style>
+  .wr { background: var(--ink2); color: var(--white); padding: 110px 0 75px; }
+  .wr-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 560px)); justify-content: space-between; gap: 52px; }
+  .wr-it { margin: 0; display: flex; flex-direction: column; }
+  .wr-stars { display: block; width: 95px; height: 16px; }
+  .wr-stars :global(svg) { display: block; width: 100%; height: auto; }
+  .wr-q { margin: 20px 0 0; font-family: var(--f-h); font-weight: 700; font-size: 28px; line-height: 1.22; letter-spacing: -.02em; min-height: 184px; }
+  .wr-by { font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--powder); }
+  @media (min-width: 768px) and (max-width: 1279px) { .wr-q { font-size: 24px; } }
+  @media (max-width: 767px) {
+    .wr { padding: 48px 0 43px; }
+    .wr-grid { grid-template-columns: minmax(0, 1fr); gap: 27px; }
+    .wr-stars { width: 80px; height: 13px; }
+    .wr-q { margin-top: 13px; font-size: 20px; line-height: 1.24; min-height: 0; }
+    .wr-by { margin-top: 10px; }
+  }
+</style>

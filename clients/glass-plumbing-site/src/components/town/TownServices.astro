@@ -1,0 +1,55 @@
+---
+// /areas/seminole "Top services" (Figma y 2367 h 666 / mobile y 2167 h 608). Ink. Six numbered rows linking to the service
+// families on /services (and the built water-heater page). Phones drop "in Seminole" from each name (as the frame).
+import Head from '../areas/Head.astro';
+const rows = [
+  { n: 'Drain cleaning', href: '/services#drains-fixtures' },
+  { n: 'Shower & tub valves', href: '/services#drains-fixtures' },
+  { n: 'Water heaters', href: '/services/water-heaters' },
+  { n: 'Water softeners & filtration', m: 'Softeners & filtration', href: '/services#hot-water' },
+  { n: 'Leak repair', href: '/services#leaks-lines' },
+  { n: 'Toilets & faucets', href: '/services#drains-fixtures' },
+];
+---
+<section class="tsvc on-ink" data-m-section aria-labelledby="tsvc-h">
+  <div class="wrap">
+    <Head eyebrow="Most called-for in Seminole" l1="Six jobs we do" l2="in Seminole." dark id="tsvc-h" />
+    <ol class="ts-grid" role="list" data-t="4" data-stagger>
+      {rows.map((r, i) => (
+        <li>
+          <a class="ts-row" href={r.href}>
+            <span class="ts-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="ts-t"><span class="d">{r.n} in Seminole</span><span class="m">{r.m ?? r.n}<span class="sr-only"> in Seminole</span></span></span>
+            <svg class="ts-ar" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true"><path d="M1 5h10M7 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .tsvc { position: relative; background: var(--ink); padding: 110px 0 106px; }
+  .ts-grid { display: grid; grid-template-columns: repeat(2, 588px); justify-content: space-between; row-gap: 16px; margin-top: 52px; }
+  .ts-row { display: flex; align-items: center; height: 76px; padding: 0 24px; background: var(--ink2); border: 1px solid var(--ink3); border-radius: 4px; color: var(--white); text-decoration: none; transition: background-color .3s var(--ease-io), border-color .3s var(--ease-io); }
+  .ts-row:hover { background: var(--ink3); border-color: var(--powder); }
+  .ts-row:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .ts-n { width: 48px; flex: none; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; color: var(--powder); }
+  .ts-t { flex: 1; font-family: var(--f-h); font-weight: 800; font-size: 21px; line-height: 1.04; letter-spacing: -.02em; }
+  .ts-ar { flex: none; color: var(--powder); transition: translate .3s var(--ease-io); }
+  .ts-row:hover .ts-ar { translate: 4px 0; }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tsvc { padding: 96px 0 96px; }
+    .ts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
+    .ts-t { font-size: 18px; }
+  }
+  @media (max-width: 767px) {
+    .tsvc { padding: 56px 0 56px; }
+    .ts-grid { grid-template-columns: 1fr; row-gap: 8px; margin-top: 24px; }
+    .ts-row { height: 58px; padding: 0 18px 0 16px; }
+    .ts-n { width: 32px; font-size: 9px; line-height: 12px; }
+    .ts-t { font-size: 17px; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

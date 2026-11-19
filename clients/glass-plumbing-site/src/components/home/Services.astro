@@ -1,0 +1,104 @@
+---
+// Home services (Figma 712:448 "Services" y 1732 h 1388; mobile 715:560 y 2568 h 1106). Meniscus seam from the frost
+// reviews band, head + lead, six service cards (photo, title, line, spec plate, "Call about ..." tel link). On phones each
+// card is a 128 px row (photo left) with the short Figma copy and "Call about it →". The card title links to the service
+// page (water heaters is built; the others go to their family on /services).
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Plate from '../kit/Plate.astro';
+import Seam from '../kit/Seam.astro';
+import { SITE } from '../../data/site';
+type Card = { name: string; href: string; photo?: string; alt?: string; focus?: string; d: string; m: string; rows: [string, string][]; badge?: boolean };
+const cards: Card[] = [
+  { name: 'Water heaters', href: '/services/water-heaters', photo: 'water-heater-tank', alt: 'A new State tank water heater installed in a closet', focus: '50% 42%',
+    d: 'Tank and tankless. Repairs, swaps and new installs, often next day.', m: 'Tank and tankless, often next day.', rows: [['Seen on jobs', 'Rheem · Rinnai · State'], ['Types', 'Tank · tankless pairs']], badge: true },
+  { name: 'Leaks & water lines', href: '/services#leaks-lines', photo: 'water-line-excavator', alt: 'A Glass plumber on a mini excavator digging to a water line', focus: '50% 30%',
+    d: 'Burst pipes, hidden leaks, and water main repair or replacement.', m: 'Burst pipes and water mains.', rows: [['On the van', 'Mini-excavator'], ['Lines', 'Main to house']] },
+  { name: 'Drains & sewer', href: '/services#drains-fixtures',
+    d: 'Showers that will not drain, clogged sewer lines, floor drains.', m: 'Showers, sewer lines, floor drains.', rows: [['Clears', 'Sinks · showers · sewer'], ['Also', 'Floor drains']] },
+  { name: 'Showers & tubs', href: '/services#drains-fixtures', photo: 'valve', alt: 'A matte black shower valve and hand shower on a travertine wall', focus: '50% 50%',
+    d: '“No need to cut open the wall to upgrade your shower valve.”', m: 'No need to cut open the wall.', rows: [['Brands', 'Moen · Gerber · Kohler'], ['Work', 'Valves · trims · tubs']] },
+  { name: 'Softeners & filters', href: '/services#hot-water', photo: 'water-softener', alt: 'A water softener tank and a blue whole-house filter on an outside wall', focus: '50% 45%',
+    d: 'Pinellas water averages 217 ppm hardness. Softeners and whole-house filters fix it.', m: '217 ppm hard water, fixed.', rows: [['Hardness', '217 ppm avg (PCU 2025)'], ['Fits', 'Softener · whole house']] },
+  { name: 'Remodels & commercial', href: '/services#remodel-commercial', photo: 'shower-remodel', alt: 'A finished walk-in shower with white subway tile and a niche', focus: '50% 62%',
+    d: 'Repipes, rough-in, remodels and commercial build-outs.', m: 'Repipes, rough-in, build-outs.', rows: [['For', 'Homes · shops · builders'], ['Work', 'Rough-in · repipe']] },
+];
+const lc = (s: string) => s.toLowerCase();
+---
+<section class="sv" aria-labelledby="sv-h" data-m-section>
+  <Seam from="var(--frost)" to="var(--white)" d={56} dm={36} />
+  <div class="wrap">
+    <div class="sv-head">
+      <div>
+        <Eyebrow text="What we fix" />
+        <h2 id="sv-h" class="h2 sv-h" data-t="2">From a leaky faucet <span class="tone">to a tankless pair.</span></h2>
+      </div>
+      <p class="sv-lead" data-t="3">Homes and businesses across Pinellas County. Every job is done under a Florida licence, {SITE.licence.number}.</p>
+    </div>
+    <ul class="cards" role="list" data-t="4" data-stagger>
+      {cards.map((c) => (
+        <li class="card">
+          <div class="ph">
+            {c.photo
+              ? <Img name={c.photo} alt={c.alt!} sizes="(min-width: 768px) 384px, 112px" widths={[224, 384, 560, 768]} box={384 / 220} boxM={112 / 128} focus={c.focus} />
+              : <svg class="drain" viewBox="0 0 384 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><circle cx="192" cy="110" r="67" fill="none" stroke="#C7CED1" stroke-width="6"/><circle cx="192" cy="110" r="20" fill="#C7CED1"/><rect x="141" y="78" width="6" height="84" rx="3" fill="#C7CED1"/><rect x="165" y="78" width="6" height="84" rx="3" fill="#C7CED1"/><rect x="213" y="78" width="6" height="84" rx="3" fill="#C7CED1"/><rect x="237" y="78" width="6" height="84" rx="3" fill="#C7CED1"/></svg>}
+            {c.badge && <span class="badge"><svg width="16" height="16" viewBox="0 0 17 17" aria-hidden="true" focusable="false"><path d="M9.467 3.73c-1-1-.867-2.6.333-3.134l1.6 1.6H13v1.6l1.6 1.6c-.533 1.2-2.133 1.334-3.133.334l-7.8 7.8c-.667.666-2 .666-2.667 0-.667-.667-.667-2 0-2.667L9.467 3.73Z" fill="#fff" stroke="#000"/></svg>Most asked</span>}
+          </div>
+          <div class="body">
+            <h3 class="h3 ct"><a href={c.href}>{c.name}</a></h3>
+            <p class="cd"><span class="d">{c.d}</span><span class="m">{c.m}</span></p>
+            <div class="cplate"><Plate rows={c.rows} pad={12} size={10} kx={122} pitch={19} shadow={false} /></div>
+            <a class="call" href={SITE.tel}><span class="d">Call about {lc(c.name)} →</span><span class="m">Call about it →</span><span class="sr-only">, {SITE.phone}</span></a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .sv { position: relative; background: var(--white); padding: 120px 0 96px; }
+  .m { display: none; }
+  .sv-head { display: grid; grid-template-columns: 680px 520px; }
+  .sv-h { margin-top: 16px; }
+  .sv-h .tone { display: block; }
+  .sv-lead { margin-top: 46px; font-size: 17px; line-height: 1.5; color: var(--ink); }
+  .cards { display: grid; grid-template-columns: repeat(3, 384px); column-gap: 24px; row-gap: 32px; margin: 54px 0 0; padding: 0; list-style: none; }
+  .card { position: relative; height: 470px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--white); overflow: hidden; transition: translate .35s ease-in-out, box-shadow .35s ease-in-out; }
+  .card:has(.ct a:hover), .card:has(.call:hover) { translate: 0 -4px; box-shadow: 6px 6px 0 var(--powder); }
+  .ph { position: relative; height: 220px; margin: -1.5px -1.5px 0; overflow: hidden; background: var(--ink); }
+  .drain { width: 100%; height: 100%; }
+  .badge { position: absolute; left: 16px; top: 16px; display: flex; align-items: center; gap: 6px; height: 30px; width: 132px; padding-left: 8px; border-radius: 3px; background: var(--ink); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .body { padding: 22.5px 22.5px 0; }
+  .ct { font-size: 26px; line-height: 1.04; }
+  .ct a::after { content: ''; position: absolute; inset: 0 0 60px 0; }
+  .ct a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .cd { margin-top: 11px; min-height: 44px; font-size: 15px; line-height: 1.45; color: var(--muted); }
+  .cplate { margin-top: 24px; }
+  .call { position: relative; z-index: 1; display: inline-block; margin-top: 22px; font-weight: 700; font-size: 14px; line-height: 21px; color: var(--pdeep); }
+  .call:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sv-head { grid-template-columns: 1fr; }
+    .sv-lead { margin-top: 20px; max-width: 560px; }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card { height: auto; padding-bottom: 22px; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .sv { padding: 72px 0 82px; }
+    .sv-head { display: block; }
+    .sv-h { margin-top: 10px; }
+    .sv-lead { display: none; }
+    .cards { grid-template-columns: 1fr; row-gap: 12px; margin-top: 28px; }
+    .card { display: grid; grid-template-columns: 112px 1fr; height: 128px; }
+    .ph { height: auto; margin: -1.5px 0 -1.5px -1.5px; }
+    .badge { left: 8px; top: 8px; width: 96px; height: 22px; gap: 4px; padding-left: 5px; font-size: 8px; line-height: 11px; }
+    .badge svg { width: 13px; height: 13px; }
+    .body { display: flex; flex-direction: column; padding: 16.5px 14px 10px 14.5px; }
+    .ct { font-size: 19px; }
+    .ct a::after { inset: 0; }
+    .cd { margin-top: 6px; min-height: 0; font-size: 14px; line-height: 1.4; }
+    .cplate { display: none; }
+    .call { margin-top: auto; }
+  }
+</style>

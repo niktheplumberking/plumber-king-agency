@@ -1,0 +1,73 @@
+---
+// "Want your job on this page?" (Figma "CTA" y 5088 h 600 / mobile y 4536 h 688).
+// INTERACTION note (884:548): the job photo fans out on scroll and the empty frame drops in last with a small bounce.
+// (The frame holds one photo polaroid + the empty slot; the fan-out is scrubbed by kit/scrub, the slot pops in, G3.)
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+---
+<section class="cx-sec cx-frost oc" data-m-section aria-labelledby="oc-h">
+  <div class="wrap oc-g">
+    <div>
+      <div class="shead">
+        <Eyebrow text="Next on this page" tone="pdeep" />
+        <h2 id="oc-h" class="cx-h oc-h" data-t="2"><span class="ln">Want your job</span> <span class="ln tone">on this page?</span></h2>
+        <p class="oc-lead" data-t="3">Call or text a photo. We post the finished job, with your OK.</p>
+      </div>
+      <div class="oc-btns" data-t="3">
+        <Btn look="call" label={SITE.phone} sub="Call now · 24/7" href={SITE.tel} w={300} size="l" class="oc-b1" />
+        <Btn look="line" label="Text a photo" icon="camera" arrow href={SITE.sms} w={220} size="l" hm={56} class="oc-b2" />
+      </div>
+    </div>
+    <div class="oc-art" data-scrub data-start="top 90%" data-end="center 55%" data-start-m="top 95%" data-end-m="center 60%">
+      <figure class="oc-pol" data-scrub-tw='{"rotate":0,"x":110,"y":20}'>
+        <div class="oc-ph"><Img name="crew-selfie" alt="A crew member in a cap and mirrored sunglasses taking a selfie in the van" sizes="(min-width: 768px) 220px, 150px" /></div>
+      </figure>
+      <div class="oc-slot" data-t="5" data-fx="pop" data-g="3">
+        <svg width="40" height="40" viewBox="0 0 18 18" aria-hidden="true"><rect x=".8" y="5.3" width="16.4" height="10.1" rx="2.2" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="9" cy="10.08" r="2.44" fill="none" stroke="currentColor" stroke-width="1"/><rect x="5.4" y="2.16" width="7.2" height="2.52" rx="1" fill="currentColor"/></svg>
+        <p>Your job, next.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .oc { padding: 110px 0 100px; }
+  @media (min-width: 1280px) { .oc { box-sizing: border-box; min-height: 600px; padding-bottom: 60px; } }
+  .oc-g { display: grid; grid-template-columns: 1fr 580px; align-items: start; }
+  .oc-h { --fs: 56px; --fs-m: 36px; margin-top: 16px; }
+  .oc-lead { margin: 20px 0 0; max-width: 440px; font: 400 17px/1.5 var(--f-b); color: var(--muted); }
+  .oc-btns { display: flex; gap: 16px; margin-top: 18px; }
+  .oc-btns :global(.btn) { height: 64px; }
+  .oc-art { position: relative; height: 300px; margin: 26px 0 0 -11px; }
+  .oc-pol { position: absolute; left: 20px; top: 10px; width: 240px; height: 284px; margin: 0; padding: 10px; background: var(--white); border-radius: 3px;
+    box-shadow: 0 10px 24px -8px rgba(13, 13, 10, .2); rotate: -6deg; transform-origin: 0 0; }
+  .oc-ph { position: relative; width: 220px; height: 220px; overflow: hidden; }
+  .oc-slot { position: absolute; left: 300px; top: 0; width: 250px; height: 294px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
+    background: var(--white); border-radius: 3px; rotate: -3deg; transform-origin: 0 0; color: var(--pdeep);
+    background-image: repeating-linear-gradient(90deg, var(--pdeep) 0 8px, transparent 8px 14px), repeating-linear-gradient(90deg, var(--pdeep) 0 8px, transparent 8px 14px),
+      repeating-linear-gradient(0deg, var(--pdeep) 0 8px, transparent 8px 14px), repeating-linear-gradient(0deg, var(--pdeep) 0 8px, transparent 8px 14px);
+    background-size: 100% 2px, 100% 2px, 2px 100%, 2px 100%; background-position: 0 0, 0 100%, 0 0, 100% 0; background-repeat: no-repeat; }
+  .oc-slot p { margin: 0; font: 800 22px/1.04 var(--f-h); letter-spacing: -0.02em; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .oc-g { grid-template-columns: 1fr; row-gap: 32px; }
+  }
+  @media (max-width: 767px) {
+    .oc { padding: 64px 0 90px; }
+    .oc-lead { display: none; }
+    .oc-g { display: flex; flex-direction: column; }
+    .oc-g > div:first-child { display: contents; }
+    .oc-h { margin-top: 12px; }
+    .oc-lead { margin-top: 12px; font-size: 15px; }
+    .oc-art { order: 2; height: 214px; margin-top: 30px; }
+    .oc-btns { order: 3; flex-direction: column; gap: 16px; margin-top: 56px; }
+    .oc-btns :global(.btn) { width: 100%; height: 60px; }
+    .oc-btns :global(.btn.oc-b2) { height: 56px; }
+    .oc-pol { left: 10px; top: 10px; width: 170px; height: 214px; padding: 8px; rotate: 5deg; }
+    .oc-ph { width: 154px; height: 154px; }
+    .oc-slot { left: 172px; top: 0; width: 170px; height: 214px; rotate: -4deg; gap: 18px; }
+    .oc-slot svg { width: 32px; height: 32px; }
+    .oc-slot p { font-size: 18px; }
+  }
+</style>

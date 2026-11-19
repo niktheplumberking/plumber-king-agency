@@ -1,0 +1,67 @@
+---
+// "Owner's words" + "Other places to find us" (Figma "Owner and other platforms" y 3710 h 520 / mobile y 6975 h 558).
+// Facebook: no page URL in site.ts yet, so the card names it without a link (Kody to confirm the page).
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { SITE } from '../../data/site';
+import logo from '../../assets/brand/logo-glass.png';
+import { Image } from 'astro:assets';
+---
+<section class="cx-sec cx-white ro" data-m-section aria-label="Owner’s words and other places to find us">
+  <div class="wrap ro-g">
+    <figure class="ro-own">
+      <Eyebrow text="Owner’s words" tone="pdeep" as="p" />
+      <blockquote class="ro-q" data-t="2"><p>“Officially up and running as a Licensed and insured master plumber.”</p></blockquote>
+      <figcaption class="ro-by" data-t="3">Kody, on Instagram</figcaption>
+      <span class="ro-seal" data-t="5" aria-hidden="true"><Image src={logo} alt="" width={154} densities={[1, 2]} /></span>
+    </figure>
+    <div class="ro-pl">
+      <Eyebrow text="Other places to find us" tone="pdeep" as="h2" />
+      <ul class="ro-l" role="list" data-t="4" data-stagger>
+        <li class="ro-c">
+          <h3>Instagram</h3>
+          <p>{SITE.social.instagramHandle} · verified · 34 posts</p>
+          <a class="cx-link" href={SITE.social.instagram} target="_blank" rel="noopener">Open Instagram →<span class="sr-only"> (opens in a new tab)</span></a>
+        </li>
+        <li class="ro-c">
+          <h3>Facebook</h3>
+          <p>{SITE.name}</p>
+        </li>
+      </ul>
+      <p class="ro-note" data-t="3"><span class="d">We only show counts we can read ourselves. Angi, Nextdoor or Yelp get added once we can see them.</span><span class="m">We only show counts we can read ourselves.</span></p>
+    </div>
+  </div>
+</section>
+<style>
+  .ro { padding: 40px 0 98px; }
+  .ro-g { display: grid; grid-template-columns: 560px 560px; justify-content: space-between; }
+  .ro-own { margin: 0; }
+  .ro-q { margin: 16px 0 0; }
+  .ro-q p { margin: 0; font: 700 30px/1.25 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .ro-by { margin-top: 16px; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .ro-seal { display: grid; place-items: center; width: 96px; height: 96px; margin-top: 25px; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); }
+  .ro-seal :global(img) { width: 77px; height: auto; }
+  .ro-l { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 20px; }
+  .ro-c { height: 130px; padding: 20px 23px 0; border: 1px solid var(--frost3); border-radius: 6px; background: var(--frost); }
+  .ro-c h3 { margin: 0; font: 800 24px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .ro-c p { margin: 10px 0 0; font: 400 15px/1.5 var(--f-b); color: var(--muted); }
+  .ro-c .cx-link { display: inline-block; margin-top: 8px; font-size: 14px; }
+  .ro-note { margin: 28px 0 0; font: 400 14px/1.5 var(--f-b); color: var(--muted); }
+  .ro-note .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ro-g { grid-template-columns: 1fr 1fr; column-gap: 48px; }
+  }
+  @media (max-width: 767px) {
+    .ro { padding: 40px 0 70px; }
+    .ro-g { grid-template-columns: 1fr; row-gap: 40px; }
+    .ro-q { margin-top: 14px; } .ro-q p { font-size: 22px; }
+    .ro-by { font-size: 10px; margin-top: 12px; }
+    .ro-seal { display: none; }
+    .ro-l { margin-top: 12px; gap: 12px; }
+    .ro-c { height: auto; padding: 16px 18px 18px; }
+    .ro-c h3 { font-size: 20px; }
+    .ro-c p { font-size: 13px; margin-top: 8px; }
+    .ro-note { margin-top: 16px; font-size: 13px; }
+    .ro-note .d { display: none; } .ro-note .m { display: inline; }
+  }
+</style>

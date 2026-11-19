@@ -1,0 +1,102 @@
+---
+// /areas "FAQ" as a text thread (Figma 721:525 y 4665 h 838 / mobile y 4321 h 835). INTERACTION note: the questions and
+// answers pop in one by one like a text thread as it scrolls in (0.25 s apart), ending on the typing dots. Tapping the
+// thread opens a text to (727) 512-0673. FAQPage JSON-LD for exactly these three.
+import Head from './Head.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import { SITE } from '../../data/site';
+const AREA_FAQ = [
+  { q: 'Do you go to the beaches?', a: 'Yes. From Belleair Beach and Indian Rocks Beach down to St. Pete Beach.' },
+  { q: 'Do you come to Tampa?', a: 'Our base is Pinellas County. Call and ask about jobs across the bay.' },
+  { q: 'Is there a trip fee?', a: 'We tell you about any trip charge before we come out.' },
+];
+const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: AREA_FAQ.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) };
+---
+<section class="afaq" data-m-section aria-labelledby="afaq-h">
+  <div class="wrap afaq-grid">
+    <div class="afaq-copy">
+      <Head eyebrow="Area questions" l1="Before you ask." l2="We already got this text." id="afaq-h" sizeM={34} />
+      <p class="afaq-lead" data-t="3">The three things people text us most about where we go.</p>
+    </div>
+    <div class="th" data-thread>
+      <div class="th-bar">
+        <span class="th-seal"><Image src={logo} alt="" width={72} height={47} class="th-logo" /></span>
+        <span class="th-who"><span class="th-name">Glass Plumbing</span><span class="th-num">Text {SITE.phone}</span></span>
+      </div>
+      <dl class="th-body">
+        {AREA_FAQ.map((i, n) => (
+          <>
+            <dt class="bub bub--you" style={`--n:${n * 2}`}>{i.q}</dt>
+            <dd class="bub bub--us" style={`--n:${n * 2 + 1}`}>{i.a}</dd>
+          </>
+        ))}
+      </dl>
+      <span class="th-dots" style={`--n:${AREA_FAQ.length * 2}`} aria-hidden="true"><i></i><i></i><i></i></span>
+      <a class="th-link" href={SITE.sms}><span class="sr-only">Text us your own question at {SITE.phone}</span></a>
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</section>
+
+<script>
+  import { onEnter } from './inview';
+  document.querySelectorAll<HTMLElement>('[data-thread]').forEach((t) => onEnter(t, () => t.classList.add('is-in'), '0px 0px -12% 0px'));
+</script>
+
+<style>
+  .afaq { position: relative; background: var(--white); padding: 110px 0 120px; }
+  .afaq-grid { display: grid; grid-template-columns: 460px 660px; justify-content: space-between; align-items: start; }
+  .afaq-lead { max-width: 420px; margin-top: 24px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+
+  .th { position: relative; display: flex; flex-direction: column; min-height: 608px; padding-bottom: 24px; background: var(--frost); border-radius: 20px; box-shadow: 10px 10px 0 var(--powder); }
+  .th::after { content: ''; position: absolute; inset: 0; border: 1.5px solid var(--ink); border-radius: inherit; pointer-events: none; }
+  .th-bar { display: flex; align-items: center; gap: 12px; height: 64px; padding: 0 20px; background: var(--ink); border-radius: 20px 20px 0 0; }
+  .th-seal { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); box-shadow: 0 0 0 0 var(--ink); }
+  .th-seal :global(.th-logo) { width: 35px; height: auto; }
+  .th-who { display: flex; flex-direction: column; }
+  .th-name { font-weight: 700; font-size: 16px; line-height: 24px; color: var(--white); }
+  .th-num { font-family: var(--f-m); font-weight: 500; font-size: 9px; line-height: 12px; letter-spacing: .02em; color: var(--powder); }
+  .th-body { display: flex; flex-direction: column; margin: 0; padding: 28px 24px 0; }
+  .bub { margin: 0; padding: 12px 20px; font-size: 16px; line-height: 24px; }
+  .bub--you { align-self: flex-end; width: 340px; padding: 11px 19px; background: var(--white); border: 1px solid var(--frost3); border-radius: 16px 16px 4px 16px; font-weight: 600; color: var(--ink); }
+  .bub--us { align-self: flex-start; width: 400px; margin-top: 10px; background: var(--pdeep); border-radius: 16px 16px 16px 4px; color: var(--white); }
+  .bub--us + .bub--you { margin-top: 22px; }
+  .th-dots { display: flex; gap: 8px; align-self: flex-start; margin: 22px 0 0 24px; padding: 13px 15px; background: var(--white); border: 1px solid var(--frost3); border-radius: 18px; }
+  .th-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--pdeep); opacity: .4; }
+  .th-dots i:nth-child(2) { opacity: .6; } .th-dots i:nth-child(3) { opacity: .8; }
+  .th-link { position: absolute; inset: 0; z-index: 2; border-radius: 20px; }
+  .th-link:focus-visible { outline-offset: 4px; }
+  .th:hover::after { border-color: var(--pdeep); transition: border-color .4s var(--ease-io); }
+
+  /* motion: each bubble pops in 0.25 s after the one before (no-motion / no-JS: all shown) */
+  .bub, .th-dots { transition: opacity .5s var(--ease-io) calc(var(--n) * .25s), translate .5s var(--ease-io) calc(var(--n) * .25s), scale .5s var(--ease-io) calc(var(--n) * .25s); }
+  .bub--you { transform-origin: 100% 100%; } .bub--us, .th-dots { transform-origin: 0 100%; }
+  :global(html.motion) .th:not(.is-in) :is(.bub, .th-dots) { opacity: 0; translate: 0 12px; scale: .94; }
+  :global(html.motion) .th.is-in .th-dots i { animation: th-type 1.2s var(--ease-io) calc(var(--d) + 1.8s) 3; }
+  .th-dots i:nth-child(1) { --d: 0s; } .th-dots i:nth-child(2) { --d: .2s; } .th-dots i:nth-child(3) { --d: .4s; }
+  @keyframes th-type { 0%, 100% { translate: 0 0; } 30% { translate: 0 -4px; } 60% { translate: 0 0; } }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .afaq { padding: 96px 0 112px; }
+    .afaq-grid { grid-template-columns: minmax(0, .75fr) minmax(0, 1fr); column-gap: 40px; }
+    .bub--you { width: auto; max-width: 80%; } .bub--us { width: auto; max-width: 86%; }
+  }
+  @media (max-width: 767px) {
+    .afaq { padding: 64px 0 100px; }
+    .afaq-grid { display: block; }
+    .afaq-lead { display: none; }
+    .th { min-height: 0; margin-top: 28px; padding-bottom: 18px; border-radius: 18px; box-shadow: 6px 6px 0 var(--powder); }
+    .th-bar { height: 56px; padding: 0 14px; gap: 10px; border-radius: 18px 18px 0 0; }
+    .th-seal { width: 40px; height: 40px; }
+    .th-seal :global(.th-logo) { width: 32px; }
+    .th-name { font-size: 15px; line-height: 23px; }
+    .th-body { padding: 20px 16px 0; }
+    .bub { padding: 10px 16px; font-size: 15px; line-height: 23px; }
+    .bub--you { width: 250px; padding: 9px 15px; border-radius: 14px; }
+    .bub--us { width: 272px; border-radius: 14px; }
+    .bub--us + .bub--you { margin-top: 18px; }
+    .th-dots { margin: 18px 0 0 16px; }
+    .th-link { border-radius: 18px; }
+  }
+</style>

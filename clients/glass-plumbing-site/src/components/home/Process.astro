@@ -1,0 +1,85 @@
+---
+// Home process (Figma 712:448 "Process" y 6023 h 1010; mobile 715:560 y 6801 h 1080). Ink band. Five housings, one per step,
+// each a little fuller than the last (the water rises as each enters: kit/glass.ts), then the "Step 1 starts here." bar
+// with text + call buttons. On phones the steps are rows (housing left) and the two buttons stack.
+import Btn from '../kit/Btn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+const steps = [
+  { t: 'Call or text a photo', d: 'Any hour. A photo helps us bring the right part.', f: 24.2 / 244 },
+  { t: 'We come out', d: 'Kody or the crew, in the white Glass van.', f: 60.5 / 244 },
+  { t: 'Price before any work', d: 'You hear the price and the plan first.', f: 96.8 / 244 },
+  { t: 'Permit if needed', d: 'Water heater swaps and repipes in Pinellas need one. We file it.', f: 133.1 / 244 },
+  { t: 'Fixed, tested, cleaned up', d: 'We test it with you and leave it clean.', f: 169.4 / 244 },
+];
+---
+<section class="pr on-ink" aria-labelledby="pr-h" data-m-section>
+  <div class="wrap">
+    <div class="pr-head">
+      <div>
+        <Eyebrow text="How a job goes" />
+        <h2 id="pr-h" class="h2 pr-h" data-t="2">Five steps. <span class="tone">No surprises.</span></h2>
+      </div>
+      <p class="pr-lead" data-t="3">From your first call to a clean floor, this is what happens.</p>
+    </div>
+    <ol class="steps" role="list" data-t="4" data-stagger>
+      {steps.map((s, i) => (
+        <li>
+          <div class="hs-w">
+            <Housing tone="ink" w={170} h={260} wm={76} hm={108} cap={18} capm={14} fill={s.f}>
+              <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            </Housing>
+          </div>
+          <div class="st"><h3 class="h3 stt"><span class="sr-only">Step {i + 1}: </span>{s.t}</h3><p class="std">{s.d}</p></div>
+        </li>
+      ))}
+    </ol>
+    <div class="bar" data-t="3">
+      <div class="bar-t"><p class="bt">Step 1 starts here.</p><p class="bs">Call or text any hour</p></div>
+      <div class="bar-b">
+        <Btn look="line" icon="camera" label="Text a photo" sub="TO (727) 512-0673" arrow size="l" w={240} wm={350} class="b-text" />
+        <Btn sub="CALL NOW · 24/7" size="l" w={280} wm={350} class="b-call" />
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .pr { position: relative; background: var(--ink); color: var(--white); padding: 110px 0 110px; }
+  .pr-head { display: grid; grid-template-columns: 680px 480px; }
+  .pr-h { margin-top: 16px; color: var(--white); } .pr-h .tone { display: block; }
+  .pr-lead { margin-top: 46px; font-size: 17px; line-height: 1.5; color: var(--white); }
+  .steps { display: flex; gap: 87.5px; margin: 74px 0 0; padding: 0; list-style: none; }
+  .steps li { width: 170px; flex: none; }
+  .num { position: absolute; left: 44px; top: 14px; font-family: var(--f-h); font-weight: 800; font-size: 44px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); }
+  .st { width: 220px; margin-top: 32px; }
+  .stt { min-height: 58px; font-size: 21px; color: var(--white); text-wrap: wrap; }
+  .std { font-size: 15px; line-height: 1.5; color: rgb(255 255 255 / .8); }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 100px; margin-top: 52px; padding: 0 32px; border: 1px solid var(--ink3); border-radius: 6px; background: var(--ink2); }
+  .bt { font-family: var(--f-h); font-weight: 800; font-size: 28px; line-height: 1.04; letter-spacing: -.02em; }
+  .bs { margin-top: 8px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .bar-b { display: flex; gap: 16px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .pr-head { grid-template-columns: 1fr; } .pr-lead { margin-top: 20px; }
+    .steps { gap: 20px; justify-content: space-between; }
+    .steps li { width: auto; flex: 1; }
+    .hs-w { max-width: 170px; } .hs-w :global(.hs) { width: 100%; height: auto; aspect-ratio: 170 / 260; }
+    .st { width: auto; }
+    .bar { flex-wrap: wrap; height: auto; padding: 24px; gap: 20px; }
+  }
+  @media (max-width: 767px) {
+    .pr { padding: 72px 0 80px; }
+    .pr-head { display: block; }
+    .pr-h { margin-top: 10px; }
+    .pr-lead { display: none; }
+    .steps { flex-direction: column; gap: 22px; margin-top: 42px; }
+    .steps li { display: flex; gap: 24px; width: auto; }
+    .num { left: 28px; top: 6px; font-size: 24px; }
+    .st { width: auto; margin-top: 14px; }
+    .stt { min-height: 0; font-size: 19px; }
+    .std { margin-top: 8px; font-size: 14px; line-height: 1.4; }
+    .bar { display: block; height: auto; margin-top: 32px; padding: 0; border: 0; background: none; }
+    .bar-t { display: none; }
+    .bar-b { flex-direction: column-reverse; gap: 12px; }
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+// FAQ explorer (Figma 718:522 "FAQ" y 6294 h 946 / mobile y 6382 h 887). Left rail = service tabs (arrow keys move between
+// them); the right side swaps to that service's questions with a 0.3 s slide. One answer open at a time (kit accordion,
+// one `name` group per tab); + rotates to −. Default tab = the Figma's (Remodel & commercial), first answer open.
+// Phone: the rail is a row of chips that scrolls sideways, active chip first.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import { SITE } from '../../data/site';
+import { FAQ_TABS } from './data';
+const ACTIVE = 'remodel';
+---
+<section class="fq" data-m-section data-fq>
+  <div class="wrap">
+    <Eyebrow text="Service questions" />
+    <h2 class="h2 fq-h" data-t="2" style="--h2:52px;--h2m:36px">Pick a service.<br /><span class="tone">Get the straight answer.</span></h2>
+    <div class="fq-box" data-t="3">
+      <div class="fq-rail">
+        <p class="fq-rk" id="fq-rk">Browse by service</p>
+        <div class="fq-tabs" role="tablist" aria-labelledby="fq-rk" aria-orientation="vertical" data-fq-tabs>
+          {FAQ_TABS.map((t) => (
+            <button class:list={['fq-tab', t.id === ACTIVE && 'is-first']} type="button" role="tab" id={`fq-t-${t.id}`} aria-controls={`fq-p-${t.id}`}
+              aria-selected={t.id === ACTIVE ? 'true' : 'false'} tabindex={t.id === ACTIVE ? 0 : -1} data-fq-tab={t.id}>
+              <span>{t.name}</span>
+              <svg class="fq-tar" viewBox="0 0 14 12" width="12" height="10" aria-hidden="true" focusable="false"><path d="M.9 5.9h12m-5 5 5-5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div class="fq-main">
+        <div class="fq-stage" data-fq-stage>
+          {FAQ_TABS.map((t) => (
+            <div class="fq-panel" id={`fq-p-${t.id}`} role="tabpanel" aria-labelledby={`fq-t-${t.id}`} hidden={t.id !== ACTIVE} data-fq-panel={t.id}>
+              <p class="fq-k"><span class="d">{t.name} · </span>{t.items.length} questions</p>
+              {t.items.map((f, i) => (
+                <details class="fq-row" data-acc name={`fq-${t.id}`} open={t.id === ACTIVE && i === 0}>
+                  <summary class="fq-q"><span>{f.q}</span><i class="fq-pm" aria-hidden="true"></i></summary>
+                  <div class="fq-a">
+                    <p>{f.a}</p>
+                    {f.chip && <a class="fq-chip" href={f.chip.href}>{f.chip.label}</a>}
+                  </div>
+                </details>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div class="fq-stuck">
+          <p><span class="d">Still stuck? Text a photo to {SITE.phone}.</span><span class="m">Still stuck? Text a photo.</span></p>
+          <Btn look="line" icon="camera" label="Text a photo" size="s" w={170} class="fq-btn" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .fq { background: var(--frost); padding: 110px 0 130px; }
+  .fq-h { margin-top: 16px; }
+  .fq-box { display: grid; grid-template-columns: 340px minmax(0, 1fr); min-height: 520px; margin-top: 48px; border-radius: 8px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 10px 10px 0 var(--powder); }
+  .fq-rail { padding: 32px 0; border-radius: 8px 0 0 8px; background: var(--ink); color: var(--white); }
+  .fq-rk { padding: 0 32px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .fq-tabs { display: flex; flex-direction: column; margin-top: 25px; }
+  .fq-tab {
+    position: relative; display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 28px 0 32px; border: 0; background: transparent; text-align: left; cursor: pointer;
+    font-family: var(--f-h); font-weight: 600; font-size: 19px; line-height: 1.04; letter-spacing: -.02em; color: rgba(255,255,255,.6); transition: background-color .3s var(--ease-io), color .3s var(--ease-io);
+  }
+  .fq-tab::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--powder); scale: 1 0; transition: scale .3s var(--ease-io); }
+  .fq-tar { opacity: 0; translate: -6px 0; transition: opacity .3s var(--ease-io), translate .3s var(--ease-io); }
+  .fq-tab:hover { color: var(--white); }
+  .fq-tab[aria-selected='true'] { background: var(--ink3); color: var(--white); font-weight: 800; }
+  .fq-tab[aria-selected='true']::before { scale: 1 1; }
+  .fq-tab[aria-selected='true'] .fq-tar { opacity: 1; translate: 0 0; }
+  .fq-tab:focus-visible { outline: 3px solid var(--powder); outline-offset: -3px; }
+
+  .fq-main { display: flex; flex-direction: column; padding: 32px 40px 32px; min-width: 0; }
+  .fq-stage { position: relative; }
+  .fq-panel[hidden] { display: none; }
+  .fq-k { padding-bottom: 17px; border-bottom: 1px solid rgba(22,19,15,.2); font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .fq-row { border-bottom: 1px solid rgba(22,19,15,.2); }
+  .fq-q { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; padding: 16px 0 16px; cursor: pointer; list-style: none; font-family: var(--f-h); font-weight: 700; font-size: 22px; line-height: 1.04; letter-spacing: -.02em; }
+  .fq-q::-webkit-details-marker { display: none; }
+  .fq-q > span { padding-top: 6px; max-width: 640px; }
+  .fq-q:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  .fq-pm { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); transition: background-color .3s var(--ease-io), rotate .4s var(--ease-io); }
+  .fq-pm::before, .fq-pm::after { content: ''; position: absolute; left: 13px; top: 19px; width: 14px; height: 2px; background: var(--ink); transition: background-color .3s var(--ease-io), rotate .4s var(--ease-io); }
+  .fq-pm::after { rotate: 90deg; }
+  .fq-row[open]:not(.acc-off) .fq-pm { background: var(--ink); rotate: 180deg; }
+  .fq-row[open]:not(.acc-off) .fq-pm::before, .fq-row[open]:not(.acc-off) .fq-pm::after { background: var(--white); }
+  .fq-row[open]:not(.acc-off) .fq-pm::after { rotate: 0deg; }
+  .fq-q:hover .fq-pm { background: var(--frost); }
+  .fq-a { padding: 0 0 29px; }
+  .fq-a p { max-width: 620px; margin-top: -10px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  .fq-chip { display: inline-flex; align-items: center; height: 33px; margin-top: 14px; padding: 0 14px; border-radius: 16.5px; background: var(--frost); box-shadow: inset 0 0 0 1.2px var(--frost3); font-weight: 600; font-size: 13px; line-height: 1.5; color: var(--ink); transition: background-color .3s var(--ease-io), color .3s var(--ease-io); }
+  .fq-chip:hover { background: var(--ink); color: var(--white); }
+  .fq-stuck { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 52px; padding: 8px 12px 8px 20px; border-radius: 6px; background: var(--frost); }
+  .fq-stuck p { font-weight: 700; font-size: 16px; line-height: 1.5; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fq-box { grid-template-columns: 260px minmax(0, 1fr); }
+    .fq-tab { padding: 0 20px 0 24px; font-size: 17px; }
+    .fq-rk { padding: 0 24px; }
+    .fq-main { padding: 28px 28px; }
+  }
+  @media (max-width: 767px) {
+    .fq { padding: 64px 0 100px; }
+    .fq-h { margin-top: 12px; }
+    .fq-box { grid-template-columns: minmax(0, 1fr); min-height: 0; margin-top: 24px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+    .fq-rail { padding: 14px 0; border-radius: 8px 8px 0 0; }
+    .fq-rk { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .fq-tabs { flex-direction: row; gap: 8px; margin: 0; padding: 5.5px 16px; overflow-x: auto; scrollbar-width: none; }
+    .fq-tabs::-webkit-scrollbar { display: none; }
+    .fq-tab { order: 1; flex: none; height: 33px; padding: 0 14px; border-radius: 16.5px; box-shadow: inset 0 0 0 1.2px var(--ink3); font-family: var(--f-b); font-weight: 600; font-size: 13px; line-height: 1.5; letter-spacing: 0; color: var(--white); }
+    .fq-tab::after { content: ''; position: absolute; left: 0; right: 0; top: -6px; bottom: -6px; }
+    .fq-tab.is-first { order: 0; }
+    .fq-tab::before, .fq-tar { display: none; }
+    .fq-tab[aria-selected='true'] { background: var(--white); color: var(--ink); font-weight: 600; box-shadow: inset 0 0 0 1.2px var(--white); }
+    .fq-main { padding: 24px 18px 18px; }
+    .fq-k { padding-bottom: 14px; font-size: 10px; line-height: 13px; }
+    .fq-q { gap: 16px; padding: 14px 0; font-size: 18px; line-height: 1.15; }
+    .fq-q > span { padding-top: 4px; }
+    .fq-pm { width: 36px; height: 36px; }
+    .fq-pm::before, .fq-pm::after { left: 11px; top: 17px; }
+    .fq-a { padding-bottom: 20px; }
+    .fq-chip { display: none; }
+    .fq-a p { margin-top: -4px; font-size: 15px; }
+    .fq-stuck { flex-direction: column; align-items: stretch; gap: 13px; margin-top: 20px; padding: 16px; }
+    .fq-stuck p { font-size: 15px; }
+    .fq-stuck :global(.fq-btn) { width: 100%; }
+  }
+</style>
+<script>
+  const root = document.querySelector<HTMLElement>('[data-fq]');
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-fq-tab]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-fq-panel]')];
+    const tabsEl = root.querySelector<HTMLElement>('[data-fq-tabs]')!;
+    const motion = () => document.documentElement.classList.contains('motion');
+    const desk = matchMedia('(min-width: 768px)');
+    let anim: Animation | null = null;
+    const select = (b: HTMLButtonElement, focus = false) => {
+      const cur = panels.find((p) => !p.hidden)!;
+      const next = panels.find((p) => p.dataset.fqPanel === b.dataset.fqTab)!;
+      tabs.forEach((t) => { const on = t === b; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      if (focus) b.focus();
+      if (next === cur) return;
+      anim?.finish();
+      cur.hidden = true; next.hidden = false;
+      // Open the new tab's first answer if none is open, so the swap always shows an answer (as the Figma does).
+      const rows = [...next.querySelectorAll<HTMLDetailsElement>('details')];
+      if (!rows.some((r) => r.open) && rows[0]) { rows[0].open = true; rows[0].querySelector('summary')?.setAttribute('aria-expanded', 'true'); }
+      if (motion()) anim = next.animate([{ opacity: 0, transform: desk.matches ? 'translateX(24px)' : 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'cubic-bezier(.65,0,.35,1)' });
+    };
+    tabs.forEach((b) => {
+      b.addEventListener('click', () => { select(b); if (tabsEl.scrollWidth > tabsEl.clientWidth + 2) b.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: motion() ? 'smooth' : 'auto' }); });
+      b.addEventListener('keydown', (e) => {
+        const vis = [...tabs].sort((x, y) => (desk.matches ? x.offsetTop - y.offsetTop : x.offsetLeft - y.offsetLeft)); const j = vis.indexOf(b);
+        const nextK = desk.matches ? 'ArrowDown' : 'ArrowRight', prevK = desk.matches ? 'ArrowUp' : 'ArrowLeft';
+        let n = -1;
+        if (e.key === nextK || e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (j + 1) % vis.length;
+        else if (e.key === prevK || e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (j - 1 + vis.length) % vis.length;
+        else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = vis.length - 1;
+        if (n < 0) return; e.preventDefault(); select(vis[n], true);
+      });
+    });
+  }
+</script>

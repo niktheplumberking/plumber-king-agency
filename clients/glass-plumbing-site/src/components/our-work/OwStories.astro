@@ -1,0 +1,74 @@
+---
+// "How the job actually went." (Figma "Job stories" y 2428 h 1620 / mobile y 1885 h 1491). Three jobs, alternating sides,
+// steel spec tags on the photos. Copy = Figma.
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+const JOBS = [
+  { n: '01', t: 'Tankless pair install', tm: 'Tankless pair install', img: 'tankless-pair', alt: 'Two Rinnai tankless water heaters side by side on a brick wall',
+    rows: [['Units', 'Rinnai RE199E × 2'], ['Setup', 'Primary + secondary']], d: 'Two tankless units on one wall, set up as primary and secondary, for steady hot water.' },
+  { n: '02', t: 'Water main dig', tm: 'Water main dig', img: 'water-line-excavator', alt: 'A crew member in a Glass Plumbing shirt running a mini-excavator in a yard',
+    rows: [['Rig', 'Mini-excavator'], ['Line', '3/4" water main']], d: 'The mini-excavator digs the trench so the new water main goes in without hand-digging the whole yard.' },
+  { n: '03', t: 'Shower valve, rough-in to finish', tm: 'Shower valve,\nrough-in to finish', img: 'shower-valve', alt: 'A new shower valve and trim on a marble-look tiled wall with corner shelves',
+    rows: [['Wall', 'Not cut open'], ['Result', 'New valve + trim']], d: '“No need to cut open the wall to upgrade your shower valve.” Kody, on Instagram.' },
+];
+---
+<section class="cx-sec cx-frost os" data-m-section aria-labelledby="os-h">
+  <Seam from="var(--white)" to="var(--frost)" />
+  <div class="wrap">
+    <div class="shead">
+      <Eyebrow text="Three jobs, start to finish" tone="pdeep" />
+      <h2 id="os-h" class="cx-h os-h" data-t="2"><span class="ln">How the job</span> <span class="ln tone">actually went.</span></h2>
+    </div>
+    <ol class="os-l" role="list">
+      {JOBS.map((j, i) => (
+        <li class:list={['os-j', i % 2 === 1 && 'os-flip']}>
+          <figure class="os-ph" data-t="4" data-fx="frame">
+            <Img name={j.img} alt={j.alt} sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 92vw" box={600 / 380} boxM={350 / 240} />
+            <dl class="cx-tag os-tag">{j.rows.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}</dl>
+          </figure>
+          <div class="os-tx">
+            <p class="os-n" data-t="1">Job {j.n}</p>
+            <h3 class="os-t" data-t="3"><span class="d">{j.t}</span><span class="m">{j.tm}</span></h3>
+            <p class="os-d" data-t="3">{j.d}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+<style>
+  .os { padding: 110px 0 100px; }
+  .os-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
+  .os-l { margin: 52px 0 0; padding: 0; list-style: none; display: grid; gap: 40px; }
+  .os-j { display: grid; grid-template-columns: 600px 1fr; column-gap: 40px; align-items: start; }
+  .os-flip { grid-template-columns: 1fr 600px; }
+  .os-flip .os-ph { order: 2; }
+  .os-ph { position: relative; margin: 0; height: 380px; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
+  .os-tag { right: 18px; bottom: 16px; width: 200px; grid-template-columns: 44px 1fr; column-gap: 12px; row-gap: 6px; }
+  .os-flip .os-tag { right: auto; left: 18px; }
+  .os-tx { padding-top: 40px; }
+  .os-n { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .os-t { margin: 15px 0 0; font: 800 34px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .os-t .m { display: none; }
+  .os-d { margin: 55px 0 0; max-width: 480px; font: 400 17px/1.5 var(--f-b); color: var(--ink); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .os-j, .os-flip { grid-template-columns: 1fr 1fr; }
+    .os-ph { height: auto; aspect-ratio: 600 / 380; }
+    .os-tx { padding-top: 16px; } .os-d { margin-top: 24px; }
+  }
+  @media (max-width: 767px) {
+    .os { padding: 64px 0 48px; }
+    .os-h { margin-top: 10px; }
+    .os-l { margin-top: 28px; gap: 44px; }
+    .os-j, .os-flip { display: flex; flex-direction: column; }
+    .os-tx { display: contents; }
+    .os-n { order: 1; font-size: 10px; line-height: 13px; } .os-t { order: 2; margin-top: 9px; font-size: 24px; } .os-ph { order: 3; } .os-d { order: 4; }
+    .os-flip .os-ph { order: 3; }
+    .os-t .d { display: none; } .os-t .m { display: inline; white-space: pre-line; }
+    .os-ph { align-self: stretch; width: 100%; height: 240px; margin-top: 16px; }
+    .os-tag, .os-flip .os-tag { left: auto; right: 16px; bottom: 10px; width: 184px; grid-template-columns: 46px 1fr; font-size: 9px; line-height: 12px; box-shadow: 6px 6px 0 var(--ink); }
+    .os-d { margin-top: 28px; font-size: 15px; }
+  }
+</style>

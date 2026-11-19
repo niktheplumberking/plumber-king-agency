@@ -1,0 +1,41 @@
+---
+// Quick answer (Figma 719:437 y 914 h 484 / mobile y 1246 h 560): the repair-or-replace answer card (AI-overview style,
+// with its source line) and the "Job facts" plate. Copy word for word from the frames.
+import Plate from '../kit/Plate.astro';
+import { SITE } from '../../data/site';
+---
+<section class="qa" data-m-section>
+  <div class="wrap qa-grid">
+    <div class="qa-card" data-t="2">
+      <p class="qa-k">Quick answer · repair or replace?</p>
+      <p class="qa-a">Repair it if the tank is dry and the problem is a part, like an element, thermostat or valve. Replace it if the tank itself leaks. In Pinellas County a replacement needs a permit (the county lists a “Water Heater Equal Change Out, Tank or Tankless” express permit), and a licensed plumber pulls it.</p>
+      <p class="qa-src"><span class="d">Source: pinellas.gov express permits, read 17 Nov 2026</span><span class="m">Source: pinellas.gov, read 17 Nov 2026</span></p>
+    </div>
+    <div class="qa-pl" data-t="3">
+      <Plate class="d" title="Job facts · water heater" pad={24} size={12} tsize={14} kx={154} pitch={22} t={false}
+        rows={[['Permit', 'Yes (Pinellas express permit)'], ['Type', 'Tank or tankless'], ['Brands seen', 'State, Rinnai (from his posts)'], ['Done by', `Licensed plumber, ${SITE.licence.number}`], ['Often', 'Next day (from reviews)']]} />
+      <Plate class="m" title="Job facts" pad={16} size={11} tsize={12} kx={106} pitch={21} t={false}
+        rows={[['Permit', 'Yes (express permit)'], ['Type', 'Tank or tankless'], ['Brands', 'State, Rinnai'], ['Done by', `Licensed, ${SITE.licence.number}`]]} />
+    </div>
+  </div>
+</section>
+<style>
+  .qa { background: var(--frost); padding: 96px 0 110px; }
+  .qa-grid { display: grid; grid-template-columns: minmax(0, 700px) 440px; justify-content: space-between; align-items: start; }
+  .qa-card { padding: 32px 32px 31px; border-radius: 6px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 10px 10px 0 var(--powder); }
+  .qa-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .qa-a { margin-top: 17px; font-weight: 500; font-size: 20px; line-height: 1.5; }
+  .qa-src { margin-top: 20px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .02em; color: var(--muted); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .qa-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+    .qa-pl { max-width: 440px; }
+  }
+  @media (max-width: 767px) {
+    .qa { padding: 48px 0 64px; }
+    .qa-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .qa-card { padding: 20px 18px 16px; box-shadow: inset 0 0 0 1.5px var(--ink), 8px 8px 0 var(--powder); }
+    .qa-k { font-size: 9px; line-height: 12px; }
+    .qa-a { margin-top: 12px; font-size: 16px; }
+    .qa-src { margin-top: 12px; font-size: 9px; line-height: 12px; letter-spacing: .01em; }
+  }
+</style>

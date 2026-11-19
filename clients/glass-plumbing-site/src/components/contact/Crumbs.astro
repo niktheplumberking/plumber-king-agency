@@ -1,0 +1,12 @@
+---
+// Visible mono breadcrumbs ("Home  /  Contact"). JSON-LD: crumbsLd() in ld.ts, passed to Base via jsonld.
+import './cx.css';
+interface Props { label: string; class?: string }
+const { label, class: cls } = Astro.props;
+---
+<nav class:list={['cx-crumbs', cls]} aria-label="Breadcrumb" data-t="1">
+  <ol>
+    <li><a href="/">Home</a><span class="sep" aria-hidden="true">/</span></li>
+    <li><span aria-current="page">{label}</span></li>
+  </ol>
+</nav>

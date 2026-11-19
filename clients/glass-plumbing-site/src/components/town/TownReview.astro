@@ -1,0 +1,80 @@
+---
+// /areas/seminole "Review and photos" (Figma y 3837 h 690 / mobile y 3572 h 572). Frost, meniscus rise (40 / 32) over the
+// white permits section. Cody Weaver's Seminole review (checked word for word against reviews.ts) and three job photos
+// captioned "· Pinellas" (which jobs were in Seminole waits for Kody). Phones: the photos are a clipped scroll-snap rail.
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { quote, STARS } from '../areas/reviews';
+const q = quote('Cody Weaver', 'Kody came out and fixed my shower in Seminole that refused to drain. He was efficient and professional throughout the whole experience.');
+const photos = [
+  { name: 'kitchen-faucet-2', cap: 'Kitchen faucet · Pinellas', alt: 'A brushed-steel pull-down kitchen faucet over a sink after install', box: 224 / 280 },
+  { name: 'corroded-pipe', cap: 'Leak repair · Pinellas', alt: 'A corroded pipe and valve on a wall before the leak repair', box: 224 / 280 },
+  { name: 'water-filters', cap: 'Whole-house filters · Pinellas', alt: 'A row of blue whole-house water filter housings plumbed on a wall', box: 460 / 200, wide: true },
+];
+---
+<section class="trev" data-m-section aria-labelledby="trev-h">
+  <Seam from="var(--white)" to="var(--frost)" flip d={40} dm={32} />
+  <div class="wrap tr-grid">
+    <figure class="tr-q" data-t="3">
+      <h2 id="trev-h" class="sr-only">A review from Seminole</h2>
+      <svg class="tr-stars" viewBox="0 0 80 13" fill="#F9B50D" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
+      <blockquote><p>“{q}”</p></blockquote>
+      <figcaption>Cody Weaver · Google · Seminole</figcaption>
+    </figure>
+    <div class="tr-rail" data-carousel>
+      <ul class="tr-photos" role="list" data-track data-t="4" data-stagger>
+        {photos.map((p) => (
+          <li class:list={['tr-ph', p.wide && 'is-wide']} data-slide>
+            <figure>
+              <div class="tr-img"><Img name={p.name} alt={p.alt} sizes={p.wide ? '(min-width:1280px) 460px, (min-width:768px) 38vw, 164px' : '(min-width:1280px) 224px, (min-width:768px) 19vw, 164px'} box={p.box} boxM={164 / 210} widths={[164, 240, 330, 460, 680, 920]} /></div>
+              <figcaption>{p.cap}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+      <div class="tr-dots" aria-hidden="true">{photos.map((_, i) => <span class:list={['dot', i === 0 && 'on']} data-dot></span>)}</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trev { position: relative; background: var(--frost); padding: 110px 0 59px; }
+  .tr-grid { display: grid; grid-template-columns: 640px 460px; justify-content: space-between; align-items: start; }
+  .tr-q { margin: 0; }
+  .tr-stars { display: block; width: 105px; height: 18px; }
+  .tr-q blockquote { margin: 18px 0 0; font-family: var(--f-h); font-weight: 700; font-size: 34px; line-height: 1.2; letter-spacing: -.02em; color: var(--ink); }
+  .tr-q figcaption { margin-top: 20px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+  .tr-photos { display: grid; grid-template-columns: 224px 224px; justify-content: space-between; row-gap: 0; }
+  .tr-ph figure { margin: 0; }
+  .tr-img { position: relative; height: 280px; border-radius: 4px; overflow: hidden; background: var(--frost2); }
+  .tr-img :global(picture), .tr-img :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .is-wide { grid-column: 1 / -1; }
+  .is-wide .tr-img { height: 200px; }
+  .tr-ph figcaption { margin-top: 8px; height: 12px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .01em; color: var(--muted); }
+  .tr-dots { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .tr-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); column-gap: 40px; }
+    .tr-q blockquote { font-size: clamp(24px, 3vw, 34px); }
+    .tr-photos { grid-template-columns: 1fr 1fr; column-gap: 12px; }
+    .tr-img { height: auto; aspect-ratio: 224 / 280; }
+    .is-wide { margin-top: 4px; }
+    .is-wide .tr-img { height: auto; aspect-ratio: 460 / 200; }
+  }
+  @media (max-width: 767px) {
+    .trev { padding: 48px 0 60px; }
+    .tr-grid { display: block; }
+    .tr-stars { width: 85px; height: 14px; }
+    .tr-q blockquote { margin-top: 12px; font-size: 21px; line-height: 1.24; }
+    .tr-q figcaption { margin-top: 12px; }
+    .tr-rail { margin: 25px calc(-1 * var(--gutter)) 0; overflow: hidden; }
+    .tr-photos { display: flex; gap: 12px; padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
+    .tr-photos::-webkit-scrollbar { display: none; }
+    .tr-ph { flex: none; width: 164px; scroll-snap-align: start; }
+    .is-wide { margin-top: 0; }
+    .tr-img, .is-wide .tr-img { height: 210px; }
+    .tr-ph figcaption { margin-top: 8px; font-size: 9px; line-height: 12px; white-space: nowrap; }
+    .tr-dots { display: flex; gap: 6px; margin: 18px 0 0 var(--gutter); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--frost3); transition: background-color .5s var(--ease-io); }
+    .dot.on { background: var(--ink); }
+  }
+</style>

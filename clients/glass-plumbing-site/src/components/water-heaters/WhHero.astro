@@ -1,0 +1,116 @@
+---
+// /services/water-heaters hero (Figma 719:437 "Hero" y 172 h 742 / mobile 720:566 y 158 h 1088): crumbs, eyebrow, H1, lead,
+// micro review (Kevin Kelleman, word for word), short call-back form (forms.ts), call + "Text the label" buttons, and the
+// photo housing (water-heater-tank-2; never water-heater-tank on this page) with its "Job label" plate.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Housing from '../kit/Housing.astro';
+import Plate from '../kit/Plate.astro';
+import Img from '../ui/Img.astro';
+import Crumbs from '../services/Crumbs.astro';
+import { SITE } from '../../data/site';
+import { STARS } from '../services/glyphs';
+---
+<section class="wh" data-m-section data-m-hero>
+  <div class="wrap wh-grid">
+    <div class="wh-l">
+      <Crumbs items={[{ label: 'Services', href: '/services' }, { label: 'Water heaters', href: '/services/water-heaters' }]} />
+      <Eyebrow class="wh-eb" text="Tank · tankless · repair · replace" />
+      <h1 class="h1 wh-h" data-t="2">Water Heaters in<br /><span class="tone">Largo, FL</span></h1>
+      <p class="wh-lead" data-t="3"><span class="d">Repair or replace, tank or tankless, often the next day. Licensed plumber, FL CFC1432488.</span><span class="m">Repair or replace, tank or tankless, often the next day. Licensed plumber, CFC1432488.</span></p>
+    </div>
+    <div class="wh-art" data-t="3">
+      <Housing w={320} h={560} wm={190} hm={300} cap={36} capm={21} r={28} tone="photo" shadow={12} shadowm={8} class="wh-hs">
+        <Img name="water-heater-tank-2" alt="A tank water heater Glass Plumbing installed" priority sizes="(min-width:768px) 320px, 190px" box={320 / 524} boxM={190 / 281} widths={[380, 640, 960]} />
+      </Housing>
+      <Plate class="wh-plate d" title="Job label" w={220} pad={12} size={10} tsize={12} kx={76} pitch={19} t={false}
+        rows={[['Job', 'Water heater'], ['Types', 'Tank · tankless'], ['Permit', 'Yes, in Pinellas'], ['Licence', SITE.licence.number]]} />
+      <Plate class="wh-plate m" title="Job label" w={170} wm={170} pad={10} size={9} tsize={10} kx={66} pitch={18} t={false}
+        rows={[['Permit', 'Yes, Pinellas'], ['Licence', SITE.licence.number]]} />
+    </div>
+    <div class="wh-act">
+      <figure class="wh-rev" data-t="3">
+        <span class="wh-stars" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
+        <blockquote><p>“…called and had one installed the next day at a great price.” <cite>Kevin Kelleman</cite></p></blockquote>
+      </figure>
+      <form class="wh-form" id="estimate" data-estimate-form novalidate aria-labelledby="wh-ft" data-t="4">
+        <p class="wh-ft" id="wh-ft">Get a water heater price</p>
+        <div class="wh-row">
+          <label class="sr-only" for="wh-name">Your name</label>
+          <input class="wh-in" id="wh-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+          <label class="sr-only" for="wh-phone">Phone</label>
+          <input class="wh-in" id="wh-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone" required />
+          <input type="hidden" name="job" value="Water heaters" />
+          <Btn look="call" type="submit" label="Call me back" size="s" w={196} h={48} hm={52} class="wh-btn" />
+        </div>
+        <p class="wh-msg" data-form-msg role="status" aria-live="polite"></p>
+      </form>
+      <div class="wh-btns" data-t="4">
+        <Btn sub="CALL NOW · 24/7" size="l" w={280} h={64} hm={60} class="wh-b" />
+        <Btn look="line" icon="camera" label="Text the label" sub={`PHOTO TO ${SITE.phone}`} arrow size="l" w={300} h={64} hm={60} class="wh-b" />
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .wh { background: var(--white); padding: 44px 0 96px; }
+  .wh-grid { display: grid; grid-template-columns: minmax(0, 680px) 460px; grid-template-areas: 'l art' 'act art'; grid-template-rows: auto 1fr; justify-content: space-between; }
+  .wh-l { grid-area: l; }
+  .wh-l :global(.wh-eb) { margin-top: 29px; }
+  .wh-h { --h1: 72px; --h1m: 34px; line-height: 1; margin-top: 16px; }
+  .wh-lead { margin-top: 22px; max-width: 560px; font-size: 19px; line-height: 1.5; }
+  .wh-art { grid-area: art; position: relative; height: 560px; margin-top: 16px; }
+  .wh-art :global(.wh-hs) { margin-left: 0; }
+  .wh-art :global(.wh-plate) { position: absolute; left: 240px; top: 320px; }
+  .wh-art :global(.wh-plate.m) { display: none; }
+  .wh-act { grid-area: act; }
+  .wh-rev { position: relative; margin: 22px 0 0; padding: 2px 0 0 18px; max-width: 560px; }
+  .wh-rev::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 56px; background: var(--powder); }
+  .wh-stars { display: block; width: 75px; height: 12px; }
+  .wh-stars :global(svg) { display: block; width: 100%; height: auto; }
+  .wh-rev blockquote { margin: 8px 0 0; }
+  .wh-rev p { font-style: italic; font-size: 15px; line-height: 1.5; }
+  .wh-rev cite { margin-left: 6px; font-style: normal; font-weight: 400; }
+  .wh-form { width: 620px; max-width: 100%; margin-top: 48px; padding: 16px 20px 14px; border-radius: 6px; background: var(--frost); box-shadow: inset 0 0 0 1px var(--frost3); }
+  .wh-ft { font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .wh-row { display: grid; grid-template-columns: 180px 180px 196px; gap: 12px; margin-top: 9px; }
+  .wh-in { width: 100%; height: 48px; padding: 0 14px; border: 0; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1px var(--frost3); font-family: var(--f-b); font-size: 15px; line-height: 23px; color: var(--ink); appearance: none; }
+  .wh-in::placeholder { color: var(--muted); opacity: 1; }
+  .wh-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  .wh-in[aria-invalid='true'] { box-shadow: inset 0 0 0 2px var(--red); }
+  .wh-row :global(.wh-btn) { width: 100%; font-size: 15px; }
+  .wh-msg { font-size: 13px; line-height: 1.4; color: var(--red); }
+  .wh-msg:not(:empty) { margin-top: 8px; }
+  .wh-btns { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .wh-grid { grid-template-columns: minmax(0, 1fr) 360px; gap: 0 40px; }
+    .wh-art :global(.wh-plate) { left: auto; right: -12px; }
+    .wh-art :global(.wh-hs) { width: 300px; }
+    .wh-row { grid-template-columns: 1fr 1fr; }
+    .wh-row :global(.wh-btn) { grid-column: 1 / -1; }
+  }
+  @media (max-width: 767px) {
+    .wh { padding: 24px 0 48px; }
+    .wh-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'art' 'act'; }
+    .wh-l :global(.wh-eb) { margin-top: 15px; }
+    .wh-h { line-height: 1.02; margin-top: 10px; }
+    .wh-lead { margin-top: 12px; font-size: 16px; }
+    .wh-art { height: 300px; margin: 24px 0 0 40px; }
+    .wh-art :global(.wh-plate.d) { display: none; }
+    .wh-art :global(.wh-plate.m) { display: block; left: 136px; top: 170px; }
+    .wh-rev { margin-top: 28px; padding: 2px 0 0 16px; }
+    .wh-rev::before { height: 70px; }
+    .wh-stars { width: 70px; height: 11px; }
+    .wh-rev blockquote { margin-top: 7px; }
+    .wh-rev p { font-size: 14px; }
+    .wh-form { width: auto; margin-top: 32px; padding: 18px 18px 18px; }
+    .wh-row { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 13px; }
+    .wh-row :global(.wh-btn) { margin-top: 2px; font-size: 16px; }
+    .wh-btns { flex-direction: column; gap: 12px; margin-top: 24px; }
+    .wh-btns :global(.wh-b) { width: 100%; }
+  }
+  @media (max-width: 374px) {
+    .wh-art { margin-left: 24px; }
+  }
+</style>

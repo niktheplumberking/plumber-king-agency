@@ -1,0 +1,33 @@
+---
+// Home (Figma 712:448 desktop 1440, 715:560 mobile 390). Sections 3-13 of figma-cache/INDEX.md, one component each.
+// Utility bar, header, emergency strip, footer and the mobile call bar come from Base.astro (shared builder).
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import Reviews from '../components/home/Reviews.astro';
+import Services from '../components/home/Services.astro';
+import Crew from '../components/home/Crew.astro';
+import RealWork from '../components/home/RealWork.astro';
+import WhyUs from '../components/home/WhyUs.astro';
+import Process from '../components/home/Process.astro';
+import Emergency from '../components/home/Emergency.astro';
+import Areas from '../components/home/Areas.astro';
+import Faq from '../components/home/Faq.astro';
+import Estimate from '../components/home/Estimate.astro';
+import { faqSchema } from '../components/home/faq';
+---
+<Base title="24/7 Plumber in Largo, FL · Glass Plumbing Services"
+  description="Kody, Zak and the crew fix leaks, drains, water heaters and softeners across Pinellas County. Call any hour, or text us a photo of the problem first."
+  path="/" jsonld={[faqSchema()]} og="hero-crew-job" ogAlt="A Glass Plumbing plumber on a mini excavator beside the white Glass van"
+  preload={{ name: 'hero-crew-job', sizes: '(min-width: 768px) 760px, 105vw', widths: [420, 760, 1000, 1520] }}>
+  <Hero />
+  <Reviews />
+  <Services />
+  <Crew />
+  <RealWork />
+  <WhyUs />
+  <Process />
+  <Emergency />
+  <Areas />
+  <Faq />
+  <Estimate />
+</Base>

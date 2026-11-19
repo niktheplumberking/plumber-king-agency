@@ -1,0 +1,89 @@
+---
+// Home "Why us" (Figma 712:448 y 5097 h 926; mobile 715:560 y 5761 h 1040). Frost band. A water "test strip": five pads,
+// each the number of the 16 Google reviews (read 17 Nov 2026) that mention that thing; then two review quotes word for word.
+// Counts are the Figma's own count of reviews.ts (Kody to confirm nothing changed). On phones the strip stands upright.
+import Eyebrow from '../kit/Eyebrow.astro';
+import { quote } from './fig';
+const pads = [
+  { n: 5, t: 'On time', dark: true },
+  { n: 2, t: 'Explains everything', dark: false },
+  { n: 6, t: 'Fair price', dark: true },
+  { n: 4, t: 'Same or next day', dark: true },
+  { n: 2, t: 'Cleans up after', dark: false },
+];
+const q1 = quote('Michael Marks', 'Zak and Chase were on time, explained everything in detail, made solid recommendations, and did the little extras (cleaning up, performance & look) that turn a really good outcome into a great one.');
+const q2 = quote('Kevin Kelleman', 'Needed a new Water Heater, called and had one installed the next day at a great price.');
+---
+<section class="why" aria-labelledby="why-h" data-m-section>
+  <div class="wrap">
+    <div class="why-head">
+      <div>
+        <Eyebrow text="What 16 reviews say" />
+        <h2 id="why-h" class="h2 why-h" data-t="2">Why they call us <span class="tone">again and again.</span></h2>
+      </div>
+      <p class="why-lead" data-t="3">We read all 16 Google reviews on 17 Nov 2026 and counted what people mention most.</p>
+    </div>
+    <div class="strip" data-t="4">
+      <p class="hdl"><b>Test strip</b><span>16 reviews</span><span class="dt">17 Nov 2026</span></p>
+      <ul class="pads" role="list" data-stagger data-t="4">
+        {pads.map((p) => (
+          <li><span class:list={['pad', { dk: p.dark }]}><b data-count={p.n}>{p.n}</b><span>of 16</span></span><span class="pt">{p.t}</span></li>
+        ))}
+      </ul>
+    </div>
+    <div class="qs">
+      <figure data-t="3"><blockquote><p>“{q1.text}”</p></blockquote><figcaption>{q1.name} · Google</figcaption></figure>
+      <figure class="q2" data-t="3"><blockquote><p>“{q2.text}”</p></blockquote><figcaption>{q2.name} · Google</figcaption></figure>
+    </div>
+  </div>
+</section>
+<style>
+  .why { position: relative; background: var(--frost); padding: 110px 0 106px; }
+  .why-head { display: grid; grid-template-columns: 680px 480px; }
+  .why-h { margin-top: 16px; } .why-h .tone { display: block; }
+  .why-lead { margin-top: 46px; font-size: 17px; line-height: 1.5; }
+  .strip { display: flex; height: 250px; margin-top: 104px; border: 1px solid var(--frost3); border-radius: 8px; background: var(--white); overflow: hidden; }
+  .hdl { position: relative; display: flex; flex-direction: column; width: 140px; flex: none; padding: 23px 0 0 23px; background: var(--frost2); font-family: var(--f-m); font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
+  .hdl b { font-weight: 700; }
+  .hdl span { margin-top: 5px; font-weight: 500; color: var(--muted); }
+  .hdl .dt { position: absolute; left: 23px; bottom: 25px; font-size: 10px; line-height: 13px; }
+  .pads { display: flex; gap: 25px; margin: 0; padding: 23px 0 0 29px; list-style: none; }
+  .pads li { width: 180px; }
+  .pad { display: flex; flex-direction: column; height: 150px; padding: 10px 20px 0; border-radius: 4px; background: var(--powder); color: var(--ink); }
+  .pad.dk { background: var(--pdeep); color: var(--white); }
+  .pad b { font-family: var(--f-h); font-weight: 800; font-size: 72px; line-height: 1.04; letter-spacing: -.02em; }
+  .pad span { margin-top: 25px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
+  .pt { display: block; margin-top: 14px; font-weight: 700; font-size: 15px; line-height: 23px; }
+  .qs { display: grid; grid-template-columns: 560px 560px; column-gap: 80px; margin-top: 60px; }
+  .qs p { font-family: var(--f-h); font-weight: 700; font-size: 22px; line-height: 1.3; letter-spacing: -.02em; }
+  .qs figcaption { margin-top: 14px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .why-head { grid-template-columns: 1fr; } .why-lead { margin-top: 20px; max-width: 560px; }
+    .strip { height: auto; margin-top: 56px; }
+    .pads { flex: 1; gap: 12px; padding: 20px; }
+    .pads li { flex: 1; width: auto; }
+    .pad { height: 120px; padding: 8px 14px 0; } .pad b { font-size: 52px; } .pad span { margin-top: 12px; }
+    .qs { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  }
+  @media (max-width: 767px) {
+    .why { padding: 72px 0 80px; }
+    .why-head { display: block; }
+    .why-h { margin-top: 10px; }
+    .why-lead { margin-top: 12px; font-size: 15px; }
+    .strip { flex-direction: column; height: auto; margin-top: 38px; }
+    .hdl { flex-direction: row; width: auto; height: 44px; padding: 16px 0 0 16px; font-size: 9px; line-height: 12px; }
+    .hdl span, .hdl .dt { position: static; margin: 0; font-weight: 700; color: var(--ink); font-size: 9px; line-height: 12px; }
+    .hdl span::before { content: ' · '; white-space: pre; }
+    .pads { flex-direction: column; gap: 12px; padding: 16px 16px 19px; }
+    .pads li { display: flex; align-items: center; gap: 18px; width: auto; }
+    .pad { width: 72px; height: 72px; flex: none; padding: 8px 0 0 14px; }
+    .pad b { font-size: 40px; }
+    .pad span { margin-top: 2px; font-size: 8px; line-height: 11px; }
+    .pt { margin: 0; font-size: 16px; line-height: 24px; }
+    .qs { display: block; margin-top: 32px; }
+    .qs p { font-size: 19px; }
+    .qs figcaption { margin-top: 10px; font-size: 10px; line-height: 13px; }
+    .q2 { display: none; }
+  }
+</style>

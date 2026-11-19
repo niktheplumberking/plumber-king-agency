@@ -1,0 +1,28 @@
+---
+// /areas/seminole "City emergency band" (Figma y 4827 h 200 / mobile y 4412 h 206). White, 10 px powder bar on top (8 on
+// phones), call button.
+import Btn from '../kit/Btn.astro';
+---
+<section class="temg" data-m-section aria-labelledby="temg-h">
+  <div class="wrap te-grid">
+    <div>
+      <h2 id="temg-h" class="te-h" data-t="2">Burst pipe in Seminole?</h2>
+      <p class="te-p" data-t="3">Close the main shut-off, then call. We answer 24/7.</p>
+    </div>
+    <Btn look="call" sub="Call now · 24/7" size="l" w={280} wm={350} t="3" class="te-btn" />
+  </div>
+</section>
+
+<style>
+  .temg { position: relative; background: var(--white); border-top: 10px solid var(--powder); padding: 54px 0 56px; }
+  .te-grid { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+  .te-h { font-family: var(--f-h); font-weight: 800; font-size: 40px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .te-p { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  @media (max-width: 767px) {
+    .temg { border-top-width: 8px; padding: 32px 0 36px; }
+    .te-grid { flex-direction: column; gap: 0; }
+    .te-h { font-size: 24px; }
+    .te-p { margin-top: 9px; font-size: 14px; }
+    .temg :global(.te-btn) { margin-top: 15px; }
+  }
+</style>

@@ -1,0 +1,79 @@
+---
+// /areas/seminole hero (Figma 723:437 y 172 h 676 / mobile 723:1034 y 158 h 794). White. The tub-job photo bleeds from the
+// left edge (640 x 676; phones: full width x 240 on top) with the "On the job" plate; breadcrumbs, eyebrow, H1 (= SEO H1),
+// the quick-answer box (pdeep 6 px tab), call + text-a-photo buttons.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Plate from '../kit/Plate.astro';
+import Img from '../ui/Img.astro';
+import { MI, QUICK } from './data';
+---
+<section class="thero" data-m-section data-m-hero aria-labelledby="thero-h">
+  <figure class="th-media" data-t="4" data-fx="frame">
+    <Img name="tub-job" alt="A tub spout and shower valve over a green bathtub, from a recent tub job" priority focus="50% 40%"
+      sizes="(min-width:1280px) 640px, (min-width:768px) 44vw, 100vw" box={640 / 676} boxM={390 / 240} widths={[390, 640, 780, 1280]} />
+    <div class="th-plate">
+      <Plate title="On the job" rows={[['Photo', 'A recent tub job'], ['Base', `Largo · ${MI}`]]} w={240} wm={200} pad={12} size={10} tsize={12} kx={76} pitch={19} shadow="ink" />
+    </div>
+  </figure>
+  <div class="wrap th-wrap">
+    <div class="th-copy">
+      <Breadcrumbs items={[{ label: 'Areas', href: '/areas' }, { label: 'Seminole', href: '/areas/seminole' }]} class="th-crumbs" />
+      <Eyebrow text={`Seminole, FL · ${MI} from our Largo base`} t="1" class="th-eb th-eb--d" />
+      <Eyebrow text={`${MI} from our Largo base`} t="1" class="th-eb th-eb--m" />
+      <h1 id="thero-h" class="th-h" data-t="2">Plumber in<br /><span class="tone">Seminole, FL</span></h1>
+      <div class="th-qa" data-t="3" data-fx="nudge">
+        <p class="th-qa-k">Quick answer</p>
+        <p class="th-qa-p">{QUICK}</p>
+      </div>
+      <div class="th-btns">
+        <Btn look="call" sub="Call now · 24/7" size="l" w={280} wm={350} t="3" />
+        <Btn look="line" label="Text a photo" sub="To (727) 512-0673" icon="camera" arrow size="l" w={280} wm={350} t="3" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .thero { position: relative; background: var(--white); min-height: 676px; }
+  .th-media { position: absolute; left: 0; top: 0; bottom: 0; width: 640px; margin: 0; }
+  .th-media :global(picture), .th-media :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .th-plate { position: absolute; z-index: 2; left: 360px; top: 470px; }
+  .th-wrap { display: flex; justify-content: flex-end; }
+  .th-copy { width: 580px; padding: 44px 0 129px; }
+  .thero :global(.th-eb) { margin-top: 29px; }
+  .thero :global(.th-eb--m) { display: none; }
+  .th-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 76px; line-height: 1; letter-spacing: -.02em; color: var(--ink); }
+  .th-h .tone { color: var(--pdeep); }
+  .th-qa { position: relative; margin-top: 28px; padding: 22px 24px 24px 28px; background: var(--frost); border-radius: 6px; overflow: hidden; }
+  .th-qa::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--pdeep); }
+  .th-qa-k { font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .th-qa-p { margin-top: 11px; font-weight: 500; font-size: 18px; line-height: 1.5; color: var(--ink); }
+  .th-btns { display: flex; gap: 16px; margin-top: 32px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .th-media { width: 44%; }
+    .th-plate { left: auto; right: 24px; top: auto; bottom: 120px; }
+    .th-copy { width: 52%; padding: 40px 0 96px; }
+    .th-h { font-size: clamp(48px, 6vw, 76px); }
+    .th-btns { flex-wrap: wrap; }
+  }
+  @media (max-width: 767px) {
+    .thero { min-height: 0; padding-top: 240px; }
+    .th-media { bottom: auto; height: 240px; width: 100%; }
+    .th-plate { left: auto; right: 20px; top: 170px; }
+    .th-copy { width: 100%; padding: 40px 0 48px; }
+    .thero :global(.th-crumbs ol) { font-size: 10px; line-height: 13px; letter-spacing: .01em; }
+    .thero :global(.th-crumbs .sep) { margin: 0 1ch; }
+    .thero :global(.th-eb) { margin-top: 15px; }
+    .thero :global(.th-eb--d) { display: none; }
+    .thero :global(.th-eb--m) { display: flex; }
+    .th-h { margin-top: 10px; font-size: 42px; line-height: 1.02; }
+    .th-qa { margin-top: 18px; padding: 16px 18px 18px 20px; }
+    .th-qa::before { width: 4px; }
+    .th-qa-k { font-size: 9px; line-height: 12px; }
+    .th-qa-p { margin-top: 10px; font-size: 15px; }
+    .th-btns { flex-direction: column; gap: 12px; margin-top: 28px; }
+  }
+</style>

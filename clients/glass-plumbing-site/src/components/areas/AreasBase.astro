@@ -1,0 +1,59 @@
+---
+// /areas "One base" (Figma 721:525 y 855 h 780 / mobile y 1028 h 759). Frost. The real Google Maps screenshot of Pinellas
+// with the Largo pin, the "Find us" spec plate and the call button. The street address waits for Kody (site.ts), so the
+// plate says "Largo, FL" where the Figma has the street.
+import Head from './Head.astro';
+import Btn from '../kit/Btn.astro';
+import Plate from '../kit/Plate.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const rows: [string, string][] = [
+  ['Name', SITE.name], ['Base', `${SITE.city}, ${SITE.region}`], ['Phone', SITE.phone], ['Hours', '24/7 emergency line'], ['Licence', `FL ${SITE.licence.number}`],
+];
+---
+<section class="abase" data-m-section aria-labelledby="abase-h">
+  <Seam from="var(--ink)" to="var(--frost)" flip />
+  <div class="wrap abase-grid">
+    <div class="abase-head">
+      <Head eyebrow="One base" l1="Everything leaves" l2="from Largo." size={48} sizeM={28} id="abase-h" />
+    </div>
+    <figure class="abase-map" data-t="4" data-fx="frame">
+      <Img name="map-pinellas" alt="Google Maps view of Pinellas County, with Largo near the middle and the beaches along the west coast" fit="cover"
+        sizes="(min-width:1280px) 700px, (min-width:768px) 52vw, 90vw" widths={[360, 700, 1000, 1400]} />
+      <svg class="abase-pin" viewBox="0 0 30 41" aria-hidden="true"><path d="M15 39S1 23 1 15C1 7 7 1 15 1s14 6 14 14c0 8-14 24-14 24Z" fill="#16130F" stroke="#fff" stroke-width="2" /></svg>
+      <figcaption class="sr-only">Our base: Largo, Florida.</figcaption>
+    </figure>
+    <div class="abase-side">
+      <Plate title="Find us" rows={rows} w={440} wm={350} pad={22} size={12} tsize={14} kx={90} pitch={22} padm={16} sizem={11} tsizem={12} kxm={72} pitchm={21} shadow="pdeep" t="4" />
+      <Btn look="call" sub="Call now · 24/7" size="l" w={440} wm={350} class="abase-btn" t="3" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .abase { position: relative; background: var(--frost); padding: 120px 0 100px; }
+  .abase-grid { display: grid; grid-template-columns: 700px 440px; justify-content: space-between; grid-template-areas: 'map head' 'map side'; grid-template-rows: auto 1fr; align-items: start; }
+  .abase-head { grid-area: head; }
+  .abase-side { grid-area: side; padding-top: 40px; }
+  .abase-map { grid-area: map; position: relative; margin: 0; height: 560px; border-radius: 4px; box-shadow: 10px 10px 0 var(--ink); }
+  .abase-map :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 4px; }
+  .abase-map::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 4px; pointer-events: none; }
+  .abase-pin { position: absolute; left: 34.85%; top: 45.5%; width: 30px; height: 41px; transform: translate(-50%, -100%); margin-top: 2px; }
+  .abase-side :global(.abase-btn) { margin-top: 90px; } /* Figma plate is 16 px taller (gap before Licence) */
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .abase { padding: 96px 0 88px; }
+    .abase-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); column-gap: 40px; }
+    .abase-map { height: auto; aspect-ratio: 700 / 560; }
+    .abase-side :global(.abase-btn) { margin-top: 40px; }
+  }
+  @media (max-width: 767px) {
+    .abase { padding: 40px 0 56px; }
+    .abase-grid { display: block; }
+    .abase-map { height: auto; aspect-ratio: 350 / 280; margin-top: 24px; box-shadow: 8px 8px 0 var(--ink); }
+    .abase-pin { width: 22px; height: 30px; }
+    .abase-side { padding-top: 30px; }
+    .abase-side :global(.abase-btn) { margin-top: 24px; }
+  }
+</style>

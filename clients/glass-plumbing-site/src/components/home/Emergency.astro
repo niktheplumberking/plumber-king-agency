@@ -1,0 +1,101 @@
+---
+// Home emergency (Figma 712:448 "Emergency" y 7033 h 866; mobile 715:560 y 7881 h 1019). The ink process band hangs into it
+// (meniscus seam). Three numbered steps, the big phone number, the call button; right: the main shut-off valve wheel (it
+// turns clockwise, scrubbed with the scroll: kit/scrub.ts) with its spec plate, and Jacob Gars's quote word for word.
+import Btn from '../kit/Btn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Plate from '../kit/Plate.astro';
+import Seam from '../kit/Seam.astro';
+import { quote } from './fig';
+import { SITE } from '../../data/site';
+const jq = quote('Jacob Gars', 'My bathroom started to flood and I didn’t know what to do. Luckily, Kody Glass came in no time and fixed everything before it became disastrous!');
+const steps = [
+  { t: 'Close your main shut-off valve.', d: 'Pinellas County advises finding and labelling it before you ever need it.' },
+  { t: 'Take a photo if you can.', d: 'It helps us bring the right part.' },
+  { t: `Call ${SITE.phone}.`, d: 'We answer 24/7.' },
+];
+---
+<section class="em" aria-labelledby="em-h" data-m-section>
+  <Seam from="var(--ink)" to="var(--white)" d={56} dm={36} />
+  <div class="wrap em-in">
+    <div class="em-head">
+      <Eyebrow text="Emergency" />
+      <h2 id="em-h" class="h2 em-h" data-t="2">Water everywhere? <span class="tone">Close the main, then call.</span></h2>
+    </div>
+    <ol class="steps" role="list" data-t="3" data-stagger>
+      {steps.map((s, i) => (
+        <li><span class:list={['n', { on: i === 2 }]} aria-hidden="true">{i + 1}</span><div><h3 class="st">{s.t}</h3><p class="sd">{s.d}</p></div></li>
+      ))}
+    </ol>
+    <div class="call">
+      <a class="big" href={SITE.tel} data-t="3"><span class="sr-only">Call </span>{SITE.phone}</a>
+      <div data-t="3"><Btn sub="CALL NOW · 24/7" size="l" w={280} wm={350} /></div>
+    </div>
+    <div class="valve" data-scrub data-start="top 85%" data-end="bottom 30%">
+      <svg viewBox="0 0 400 440" role="img" aria-label="A main shut-off valve wheel: turn it clockwise to close" focusable="false">
+        <rect x="187" y="250" width="26" height="170" fill="#AEB6BA" stroke="#16130F" stroke-width="2"/>
+        <rect x="121" y="401" width="158" height="38" rx="4" fill="#C7CED1" stroke="#16130F" stroke-width="2"/>
+        <g data-scrub-turn="0,120" data-origin="200 210">
+          <circle cx="200" cy="210" r="169" fill="none" stroke="#16130F" stroke-width="22"/>
+          <circle cx="200" cy="210" r="166" fill="none" stroke="#84B3C7" stroke-width="4"/>
+          <rect x="190" y="40" width="20" height="340" rx="10" fill="#16130F"/>
+          <rect x="190" y="40" width="20" height="340" rx="10" fill="#16130F" transform="rotate(60 200 210)"/>
+          <rect x="190" y="40" width="20" height="340" rx="10" fill="#16130F" transform="rotate(-60 200 210)"/>
+          <circle cx="200" cy="210" r="40" fill="#16130F"/>
+          <circle cx="200" cy="210" r="16" fill="#84B3C7"/>
+        </g>
+      </svg>
+      <div class="vplate"><Plate title="Main shut-off" rows={[['Turn', 'Clockwise to close']]} w={200} pad={12} size={10} kx={68} pitch={19} /></div>
+    </div>
+    <figure class="jq" data-t="3"><blockquote><p>“{jq.text}”</p></blockquote><figcaption>{jq.name} · Google</figcaption></figure>
+  </div>
+</section>
+<style>
+  .em { position: relative; background: var(--white); }
+  .em-in { display: grid; grid-template-columns: 680px 520px; grid-template-areas: 'head head' 'steps .' 'call quote'; position: relative; padding: 120px 0 98px; }
+  .em-head { grid-area: head; }
+  .em-h { margin-top: 16px; --h2: 58px; text-wrap: wrap; } .em-h .tone { display: block; }
+  @media (min-width: 1280px) { .em-h .tone { white-space: nowrap; } }
+  .steps { grid-area: steps; display: grid; row-gap: 34px; margin: 36px 0 0; padding: 0; list-style: none; align-self: start; }
+  .steps li { display: flex; gap: 20px; }
+  .n { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border: 2px solid var(--ink); border-radius: 50%; font-family: var(--f-h); font-weight: 800; font-size: 20px; line-height: 1; }
+  .n.on { background: var(--ink); color: var(--white); }
+  .st { padding-top: 2px; font-family: var(--f-h); font-weight: 800; font-size: 22px; line-height: 1.04; letter-spacing: -.02em; }
+  .sd { margin-top: 9px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+  .call { grid-area: call; margin-top: 63px; }
+  .big { display: block; font-family: var(--f-h); font-weight: 800; font-size: 64px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; }
+  .big:hover { color: var(--red); }
+  .call > div { margin-top: 27px; }
+  .valve { grid-area: valve; position: relative; position: absolute; left: 764px; top: 150px; width: 400px; }
+  .valve svg { width: 400px; height: 440px; overflow: visible; }
+  .vplate { position: absolute; left: 220px; top: 320px; }
+  .jq { grid-area: quote; margin-top: 71px; }
+  .jq p { font-style: italic; font-size: 17px; line-height: 1.5; }
+  .jq figcaption { margin-top: 12px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .em-in { grid-template-columns: minmax(0, 1fr) minmax(0, 360px); column-gap: 32px; }
+    .em-in { grid-template-areas: 'head head' 'steps valve' 'call quote'; }
+    .valve { position: relative; left: auto; top: auto; width: 100%; margin: 0; } .valve svg { width: 100%; height: auto; }
+    .vplate { left: auto; right: 0; top: 70%; }
+    .big { font-size: clamp(44px, 6vw, 64px); }
+  }
+  @media (max-width: 767px) {
+    .em-in { display: flex; flex-direction: column; padding: 72px 0 84px; }
+    .em-h { margin-top: 10px; }
+    .valve { order: 1; position: relative; left: auto; top: auto; width: 200px; margin: 28px auto 0; }
+    .valve svg { width: 200px; height: 220px; }
+    .vplate { display: none; }
+    .steps { order: 2; row-gap: 22px; margin-top: 16px; }
+    .steps li { gap: 16px; }
+    .n { width: 32px; height: 32px; font-size: 17px; }
+    .st { font-size: 18px; }
+    .sd { margin-top: 4px; font-size: 14px; }
+    .call { order: 3; margin-top: 28px; }
+    .big { font-size: 44px; }
+    .call > div { margin-top: 18px; }
+    .jq { order: 4; margin-top: 28px; }
+    .jq p { font-size: 15px; }
+    .jq figcaption { margin-top: 8px; font-size: 10px; line-height: 13px; }
+  }
+</style>

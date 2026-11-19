@@ -1,0 +1,248 @@
+---
+// Home FAQ (Figma 712:448 "FAQ" y 8739 h 1117; mobile 715:560 y 9870 h 1724). Left: head, lead, the live search (filters
+// the six rows as you type and marks the match), topic chips (same filter), the "Not on the list?" call box. Right: six
+// accordion rows (kit accordion, one open at a time). The open row floods ink from the left (0.5 s) and its photo rises into
+// the housing; hover turns a row frost and fills the + ink. Q02 is open on load, as in the frame.
+// Interaction script: the search + chips filter only (the accordion is kit/accordion.ts). FAQPage JSON-LD: faq.ts.
+import Img from '../ui/Img.astro';
+import Btn from '../kit/Btn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+import Plate from '../kit/Plate.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import { FAQ, TOPICS } from './faq';
+---
+<section class="fq" aria-labelledby="fq-h" data-m-section data-faq>
+  <div class="wrap fq-in">
+    <div class="side">
+      <Eyebrow text="Questions" />
+      <h2 id="fq-h" class="h2 fq-h" data-t="2">Ask the plumber. <span class="tone">Get it straight.</span></h2>
+      <p class="fq-lead" data-t="3">The six things Pinellas homeowners ask us most.<span class="d"> Search, or tap a topic.</span></p>
+      <div class="find" data-t="3">
+        <div class="search">
+          <label class="sr-only" for="fq-q">Search the questions</label>
+          <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.1 15.1l5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          <input id="fq-q" type="search" autocomplete="off" placeholder="Try “permit” or “hard water”" data-faq-q aria-describedby="fq-count" />
+          <span id="fq-count" class="count" aria-live="polite" data-faq-count>6 answers</span>
+        </div>
+        <div class="chips" role="group" aria-label="Filter by topic">
+          <button type="button" class="chip" aria-pressed="true" data-faq-chip="">All · {FAQ.length}</button>
+          {TOPICS.map((t) => <button type="button" class="chip" aria-pressed="false" data-faq-chip={t}>{t}</button>)}
+        </div>
+      </div>
+      <div class="ask on-ink" data-t="4">
+        <div class="ask-top">
+          <span class="seal" aria-hidden="true"><Image src={logo} alt="" width={104} /></span>
+          <div><p class="ask-h">Not on the list?</p><p class="ask-s">Ask the crew. A photo helps.</p></div>
+        </div>
+        <div class="ask-b">
+          <Btn sub="CALL · 24/7" h={60} hm={56} w={250} wm={310} />
+          <Btn look="line" icon="camera" label="Text" arrow h={60} w={128} class="ask-text" />
+          <a class="ask-link" href="sms:+17275120673">or text a photo →</a>
+        </div>
+      </div>
+    </div>
+    <div class="list">
+      <div class="rows" data-t="4" data-stagger>
+        {FAQ.map((f, i) => (
+          <details class="row" data-acc name="home-faq" open={i === 1} data-topic={f.topic} id={`faq-${f.id}`}>
+            <summary>
+              <span class="qn">Q{String(i + 1).padStart(2, '0')}</span>
+              <span class="q" data-faq-text>{f.q}</span>
+              <span class="tp">{f.topic.toUpperCase()}</span>
+              <span class="pm" aria-hidden="true"><i></i><i class="v"></i></span>
+            </summary>
+            <div class="ans">
+              <div class="a-txt">
+                <p class="a" data-faq-a>{f.a}</p>
+                {f.plate && <div class="a-pl"><Plate rows={f.plate} tone="ink" shadow={false} w={320} wm={218} pad={12} size={10} kx={78} pitch={19} padm={10} sizem={9} kxm={66} pitchm={18} /></div>}
+                {f.link && <a class="a-link" href={f.link.href}>{f.link.m ? <><span class="d">{f.link.label}</span><span class="m">{f.link.m}</span></> : f.link.label}</a>}
+              </div>
+              <figure class="a-ph">
+                <div class="rise"><Housing tone="photo" fluid w={150} h={255} wm={112} hm={170} cap={18} capm={14} r={22} rm={18} class="fq-can">
+                  <Img name={f.photo} alt={f.alt} sizes="(min-width: 768px) 150px, 110px" widths={[150, 300]} box={150 / 239} boxM={110 / 158} focus={f.focus} />
+                </Housing></div>
+                <figcaption>From the crew’s posts</figcaption>
+              </figure>
+            </div>
+          </details>
+        ))}
+      </div>
+      <p class="none" data-faq-none hidden>No question matches that. Call or text us: a real plumber answers.</p>
+      <a class="all" href="/faq" data-t="3">See all questions →</a>
+    </div>
+  </div>
+</section>
+<script>
+  // Live filter for the home FAQ: the search box and the topic chips hide the rows that do not match, mark the match in the
+  // question, and keep the "n answers" count. An open row that gets filtered out closes. Works without motion.
+  const root = document.querySelector<HTMLElement>('[data-faq]');
+  if (root) {
+    const q = root.querySelector<HTMLInputElement>('[data-faq-q]')!;
+    const count = root.querySelector<HTMLElement>('[data-faq-count]')!;
+    const none = root.querySelector<HTMLElement>('[data-faq-none]')!;
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-faq-chip]'));
+    const rows = Array.from(root.querySelectorAll<HTMLDetailsElement>('details.row'));
+    const plain = new Map(rows.map((r) => [r, r.querySelector<HTMLElement>('[data-faq-text]')!.textContent || '']));
+    let topic = '';
+    // The 390 frame shortens the placeholder (Try "permit"); the full one does not fit a phone's field.
+    const mq = matchMedia('(max-width: 767px)');
+    const ph = () => { q.placeholder = mq.matches ? 'Try “permit”' : 'Try “permit” or “hard water”'; };
+    ph(); mq.addEventListener('change', ph);
+    const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+    const run = () => {
+      const term = q.value.trim().toLowerCase();
+      let n = 0;
+      rows.forEach((r) => {
+        const title = plain.get(r)!;
+        const ans = r.querySelector('[data-faq-a]')?.textContent || '';
+        const hit = (!topic || r.dataset.topic === topic) && (!term || `${title} ${ans}`.toLowerCase().includes(term));
+        r.hidden = !hit;
+        if (!hit && r.open) r.open = false;
+        if (hit) n++;
+        const el = r.querySelector<HTMLElement>('[data-faq-text]')!;
+        const at = term ? title.toLowerCase().indexOf(term) : -1;
+        el.innerHTML = at < 0 ? esc(title) : `${esc(title.slice(0, at))}<mark>${esc(title.slice(at, at + term.length))}</mark>${esc(title.slice(at + term.length))}`;
+      });
+      count.textContent = `${n} answer${n === 1 ? '' : 's'}`;
+      none.hidden = n > 0;
+    };
+    q.addEventListener('input', run);
+    q.addEventListener('keydown', (e) => { if (e.key === 'Escape' && q.value) { q.value = ''; run(); } });
+    chips.forEach((c) => c.addEventListener('click', () => {
+      topic = c.dataset.faqChip || '';
+      chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+      run();
+    }));
+  }
+</script>
+<style>
+  .fq { position: relative; background: var(--white); padding: 112px 0 160px; }
+  .m { display: none; }
+  .fq-in { display: grid; grid-template-columns: 440px 720px; column-gap: 40px; }
+  .fq-h { margin-top: 16px; --h2: 62px; width: 450px; } .fq-h .tone { display: block; }
+  .fq-lead { margin-top: 40px; width: 420px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  .find { margin-top: 18px; }
+  .search { display: flex; align-items: center; height: 64px; padding: 0 20px 0 22px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--white); box-shadow: 6px 6px 0 var(--powder); }
+  .search:focus-within { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .search svg { flex: none; color: var(--ink); }
+  .search input { flex: 1; min-width: 0; height: 100%; margin-left: 14px; padding-left: 8px; border: 0; border-left: 2px solid var(--pdeep); border-radius: 0; background: none; font-size: 16px; line-height: 24px; outline: none; }
+  .search input::placeholder { color: var(--muted); opacity: 1; }
+  .search input { border-left-color: transparent; }
+  .search input:placeholder-shown { border-image: linear-gradient(var(--pdeep), var(--pdeep)) 0 0 0 1 / 0 0 0 2px; border-image-outset: 0; }
+  .count { flex: none; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .chips { display: flex; flex-wrap: wrap; gap: 16px 10px; margin-top: 28px; width: 400px; }
+  .chip { height: 34px; padding: 0 13px; border: 1.2px solid var(--ink); border-radius: 17px; font-weight: 600; font-size: 14px; line-height: 21px; color: var(--ink); white-space: nowrap; transition: background-color .35s ease-in-out, color .35s ease-in-out; }
+  .chip:hover { background: var(--frost); }
+  .chip[aria-pressed='true'] { background: var(--ink); color: var(--white); }
+  .ask { position: relative; margin-top: 62px; padding: 24px; border-radius: 6px; background: var(--ink); color: var(--white); box-shadow: 8px 8px 0 var(--powder); }
+  .ask-top { display: flex; gap: 16px; }
+  .seal { display: grid; place-items: center; width: 64px; height: 64px; flex: none; border: 2px solid var(--ink); border-radius: 50%; background: var(--cream); }
+  .seal :global(img) { width: 52px; height: auto; }
+  .ask-h { margin-top: 4px; font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.04; letter-spacing: -.02em; }
+  .ask-s { margin-top: 9px; font-size: 15px; line-height: 23px; color: rgb(255 255 255 / .8); }
+  .ask-b { display: flex; gap: 14px; margin-top: 24px; }
+  .ask-link { display: none; }
+
+  .rows { border-bottom: 1px solid rgb(22 19 15 / .2); }
+  .row { position: relative; margin: 0 -16px; border-radius: 6px; }
+  .row::before { content: ''; position: absolute; inset: 0; border-radius: 6px; background: var(--ink); transform: scaleX(0); transform-origin: 0 50%; transition: transform .5s ease-in-out, box-shadow .5s ease-in-out; }
+  .row[open]:not(.acc-off)::before { transform: scaleX(1); box-shadow: 10px 10px 0 var(--powder); }
+  .row + .row summary { border-top-color: rgb(22 19 15 / .2); }
+  .row[open]:not(.acc-off) summary, .row[open]:not(.acc-off) + .row summary { border-top-color: transparent; }
+  summary { position: relative; display: grid; grid-template-columns: 80px 1fr auto 44px; align-items: center; column-gap: 0; min-height: 88px; padding: 0 16px; border-top: 1px solid rgb(22 19 15 / .2); list-style: none; cursor: pointer; transition: border-color .5s ease-in-out; }
+  .row:first-child summary { border-top-color: rgb(22 19 15 / .2); }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: ''; position: absolute; inset: 4px 0; border-radius: 6px; background: var(--frost); opacity: 0; transition: opacity .35s ease-in-out; }
+  .row:not([open]) summary:hover::before { opacity: 1; }
+  summary > * { position: relative; }
+  .qn { font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 16px; letter-spacing: .06em; color: var(--pdeep); transition: color .5s ease-in-out; }
+  .q { padding: 20px 20px 20px 0; font-family: var(--f-h); font-weight: 700; font-size: 23px; line-height: 1.12; letter-spacing: -.02em; color: var(--ink); transition: color .5s ease-in-out; }
+  .q :global(mark) { background: var(--powder); color: inherit; border-radius: 2px; }
+  .tp { padding-right: 36px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .06em; color: var(--muted); transition: opacity .3s ease-in-out; }
+  .pm { position: relative; width: 44px; height: 44px; border: 1.5px solid var(--ink); border-radius: 50%; transition: background-color .35s ease-in-out, border-color .35s ease-in-out; }
+  .pm i { position: absolute; left: 13px; top: 20px; width: 16px; height: 2px; background: var(--ink); transition: background-color .35s ease-in-out, transform .5s ease-in-out; }
+  .pm i.v { transform: rotate(90deg); }
+  summary:hover .pm { background: var(--ink); } summary:hover .pm i { background: var(--white); }
+  .row[open]:not(.acc-off) .qn { color: var(--powder); }
+  .row[open]:not(.acc-off) .q { color: var(--white); }
+  @media (min-width: 1280px) {
+    .row[open]:not(.acc-off) summary { align-items: start; }
+    .row[open]:not(.acc-off) .q { max-width: 440px; padding-top: 28px; font-weight: 800; font-size: 26px; }
+    .row[open]:not(.acc-off) .qn { padding-top: 36px; }
+    .row[open]:not(.acc-off) .pm { margin-top: 24px; }
+    .row[open]:not(.acc-off) .tp { padding-top: 38px; }
+  }
+  .row[open]:not(.acc-off) .tp { opacity: 0; }
+  .row[open]:not(.acc-off) .pm { background: var(--white); border-color: var(--white); }
+  .row[open]:not(.acc-off) .pm i { background: var(--ink); }
+  .row[open]:not(.acc-off) .pm i.v { transform: rotate(0deg) scaleX(0); }
+  .row:focus-within summary:focus-visible { outline-offset: -3px; }
+  .ans { position: relative; display: grid; grid-template-columns: 420px 150px; column-gap: 0; padding: 0 16px 24px 96px; color: var(--white); }
+  .a { margin-top: -6px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .9); }
+  .a-pl { margin-top: 20px; }
+  .a-link { display: inline-block; margin-top: 18px; font-weight: 700; font-size: 15px; line-height: 23px; color: var(--powder); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .a-link:hover { color: var(--white); }
+  .a-ph { margin: -63px 0 0 -16px; }
+  .a-ph :global(.fq-can) { --c: var(--powder); --o: var(--powder); }
+  .rise { transform: translateY(32px); opacity: 0; transition: transform .6s ease-in-out .15s, opacity .4s ease-in-out .15s; }
+  .row[open]:not(.acc-off) .rise { transform: none; opacity: 1; }
+  :global(html.no-motion) .rise, :global(html:not(.js)) .rise { transform: none; opacity: 1; }
+  .a-ph figcaption { margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--powder); }
+  .none { padding: 24px 0; font-size: 16px; color: var(--muted); }
+  .all { display: inline-block; margin-top: 27px; font-weight: 700; font-size: 15px; line-height: 23px; color: var(--pdeep); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .all:hover { color: var(--ink); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fq-in { grid-template-columns: minmax(0, 1fr); row-gap: 48px; }
+    .fq-h, .fq-lead, .chips { width: auto; }
+    .side { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
+    .side > :global(*) { grid-column: 1; }
+    .ask { grid-column: 2 !important; grid-row: 1 / span 4; align-self: end; margin-top: 0; }
+    .ans { grid-template-columns: minmax(0, 1fr) 150px; column-gap: 32px; padding-left: 96px; }
+    .a-ph { margin-left: 0; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .fq { padding: 64px 0 120px; }
+    .fq-in { display: flex; flex-direction: column; }
+    .side, .list { display: contents; }
+    .fq-h { margin-top: 10px; width: auto; --h2m: 44px; }
+    .fq-lead { width: auto; margin-top: 16px; font-size: 16px; }
+    .find { margin-top: 22px; }
+    .search { height: 56px; padding-left: 16px; box-shadow: 5px 5px 0 var(--powder); }
+    .count { display: none; }
+    .chips { flex-wrap: nowrap; width: auto; margin: 29px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); overflow-x: auto; scrollbar-width: none; gap: 8px; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { height: 34px; flex: none; }
+    .rows { order: 1; margin: 28px 0 0; }
+    .row { margin: 0; border-radius: 0; }
+    /* The open row floods the full phone width; the closed rows keep the 20 px gutter and their rules. */
+    .row::before { inset: 0 calc(-1 * var(--gutter)); border-radius: 0; }
+    .row[open]:not(.acc-off)::before { box-shadow: none; }
+    summary { grid-template-columns: 48px 1fr 40px; min-height: 76px; padding: 0; }
+    summary::before { inset: 4px calc(-1 * var(--gutter)); border-radius: 0; }
+    .tp { display: none; }
+    .q { padding: 16px 12px 16px 0; font-size: 18px; line-height: 1.15; }
+    .pm { width: 40px; height: 40px; } .pm i { left: 12px; top: 18px; }
+    .row[open]:not(.acc-off) summary { grid-template-columns: 1fr 40px; grid-template-rows: 40px auto; align-items: center; padding-top: 18px; }
+    .row[open]:not(.acc-off) .qn { grid-area: 1 / 1; }
+    .row[open]:not(.acc-off) .pm { grid-area: 1 / 2; }
+    .row[open]:not(.acc-off) .q { grid-area: 2 / 1 / 3 / 3; max-width: 290px; margin-top: -6px; padding: 0; font-weight: 800; font-size: 22px; line-height: 1.12; }
+    .a-ph figcaption { white-space: nowrap; }
+    .ans { display: grid; grid-template-columns: 112px minmax(0, 1fr); grid-template-rows: auto auto 1fr; column-gap: 20px; padding: 14px 0 21px; }
+    .a { grid-area: 1 / 1 / 2 / 3; margin-top: 0; font-size: 16px; }
+    .a-txt { display: contents; }
+    .a-ph { grid-area: 2 / 1 / 4 / 2; margin: 28px 0 0; width: 112px; }
+    .a-pl { grid-area: 2 / 2; margin-top: 28px; }
+    .a-link { grid-area: 3 / 2; margin: 16px 0 0; align-self: start; justify-self: start; }
+    .all { order: 2; margin-top: 24px; align-self: flex-start; }
+    .ask { order: 3; margin-top: 33px; padding: 20px 20px 11px; box-shadow: 6px 6px 0 var(--powder); }
+    .seal { width: 56px; height: 56px; } .seal :global(img) { width: 45px; }
+    .ask-h { font-size: 22px; } .ask-s { margin-top: 7px; font-size: 14px; line-height: 21px; }
+    .ask-b { flex-direction: column; margin-top: 19px; }
+    .ask-b :global(.ask-text) { display: none; }
+    .ask-link { display: inline-block; align-self: flex-start; margin-top: 16px; font-weight: 700; font-size: 15px; line-height: 23px; color: var(--powder); text-decoration: underline; text-underline-offset: 4px; }
+  }
+</style>

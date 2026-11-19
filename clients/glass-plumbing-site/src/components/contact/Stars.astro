@@ -1,0 +1,7 @@
+---
+// Five gold stars (Figma "stars" 75 x 12). Decorative: the text next to it says "5.0" or the review is all 5 stars.
+interface Props { w?: number; class?: string; label?: string }
+const { w = 75, class: cls, label } = Astro.props;
+const star = (x: number) => `<path d="M${x} 0L${x + 1.587} 3.816L${x + 5.706} 4.146L${x + 2.568} 6.834L${x + 3.527} 10.854L${x} 8.7L${x - 3.527} 10.854L${x - 2.568} 6.834L${x - 5.706} 4.146L${x - 1.587} 3.816Z" fill="#F9B50D"/>`;
+---
+<svg class:list={['cx-stars', cls]} width={w} height={w * 12 / 75} viewBox="0 0 75 12" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'} set:html={[6, 21, 36, 51, 66].map(star).join('')} />

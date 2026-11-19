@@ -1,0 +1,95 @@
+---
+// Home areas (Figma 712:448 "Areas" y 7899 h 840; mobile 715:560 y 8900 h 970). Frost band. The real Google Maps screenshot
+// of Pinellas with the Largo pin and the "Glass Plumbing" plate; right: head, the straight-line-miles note and the 20 towns
+// from towns.ts in four groups. Bold towns are links (Seminole has its page; the others go to their row on /areas).
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Plate from '../kit/Plate.astro';
+import { TOWNS } from '../../data/towns';
+const LINKED = ['largo', 'belleair-bluffs', 'clearwater', 'seminole', 'pinellas-park', 'st-petersburg'];
+const SHORT: Record<string, string> = { 'indian-rocks-beach': 'Indian Rocks' };
+const col = (g: string) => TOWNS.filter((t) => t.group === g);
+const cols = [[['Central', col('Central')], ['South', col('South')]], [['North', col('North')], ['Beaches', col('Beaches')]]] as const;
+---
+<section class="ar" aria-labelledby="ar-h" data-m-section>
+  <div class="wrap ar-in">
+    <div class="map" data-t="4" data-fx="frame">
+      <div class="map-ph">
+        <Img name="map-pinellas" alt="Google Maps view of Pinellas County, Florida, with Largo marked as the Glass Plumbing base" sizes="(min-width: 768px) 620px, 350px" widths={[350, 620, 700]} focus="50% 51%" />
+        <svg class="pin" width="28" height="38" viewBox="0 0 30 41" aria-hidden="true" focusable="false"><path d="M15 39S1 23 1 15C1 7 7 1 15 1s14 6 14 14c0 8-14 24-14 24Z" fill="#16130F" stroke="#fff" stroke-width="2"/><circle cx="15" cy="14.5" r="7" fill="#84B3C7"/></svg>
+      </div>
+      <div class="mplate"><Plate title="Glass Plumbing" rows={[['Base', 'Largo, FL'], ['Covers', 'All of Pinellas']]} w={240} pad={12} size={10} kx={76} pitch={19} /></div>
+    </div>
+    <div class="txt">
+      <Eyebrow text="Where we work" />
+      <h2 id="ar-h" class="h2 ar-h" data-t="2">Based in Largo. <span class="tone">All of Pinellas.</span></h2>
+      <p class="note" data-t="3">Miles are straight-line from our base in Largo, not driving miles.</p>
+      <div class="cols" data-t="4">
+        {cols.map((c) => (
+          <div class="col">
+            {c.map(([g, towns]) => (
+              <div class="grp">
+                <h3 class="gl">{g}<span class="m"> (mi)</span></h3>
+                <ul role="list">
+                  {towns.map((t) => (
+                    <li>
+                      {LINKED.includes(t.slug)
+                        ? <a href={t.page ?? `/areas#town-${t.slug}`}>{SHORT[t.slug] ? <><span class="d">{t.name}</span><span class="m">{SHORT[t.slug]}</span></> : t.name}</a>
+                        : <span class="tn">{SHORT[t.slug] ? <><span class="d">{t.name}</span><span class="m">{SHORT[t.slug]}</span></> : t.name}</span>}
+                      <span class="mi">{t.mi.toFixed(1)}<span class="d"> mi</span><span class="sr-only"> miles</span></span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .ar { position: relative; background: var(--frost); }
+  .m { display: none; }
+  .ar-in { display: grid; grid-template-columns: 620px 520px; column-gap: 60px; padding: 140px 0 120px; }
+  .map { position: relative; height: 580px; }
+  .map-ph { position: relative; height: 100%; border: 2px solid var(--ink); border-radius: 4px; overflow: hidden; box-shadow: 12px 12px 0 var(--powder); }
+  .pin { position: absolute; left: 201px; top: 181px; }
+  .mplate { position: absolute; left: 24px; top: 480px; }
+  .ar-h { margin-top: 16px; } .ar-h .tone { display: block; }
+  .note { margin-top: 20px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .cols { display: grid; grid-template-columns: 240px 240px; column-gap: 40px; margin-top: 41px; }
+  .grp + .grp { margin-top: 30px; }
+  .gl { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .grp ul { margin: 13px 0 0; padding: 0; list-style: none; }
+  .grp li { display: flex; justify-content: space-between; align-items: baseline; height: 26px; border-bottom: 1px solid rgb(22 19 15 / .1); }
+  .grp li a, .tn { font-size: 15px; line-height: 23px; }
+  .grp li a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  .grp li a:hover { color: var(--pdeep); }
+  .mi { font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; color: var(--muted); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ar-in { grid-template-columns: 1fr; row-gap: 56px; }
+    .txt { order: -1; }
+    .map { height: auto; aspect-ratio: 620 / 580; max-width: 620px; }
+    .mplate { top: auto; bottom: 20px; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .ar-in { display: flex; flex-direction: column; padding: 56px 0 82px; }
+    .txt { display: contents; }
+    .ar-h { margin-top: 10px; }
+    .note { margin-top: 10px; font-size: 14px; }
+    .map { order: 1; height: 327px; margin-top: 18px; }
+    .map-ph { box-shadow: 8px 8px 0 var(--powder); }
+    .pin { left: 111px; top: 100px; width: 20px; height: 28px; }
+    .mplate { display: none; }
+    .cols { order: 2; grid-template-columns: 1fr 1fr; column-gap: 20px; margin-top: 33px; }
+    .grp + .grp { margin-top: 22px; }
+    .gl { font-size: 10px; line-height: 13px; }
+    .grp ul { margin-top: 11px; }
+    .grp li { height: 24px; }
+    .grp li a, .tn { font-size: 14px; line-height: 21px; }
+    .mi { font-size: 10px; line-height: 13px; }
+  }
+</style>

@@ -1,0 +1,171 @@
+---
+// Service families (Figma 718:522 "Service families" y 1586 h 1764 / mobile y 1937 h 1068). Ink section with a meniscus rise.
+// Desktop: the left index is pinned; each card is `position: sticky` 40 px lower than the last, so they pile up like a deck;
+// the index highlights the card on top (script below). Hover a service row: arrow slides 6 px, row fills white.
+// Phone: the cards are a swipe carousel that snaps (ui.ts carousels: dots + "Swipe · 01 / 04").
+// Card ids are the family anchors the header and footer link to (/services#hot-water ...).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+import { FAMILIES } from './data';
+import { ARROW } from './glyphs';
+const BG = ['var(--white)', 'var(--frost)', 'var(--frost2)', 'var(--powder)'];
+---
+<section class="fm seam-host" data-m-section data-families>
+  <Seam from="var(--white)" to="var(--ink)" flip d={48} dm={32} />
+  <div class="wrap fm-grid" data-carousel>
+    <div class="fm-side">
+      <div class="fm-pin">
+        <Eyebrow text="Four kinds of work" tone="light" />
+        <h2 class="h2 fm-h" data-t="2" style="--h2:46px;--h2m:36px">Everything we fix,<br /><span class="fm-tone">sorted four ways.</span></h2>
+        <p class="fm-swipe" aria-hidden="true">Swipe · 0<span data-count-now>1</span> / 04</p>
+        <ol class="fm-idx" role="list" data-t="3" data-stagger>
+          {FAMILIES.map((f, i) => (
+            <li><a class:list={['fm-i', i === 0 && 'on']} href={`#${f.id}`} data-fm-i={i} aria-current={i === 0 ? 'true' : undefined}><span class="fm-in">{f.n}</span><span class="fm-it">{f.name}</span></a></li>
+          ))}
+        </ol>
+        <p class="fm-hint" data-t="4">↓ Scroll · the cards stack</p>
+        <Btn label="Not sure? Call" sub={SITE.phone} w={300} h={60} shadow="powder" class="fm-call fm-call-d" t="4" />
+      </div>
+    </div>
+    <div class="fm-track" data-track>
+      {FAMILIES.map((f, i) => (
+        <article class="fm-card" id={f.id} data-slide data-fm-card style={`--bg:${BG[i]};--i:${i}`} aria-labelledby={`fm-n-${f.id}`}>
+          <p class="fm-top"><span>Family {f.n} of 04</span><span class="fm-cnt">{f.services.length} services</span></p>
+          <p class="fm-num" aria-hidden="true">{f.n}</p>
+          <h3 class="fm-name" id={`fm-n-${f.id}`}>{f.name}</h3>
+          <div class="fm-btns">
+            <Btn look="call" label="Call" size="s" w={132} wm={130} shadow={false} />
+            <Btn look="line" icon="camera" label="Photo" size="s" w={128} wm={132} class="fm-photo-btn" />
+          </div>
+          <div class="fm-ph"><Img name={f.photo} alt={f.alt} focus={f.focus} sizes="(min-width:1280px) 190px, (min-width:768px) 25vw, 274px" box={190 / 264} boxM={274 / 170} widths={[280, 380, 560, 760]} /></div>
+          <ul class="fm-list" role="list">
+            {f.services.map((s) => (
+              <li><a class="fm-row" href={s.href}><span>{s.name}</span><span class="fm-ar" set:html={ARROW} /></a></li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+    <div class="fm-dots" aria-hidden="true">{FAMILIES.map((_, i) => <span class:list={['fm-dot', i === 0 && 'on']} data-dot></span>)}</div>
+    <Btn label="Not sure? Call" sub={SITE.phone} block h={60} shadow="powder" class="fm-call fm-call-m" />
+  </div>
+</section>
+<style>
+  .fm { position: relative; background: var(--ink); color: var(--white); padding: 120px 0; }
+  .fm-grid { display: grid; grid-template-columns: 360px 780px; justify-content: space-between; align-items: start; }
+  .fm-pin { position: sticky; top: calc(var(--header-h) + 32px); }
+  .fm-side { align-self: stretch; }
+  .fm-h { width: 420px; max-width: calc(100vw - 2 * var(--gutter)); margin-top: 16px; color: var(--white); }
+  .fm-tone { color: var(--powder); }
+  .fm-swipe { display: none; }
+  .fm-idx { margin: 48px 0 0; padding: 0; list-style: none; border-bottom: 1px solid rgba(255,255,255,.2); }
+  .fm-i { position: relative; display: flex; gap: 30px; align-items: flex-start; min-height: 64px; padding: 20px 16px 20px 0; border-top: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); transition: padding .4s var(--ease-io), color .3s var(--ease-io); }
+  .fm-i::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--powder); scale: 1 0; transform-origin: 50% 0; transition: scale .4s var(--ease-io); }
+  .fm-in { flex: none; width: 14px; margin-top: 4px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; color: rgba(132,179,199,.6); transition: color .3s var(--ease-io); }
+  .fm-it { font-family: var(--f-h); font-weight: 600; font-size: 19px; line-height: 1.04; letter-spacing: -.02em; max-width: 280px; }
+  .fm-i.on { padding-left: 20px; color: var(--white); }
+  .fm-i.on::before { scale: 1 1; }
+  .fm-i.on .fm-in { color: var(--powder); }
+  .fm-i.on .fm-it { font-weight: 800; }
+  .fm-i:hover { color: var(--white); }
+  .fm-hint { margin-top: 39px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .fm :global(.fm-call-d) { margin-top: 25px; }
+  .fm :global(.fm-call-m), .fm-dots { display: none; }
+
+  .fm-track { display: flex; flex-direction: column; gap: 28px; }
+  .fm-card {
+    position: sticky; top: calc(var(--header-h) + 32px + var(--i) * 40px);
+    display: grid; grid-template-columns: 272px 190px 204px; column-gap: 0;
+    grid-template-areas: 'top top top' 'num ph list' 'name ph list' 'btn ph list'; grid-template-rows: auto auto auto 1fr;
+    height: 360px; padding: 22px 28px 28px; border-radius: 8px; background: var(--bg); color: var(--ink);
+    box-shadow: 0 -10px 30px -18px rgba(0,0,0,.45);
+  }
+  .fm-card > .fm-ph { margin-left: 30px; }
+  .fm-card > .fm-list { margin-left: 28px; }
+  .fm-top { grid-area: top; display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 1px solid rgba(22,19,15,.3); font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: rgba(22,19,15,.7); }
+  .fm-num { grid-area: num; margin: 13px 0 0 -6px; font-family: var(--f-h); font-weight: 900; font-size: 104px; line-height: 1; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 2px var(--ink); }
+  .fm-name { grid-area: name; margin-top: 18px; max-width: 280px; font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.06; letter-spacing: -.02em; text-wrap: wrap; }
+  .fm-btns { grid-area: btn; align-self: end; display: flex; gap: 12px; }
+  .fm-card :global(.fm-photo-btn), .fm-card :global(.fm-photo-btn:hover) { color: var(--ink); }
+  @media (hover: hover) and (pointer: fine) { .fm-card :global(.fm-photo-btn:hover) { color: var(--white); } }
+  .fm-ph { grid-area: ph; position: relative; height: 264px; margin-top: 19px; overflow: hidden; border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .fm-ph::after { content: ''; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--ink); pointer-events: none; }
+  .fm-list { grid-area: list; margin-top: 19px; padding: 0; list-style: none; border-bottom: 1px solid rgba(22,19,15,.3); align-self: start; }
+  .fm-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; min-height: 56px; margin: 0 -8px; padding: 13px 8px; border-top: 1px solid rgba(22,19,15,.3); font-family: var(--f-b); font-weight: 700; font-size: 15px; line-height: 1.25; color: var(--ink); transition: background-color .3s var(--ease-io); }
+  .fm-list li:first-child .fm-row { border-top-color: rgba(22,19,15,.3); }
+  .fm-row > span:first-child { max-width: 184px; }
+  .fm-ar { flex: none; width: 12px; height: 10px; margin-top: 4px; transition: translate .3s var(--ease-io); }
+  .fm-ar :global(svg) { display: block; width: 12px; height: 10px; }
+  .fm-row:hover { background: var(--white); }
+  .fm-row:hover .fm-ar { translate: 6px 0; }
+  .fm-row:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 0; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fm-grid { grid-template-columns: minmax(0, 1fr); }
+    .fm-pin { position: static; }
+    .fm-idx, .fm-hint { display: none; }
+    .fm :global(.fm-call-d) { margin-top: 28px; }
+    .fm-track { margin-top: 40px; }
+    .fm-card { grid-template-columns: minmax(0, 1fr) minmax(0, 190px) minmax(0, 204px); top: calc(var(--header-h) + 24px + var(--i) * 32px); }
+  }
+  @media (max-width: 767px) {
+    .fm { padding: 80px 0 90px; }
+    .fm-grid { display: block; width: 100%; }
+    .fm-side, .fm :global(.fm-call-m), .fm-dots { margin-inline: var(--gutter); }
+    .fm-pin { position: static; }
+    .fm-h { margin-top: 12px; }
+    .fm-swipe { display: block; margin-top: 20px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+    .fm-idx, .fm-hint, .fm :global(.fm-call-d) { display: none; }
+    .fm-track {
+      flex-direction: row; gap: 12px; margin-top: 21px; padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none;
+    }
+    .fm-track::-webkit-scrollbar { display: none; }
+    .fm-card {
+      position: relative; top: auto; flex: none; width: min(310px, calc(100vw - 80px)); height: 620px; padding: 18px 18px 18px; scroll-snap-align: start;
+      grid-template-columns: 92px minmax(0, 1fr); grid-template-areas: 'top top' 'num name' 'ph ph' 'list list' 'btn btn'; grid-template-rows: auto 99px 170px auto 1fr;
+      box-shadow: none;
+    }
+    .fm-card > .fm-ph, .fm-card > .fm-list { margin-left: 0; }
+    .fm-top { font-size: 10px; line-height: 13px; padding-bottom: 9px; }
+    .fm-cnt { display: none; }
+    .fm-num { margin: 11px 0 0 -2px; font-size: 72px; -webkit-text-stroke-width: 1.5px; }
+    .fm-name { margin-top: 17px; font-size: 21px; line-height: 1.08; }
+    .fm-ph { height: 170px; margin-top: 0; }
+    .fm-list { margin-top: 16px; border-bottom: 0; }
+    .fm-row { min-height: 50px; padding: 13px 8px; line-height: 1.5; }
+    .fm-row > span:first-child { max-width: 230px; }
+    .fm-btns { gap: 12px; }
+    .fm-dots { display: flex; margin-top: 20px; }
+    .fm-dot { width: 8px; margin-right: 20px; height: 8px; border-radius: 4px; background: rgba(132,179,199,.4); transition: width .3s var(--ease-io), margin .3s var(--ease-io), background-color .3s var(--ease-io); }
+    .fm-dot.on { width: 20px; margin-right: 8px; background: var(--powder); }
+    .fm :global(.fm-call-m) { display: flex; width: auto; margin-top: 32px; }
+  }
+</style>
+<script>
+  // Desktop: highlight the index row of the card on top of the pile (the last card that has reached its sticky offset).
+  // The index links scroll to the card's stacked position, not its flow position.
+  const root = document.querySelector<HTMLElement>('[data-families]');
+  if (root) {
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-fm-card]')];
+    const rows = [...root.querySelectorAll<HTMLAnchorElement>('[data-fm-i]')];
+    const desk = window.matchMedia('(min-width: 1280px)');
+    let cur = 0, raf = 0;
+    const set = (n: number) => {
+      if (n === cur) return; cur = n;
+      rows.forEach((r, i) => { r.classList.toggle('on', i === n); if (i === n) r.setAttribute('aria-current', 'true'); else r.removeAttribute('aria-current'); });
+    };
+    const update = () => {
+      raf = 0; if (!desk.matches) return;
+      let top = 0;
+      cards.forEach((c, i) => { const stick = parseFloat(getComputedStyle(c).top) || 0; if (c.getBoundingClientRect().top <= stick + 2) top = i; });
+      set(top);
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+    addEventListener('resize', update, { passive: true });
+    update();
+  }
+</script>

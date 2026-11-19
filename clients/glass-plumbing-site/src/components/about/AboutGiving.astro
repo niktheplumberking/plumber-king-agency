@@ -1,0 +1,50 @@
+---
+// /about "Community and licence" (Figma y 5107 h 520 / mobile y 4729 h 450). Ink2. The offer (site.ts) and the Licences
+// plate (phones: shorter values, as the frame), with the DBPR verify link (site.ts licence.url).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Plate from '../kit/Plate.astro';
+import { SITE } from '../../data/site';
+const L = SITE.licence;
+const rowsD: [string, string][] = [['Licence', `${L.state} ${L.kind}`], ['Number', L.number], ['Status', `Active · expires ${L.expires}`], ['Checked', 'DBPR, myfloridalicense.com'], ['Insured', '“Licensed & Insured” on the van']];
+const rowsM: [string, string][] = [['Licence', L.kind], ['Number', L.number], ['Status', `Active · exp. ${L.expires}`], ['Checked', 'DBPR'], ['Insured', '“Licensed & Insured” on van']];
+---
+<section class="bgive on-ink" data-m-section aria-labelledby="bgive-h">
+  <div class="wrap bg-grid">
+    <div>
+      <Eyebrow text="Giving back" class="bg-eb" />
+      <h2 id="bgive-h" class="bg-h" data-t="2">10% off for veterans, first responders, teachers &amp; seniors.</h2>
+      <p class="bg-p" data-t="3"><span class="d">Up to $100. Just tell us when you call.</span><span class="m">Up to $100. Tell us when you call.</span></p>
+    </div>
+    <div class="bg-side" data-t="4">
+      <Plate title="Licences" rows={rowsD} w={560} pad={24} size={12} tsize={14} kx={134} pitch={22} shadow="powder" class="d-b" />
+      <Plate title="Licences" rows={rowsM} wm={350} pad={16} size={11} tsize={12} kx={92} pitch={21} shadow="powder" class="m-b" />
+      <a class="bg-link" href={L.url} target="_blank" rel="noopener"><span class="d">Verify {L.number} on DBPR</span><span class="m">Verify on DBPR</span> →<span class="sr-only"> (opens in a new tab)</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bgive { position: relative; background: var(--ink2); color: var(--white); padding: 100px 0 67px; }
+  .bg-grid { display: grid; grid-template-columns: 560px 560px; justify-content: space-between; align-items: start; }
+  .bg-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 36px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); }
+  .bg-p { margin-top: 54px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .9); }
+  .bg-side :global(.m-b) { display: none; }
+  .bg-link { display: inline-block; margin-top: 126px; padding: 10px 0; font-weight: 700; font-size: 15px; line-height: 1.5; color: var(--powder); text-decoration: underline; text-underline-offset: 3px; }
+  .bg-link:hover { color: var(--white); }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .bg-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
+    .bg-link { margin-top: 40px; }
+  }
+  @media (max-width: 767px) {
+    .bgive { padding: 48px 0 23px; }
+    .bg-grid { display: block; }
+    .bg-h { margin-top: 10px; font-size: 24px; }
+    .bg-p { margin-top: 10px; font-size: 15px; }
+    .bg-side { margin-top: 27px; }
+    .bg-side :global(.d-b) { display: none; }
+    .bg-side :global(.m-b) { display: block; }
+    .bg-link { margin-top: 14px; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

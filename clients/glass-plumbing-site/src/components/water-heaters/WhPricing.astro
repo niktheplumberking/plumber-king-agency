@@ -1,0 +1,59 @@
+---
+// Pricing (Figma 719:437 y 4868 h 560 / mobile y 5261 h 535): no price list; six things that change the price, each with a
+// small sight glass that fills a bit more (the Figma's levels). No prices anywhere (facts rule).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+import Seam from '../kit/Seam.astro';
+const F = [
+  { t: 'Tank or tankless', d: 'Tankless units cost more to fit.', dm: 'Tankless costs more to fit.', f: 0.283 },
+  { t: 'Gas or electric', d: 'Gas adds venting and gas-line work.', dm: 'Gas adds venting.', f: 0.378 },
+  { t: 'Size', d: 'More bathrooms, bigger unit.', f: 0.472 },
+  { t: 'Venting', d: 'Gas units need a safe vent path.', dm: 'Gas units need a vent path.', f: 0.567 },
+  { t: 'Permit', d: 'Needed for a replacement in Pinellas.', dm: 'Needed in Pinellas.', f: 0.661 },
+  { t: 'Access', d: 'Attic, closet or garage changes the job.', dm: 'Attic, closet or garage.', f: 0.756 },
+];
+---
+<section class="pc seam-host" data-m-section>
+  <Seam from="var(--frost)" to="var(--white)" d={48} dm={32} />
+  <div class="wrap pc-grid">
+    <div class="pc-l">
+      <Eyebrow text="What it costs" />
+      <h2 class="h2 pc-h" data-t="2" style="--h2:42px;--h2m:28px">No price list.<br /><span class="tone">Here’s what changes it.</span></h2>
+      <p class="pc-lead" data-t="3"><span class="d">Every house is different, so we don’t post prices. </span>We give you the price before any work starts.</p>
+    </div>
+    <ul class="pc-list" role="list" data-t="3" data-stagger>
+      {F.map((f) => (
+        <li class="pc-it">
+          <Housing w={30} h={48} wm={22} hm={34} r={8} rm={6} cap={14} tone="frost" fill={f.f} class="pc-g" />
+          <div>
+            <h3 class="pc-t">{f.t}</h3>
+            <p class="pc-d">{f.dm ? <><span class="d">{f.d}</span><span class="m">{f.dm}</span></> : f.d}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .pc { position: relative; background: var(--white); padding: 110px 0 60px; }
+  .pc-grid { display: grid; grid-template-columns: minmax(0, 520px) 640px; justify-content: space-between; align-items: start; }
+  .pc-h { margin-top: 16px; }
+  .pc-lead { margin-top: 20px; max-width: 440px; font-size: 17px; line-height: 1.5; }
+  .pc-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; margin: 0; padding: 0; list-style: none; }
+  .pc-it { display: flex; gap: 18px; min-height: 130px; }
+  .pc-t { font-family: var(--f-h); font-weight: 800; font-size: 20px; line-height: 1.04; letter-spacing: -.02em; }
+  .pc-d { margin-top: 9px; max-width: 250px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .pc-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  }
+  @media (max-width: 767px) {
+    .pc { padding: 64px 0 46px; }
+    .pc-grid { grid-template-columns: minmax(0, 1fr); }
+    .pc-h { margin-top: 10px; }
+    .pc-lead { margin-top: 12px; font-size: 15px; }
+    .pc-list { gap: 0 9px; margin-top: 24px; }
+    .pc-it { gap: 10px; min-height: 96px; }
+    .pc-t { font-size: 15px; }
+    .pc-d { margin-top: 6px; font-size: 13px; }
+  }
+</style>

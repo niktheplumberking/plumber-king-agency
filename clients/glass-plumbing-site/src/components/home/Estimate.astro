@@ -1,0 +1,342 @@
+---
+// Home final estimate (Figma 712:448 "Final estimate" y 9856 h 974; mobile 715:560 y 11594 h 1481). Ink band; the ink rises
+// into the FAQ above (meniscus rise). Left: head, lead, the live work order (a dark plate that fills as you answer), the
+// "draft" line and the gauge (an ink housing that fills a third per answered step). Right: the 3-step form card with the two
+// next steps peeking out under it; they slide forward as you go (build note 869:671). One question per screen:
+//   1 what is wrong (six option tiles)  2 town (chips) + when (now / today / this week)  3 name, phone, optional photo.
+// The form is a real [data-estimate-form] (scripts/forms.ts validates name + phone and sends). Without JS all three steps
+// show at once and still submit. "Water running right now?" keeps the call button on every step.
+import Btn from '../kit/Btn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+import Plate from '../kit/Plate.astro';
+import Seam from '../kit/Seam.astro';
+import { TILE_ICONS, CAMERA } from './fig';
+import { SITE } from '../../data/site';
+import { TOWNS } from '../../data/towns';
+const tiles = [
+  { v: 'No hot water', i: 'heater' }, { v: 'Water on the floor', i: 'drop' }, { v: 'Drain slow or backed up', i: 'drain' },
+  { v: 'Toilet keeps running', i: 'toilet' }, { v: 'Low water pressure', i: 'gauge' }, { v: 'Something else', i: 'other' },
+];
+const towns = [...TOWNS].sort((a, b) => a.mi - b.mi).map((t) => t.name).concat('Somewhere else');
+const whens = ['Right now', 'Today', 'This week'];
+const tabs = [['01 What’s wrong', '01 Wrong'], ['02 Town + when', '02 Town'], ['03 Number + photo', '03 Number']];
+const CHECK = '<svg width="12" height="9" viewBox="0 0 14 10" fill="none" aria-hidden="true" focusable="false"><path d="M1 5L5 9L13 1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+---
+<section class="est on-ink" aria-labelledby="est-h" data-m-section data-est>
+  <Seam from="var(--white)" to="var(--ink)" flip d={56} dm={36} />
+  <div class="wrap est-in">
+    <div class="txt">
+      <Eyebrow text="Tell us about the job" />
+      <h2 id="est-h" class="h2 est-h" data-t="2">Tell us what’s wrong. <span class="tone">We’ll explain it straight.</span></h2>
+      <p class="lead" data-t="3">Three quick taps and your number. Kody or the crew calls you back.<span class="d"> In a hurry? Call <a href={SITE.tel}>{SITE.phone}</a>.</span></p>
+    </div>
+    <div class="meter" data-t="4">
+      <div class="wo">
+        <Plate tone="ink" title="Work order · fills as you answer" class="est-wo" shadow="powder" w={400} wm={350}
+          rows={[['Problem', '—'], ['Town', '—'], ['When', '—'], ['Photo', '—'], ['Call back', '—']]}
+          pad={16} size={12} tsize={12} kx={126} pitch={22} sizem={11} kxm={116} pitchm={21} label="Your work order so far" />
+        <p class="draft"><span aria-hidden="true">● </span>Draft · nothing sent yet</p>
+      </div>
+      <div class="gauge" aria-hidden="true">
+        <Housing tone="ink" w={80} h={166} cap={14} r={20} fill={1 / 3} class="est-gauge" />
+        <p class="gl"><span data-est-count>1</span> / 3</p>
+      </div>
+    </div>
+    <div class="stack" data-step="1" data-est-stack>
+      <div class="pk pk3" aria-hidden="true"><span><span class="d">03 · Your number + photo</span><span class="m">03 · Number + photo</span></span></div>
+      <div class="pk pk2" aria-hidden="true"><span>02 · Town + when</span></div>
+      <form class="card" action="/thank-you" method="post" enctype="multipart/form-data" novalidate data-estimate-form data-est-form>
+        <ol class="tabs" role="list" aria-hidden="true">
+          {tabs.map(([d, m], i) => (<li class:list={[{ on: i === 0 }]} data-est-tab><span class="d">{d}</span><span class="m">{m}</span></li>))}
+        </ol>
+
+        <fieldset class="step" data-est-step="1" aria-labelledby="est-s1">
+          <h3 id="est-s1" class="sh" tabindex="-1">What’s going on?</h3>
+          <p class="ss">Pick the closest one.<span class="d"> You can change it on the call.</span></p>
+          <div class="tiles" role="radiogroup" aria-labelledby="est-s1">
+            {tiles.map((t) => (
+              <label class="tile">
+                <input type="radio" name="problem" value={t.v} class="sr-only" />
+                <svg class="ti" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" set:html={TILE_ICONS[t.i]} />
+                <span class="tt">{t.v}</span>
+                <span class="ck" aria-hidden="true" set:html={CHECK} />
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="step" data-est-step="2" aria-labelledby="est-s2">
+          <h3 id="est-s2" class="sh" tabindex="-1">Where and when?</h3>
+          <p class="ss">Your town, and how soon you need us.</p>
+          <fieldset class="grp">
+            <legend class="lg">Town</legend>
+            <div class="chips">
+              {towns.map((t) => (<label class="chip"><input type="radio" name="town" value={t} class="sr-only" /><span>{t}</span></label>))}
+            </div>
+          </fieldset>
+          <fieldset class="grp">
+            <legend class="lg">When</legend>
+            <div class="whens">
+              {whens.map((w) => (<label class="when"><input type="radio" name="when" value={w} class="sr-only" /><span>{w}</span><span class="ck" aria-hidden="true" set:html={CHECK} /></label>))}
+            </div>
+          </fieldset>
+        </fieldset>
+
+        <fieldset class="step" data-est-step="3" aria-labelledby="est-s3">
+          <h3 id="est-s3" class="sh" tabindex="-1">Where do we call you?</h3>
+          <p class="ss">Kody or the crew calls you back.</p>
+          <div class="fields">
+            <label class="fl"><span class="lg">Your name</span><input type="text" name="name" autocomplete="name" required /></label>
+            <label class="fl"><span class="lg">Phone</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required /></label>
+            <label class="photo">
+              <input type="file" name="photo" accept="image/*" class="sr-only" data-est-photo />
+              <span class="pi" set:html={CAMERA} />
+              <span><b data-est-photo-name>Add a photo</b> <span class="opt">(optional)</span><span class="ph">It helps us bring the right part.</span></span>
+            </label>
+          </div>
+          <p class="msg" data-form-msg role="status" aria-live="polite"></p>
+        </fieldset>
+
+        <div class="sos">
+          <p><b>Water running right now?</b><span>Skip the form and call.</span></p>
+          <Btn w={212} wm={278} h={52} hm={52} shadow="ink" class="sos-btn" />
+        </div>
+
+        <div class="foot">
+          <button type="button" class="back" data-est-back disabled>← Back</button>
+          <p class="cnt" aria-live="polite" data-est-live>Step 1 of 3</p>
+          <div class="nx">
+            <Btn look="ink" type="button" label="Next: town + when" arrow w={260} wm={310} data-est-next="1" />
+            <Btn look="ink" type="button" label="Next: number + photo" arrow w={260} wm={310} data-est-next="2" />
+            <Btn look="ink" type="submit" label="Send to Kody" arrow w={260} wm={310} data-est-next="3" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+<script>
+  // One question per screen. Steps advance with Next (or Enter); a submit before step 3 is caught here (capture phase, on
+  // the section, so it runs before forms.ts) and turned into "next". Each answer is written into the work order and fills
+  // the gauge a third. Focus moves to the new step's heading; the "Step n of 3" line is a live region.
+  document.querySelectorAll<HTMLElement>('[data-est]').forEach((sec) => {
+    const form = sec.querySelector<HTMLFormElement>('[data-est-form]')!;
+    const stack = sec.querySelector<HTMLElement>('[data-est-stack]')!;
+    const steps = [...sec.querySelectorAll<HTMLElement>('[data-est-step]')];
+    const tabs = [...sec.querySelectorAll<HTMLElement>('[data-est-tab]')];
+    const nexts = [...sec.querySelectorAll<HTMLElement>('[data-est-next]')];
+    const back = sec.querySelector<HTMLButtonElement>('[data-est-back]')!;
+    const live = sec.querySelector<HTMLElement>('[data-est-live]')!;
+    const vals = [...sec.querySelectorAll<HTMLElement>('.est-wo dd')];
+    const gauge = sec.querySelector<HTMLElement>('.est-gauge');
+    const count = sec.querySelector<HTMLElement>('[data-est-count]');
+    const photo = sec.querySelector<HTMLInputElement>('[data-est-photo]');
+    const photoName = sec.querySelector<HTMLElement>('[data-est-photo-name]');
+    const msg = form.querySelector<HTMLElement>('[data-form-msg]');
+    const val = (n: string) => (form.elements.namedItem(n) as RadioNodeList | HTMLInputElement | null)?.value?.trim() ?? '';
+    let step = 1;
+    sec.classList.add('js');
+
+    const done = () => {
+      const a = [!!val('problem'), !!(val('town') && val('when')), !!(val('name') && val('phone').replace(/\D/g, '').length >= 10)];
+      return a.filter(Boolean).length;
+    };
+    const paint = () => {
+      const phone = val('phone'), name = val('name');
+      const out = [val('problem'), val('town'), val('when'), photo?.files?.length ? 'Added' : '', [name, phone].filter(Boolean).join(' · ')];
+      out.forEach((v, i) => { if (vals[i]) vals[i].textContent = v || '—'; });
+      const n = done();
+      gauge?.style.setProperty('--lvl', String(n / 3));
+      if (count) count.textContent = String(n);
+    };
+    const go = (to: number, focus = true) => {
+      step = Math.max(1, Math.min(3, to));
+      steps.forEach((s, i) => { s.hidden = i + 1 !== step; });
+      tabs.forEach((t, i) => t.classList.toggle('on', i < step));
+      nexts.forEach((b) => { b.hidden = b.dataset.estNext !== String(step); });
+      back.disabled = step === 1;
+      stack.dataset.step = String(step);
+      live.textContent = `Step ${step} of 3`;
+      if (msg && step < 3) msg.textContent = '';
+      if (focus) steps[step - 1].querySelector<HTMLElement>('.sh')?.focus({ preventScroll: true });
+    };
+    const need = () => {
+      if (step === 1 && !val('problem')) return 'Pick the closest one to go on.';
+      if (step === 2 && !val('town')) return 'Pick your town to go on.';
+      if (step === 2 && !val('when')) return 'Pick when you need us to go on.';
+      return '';
+    };
+    const next = () => {
+      const why = need();
+      if (why) {
+        live.textContent = why;
+        steps[step - 1].querySelector<HTMLInputElement>(step === 2 && val('town') ? 'input[name="when"]' : 'input[type="radio"]')?.focus();
+        return;
+      }
+      go(step + 1);
+    };
+    nexts.forEach((b) => { if (b.getAttribute('type') === 'button') b.addEventListener('click', next); });
+    back.addEventListener('click', () => go(step - 1));
+    sec.addEventListener('submit', (e) => {
+      if (step < 3) { e.preventDefault(); e.stopImmediatePropagation(); next(); }
+    }, true);
+    form.addEventListener('change', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t === photo && photoName) photoName.textContent = photo.files?.[0]?.name || 'Add a photo';
+      paint();
+    });
+    form.addEventListener('input', paint);
+    // A tile pick on step 1 is the whole question: Enter on a focused tile goes on (Space selects, as radios do).
+    form.addEventListener('keydown', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (e.key === 'Enter' && t.type === 'radio') { e.preventDefault(); if (!t.checked) { t.checked = true; paint(); } next(); }
+    });
+    go(1, false);
+    paint();
+    form.classList.add('est-ready');
+  });
+</script>
+<style>
+  .est { position: relative; background: var(--ink); color: var(--white); padding: 120px 0 120px; }
+  .m { display: none; }
+  .est-in { display: grid; grid-template-columns: 520px 620px; grid-template-rows: auto 1fr; grid-template-areas: 'txt stack' 'meter stack'; column-gap: 60px; }
+  .txt { grid-area: txt; padding-top: 8px; }
+  .est-h { margin-top: 16px; color: var(--white); text-wrap: wrap; } .est-h .tone { display: block; }
+  .lead { width: 470px; margin-top: 40px; font-size: 18px; line-height: 1.5; color: rgb(255 255 255 / .85); }
+  .lead a { color: var(--white); white-space: nowrap; }
+  .lead a:hover { color: var(--powder); }
+
+  .meter { grid-area: meter; display: flex; gap: 40px; align-items: flex-start; margin-top: 44px; }
+  .wo :global(.est-wo) { box-shadow: inset 0 0 0 1px var(--ink3), 8px 8px 0 var(--powder); }
+  .wo :global(.est-wo dd) { transition: color .3s; }
+  .draft { margin-top: 22px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .gauge :global(.est-gauge) { --c: var(--white); --o: var(--white); }
+  .gauge :global(.est-gauge .hs-water) { transition: translate 1.2s var(--ease-io), height .8s var(--ease-io); }
+  .gl { margin-top: 20px; font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 16px; letter-spacing: .06em; }
+
+  /* The card and the two peeking next steps. They slide forward (up and in) as the steps go by. */
+  .stack { grid-area: stack; position: relative; align-self: start; margin-bottom: 56px; }
+  .pk { position: absolute; border-radius: 6px; transition: translate .5s var(--ease-io), inset .5s var(--ease-io), opacity .4s; }
+  .pk > span { position: absolute; left: 24px; bottom: 8px; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .pk2 { inset: 28px 16px -28px; background: var(--powder); color: var(--ink); }
+  .pk3 { inset: 56px 32px -56px; background: var(--pdeep); color: var(--white); }
+  .stack[data-step='2'] .pk2, .stack[data-step='3'] .pk2, .stack[data-step='3'] .pk3 { translate: 0 -28px; opacity: 0; }
+  .stack[data-step='2'] .pk3 { inset: 28px 16px -28px; }
+
+  .card { position: relative; display: flex; flex-direction: column; min-height: 678px; padding: 40px; border-radius: 6px; background: var(--white); color: var(--ink); }
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .tabs li { padding-top: 10px; border-top: 4px solid var(--frost3); border-radius: 2px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); transition: border-color .4s, color .4s; }
+  .tabs li.on { border-color: var(--pdeep); color: var(--ink); }
+
+  .step { min-width: 0; margin: 0; padding: 0; border: 0; }
+  /* Before the step script runs (html.js is set inline in the head), show only step 1, so nothing jumps. Without JS all
+     three steps show and only the real submit button stays. */
+  :global(html.js) .card:not(.est-ready) [data-est-step]:not([data-est-step='1']),
+  :global(html.js) .card:not(.est-ready) .nx > :global(:not([data-est-next='1'])) { display: none; }
+  :global(html:not(.js)) .nx > :global(:not([data-est-next='3'])), :global(html:not(.js)) .back { display: none; }
+  .step + .step { margin-top: 40px; }
+  .js .step + .step { margin-top: 0; }
+  .sh { margin-top: 29px; font-family: var(--f-h); font-weight: 800; font-size: 32px; line-height: 1.04; letter-spacing: -.02em; outline: none; }
+  .ss { margin-top: 11px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  :global(html.motion) .js .step:not([hidden]) { animation: est-in .45s var(--ease-io) both; }
+  @keyframes est-in { from { opacity: 0; translate: 24px 0; } }
+
+  .tiles { display: grid; grid-template-columns: repeat(3, 168px); gap: 18px; margin-top: 27px; }
+  .tile { position: relative; display: flex; flex-direction: column; justify-content: space-between; height: 120px; padding: 18px; border-radius: 6px; background: var(--white);
+    box-shadow: inset 0 0 0 1.5px var(--frost3); cursor: pointer; transition: background-color .2s, box-shadow .2s; }
+  .tile:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .tile:has(:checked) { background: var(--frost); box-shadow: inset 0 0 0 2px var(--ink), 6px 6px 0 var(--powder); }
+  .tile:has(:focus-visible), .chip:has(:focus-visible), .when:has(:focus-visible), .photo:has(:focus-visible) { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  .ti { display: block; color: var(--ink); }
+  .tt { font-weight: 700; font-size: 15px; line-height: 1.25; }
+  .ck { position: absolute; right: 12px; top: 12px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--pdeep); scale: 0; transition: scale .25s var(--ease-back); }
+  .tile:has(:checked) .ck, .when:has(:checked) .ck { scale: 1; }
+
+  .grp { min-width: 0; margin: 22px 0 0; padding: 0; border: 0; }
+  .lg { display: block; padding: 0; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip span { display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 18px; box-shadow: inset 0 0 0 1.5px var(--frost3); font-weight: 600; font-size: 14px; line-height: 1; cursor: pointer; transition: background-color .2s, color .2s, box-shadow .2s; }
+  .chip:hover span { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .chip { border-radius: 18px; }
+  .chip:has(:checked) span { background: var(--ink); color: var(--white); box-shadow: none; }
+  .whens { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 10px; }
+  .when { position: relative; display: flex; align-items: center; height: 56px; padding: 0 18px; border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--frost3); font-weight: 700; font-size: 15px; cursor: pointer; transition: background-color .2s, box-shadow .2s; }
+  .when:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .when:has(:checked) { background: var(--frost); box-shadow: inset 0 0 0 2px var(--ink), 6px 6px 0 var(--powder); }
+  .when .ck { top: 16px; }
+
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 27px; }
+  .fl input { display: block; width: 100%; height: 52px; margin-top: 8px; padding: 0 16px; border: 0; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--frost3); font: inherit; font-size: 16px; color: var(--ink); }
+  .fl input:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .fl input:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; box-shadow: inset 0 0 0 2px var(--ink); }
+  .fl input[aria-invalid='true'] { box-shadow: inset 0 0 0 2px var(--red); }
+  .photo { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; min-height: 84px; padding: 16px 20px; border: 1.5px dashed var(--steel2); border-radius: 6px; background: var(--frost); cursor: pointer; transition: border-color .2s; }
+  .photo:hover { border-color: var(--ink); }
+  .pi { display: grid; place-items: center; width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--ink); color: var(--white); }
+  .photo b { font-size: 15px; overflow-wrap: anywhere; } .opt { font-size: 14px; color: var(--muted); }
+  .ph { display: block; margin-top: 2px; font-size: 14px; color: var(--muted); }
+  .msg { margin-top: 14px; font-size: 14px; line-height: 1.5; color: var(--red); }
+  .msg:empty { display: none; }
+
+  .sos { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; padding: 12px 14px 12px 20px; border-radius: 6px; background: var(--frost); }
+  .sos b { display: block; font-size: 16px; line-height: 1.5; }
+  .sos span { display: block; font-size: 14px; line-height: 1.5; color: var(--muted); }
+
+  .foot { display: flex; align-items: center; margin-top: auto; padding-top: 32px; }
+  .back { min-height: 44px; padding: 0; border: 0; background: none; font: inherit; font-weight: 600; font-size: 15px; color: var(--ink); cursor: pointer; }
+  .back:hover:not(:disabled) { color: var(--pdeep); }
+  .back:disabled { color: var(--muted2); cursor: default; }
+  .cnt { margin-left: 36px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); }
+  .nx { margin-left: auto; }
+  .nx :global([hidden]) { display: none; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .est-in { grid-template-columns: 1fr; grid-template-areas: 'txt' 'stack' 'meter'; }
+    .stack { max-width: 620px; margin: 48px 0 96px; }
+    .meter { margin-top: 0; }
+    .lead { width: auto; max-width: 560px; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .est { padding: 80px 0 77px; }
+    .est-in { display: flex; flex-direction: column; }
+    .txt { padding-top: 0; }
+    .est-h { margin-top: 12px; --h2m: 40px; }
+    .lead { width: auto; margin-top: 16px; font-size: 16px; }
+    .stack { order: 1; margin: 32px 0 84px; }
+    .pk > span { left: 16px; bottom: 5px; font-size: 9px; line-height: 12px; }
+    .pk2 { inset: 22px 12px -22px; }
+    .pk3 { inset: 44px 24px -44px; }
+    .stack[data-step='2'] .pk2, .stack[data-step='3'] .pk2, .stack[data-step='3'] .pk3 { translate: 0 -22px; }
+    .stack[data-step='2'] .pk3 { inset: 22px 12px -22px; }
+    .card { min-height: 760px; padding: 24px 20px 10px; }
+    .tabs { column-gap: 8px; }
+    .tabs li { padding-top: 8px; font-size: 10px; line-height: 13px; }
+    .sh { margin-top: 23px; font-size: 26px; }
+    .ss { margin-top: 7px; font-size: 14px; }
+    .tiles { grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 17px; }
+    .tile { height: 104px; padding: 14px; }
+    .tile:has(:checked) { box-shadow: inset 0 0 0 2px var(--ink), 5px 5px 0 var(--powder); }
+    .tt { font-size: 14px; }
+    .ck { right: 10px; top: 10px; }
+    .chips { gap: 6px; }
+    .chip span { height: 44px; border-radius: 22px; padding: 0 14px; }
+    .whens { gap: 8px; }
+    .when { padding: 0 12px; font-size: 14px; }
+    .when .ck { display: none; }
+    .fields { grid-template-columns: 1fr; gap: 14px; margin-top: 17px; }
+    .sos { display: block; margin-top: 20px; padding: 14px 16px 16px; }
+    .sos b { font-size: 15px; } .sos span { font-size: 13px; }
+    .sos :global(.sos-btn) { margin-top: 6px; width: 100%; }
+    .foot { flex-wrap: wrap; padding-top: 20px; }
+    .nx { order: -1; width: 100%; margin: 0 0 2px; }
+    .nx :global(.btn) { width: 100%; }
+    .back { font-size: 14px; }
+    .cnt { margin-left: auto; font-size: 10px; line-height: 13px; }
+    .meter { order: 2; display: block; margin-top: 0; }
+    .wo :global(.est-wo) { box-shadow: inset 0 0 0 1px var(--ink3), 6px 6px 0 var(--powder); }
+    .draft { margin-top: 18px; font-size: 10px; line-height: 13px; }
+    .gauge { display: none; }
+  }
+</style>

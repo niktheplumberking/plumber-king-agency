@@ -1,0 +1,100 @@
+---
+// Problems (Figma 719:437 y 1398 h 1010 / mobile y 1806 h 1039): "Six ways a water heater tells you it's done." A drawn
+// tank cutaway in the middle (Figma vectors, redrawn 1:1 from the frame's rectangles) with callout lines to six problems.
+// Hover or focus a problem: its callout and dot turn powder-deep. Phone: a mini cutaway, a numbered list, one link.
+import Eyebrow from '../kit/Eyebrow.astro';
+import { SITE } from '../../data/site';
+const P = [
+  { t: 'No hot water', d: 'Element, pilot or thermostat. Often a part, not the tank.' },
+  { t: 'Runs out fast', d: 'A failing element or a tank too small for the house.' },
+  { t: 'Rusty water', d: 'Often the anode rod is used up.' },
+  { t: 'Leaking tank', d: 'If the tank shell leaks, it needs replacing.' },
+  { t: 'Rumbling and popping', d: 'Scale at the bottom. Pinellas water averages 217 ppm hardness.', dm: 'Scale at the bottom. Pinellas water averages 217\u00a0ppm.' },
+  { t: 'Relief valve dripping', d: 'A safety part. This one is for a licensed plumber.', dm: 'A safety part. For a licensed plumber.' },
+];
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="pb" data-m-section>
+  <div class="wrap">
+    <Eyebrow text="What’s wrong with it?" />
+    <h2 class="h2 pb-h" data-t="2" style="--h2:52px;--h2m:28px">Six ways a water heater<br /><span class="tone">tells you it’s done.</span></h2>
+    <div class="pb-grid">
+      <svg class="pb-tank" viewBox="0 0 320 620" width="320" height="620" aria-hidden="true" focusable="false" data-t="3">
+        <rect x="111" y="1" width="20" height="58" fill="#AEB6BA" stroke="#16130F" stroke-width="2" />
+        <rect x="189" y="1" width="20" height="58" fill="#AEB6BA" stroke="#16130F" stroke-width="2" />
+        <rect x="41.5" y="51.5" width="237" height="497" rx="28" fill="#fff" stroke="#16130F" stroke-width="3" />
+        <rect x="58" y="70" width="204" height="460" rx="20" fill="#EEF3F4" />
+        <path class="pb-water" d="M58 230h204v280a20 20 0 0 1-20 20H78a20 20 0 0 1-20-20z" fill="#84B3C7" />
+        <rect x="62" y="230" width="196" height="3" fill="#fff" fill-opacity=".8" />
+        <rect x="138" y="90" width="8" height="400" rx="4" fill="#AEB6BA" />
+        <rect x="176" y="90" width="10" height="380" rx="5" fill="#322E27" />
+        <g class="pb-sd" fill="#322E27"><ellipse cx="75" cy="503" rx="5" ry="3" /><ellipse cx="105" cy="503" rx="5" ry="3" /><ellipse cx="135" cy="503" rx="5" ry="3" /><ellipse cx="165" cy="503" rx="5" ry="3" /><ellipse cx="195" cy="503" rx="5" ry="3" /><ellipse cx="225" cy="503" rx="5" ry="3" /></g>
+        <rect x="41" y="551" width="238" height="48" rx="6" fill="#C7CED1" stroke="#16130F" stroke-width="2" />
+        <rect class="pb-sd" x="251" y="411" width="44" height="16" fill="#AEB6BA" stroke="#16130F" stroke-width="2" />
+        <rect class="pb-sd" x="269" y="121" width="38" height="14" fill="#AEB6BA" stroke="#16130F" stroke-width="2" />
+      </svg>
+      <ol class="pb-list" role="list" data-t="3" data-stagger>
+        {P.map((p, i) => (
+          <li class:list={['pb-it', i < 3 ? 'pb-left' : 'pb-right']} style={`--r:${i % 3}`}>
+            <span class="pb-n" aria-hidden="true">{pad(i + 1)}</span>
+            <h3 class="pb-t">{p.t}</h3>
+            <p class="pb-d">{p.dm ? <><span class="d">{p.d}</span><span class="m">{p.dm}</span></> : p.d}</p>
+            <a class="pb-a" href={SITE.sms}>Text a photo of the label <span aria-hidden="true">→</span></a>
+            <i class="pb-line" aria-hidden="true"></i>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <a class="pb-am" href={SITE.sms}>Text a photo of the label <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+<style>
+  .pb { background: var(--white); padding: 110px 0 60px; }
+  .pb-h { margin-top: 16px; }
+  .pb-grid { position: relative; height: 620px; margin-top: 82px; }
+  .pb-tank { position: absolute; left: 440px; top: 0; }
+  .pb-list { margin: 0; padding: 0; list-style: none; }
+  .pb-it { position: absolute; top: calc(50px + var(--r) * 160px); width: 360px; }
+  .pb-left { left: 0; }
+  .pb-right { right: 0; }
+  .pb-n { display: none; }
+  .pb-t { font-family: var(--f-h); font-weight: 800; font-size: 22px; line-height: 1.04; letter-spacing: -.02em; }
+  .pb-d { margin-top: 9px; max-width: 340px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .pb-a { display: inline-block; margin-top: 4px; padding: 4px 0; font-weight: 700; font-size: 14px; line-height: 1.5; color: var(--pdeep); }
+  .pb-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .pb-line { position: absolute; top: 14px; height: 2px; background: rgba(22,19,15,.4); transition: background-color .3s var(--ease-io); }
+  .pb-line::after { content: ''; position: absolute; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--ink); transition: background-color .3s var(--ease-io), scale .3s var(--ease-io); }
+  .pb-left .pb-line { left: 360px; width: 200px; }
+  .pb-left .pb-line::after { right: -5px; }
+  .pb-right .pb-line { right: 360px; width: 114px; }
+  .pb-right .pb-line::after { left: -5px; }
+  .pb-it:hover .pb-line, .pb-it:focus-within .pb-line { background: var(--pdeep); }
+  .pb-it:hover .pb-line::after, .pb-it:focus-within .pb-line::after { background: var(--pdeep); scale: 1.3; }
+  .pb-am { display: none; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .pb-grid { height: auto; display: grid; grid-template-columns: 1fr 200px 1fr; gap: 0 32px; }
+    .pb-tank { position: static; grid-column: 2; grid-row: 1; width: 200px; height: auto; }
+    .pb-list { display: contents; }
+    .pb-it { position: static; width: auto; margin-bottom: 32px; }
+    .pb-left { grid-column: 1; grid-row: calc(var(--r) + 1); }
+    .pb-right { grid-column: 3; grid-row: calc(var(--r) + 1); }
+    .pb-tank { grid-row: 1 / 4; }
+    .pb-line { display: none; }
+  }
+  @media (max-width: 767px) {
+    .pb { padding: 56px 0 58px; }
+    .pb-h { margin-top: 10px; }
+    .pb-grid { height: auto; margin-top: 28px; }
+    .pb-tank { position: static; display: block; width: 120px; height: 232px; margin: 0 auto; }
+    .pb-list { margin-top: 18px; border-top: 1px solid rgba(22,19,15,.2); }
+    .pb-it { position: static; width: auto; display: grid; grid-template-columns: 36px minmax(0, 1fr); padding: 13px 0 15px; border-bottom: 1px solid rgba(22,19,15,.2); }
+    .pb-n { display: block; grid-row: 1 / 3; padding-top: 4px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; color: var(--pdeep); }
+    .pb-t { font-size: 18px; }
+    .pb-d { margin-top: 7px; font-size: 14px; }
+    .pb-it:last-child { border-bottom: 0; }
+    .pb-sd { display: none; }
+    .pb-a, .pb-line { display: none; }
+    .pb-am { display: inline-block; margin-top: 4px; padding: 10px 0; font-weight: 700; font-size: 15px; line-height: 1.5; color: var(--pdeep); text-decoration: underline; text-underline-offset: 3px; }
+  }
+</style>

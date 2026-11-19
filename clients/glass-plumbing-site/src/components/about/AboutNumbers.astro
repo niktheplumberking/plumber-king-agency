@@ -1,0 +1,52 @@
+---
+// /about "Numbers" (Figma y 1713 h 420 / mobile y 1694 h 350). Ink, meniscus rise over the frost story. 104 and 77 are
+// the two separate Google profiles (site.ts; never added), 16 = the reviews in reviews.ts, 34 = Instagram posts (Figma,
+// read 17 Nov 2026). data-count: motion.ts counts up on enter; the HTML holds the final value.
+import Seam from '../kit/Seam.astro';
+import { SITE } from '../../data/site';
+import { REVIEW_TOTAL, IG_POSTS } from './data';
+const nums = [
+  { n: SITE.google.a.count, d: 'Google reviews, profile 1, all 5.0', m: 'Google reviews, profile 1' },
+  { n: SITE.google.b.count, d: 'Google reviews, profile 2, all 5.0', m: 'Google reviews, profile 2' },
+  { n: REVIEW_TOTAL, d: 'reviews we read word for word', m: 'reviews read word for word', tone: true },
+  { n: IG_POSTS, d: 'Instagram posts of real jobs', m: 'Instagram posts', tone: true },
+];
+---
+<section class="bnum on-ink" data-m-section aria-labelledby="bnum-h">
+  <Seam from="var(--frost)" to="var(--ink)" flip />
+  <div class="wrap">
+    <h2 id="bnum-h" class="sr-only">Glass Plumbing in numbers</h2>
+    <ul class="bn-grid" role="list" data-stagger>
+      {nums.map((x) => (
+        <li class:list={['bn', x.tone && 'is-tone']}>
+          <span class="bn-n" data-count={x.n}>{x.n}</span>
+          <span class="bn-l"><span class="d">{x.d}</span><span class="m">{x.m}</span></span>
+        </li>
+      ))}
+    </ul>
+    <p class="bn-note" data-t="5"><span class="d">Read {SITE.google.checked}. The two Google counts are separate profiles and are never added together.</span><span class="m">Read {SITE.google.checked}. Two separate profiles, never added.</span></p>
+  </div>
+</section>
+
+<style>
+  .bnum { position: relative; background: var(--ink); color: var(--white); padding: 110px 0 75px; }
+  .bn-grid { display: grid; grid-template-columns: repeat(4, 260px); column-gap: 46px; }
+  .bn { display: flex; flex-direction: column; }
+  .bn-n { font-family: var(--f-h); font-weight: 800; font-size: 96px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); font-variant-numeric: tabular-nums; }
+  .is-tone .bn-n { color: var(--powder); }
+  .bn-l { margin-top: 22px; padding-top: 16px; border-top: 2px solid var(--ink3); font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--white); }
+  .bn-note { margin-top: 65px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--powder); }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .bn-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 24px; }
+    .bn-n { font-size: clamp(56px, 7.5vw, 96px); }
+  }
+  @media (max-width: 767px) {
+    .bnum { padding: 40px 0 28px; }
+    .bn-grid { grid-template-columns: 179px 1fr; row-gap: 45px; column-gap: 0; }
+    .bn-n { font-size: 56px; }
+    .bn-l { margin-top: 14px; padding-top: 0; border-top: 0; font-size: 10px; line-height: 13px; }
+    .bn-note { margin-top: 55px; font-size: 9px; line-height: 12px; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

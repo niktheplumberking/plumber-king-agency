@@ -1,0 +1,67 @@
+---
+// CTA "text a photo" (Figma 718:522 y 7240 h 700 / mobile y 7269 h 776). Ink section with a meniscus rise, two buttons and a
+// phone mock showing an example text (the valve photo). Phone: heading, phone mock, then the two buttons full width.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+---
+<section class="ct on-ink seam-host" data-m-section>
+  <Seam from="var(--frost)" to="var(--ink)" flip d={48} dm={32} />
+  <div class="wrap ct-grid">
+    <div class="ct-l">
+      <Eyebrow text="Not sure what it’s called?" />
+      <h2 class="h2 ct-h" data-t="2" style="--h2:56px;--h2m:30px">Text a photo.<br /><span class="tone">We’ll tell you what it is.</span></h2>
+      <p class="ct-lead" data-t="3">Snap the leak, the label or the valve and send it to <span class="nowrap">{SITE.phone}</span> with your town.</p>
+    </div>
+    <div class="ct-btns" data-t="3">
+      <Btn look="line" icon="camera" label="Text a photo" sub={`TO ${SITE.phone}`} arrow size="l" w={280} h={64} hm={60} class="ct-b" />
+      <Btn sub="OR CALL · 24/7" size="l" w={280} h={64} hm={60} class="ct-b" />
+    </div>
+    <div class="ct-phone" data-t="4" aria-hidden="true">
+      <div class="ct-scr">
+        <i class="ct-notch"></i>
+        <p class="ct-to">To: {SITE.phone}</p>
+        <div class="ct-ph"><Img name="valve" alt="" sizes="(min-width:768px) 160px, 112px" box={160 / 200} boxM={112 / 140} widths={[240, 320, 480]} /></div>
+        <p class="ct-msg">This valve drips. Largo.</p>
+        <p class="ct-ex">Example</p>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .ct { position: relative; padding: 90px 0 90px; }
+  .ct-grid { display: grid; grid-template-columns: minmax(0, 640px) 280px; grid-template-areas: 'l phone' 'btn phone'; grid-template-rows: auto 1fr; justify-content: space-between; align-items: start; padding-right: 140px; }
+  .ct-l { grid-area: l; padding-top: 50px; }
+  .ct-h { margin-top: 16px; color: var(--white); }
+  .ct-lead { margin-top: 34px; max-width: 520px; font-size: 18px; line-height: 1.5; color: var(--white); }
+  .ct-btns { grid-area: btn; display: flex; flex-wrap: wrap; gap: 16px; margin-top: 26px; }
+  .ct-phone { grid-area: phone; position: relative; width: 280px; height: 520px; padding: 14px; border-radius: 36px; background: var(--ink3); box-shadow: inset 0 0 0 2px var(--steel2), 12px 12px 0 var(--powder); }
+  .ct-scr { position: relative; height: 100%; border-radius: 26px; background: var(--frost); color: var(--ink); }
+  .ct-notch { position: absolute; left: 90px; top: 10px; width: 72px; height: 18px; border-radius: 9px; background: var(--ink3); }
+  .ct-to { position: absolute; left: 16px; top: 48px; font-family: var(--f-m); font-weight: 700; font-size: 9px; line-height: 12px; letter-spacing: .01em; }
+  .ct-ph { position: absolute; left: 82px; top: 82px; width: 160px; height: 200px; border-radius: 16px; overflow: hidden; }
+  .ct-msg { position: absolute; left: 42px; top: 296px; width: 200px; height: 64px; padding: 20px 16px; border-radius: 16px; background: var(--pdeep); color: var(--white); font-weight: 600; font-size: 14px; line-height: 1.5; }
+  .ct-ex { position: absolute; left: 182px; top: 370px; font-family: var(--f-m); font-weight: 700; font-size: 9px; line-height: 12px; letter-spacing: .01em; color: var(--muted); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ct-grid { grid-template-columns: minmax(0, 1fr) 280px; gap: 0 40px; padding-right: 0; }
+  }
+  @media (max-width: 767px) {
+    .ct { padding: 64px 0 64px; }
+    .ct-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'phone' 'btn'; padding: 0; }
+    .ct-l { padding-top: 0; }
+    .ct-h { margin-top: 10px; }
+    .ct-lead { display: none; }
+    .ct-phone { justify-self: center; width: 200px; height: 370px; margin-top: 28px; padding: 10px; border-radius: 28px; box-shadow: inset 0 0 0 2px var(--steel2), 8px 8px 0 var(--powder); }
+    .ct-scr { border-radius: 20px; }
+    .ct-notch { left: 64px; top: 8px; width: 52px; height: 13px; border-radius: 7px; }
+    .ct-to { left: 12px; top: 34px; font-size: 8px; line-height: 11px; }
+    .ct-ph { left: 60px; top: 56px; width: 112px; height: 140px; border-radius: 12px; }
+    .ct-msg { left: 30px; top: 208px; width: 142px; height: 48px; padding: 15px 12px; border-radius: 12px; font-size: 11px; }
+    .ct-ex { left: 126px; top: 264px; font-size: 8px; line-height: 11px; }
+    .ct-btns { flex-direction: column; gap: 12px; margin-top: 30px; }
+    .ct-btns :global(.ct-b) { width: 100%; }
+  }
+</style>

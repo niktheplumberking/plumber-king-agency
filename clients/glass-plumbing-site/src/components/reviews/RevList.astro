@@ -1,0 +1,80 @@
+---
+// "Newest first." All 16 reviews word for word (reviews.ts; names as written). Figma "All reviews" y 1432 h 2278 (3 columns)
+// / mobile y 1494 h 5481 (one column). Desktop columns follow the Figma frame; the DOM keeps the newest-first order (CSS order
+// on phones). No Review / AggregateRating markup (BUILD-BRIEF 6).
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Seam from '../kit/Seam.astro';
+import Stars from '../contact/Stars.astro';
+import { REVIEWS } from '../../data/reviews';
+// Newest first, as the 390 frame lists them.
+const ORDER = ['Peter Van Buskirk', 'Greg Letsch', 'Jen James', 'Michael Marks', 'Nelson Whitesell', 'Cody Weaver', 'Emily Van Den Langenberg', 'David Peek',
+  'Kevin Kelleman', 'Cary Cannon', 'Jordan Carlson', 'Eduardo “EddieZoRz” Perea', 'John Rooney', 'Parker L', 'Seth Nye', 'Jacob Gars'];
+// Desktop columns as drawn in the 1440 frame.
+const COLS = [
+  ['Peter Van Buskirk', 'Nelson Whitesell', 'Emily Van Den Langenberg', 'Cary Cannon', 'John Rooney', 'Seth Nye'],
+  ['Greg Letsch', 'Michael Marks', 'David Peek', 'Jordan Carlson', 'Parker L', 'Jacob Gars'],
+  ['Jen James', 'Cody Weaver', 'Kevin Kelleman', 'Eduardo “EddieZoRz” Perea'],
+];
+const byName = new Map(REVIEWS.map((r) => [r.name, r]));
+if (ORDER.length !== REVIEWS.length || ORDER.some((n) => !byName.has(n))) throw new Error('RevList: review names out of sync with reviews.ts');
+---
+<section class="cx-sec cx-white rl" data-m-section aria-labelledby="rl-h">
+  <Seam from="var(--frost)" to="var(--white)" />
+  <div class="wrap">
+    <div class="shead">
+      <Eyebrow text="All 16 reviews, word for word" tone="pdeep" />
+      <h2 id="rl-h" class="cx-h rl-h" data-t="2">Newest first.</h2>
+    </div>
+    <div class="rl-g">
+      {COLS.map((col) => (
+        <ul class="rl-col" role="list" data-t="4" data-stagger>
+          {col.map((name) => {
+            const r = byName.get(name)!;
+            return (
+              <li class="rl-c" style={`--o:${ORDER.indexOf(name)}`}>
+                <article>
+                  <div class="rl-top"><Stars w={80} label="5 out of 5 stars" /><span class="rl-when">{r.when}</span></div>
+                  <blockquote class="rl-t"><p>{r.text}</p></blockquote>
+                  <p class="rl-n">{r.name}</p>
+                  <p class="rl-src">Google</p>
+                </article>
+              </li>
+            );
+          })}
+        </ul>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .rl { padding: 110px 0 104px; }
+  .rl-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
+  .rl-g { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 24px; align-items: start; margin-top: 45px; }
+  .rl-col { margin: 0; padding: 0; list-style: none; display: grid; gap: 24px; }
+  .rl-c article { position: relative; padding: 28px 24px 18px; border: 1px solid var(--frost3); border-radius: 6px; background: var(--white); overflow: hidden; }
+  .rl-c article::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--powder); }
+  .rl-top { display: flex; align-items: center; justify-content: space-between; height: 13px; }
+  .rl-when { font: 500 10px/13px var(--f-m); letter-spacing: .01em; color: var(--muted); }
+  .rl-t { margin: 15px 0 0; }
+  .rl-t p { margin: 0; font: 400 15px/1.5 var(--f-b); color: var(--ink); white-space: pre-wrap; overflow-wrap: break-word; }
+  .rl-n { margin: 16px 0 0; font: 800 16px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .rl-src { margin: 9px 0 0; font: 500 9px/12px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rl-g { column-gap: 16px; } .rl-col { gap: 16px; }
+    .rl-c article { padding: 24px 18px 20px; }
+  }
+  @media (max-width: 767px) {
+    .rl { padding: 60px 0 60px; }
+    .rl-h { margin-top: 12px; }
+    .rl-g { display: flex; flex-direction: column; gap: 16px; margin-top: 30px; }
+    .rl-col { display: contents; }
+    .rl-c { order: var(--o); }
+    .rl-c article { padding: 23px 18px 15px; }
+    .rl-c article::before { height: 5px; }
+    .rl-top :global(.cx-stars) { width: 75px; height: 12px; }
+    .rl-t { margin-top: 13px; }
+    .rl-n { margin-top: 14px; font-size: 15px; }
+    .rl-src { margin-top: 8px; }
+  }
+</style>

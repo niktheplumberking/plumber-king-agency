@@ -1,0 +1,76 @@
+---
+// /about "Proof" (Figma y 4087 h 1020 / mobile y 3783 h 946). White, meniscus dip from the frost rules. The crew-and-tank
+// "reel" frame (a link to the Instagram profile, play button) and three review cards (phones: two, the second shorter, as
+// the frame). Quotes checked word for word against reviews.ts.
+import Head from '../areas/Head.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { quote, STARS } from '../areas/reviews';
+import { SITE } from '../../data/site';
+const cards = [
+  { by: 'John Rooney', d: quote('John Rooney', 'As a contractor it’s always hard to find reliable, trustworthy subs you can count on. Kody is one of those guys.') },
+  { by: 'David Peek', d: quote('David Peek', 'These guys know their stuff - commercial or residential. … Trusted and dependable.'), m: quote('David Peek', 'These guys know their stuff - commercial or residential.') },
+  { by: 'Emily Van Den Langenberg', d: quote('Emily Van Den Langenberg', 'Through multiple moves, Kody and Zak are our go-to plumbers.'), dOnly: true },
+];
+---
+<section class="bproof" data-m-section aria-labelledby="bproof-h">
+  <Seam from="var(--frost)" to="var(--white)" />
+  <div class="wrap">
+    <Head eyebrow="See it for yourself" l1="Real jobs on video." l2="Real words in reviews." sizeM={26} id="bproof-h" />
+    <div class="bp-grid">
+      <a class="bp-reel" href={SITE.social.instagram} target="_blank" rel="noopener" data-t="4" data-fx="frame">
+        <Img name="crew-water-heater-tank" alt="" sizes="(min-width:1280px) 560px, (min-width:768px) 46vw, 90vw" box={560 / 620} boxM={350 / 400} widths={[350, 560, 700, 1120]} focus="50% 35%" />
+        <span class="bp-play" aria-hidden="true"><svg viewBox="0 0 20 22" width="20" height="22"><path d="M2 1.5v19L19 11z" fill="#fff" /></svg></span>
+        <span class="bp-lab">Reel · {SITE.social.instagramHandle}</span>
+        <span class="sr-only">: a crew member carrying a water heater tank. Watch our job reels on Instagram (opens in a new tab)</span>
+      </a>
+      <ul class="bp-cards" role="list" data-t="4" data-stagger>
+        {cards.map((c) => (
+          <li class:list={['bp-c', c.dOnly && 'd-only']}>
+            <figure>
+              <svg class="bp-stars" viewBox="0 0 80 13" fill="#F9B50D" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
+              <blockquote><p>{c.m ? <><span class="d">“{c.d}”</span><span class="m">“{c.m}”</span></> : <>“{c.d}”</>}</p></blockquote>
+              <figcaption>{c.by} · Google</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bproof { position: relative; background: var(--white); padding: 110px 0 100px; }
+  .bp-grid { display: grid; grid-template-columns: 560px 580px; justify-content: space-between; align-items: start; margin-top: 52px; }
+  .bp-reel { position: relative; display: block; height: 620px; border-radius: 6px; box-shadow: 12px 12px 0 var(--powder); color: var(--white); text-decoration: none; }
+  .bp-reel :global(picture), .bp-reel :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; }
+  .bp-reel::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 6px; pointer-events: none; }
+  .bp-play { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 64px; height: 64px; margin: -32px 0 0 -32px; padding-left: 4px; border-radius: 50%; background: rgb(22 19 15 / .75); transition: scale .3s var(--ease-io), background-color .3s; }
+  .bp-reel:hover .bp-play { scale: 1.08; background: var(--ink); }
+  .bp-reel:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 4px; }
+  .bp-lab { position: absolute; left: 20px; bottom: 25px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 1px 6px rgb(0 0 0 / .6); }
+  .bp-cards { display: grid; row-gap: 20px; }
+  .bp-c figure { display: flex; flex-direction: column; height: 190px; margin: 0; padding: 22px 26px 25px 24px; background: var(--frost); border-radius: 4px; }
+  .bp-stars { display: block; width: 80px; height: 13px; }
+  .bp-c blockquote { margin: 13px 0 0; font-size: 17px; line-height: 1.48; color: var(--ink); }
+  .bp-c figcaption { margin-top: auto; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .bp-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; }
+    .bp-reel { height: auto; aspect-ratio: 560 / 620; }
+    .bp-c figure { height: auto; min-height: 190px; }
+  }
+  @media (max-width: 767px) {
+    .bproof { padding: 64px 0 54px; }
+    .bp-grid { display: block; margin-top: 24px; }
+    .bp-reel { height: 400px; box-shadow: 8px 8px 0 var(--powder); }
+    .bp-lab { display: none; }
+    .bp-cards { row-gap: 14px; margin-top: 28px; }
+    .d-only { display: none; }
+    .bp-c figure { height: auto; padding: 16px 18px 18px; }
+    .bp-stars { width: 75px; height: 12px; }
+    .bp-c blockquote { margin-top: 12px; font-size: 15px; }
+    .bp-c figcaption { margin-top: 16px; font-size: 9px; line-height: 12px; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

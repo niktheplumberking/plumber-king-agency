@@ -1,0 +1,110 @@
+---
+// Gallery with chip filters (Figma "Gallery" y 862 h 1566 / mobile y 698 h 1187). The chips really filter (radio inputs,
+// so it works by keyboard and without JS through :has()). "Water mains & digging" and "Commercial" have no photo in this
+// set yet: they show a short note that points to Instagram (no invented captions).
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const CATS = [
+  { id: 'all', l: 'All', m: 'All' }, { id: 'wh', l: 'Water heaters', m: 'Water heaters' }, { id: 'soft', l: 'Softeners & filters', m: 'Softeners & filters' },
+  { id: 'show', l: 'Showers & tubs', m: 'Showers & tubs' }, { id: 'main', l: 'Water mains & digging', m: 'Water mains' }, { id: 'com', l: 'Commercial', m: 'Commercial' },
+  { id: 'kit', l: 'Kitchens', m: 'Kitchens' },
+];
+const label = (c: string) => CATS.find((x) => x.id === c)!.l;
+const PHOTOS = [
+  { img: 'water-heater-tank', c: 'wh', alt: 'A new tank water heater with copper supply lines' },
+  { img: 'water-heater-softener', c: 'wh', alt: 'A water heater on a wall shelf next to a water softener' },
+  { img: 'water-softener', c: 'soft', alt: 'A water softener tank with its control head and a blue filter housing' },
+  { img: 'water-filters', c: 'soft', alt: 'Two blue whole-house filter tanks with filter housings on a garage wall' },
+  { img: 'valve', c: 'show', alt: 'A black thermostatic shower valve and hand-shower hose on a tiled wall' },
+  { img: 'shower-remodel', c: 'show', alt: 'A finished walk-in shower with white tile, a niche and a black rain head' },
+  { img: 'kitchen-faucet', c: 'kit', alt: 'A brushed steel kitchen faucet over a granite counter' },
+  { img: 'kitchen-faucet-2', c: 'kit', alt: 'A pull-down kitchen faucet with a separate drinking water tap' },
+  { img: 'tub-job', c: 'show', alt: 'A tub spout and shower valve trim over a green bathtub' },
+];
+---
+<section class="cx-sec cx-white og" data-m-section aria-labelledby="og-h" data-gallery>
+  <div class="wrap">
+    <fieldset class="og-f">
+      <legend id="og-h"><Eyebrow text="Filter by job" tone="pdeep" as="span" /></legend>
+      <div class="og-chips-clip">
+        <div class="og-chips" data-t="3" data-stagger>
+          {CATS.map((c, i) => (
+            <label class="og-chip"><input type="radio" name="og-cat" value={c.id} checked={i === 0} class="sr-only" /><span class="d">{c.l}</span><span class="m">{c.m}</span></label>
+          ))}
+        </div>
+      </div>
+    </fieldset>
+    <p class="sr-only" aria-live="polite" data-og-status></p>
+    <ul class="og-g" role="list" data-t="4" data-stagger>
+      {PHOTOS.map((p) => (
+        <li class="og-i" data-cat={p.c}>
+          <figure>
+            <Img name={p.img} alt={p.alt} sizes="(min-width: 1280px) 384px, (min-width: 768px) 30vw, 46vw" />
+            <figcaption class="og-tag">{label(p.c)}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+    <p class="og-empty" data-og-empty hidden>No photos from these jobs in this set yet. More go up on <a class="cx-link" href={SITE.social.instagram} target="_blank" rel="noopener">Instagram<span class="sr-only"> (opens in a new tab)</span></a>.</p>
+  </div>
+</section>
+<script>
+  // Chip filter: hide the photos of other jobs (fade, ease-in-out; instant under reduced motion), announce the count.
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((root) => {
+    const items = Array.from(root.querySelectorAll<HTMLElement>('.og-i'));
+    const empty = root.querySelector<HTMLElement>('[data-og-empty]');
+    const status = root.querySelector<HTMLElement>('[data-og-status]');
+    const motion = () => document.documentElement.classList.contains('motion');
+    const apply = (cat: string) => {
+      let n = 0;
+      items.forEach((it) => {
+        const on = cat === 'all' || it.dataset.cat === cat;
+        if (on) n++;
+        if (on && it.hidden) { it.hidden = false; if (motion()) it.animate([{ opacity: 0, transform: 'translateY(20px)' }, { opacity: 1, transform: 'none' }], { duration: 500, easing: 'cubic-bezier(.65,0,.35,1)' }); }
+        else if (!on) it.hidden = true;
+      });
+      if (empty) empty.hidden = n > 0;
+      if (status) status.textContent = n ? `${n} photo${n === 1 ? '' : 's'} shown` : 'No photos in this group yet';
+      window.dispatchEvent(new Event('resize'));
+    };
+    root.querySelectorAll<HTMLInputElement>('input[name="og-cat"]').forEach((r) => r.addEventListener('change', () => r.checked && apply(r.value)));
+  });
+</script>
+<style>
+  .og { padding: 90px 0 108px; }
+  .og-f { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .og-f legend { padding: 0; }
+  .og-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .og-chip { position: relative; display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 17px; box-shadow: inset 0 0 0 1.2px var(--ink); background: var(--white);
+    font: 600 14px/1.5 var(--f-b); color: var(--ink); cursor: pointer; white-space: nowrap; transition: background-color .4s var(--ease-io), color .4s var(--ease-io); }
+  .og-chip .m { display: none; }
+  .og-chip:hover { background: var(--frost); }
+  .og-chip:has(input:checked) { background: var(--ink); color: var(--white); }
+  .og-chip:has(input:focus-visible) { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .og-g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 24px; margin: 46px 0 0; padding: 0; list-style: none; }
+  .og-i[hidden] { display: none; }
+  .og-i figure { position: relative; margin: 0; aspect-ratio: 1; border-radius: 4px; overflow: hidden; }
+  .og-tag { position: absolute; left: 14px; bottom: 14px; padding: 6px 10px; border-radius: 16px; background: var(--white); font: 600 12px/18px var(--f-b); color: var(--ink); }
+  .og-empty { margin: 40px 0 0; font: 400 17px/1.5 var(--f-b); color: var(--muted); }
+  /* No JS: filter with :has() */
+  html:not(.js) .og:has(input[value='wh']:checked) .og-i:not([data-cat='wh']),
+  html:not(.js) .og:has(input[value='soft']:checked) .og-i:not([data-cat='soft']),
+  html:not(.js) .og:has(input[value='show']:checked) .og-i:not([data-cat='show']),
+  html:not(.js) .og:has(input[value='kit']:checked) .og-i:not([data-cat='kit']),
+  html:not(.js) .og:has(input[value='main']:checked) .og-i, html:not(.js) .og:has(input[value='com']:checked) .og-i { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) { .og-g { gap: 24px 16px; } }
+  @media (max-width: 767px) {
+    .og { padding: 48px 0 48px; }
+    .og-chips-clip { position: relative; margin: 14px calc(-1 * var(--gutter)) 0 0; overflow-x: auto; scrollbar-width: none; }
+    .og-chips-clip::-webkit-scrollbar { display: none; }
+    .og-chips { flex-wrap: nowrap; gap: 8px; margin: 0; padding-right: var(--gutter); }
+    .og-chip { height: 44px; padding: 0 12px; border-radius: 22px; font-size: 13px; }
+    .og-chip .d { display: none; } .og-chip .m { display: inline; }
+    .og-g { grid-template-columns: 1fr 1fr; gap: 16px 8px; margin-top: 29px; }
+    .og-i:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    .og-i:last-child:nth-child(odd) figure { aspect-ratio: 350 / 240; }
+    .og-tag { left: 10px; bottom: 6px; padding: 7px 7px; border-radius: 15px; font-size: 10px; line-height: 15px; }
+  }
+</style>

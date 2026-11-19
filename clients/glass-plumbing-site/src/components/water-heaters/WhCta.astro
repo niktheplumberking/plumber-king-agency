@@ -1,0 +1,63 @@
+---
+// CTA "send the label" (Figma 719:437 y 8814 h 560 / mobile y 9231 h 673): ink section with a meniscus rise, the rating
+// plate mock (tilted -3 deg) and the two buttons. Phone: heading, lead, label mock, then the buttons full width.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Seam from '../kit/Seam.astro';
+import { SITE } from '../../data/site';
+const F = [['Brand', 'e.g. Rheem, State'], ['Model no.', 'on the plate'], ['Serial no.', 'tells its age'], ['Capacity', 'gallons'], ['Fuel', 'gas or electric']];
+---
+<section class="wc on-ink seam-host" data-m-section>
+  <Seam from="var(--frost)" to="var(--ink)" flip d={40} dm={32} />
+  <div class="wrap wc-grid">
+    <div class="wc-l">
+      <Eyebrow text="Fastest way to a price" />
+      <h2 class="h2 wc-h" data-t="2" style="--h2:52px;--h2m:28px">Send a photo of your<br /><span class="tone">water heater label.</span></h2>
+      <p class="wc-lead" data-t="3">The label tells us the brand, size and fuel.<span class="d"> Text it to <span class="nowrap">{SITE.phone}</span> with your town.</span></p>
+    </div>
+    <div class="wc-btns" data-t="3">
+      <Btn look="line" icon="camera" label="Text the label" sub={`TO ${SITE.phone}`} arrow size="l" w={280} h={64} hm={60} class="wc-b" />
+      <Btn sub="OR CALL · 24/7" size="l" w={280} h={64} hm={60} class="wc-b" />
+    </div>
+    <div class="wc-mock" aria-hidden="true" data-t="4">
+      <p class="wc-mt">Rating plate · photograph this</p>
+      <dl>
+        {F.map(([k, v]) => <div class:list={[k === 'Serial no.' && 'wc-ser']}><dt>{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+    </div>
+  </div>
+</section>
+<style>
+  .wc { position: relative; padding: 130px 0 116px; }
+  .wc-grid { display: grid; grid-template-columns: minmax(0, 660px) 460px; grid-template-areas: 'l mock' 'btn mock'; grid-template-rows: auto 1fr; justify-content: space-between; }
+  .wc-l { grid-area: l; }
+  .wc-h { margin-top: 16px; color: var(--white); }
+  .wc-lead { margin-top: 32px; max-width: 520px; font-size: 18px; line-height: 1.5; color: var(--white); }
+  .wc-btns { grid-area: btn; display: flex; flex-wrap: wrap; gap: 16px; margin-top: 26px; }
+  .wc-mock { grid-area: mock; align-self: start; width: 460px; margin-top: -20px; border-radius: 4px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 2px var(--steel2), 12px 12px 0 var(--powder); rotate: -3deg; overflow: hidden; }
+  .wc-mt { height: 52px; padding: 18px 20px 0; background: var(--pdeep); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
+  .wc-mock dl { margin: 0; padding: 18px 20px 30px; display: grid; gap: 22px; }
+  .wc-mock dl div { display: grid; grid-template-columns: 130px 1fr; align-items: center; }
+  .wc-mock dt { font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .wc-mock dd { margin: 0; height: 30px; padding: 4px 12px; border-radius: 2px; background: var(--frost); font-size: 14px; line-height: 1.5; color: var(--muted); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .wc-grid { grid-template-columns: minmax(0, 1fr) 360px; gap: 0 40px; }
+    .wc-mock { width: 360px; }
+    .wc-mock dl div { grid-template-columns: 100px 1fr; }
+  }
+  @media (max-width: 767px) {
+    .wc { padding: 64px 0 56px; }
+    .wc-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'mock' 'btn'; }
+    .wc-h { margin-top: 10px; }
+    .wc-lead { margin-top: 16px; font-size: 15px; }
+    .wc-mock { justify-self: center; width: 310px; max-width: calc(100% - 20px); margin-top: 32px; box-shadow: inset 0 0 0 2px var(--steel2), 8px 8px 0 var(--powder); }
+    .wc-mt { height: 40px; padding: 14px 14px 0; font-size: 9px; line-height: 12px; }
+    .wc-mock dl { padding: 12px 16px 24px 14px; gap: 14px; }
+    .wc-mock dl div { grid-template-columns: 96px 1fr; }
+    .wc-mock dt { font-size: 9px; line-height: 12px; }
+    .wc-mock dd { height: 28px; padding: 4px 10px; font-size: 13px; }
+    .wc-ser { display: none !important; }
+    .wc-btns { flex-direction: column; gap: 12px; margin-top: 40px; }
+    .wc-btns :global(.wc-b) { width: 100%; }
+  }
+</style>

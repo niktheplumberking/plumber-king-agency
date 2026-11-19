@@ -1,0 +1,60 @@
+/* Shared bits of /contact, /reviews, /our-work, /faq (this builder's pages only; prefix cx-).
+   Desktop values = Figma px at 1440 (content x 120 -> 1320); phones = the 390 frames. */
+.cx-sec { position: relative; }
+.cx-frost { background: var(--frost); }
+.cx-white { background: var(--white); }
+.cx-ink { background: var(--ink); color: var(--white); }
+.cx-ink2 { background: var(--ink2); color: var(--white); }
+
+/* Two-tone headings (Schibsted ExtraBold, 102 %, -2 %). Size per use through --fs / --fs-m. */
+.cx-h { margin: 0; font-family: var(--f-h); font-weight: 800; font-size: var(--fs, 52px); line-height: 1.02; letter-spacing: -0.02em; color: var(--ink); text-wrap: balance; }
+.cx-h .tone { color: var(--pdeep); }
+.cx-ink .cx-h, .cx-ink2 .cx-h { color: var(--white); }
+.cx-ink .cx-h .tone, .cx-ink2 .cx-h .tone { color: var(--powder); }
+.cx-h .ln { display: block; }
+
+/* Visible breadcrumbs (mono 11, muted). The BreadcrumbList JSON-LD goes in the page's jsonld. */
+.cx-crumbs ol { display: flex; gap: 0; margin: 0; padding: 0; list-style: none; font: 500 11px/15px var(--f-m); letter-spacing: .02em; color: var(--muted); }
+.cx-crumbs li { display: inline-flex; align-items: center; white-space: pre; }
+.cx-crumbs a { display: inline-flex; align-items: center; min-height: 24px; margin: -4.5px 0; color: inherit; text-decoration: none; }
+.cx-crumbs a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.cx-crumbs .sep { padding: 0 14px; }
+.cx-ink .cx-crumbs ol { color: rgba(255, 255, 255, .8); }
+
+.cx-mono { font-family: var(--f-m); }
+.cx-lead { margin: 0; font: 400 18px/1.5 var(--f-b); }
+
+/* Text link with an arrow (powder underline on light grounds). */
+.cx-link { font: 700 15px/1.5 var(--f-b); color: var(--pdeep); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.cx-link:hover { color: var(--ink); }
+
+/* Gold stars */
+.cx-stars { display: block; flex: none; }
+
+/* Steel plate (photo tags, spec plates): rivets + mono rows. */
+.cx-tag { position: absolute; display: grid; grid-template-columns: auto 1fr; column-gap: 18px; row-gap: 6px; align-items: start;
+  padding: 10px 12px 10px 12px; background: var(--steel); border: 1px solid var(--steel2); border-radius: 3px; box-shadow: 4px 4px 0 var(--ink);
+  font: 700 10px/13px var(--f-m); letter-spacing: .04em; color: var(--ink); }
+.cx-tag dt { margin: 0; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; opacity: .7; }
+.cx-tag dd { margin: 0; }
+.cx-tag::before, .cx-tag::after { content: ''; position: absolute; left: 4px; right: 4px; top: 4px; bottom: 4px; pointer-events: none;
+  background:
+    radial-gradient(circle at 2px 2px, var(--steel2) 2px, transparent 2.5px) left top / 4px 4px no-repeat,
+    radial-gradient(circle at 2px 2px, var(--steel2) 2px, transparent 2.5px) right top / 4px 4px no-repeat,
+    radial-gradient(circle at 2px 2px, var(--steel2) 2px, transparent 2.5px) left bottom / 4px 4px no-repeat,
+    radial-gradient(circle at 2px 2px, var(--steel2) 2px, transparent 2.5px) right bottom / 4px 4px no-repeat; }
+.cx-tag::after { display: none; }
+
+/* Mobile horizontal scrollers (clipped, scroll-snap, no page overflow). */
+.cx-scroll { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.cx-scroll::-webkit-scrollbar { display: none; }
+.cx-scroll > * { scroll-snap-align: start; flex: none; }
+
+@media (max-width: 767px) {
+  .cx-h { font-size: var(--fs-m, 34px); }
+  .cx-crumbs ol { font-size: 10px; line-height: 13px; letter-spacing: .01em; }
+  .cx-crumbs .sep { padding: 0 6px; }
+}
+@media (min-width: 768px) and (max-width: 1279px) {
+  .cx-h { font-size: calc(var(--fs, 52px) * .82); }
+}

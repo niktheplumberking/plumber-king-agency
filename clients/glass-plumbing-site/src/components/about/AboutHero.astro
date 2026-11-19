@@ -1,0 +1,66 @@
+---
+// /about hero (Figma 724:746 y 172 h 740 / mobile 725:439 y 158 h 932). White. Breadcrumbs, eyebrow, H1 (= SEO H1), lead,
+// the call button, the crew photo (no names on faces: the alt says "a crew member") and Kody's business card at -4 deg.
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+---
+<section class="bhero" data-m-section data-m-hero aria-labelledby="bhero-h">
+  <div class="wrap bh-grid">
+    <div class="bh-copy">
+      <Breadcrumbs items={[{ label: 'About', href: '/about' }]} class="bh-crumbs" />
+      <Eyebrow text="Glass Plumbing Services · Largo, FL" t="1" class="bh-eb bh-eb--d" />
+      <Eyebrow text="Glass Plumbing Services · Largo" t="1" class="bh-eb bh-eb--m" />
+      <h1 id="bhero-h" class="bh-h" data-t="2">Meet the<br /><span class="tone">Glass Brothers</span></h1>
+      <p class="bh-lead" data-t="3" data-fx="nudge"><span class="d">A Florida-licensed plumbing contractor, his brother and their crew, fixing homes and businesses across Pinellas County from Largo.</span><span class="m">A Florida-licensed plumbing contractor, his brother and their crew, fixing homes and businesses across Pinellas from Largo.</span></p>
+    </div>
+    <div class="bh-btn"><Btn look="call" sub="Talk to a Glass brother" size="l" w={320} wm={350} t="3" /></div>
+    <figure class="bh-photo" data-t="4" data-fx="frame">
+      <Img name="crew-selfie" alt="A Glass Plumbing crew member in a cap and sunglasses, taking a selfie in the work van" priority focus="50% 45%"
+        sizes="(min-width:1280px) 420px, (min-width:768px) 36vw, 280px" box={420 / 520} boxM={280 / 340} widths={[280, 420, 560, 840]} />
+    </figure>
+    <figure class="bh-card" data-t="5" data-fx="pop">
+      <Img name="business-card" alt="Kody Glass's business card: Glass Plumbing Services, commercial and residential, (727) 512-0673, 24/7 emergency service, licensed and insured"
+        sizes="(min-width:768px) 300px, 200px" box={300 / 180} boxM={200 / 120} widths={[200, 300, 400, 600]} />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .bhero { position: relative; background: var(--white); padding: 44px 0 52px; }
+  .bh-grid { display: grid; grid-template-columns: 620px 420px; column-gap: 40px; justify-content: start; grid-template-areas: 'copy photo' 'btn photo' 'card photo'; grid-template-rows: auto auto 1fr; }
+  .bh-copy { grid-area: copy; }
+  .bh-btn { grid-area: btn; margin-top: 29px; }
+  .bh-photo { grid-area: photo; position: relative; align-self: start; margin: 16px 0 0; width: 420px; height: 520px; border-radius: 6px; box-shadow: 12px 12px 0 var(--powder); }
+  .bh-photo :global(picture), .bh-photo :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; }
+  .bh-photo::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 6px; pointer-events: none; }
+  .bh-card { grid-area: card; position: relative; margin: 16px 0 0; width: 300px; height: 180px; rotate: -4deg; border-radius: 5px; box-shadow: 8px 8px 0 var(--ink); }
+  .bh-card :global(picture), .bh-card :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 5px; }
+  .bhero :global(.bh-eb) { margin-top: 29px; }
+  .bhero :global(.bh-eb--m) { display: none; }
+  .bh-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 88px; line-height: .96; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; }
+  .bh-h .tone { color: var(--pdeep); }
+  .bh-lead { margin-top: 24px; max-width: 560px; font-size: 19px; line-height: 1.5; color: var(--ink); }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .bh-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .7fr); }
+    .bh-h { font-size: clamp(52px, 7vw, 88px); white-space: normal; }
+    .bh-photo { width: 100%; height: auto; aspect-ratio: 420 / 520; }
+  }
+  @media (max-width: 767px) {
+    .bhero { padding: 24px 0 58px; }
+    .bh-grid { display: flex; flex-direction: column; align-items: stretch; }
+    .bhero :global(.bh-crumbs ol) { font-size: 10px; line-height: 13px; letter-spacing: .01em; }
+    .bhero :global(.bh-crumbs .sep) { margin: 0 1ch; }
+    .bhero :global(.bh-eb) { margin-top: 15px; }
+    .bhero :global(.bh-eb--d) { display: none; }
+    .bhero :global(.bh-eb--m) { display: flex; }
+    .bh-h { margin-top: 10px; font-size: 44px; line-height: 1.02; white-space: normal; }
+    .bh-lead { margin-top: 14px; font-size: 16px; }
+    .d { display: none; } .m { display: inline; }
+    .bh-photo { order: 1; align-self: center; width: 280px; height: 340px; margin-top: 28px; box-shadow: 8px 8px 0 var(--powder); }
+    .bh-btn { order: 2; margin-top: 36px; }
+    .bh-card { order: 3; align-self: flex-end; width: 200px; height: 120px; margin-top: 36px; box-shadow: 6px 6px 0 var(--ink); }
+  }
+</style>

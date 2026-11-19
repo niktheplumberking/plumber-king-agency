@@ -1,0 +1,22 @@
+---
+// /faq (Figma 730:437 desktop, 730:766 mobile). BreadcrumbList + FAQPage for the 17 visible questions.
+import Base from '../layouts/Base.astro';
+import FaqHero from '../components/faq/FaqHero.astro';
+import FaqList from '../components/faq/FaqList.astro';
+import FaqHealthy from '../components/faq/FaqHealthy.astro';
+import FaqAsk from '../components/faq/FaqAsk.astro';
+import TownsStrip from '../components/global/TownsStrip.astro';
+import { crumbsLd, faqLd } from '../components/contact/ld';
+import { FAQ_ALL } from '../components/faq/data';
+const path = '/faq';
+---
+<Base title="Plumbing Questions, Answered · Glass Plumbing, Largo"
+  description="17 straight answers from a licensed Largo plumber: emergencies, water heaters, Pinellas hard water, permits, booking and price."
+  path={path} og="water-heater-tank" ogAlt="A water heater installed by Glass Plumbing Services"
+  jsonld={[crumbsLd('FAQ', path), faqLd(FAQ_ALL.map(({ q, a }) => ({ q, a })))]} estimate="/contact#estimate">
+  <FaqHero />
+  <FaqList />
+  <FaqHealthy />
+  <FaqAsk />
+  <TownsStrip />
+</Base>

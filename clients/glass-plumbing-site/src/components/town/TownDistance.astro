@@ -1,0 +1,76 @@
+---
+// /areas/seminole "Distance" (Figma y 848 h 799 / mobile y 952 h 603). Frost. The Pinellas map with the Largo base pin (ink),
+// the Seminole pin (pdeep), a dashed straight line between them and two chips; "5.9 mi" big; the Route plate. Miles are
+// straight-line (towns.ts, Census map points) and the copy says so. Pins sit at Figma's spots as % of the 640 x 599 map
+// (the map keeps that aspect at every width, so the % hold).
+import Head from '../areas/Head.astro';
+import Plate from '../kit/Plate.astro';
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { MI } from './data';
+---
+<section class="tdist" data-m-section aria-labelledby="tdist-h">
+  <div class="wrap td-grid">
+    <figure class="td-map" data-t="4" data-fx="frame">
+      <Img name="map-pinellas" alt="Google Maps view of Pinellas County with pins on our Largo base and on Seminole, just southwest of it" fit="cover"
+        sizes="(min-width:1280px) 640px, (min-width:768px) 48vw, 90vw" widths={[360, 640, 960, 1280]} />
+      <svg class="td-line" viewBox="0 0 640 599" preserveAspectRatio="none" aria-hidden="true"><path d="M224.2 231.5 202.5 350.2" /></svg>
+      <svg class="td-pin td-pin--base" viewBox="0 0 30 41" aria-hidden="true"><path d="M15 39S1 23 1 15C1 7 7 1 15 1s14 6 14 14c0 8-14 24-14 24Z" fill="#16130F" stroke="#fff" stroke-width="2" /><circle cx="15" cy="15" r="7" fill="#84B3C7" /></svg>
+      <svg class="td-pin td-pin--town" viewBox="0 0 30 41" aria-hidden="true"><path d="M15 39S1 23 1 15C1 7 7 1 15 1s14 6 14 14c0 8-14 24-14 24Z" fill="#2F6178" stroke="#fff" stroke-width="2" /><circle cx="15" cy="15" r="7" fill="#84B3C7" /></svg>
+      <span class="td-chip td-chip--base" aria-hidden="true">Largo base</span>
+      <span class="td-chip td-chip--town" aria-hidden="true">Seminole</span>
+      <figcaption class="sr-only">Seminole is {MI} in a straight line from our Largo base.</figcaption>
+    </figure>
+    <div class="td-copy">
+      <Eyebrow text="Distance from base" class="td-eb" />
+      <h2 id="tdist-h" class="td-mi" data-t="2">{MI}<span class="sr-only"> from our Largo base to Seminole</span></h2>
+      <p class="td-lead" data-t="3"><span class="d">As the crow flies from our Largo base to the centre of Seminole, measured on Census map points. Driving is longer.</span><span class="m">As the crow flies, Largo base to Seminole, on Census map points. Driving is longer.</span></p>
+      <div class="td-plate" data-t="4">
+        <Plate title="Route" rows={[['From', 'Largo base'], ['To', 'Seminole, FL'], ['Straight line', MI], ['Covers', 'All of Seminole']]} w={440} wm={350} pad={20} size={12} tsize={14} kx={140} pitch={22} padm={16} sizem={11} tsizem={12} kxm={130} pitchm={21} shadow="ink" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tdist { position: relative; background: var(--frost); padding: 100px 0 100px; }
+  .td-grid { display: grid; grid-template-columns: 640px 460px; justify-content: space-between; align-items: start; }
+  .td-map { position: relative; margin: 0; aspect-ratio: 640 / 599; border-radius: 4px; box-shadow: 12px 12px 0 var(--powder); }
+  .td-map :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 4px; }
+  .td-map::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 4px; pointer-events: none; }
+  .td-line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .td-line path { fill: none; stroke: var(--ink); stroke-width: 3; stroke-dasharray: 8 6; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .td-pin { position: absolute; width: 30px; height: 41px; transform: translate(-50%, -100%); margin-top: 2px; }
+  .td-pin--base { left: 34.84%; top: 40.07%; }
+  .td-pin--town { left: 31.41%; top: 59.93%; }
+  .td-chip { position: absolute; padding: 6px 9px; background: var(--white); border: 1.2px solid var(--ink); border-radius: 16px; font-size: 12px; line-height: 18px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .td-chip--base { left: 37.66%; top: 32.39%; }
+  .td-chip--town { left: 34.22%; top: 54.92%; }
+  .td-copy { padding-top: 20px; }
+  .td-mi { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 110px; line-height: 1.04; letter-spacing: -.02em; color: var(--pdeep); }
+  .td-lead { margin-top: 24px; max-width: 440px; font-size: 17px; line-height: 1.5; color: var(--ink); }
+  .m { display: none; }
+  .td-plate { margin-top: 32px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .td-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 48px; }
+    .td-mi { font-size: clamp(72px, 9vw, 110px); }
+  }
+  @media (max-width: 767px) {
+    .tdist { padding: 48px 0 56px; }
+    .td-grid { display: flex; flex-direction: column-reverse; align-items: stretch; }
+    .td-copy { padding-top: 0; }
+    .td-map { margin-top: 24px; box-shadow: 8px 8px 0 var(--powder); }
+    .td-line path { stroke-width: 2.5; stroke-dasharray: 6 5; }
+    .td-pin { width: 20px; height: 28px; }
+    .td-pin--base { left: 34.83%; top: 40.21%; }
+    .td-pin--town { left: 31.43%; top: 60.1%; }
+    .td-chip { padding: 6px 7px; font-size: 11px; line-height: 17px; border-radius: 15.5px; }
+    .td-chip--base { left: 38.86%; top: 29.36%; }
+    .td-chip--town { left: 35.43%; top: 52.6%; }
+    .td-mi { margin-top: 10px; font-size: 64px; }
+    .td-lead { margin-top: 13px; font-size: 14px; }
+    .d { display: none; } .m { display: inline; }
+    .td-plate { display: none; }
+  }
+</style>

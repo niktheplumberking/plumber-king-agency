@@ -1,0 +1,115 @@
+---
+// Home hero (Figma 712:448 "Hero" y 172 h 680; mobile 715:560 y 158 h 936). Left: eyebrow, two-tone H1, lead, towns,
+// call + text buttons, the proof row (two Google profiles, never summed, + the licence). Right: three photo housings
+// (van + excavator, crew at work, shower job), the "On the job" spec plate and the mascot seal.
+// The "What's going on?" call-back bar that straddles the bottom edge lives in Reviews.astro (it belongs to that frame).
+import Img from '../ui/Img.astro';
+import Btn from '../kit/Btn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+import Plate from '../kit/Plate.astro';
+import { STARS } from './fig';
+import { SITE } from '../../data/site';
+import logo from '../../assets/brand/logo-glass.png';
+import { Image } from 'astro:assets';
+const g = SITE.google;
+---
+<section class="hero" aria-labelledby="hero-h" data-m-section data-m-hero>
+  <div class="wrap hero-in">
+    <div class="hero-txt">
+      <Eyebrow tone="pdeep" t="1"><span class="d">Licensed &amp; insured · Pinellas County</span><span class="m">Licensed &amp; insured · Pinellas</span></Eyebrow>
+      <h1 id="hero-h" class="h1 hero-h" data-t="2">24/7 Plumber in <span class="tone">Largo, FL</span></h1>
+      <p class="lead hero-lead" data-t="3" data-fx="nudge"><span class="d">Kody, Zak and the crew fix leaks, drains, water heaters and softeners for homes and businesses across Pinellas County. Call any hour, or text us a photo of the problem first.</span><span class="m">Kody, Zak and the crew fix leaks, drains, water heaters and softeners across Pinellas County. Call any hour, or text us a photo first.</span></p>
+      <p class="towns" data-t="3">Largo · Seminole · Clearwater · St. Pete · Belleair Bluffs · Pinellas Park</p>
+      <div class="btns" data-t="3">
+        <Btn sub="CALL NOW · 24/7" size="l" w={280} wm={350} />
+        <Btn look="line" icon="camera" label="Text us a photo" sub={`TO ${SITE.phone}`} arrow size="l" w={280} wm={350} />
+      </div>
+      <ul class="proof" role="list" data-t="3">
+        <li><a href={g.a.url} target="_blank" rel="noopener"><Fragment set:html={STARS(75, 12)} /><b>{g.a.value} · {g.a.count} reviews</b><span class="pk">Google profile 1</span><span class="sr-only"> (opens in a new tab)</span></a></li>
+        <li><a href={g.b.url} target="_blank" rel="noopener"><Fragment set:html={STARS(75, 12)} /><b>{g.b.value} · {g.b.count} reviews</b><span class="pk">Google profile 2</span><span class="sr-only"> (opens in a new tab)</span></a></li>
+        <li class="lic"><a href={SITE.licence.url} target="_blank" rel="noopener"><span class="pt">Licensed &amp; insured</span><b>{SITE.licence.number}</b><span class="pk"><span class="d">FL licence · verify on DBPR</span><span class="m">FL licence · licensed &amp; insured</span></span><span class="sr-only"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+    <div class="media" data-t="4" data-fx="frame">
+      <div class="c-big"><Housing tone="photo" fluid w={284} h={540} wm={212} hm={290} cap={36} capm={20} shadow={12} shadowm={8}>
+        <Img name="hero-crew-job" alt="A Glass Plumbing plumber on a mini excavator beside the white Glass van on a water line job" sizes="(min-width: 768px) 760px, 105vw" widths={[420, 760, 1000, 1520]} focus="45% 50%" priority />
+      </Housing></div>
+      <div class="c-crew"><Housing tone="photo" fluid w={228} h={300} wm={122} hm={140} cap={21} capm={14} shadow={8} shadowm={6}>
+        <Img name="crew-water-heater-tank" alt="A Glass plumber lifting a water heater part into place" sizes="(min-width: 1280px) 228px, (min-width: 768px) 24vw, 32vw" widths={[160, 240, 360, 480]} box={228 / 281} boxM={122 / 128} focus="55% 35%" />
+      </Housing></div>
+      <div class="c-shower"><Housing tone="photo" fluid w={228} h={224} wm={122} hm={138} cap={16} capm={14} shadow={8} shadowm={6}>
+        <Img name="shower-valve" alt="A tiled shower with a new valve and trim" sizes="(min-width: 1280px) 228px, (min-width: 768px) 24vw, 32vw" widths={[160, 240, 360, 480]} box={228 / 210} boxM={122 / 126} focus="50% 40%" />
+      </Housing></div>
+      <div class="plate"><Plate title="On the job" w={214} wm={150} padm={10} sizem={9} tsizem={10} kxm={54} pitchm={18} rows={[['Rig', 'Glass van'], ['Dig', 'Mini-excavator'], ['Area', 'Pinellas County']]} /></div>
+      <span class="seal" aria-hidden="true"><Image src={logo} alt="" width={160} /></span>
+    </div>
+  </div>
+</section>
+<style>
+  .hero { position: relative; background: var(--white); height: 680px; }
+  .hero-in { position: relative; height: 100%; }
+  .hero-txt { position: relative; z-index: 2; width: 600px; padding-top: 64px; }
+  .m { display: none; }
+  .hero-h { margin-top: 16px; width: 660px; font-family: var(--f-h); font-weight: 800; font-size: 80px; line-height: .98; letter-spacing: -.02em; color: var(--ink); }
+  .hero-h .tone { display: block; color: var(--pdeep); }
+  .hero-lead { margin-top: 23px; width: 560px; font-family: var(--f-b); font-size: 19px; line-height: 1.5; color: var(--ink); }
+  .towns { margin-top: 18px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .04em; text-transform: uppercase; color: var(--pdeep); }
+  .btns { display: flex; gap: 16px; margin-top: 28px; }
+  .proof { display: flex; margin: 32px 0 0; padding: 0; list-style: none; }
+  .proof li { position: relative; padding-right: 16px; }
+  .proof li + li { padding-left: 16px; border-left: 1px solid rgb(22 19 15 / .2); }
+  .proof li:nth-child(1) { width: 181px; } .proof li:nth-child(2) { width: 197px; }
+  .proof a { display: grid; grid-template-rows: 12px 23px 13px; row-gap: 6px; min-height: 56px; }
+  .proof a :global(.stars) { display: block; }
+  .proof b { font-family: var(--f-b); font-weight: 700; font-size: 15px; line-height: 23px; color: var(--ink); white-space: nowrap; }
+  .proof .pk, .proof .pt { font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .proof .pt { font-weight: 700; color: var(--pdeep); }
+  .proof a:hover b { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* the photo cluster: box = Figma x 596-1320, y 33-596 (positions in % so it scales on tablet) */
+  .media { position: absolute; left: 476px; top: 33px; width: 724px; height: 563px; }
+  .media > * { position: absolute; }
+  .c-big { left: 25.97%; top: 4.09%; width: 39.23%; }
+  .c-crew { left: 68.51%; top: 1.24%; width: 31.49%; }
+  .c-shower { left: 68.51%; top: 60.21%; width: 31.49%; }
+  .plate { left: 16.57%; top: 77.62%; width: 214px; z-index: 3; }
+  .seal { left: 90.61%; top: 46.71%; width: 100px; height: 100px; z-index: 3; display: grid; place-items: center; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); }
+  .seal :global(img) { width: 80%; height: auto; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .hero { height: auto; padding-bottom: 136px; }
+    .hero-txt { width: auto; max-width: 660px; }
+    .hero-h { width: auto; font-size: clamp(56px, 7.4vw, 80px); }
+    .hero-lead { width: auto; max-width: 560px; }
+    .media { position: relative; left: auto; top: auto; width: min(724px, 100%); height: auto; aspect-ratio: 724 / 563; margin: 56px 0 0 auto; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .hero { height: auto; padding-bottom: 128px; }
+    .hero-in { display: flex; flex-direction: column; }
+    .hero-txt { display: contents; }
+    .hero-h { margin-top: 10px; width: auto; font-size: 40px; line-height: 1; }
+    .hero-lead { margin-top: 14px; width: auto; font-size: 16px; line-height: 1.5; }
+    .towns { display: none; }
+    .hero-in { padding-top: 28px; }
+    /* cluster: Figma 390 frame x 14-376, y 235-564 */
+    .media { order: 1; position: relative; left: auto; top: auto; width: calc(100% + 12px); margin: 15px -6px 0; height: auto; aspect-ratio: 362 / 330; }
+    .c-big { left: 1.66%; top: 4.55%; width: 58.56%; }
+    .c-crew { left: 64.64%; top: 2.12%; width: 33.7%; }
+    .c-shower { left: 64.64%; top: 50.61%; width: 33.7%; }
+    .plate { left: 31.49%; top: 72.12%; width: 150px; }
+    .plate :global(.pl-row:nth-child(3)) { display: none; }
+    .seal { left: 80.66%; top: 79.39%; width: 66px; height: 66px; }
+    .btns { order: 2; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .proof { order: 3; flex-wrap: wrap; margin-top: 24px; }
+    .proof li { width: 50% !important; padding: 0; }
+    .proof li + li { border-left: 0; padding-left: 0; }
+    .proof a { grid-template-rows: 11px 21px 12px; row-gap: 5px; }
+    .proof b { font-size: 14px; line-height: 21px; }
+    .proof .pk { font-size: 9px; line-height: 12px; }
+    .proof .lic { width: 100% !important; margin-top: 10px; padding-top: 9px; border-top: 1px solid rgb(22 19 15 / .1); }
+    .proof .lic a { display: flex; align-items: center; gap: 18px; min-height: 21px; }
+    .proof .lic .pt { display: none; }
+  }
+</style>

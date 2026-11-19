@@ -1,0 +1,25 @@
+---
+// /our-work (Figma 727:993 desktop, 729:1033 mobile). BreadcrumbList + CollectionPage with ImageObject captions.
+import Base from '../layouts/Base.astro';
+import OwHero from '../components/our-work/OwHero.astro';
+import OwGallery from '../components/our-work/OwGallery.astro';
+import OwStories from '../components/our-work/OwStories.astro';
+import OwFeed from '../components/our-work/OwFeed.astro';
+import OwQuotes from '../components/our-work/OwQuotes.astro';
+import OwCta from '../components/our-work/OwCta.astro';
+import TownsStrip from '../components/global/TownsStrip.astro';
+import { crumbsLd } from '../components/contact/ld';
+const path = '/our-work';
+---
+<Base title="Recent Plumbing Jobs in Pinellas · Glass Plumbing"
+  description="Real jobs, real photos, straight from the van: water heaters, tankless pairs, softeners, showers, kitchens and a water main dig in Pinellas County."
+  path={path} og="tankless-pair" ogAlt="Two tankless water heaters installed by Glass Plumbing Services"
+  jsonld={[crumbsLd('Our work', path)]} estimate="/contact#estimate" preload={{ name: 'manifold-install', sizes: '(min-width: 1280px) 384px, (min-width: 768px) 30vw, 260px', widths: [360, 540, 720, 960] }}>
+  <OwHero />
+  <OwGallery />
+  <OwStories />
+  <OwFeed />
+  <OwQuotes />
+  <OwCta />
+  <TownsStrip />
+</Base>

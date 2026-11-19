@@ -1,0 +1,73 @@
+---
+// FAQ hero (Figma "Hero" y 172 h 510 / mobile y 158 h 582). Frost band: crumbs, eyebrow, H1, lead, and five topic tiles
+// (question count + group name + arrow) that jump to the group. Tile 01 is ink with the 6/6 pdeep offset shadow.
+// Phones: shorter eyebrow and lead (as the 390 frame), tiles become a 56 px list with a down arrow.
+import '../contact/cx.css';
+import Crumbs from '../contact/Crumbs.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { FAQ_GROUPS, FAQ_ALL } from './data';
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="cx-sec cx-frost fh" data-m-section data-m-hero aria-labelledby="fh-h">
+  <div class="wrap fh-g">
+    <div class="fh-tx">
+      <Crumbs label="FAQ" />
+      <Eyebrow tone="pdeep" class="fh-eb"><span class="d">Straight answers from a licensed plumber</span><span class="m">Straight answers</span></Eyebrow>
+      <h1 id="fh-h" class="cx-h fh-h" data-t="2"><span class="ln">Plumbing Questions,</span> <span class="ln tone">Answered.</span></h1>
+      <p class="fh-lead" data-t="3"><span class="d">{FAQ_ALL.length} questions Pinellas homeowners ask us, in five groups. Where a fact comes from a public source, the source is under the answer.</span><span class="m">{FAQ_ALL.length} questions in five groups. Sources sit under the answers.</span></p>
+    </div>
+    <nav class="fh-tiles" aria-label="FAQ topics" data-t="3" data-stagger>
+      {FAQ_GROUPS.map((g, i) => (
+        <a class:list={['fh-tile', i === 0 && 'is-ink', i === FAQ_GROUPS.length - 1 && 'is-wide']} href={`#faq-${g.id}`}>
+          <span class="fh-n">{pad(g.items.length)}<span class="sr-only"> questions:</span></span>
+          <span class="fh-l">{g.name}</span>
+          <svg class="fh-ar fh-ar-d" width="14" height="12" viewBox="0 0 14 12" aria-hidden="true"><path d="M.9 5.9h12M7.9 10.9l5-5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="fh-ar fh-ar-m" width="12" height="14" viewBox="0 0 12 14" aria-hidden="true"><path d="M5.9.9v12M10.9 7.9l-5 5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      ))}
+    </nav>
+  </div>
+</section>
+<style>
+  .fh { padding: 44px 0 0; height: 510px; box-sizing: border-box; }
+  .fh-g { display: grid; grid-template-columns: 1fr 520px; column-gap: 40px; }
+  .fh-tx :global(.fh-eb) { margin-top: 29px; }
+  .fh-h { --fs: 64px; --fs-m: 32px; margin-top: 16px; }
+  .fh-lead { margin: 24px 0 0; max-width: 540px; font: 400 18px/1.5 var(--f-b); color: var(--ink); }
+  .m { display: none; }
+  .fh-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 26px; align-content: start; }
+  .fh-tile { position: relative; display: block; height: 116px; padding: 16px 20px; box-sizing: border-box; border-radius: 6px; background: var(--white);
+    box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); text-decoration: none; transition: translate .25s var(--ease-out, ease), box-shadow .25s; }
+  .fh-tile.is-wide { grid-column: 1 / -1; }
+  .fh-tile.is-ink { background: var(--ink); color: var(--white); box-shadow: 6px 6px 0 var(--pdeep); }
+  .fh-n { display: block; font: 800 34px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--pdeep); }
+  .fh-tile.is-ink .fh-n { color: var(--powder); }
+  .fh-l { display: block; margin-top: 13px; font: 800 19px/1.04 var(--f-h); letter-spacing: -0.02em; }
+  .fh-ar { position: absolute; right: 22px; top: 24px; }
+  .fh-ar-m { display: none; }
+  .fh-tile:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  @media (hover: hover) and (pointer: fine) {
+    .fh-tile:hover { translate: 0 -3px; }
+    .fh-tile:not(.is-ink):hover { box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .fh { height: auto; padding-bottom: 64px; }
+    .fh-g { grid-template-columns: 1fr; row-gap: 40px; }
+    .fh-tiles { margin-top: 0; }
+  }
+  @media (max-width: 767px) {
+    .fh { height: auto; padding: 24px 0 39px; }
+    .fh-g { grid-template-columns: 1fr; }
+    .d { display: none; } .m { display: inline; }
+    .fh-tx :global(.fh-eb) { margin-top: 15px; }
+    .fh-h { margin-top: 10px; }
+    .fh-lead { margin-top: 14px; font-size: 16px; }
+    .fh-tiles { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }
+    .fh-tile { display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 16px; border-radius: 4px; box-shadow: inset 0 0 0 1.2px var(--ink); }
+    .fh-tile.is-ink { box-shadow: none; }
+    .fh-n { width: 28px; font-size: 22px; }
+    .fh-l { margin: 0; font-size: 17px; }
+    .fh-ar { top: 21px; }
+    .fh-ar-d { display: none; } .fh-ar-m { display: block; }
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+// DIY vs pro (Figma 719:437 y 2408 h 840 / mobile y 2845 h 724): ink section with a meniscus rise. "You can" (frost, ticks)
+// beside "Needs a licensed plumber + permit" (ink2 with a powder outline and offset). Copy word for word.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Seam from '../kit/Seam.astro';
+const CAN = ['Check the breaker (electric) or the pilot (gas).', 'If it leaks, close the cold-water valve on top.', 'Take a photo of the label on the side.'];
+const PRO = ['Replacing the water heater.', 'Anything on the gas line.', 'The relief valve.'];
+---
+<section class="dy on-ink seam-host" data-m-section>
+  <Seam from="var(--white)" to="var(--ink)" flip d={48} dm={32} />
+  <div class="wrap">
+    <Eyebrow text="Before you call" />
+    <h2 class="h2 dy-h" data-t="2" style="--h2:52px;--h2m:28px">What you can check.<br /><span class="tone">What needs us.</span></h2>
+    <div class="dy-grid" data-t="3" data-stagger>
+      <div class="dy-col dy-can">
+        <h3 class="dy-t">You can</h3>
+        <ul role="list">{CAN.map((c) => <li><i class="dy-ic" aria-hidden="true"><svg viewBox="0 0 12 8" width="12" height="8"><path d="M1 4l3.2 3L11 1" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg></i>{c}</li>)}</ul>
+      </div>
+      <div class="dy-col dy-pro">
+        <h3 class="dy-t">Needs a licensed plumber + permit</h3>
+        <ul role="list">{PRO.map((c) => <li><i class="dy-ic" aria-hidden="true"></i>{c}</li>)}</ul>
+      </div>
+    </div>
+    <Btn sub="CALL A LICENSED PLUMBER" size="l" w={320} h={64} hm={60} class="dy-btn" t="4" />
+  </div>
+</section>
+<style>
+  .dy { position: relative; padding: 110px 0 96px; }
+  .dy-h { margin-top: 16px; color: var(--white); }
+  .dy-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 52px; }
+  .dy-col { min-height: 330px; padding: 32px; border-radius: 6px; }
+  .dy-can { background: var(--frost); color: var(--ink); }
+  .dy-pro { background: var(--ink2); color: var(--white); box-shadow: inset 0 0 0 2px var(--powder), 10px 10px 0 var(--powder); }
+  .dy-t { font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.04; letter-spacing: -.02em; }
+  .dy-col ul { margin: 43px 0 0; padding: 0; list-style: none; display: grid; gap: 38px; }
+  .dy-col li { display: flex; align-items: flex-start; gap: 16px; font-size: 17px; line-height: 1.5; }
+  .dy-ic { flex: none; position: relative; display: grid; place-items: center; width: 24px; height: 24px; margin-top: 2px; border-radius: 50%; }
+  .dy-can .dy-ic { background: var(--pdeep); }
+  .dy-pro .dy-ic { box-shadow: inset 0 0 0 2px var(--powder); }
+  .dy-pro .dy-ic::after { content: ''; width: 12px; height: 2px; background: var(--powder); }
+  .dy :global(.dy-btn) { margin-top: 50px; }
+  @media (max-width: 767px) {
+    .dy { padding: 56px 0 56px; }
+    .dy-h { margin-top: 10px; }
+    .dy-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 28px; }
+    .dy-col { min-height: 0; padding: 18px 18px 20px; }
+    .dy-pro { box-shadow: inset 0 0 0 2px var(--powder), 8px 8px 0 var(--powder); }
+    .dy-t { font-size: 19px; max-width: 300px; }
+    .dy-col ul { margin-top: 16px; gap: 12px; }
+    .dy-pro ul { gap: 12px; }
+    .dy-col li { gap: 12px; font-size: 15px; }
+    .dy-ic { width: 20px; height: 20px; margin-top: 1px; }
+    .dy-ic svg { width: 10px; height: 7px; }
+    .dy-pro .dy-ic::after { width: 10px; }
+    .dy :global(.dy-btn) { width: 100%; margin-top: 24px; }
+  }
+</style>

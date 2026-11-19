@@ -1,0 +1,45 @@
+---
+// "Leave a review. It helps your neighbours." (Figma "Leave a review" y 4230 h 340 / mobile y 7533 h 408). Ink band, a
+// meniscus seam rises into the white band above. Button labels per BUILD-BRIEF 11 (no sums, one button per profile).
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Seam from '../kit/Seam.astro';
+import { SITE } from '../../data/site';
+const g = SITE.google;
+---
+<section class="cx-sec cx-ink rv-l on-ink" data-m-section aria-labelledby="rlv-h">
+  <Seam from="var(--white)" to="var(--ink)" flip />
+  <div class="wrap rlv-g">
+    <div class="shead">
+      <Eyebrow text="Had us out?" tone="light" />
+      <h2 id="rlv-h" class="cx-h rlv-h" data-t="2"><span class="ln">Leave a review.</span> <span class="ln tone">It helps your neighbours.</span></h2>
+    </div>
+    <div class="rlv-b">
+      <div class="rlv-btns" data-t="3">
+        <Btn look="light" label={`Google profile · ${g.a.count} reviews`} href={g.a.url} external w={240} class="rlv-btn" />
+        <Btn look="light" label={`Google profile · ${g.b.count} reviews`} href={g.b.url} external w={260} class="rlv-btn" />
+      </div>
+      <p class="rlv-n" data-t="3">Both are real Glass Plumbing profiles on Google until they are merged.</p>
+    </div>
+  </div>
+</section>
+<style>
+  .rv-l { padding: 110px 0 92px; }
+  .rlv-g { display: grid; grid-template-columns: 1fr 520px; column-gap: 40px; }
+  .rlv-h { --fs: 52px; --fs-m: 28px; margin-top: 16px; }
+  .rlv-btns { display: flex; gap: 20px; }
+  .rlv-btns :global(.rlv-btn) { height: 64px; }
+  .rlv-n { margin: 20px 0 0; font: 400 14px/1.5 var(--f-b); color: rgba(255, 255, 255, .8); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rlv-g { grid-template-columns: 1fr; row-gap: 32px; }
+  }
+  @media (max-width: 767px) {
+    .rv-l { padding: 64px 0 50px; }
+    .rlv-g { grid-template-columns: 1fr; row-gap: 26px; }
+    .rlv-h { margin-top: 12px; }
+    .rlv-btns { flex-direction: column; gap: 12px; }
+    .rlv-btns :global(.rlv-btn) { width: 100%; height: 56px; }
+    .rlv-n { margin-top: 26px; font-size: 13px; }
+  }
+</style>

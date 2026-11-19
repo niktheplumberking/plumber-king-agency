@@ -1,0 +1,43 @@
+---
+// "Follow the van." (Figma "Instagram feed" y 4048 h 740 / mobile y 3376 h 676). Four photos from the crew's posts
+// (mapped by hash: "wh_tank2" / "crew_crawl" = crew-crawlspace.jpg). No names on faces.
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Seam from '../kit/Seam.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const FEED = [
+  { img: 'hero-crew-job', alt: 'A crew member on a mini-excavator in a yard, the Glass Plumbing van parked behind' },
+  { img: 'crew-crawlspace', alt: 'A crew member in a Glass cap smiling from a crawlspace' },
+  { img: 'corroded-pipe', alt: 'A corroded pipe and valve on a utility wall before the repair' },
+  { img: 'crew-water-heater-tank', alt: 'A crew member lifting a water heater part in a tiled room' },
+];
+---
+<section class="cx-sec cx-white of" data-m-section aria-labelledby="of-h">
+  <Seam from="var(--frost)" to="var(--white)" />
+  <div class="wrap">
+    <div class="shead">
+      <Eyebrow text={SITE.social.instagramHandle} tone="pdeep" />
+      <h2 id="of-h" class="cx-h of-h" data-t="2">Follow the van.</h2>
+    </div>
+    <ul class="of-g" role="list" data-t="4" data-stagger>
+      {FEED.map((p) => <li class="of-i"><Img name={p.img} alt={p.alt} sizes="(min-width: 1280px) 282px, (min-width: 768px) 23vw, 46vw" /></li>)}
+    </ul>
+    <Btn look="ink" label="Follow on Instagram" href={SITE.social.instagram} external w={300} t="3" class="of-btn" />
+  </div>
+</section>
+<style>
+  .of { padding: 110px 0 74px; }
+  .of-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
+  .of-g { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 95px 0 0; padding: 0; list-style: none; }
+  .of-i { position: relative; aspect-ratio: 1; border-radius: 4px; overflow: hidden; }
+  .of :global(.of-btn) { margin-top: 38px; height: 56px; }
+  @media (min-width: 768px) and (max-width: 1279px) { .of-g { gap: 16px; margin-top: 48px; } }
+  @media (max-width: 767px) {
+    .of { padding: 64px 0 52px; }
+    .of-h { margin-top: 10px; }
+    .of-g { grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 79px; }
+    .of :global(.of-btn) { width: 100%; margin-top: 18px; }
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+// "Counted from the 16 reviews we read." (Figma "What people mention" y 792 h 640 / mobile y 798 h 696). Counts = Figma.
+// Each dot is one review; the dots fill in as the row enters (CSS transition, staggered; static under reduced motion).
+import '../contact/cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+const rows: [string, number][] = [['On time', 5], ['Explained everything', 2], ['Fair price', 6], ['Same or next day', 4], ['Professional', 6], ['Cleaned up after', 2]];
+---
+<section class="cx-sec cx-frost rm" data-m-section aria-labelledby="rm-h">
+  <div class="wrap rm-g">
+    <div class="rm-head">
+      <div class="shead">
+        <Eyebrow text="What people mention" tone="pdeep" />
+        <h2 id="rm-h" class="cx-h rm-h" data-t="2"><span class="ln">Counted from the</span> <span class="ln tone">16 reviews we read.</span></h2>
+      </div>
+      <p class="rm-note" data-t="3">Each dot is one review. A review can mention more than one thing.</p>
+    </div>
+    <ul class="rm-l" role="list" data-t="3" data-stagger>
+      {rows.map(([t, n]) => (
+        <li class="rm-r">
+          <span class="rm-t">{t}</span>
+          <span class="rm-d" aria-hidden="true">{Array.from({ length: 16 }, (_, i) => <i class:list={[i < n && 'on']} style={`--i:${i}`}></i>)}</span>
+          <span class="rm-n">{n}/16<span class="sr-only"> reviews</span></span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .rm { padding: 100px 0 153px; }
+  .rm-g { display: grid; grid-template-columns: 600px 1fr; }
+  .rm-h { --fs: 48px; --fs-m: 28px; margin-top: 16px; }
+  .rm-note { margin: 40px 0 0; font: 400 14px/1.5 var(--f-b); color: var(--muted); max-width: 460px; }
+  .rm-l { margin: 16px 0 0; padding: 0; list-style: none; display: grid; row-gap: 49px; }
+  .rm-r { display: grid; grid-template-columns: 260px 1fr auto; align-items: center; height: 21px; }
+  .rm-t { font: 800 20px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .rm-d { display: flex; gap: 4px; }
+  .rm-d i { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--frost3); }
+  .rm-d i.on { background: var(--pdeep); box-shadow: none; }
+  .rm-n { font: 700 11px/15px var(--f-m); letter-spacing: .06em; color: var(--pdeep); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .rm-g { grid-template-columns: 1fr; row-gap: 48px; }
+    .rm-note { margin-top: 20px; }
+  }
+  @media (max-width: 767px) {
+    .rm { padding: 56px 0 84px; }
+    .rm-g { display: flex; flex-direction: column; }
+    .rm-head { display: contents; }
+    .rm-h { margin-top: 12px; }
+    .rm-l { order: 2; margin-top: 26px; row-gap: 22px; }
+    .rm-note { order: 3; margin-top: 26px; font-size: 13px; }
+    .rm-r { grid-template-columns: 1fr auto; row-gap: 12px; height: auto; }
+    .rm-t { font-size: 18px; }
+    .rm-d { grid-column: 1 / -1; grid-row: 2; justify-content: space-between; gap: 0; }
+    .rm-d i { width: 15px; height: 15px; }
+    .rm-n { font-size: 10px; grid-row: 1; grid-column: 2; }
+  }
+</style>

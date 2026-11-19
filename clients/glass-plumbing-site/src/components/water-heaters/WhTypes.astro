@@ -1,0 +1,56 @@
+---
+// Tank vs tankless (Figma 719:437 y 3868 h 1000 / mobile y 4337 h 924): two job photos (Glass's own installs) each with a
+// steel plate of what was on the job. Copy word for word; the brands are the ones seen in the crew's posts.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Plate from '../kit/Plate.astro';
+import Img from '../ui/Img.astro';
+const T = [
+  { photo: 'water-heater-softener', alt: 'A tank water heater on a platform beside a water softener', title: 'Tank',
+    d: [['Stores', 'Hot water in the tank'], ['Space', 'Floor space, like this one'], ['Seen', 'Rheem 40 gal on a Holdrite platform']],
+    m: [['Stores', 'Hot water in the tank'], ['Seen', 'Rheem 40 gal, Holdrite']] },
+  { photo: 'tankless-pair', alt: 'Two tankless water heaters mounted on a brick wall', title: 'Tankless',
+    d: [['Heats', 'Water on demand'], ['Space', 'Mounted on the wall'], ['Seen', 'Rinnai RE199E pair, primary + secondary']],
+    m: [['Heats', 'On demand'], ['Seen', 'Rinnai RE199E pair']] },
+] as const;
+---
+<section class="ty" id="types" data-m-section>
+  <div class="wrap">
+    <Eyebrow text="Tank or tankless?" />
+    <h2 class="h2 ty-h" data-t="2" style="--h2:52px;--h2m:28px">Two ways to get<br /><span class="tone">hot water.</span></h2>
+    <div class="ty-grid" data-t="3" data-stagger>
+      {T.map((t) => (
+        <figure class="ty-c">
+          <div class="ty-ph"><Img name={t.photo} alt={t.alt} sizes="(min-width:1280px) 588px, (min-width:768px) 46vw, 92vw" box={588 / 420} boxM={350 / 240} widths={[360, 600, 900, 1200]} /></div>
+          <figcaption>
+            <Plate class="ty-pl d" title={t.title} rows={t.d.map((r) => [...r]) as [string, string][]} w={400} pad={18} size={12} tsize={16} kx={88} pitch={22} t={false} />
+            <Plate class="ty-pl m" title={t.title} rows={t.m.map((r) => [...r]) as [string, string][]} w={280} wm={280} pad={12} size={10} tsize={13} kx={68} pitch={19} t={false} />
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+    <p class="ty-note" data-t="3"><span class="d">Which fits your home depends on how many bathrooms you run at once, gas or electric, and where it can go. We’ll tell you straight.</span><span class="m">Which fits depends on how many bathrooms run at once, gas or electric, and where it can go.</span></p>
+  </div>
+</section>
+<style>
+  .ty { background: var(--frost); padding: 110px 0 68px; }
+  .ty-h { margin-top: 16px; }
+  .ty-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 52px; }
+  .ty-c { position: relative; margin: 0; padding-bottom: 66px; }
+  .ty-ph { position: relative; height: 420px; border-radius: 6px; overflow: hidden; }
+  .ty-ph::after { content: ''; position: absolute; inset: 0; border-radius: 6px; box-shadow: inset 0 0 0 2px var(--ink); pointer-events: none; }
+  .ty-c figcaption { position: absolute; left: 24px; top: 340px; right: 24px; }
+  .ty-c :global(.ty-pl.m) { display: none; }
+  .ty-note { max-width: 760px; margin-top: 94px; font-size: 17px; line-height: 1.5; }
+  .ty-grid + .ty-note { margin-top: 95px; }
+  @media (max-width: 767px) {
+    .ty { padding: 64px 0 62px; }
+    .ty-h { margin-top: 10px; }
+    .ty-grid { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 28px; }
+    .ty-c { padding-bottom: 80px; }
+    .ty-ph { height: 240px; }
+    .ty-c figcaption { left: 14px; top: 200px; right: auto; }
+    .ty-c :global(.ty-pl.d) { display: none; }
+    .ty-c :global(.ty-pl.m) { display: block; }
+    .ty-grid + .ty-note { margin-top: 1px; font-size: 15px; }
+  }
+</style>

@@ -1,0 +1,153 @@
+---
+// "Builders, landlords and the rest." (Figma "Other tasks" y 3026 h 800 / mobile y 2919 h 795) + the audience switch.
+// INTERACTION note (883:830): three-way switch; the ink pill slides to the picked audience; the panel swaps photo, line,
+// quote and button (fade + 20 px rise). "Send a video" opens a text to (727) 512-0673.
+// Figma draws only the Contractor panel. Landlord + video panels use real review words (reviews.ts) and site facts only.
+import './cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const panels = [
+  { id: 'builder', tab: 'Contractor or builder', tabM: 'Contractor or builder', kicker: 'For contractors', h: 'Rough-in, remodels and new construction.',
+    q: '“He always does a great job and shows up when he says he’s going to, with the right equipment and attitude.”', who: 'John Rooney · Google',
+    img: 'rough-in-plywood', alt: 'Plywood subfloor with a tape measure laid across it, ready for a rough-in',
+    btn: { look: 'call' as const, label: 'Call about a bid', sub: SITE.phone, href: SITE.tel } },
+  { id: 'landlord', tab: 'Landlord or property owner', tabM: 'Landlord', kicker: 'For landlords', h: 'Rentals, estates and more than one property.',
+    q: '“I’ve had them do work for me in my own home, my daughter’s home, rental properties, my in-laws’ properties and estate properties. Trusted and dependable.”', who: 'David Peek · Google',
+    img: 'water-heater-softener', alt: 'Water heater installed next to a water softener in a garage',
+    btn: { look: 'call' as const, label: 'Call about a property', sub: SITE.phone, href: SITE.tel } },
+  { id: 'video', tab: 'Send a video', tabM: 'Send a video', kicker: 'Not sure what it is?', h: 'Text us a video of the problem.',
+    q: '“I took a few pictures of the valve that needed replaced and he was at my home the next day !!”', who: 'Jen James · Google',
+    img: 'valve', alt: 'A black shower valve and hand-shower hose on a tiled wall',
+    btn: { look: 'ink' as const, label: 'Text a video', sub: SITE.phone, href: SITE.sms } },
+];
+---
+<section class="cx-sec cx-frost co" data-m-section aria-labelledby="co-h" data-aud>
+  <div class="wrap">
+    <div class="shead">
+      <Eyebrow text="Not a repair?" tone="pdeep" />
+      <h2 id="co-h" class="cx-h co-h" data-t="2"><span class="ln">Builders, landlords</span> <span class="ln tone">and the rest.</span></h2>
+    </div>
+    <div class="co-sw-clip" data-t="3">
+      <div class="co-sw" role="tablist" aria-label="Who are you?">
+        <span class="co-pill" aria-hidden="true"></span>
+        {panels.map((p, i) => (
+          <button type="button" role="tab" id={`co-t-${p.id}`} aria-controls={`co-p-${p.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} class="co-tab" data-aud-tab={i}>
+            <span class="d">{p.tab}</span><span class="m">{p.tabM}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+    <div class="co-stage" data-t="4" data-fx="up">
+      {panels.map((p, i) => (
+        <div class="co-p" role="tabpanel" id={`co-p-${p.id}`} aria-labelledby={`co-t-${p.id}`} data-aud-panel={i} hidden={i !== 0 ? true : undefined}>
+          <div class="co-ph"><Img name={p.img} alt={p.alt} sizes="(min-width: 1280px) 380px, (min-width: 768px) 40vw, 92vw" box={380 / 300} boxM={350 / 170} /></div>
+          <div class="co-tx">
+            <p class="co-k">{p.kicker}</p>
+            <h3 class="co-t">{p.h}</h3>
+            <blockquote class="co-q"><p>{p.q}</p><footer>{p.who}</footer></blockquote>
+            <Btn look={p.btn.look} label={p.btn.label} sub={p.btn.sub} href={p.btn.href} w={300} class="co-btn" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<script>
+  // Three-way audience switch: roving tabindex, arrows/Home/End, the ink pill slides (CSS transition), the panel swaps with
+  // a fade + 20 px rise (WAAPI, ease-in-out; instant under reduced motion). Works without motion.
+  const reduce = () => !document.documentElement.classList.contains('motion');
+  document.querySelectorAll<HTMLElement>('[data-aud]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-aud-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-aud-panel]'));
+    const pill = root.querySelector<HTMLElement>('.co-pill');
+    const sw = root.querySelector<HTMLElement>('.co-sw');
+    let cur = 0;
+    const place = () => {
+      const t = tabs[cur]; if (!pill || !t || !sw) return;
+      pill.style.width = `${t.offsetWidth}px`; pill.style.height = `${t.offsetHeight}px`;
+      pill.style.transform = `translate(${t.offsetLeft}px, ${t.offsetTop}px)`;
+    };
+    const pick = (i: number, focus = false) => {
+      if (i === cur) { if (focus) tabs[i].focus(); return; }
+      const from = panels[cur], to = panels[i];
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      cur = i; place();
+      if (focus) tabs[i].focus();
+      tabs[i].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduce() ? 'auto' : 'smooth' });
+      if (reduce()) { from.hidden = true; to.hidden = false; return; }
+      from.getAnimations().forEach((a) => a.cancel());
+      const out = from.animate([{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-20px)' }], { duration: 250, easing: 'cubic-bezier(.65,0,.35,1)' });
+      out.onfinish = () => {
+        from.hidden = true; to.hidden = false;
+        to.animate([{ opacity: 0, transform: 'translateY(20px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 450, easing: 'cubic-bezier(.65,0,.35,1)' });
+      };
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => pick(i));
+      t.addEventListener('keydown', (e) => {
+        const k = e.key; let n = -1;
+        if (k === 'ArrowRight') n = (cur + 1) % tabs.length; else if (k === 'ArrowLeft') n = (cur - 1 + tabs.length) % tabs.length;
+        else if (k === 'Home') n = 0; else if (k === 'End') n = tabs.length - 1;
+        if (n >= 0) { e.preventDefault(); pick(n, true); }
+      });
+    });
+    place();
+    root.classList.add('is-ready');
+    new ResizeObserver(place).observe(sw!);
+    document.fonts?.ready.then(place);
+  });
+</script>
+<style>
+  .co { padding: 110px 0 120px; }
+  .co-h { --fs: 52px; --fs-m: 34px; margin-top: 16px; }
+  .co-sw-clip { margin-top: 40px; }
+  .co-sw { position: relative; display: inline-flex; width: 760px; height: 60px; padding: 4px; border: 1.5px solid var(--ink); border-radius: 30px; background: var(--white); }
+  .co-pill { position: absolute; left: 0; top: 0; border-radius: 26px; background: var(--ink); transition: transform .5s var(--ease-io), width .5s var(--ease-io); }
+  .co:not(.is-ready) .co-pill { display: none; }
+  .co:not(.is-ready) .co-tab[aria-selected='true'] { background: var(--ink); color: var(--white); }
+  .co-tab { position: relative; z-index: 1; height: 49px; border-radius: 26px; padding: 0 24px; font: 700 15px/1.5 var(--f-b); color: var(--ink); white-space: nowrap; transition: color .5s var(--ease-io), background-color .5s var(--ease-io); }
+  .co-tab:nth-of-type(1) { width: 245px; } .co-tab:nth-of-type(2) { width: 260px; } .co-tab:nth-of-type(3) { flex: 1; }
+  .co-tab[aria-selected='true'] { color: var(--white); }
+  .co-tab:not([aria-selected='true']):hover { text-decoration: underline; text-underline-offset: 3px; }
+  .co-tab .m { display: none; }
+  .co-stage { margin-top: 32px; }
+  .co-p { display: grid; grid-template-columns: 380px 1fr; min-height: 300px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--white); box-shadow: 10px 10px 0 var(--powder); overflow: hidden; }
+  .co-p[hidden] { display: none; }
+  .co-ph { position: relative; overflow: hidden; }
+  .co-ph :global(.img) { position: absolute; inset: 0; }
+  .co-tx { padding: 40px 40px 22px; }
+  .co-k { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .co-t { margin: 11px 0 0; font: 800 28px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .co-q { margin: 25px 0 0; }
+  .co-q p { margin: 0; font: 600 21px/1.24 var(--f-h); letter-spacing: -0.02em; color: var(--ink); max-width: 720px; }
+  .co-q footer { margin-top: 12px; font: 500 11px/15px var(--f-m); letter-spacing: .02em; color: var(--muted); }
+  .co-tx :global(.co-btn) { margin-top: 17px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .co-sw { width: auto; max-width: 100%; }
+    .co-tab:nth-of-type(n) { width: auto; flex: none; }
+    .co-p { grid-template-columns: 34% 1fr; }
+  }
+  @media (max-width: 767px) {
+    .co { padding: 64px 0 90px; }
+    .co-h { margin-top: 12px; }
+    .co-sw-clip { margin: 24px calc(-1 * var(--gutter)) 0 0; overflow-x: auto; scrollbar-width: none; padding: 5px 0; }
+    .co-sw-clip::-webkit-scrollbar { display: none; }
+    .co-sw { width: max-content; height: auto; padding: 0 20px 0 0; border: 0; border-radius: 0; background: none; gap: 8px; }
+    .co-pill { border-radius: 17px; }
+    .co-tab:nth-of-type(n) { width: auto; flex: none; height: 34px; padding: 0 13px; border-radius: 17px; box-shadow: inset 0 0 0 1.2px var(--ink); background: var(--white); font: 600 14px/1.5 var(--f-b); }
+    .co.is-ready .co-tab[aria-selected='true'] { background: transparent; }
+    .co-tab .d { display: none; } .co-tab .m { display: inline; }
+    .co-stage { margin-top: 15px; }
+    .co-p { grid-template-columns: 1fr; box-shadow: 6px 6px 0 var(--powder); }
+    .co-ph { height: 170px; }
+    .co-tx { padding: 20px 18px 20px; }
+    .co-k { font-size: 10px; line-height: 13px; }
+    .co-t { margin-top: 9px; font-size: 21px; }
+    .co-q { margin-top: 12px; }
+    .co-q p { font-size: 17px; }
+    .co-q footer { margin-top: 10px; font-size: 10px; line-height: 13px; }
+    .co-tx :global(.co-btn) { width: 100%; margin-top: 20px; }
+  }
+</style>

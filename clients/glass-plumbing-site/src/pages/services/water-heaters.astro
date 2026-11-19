@@ -1,0 +1,48 @@
+---
+// /services/water-heaters (Figma 719:437 desktop 1440, 720:566 mobile 390). Sections 3-16 of figma-cache/INDEX.md, one
+// component each; utility bar, header, emergency strip, footer and mobile call bar come from Base.astro (shared builder).
+import Base from '../../layouts/Base.astro';
+import WhHero from '../../components/water-heaters/WhHero.astro';
+import WhQuick from '../../components/water-heaters/WhQuick.astro';
+import WhProblems from '../../components/water-heaters/WhProblems.astro';
+import WhDiy from '../../components/water-heaters/WhDiy.astro';
+import WhProcess from '../../components/water-heaters/WhProcess.astro';
+import WhTypes from '../../components/water-heaters/WhTypes.astro';
+import WhPricing from '../../components/water-heaters/WhPricing.astro';
+import WhReviews from '../../components/water-heaters/WhReviews.astro';
+import WhWhy from '../../components/water-heaters/WhWhy.astro';
+import WhCare from '../../components/water-heaters/WhCare.astro';
+import WhFaq from '../../components/water-heaters/WhFaq.astro';
+import WhRelated from '../../components/water-heaters/WhRelated.astro';
+import WhCta from '../../components/water-heaters/WhCta.astro';
+import TownsStrip from '../../components/global/TownsStrip.astro';
+import { WH_FAQ } from '../../components/water-heaters/data';
+import { serviceSchema } from '../../lib/schema';
+import '../../components/services/sv.css';
+const description = 'Water heater repair and replacement in Largo and Pinellas County: tank or tankless, often the next day. Licensed plumber, FL CFC1432488.';
+const faq = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: WH_FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+const service = serviceSchema({ name: 'Water heater repair and replacement', path: '/services/water-heaters', description, serviceType: 'Water heater installation and repair' });
+---
+<Base title="Water Heater Repair & Install in Largo, FL · Glass" description={description} path="/services/water-heaters"
+  jsonld={[service, faq]} og="water-heater-tank-2" ogAlt="A tank water heater Glass Plumbing installed"
+  preload={{ name: 'water-heater-tank-2', sizes: '(min-width:768px) 320px, 190px', widths: [380, 640, 960] }}>
+  <div class="sv">
+    <WhHero />
+    <WhQuick />
+    <WhProblems />
+    <WhDiy />
+    <WhProcess />
+    <WhTypes />
+    <WhPricing />
+    <WhReviews />
+    <WhWhy />
+    <WhCare />
+    <WhFaq />
+    <WhRelated />
+    <WhCta />
+    <TownsStrip />
+  </div>
+</Base>

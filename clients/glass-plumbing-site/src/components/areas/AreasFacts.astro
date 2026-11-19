@@ -1,0 +1,58 @@
+---
+// /areas "Local quirks" (Figma 721:525 y 3135 h 850 / mobile y 3089 h 772). White. Four sourced local facts (copy and
+// sources exactly as the frames; LOCAL-FACTS.md backs them). Each card's housing fills to its own level as it enters.
+import Head from './Head.astro';
+import Housing from '../kit/Housing.astro';
+const facts = [
+  { t: 'Permits depend on the city', d: 'Pinellas County handles unincorporated areas. Largo and Clearwater issue their own.', m: 'Pinellas County handles unincorporated areas. Largo and Clearwater issue their own.',
+    s: 'Source: pinellas.gov · largo.com · myclearwater.com', sm: 'Source: pinellas.gov · largo.com · myclearwater.com', f: 0.192 },
+  { t: 'Hard, treated water', d: 'Tampa Bay Water supply, treated with chloramine, 217 ppm hardness on average.', m: 'Tampa Bay Water supply, chloramine-treated, 217 ppm hardness on average.',
+    s: 'Source: PCU 2025 Consumer Confidence Report', sm: 'Source: PCU 2025 report', f: 0.576 },
+  { t: 'Older homes', d: 'Largo’s median home was built in 1978, so supply lines and drains are often original.', m: 'Largo’s median home was built in 1978.',
+    s: 'Source: ACS 2023 via city-stats.com (third party)', sm: 'Source: ACS 2023 via city-stats.com (third party)', f: 0.384 },
+  { t: 'Storm surge', d: 'Hurricane Helene (2024) pushed about 6.5 ft of surge into Clearwater Beach.', m: 'Helene (2024) pushed about 6.5 ft of surge into Clearwater Beach.',
+    s: 'Source: axios.com/local/tampa-bay', sm: 'Source: axios.com', f: 0.816 },
+];
+---
+<section class="afacts" data-m-section aria-labelledby="afacts-h">
+  <div class="wrap">
+    <Head eyebrow="Good to know in Pinellas" l1="Four local facts" l2="that change the job." id="afacts-h" />
+    <ul class="af-grid" role="list" data-t="4" data-stagger>
+      {facts.map((f) => (
+        <li class="fc">
+          <Housing w={40} h={62} wm={28} hm={42} r={10} rm={8} fill={f.f} class="fc-jar" />
+          <div class="fc-txt">
+            <h3 class="fc-h">{f.t}</h3>
+            <p class="fc-p"><span class="d">{f.d}</span><span class="m">{f.m}</span></p>
+            <p class="fc-src"><span class="d">{f.s}</span><span class="m">{f.sm}</span></p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .afacts { position: relative; background: var(--white); padding: 110px 0 114px; }
+  .af-grid { display: grid; grid-template-columns: repeat(2, 588px); justify-content: space-between; row-gap: 24px; margin-top: 52px; }
+  .fc { display: flex; gap: 24px; min-height: 206px; padding: 28px 36px 26px 28px; background: var(--frost); border-radius: 6px; }
+  .fc-txt { display: flex; flex-direction: column; flex: 1; }
+  .fc-h { font-family: var(--f-h); font-weight: 800; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .fc-p { margin-top: 15px; font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .fc-src { margin-top: auto; padding-top: 18px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .01em; color: var(--pdeep); }
+  .m { display: none; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .afacts { padding: 96px 0 104px; }
+    .af-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+  }
+  @media (max-width: 767px) {
+    .afacts { padding: 56px 0 60px; }
+    .af-grid { grid-template-columns: 1fr; row-gap: 12px; margin-top: 24px; }
+    .fc { min-height: 0; gap: 14px; padding: 18px 16px 18px 16px; }
+    .fc-h { font-size: 18px; }
+    .fc-p { margin-top: 6px; font-size: 14px; }
+    .fc-src { margin-top: 0; padding-top: 10px; font-size: 9px; line-height: 12px; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

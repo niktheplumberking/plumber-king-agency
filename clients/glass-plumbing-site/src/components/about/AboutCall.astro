@@ -1,0 +1,117 @@
+---
+// /about "CTA talk to a brother" (Figma y 5627 h 620 / mobile y 5179 h 776). White. Status pill, call + text buttons and
+// the "Who picks up" switchboard: Kody / Zak / Chase with their review counts (data.ts, from reviews.ts). INTERACTION note:
+// the "Ringing" highlight moves between the three names every 2 s and pauses on hover; a visible Pause button stops it
+// (WCAG 2.2.2). Reduced motion: static on Kody, no button.
+import Head from '../areas/Head.astro';
+import Btn from '../kit/Btn.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import { KODY, ZAK, CHASE, REVIEW_TOTAL } from './data';
+const rows = [
+  { n: 'Kody', s: `Owner · named in ${KODY} of ${REVIEW_TOTAL} reviews` },
+  { n: 'Zak', s: `Named in ${ZAK} of ${REVIEW_TOTAL} reviews` },
+  { n: 'Chase', s: `Named in ${CHASE} of ${REVIEW_TOTAL} reviews` },
+];
+---
+<section class="bcall" data-m-section aria-labelledby="bcall-h">
+  <div class="wrap bk-grid">
+    <div class="bk-copy">
+      <Head eyebrow="Who picks up" l1="Talk to a" l2="Glass brother." size={60} sizeM={38} id="bcall-h" />
+      <p class="bk-status" data-t="3"><span class="bk-live" aria-hidden="true"></span>Line open now · 24/7</p>
+      <div class="bk-btns">
+        <Btn look="call" sub="Call now · 24/7" size="l" w={300} wm={350} t="3" />
+        <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={220} wm={350} hm={56} t="3" />
+      </div>
+    </div>
+    <div class="bk-board" data-switchboard data-t="4" data-fx="frame">
+      <div class="bk-top">
+        <p class="bk-k"><span class="d">When you call, one of these picks up</span><span class="m">One of these picks up</span></p>
+        <button class="bk-pause" type="button" aria-pressed="false" data-sb-pause>Pause</button>
+      </div>
+      <ul class="bk-rows" role="list">
+        {rows.map((r, i) => (
+          <li class:list={['bk-row', i === 0 && 'is-on']} data-sb-row>
+            <span class="bk-seal" aria-hidden="true"><Image src={logo} alt="" width={90} height={58} class="bk-logo" /></span>
+            <span class="bk-who"><span class="bk-n">{r.n}</span><span class="bk-s">{r.s}</span></span>
+            <span class="bk-chip" aria-hidden="true">Ringing</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Switchboard: the "Ringing" highlight steps Kody -> Zak -> Chase every 2 s. Pauses on hover / focus inside; the Pause
+  // button stops it for good (WCAG 2.2.2). Reduced motion (no html.motion): it never starts.
+  document.querySelectorAll<HTMLElement>('[data-switchboard]').forEach((board) => {
+    const rows = [...board.querySelectorAll<HTMLElement>('[data-sb-row]')];
+    const btn = board.querySelector<HTMLButtonElement>('[data-sb-pause]')!;
+    if (!document.documentElement.classList.contains('motion') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    board.classList.add('is-live');
+    let i = 0, hover = false, stopped = false, timer = 0;
+    const tick = () => { if (hover || stopped || document.hidden) return; rows[i].classList.remove('is-on'); i = (i + 1) % rows.length; rows[i].classList.add('is-on'); };
+    const start = () => { clearInterval(timer); timer = window.setInterval(tick, 2000); };
+    board.addEventListener('pointerenter', () => { hover = true; });
+    board.addEventListener('pointerleave', () => { hover = false; });
+    board.addEventListener('focusin', () => { hover = true; });
+    board.addEventListener('focusout', () => { hover = false; });
+    btn.addEventListener('click', () => {
+      stopped = !stopped;
+      btn.setAttribute('aria-pressed', String(stopped));
+      btn.textContent = stopped ? 'Play' : 'Pause';
+      if (!stopped) start();
+    });
+    start();
+  });
+</script>
+
+<style>
+  .bcall { position: relative; background: var(--white); padding: 110px 0 130px; }
+  .bk-grid { display: grid; grid-template-columns: 540px 600px; justify-content: space-between; align-items: start; }
+  .bk-status { display: flex; align-items: center; gap: 10px; width: 300px; height: 36px; margin-top: 30px; padding: 0 16px; border: 1.5px solid var(--ink); border-radius: 18px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .bk-live { width: 12px; height: 12px; border-radius: 50%; background: var(--pdeep); box-shadow: 0 0 0 3px var(--powder); }
+  .bk-btns { display: flex; gap: 16px; margin-top: 30px; }
+  .bk-board { position: relative; padding: 28px 20px 32px; background: var(--ink); border-radius: 8px; box-shadow: 10px 10px 0 var(--powder); color: var(--white); }
+  .bk-top { display: flex; justify-content: space-between; align-items: center; min-height: 15px; padding: 0 8px; }
+  .bk-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .bk-pause { display: none; min-height: 32px; margin: -9px 0; padding: 0 12px; border: 1px solid var(--ink3); border-radius: 16px; background: transparent; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); cursor: pointer; }
+  .bk-pause:hover { border-color: var(--powder); }
+  .bk-pause:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .is-live .bk-pause { display: inline-flex; align-items: center; }
+  .bk-rows { display: grid; row-gap: 12px; margin-top: 29px; }
+  .bk-row { position: relative; display: flex; align-items: center; height: 84px; padding: 0 20px 0 16px; background: var(--ink2); border-radius: 6px; box-shadow: inset 0 0 0 1px var(--ink3); transition: background-color .5s var(--ease-io), box-shadow .5s var(--ease-io); }
+  .bk-row.is-on { background: var(--ink3); box-shadow: inset 0 0 0 1px var(--powder); }
+  .bk-seal { display: grid; place-items: center; flex: none; width: 56px; height: 56px; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); }
+  .bk-seal :global(.bk-logo) { width: 45px; height: auto; }
+  .bk-who { display: flex; flex-direction: column; flex: 1; margin-left: 18px; }
+  .bk-n { font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.04; letter-spacing: -.02em; }
+  .bk-s { margin-top: 7px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: rgb(255 255 255 / .7); }
+  .bk-chip { padding: 6px 13px; border-radius: 16px; background: var(--powder); font-weight: 600; font-size: 12px; line-height: 18px; color: var(--ink); opacity: 0; scale: .8; transition: opacity .4s var(--ease-io), scale .4s var(--ease-io); }
+  .is-on .bk-chip { opacity: 1; scale: 1; }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .bk-grid { grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); column-gap: 40px; }
+    .bk-btns { flex-wrap: wrap; }
+  }
+  @media (max-width: 767px) {
+    .bcall { padding: 64px 0 90px; }
+    .bk-grid { display: flex; flex-direction: column; align-items: stretch; }
+    .bk-copy { display: contents; }
+    .bk-status { display: none; }
+    .bk-btns { order: 2; flex-direction: column; gap: 16px; margin-top: 30px; }
+    .bk-board { order: 1; margin-top: 24px; padding: 20px 12px 22px; box-shadow: 6px 6px 0 var(--powder); }
+    .bk-top { padding: 0 6px; }
+    .bk-k { font-size: 10px; line-height: 13px; }
+    .bk-rows { margin-top: 17px; }
+    .bk-row { height: 78px; padding: 0 12px; }
+    .bk-seal { width: 50px; height: 50px; }
+    .bk-seal :global(.bk-logo) { width: 40px; }
+    .bk-who { margin-left: 14px; }
+    .bk-n { font-size: 22px; }
+    .bk-s { margin-top: 9px; font-size: 10px; line-height: 13px; }
+    .bk-chip { display: none; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

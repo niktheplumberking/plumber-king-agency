@@ -1,0 +1,67 @@
+---
+// /about "Owners and crew" (Figma y 2133 h 700 / mobile y 2044 h 702). White. Three steel name plates, no photos (the
+// page says why). Every count is computed from reviews.ts (data.ts): Kody 8, Zak 6 (Zak / Zac / Zach), Chase 2, of 16.
+import Head from '../areas/Head.astro';
+import { KODY, ZAK, CHASE, CHASE_BY, REVIEW_TOTAL } from './data';
+import { SITE } from '../../data/site';
+const poss = (n: string) => `${n}’s`;
+const people = [
+  { role: 'Owner · licence holder', name: 'Kody Glass', d: `FL ${SITE.licence.number}. Named in ${KODY} of the ${REVIEW_TOTAL} reviews we read.`, m: `FL ${SITE.licence.number}. Named in ${KODY} of ${REVIEW_TOTAL} reviews.`, foot: 'Owner', key: true },
+  { role: 'Brother · on the crew', name: 'Zak', d: `Commercial and new builds. Named in ${ZAK} reviews.`, m: `Commercial and new builds. Named in ${ZAK}.`, foot: 'Brother · on the crew' },
+  { role: 'On the crew', name: 'Chase', d: `Named in ${CHASE_BY.map(poss).join(' and ')} reviews.`, m: `Named in ${CHASE === 2 ? 'two' : CHASE} reviews.`, foot: 'On the crew' },
+];
+---
+<section class="bcrew" data-m-section aria-labelledby="bcrew-h">
+  <div class="wrap">
+    <div class="bc-top">
+      <Head eyebrow="Who is who" l1="Two brothers." l2="One crew." id="bcrew-h" />
+      <p class="bc-note" data-t="3">We don’t put names on photos, because faces change job to job. Here is who you’ll talk to.</p>
+    </div>
+    <ul class="bc-grid" role="list" data-t="4" data-stagger>
+      {people.map((p) => (
+        <li class:list={['bc', p.key && 'is-key']}>
+          <p class="bc-role">{p.role}</p>
+          <h3 class="bc-name">{p.name}</h3>
+          <p class="bc-d"><span class="d">{p.d}</span><span class="m">{p.m}</span></p>
+          <p class="bc-foot" aria-hidden="true">{p.foot}</p>
+          <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .bcrew { position: relative; background: var(--white); padding: 110px 0 100px; }
+  .bc-top { display: grid; grid-template-columns: 600px 500px; justify-content: space-between; align-items: start; }
+  .bc-note { margin-top: 46px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+  .bc-grid { display: grid; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin-top: 52px; }
+  .bc { position: relative; display: flex; flex-direction: column; height: 300px; padding: 32px 28px 33px; background: var(--steel); border-radius: 4px; box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--ink); }
+  .is-key { box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--pdeep); }
+  .bc-role { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .bc-name { margin-top: 13px; font-family: var(--f-h); font-weight: 800; font-size: 40px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .bc-d { margin-top: 22px; max-width: 320px; font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .bc-foot { margin-top: auto; padding-top: 15px; border-top: 1px solid rgb(22 19 15 / .3); font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--ink); }
+  .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-of-type(1) { left: 6px; top: 6px; } .rv:nth-of-type(2) { right: 6px; top: 6px; }
+  .rv:nth-of-type(3) { left: 6px; bottom: 6px; } .rv:nth-of-type(4) { right: 6px; bottom: 6px; }
+  .m { display: none; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .bc-top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
+    .bc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+    .bc { height: auto; min-height: 300px; }
+  }
+  @media (max-width: 767px) {
+    .bcrew { padding: 56px 0 56px; }
+    .bc-top { display: block; }
+    .bc-note { display: none; }
+    .bc-grid { grid-template-columns: 1fr; row-gap: 16px; margin-top: 24px; }
+    .bc { height: 150px; padding: 20px 20px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); }
+    .is-key { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--pdeep); }
+    .bc-role { font-size: 9px; line-height: 12px; }
+    .bc-name { margin-top: 10px; font-size: 28px; }
+    .bc-d { margin-top: 19px; font-size: 14px; }
+    .bc-foot { display: none; }
+    .d { display: none; } .m { display: inline; }
+  }
+</style>

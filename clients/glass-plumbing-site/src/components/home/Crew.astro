@@ -1,0 +1,95 @@
+---
+// Home crew (Figma 712:448 "Crew" y 3120 h 974; mobile 715:560 y 3674 h 1265). Ink band. Kody's business card tilted over
+// the top edge, the crawlspace photo in a steel-capped housing, "A licensed plumber. And his crew.", Kody's own line from
+// Instagram, the three names with how many of the 16 reviews name them, David Peek's quote and the call button.
+// No names on the photo (we cannot tell Kody from Zak).
+import Img from '../ui/Img.astro';
+import Btn from '../kit/Btn.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Housing from '../kit/Housing.astro';
+import { quote } from './fig';
+import { SITE } from '../../data/site';
+const dp = quote('David Peek', 'These guys know their stuff - commercial or residential.');
+const crew = [
+  { n: 'Kody', d: `Owner · licence holder · FL ${SITE.licence.number}`, dm: `Owner · licence holder · ${SITE.licence.number}`, c: 8 },
+  { n: 'Zak', d: 'On the crew · commercial and new builds', c: 6 },
+  { n: 'Chase', d: 'On the crew', c: 2 },
+];
+---
+<section class="crew on-ink" aria-labelledby="crew-h" data-m-section>
+  <div class="wrap crew-in">
+    <div class="card" data-t="5" data-fx="pop"><Img name="business-card" alt="Kody Glass's business card: Glass Plumbing Services, commercial and residential, 24/7 emergency service, licensed and insured, 10% off for veterans, seniors, first responders and teachers (up to $100)" sizes="(min-width: 768px) 300px, 250px" widths={[300, 500, 600]} box={300 / 180} boxM={250 / 150} focus="50% 62%" /></div>
+    <div class="ph" data-t="4" data-fx="frame">
+      <Housing tone="photo" fluid w={330} h={440} wm={250} hm={320} cap={31} capm={22} shadow={12} shadowm={10} class="crew-can">
+        <Img name="crew-crawlspace" alt="A Glass plumber in a cap smiling from under a floor in a crawlspace" sizes="(min-width: 768px) 330px, 250px" widths={[250, 330, 500, 660]} box={330 / 411} boxM={250 / 300} focus="50% 45%" />
+      </Housing>
+    </div>
+    <div class="txt">
+      <Eyebrow text="Who shows up" />
+      <h2 id="crew-h" class="h2 crew-h" data-t="2">A licensed plumber. <span class="tone">And his crew.</span></h2>
+      <figure class="kq" data-t="3">
+        <blockquote><p>“Officially up and running as a Licensed and insured master plumber.”</p></blockquote>
+        <figcaption>Kody, on <a href={SITE.social.instagram} target="_blank" rel="noopener">{SITE.social.instagramHandle}<span class="sr-only"> (opens in a new tab)</span></a></figcaption>
+      </figure>
+      <ul class="names" role="list" data-t="4" data-stagger>
+        {crew.map((p) => (
+          <li><p class="nm">{p.n}</p><p class="cnt">Named in {p.c} of 16 reviews</p><p class="nd">{p.dm ? <><span class="d">{p.d}</span><span class="m">{p.dm}</span></> : p.d}</p></li>
+        ))}
+      </ul>
+      <figure class="dq" data-t="3">
+        <blockquote><p>“{dp.text}”</p></blockquote>
+        <figcaption>{dp.name} · Google</figcaption>
+      </figure>
+      <div class="cta" data-t="3"><Btn sub="TALK TO THE CREW" size="l" w={280} wm={350} /></div>
+    </div>
+  </div>
+</section>
+<style>
+  .crew { position: relative; background: var(--ink); color: var(--white); }
+  .m { display: none; }
+  .crew-in { position: relative; display: grid; grid-template-columns: 520px 680px; min-height: 974px; padding: 120px 0 100px; }
+  .card { position: absolute; left: 900px; top: -70px; z-index: 4; width: 300px; height: 180px; rotate: 4deg; border-radius: 6px; overflow: hidden; box-shadow: 12px 12px 0 var(--powder); }
+  .card :global(img) { width: 100%; height: 100%; }
+  .ph { padding: 140px 0 0 60px; }
+  .ph :global(.crew-can) { --c: var(--steel2); --o: var(--white); }
+  .txt { grid-column: 2; }
+  .crew-h { margin-top: 16px; --h2: 48px; color: var(--white); }
+  .crew-h .tone { display: block; color: var(--pdeep); }
+  .kq { margin-top: 24px; }
+  .kq p { font-style: italic; font-size: 18px; line-height: 1.5; color: var(--white); }
+  .kq figcaption, .dq figcaption { margin-top: 8px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--powder); }
+  .kq a:hover { text-decoration: underline; }
+  .names { margin: 56px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--ink3); }
+  .names li { display: grid; grid-template-columns: 1fr auto; height: 100px; padding-top: 19px; border-bottom: 1px solid var(--ink3); }
+  .nm { font-family: var(--f-h); font-weight: 800; font-size: 30px; line-height: 1.04; letter-spacing: -.02em; }
+  .cnt { padding: 10px 6px 0 0; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .nd { grid-column: 1 / -1; margin-top: -1px; font-size: 15px; line-height: 23px; color: rgb(255 255 255 / .8); }
+  .dq { margin-top: 35px; }
+  .dq p { font-family: var(--f-h); font-weight: 700; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; }
+  .dq figcaption { margin-top: 15px; }
+  .cta { margin-top: 29px; }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .crew-in { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); column-gap: 40px; }
+    .card { left: auto; right: 0; width: 240px; height: 144px; }
+    .ph { padding: 160px 0 0; }
+  }
+  @media (max-width: 767px) {
+    .d { display: none; } .m { display: inline; }
+    .crew-in { display: flex; flex-direction: column; min-height: 0; padding: 150px 0 80px; }
+    .card { left: 10px; top: -46px; width: 250px; height: 150px; box-shadow: 8px 8px 0 var(--powder); }
+    .txt { display: contents; }
+    .crew-h { margin-top: 10px; --h2m: 32px; }
+    .kq { margin-top: 47px; } .kq p { font-size: 16px; }
+    .kq figcaption, .dq figcaption { margin-top: 6px; font-size: 10px; line-height: 13px; }
+    .ph { order: 1; padding: 30px 0 0 50px; }
+    .dq { order: 2; margin-top: 36px; } .dq p { font-size: 21px; }
+    .dq figcaption { margin-top: 10px; }
+    .names { order: 3; margin-top: 28px; }
+    .names li { height: 88px; padding-top: 15px; }
+    .nm { font-size: 24px; }
+    .cnt { padding: 8px 8px 0 0; font-size: 9px; line-height: 12px; }
+    .nd { margin-top: 1px; font-size: 14px; line-height: 21px; }
+    .cta { order: 4; margin-top: 24px; }
+  }
+</style>

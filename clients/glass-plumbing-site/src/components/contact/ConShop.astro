@@ -1,0 +1,44 @@
+---
+// "Largo base" spec plate + Pinellas map (Figma "Shop and map" y 2306 h 720 / mobile y 2342 h 577). A meniscus seam dips
+// from the ink band above. Street address: site.ts says "Largo, FL" only until Kody confirms (Figma shows the street).
+import './cx.css';
+import Plate from '../kit/Plate.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const rows: [string, string][] = [
+  ['Name', SITE.name],
+  ['Base', `${SITE.city}, ${SITE.region}`],
+  ['Phone', SITE.phone],
+  ['Email', SITE.email],
+  ['Hours', '24/7 emergency line'],
+  ['Licence', `FL ${SITE.licence.number}`],
+];
+---
+<section class="cx-sec cx-white cs" data-m-section aria-label="Our base in Largo">
+  <Seam from="var(--ink)" to="var(--white)" />
+  <div class="wrap cs-g">
+    <div class="cs-plate" data-t="4" data-fx="left">
+      <Plate rows={rows} title="Largo base" w={480} class="cs-p" />
+    </div>
+    <figure class="cs-map" data-t="4" data-fx="frame">
+      <Img name="map-pinellas" alt="Map of Pinellas County, from Clearwater and Dunedin down to St. Petersburg, with Largo in the middle" sizes="(min-width: 1280px) 660px, (min-width: 768px) 80vw, 92vw" fit="cover" focus="50% 50%" />
+    </figure>
+  </div>
+</section>
+<style>
+  .cs { padding: 120px 0 100px; }
+  .cs-g { display: grid; grid-template-columns: 480px 660px; justify-content: space-between; align-items: start; }
+  .cs-plate :global(.cs-p) { box-shadow: 6px 6px 0 var(--pdeep); }
+  .cs-map { position: relative; height: 500px; border: 2px solid var(--ink); border-radius: 4px; overflow: hidden; box-shadow: 12px 12px 0 var(--powder); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .cs-g { grid-template-columns: 1fr; row-gap: 48px; }
+    .cs-map { height: auto; aspect-ratio: 660 / 500; }
+  }
+  @media (max-width: 767px) {
+    .cs { padding: 72px 0 56px; }
+    .cs-g { grid-template-columns: 1fr; row-gap: 28px; }
+    .cs-plate :global(.cs-p) { width: 100% !important; }
+    .cs-map { height: 260px; box-shadow: 8px 8px 0 var(--powder); }
+  }
+</style>

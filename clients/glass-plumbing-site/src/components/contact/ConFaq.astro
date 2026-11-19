@@ -1,0 +1,96 @@
+---
+// "Quick answers. Tap a card to flip it." (Figma "FAQ" y 3826 h 676 / mobile y 3714 h 822).
+// INTERACTION note (883:853): cards flip on tap or hover (3D rotateY 180, 0.6 s). One card is shown flipped (01).
+import './cx.css';
+import Eyebrow from '../kit/Eyebrow.astro';
+import { CONTACT_FAQ } from './faqs';
+---
+<section class="cx-sec cx-white cq" data-m-section aria-labelledby="cq-h">
+  <div class="wrap">
+    <div class="shead">
+      <Eyebrow text="Contact questions" tone="pdeep" />
+      <h2 id="cq-h" class="cx-h cq-h" data-t="2"><span class="ln">Quick answers.</span> <span class="ln tone">Tap a card to flip it.</span></h2>
+    </div>
+    <ul class="cq-g" role="list" data-t="4" data-stagger>
+      {CONTACT_FAQ.map((f, i) => {
+        const n = `Q0${i + 1}`;
+        return (
+          <li class="cq-c">
+            <button type="button" class:list={['cq-card', i === 0 && 'is-flipped']} aria-pressed={i === 0 ? 'true' : 'false'} data-flip>
+              <span class="cq-in">
+                <span class="cq-f cq-front" aria-hidden={i === 0 ? 'true' : 'false'}>
+                  <span class="cq-n">{n}</span>
+                  <span class="cq-q">{f.q}</span>
+                  <span class="cq-tap"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Tap to flip</span>
+                </span>
+                <span class="cq-f cq-back" aria-hidden={i === 0 ? 'false' : 'true'}>
+                  <span class="cq-n">{n} · answer</span>
+                  <span class="cq-a">{f.a}</span>
+                  <span class="cq-qs">{f.q}</span>
+                </span>
+              </span>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</section>
+<script>
+  // Tap / click / Enter flips; hover flips on fine pointers (and back on leave unless it was tapped). 3D rotateY via CSS.
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  document.querySelectorAll<HTMLButtonElement>('[data-flip]').forEach((b) => {
+    const front = b.querySelector('.cq-front')!, back = b.querySelector('.cq-back')!;
+    let pinned = b.classList.contains('is-flipped');
+    const set = (on: boolean) => {
+      b.classList.toggle('is-flipped', on); b.setAttribute('aria-pressed', String(on));
+      front.setAttribute('aria-hidden', String(on)); back.setAttribute('aria-hidden', String(!on));
+    };
+    b.addEventListener('click', () => {
+      const on = b.classList.contains('is-flipped');
+      if (on && !pinned) { pinned = true; return; } // hovered open: a click keeps it open
+      pinned = !on; set(!on);
+    });
+    b.addEventListener('pointerenter', (e) => { if (fine.matches && e.pointerType === 'mouse' && !pinned) set(true); });
+    b.addEventListener('pointerleave', (e) => { if (fine.matches && e.pointerType === 'mouse' && !pinned) set(false); });
+  });
+</script>
+<style>
+  .cq { padding: 110px 0 120px; }
+  .cq-h { --fs: 52px; --fs-m: 34px; margin-top: 16px; }
+  .cq-g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 48px 0 0; padding: 0; list-style: none; }
+  .cq-c { perspective: 1400px; }
+  .cq-card { display: block; width: 100%; height: 260px; padding: 0; text-align: left; background: none; border: 0; cursor: pointer; transition: rotate .6s var(--ease-io); }
+  .cq-card.is-flipped { rotate: 2deg; }
+  .cq-in { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s var(--ease-io); }
+  .cq-card.is-flipped .cq-in { transform: rotateY(180deg); }
+  .cq-f { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 24px 24px 22px; border: 1.5px solid var(--ink); border-radius: 10px; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .cq-front { background: var(--frost); color: var(--ink); }
+  .cq-back { background: var(--ink); color: var(--white); transform: rotateY(180deg); box-shadow: 8px 8px 0 var(--powder); }
+  .cq-n { font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .cq-back .cq-n { color: var(--powder); }
+  .cq-q { margin-top: 19px; font: 800 28px/1.1 var(--f-h); letter-spacing: -0.02em; max-width: 336px; }
+  .cq-tap { margin-top: auto; display: inline-flex; align-items: center; gap: 9px; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; }
+  .cq-a { margin-top: 19px; font: 700 24px/1.18 var(--f-h); letter-spacing: -0.02em; max-width: 336px; }
+  .cq-qs { margin-top: auto; font: 500 10px/13px var(--f-m); letter-spacing: .02em; color: rgba(255, 255, 255, .6); }
+  .cq-card:hover .cq-tap { text-decoration: underline; text-underline-offset: 3px; }
+  .cq-card:focus-visible { outline: none; }
+  .cq-card:focus-visible .cq-f { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .cq-g { gap: 16px; } .cq-q { font-size: 22px; } .cq-a { font-size: 20px; }
+  }
+  @media (max-width: 767px) {
+    .cq { padding: 64px 0 94px; }
+    .cq-h { margin-top: 12px; }
+    .cq-g { grid-template-columns: 1fr; gap: 14px; margin-top: 28px; }
+    .cq-card { height: 170px; }
+    .cq-card.is-flipped { rotate: 0deg; }
+    .cq-f { padding: 18px 18px 20px; }
+    .cq-back { box-shadow: 6px 6px 0 var(--powder); }
+    .cq-n { font-size: 10px; line-height: 13px; }
+    .cq-q { margin-top: 13px; font-size: 22px; }
+    .cq-a { margin-top: 13px; font-size: 20px; }
+    .cq-qs { display: none; }
+    .cq-tap { font-size: 10px; line-height: 13px; }
+  }
+</style>

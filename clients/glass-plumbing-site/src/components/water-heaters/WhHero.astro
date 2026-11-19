@@ -16,7 +16,7 @@ import { STARS } from '../services/glyphs';
     <div class="wh-l">
       <Crumbs items={[{ label: 'Services', href: '/services' }, { label: 'Water heaters', href: '/services/water-heaters' }]} />
       <Eyebrow class="wh-eb" text="Tank · tankless · repair · replace" />
-      <h1 class="h1 wh-h" data-t="2">Water Heaters in<br /><span class="tone">Largo, FL</span></h1>
+      <h1 class="h1 wh-h" data-t="2">Water <span class="wh-nw">Heaters in</span><br /><span class="tone">Largo, FL</span></h1>
       <p class="wh-lead" data-t="3"><span class="d">Repair or replace, tank or tankless, often the next day. Licensed plumber, FL CFC1432488.</span><span class="m">Repair or replace, tank or tankless, often the next day. Licensed plumber, CFC1432488.</span></p>
     </div>
     <div class="wh-art" data-t="3">
@@ -77,10 +77,10 @@ import { STARS } from '../services/glyphs';
   .wh-in { width: 100%; height: 48px; padding: 0 14px; border: 0; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1px var(--frost3); font-family: var(--f-b); font-size: 15px; line-height: 23px; color: var(--ink); appearance: none; }
   .wh-in::placeholder { color: var(--muted); opacity: 1; }
   .wh-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
-  .wh-in[aria-invalid='true'] { box-shadow: inset 0 0 0 2px var(--red); }
+  .wh-in[aria-invalid='true'] { box-shadow: inset 0 0 0 2px var(--pdeep); }
   .wh-row :global(.wh-btn) { width: 100%; font-size: 15px; }
-  .wh-msg { font-size: 13px; line-height: 1.4; color: var(--red); }
-  .wh-msg:not(:empty) { margin-top: 8px; }
+  .wh-msg { font-size: 13px; line-height: 1.4; color: var(--ink); }
+  .wh-msg:not(:empty) { margin-top: 8px; border-left: 3px solid var(--pdeep); padding-left: 10px; }
   .wh-btns { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
@@ -89,6 +89,8 @@ import { STARS } from '../services/glyphs';
     .wh-art :global(.wh-hs) { width: 300px; }
     .wh-row { grid-template-columns: 1fr 1fr; }
     .wh-row :global(.wh-btn) { grid-column: 1 / -1; }
+    .wh-h { font-size: clamp(40px, 9.6vw - 37px, 72px); } /* "Water Heaters in" stays on one line at 820-1279 */
+    .wh-nw { white-space: nowrap; } /* never a lone "in" */
   }
   @media (max-width: 767px) {
     .wh { padding: 24px 0 48px; }

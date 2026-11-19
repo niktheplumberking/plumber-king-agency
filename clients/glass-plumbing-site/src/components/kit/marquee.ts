@@ -1,4 +1,4 @@
-// Marquee: the ONE engine for bands of repeating words (kit/README.md; fix round 1 B8, United's initTickers). Markup:
+// Marquee: the ONE engine for bands of repeating words (kit/README.md; fix round 1 B8). Markup:
 //   <div data-marquee [data-speed="px/s"] [data-dir="-1|1"]>  the clipping band (display: flex)
 //     <div data-marquee-track> one copy </div><div data-marquee-track aria-hidden="true"> the same copy </div>
 //   </div>

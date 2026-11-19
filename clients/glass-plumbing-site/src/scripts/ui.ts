@@ -224,4 +224,18 @@ function formBits() {
   });
 }
 
-header(); mega(); mobileMenu(); initAccordions(); carousels(); crew(); callBar(); footerCols(); formBits();
+/* ---------- sideways scrollers: keyboard-scrollable (a tab stop) only while they actually scroll ---------- */
+function hscroll() {
+  const els = $$('[data-hscroll]');
+  if (!els.length) return;
+  const set = () => els.forEach((el) => {
+    const scrolls = el.scrollWidth > el.clientWidth + 1;
+    if (scrolls) el.setAttribute('tabindex', '0');
+    else if (el.hasAttribute('tabindex')) el.toggleAttribute('tabindex', false);
+  });
+  set();
+  window.addEventListener('resize', set, { passive: true });
+  window.addEventListener('load', set);
+}
+
+header(); mega(); mobileMenu(); initAccordions(); carousels(); crew(); callBar(); footerCols(); formBits(); hscroll();

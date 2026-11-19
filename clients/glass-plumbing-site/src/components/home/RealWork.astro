@@ -24,7 +24,7 @@ const jobs: Job[] = [
       </div>
       <p class="wk-lead" data-t="3">Every photo on this site is a real Glass Plumbing job<span class="d">, straight from our Instagram</span>. No stock photos.</p>
     </div>
-    <div class="rail" data-carousel>
+    <div class="rail" data-carousel data-hscroll role="region" aria-label="Recent job photos">
       <ul class="jobs" role="list" data-track data-t="4" data-stagger>
         {jobs.map((j) => (
           <li class="job" style={`--top:${j.top}px;--h:${j.h}px`} data-slide>

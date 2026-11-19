@@ -14,8 +14,8 @@ DirectorySlash Off
   RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
   RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
-  # Old-site URLs that changed (research/competitors/BASELINE.md): /home was a copy of the homepage, (Paul example; Mike had no old site).
-  # The old site's sitemap was /sitemap.xml; the new one is /sitemap-index.xml.
+  # Common old URLs: /home -> / (a homepage copy on many old builders; harmless if never used).
+  # The sitemap is /sitemap-index.xml; /sitemap.xml points there.
   RewriteRule ^home/?$ / [L,R=301,NC]
   RewriteRule ^sitemap\.xml$ /sitemap-index.xml [L,R=301]
 

@@ -1,5 +1,5 @@
 // Motion system (read MOTION.md first). One grammar for every page:
-//   loader -> hero handoff, page curtain, United-style per-element scroll reveals with Nick's 3 group delays (round 4),
+//   loader -> hero handoff, page curtain, per-element scroll reveals with Nick's 3 group delays (round 4),
 //   parallax depth, signature moments, Lenis smooth scroll.
 // Everything here is progressive: without JS, or with prefers-reduced-motion, the page is complete and static.
 // <html> classes are decided before first paint in Base.astro: .motion (animate) | .no-motion, .intro (loader this visit),
@@ -20,8 +20,8 @@ declare global { interface Window { __pbpMotion?: boolean; __pbpLenis?: Lenis } 
 const html = document.documentElement;
 const MOTION = html.classList.contains('motion');
 const FINE = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-/* Round 4 (MOTION.md section 2): United Plumbing's scroll UX on Paul's UI. Every element reveals on its OWN trigger as it
- * comes into view (United's per-element model), with United's effects, durations and easing. Nick's three priority groups
+/* Round 4 (MOTION.md section 2): the reference scroll UX. Every element reveals on its OWN trigger as it
+ * comes into view (per-element model), with the reference effects, durations and easing. Nick's three priority groups
  * are small delays on top of that trigger, so when several things enter together the message leads:
  *   G1 headline, lead/body, main photo, big cards        +0
  *   G2 eyebrow, pills, buttons, chips, captions, patches  +0.1 s
@@ -33,15 +33,15 @@ const EASE = 'power3.out';          // loader, curtain mark, header bits
 const SOFT = 'power2.out';          // header top-bar fade
 const G_DELAY = [0, 0.1, 0.15];     // G1 / G2 / G3 (fix round 2, QA D6: was 0.15 / 0.3)
 const HEAD_STEP = 0.1;              // items of one group inside a section head, DOM order
-// Trigger points (fix round 2, QA D6): United's 88 / 85 % left an eyebrow ~0.4 s invisible in view at a 750 px/s reading
+// Trigger points (fix round 2, QA D6): the reference 88 / 85 % left an eyebrow ~0.4 s invisible in view at a 750 px/s reading
 // pace (12 % of the viewport to scroll + its group delay). Now just inside the bottom edge, so an element starts as it shows.
 const START = { one: 'top 96%', group: 'top 95%', draw: 'top 97%', count: 'top 96%' };
-const KID_GAP = 0.09;               // children of a data-stagger group (United)
-const LINE_GAP = 0.1;               // headline lines on scroll (United data-split); hero 0.12
-const HERO_STEP = 0.08;             // hero items (United heroTimeline 0.12; fix round 2, QA D6: last item in by ~0.3 s)
+const KID_GAP = 0.09;               // children of a data-stagger group
+const LINE_GAP = 0.1;               // headline lines on scroll; hero 0.12
+const HERO_STEP = 0.08;             // hero items (reference 0.12; fix round 2, QA D6: last item in by ~0.3 s)
 const HERO_BEAT = 0.08;             // the beat between hero groups (was G_DELAY[1])
 type Fx = 'up' | 'left' | 'right' | 'scale' | 'fade' | 'clip' | 'pop' | 'lines' | 'toss' | 'spin' | 'write' | 'nudge';
-/** United's effect table. `d` = duration on scroll, `h` = duration in the hero. */
+/** The effect table. `d` = duration on scroll, `h` = duration in the hero. */
 const FX: Record<string, { d: number; h: number; ease: string }> = {
   up: { d: 1, h: 0.9, ease: 'power3.out' }, left: { d: 1, h: 0.9, ease: 'power3.out' }, right: { d: 1, h: 0.9, ease: 'power3.out' },
   scale: { d: 1, h: 0.9, ease: 'power3.out' }, fade: { d: 1, h: 0.9, ease: 'power3.out' }, nudge: { d: 0.9, h: 0.9, ease: 'power3.out' },
@@ -49,8 +49,8 @@ const FX: Record<string, { d: number; h: number; ease: string }> = {
   lines: { d: 0.9, h: 0.85, ease: 'back.out(1.4)' }, toss: { d: 1, h: 0.9, ease: 'power3.out' },
   spin: { d: 0.9, h: 0.9, ease: 'power3.out' }, write: { d: 0.9, h: 0.9, ease: 'power2.inOut' },
 };
-const KID_DUR = 0.9;                // United stagger children
-const DRAW_DUR = 1.2;               // underlines (United 1.6 for long drawings; ours are short)
+const KID_DUR = 0.9;                // stagger children
+const DRAW_DUR = 1.2;               // underlines (1.6 suits long drawings; ours are short)
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
 
@@ -74,7 +74,7 @@ function settle(els: Element[]) {
 }
 
 /** One effect on one target, as fromTo with explicit end values and immediateRender, so the start state is applied the
- *  moment it is built (United). Effects write transform (x/y/scale/rotation, never yPercent: that is the parallax's),
+ *  moment it is built. Effects write transform (x/y/scale/rotation, never yPercent: that is the parallax's),
  *  opacity and clip-path only; photos are never transformed (a frame is clipped as a whole, ring and shadow included). */
 function effect(t: HTMLElement, fx: Fx, hero: boolean, i = 0, dur?: number): gsap.core.Timeline {
   const tl = gsap.timeline();
@@ -140,7 +140,7 @@ function effect(t: HTMLElement, fx: Fx, hero: boolean, i = 0, dur?: number): gsa
     // the curtain it has already painted (LCP is taken), so it fades in on its turn.
     case 'nudge': go({ y: 24, autoAlpha: heroUncovered ? 1 : 0 }, { y: 0, autoAlpha: 1 }); break;
     case 'clip': {
-      // United's clip (opens top to bottom), with negative insets so the frame's white ring and shadow (drawn outside the
+      // The clip (opens top to bottom), with negative insets so the frame's white ring and shadow (drawn outside the
       // box) are inside the clip at the end; the clip is removed afterwards. A quick fade hides the -5 % sliver at the start.
       if (hero && heroUncovered) { tl.set(t, { autoAlpha: 1 }); break; } // plain load: the LCP photo stays put
       tl.fromTo(t, { clipPath: 'inset(-5% -5% 100% -5%)' }, { clipPath: 'inset(-5% -5% -5% -5%)', duration: d, ease, immediateRender: true }, 0);
@@ -161,7 +161,7 @@ function effect(t: HTMLElement, fx: Fx, hero: boolean, i = 0, dur?: number): gsa
   return tl;
 }
 
-/* ------------------------------------------------------------------ mapping: markup -> United effect + Nick's group */
+/* ------------------------------------------------------------------ mapping: markup -> effect + Nick's group */
 
 /** Seals, stamps, medals, number stickers: decorative accents (G3). */
 const ACCENT_SEL = '.seal, .stamp, .medal, .nst';
@@ -194,7 +194,7 @@ function groupOf(el: HTMLElement): 1 | 2 | 3 {
   return el.getBoundingClientRect().height >= 120 ? 1 : 2;
 }
 
-/** A side column (a card or panel in the left or right part of its section): United's left/right slide. */
+/** A side column (a card or panel in the left or right part of its section): the left/right slide. */
 function sideOf(el: HTMLElement, sec: HTMLElement): 'left' | 'right' | null {
   const r = el.getBoundingClientRect(), s = sec.getBoundingClientRect();
   if (!s.width || r.width > s.width * 0.6) return null;
@@ -202,7 +202,7 @@ function sideOf(el: HTMLElement, sec: HTMLElement): 'left' | 'right' | null {
   return c < 0.45 ? 'left' : c > 0.55 ? 'right' : null;
 }
 
-/** The United effect for an existing `data-t` / `data-fx` (MOTION.md section 2, mapping table). `kid` = inside a stagger. */
+/** The effect for an existing `data-t` / `data-fx` (MOTION.md section 2, mapping table). `kid` = inside a stagger. */
 function fxOf(el: HTMLElement, sec: HTMLElement, hero: boolean, kid = false): Fx {
   const t = el.dataset.t || '3';
   const f = el.dataset.fx;
@@ -253,7 +253,7 @@ const fontsIn = () => (document.fonts && document.fonts.status !== 'loaded'
   ? Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 700))]) : Promise.resolve());
 
 /** A built entrance on its own scroll trigger. An element whose box is already ABOVE the viewport when it is built is set
- *  to its end state; anything on screen or below plays when its trigger point is reached (United). */
+ *  to its end state; anything on screen or below plays when its trigger point is reached. */
 function onScroll(tl: gsap.core.Timeline, trigger: Element, start: string, above: boolean) {
   built.push(tl);
   if (above) { tl.progress(1); return; }
@@ -347,7 +347,7 @@ function buildSection(p: ReturnType<typeof planSection>) {
   });
 }
 
-/** Build every section below the hero in idle slices (United builds all tweens and splits up front, so no layout work
+/** Build every section below the hero in idle slices (all tweens and splits up front, so no layout work
  *  happens mid-scroll; slicing keeps each task short for TBT). `done` runs after the last one. */
 function buildRest(done: () => void) {
   const secs = $$('[data-m-section]').filter((s) => !s.hasAttribute('data-m-hero'));
@@ -364,7 +364,7 @@ function buildRest(done: () => void) {
   idle(step);
 }
 
-/** The hero: one ordered timeline played at the handoff (United heroTimeline). Items in group order (G1, G2, G3), DOM
+/** The hero: one ordered timeline played at the handoff. Items in group order (G1, G2, G3), DOM
  *  order inside a group, HERO_STEP apart; a split headline holds the next item until its lines have started; each new
  *  group adds a 0.08 s beat (HERO_BEAT). The stripe underline and the swoosh ribbons run with G3. */
 function buildHeroTl(): gsap.core.Timeline | null {
@@ -402,7 +402,7 @@ function swooshIn(svg: SVGElement, dur = 0.9): gsap.core.Timeline {
 
 /* ------------------------------------------------------------------ parallax (depth, round 3) */
 
-/* United-style depth (MOTION.md section 4b). Parallax writes ONLY the individual CSS `translate` property, on wrappers:
+/* Depth (MOTION.md section 4b). Parallax writes ONLY the individual CSS `translate` property, on wrappers:
  * entrances write `transform`/opacity/clip, the frame photo's reveal writes the img's own `scale`/`clip-path`, so no
  * property ever has two writers (round 2's glitch was three writers on one img transform). Photos never move inside their
  * frame: the whole media column (frame + its caption/stickers) drifts as one, snapped to whole device pixels so the photo
@@ -483,7 +483,7 @@ function parallax() {
         $$<HTMLElement>(`${ACCENT_SEL}, [data-fx="toss"], [data-fx="pop"]`, w).filter(shown).forEach((a) => add(a, hero ? 0 : 14, hero ? -28 : -14, 40, hero));
       });
       if (hero) return;
-      // 2. Section heads (eyebrow + headline + lead as one block): lead the page, +24 -> -24 px (United: h2 +40 -> -20).
+      // 2. Section heads (eyebrow + headline + lead as one block): lead the page, +24 -> -24 px.
       $$('.shead', sec).filter(shown).forEach((h) => { if (!h.closest('[data-carousel], [data-track]')) add(h, 10, -10, roomAround(h, sec)); }); // B5: headings +-10 px max
       // 3. Seals, stamps and stickers that sit on their own (not on a photo): lead, +-28 px.
       $$<HTMLElement>(ACCENT_SEL, sec).filter((a) => shown(a) && ![...wraps].some((w) => w.contains(a))).forEach((a) => add(a, 14, -14, roomAround(a, sec))); // B5: stamps lead +-14 px
@@ -520,7 +520,7 @@ function parallax() {
   ScrollTrigger.addEventListener('refresh', () => pxItems.forEach((it) => it.paint?.()));
 }
 
-/* United's in-frame drift (fix round 1, B5; United initAutoParallax): every cover photo that fills a clipping frame drifts
+/* In-frame drift (fix round 1, B5): every cover photo that fills a clipping frame drifts
  * inside it. One writer per property: the img gets CSS `scale: 1.14` (set once, so the photo overfills its frame by 7 % on
  * each side) and this scrub writes only its `translate` (0 -5 % -> 0 5 %, scrub 0.6). Entrances never touch the img (the
  * clip reveal is on the frame); media-column drift writes `translate` on the column wrapper, never on the img. Skipped:
@@ -563,7 +563,7 @@ function photoDrift() {
 /* ------------------------------------------------------------------ signature moments */
 
 function signatures() {
-  // Counters (G3): count up from zero once, as they enter (United: top 90 %, 1.8 s power2.out). One already above the
+  // Counters (G3): count up from zero once, as they enter (top 90 %, 1.8 s power2.out). One already above the
   // viewport when wired keeps its value.
   $$('[data-count]').forEach((el) => {
     const end = parseFloat(el.dataset.count || '0');
@@ -623,7 +623,7 @@ function pointer() {
 
 /* ------------------------------------------------------------------ loader, curtain, handoff */
 
-/** The header settles first (United heroTimeline): top bar fades in, the logo tab, nav items and header buttons drop in
+/** The header settles first: top bar fades in, the logo tab, nav items and header buttons drop in
  *  (y -24, 0.6 s, 0.05 s apart). Only built when a cover (loader or curtain) hides the page, so nothing flashes. */
 function introChrome(tl: gsap.core.Timeline) {
   // Fix round 2 (review 3): the bars themselves (utility bar, header, emergency strip) stay painted from the first frame, so
@@ -652,7 +652,7 @@ function boot() {
     if (host && (!host.classList.contains('m-built') || parseFloat(getComputedStyle(host).opacity) < 0.5)) keyboardRelease();
   });
 
-  // Lenis = United's settings exactly (lerp 0.1, wheelMultiplier 1, smooth wheel, native touch). Lenis lerp is frame-rate
+  // Lenis = the reference settings exactly (lerp 0.1, wheelMultiplier 1, smooth wheel, native touch). Lenis lerp is frame-rate
   // independent (damp), so it feels the same at 60 and 120 Hz. One clock: Lenis is driven by the GSAP ticker and
   // ScrollTrigger updates on every Lenis scroll, so no scrollerProxy is needed (Lenis scrolls the real window).
   const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 * (parseFloat(document.documentElement.style.zoom) || 1) }, autoRaf: false });
@@ -700,17 +700,17 @@ function boot() {
   };
   const play = () => {
     buildHero();
-    // In-site navigation plays the header and hero 1.5x (United).
+    // In-site navigation plays the header and hero 1.5x.
     if (ptIn) { chrome.timeScale(1.5); heroTl?.timeScale(1.5); }
     chrome.play();
     const hero = heroTl;
-    // The header leads; the hero starts 0.25 s in (United: hero items from 0.25 s).
+    // The header leads; the hero starts 0.25 s in.
     // Fix round 2: the handoff now fires while the cover is ~75 % off, so the hero starts with the header (0.05 s), and the
     // H1 begins as the cover clears (no dead time).
     if (hero) { if (chrome.duration() > 0.02) gsap.delayedCall(0.05, () => { hero.play(); }); else hero.play(); }
     window.dispatchEvent(new CustomEvent('pbp:handoff'));
-    // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front, as
-    // United does, so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
+    // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front,
+    // so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
     const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));
     buildRest(() => { signatures(); pointer(); initMarquees(); requestRefresh(0); idle(() => { parallax(); photoDrift(); requestRefresh(0); startIdle(); }, 600); });
   };

@@ -1,7 +1,7 @@
 ---
 // Gallery with chip filters (Figma "Gallery" y 862 h 1566 / mobile y 698 h 1187). The chips really filter (radio inputs,
-// so it works by keyboard and without JS through :has()). "Water mains & digging" and "Commercial" have no photo in this
-// set yet: they show a short note that points to Instagram (no invented captions).
+// so it works by keyboard and without JS through :has()). A chip shows only when its group has a photo ("Water mains &
+// digging" and "Commercial" have none yet, so they are hidden; they come back by themselves once a photo is added).
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
@@ -23,6 +23,7 @@ const PHOTOS = [
   { img: 'kitchen-faucet-2', c: 'kit', alt: 'A pull-down kitchen faucet with a separate drinking water tap' },
   { img: 'tub-job', c: 'show', alt: 'A tub spout and shower valve trim over a green bathtub' },
 ];
+const SHOWN = CATS.filter((c) => c.id === 'all' || PHOTOS.some((p) => p.c === c.id));
 ---
 <section class="cx-sec cx-white og" data-m-section aria-labelledby="og-h" data-gallery>
   <div class="wrap">
@@ -30,7 +31,7 @@ const PHOTOS = [
       <legend id="og-h"><Eyebrow text="Filter by job" tone="pdeep" as="span" /></legend>
       <div class="og-chips-clip">
         <div class="og-chips" data-t="3" data-stagger>
-          {CATS.map((c, i) => (
+          {SHOWN.map((c, i) => (
             <label class="og-chip"><input type="radio" name="og-cat" value={c.id} checked={i === 0} class="sr-only" /><span class="d">{c.l}</span><span class="m">{c.m}</span></label>
           ))}
         </div>

@@ -88,6 +88,7 @@ const attrs = type ? { type } : { href: link, ...(external ? { target: '_blank',
   .btn-ar { flex: none; margin-left: auto; margin-right: -2px; }
 
   .btn-call { background: var(--red); color: var(--white); }
+  .btn-call .btn-sub { opacity: 1; } /* white 80 % on red = 4.33:1; full white passes 4.5:1 (axe, 19 Nov QA) */
   .btn-ink { background: var(--ink); color: var(--white); }
   .btn-line { box-shadow: inset 0 0 0 1.5px currentColor; color: var(--ink); }
   .btn-light { background: var(--white); color: var(--ink); }

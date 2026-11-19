@@ -89,15 +89,15 @@ const towns = [...TOWNS].sort((a, b) => a.name.localeCompare(b.name));
   .af-in::placeholder { color: var(--muted); opacity: 1; }
   .af-in:hover { border-color: var(--muted2); }
   .af-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 1px; background: var(--white); }
-  .af-in[aria-invalid='true'] { border-color: var(--red); }
+  .af-in[aria-invalid='true'] { border-color: var(--pdeep); box-shadow: inset 0 0 0 1px var(--pdeep); }
   select.af-in { padding-right: 40px; cursor: pointer; }
   select.af-in:has(option[value='']:checked) { color: var(--muted); }
   .af-sel { position: relative; display: block; }
   .af-chev { position: absolute; right: 15px; top: 21px; color: var(--ink); pointer-events: none; }
   .ahero-form :global(.af-btn) { margin-top: 16px; }
-  .af-msg { font-size: 14px; line-height: 1.4; color: var(--red); }
+  .af-msg { font-size: 14px; line-height: 1.4; color: var(--ink); }
   .af-msg:empty { display: none; }
-  .af-msg:not(:empty) { margin-top: 10px; }
+  .af-msg:not(:empty) { margin-top: 10px; border-left: 3px solid var(--pdeep); padding-left: 10px; }
 
   /* lying housing: photo 500 x 360 r 28, white 2 px edge, powder offset 12/12; cap 532 x 28 at -16/-14; port 140 x 12 */
   .ahero-media { position: relative; width: 500px; margin: 48px 0 0; }

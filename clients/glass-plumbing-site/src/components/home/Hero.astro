@@ -84,6 +84,13 @@ const g = SITE.google;
     .hero-lead { width: auto; max-width: 560px; }
     .media { position: relative; left: auto; top: auto; width: min(724px, 100%); height: auto; aspect-ratio: 724 / 563; margin: 56px 0 0 auto; }
   }
+  /* 1024-1279: text and photo cluster side by side (stacked, each used only half the width). */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .hero-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 24px; align-items: center; }
+    .hero-h { font-size: clamp(52px, 5.6vw, 68px); }
+    .btns, .proof { flex-wrap: wrap; row-gap: 16px; }
+    .media { width: 112%; margin: 0 0 0 -12%; }
+  }
   @media (max-width: 767px) {
     .d { display: none; } .m { display: inline; }
     .hero { height: auto; padding-bottom: 110px; }

@@ -88,3 +88,11 @@ html.lenis, html.lenis body { height: auto; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* Phones: 44 px hit area for the small breadcrumb and footer Privacy/Terms links, without moving anything (19 Nov QA). */
+@media (max-width: 767px) {
+  nav[aria-label="Breadcrumb"] a, .ft-bar a[href="/privacy"], .ft-bar a[href="/terms"] { position: relative; }
+  nav[aria-label="Breadcrumb"] a::before, .ft-bar a[href="/privacy"]::before, .ft-bar a[href="/terms"]::before {
+    content: ''; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); translate: -50% -50%;
+  }
+}

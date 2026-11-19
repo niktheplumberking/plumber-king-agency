@@ -53,7 +53,8 @@ const plates = [
   .rh-v { position: absolute; left: 260px; top: 61px; margin: 0; }
   .rh-s { display: block; font: 800 52px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
   .rh-v :global(.rh-st) { margin: 10px 0 0 2px; }
-  .rh-a { grid-column: 1 / -1; justify-self: start; margin-top: 2px; }
+  .rh-a { grid-column: 1 / -1; justify-self: start; margin-top: 2px; color: #275468; } /* pdeep darkened: 5.2:1 on the steel card */
+  .rh-a:hover { color: var(--ink); }
   @media (min-width: 768px) and (max-width: 1279px) {
     .rh-g { grid-template-columns: 1fr; }
     .rh-plates { grid-template-columns: 1fr 1fr; gap: 24px; }

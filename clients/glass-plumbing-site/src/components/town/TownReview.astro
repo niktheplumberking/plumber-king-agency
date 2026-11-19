@@ -22,7 +22,7 @@ const photos = [
       <figcaption>Cody Weaver · Google · Seminole</figcaption>
     </figure>
     <div class="tr-rail" data-carousel>
-      <ul class="tr-photos" role="list" data-track data-t="4" data-stagger>
+      <ul class="tr-photos" role="list" data-track data-hscroll aria-label="Job photos" data-t="4" data-stagger>
         {photos.map((p) => (
           <li class:list={['tr-ph', p.wide && 'is-wide']} data-slide>
             <figure>

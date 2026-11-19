@@ -22,7 +22,7 @@ Q.forEach(({ who, q }) => { const r = REVIEWS.find((x) => x.name === who); if (!
   </ul>
 </section>
 <style>
-  .oq { padding: 66px 0 0; height: 300px; }
+  .oq { padding: 66px 0 0; height: 300px; background: var(--ink2); } /* Figma bg #24211c; global .on-ink would paint ink */
   .oq-l { display: grid; grid-template-columns: repeat(3, 1fr); gap: 38px; margin: 0 auto; padding: 0; list-style: none; }
   .oq-i { display: flex; flex-direction: column; height: 172px; }
   .oq-i blockquote { margin: 16px 0 0; display: flex; flex-direction: column; flex: 1; }

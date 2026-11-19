@@ -75,7 +75,7 @@ const profiles = [
           </li>
         ))}
       </ul>
-      <div class="slips-wrap" data-carousel>
+      <div class="slips-wrap" data-carousel data-hscroll role="region" aria-label="Google review slips">
         <ul class="slips" role="list" data-track data-t="4" data-stagger>
           {slips.map((s) => (
             <li class="slip" data-slide>
@@ -107,7 +107,7 @@ const profiles = [
   .cb-row { display: flex; gap: 12px; margin-top: 30px; }
   .cb-in { width: 300px; height: 48px; padding: 0 16px; border: 0; border-radius: 4px; background: var(--white); color: var(--ink); font-family: var(--f-b); font-size: 15px; line-height: 23px; }
   .cb-in::placeholder { color: var(--muted); opacity: 1; }
-  .cb-in[aria-invalid='true'] { outline: 2px solid var(--red); outline-offset: 2px; }
+  .cb-in[aria-invalid='true'] { outline: 2px solid var(--powder); outline-offset: 2px; }
   .cb-sel { position: relative; display: block; }
   .cb-sel select { width: 200px; appearance: none; -webkit-appearance: none; padding-right: 40px; }
   .cb-sel select:has(option[value='']:checked) { color: var(--muted); }
@@ -163,6 +163,13 @@ const profiles = [
     .rv-lead { width: auto; }
     .slips-wrap { overflow-x: auto; scroll-snap-type: x mandatory; }
     .slip { scroll-snap-align: start; }
+    .slips { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(216px, 1fr); }
+    .slip { width: auto; }
+  }
+  /* 1024-1279: the two gauges sit beside the heading instead of alone on the left half. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .rv-grid { grid-template-columns: minmax(0, 1fr) auto; column-gap: 40px; grid-template-areas: 'head cans' 'quote quote' 'slips slips' 'more more'; }
+    .cans { margin-top: 0; }
   }
   @media (max-width: 767px) {
     .rv-q figcaption .d { display: none; }

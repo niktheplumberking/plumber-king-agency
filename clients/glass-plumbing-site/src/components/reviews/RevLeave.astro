@@ -1,6 +1,7 @@
 ---
 // "Leave a review. It helps your neighbours." (Figma "Leave a review" y 4230 h 340 / mobile y 7533 h 408). Ink band, a
-// meniscus seam rises into the white band above. Button labels per BUILD-BRIEF 11 (no sums, one button per profile).
+// meniscus seam rises into the white band above. Button labels per BUILD-BRIEF 11 (no sums, one button per profile);
+// the longer label (3-digit count) gets the 260 px button so the label clears the arrow (still 240 + 20 + 260 = 520).
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
@@ -17,8 +18,8 @@ const g = SITE.google;
     </div>
     <div class="rlv-b">
       <div class="rlv-btns" data-t="3">
-        <Btn look="light" label={`Google profile · ${g.a.count} reviews`} href={g.a.url} external w={240} class="rlv-btn" />
-        <Btn look="light" label={`Google profile · ${g.b.count} reviews`} href={g.b.url} external w={260} class="rlv-btn" />
+        <Btn look="light" label={`Google profile · ${g.a.count} reviews`} href={g.a.url} external arrow w={g.a.count > g.b.count ? 260 : 240} class="rlv-btn" />
+        <Btn look="light" label={`Google profile · ${g.b.count} reviews`} href={g.b.url} external arrow w={g.a.count > g.b.count ? 240 : 260} class="rlv-btn" />
       </div>
       <p class="rlv-n" data-t="3">Both are real Glass Plumbing profiles on Google until they are merged.</p>
     </div>
@@ -30,6 +31,7 @@ const g = SITE.google;
   .rlv-h { --fs: 52px; --fs-m: 28px; margin-top: 16px; }
   .rlv-btns { display: flex; gap: 20px; }
   .rlv-btns :global(.rlv-btn) { height: 64px; }
+  @media (min-width: 1280px) { .rlv-b { padding-top: 30px; } } /* Figma: buttons at y 140, the heading's top (eyebrow at 110) */
   .rlv-n { margin: 20px 0 0; font: 400 14px/1.5 var(--f-b); color: rgba(255, 255, 255, .8); }
   @media (min-width: 768px) and (max-width: 1279px) {
     .rlv-g { grid-template-columns: 1fr; row-gap: 32px; }

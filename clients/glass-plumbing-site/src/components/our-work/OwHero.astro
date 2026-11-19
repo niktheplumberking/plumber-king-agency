@@ -8,7 +8,7 @@ import Img from '../ui/Img.astro';
 const shots = [
   { img: 'manifold-install', alt: 'A manifold install with copper lines and valves inside an open wall panel', k: 'Recent install', v: 'On a real job', m: 'Recent install' },
   { img: 'van-night', alt: 'The Glass Plumbing Services van at night, the mascot and phone number on its side', k: 'The van', v: 'Glass Plumbing Services', m: 'The van', sh: true },
-  { img: 'water-heater-expansion-tank', alt: 'A water heater with an expansion tank beside it', k: 'Water heater', v: 'With expansion tank', m: 'Water heater + exp. tank' },
+  { img: 'water-heater-expansion-tank', alt: 'A new water heater being installed in a closet, its expansion tank on the floor beside it, with the words “Floor Drain Built In” on the photo', k: 'Water heater', v: 'With expansion tank', m: 'Water heater + exp. tank' },
 ];
 ---
 <section class="cx-sec cx-ink oh on-ink" data-m-section data-m-hero aria-labelledby="oh-h">
@@ -18,7 +18,7 @@ const shots = [
     <h1 id="oh-h" class="cx-h oh-h" data-t="2">Recent Work <span class="tone">Across Pinellas</span></h1>
     <p class="oh-lead lead" data-t="3" data-fx="nudge">Real jobs, real photos, straight from the van. 34 posts and counting.</p>
     <p class="oh-swipe" aria-hidden="true">Swipe →</p>
-    <ul class="oh-row cx-scroll" role="list" data-track>
+    <ul class="oh-row cx-scroll" role="list" data-track data-hscroll aria-label="Recent job photos">
       {shots.map((s, i) => (
         <li class:list={['oh-c', s.sh && 'oh-sh']} data-t="4" data-fx={i === 0 ? 'frame' : 'up'}>
           <figure>

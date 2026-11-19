@@ -125,7 +125,7 @@ animated by someone else (put it on a wrapper or inner child).
 
 | `data-idle` | Gesture (duration) | Default priority | For |
 |---|---|---|---|
-| `shake` | rotate +-4 deg x3 with a small x jiggle (0.6 s) | 1 | the black "5.0 · 20 reviews on Yelp" badge |
+| `shake` | rotate +-4 deg x3 with a small x jiggle (0.6 s) | 1 | a small rating badge |
 | `thump` | scale 1 -> 1.1 -> 0.97 -> 1 (0.5 s) | 2 | stamps |
 | `nut` | rotate +60 deg, ease-in-out (0.7 s); a hexagon ends looking identical | 3 | hex nuts |
 | `valve` | rotate +90 deg, ease-in-out (0.8 s) | 4 | the red valve wheel |

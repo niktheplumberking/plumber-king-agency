@@ -1,0 +1,10 @@
+---
+// Part 3 pages 06-10: mobile frames are drawn at Figma's 390 px and zoomed to the viewport (360-1023 px), see p3.css.
+---
+<script is:inline>
+  (function () {
+    var r = document.documentElement;
+    function f() { var w = innerWidth; r.style.setProperty('--mz', w < 1024 ? String(Math.min(1.6, w / 390)) : '1'); }
+    f(); addEventListener('resize', f, { passive: true });
+  })();
+</script>

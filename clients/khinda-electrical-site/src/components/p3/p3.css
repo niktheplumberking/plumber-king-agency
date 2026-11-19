@@ -23,3 +23,13 @@
   .p3s .bw { width: 100%; }
   .p3s .tag-cap { font-size: 11px; line-height: 16px; letter-spacing: .04em; padding: 5px 10px; }
 }
+/* Pages 06-10 ("p3m" sections): desktop = the .ab system (Figma 1440 px); mobile = the Figma 390 frame drawn 1:1 in a
+   390-wide box (.mz) that is zoomed to the viewport width (--mz, set by components/p3/Mz.astro; 1 without JS, clipped). */
+.p3m .am { position: absolute; }
+@media (min-width: 1024px) { .p3m > .mz { display: contents; } .p3m .am.dn-m-only { display: none; } }
+@media (max-width: 1023px) {
+  .sec.p3m { height: auto; padding: 0; overflow: hidden; }
+  .p3m > .mz { position: relative; width: 390px; height: var(--hm); margin: 0 auto; zoom: var(--mz, 1); }
+  .p3m .mz :is(.ab, .am) { position: absolute; left: var(--mx, 20px); top: var(--my, 0); width: var(--mw, auto); }
+  .p3m .mz .flowm { position: static; }
+}

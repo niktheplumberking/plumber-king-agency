@@ -1,0 +1,379 @@
+---
+// About (Figma 06 About, desktop 799:438 1440 / mobile 799:439 390; figma/v5/06-about-*.png). Every drawn object is the
+// Figma layer (scripts/cuts-p3.py: copy, buttons and photos taken out); copy, photos, stickers, phones and the directory
+// card are HTML on top at the Figma coordinates (desktop --x/--y, mobile --mx/--my in the 390 frame, see p3.css).
+// STATES: 6.2 the cable grows with the scroll (drawn), 6.6 the rule stickers land one by one, 6.9 the checklist boxes stay
+// empty until Khinda gives each number (README "Khinda to confirm").
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import Obj from '../p3/Obj.astro';
+import Crumbs from '../p3/Crumbs.astro';
+import Tape from '../kit/Tape.astro';
+import s1m from '../../art/p3/06/s1-m.svg?raw';
+import s2d from '../../art/p3/06/s2-d.svg?raw';
+import s2m from '../../art/p3/06/s2-m.svg?raw';
+import s3d from '../../art/p3/06/s3-d.svg?raw';
+import s3m from '../../art/p3/06/s3-m.svg?raw';
+import s4d from '../../art/p3/06/s4-d.svg?raw';
+import s4m from '../../art/p3/06/s4-m.svg?raw';
+import s6d from '../../art/p3/06/s6-d.svg?raw';
+import s6m from '../../art/p3/06/s6-m.svg?raw';
+import s7d from '../../art/p3/06/s7-d.svg?raw';
+import s7m from '../../art/p3/06/s7-m.svg?raw';
+import s9d from '../../art/p3/06/s9-d.svg?raw';
+import s9m from '../../art/p3/06/s9-m.svg?raw';
+import s10d from '../../art/p3/06/s10-d.svg?raw';
+import s10m from '../../art/p3/06/s10-m.svg?raw';
+import mark from '../../assets/brand/logo-mark-K-bolt.png';
+import { SITE } from '../../data/site';
+const P = (x: number, y: number, mx?: number, my?: number, w?: number, mw?: number) =>
+  `--x:${x}px;--y:${y}px` + (mx != null ? `;--mx:${mx}px;--my:${my}px` : '') + (w ? `;--w:${w}px` : '') + (mw ? `;--mw:${mw}px` : '');
+const CARD = ['Kitchen counter', 'Kitchen counter', 'Fridge', 'Dishwasher', 'Range', 'Range', 'Basement suite', 'Laundry', 'Bathroom GFCI', 'Furnace', 'Pot lights · living', 'EV charger', 'Bedrooms', 'Garage', 'Outdoor plugs', 'Smoke alarms', '', '', '', ''];
+const STORY = [
+  ['CA + IN', 'Canada + India', 'Electrical work in both countries, in his own words on Facebook.', 190, 1026],
+  ['2018', 'January 2018', 'Opens his YouTube channel on 25 Jan 2018 and starts filming the work.', 470, 896],
+  ['66 posts', '@khinda__electrical', 'Rough-ins, finished panels, chandeliers and shop fit-outs, posted on Instagram.', 750, 726],
+  ['Now', 'Today, Surrey, BC', 'All domestic, commercial work and renovations. Your panel is the next marker.', 990, 556],
+] as const;
+const RULES = [
+  ['Every circuit labelled', 'Each breaker gets its name in marker, like the panels on his Instagram.'],
+  ['A permit on regulated work', 'Surrey issues its own electrical permits. Regulated work gets one.'],
+  ['The price before the work', 'You get the price before any work. Then you decide.'],
+  ['A clean site at the end', 'Offcuts, dust and boxes leave with him.'],
+];
+const REELS = [
+  ['barbershop-commercial-lighting-surrey', 'Barbershop lights', 'Commercial fit-out', 'Barbershop lighting fit-out by Khinda Electrical'],
+  ['starry-sky-ceiling-lights-surrey', 'Starry-sky ceiling', 'Feature ceiling', 'Starry sky ceiling lights installed by Khinda Electrical'],
+  ['house-exterior-soffit-lights-surrey', 'Soffit lights', 'House exterior', 'House exterior with soffit lights, wired by Khinda Electrical'],
+];
+const CHECK = [['TSBC licence', 'Electrical contractor licence from Technical Safety BC.'], ['Field Safety Representative', 'The certified person who answers for the electrical work on a permit.'], ['Insurance', 'Liability cover in case something goes wrong on the job.']];
+---
+<!-- 6.1 Hero -->
+<section class="a1 sec on-dark p3s p3m" style="--h:800px;--hm:1080px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="mz">
+    <div class="a1-ph ab" style={P(760, 0, 0, 680)} data-fx="frame" data-t="4"><Img name="residential-electrical-panel-rough-in-surrey" alt="Residential electrical panel rough-in by Khinda Electrical, wires labelled and dressed" sizes="(min-width: 1024px) 680px, 100vw" box={680 / 800} boxM={390 / 400} focus="50% 45%" priority /></div>
+    <Obj svg={s1m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Crumbs trail={[{ name: 'Home', path: '/' }, { name: 'About', path: '/about/' }]} class="ab" style={P(120, 62, 20, 28)} data-t="1" />
+    <Eyebrow text="About · Surrey, BC" class="ab a1-eb" style={P(120, 98, 20, 56)} data-t="1" />
+    <h1 class="h1 a1-h ab" id="h1" style={P(120, 132, 20, 82)} data-t="2"><span class="l1">About Khinda</span><span class="l2">Electrical</span></h1>
+    <p class="a1-mk ab" style={P(120, 286, 20, 180)} data-t="5">Labels his own work.<i aria-hidden="true"></i></p>
+    <p class="a1-p ab" style={P(120, 356, 20, 220, 470, 350)} data-t="3">An electrician based in Surrey, BC. All domestic, commercial work and renovations, and he films the jobs as he goes: rough-ins, finished panels, chandeliers and shop fit-outs.</p>
+    <div class="a1-b ab" style={P(120, 500, 20, 360)} data-t="3"><Btn v="call" /><Btn v="text" tone="dark" main="See his 66 posts" sub={SITE.igHandle} href={SITE.social.instagram} /></div>
+    <dl class="a1-rows ab" style={P(120, 604, 20, 528, 460, 350)} data-t="4">
+      <div><dt class="tech">Base</dt><dd>Surrey, BC</dd></div><div><dt class="tech">On YouTube</dt><dd>since 25 Jan 2018</dd></div><div><dt class="tech">On Instagram</dt><dd>66 posts · 1,521 followers</dd></div>
+    </dl>
+    <div class="a1-card ab" style={P(630, 150, 24, 900)} data-t="4" aria-label="Circuit directory card, filled in by hand" role="img">
+      <div class="a1-ch"><span class="tech">Circuit directory</span><span class="tech">Panel A <span class="dn-m">·  Fill in by hand</span></span></div>
+      <ol class="a1-cl">{CARD.map((c, i) => <li class:list={[i >= 12 && 'dn-m']}><span class="tech">{String(i + 1).padStart(2, '0')}</span>{c}</li>)}</ol>
+      <p class="tech a1-ib">Installed by</p><p class="a1-sig">Khinda Electrical</p><p class="tech a1-sb dn-m">Surrey, BC</p><p class="a1-cn">{SITE.phone}</p>
+    </div>
+    <Tape text="Panel A, rough-in." rot={3} size={22} class="a1-tape ab" style={P(700, 118, 172, 874)} />
+  </div>
+</section>
+
+<!-- 6.2 Story -->
+<section class="a2 sec p3s p3m" style="--h:740px;--hm:1200px" data-m-section aria-labelledby="a2-h">
+  <div class="mz">
+    <Obj svg={s2d} class="ab dn-m" style="--x:0px;--y:0px" data-draw="rev" data-start="top 80%" data-end="bottom 70%" />
+    <Obj svg={s2m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="His story · one cable run" class="ab" style={P(120, 118, 20, 214)} data-t="1" />
+    <h2 class="h2 ab a2-h" id="a2-h" style={P(120, 152, 20, 240)} data-t="2"><span class="l1">From his first video</span><span class="l2">to your panel.</span></h2>
+    <p class="lede a2-p ab" style={P(780, 160, 20, 318, 430, 300)} data-t="3">Only what he has put online himself, in order. Each marker on the cable is something you can look up.</p>
+    <a class="lk ab" style={P(780, 260, 20, 424)} href={SITE.tel}>Ask him<span class="dn-m"> about your job</span>: {SITE.phone} →</a>
+    {STORY.map(([, t, p, x, my]) => <div class="a2-m ab" style={P(x, 508, 78, my, 220, 292)} data-t="5"><h3>{t}</h3><p>{p}</p></div>)}
+    <p class="tech a2-src ab" style={P(120, 676, 78, 1150, 640, 292)}>Dates from his own YouTube and Instagram profiles, checked 17 Nov 2026.</p>
+  </div>
+</section>
+
+<!-- 6.3 Numbers -->
+<section class="a3 sec on-dark p3s p3m" style="--h:760px;--hm:1060px" data-m-section aria-labelledby="a3-h">
+  <div class="mz">
+    <Obj svg={s3d} class="ab dn-m a3-art" style="--x:0px;--y:0px" />
+    <Obj svg={s3m} class="am dn-d a3-art" style="--mx:0px;--my:0px" />
+    <Eyebrow text="The numbers · read 17 Nov 2026" class="ab a3-eb" style={P(120, 128, 20, 58)} data-t="1" />
+    <h2 class="h2 ab a3-h" id="a3-h" style={P(120, 162, 20, 84)} data-t="2"><span class="l1">Read off his meter.</span><span class="l2">Nothing rounded up.</span></h2>
+    <p class="a3-p ab" style={P(120, 282, 20, 162, 480, 350)} data-t="3">Counted on his own Instagram and YouTube profiles on 17 Nov 2026. When he posts a job, the reading goes up.</p>
+    <dl class="a3-rows ab" style={P(120, 390, 20, 280, 460, 350)} data-t="4">
+      <div><dt>1,521</dt><dd>followers on Instagram</dd></div><div><dt>66</dt><dd>posts on Instagram</dd></div><div><dt>Jan 2018</dt><dd>on YouTube since</dd></div>
+    </dl>
+    <div class="a3-b ab" style={P(120, 612, 20, 472)} data-t="3"><Btn v="text" tone="dark" main="See the 66 posts" sub={SITE.igHandle} href={SITE.social.instagram} /><a class="a3-lk" href={SITE.tel}>Or call {SITE.phone} →</a></div>
+  </div>
+</section>
+
+<!-- 6.4 Owner -->
+<section class="a4 sec p3s p3m" style="--h:820px;--hm:1060px" data-m-section aria-labelledby="a4-h">
+  <div class="mz">
+    <Obj svg={s4d} class="ab dn-m" style="--x:0px;--y:0px" data-t="4" />
+    <Obj svg={s4m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <figure class="a4-pr a4-pr1 ab" style={P(164, 152, 44, 634)} data-t="5"><div><Img name="crystal-chandelier-installed-surrey" alt="Crystal chandelier installed by Khinda Electrical" sizes="(min-width: 1024px) 204px, 112px" box={204 / 250} boxM={112 / 136} /></div><figcaption>Crystal chandelier</figcaption></figure>
+    <figure class="a4-pr a4-pr2 ab" style={P(510, 386, 233, 762)} data-t="5"><div><Img name="spiral-wall-sconce-surrey" alt="Spiral wall sconce installed by Khinda Electrical" sizes="(min-width: 1024px) 194px, 106px" box={194 / 240} boxM={106 / 130} /></div><figcaption>Spiral sconce</figcaption></figure>
+    <Tape text="His wall, his jobs." rot={-2} size={22} class="a4-tape ab" style={P(150, 690, 40, 950)} />
+    <Eyebrow text="The owner · in his own words" class="ab" style={P(860, 130, 20, 80)} data-t="1" />
+    <h2 class="h2 ab a4-h" id="a4-h" style={P(860, 164, 20, 106)} data-t="2"><span class="l1">The electrician</span><span class="l2">behind the labels.</span></h2>
+    <p class="a4-p ab" style={P(860, 284, 20, 184, 460, 350)} data-t="3">Khinda Electrical works out of Surrey, BC. He wires homes, basement suites and shops, and films the work as it goes in: the rough-in, the finished panel, the fixture going up.</p>
+    <blockquote class="a4-q ab" style={P(860, 430, 20, 330, 460, 350)} data-t="4"><p>“All domestic / commercial work / Renovations.”</p><cite class="tech">His own line · <span class="dn-m">@khinda__electrical</span><span class="dn-d">Instagram</span></cite></blockquote>
+    <div class="a4-b ab" style={P(860, 620, 20, 470)} data-t="3"><Btn v="call" main="Talk to him directly" sub={`${SITE.phone} · tap to call`} /><a class="lk" href={SITE.sms}>Text him a photo →</a></div>
+  </div>
+</section>
+
+<!-- 6.6 Four rules -->
+<section class="a6 sec p3s p3m" style="--h:820px;--hm:1060px" data-m-section aria-labelledby="a6-h">
+  <div class="mz">
+    <Obj svg={s6d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <Obj svg={s6m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="How he works · 4 rules" class="ab" style={P(120, 150, 20, 70)} data-t="1" />
+    <h2 class="h2 ab a6-h" id="a6-h" style={P(120, 184, 20, 96)} data-t="2"><span class="l1">Four rules,</span><span class="l2">stuck inside the door.</span></h2>
+    <p class="a6-p ab" style={P(120, 304, 20, 174, 440, 350)} data-t="3">Panel makers print their rules inside the door. These are his, for every job he takes on.</p>
+    <div class="a6-b ab" style={P(120, 420, 20, 262)} data-t="3"><Btn v="call" /><Btn v="text" /></div>
+    <ol class="a6-st ab" style={P(696, 16, 46, 492)} role="list" data-stagger>
+      {RULES.map(([t, p], i) => <li class="a6-r" style={`--i:${i};--rot:${[0.8, -0.6, 0.4, 0][i]}deg`} data-t="4"><p class="a6-band"><span class="tech">Rule 0{i + 1}</span><span class="tech dn-m">Read before work starts</span></p><h3>{t}</h3><p class="a6-tx">{p}</p><p class="tech a6-ft">Khinda Electrical · Surrey<span class="dn-m">, BC</span></p></li>)}
+    </ol>
+  </div>
+</section>
+
+<!-- 6.7 Proof -->
+<section class="a7 sec on-dark p3s p3m" style="--h:820px;--hm:800px" data-m-section aria-labelledby="a7-h">
+  <div class="mz">
+    <Obj svg={s7d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <Obj svg={s7m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Proof · his own reels" class="ab a7-eb" style={P(593, 96, 68, 64)} data-t="1" />
+    <h2 class="h2 ab a7-h" id="a7-h" style={P(320, 130, 20, 90, 800, 350)} data-t="2"><span class="l1">Press play.</span><span class="l2">The work is on film.</span></h2>
+    <p class="a7-p ab" style={P(410, 250, 20, 168, 620, 350)} data-t="3">Three jobs from @khinda__electrical. Tap one to watch it on his Instagram, with the rest of his reels.</p>
+    <div class="a7-b ab" style={P(502, 316, 20, 262)} data-t="3"><Btn v="text" tone="dark" main="Watch on Instagram" sub={`${SITE.igHandle} · ${SITE.igPosts} posts`} href={SITE.social.instagram} class="a7-ig" /><a class="a7-lk" href={SITE.tel}>Or call {SITE.phone} →</a></div>
+    <ul class="a7-ph ab" style={P(0, 0, 0, 392)} role="list" data-stagger>
+      {REELS.map(([n, t, k, alt], i) => (
+        <li class="a7-f" style={`--i:${i}`} data-t="4">
+          <a href={SITE.social.instagram} rel="noopener" class="a7-a">
+            <span class="a7-sc"><Img name={n} alt={alt} sizes="(min-width: 1024px) 180px, 146px" box={178 / 346} boxM={146 / 284} /></span>
+            <span class="a7-rl" aria-hidden="true">Reels</span><span class="a7-play" aria-hidden="true"></span>
+            <span class="a7-cap"><span>@khinda__electrical</span><span>{t}</span><span class="tech">{k}</span><i aria-hidden="true"></i></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="tech a7-sw am dn-d" style="--mx:20px;--my:760px" aria-hidden="true">Swipe for more  →</p>
+  </div>
+</section>
+
+<!-- 6.9 Licences -->
+<section class="a9 sec p3s p3m" style="--h:760px;--hm:1100px" data-m-section aria-labelledby="a9-h">
+  <div class="mz">
+    <Obj svg={s9d} class="ab dn-m" style="--x:0px;--y:0px" data-t="4" />
+    <Obj svg={s9m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <img class="a9-logo ab" src={mark.src} width="78" height="64" alt="" style={P(895, 357, 121, 372)} loading="lazy" />
+    <Eyebrow text="Checklist · ask any electrician" class="ab dn-m" style={P(120, 134)} data-t="1" />
+    <Eyebrow text="Checklist · ask first" class="am dn-d" style="--mx:20px;--my:62px" />
+    <h2 class="h2 ab a9-h" id="a9-h" style={P(120, 168, 20, 88)} data-t="2"><span class="l1">Check the paperwork</span><span class="l2">before he starts.</span></h2>
+    <p class="a9-p ab" style={P(120, 288, 20, 166, 500, 350)} data-t="3">Electrical work in BC is licensed through Technical Safety BC. Ask for these three before any job, from any electrician.</p>
+    <ul class="a9-ck ab" style={P(120, 386, 20, 540, 520, 350)} role="list" data-t="4">{CHECK.map(([t, p]) => <li><span class="a9-box" aria-hidden="true"></span><b>{t}</b><span>{p}</span></li>)}</ul>
+    <div class="a9-b ab" style={P(120, 668, 20, 852)} data-t="3"><Btn v="call" main="Ask him for the numbers" sub={`Call ${SITE.phone}`} /><a class="lk" href="https://www.technicalsafetybc.ca/" rel="noopener">Look up TSBC licences →</a></div>
+  </div>
+</section>
+
+<!-- 6.10 CTA -->
+<section class="a10 sec p3s p3m" style="--h:580px;--hm:570px" data-m-section aria-labelledby="a10-h">
+  <div class="mz">
+    <Obj svg={s10d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <Obj svg={s10m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="One number · Surrey, BC" class="ab a10-eb" style={P(120, 112, 20, 62)} data-t="1" />
+    <h2 class="h2 ab a10-h" id="a10-h" style={P(120, 146, 20, 88)} data-t="2"><span class="l1">One number.</span><span class="l2">Calls and WhatsApp.</span></h2>
+    <a class="a10-n ab" style={P(116, 262, 18, 170)} href={SITE.tel} data-t="3">{SITE.phone}</a>
+    <div class="a10-b ab" style={P(120, 394, 20, 236)} data-t="3"><Btn v="call" class="btn-deep" /><Btn v="text" class="btn-ink" /></div>
+    <p class="a10-p ab" style={P(120, 486, 20, 404, 520, 236)} data-t="3">Say what is off and what town you are in. That is all he needs to start.</p>
+  </div>
+</section>
+
+<style>
+  /* shared */
+  .p3m :global(.obj.ab), .p3m :global(.obj.am) { width: auto; }
+  .p3m h3 { margin: 0; }
+  /* 6.1 */
+  .a1 { background: var(--indigo); z-index: 3; }
+  .a1-ph { width: 680px; height: 800px; overflow: hidden; }
+  .a1-ph::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 6px; background: rgba(13, 15, 51, .6); }
+  .a1 :global(.a1-eb) { color: var(--mist); }
+  .a1-h { font-size: 64px; line-height: 68px; }
+  .a1-mk { font-family: var(--f-marker); font-size: 26px; line-height: 38px; color: var(--amber); transform: rotate(2deg); transform-origin: 0 0; white-space: nowrap; }
+  .a1-mk i { display: block; width: 250px; height: 3px; margin-top: 2px; border-radius: 2px; background: var(--amber); }
+  .a1-p { font-size: 19px; line-height: 30px; color: var(--mist); }
+  .a1-b { display: flex; gap: 14px; }
+  .a1-rows { border-top: 1px solid rgba(174, 180, 198, .25); }
+  .a1-rows div { display: flex; align-items: baseline; height: 40px; padding-top: 12px; border-bottom: 1px solid rgba(174, 180, 198, .25); }
+  .a1-rows dt { width: 170px; font-size: 10px; line-height: 14px; color: var(--mist); }
+  .a1-rows dd { margin: 0; font-weight: 600; font-size: 15px; line-height: 19px; color: #fff; }
+  .a1-card { z-index: 4; width: 400px; height: 700px; background: #FBFAF4; border-radius: 4px; box-shadow: 0 18px 40px rgba(13, 15, 51, .35); transform: rotate(2.5deg); transform-origin: 0 0; overflow: hidden; }
+  .a1-ch { display: flex; flex-direction: column; gap: 6px; height: 64px; padding: 16px 22px 0; background: var(--indigo); }
+  .a1-ch .tech:first-child { font-size: 12px; line-height: 17px; letter-spacing: .14em; color: #fff; }
+  .a1-ch .tech:last-child { font-size: 10px; line-height: 14px; color: var(--amber); }
+  .a1-cl { display: grid; grid-template-columns: 1fr 1fr; margin: 18px 14px 0; padding: 0; list-style: none; }
+  .a1-cl li { display: flex; align-items: baseline; gap: 8px; height: 44px; padding: 14px 4px 0; border-bottom: 1px solid #D9D6C8; font-family: var(--f-marker); font-size: 15px; line-height: 22px; color: var(--ink); white-space: nowrap; overflow: hidden; }
+  .a1-cl li:nth-child(odd) { border-right: 1px solid #D9D6C8; }
+  .a1-cl .tech { font-family: var(--f-tech); font-size: 10px; letter-spacing: 0; color: var(--steel); }
+  .a1-ib { margin: 26px 0 0 22px; font-size: 10px; line-height: 14px; letter-spacing: .14em; color: var(--steel); }
+  .a1-sig { margin: 0 0 0 20px; font-family: var(--f-marker); font-size: 30px; line-height: 44px; color: var(--indigo); transform: rotate(1deg); }
+  .a1-sb { margin: 24px 22px 0 0; text-align: right; font-size: 10px; line-height: 14px; letter-spacing: .14em; color: var(--steel); }
+  .a1-cn { margin: 2px 0 0 18px; font-family: var(--f-display); font-weight: 800; font-size: 18px; line-height: 28px; color: var(--ink); }
+  .a1 :global(.a1-tape) { z-index: 5; }
+  /* 6.2 */
+  .a2 { background: var(--panel); z-index: 1; }
+  .a2-p { color: var(--ink); font-size: 18px; line-height: 28px; }
+  .a2-m { text-align: center; }
+  .a2-m h3 { font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 34px; color: var(--indigo); }
+  .a2-m p { font-size: 15px; line-height: 23px; color: var(--ink); }
+  .a2-src { font-size: 10px; line-height: 14px; letter-spacing: .08em; text-transform: none; color: var(--steel); }
+  /* 6.3 */
+  .a3 { background: var(--deep); z-index: 2; }
+  .a3 :global(.a3-eb) { color: var(--mist); }
+  .a3-p { font-size: 18px; line-height: 28px; color: var(--mist); }
+  .a3-rows div { display: flex; align-items: baseline; height: 62px; padding-top: 12px; border-top: 1px solid rgba(174, 180, 198, .22); }
+  .a3-rows div:last-child { border-bottom: 1px solid rgba(174, 180, 198, .22); }
+  .a3-rows dt { width: 170px; font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 38px; color: var(--amber); }
+  .a3-rows dd { margin: 0; font-weight: 500; font-size: 16px; line-height: 20px; color: #fff; }
+  .a3-b { display: flex; align-items: center; gap: 24px; }
+  .a3-lk, .a7-lk { font-weight: 600; font-size: 16px; line-height: 20px; color: var(--amber); }
+  .a3-lk:hover, .a7-lk:hover { text-decoration: underline; }
+  /* 6.4 */
+  .a4 { background: #fff; z-index: 1; }
+  .a4-pr { z-index: 2; margin: 0; padding: 7px 10px 0; background: #fff; box-shadow: 0 6px 12px rgba(13, 15, 51, .22); transform-origin: 0 0; }
+  .a4-pr1 { width: 224px; height: 296px; transform: rotate(3deg); } .a4-pr2 { width: 214px; height: 284px; transform: rotate(-3deg); }
+  .a4-pr div { height: 82%; overflow: hidden; background: var(--deep); }
+  .a4-pr figcaption { margin-top: 10px; font-family: var(--f-marker); font-size: 15px; line-height: 22px; color: var(--ink); }
+  .a4 :global(.a4-tape) { z-index: 3; }
+  .a4-p { font-size: 18px; line-height: 28px; color: var(--ink); }
+  .a4-q { height: 150px; margin: 0; padding: 26px 32px 0; background: var(--panel); border-left: 6px solid var(--amber); border-radius: 4px; }
+  .a4-q p { font-family: var(--f-display); font-weight: 800; font-size: 26px; line-height: 32px; color: var(--indigo); }
+  .a4-q cite { display: block; margin-top: 22px; font-style: normal; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .a4-b { display: flex; align-items: center; gap: 24px; }
+  /* 6.6 */
+  .a6 { background: var(--panel); z-index: 2; }
+  .a6-p { font-size: 18px; line-height: 28px; color: var(--ink); }
+  .a6-b { display: flex; gap: 14px; }
+  .a6-st { width: 568px; margin: 0; padding: 0; list-style: none; }
+  .a6-r { position: absolute; left: 0; top: calc(var(--i) * 116px); width: 568px; height: 300px; background: #fff; border-radius: 4px; box-shadow: 0 2px 6px rgba(13, 15, 51, .14); transform: rotate(var(--rot)); }
+  .a6-r:last-child { height: 270px; }
+  .a6-band { display: flex; justify-content: space-between; height: 54px; padding: 22px 24px 0 44px; background: var(--indigo); border-radius: 4px 4px 0 0; }
+  .a6-band .tech:first-child { font-size: 12px; line-height: 17px; color: var(--amber); }
+  .a6-band .tech:last-child { font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--mist); }
+  .a6-r h3 { margin: 16px 24px 0; font-family: var(--f-display); font-weight: 800; font-size: 28px; line-height: 32px; color: var(--indigo); }
+  .a6-tx { margin: 14px 24px 0; width: 400px; font-size: 16px; line-height: 24px; color: var(--ink); }
+  .a6-ft { position: absolute; left: 24px; right: 24px; bottom: 30px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  /* 6.7 */
+  .a7 { background: var(--indigo); z-index: 2; }
+  .a7 :global(.a7-eb) { color: var(--mist); }
+  .a7-h { text-align: center; }
+  .a7-p { font-size: 18px; line-height: 28px; text-align: center; color: var(--mist); }
+  .a7-b { display: flex; align-items: center; gap: 28px; }
+  .a7 :global(.a7-ig) { min-height: 70px; }
+  .a7-ph { width: 1440px; height: 820px; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+  .a7-f { position: absolute; left: calc(360px + var(--i) * 260px); top: 452px; width: 192px; height: 360px; border-radius: 28px; background: #14152B; box-shadow: 0 14px 24px rgba(5, 5, 15, .55); transform: rotate(var(--r)); transform-origin: 0 0; pointer-events: auto; transition: transform .45s var(--ease-out); }
+  .a7-f:nth-child(1) { --r: 6deg; } .a7-f:nth-child(2) { --r: -2deg; left: 628px; } .a7-f:nth-child(3) { --r: 3deg; left: 880px; }
+  .a7-f:hover { transform: rotate(var(--r)) translateY(-10px); }
+  .a7-a { display: block; height: 100%; }
+  .a7-sc { position: absolute; inset: 7px 7px 7px 7px; border-radius: 22px; overflow: hidden; background: var(--deep); }
+  .a7-sc::after { content: ''; position: absolute; inset: auto 0 0; height: 45%; background: rgba(13, 15, 51, .55); }
+  .a7-rl { position: absolute; left: 20px; top: 20px; font-weight: 600; font-size: 13px; line-height: 17px; color: #fff; }
+  .a7-play { position: absolute; left: 50%; top: 42%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: #fff; }
+  .a7-play::after { content: ''; position: absolute; left: 17px; top: 13px; border-left: 14px solid var(--ink); border-top: 9px solid transparent; border-bottom: 9px solid transparent; }
+  .a7-cap { position: absolute; left: 18px; right: 18px; bottom: 26px; display: flex; flex-direction: column; gap: 4px; font-size: 12px; line-height: 15px; color: #fff; }
+  .a7-cap span:first-child { font-weight: 600; }
+  .a7-cap .tech { font-size: 10px; line-height: 14px; letter-spacing: .06em; color: var(--amber); }
+  .a7-cap i { display: block; height: 2px; margin-top: 6px; background: linear-gradient(90deg, var(--amber) 0 30%, rgba(255, 255, 255, .3) 30%); }
+  .a7-sw { font-size: 11px; line-height: 16px; color: #E9D7BF; }
+  /* 6.9 */
+  .a9 { background: #fff; z-index: 1; }
+  .a9-logo { z-index: 2; width: 78px; height: 64px; object-fit: contain; transform: rotate(6deg); }
+  .a9-p { font-size: 18px; line-height: 28px; color: var(--ink); }
+  .a9-ck { margin: 0; padding: 0; list-style: none; border-top: 1px solid #D3D7DE; }
+  .a9-ck li { position: relative; display: flex; flex-direction: column; gap: 2px; min-height: 86px; padding: 16px 0 12px 28px; border-bottom: 1px solid #D3D7DE; }
+  .a9-ck li:nth-child(2) { min-height: 92px; }
+  .a9-box { position: absolute; left: -1px; top: 19px; width: 16px; height: 16px; border: 1.5px solid var(--ink); border-radius: 3px; background: #fff; }
+  .a9-ck b { font-weight: 600; font-size: 17px; line-height: 22px; color: var(--indigo); }
+  .a9-ck span:last-child { font-size: 15px; line-height: 22px; color: var(--steel); }
+  .a9-b { display: flex; align-items: center; gap: 24px; }
+  /* 6.10 */
+  .a10 { background: var(--amber); z-index: 3; }
+  .a10 :global(.a10-eb) { color: var(--ink); }
+  .a10 :global(.a10-eb svg path) { fill: var(--ink); }
+  .a10-h, .a10-h .l2 { color: var(--ink); } .a10-h .l2 { color: var(--indigo); }
+  .a10-n { font-family: var(--f-display); font-weight: 800; font-size: 84px; line-height: 92px; color: var(--ink); white-space: nowrap; }
+  .a10-n:hover { color: var(--indigo); }
+  .a10-b { display: flex; gap: 14px; }
+  .a10-p { font-size: 16px; line-height: 24px; color: var(--ink); }
+  @media (max-width: 1023px) {
+    .p3m :global(.eyebrow) { font-size: 12px; line-height: 17px; }
+    .p3m .h2 { font-size: 30px; line-height: 34px; }
+    .p3m .h2 .l1, .p3m .h2 .l2 { white-space: nowrap; }
+    .a1-ph { width: 390px; height: 400px; }
+    .a1-ph::after { display: none; }
+    .a1-h { font-size: 40px; line-height: 44px; }
+    .a1-mk { font-size: 20px; line-height: 29px; }
+    .a1-mk i { display: none; }
+    .a1-p { font-size: 16px; line-height: 25px; }
+    .a1-b { flex-direction: column; gap: 12px; }
+    .a1-b :global(.btn) { width: 350px; }
+    .a1-rows div { height: 40px; padding-top: 13px; }
+    .a1-rows dt { width: 151px; font-size: 11px; line-height: 16px; letter-spacing: .1em; }
+    .a1-rows dd { font-size: 14px; line-height: 18px; }
+    .a1-card { width: 342px; height: 372px; transform: rotate(1.5deg); }
+    .a1-ch { height: 52px; padding: 10px 16px 0; gap: 2px; }
+    .a1-ch .tech { font-size: 11px !important; line-height: 16px !important; }
+    .a1-cl { margin: 6px 10px 0; }
+    .a1-cl li { height: 34px; padding-top: 9px; font-size: 12px; line-height: 17px; }
+    .a1-cl .tech { font-size: 11px; }
+    .a1-ib { margin: 14px 0 0 12px; font-size: 11px; line-height: 16px; }
+    .a1-sig { margin-left: 10px; font-size: 22px; line-height: 32px; }
+    .a1-cn { margin: 22px 0 0 10px; font-size: 14px; line-height: 22px; }
+    .a1 :global(.a1-tape) { font-size: 17.6px !important; padding: 4.8px 12.8px; }
+    .a2-p { font-size: 16px; line-height: 25px; }
+    .a2-m { text-align: left; }
+    .a2-m h3 { font-size: 20px; line-height: 28px; }
+    .a2-m p { font-size: 14px; line-height: 21px; }
+    .a2-src { font-size: 11px; line-height: 16px; letter-spacing: .06em; }
+    .a3-p { font-size: 16px; line-height: 25px; }
+    .a3-rows div { height: 56px; }
+    .a3-rows dt { width: 130px; font-size: 24px; line-height: 32px; }
+    .a3-rows dd { font-size: 15px; line-height: 19px; }
+    .a3-b { flex-direction: column; align-items: flex-start; gap: 22px; }
+    .a3-b :global(.btn), .a4-b :global(.btn), .a6-b :global(.btn), .a7-b :global(.btn), .a9-b :global(.btn) { width: 350px; }
+    .a4-pr { padding: 4px 5px 0; }
+    .a4-pr1 { width: 123px; height: 162px; } .a4-pr2 { width: 117px; height: 155px; }
+    .a4-pr figcaption { margin-top: 3px; font-size: 9px; line-height: 13px; }
+    .a4 :global(.a4-tape) { font-size: 16.5px !important; padding: 4.5px 12px; }
+    .a4-p { font-size: 16px; line-height: 25px; }
+    .a4-q { height: 118px; padding: 18px 24px 0; }
+    .a4-q p { font-size: 20px; line-height: 25px; }
+    .a4-q cite { margin-top: 18px; font-size: 11px; line-height: 16px; letter-spacing: .08em; }
+    .a4-b, .a9-b { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .a6-p { font-size: 16px; line-height: 25px; }
+    .a6-b { flex-direction: column; gap: 12px; }
+    .a6-st { width: 298px; }
+    .a6-r { top: calc(var(--i) * 84px); width: 298px; height: 160px; border-radius: 3px; }
+    .a6-r:last-child { height: 206px; }
+    .a6-band { height: 40px; padding: 13px 16px 0 34px; }
+    .a6-band .tech:first-child { font-size: 11px; line-height: 16px; }
+    .a6-r h3 { margin: 10px 16px 0; font-size: 18px; line-height: 22px; }
+    .a6-tx { width: 266px; margin: 10px 16px 0; font-size: 14px; line-height: 20px; }
+    .a6-ft { left: 16px; right: 16px; bottom: 12px; padding-top: 10px; font-size: 11px; line-height: 16px; letter-spacing: .06em; }
+    .a7-p { font-size: 16px; line-height: 25px; }
+    .a7-b { flex-direction: column; gap: 18px; }
+    .a7-ph { width: 390px; height: 408px; overflow-x: auto; overflow-y: hidden; pointer-events: auto; scrollbar-width: none; }
+    .a7-ph::after { content: ''; position: absolute; left: 540px; width: 1px; height: 1px; }
+    .a7-f { width: 157px; height: 295px; top: 28px; border-radius: 23px; }
+    .a7-f:nth-child(1) { left: 18px; } .a7-f:nth-child(2) { left: 196px; top: 44px; } .a7-f:nth-child(3) { left: 372px; top: 32px; }
+    .a7-sc { inset: 6px 5px; border-radius: 18px; }
+    .a7-rl { left: 14px; top: 14px; font-size: 11px; }
+    .a7-cap { left: 12px; right: 10px; bottom: 20px; font-size: 11px; line-height: 14px; }
+    .a7-cap .tech { font-size: 9px; }
+    .a9-logo { width: 50px; height: 41px; }
+    .a9-p { font-size: 16px; line-height: 25px; }
+    .a9-ck li { min-height: 96px; padding: 16px 0 12px 24px; }
+    .a9-box { width: 14px; height: 14px; }
+    .a9-ck b { font-size: 16px; line-height: 20px; }
+    .a9-ck span:last-child { font-size: 14px; line-height: 21px; }
+    .a10-n { font-size: 32px; line-height: 50px; }
+    .a10-b { flex-direction: column; gap: 12px; }
+    .a10-b :global(.btn) { width: 236px; }
+    .a10-p { font-size: 15px; line-height: 23px; }
+  }
+</style>

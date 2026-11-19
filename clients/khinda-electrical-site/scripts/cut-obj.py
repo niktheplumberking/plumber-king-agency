@@ -26,7 +26,17 @@ def name(e):
 frame = [e for e in root.iter(NS + 'g') if ('desktop' if fr == 'd' else 'mobile') in name(e).lower()][0]
 sec = frame if secname == '*' else next(e for e in frame.iter() if name(e) == secname)
 picked, tagged, drop, sub = [], {}, [], []
+TXT, NOIMG = set(), False
+norm = lambda t: re.sub(r'\s+', '', t)
 for L in layers:
+    if L == '!@img': NOIMG = True; continue
+    if L == '!@text':
+        # copy texts that sit directly in the section (depth 2 rows): HTML renders them instead
+        rows = json.load(open(f"{CACHE}/{pg}/{'desktop' if fr == 'd' else 'mobile'}.json"))['rows']; on = False
+        for r in rows:
+            if r[0] == 1: on = secname == '*' or r[2] == secname or secname.startswith(r[2])
+            elif on and r[0] == 2 and r[1] == 'T': TXT.add(norm(r[7])[:30]); TXT.add(norm(r[7]))
+        continue
     if L.startswith('!'): drop.append(L[1:]); continue
     if L.startswith('~'): n_, c_ = L[1:].rsplit('@', 1); sub.append((n_, c_)); continue
     cls = None
@@ -48,6 +58,12 @@ def dump(e):
             if name(z) == n_ or (n_.endswith('*') and name(z).startswith(n_[:-1])): z.set('class', c_)
     for d in drop:
         for z in [q for q in c.iter() if name(q) == d or (d.endswith('*') and name(q).startswith(d[:-1]))]:
+            if z.getparent() is not None: z.getparent().remove(z)
+    if TXT:
+        for z in [q for q in c if q.tag == NS + 'path' and (norm(name(q)) in TXT or norm(name(q))[:30] in TXT)]:
+            c.remove(z)
+    if NOIMG:
+        for z in [q for q in c.iter() if 'url(#pattern' in (q.get('fill') or '')]:
             if z.getparent() is not None: z.getparent().remove(z)
     return etree.tostring(c).decode()
 body = ''.join(dump(e) for e in picked)

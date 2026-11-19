@@ -1,4 +1,18 @@
 ---
-import Stub from '../components/stub/Stub.astro';
+// About (Figma 06). Endings: F (generic), G5, G6.
+import '../components/p3/p3.css';
+import Base from '../layouts/Base.astro';
+import Mz from '../components/p3/Mz.astro';
+import About from '../components/about/About.astro';
+import Endings from '../components/endings/Endings.astro';
+import { breadcrumbSchema } from '../lib/schema';
+const title = 'About Khinda Electrical · Surrey Electrician';
+const description = 'Khinda Electrical is an electrician based in Surrey, BC: domestic, commercial work and renovations, filmed on his own Instagram and YouTube since 2018.';
 ---
-<Stub title="About Khinda Electrical · Surrey Electrician" path="/about/" description="Khinda Electrical is based in Surrey, BC: homes, basement suites and shops. All domestic, commercial work and renovations. Call or text 236-818-2664." eyebrow="About · Surrey, BC" h1={['About Khinda', 'Electrical']} lead="Khinda Electrical works out of Surrey, BC. He wires homes, basement suites and shops, and films the work as it goes in: the rough-in, the finished panel, the fixture going up." crumbs={[{ name: 'About', path: '/about/' }]}  />
+<Base title={title} description={description} path="/about/" og="residential-electrical-panel-rough-in-surrey" ogAlt="Residential electrical panel rough-in by Khinda Electrical"
+  preload={{ name: 'residential-electrical-panel-rough-in-surrey', sizes: '(min-width: 1024px) 680px, 100vw', widths: [360, 540, 720, 960] }}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About', path: '/about/' }]), { '@type': 'AboutPage' }]}>
+  <Mz />
+  <About />
+  <Endings slot="end" />
+</Base>

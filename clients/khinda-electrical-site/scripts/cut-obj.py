@@ -2,7 +2,7 @@
 Part 3 tool (art.py assumes Home's 0.291676 scale; other pages were exported at their own scale, read here from the
 frame's tf in sec/bbox-<page>.json).
 usage: python3 scripts/cut-obj.py <page> <d|m> "<section name>" <x,y,w,h page px> <out.svg> "<layer>" [...]
-layer syntax as art.py: name | name#k | name* | name@class | "." (the whole section); "!name" / "!prefix*" drops
+layer syntax as art.py (plus "!@text" = the depth-2 copy texts, "!@textall" = texts at any depth, "!@img" = photo fills): name | name#k | name* | name@class | "." (the whole section); "!name" / "!prefix*" drops
 matching descendants from every picked layer (e.g. a frame without its text-bearing child frames); "~name@class"
 adds a class to matching descendants (states driven by CSS).
 The SVG gets width=w height=h, so place it at the rect's x/y with width w (desktop) or scale it (mobile)."""
@@ -26,10 +26,17 @@ def name(e):
 frame = [e for e in root.iter(NS + 'g') if ('desktop' if fr == 'd' else 'mobile') in name(e).lower()][0]
 sec = frame if secname == '*' else next(e for e in frame.iter() if name(e) == secname)
 picked, tagged, drop, sub = [], {}, [], []
-TXT, NOIMG = set(), False
+TXT, NOIMG, TXTALL = set(), False, set()
 norm = lambda t: re.sub(r'\s+', '', t)
 for L in layers:
     if L == '!@img': NOIMG = True; continue
+    if L == '!@textall':
+        # every copy text of the section at any depth (texts inside cards / boxes too): HTML renders them
+        rows = json.load(open(f"{CACHE}/{pg}/{'desktop' if fr == 'd' else 'mobile'}.json"))['rows']; on = False
+        for r in rows:
+            if r[0] == 1: on = secname == '*' or r[2] == secname or secname.startswith(r[2])
+            elif on and r[1] == 'T': TXTALL.add(norm(r[7])[:30]); TXTALL.add(norm(r[7]))
+        continue
     if L == '!@text':
         # copy texts that sit directly in the section (depth 2 rows): HTML renders them instead
         rows = json.load(open(f"{CACHE}/{pg}/{'desktop' if fr == 'd' else 'mobile'}.json"))['rows']; on = False
@@ -62,6 +69,9 @@ def dump(e):
     if TXT:
         for z in [q for q in c if q.tag == NS + 'path' and (norm(name(q)) in TXT or norm(name(q))[:30] in TXT)]:
             c.remove(z)
+    if TXTALL:
+        for z in [q for q in c.iter() if q.tag == NS + 'path' and (norm(name(q)) in TXTALL or norm(name(q))[:30] in TXTALL)]:
+            if z.getparent() is not None: z.getparent().remove(z)
     if NOIMG:
         for z in [q for q in c.iter() if 'url(#pattern' in (q.get('fill') or '')]:
             if z.getparent() is not None: z.getparent().remove(z)

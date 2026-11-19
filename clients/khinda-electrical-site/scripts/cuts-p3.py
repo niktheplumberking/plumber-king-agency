@@ -39,12 +39,31 @@ M07 = [(S7[1], 152, 1240, ['!marker line', '!tape label', '!HOME  /  CONTACT', '
 T += [('07-contact', 'm', n, f'0,{y},390,{h}', f'07/s{n.split()[0].split(".")[1]}-m', ex) for n, y, h, ex in M07]
 T += [('07-contact', 'm', S7[1], '115,823,160,160', '07/bell-m', BELL[:4] + ['bolt#2']),
       ('07-contact', 'm', '*', '220,7380,170,420', '07/s7-m', ['duplex outlet plate', 'plug (pushed into the top outlet)', 'plug cord (7.7 into the J-box)', 'junction box (7.7 cord in, G5 cable out)'])]
+S8 = {1: '8.1 Hero · terminal board: review slots open, job slots wired', 2: '8.2 Job wall · staggered job boxes screwed to the board',
+      3: "8.3 Owner's words · his bio on torn masking tape + the roll", 4: '8.4 Proof today · rugged job-site tablet showing his Instagram profile',
+      5: '8.5 Leave a review · review sticker on an outdoor disconnect switch', 6: '8.6 Send a video · record button with a 0:00 counter', 7: '8.7 CTA · dimmer slide: turn it up, call'}
+M8 = {1: '8.1 Hero · terminal board (mobile)', 2: '8.2 Job wall · staggered job boxes screwed to the board (mobile)', 3: "8.3 Owner's words · torn masking tape + the roll (mobile)",
+      4: '8.4 Proof today · rugged tablet with his Instagram (mobile)', 5: '8.5 Leave a review · sticker on a disconnect switch (mobile)', 6: '8.6 Send a video · record button + 0:00 counter (mobile)', 7: '8.7 CTA · dimmer slide (mobile)'}
+LEG = ['!HOW TO READ THE BOARD', '!Open slot', '!A Google review*', '!Wired', '!A job he posted*']
+T += [
+ ('08-reviews', 'd', S8[1], '0,178,1440,880', '08/s1-d', ['!legend · how to read the board', '!marker underline', '!marker line', '!6 OF 66*']),
+ ('08-reviews', 'd', S8[2], '0,998,1440,1086', '08/s2-d', ['!@textall', '!text link', '!Want your job*', '!job', '!what he did', '!town', '!JOB 0*']),
+ ('08-reviews', 'd', S8[3], '0,2084,1440,760', '08/s3-d', ['!source card', '!his three lines · where each one leads', '!marker caption']),
+ ('08-reviews', 'd', S8[4], '0,2844,1440,900', '08/s4-d', ['!odometer*', '!Rectangle']),
+ ('08-reviews', 'd', S8[5], '0,3684,1440,800', '08/s5-d', ['!breaker toggle', '!Rectangle']),
+ ('08-reviews', 'd', S8[6], '0,4484,1440,900', '08/s6-d', []),
+ ('08-reviews', 'd', S8[7], '0,5344,1440,600', '08/s7-d', ['!If your street*', '!1 FLIP IT*']),
+]
+T += [('08-reviews', 'm', M8[k], f'0,{y},390,{h}', f'08/s{k}-m', ex) for k, y, h, ex in [
+ (1, 152, 1260, ['!legend', '!First reviews*']), (2, 1352, 1600, ['!@textall', '!job', '!what he did', '!town', '!JOB 0*']), (3, 2952, 1010, ['!source card', '!marker caption']),
+ (4, 3962, 1100, ['!odometer*', '!Rectangle', '+Frame*']), (5, 4982, 1190, ['+Frame*']), (6, 6172, 840, ['+Frame*']), (7, 7012, 780, ['!If your street*', '!1 FLIP IT*'])]]
 EXTRA = {}
 want = sys.argv[1] if len(sys.argv) > 1 else ''
 for pg, fr, sec, rect, out, ex in T + EXTRA.get('x', []):
     if not pg.startswith(want): continue
-    picks_only = sec == '*' or all(not e.startswith(('!', '~')) for e in ex)
-    args = ex if picks_only else ['.', *G, *ex]
+    keep = {e[1:] for e in ex if e.startswith('+')}; ex = [e for e in ex if not e.startswith('+')]  # '+X': keep X (not in G's drops)
+    picks_only = sec == '*' or (bool(ex) or bool(keep)) and not keep and all(not e.startswith(('!', '~')) for e in ex)
+    args = ex if picks_only else ['.', *[g for g in G if g[1:] not in keep], *ex]
     subprocess.run(['python3', 'scripts/cut-obj.py', pg, fr, sec, rect, f'src/art/p3/{out}.svg', *args])
     # 2-decimal coordinates (0.01 export unit < 0.04 px): the outlined copy in these layers is heavy
     f = f'src/art/p3/{out}.svg'; t = open(f).read()

@@ -1,4 +1,17 @@
 ---
-import Stub from '../components/stub/Stub.astro';
+// Reviews (Figma 08). No reviews exist yet: no review text, stars, ratings or AggregateRating anywhere. Endings: F, G5, G6.
+import '../components/p3/p3.css';
+import Base from '../layouts/Base.astro';
+import Mz from '../components/p3/Mz.astro';
+import Reviews from '../components/reviews/Reviews.astro';
+import Endings from '../components/endings/Endings.astro';
+import { breadcrumbSchema } from '../lib/schema';
 ---
-<Stub title="Khinda Electrical Reviews · Surrey, BC" path="/reviews/" description="No reviews online yet. Khinda Electrical's work is on Instagram, @khinda__electrical: panels, chandeliers and shop fit-outs in Surrey, BC." eyebrow="Reviews · Surrey, BC" h1={['Khinda Electrical', 'Reviews']} lead="His Google reviews are on their way. Until then, the work speaks: panels, chandeliers and shop fit-outs, posted job by job on @khinda__electrical." crumbs={[{ name: 'Reviews', path: '/reviews/' }]}  />
+<Base title="Khinda Electrical Reviews · Surrey, BC" path="/reviews/"
+  description="Khinda Electrical's first Google reviews are on their way. Until then, see six of his Surrey jobs, his own bio and his Instagram, and leave the first review after your job."
+  og="residential-electrical-panel-finished-labelled-surrey" ogAlt="Finished, labelled residential electrical panel by Khinda Electrical"
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Reviews', path: '/reviews/' }])]}>
+  <Mz />
+  <Reviews />
+  <Endings slot="end" />
+</Base>

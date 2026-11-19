@@ -1,0 +1,358 @@
+---
+// Reviews (Figma 08 Reviews, desktop 1440 / mobile 390; figma/v5/08-reviews-*.png). No reviews, stars or ratings exist yet,
+// so none are shown and nothing is invented: the terminal board shows 5 OPEN review slots and 6 WIRED job slots, and the
+// page shows his own jobs, his own bio and his Instagram numbers (counted 17 Nov 2026). Drawn objects are the Figma layers
+// (scripts/cuts-p3.py 08), served as cached SVG files (ObjImg: their outlined lettering is heavy); copy, photos, buttons and
+// the meters are HTML on top at the Figma coordinates (desktop --x/--y, mobile --mx/--my in the 390 frame, see p3.css).
+// STATE 8.4: the meter drums roll up from 0 once, right drum first, and settle on 1,521 / 66 / 2018 (reduced motion: settled).
+// Google review link: not known yet (README "Khinda to confirm"); the review buttons open a Google search for his business
+// until his profile link is given.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import ObjImg from '../p3/ObjImg.astro';
+import Crumbs from '../p3/Crumbs.astro';
+import s1dr from '../../art/p3/08/s1-d.svg?raw'; import s1d from '../../art/p3/08/s1-d.svg?url';
+import s1mr from '../../art/p3/08/s1-m.svg?raw'; import s1m from '../../art/p3/08/s1-m.svg?url';
+import s2dr from '../../art/p3/08/s2-d.svg?raw'; import s2d from '../../art/p3/08/s2-d.svg?url';
+import s2mr from '../../art/p3/08/s2-m.svg?raw'; import s2m from '../../art/p3/08/s2-m.svg?url';
+import s3dr from '../../art/p3/08/s3-d.svg?raw'; import s3d from '../../art/p3/08/s3-d.svg?url';
+import s3mr from '../../art/p3/08/s3-m.svg?raw'; import s3m from '../../art/p3/08/s3-m.svg?url';
+import s4dr from '../../art/p3/08/s4-d.svg?raw'; import s4d from '../../art/p3/08/s4-d.svg?url';
+import s4mr from '../../art/p3/08/s4-m.svg?raw'; import s4m from '../../art/p3/08/s4-m.svg?url';
+import s5dr from '../../art/p3/08/s5-d.svg?raw'; import s5d from '../../art/p3/08/s5-d.svg?url';
+import s5mr from '../../art/p3/08/s5-m.svg?raw'; import s5m from '../../art/p3/08/s5-m.svg?url';
+import s6dr from '../../art/p3/08/s6-d.svg?raw'; import s6d from '../../art/p3/08/s6-d.svg?url';
+import s6mr from '../../art/p3/08/s6-m.svg?raw'; import s6m from '../../art/p3/08/s6-m.svg?url';
+import s7dr from '../../art/p3/08/s7-d.svg?raw'; import s7d from '../../art/p3/08/s7-d.svg?url';
+import s7mr from '../../art/p3/08/s7-m.svg?raw'; import s7m from '../../art/p3/08/s7-m.svg?url';
+import mark from '../../assets/brand/logo-mark-K-bolt.png';
+import { SITE } from '../../data/site';
+import { PHOTO } from '../../data/towns';
+const P = (x: number, y: number, mx?: number, my?: number, w?: number, mw?: number) =>
+  `--x:${x}px;--y:${y}px` + (mx != null ? `;--mx:${mx}px;--my:${my}px` : '') + (w ? `;--w:${w}px` : '') + (mw ? `;--mw:${mw}px` : '');
+const GREVIEW = 'https://www.google.com/search?q=Khinda+Electrical+Surrey+BC';
+// job boxes: [photo, label, title, desc desktop, desc mobile, desktop x, y, rot, mobile x, y, stripe colour]
+const JOBS = [
+  ['ig61', 'Panels', 'Finished panel', 'Every breaker labelled by hand, cover off for the photo.', 'Every breaker labelled by hand.', 120, 380, 1.5, 20, 346],
+  ['ig23', 'Lights', 'Crystal chandelier', 'Hung, wired and lit in a home.', 'Hung, wired and lit in a home.', 323, 440, -1, 205, 390],
+  ['ig20', 'Shops', 'Barbershop lighting', 'Ceiling panel lights over every chair.', 'Panel lights over every chair.', 526, 380, 0.5, 20, 716],
+  ['ig03', 'Alarms', 'Fire alarm panels', 'Commercial fire alarm work, finished and closed up.', 'Commercial fire alarm work, finished.', 729, 440, -1.5, 205, 760],
+  ['ig09', 'Outdoor', 'Soffit lights', 'Soffit and entry lights on a house front.', 'Soffit and entry lights on a house front.', 932, 380, 1, 20, 1086],
+  ['ig12', 'Renos', 'Pot lights, feature wall', 'Pot lights over a finished living room.', 'Pot lights over a living room.', 1135, 440, -0.5, 205, 1130],
+] as const;
+const LINES = [['All domestic', 'Panels, pot lights, EV chargers →', '/services/panel-upgrades/', '#C8362F'], ['Commercial work', 'Shop fit-outs and fire alarm →', '/services/commercial-electrical/', '#F5C518'], ['Renovations', 'Basement suites and new builds →', '/services/renovations-basement-suites/', '#2F5FC8']];
+// meters: [label desktop, label mobile, digits, comma after drum, desktop x, mobile x, desktop w, mobile w]
+const METERS = [['Followers', 'Followers', '1521', 1, 120, 20, 170, 121], ['Posts', 'Posts', '66', 0, 318, 157, 84, 59], ['YouTube, since Jan', 'YouTube', '2018', 0, 430, 232, 160, 113]] as const;
+const TILES = ['ig39', 'ig40', 'ig43', 'ig46', 'ig57', 'ig17'];
+const ASK = [['What he did', 'Panel, pot lights, EV charger, a reno.'], ['Where you are', 'Your part of Surrey.'], ['How it went', 'Start to finish, in your words.']];
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<!-- 8.1 Hero: terminal board -->
+<section class="r1 sec on-dark p3s p3m" style="--h:820px;--hm:1200px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="mz">
+    <ObjImg raw={s1dr} src={s1d} class="ab dn-m r1-art" style="--x:0px;--y:0px" eager />
+    <ObjImg raw={s1mr} src={s1m} class="am dn-d r1-art" style="--mx:0px;--my:0px" />
+    <p class="sr-only">A terminal board: five open slots for Google reviews, none written yet, and six wired slots for jobs he posted on Instagram.</p>
+    <Crumbs trail={[{ name: 'Home', path: '/' }, { name: 'Reviews', path: '/reviews/' }]} class="ab" style={P(120, 62, 20, 30)} data-t="1" />
+    <Eyebrow text="Reviews · Surrey, BC" class="ab" style={P(120, 98, 20, 58)} data-t="1" />
+    <h1 class="h1 r1-h ab" id="h1" style={P(120, 132, 20, 88)} data-t="2"><span class="l1">Khinda Electrical</span><span class="l2">Reviews</span></h1>
+    <p class="r1-mk ab dn-m" style={P(120, 290)} data-t="5">First reviews are on their way.<i aria-hidden="true"></i></p>
+    <p class="r1-p ab" style={P(120, 360, 20, 228, 500, 350)} data-t="3">His Google reviews start here, so there is nothing to quote yet, and nothing is made up. Until the first customers write in, look at the work: 66 posts on {SITE.igHandle}, from labelled panels to chandeliers.</p>
+    <div class="r1-b ab" style={P(120, 520, 20, 390)} data-t="3"><Btn v="call" class="r1-bc" /><Btn v="text" tone="dark" main="See the job wall" sub="Six of his jobs, below" href="#jobs" class="r1-bt" /></div>
+    <div class="r1-lg ab" style={P(120, 628, 20, 552, 470, 350)} data-t="4">
+      <p class="tech r1-lt dn-m">How to read the board</p>
+      <div class="r1-li"><span class="mb" aria-hidden="true"></span><b>Open slot</b><span><span class="dn-m">A Google review, once a customer writes it.</span><span class="dn-d">A Google review, once written.</span></span></div>
+      <div class="r1-li r1-li2"><span class="mb wired" aria-hidden="true"></span><b>Wired</b><span><span class="dn-m">A job he posted on Instagram. Below.</span><span class="dn-d">A job he posted on Instagram.</span></span></div>
+    </div>
+    <p class="tech r1-ct ab dn-m" style={P(120, 772)}>6 of 66 posts shown  ·  counted 17 Nov 2026</p>
+  </div>
+</section>
+
+<!-- 8.2 Job wall -->
+<section class="r2 sec p3s p3m" id="jobs" style="--h:1086px;--hm:1600px" data-m-section aria-labelledby="r2-h">
+  <div class="mz">
+    <ObjImg raw={s2dr} src={s2d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s2mr} src={s2m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="The job wall · until the reviews arrive" class="ab dn-m" style={P(120, 96)} data-t="1" />
+    <Eyebrow text="The job wall" class="am dn-d" style={P(0, 0, 20, 96)} />
+    <h2 class="h2 ab" id="r2-h" style={P(120, 130, 20, 124)} data-t="2"><span class="l1">Read the work</span><span class="l2">while reviews come in.</span></h2>
+    <p class="lead ab" style={P(120, 250, 20, 206, 560, 350)} data-t="3"><span class="dn-m">Six jobs off his Instagram, each one screwed to the board. When real Google reviews arrive, the customer's own words go on these boxes, word for word, with their town.</span><span class="dn-d">Six jobs off his Instagram. When real Google reviews arrive, the customer's own words go on these boxes, word for word, with their town.</span></p>
+    <ul class="r2-l" role="list">
+      {JOBS.map(([ig, lab, t, d, dm, x, y, r, mx, my], i) => (
+        <li class="r2-j ab" style={P(x, y, mx, my, 184, 165) + `;--r:${r}deg`} data-t="4">
+          <p class="tech r2-lab"><span class="dn-m">Job {pad(i + 1)}  ·  {lab}</span><span class="dn-d">Job {pad(i + 1)}</span></p>
+          <div class="r2-ph"><Img name={PHOTO[ig].name} alt={PHOTO[ig].alt} sizes="(min-width: 1024px) 160px, 145px" box={160 / 168} boxM={145 / 132} /></div>
+          <h3 class="r2-t">{t}</h3>
+          <p class="r2-d"><span class="dn-m">{d}</span><span class="dn-d">{dm}</span></p>
+          <p class="tech r2-tw">Surrey area</p>
+        </li>
+      ))}
+    </ul>
+    <div class="r2-cta ab" style={P(120, 920, 20, 1504)} data-t="5">
+      <Btn v="call" class="r2-bc" />
+      <p class="dn-m"><b>Want your job on the wall?</b><a href={SITE.sms}>Text a photo of it to the same number →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- 8.3 Owner's words: his bio on masking tape -->
+<section class="r3 sec p3s p3m" style="--h:760px;--hm:1010px" data-m-section aria-labelledby="r3-h">
+  <div class="mz">
+    <ObjImg raw={s3dr} src={s3d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s3mr} src={s3m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <blockquote class="sr-only"><p>All domestic. Commercial work. Renovations.</p></blockquote>
+    <p class="r3-cap ab" style={P(420, 478, 110, 508)} aria-hidden="true">— his Instagram bio, word for word</p>
+    <Eyebrow text="In his words · his Instagram bio" class="ab dn-m" style={P(840, 120)} data-t="1" />
+    <Eyebrow text="In his words · his bio" class="am dn-d" style={P(0, 0, 20, 64)} />
+    <h2 class="h2 ab" id="r3-h" style={P(840, 154, 20, 92)} data-t="2"><span class="l1">He sums it up</span><span class="l2">in three lines.</span></h2>
+    <p class="lead ab" style={P(840, 274, 20, 174, 470, 350)} data-t="3">Before any customer reviews him, this is how he describes the work himself, on {SITE.igHandle}.<span class="dn-m"> Homes, shops and renovations: one electrician for all three.</span></p>
+    <a class="r3-src ab" href={SITE.social.instagram} style={P(840, 394, 20, 744, 470, 350)} data-t="4">
+      <span class="r3-av" aria-hidden="true"><img src={mark.src} width="30" height="26" alt="" /></span>
+      <b>{SITE.igHandle}</b><span class="tech"><span class="dn-m">Instagram bio  ·  read 17 Nov 2026</span><span class="dn-d">Instagram bio · 17 Nov 2026</span></span>
+    </a>
+    <div class="r3-b ab" style={P(840, 516, 20, 842)} data-t="4"><Btn v="call" main="Call about your job" sub={`${SITE.phone} · tap to call`} class="r3-bc" /><Btn v="text" class="r3-bt" /></div>
+    <ul class="r3-l ab dn-m" role="list" style={P(840, 610, 0, 0, 470)} data-t="5">
+      {LINES.map(([k, l, h, c]) => <li style={`--c:${c}`}><span class="tech">{k}</span><a href={h}>{l}</a></li>)}
+    </ul>
+  </div>
+</section>
+
+<!-- 8.4 Proof today: rugged tablet + meters -->
+<section class="r4 sec on-dark p3s p3m" style="--h:840px;--hm:1020px" data-m-section aria-labelledby="r4-h">
+  <div class="mz">
+    <ObjImg raw={s4dr} src={s4d} class="ab dn-m r4-art" style="--x:0px;--y:0px" />
+    <ObjImg raw={s4mr} src={s4m} class="am dn-d r4-art" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Proof today · counted 17 Nov 2026" class="ab dn-m" style={P(120, 110)} data-t="1" />
+    <Eyebrow text="Proof today · 17 Nov 2026" class="am dn-d" style={P(0, 0, 20, 64)} />
+    <h2 class="h2 ab" id="r4-h" style={P(120, 144, 20, 92)} data-t="2"><span class="l1">His Instagram is</span><span class="l2">the proof for now.</span></h2>
+    <p class="lead ab" style={P(120, 264, 20, 174, 470, 350)} data-t="3"><span class="dn-m">No Google stars yet, so here is what anyone can check today: his own posts. Real panels, real fixtures, filmed on the job and posted by him.</span><span class="dn-d">No Google stars yet, so here is what anyone can check today: his own posts, filmed on the job.</span></p>
+    {METERS.map(([l, lm, n, comma, x, mx, w, mw]) => (
+      <div class="r4-m ab" style={P(x, 382, mx, 266, w, mw)} data-odo>
+        <span class="r4-o" role="img" aria-label={`${l}: ${Number(n).toLocaleString('en-CA')}`}>
+          {[...n].map((d, i) => <><span class="r4-d" style={`--d:${d};--i:${n.length - 1 - i}`} aria-hidden="true"><span>{[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <i>{k}</i>)}</span></span>{comma === 1 && i === 0 && <span class="r4-c" aria-hidden="true">,</span>}</>)}
+        </span>
+        <p class="tech r4-l"><span class="dn-m">{l}</span><span class="dn-d">{lm}</span></p>
+      </div>
+    ))}
+    <i class="r4-hr ab" style={P(120, 490, 20, 352, 470, 350)} aria-hidden="true"></i>
+    <Btn v="text" tone="dark" main="See all 66 posts" sub={SITE.igHandle} href={SITE.social.instagram} class="r4-bt ab" style={P(120, 526, 20, 364)} />
+    <a class="r4-call ab" href={SITE.tel} style={P(368, 548, 20, 446)}>Or call {SITE.phone} →</a>
+    <img class="r4-av ab" src={mark.src} alt="" width="82" height="70" style={P(781, 221, 71, 606, 82, 55)} />
+    {TILES.map((ig, i) => (
+      <div class="r4-t ab" style={P(757 + (i % 3) * 163, i < 3 ? 420 : 624, 57 + (i % 3) * 93, i < 3 ? 746 : 873, 160, 90)}>
+        <Img name={PHOTO[ig].name} alt={PHOTO[ig].alt} sizes="(min-width: 1024px) 160px, 90px" box={160 / 201} boxM={90 / 124} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- 8.5 Leave a review: sticker on a disconnect switch -->
+<section class="r5 sec p3s p3m" id="review" style="--h:800px;--hm:1190px" data-m-section aria-labelledby="r5-h">
+  <div class="mz">
+    <ObjImg raw={s5dr} src={s5d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s5mr} src={s5m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <img class="r5-logo ab" src={mark.src} alt="" width="80" height="80" style={P(310, 393, 133, 887, 80, 60)} />
+    <a class="r5-stk ab" href={GREVIEW} style={P(228, 552, 76, 1014, 244, 184)} aria-label="Write a Google review (opens Google)"></a>
+    <Eyebrow text="After your job · leave a review" class="ab dn-m" style={P(760, 140)} data-t="1" />
+    <Eyebrow text="After your job" class="am dn-d" style={P(0, 0, 20, 96)} />
+    <h2 class="h2 ab" id="r5-h" style={P(760, 174, 20, 124)} data-t="2"><span class="l1">Had him over?</span><span class="l2">Leave the first review.</span></h2>
+    <p class="lead ab" style={P(760, 294, 20, 206, 500, 350)} data-t="3">Reviews go on his Google profile, in your own words. Three things help the next Surrey homeowner most:</p>
+    <ul class="r5-l ab" role="list" style={P(760, 383, 20, 308, 500, 350)} data-t="4">
+      {ASK.map(([t, d]) => <li><span class="r5-tg" aria-hidden="true"><i></i></span><b>{t}</b><span>{d}</span></li>)}
+    </ul>
+    <div class="r5-b ab" style={P(760, 588, 20, 494)} data-t="5">
+      <Btn v="call" main="Leave a Google review" sub="Opens his Google profile" href={GREVIEW} class="r5-bc" />
+      <Btn v="text" main={`Call ${SITE.phone}`} sub="Questions first? Ask him" href={SITE.tel} class="r5-bt" />
+    </div>
+  </div>
+</section>
+
+<!-- 8.6 Send a video -->
+<section class="r6 sec p3s p3m" style="--h:900px;--hm:840px" data-m-section aria-labelledby="r6-h">
+  <div class="mz">
+    <ObjImg raw={s6dr} src={s6d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s6mr} src={s6m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Send a video · on WhatsApp" class="ab dn-m r6-eb" style={P(584, 130)} data-t="1" />
+    <Eyebrow text="Send a video · WhatsApp" class="am dn-d" style={P(0, 0, 83, 72)} />
+    <h2 class="h2 r6-c ab" id="r6-h" style={P(270, 164, 20, 102, 900, 350)} data-t="2"><span class="l1">Happy with the job?</span><span class="l2">Say it on camera.</span></h2>
+    <p class="lead r6-c ab" style={P(390, 284, 20, 182, 660, 350)} data-t="3"><span class="dn-m">Film about 30 seconds: your first name, your town and what he did. Send it to {SITE.phone} on WhatsApp. With your OK, it goes on this page.</span><span class="dn-d">Film about 30 seconds: your first name, your town and what he did. Send it on WhatsApp. With your OK, it goes on this page.</span></p>
+    <a class="r6-rec ab" href={SITE.whatsapp} style={P(658, 600, 147, 500, 124, 96)} aria-label={`Record and send a video on WhatsApp to ${SITE.phone}`}></a>
+    <div class="r6-b ab" style={P(478, 770, 20, 640)} data-t="4">
+      <Btn v="call" main="WhatsApp a video" sub={`${SITE.phone} · same number`} href={SITE.whatsapp} class="r6-bc" />
+      <Btn v="text" main="Rather type it?" sub="Leave a Google review ↑" href="#review" class="r6-bt" />
+    </div>
+  </div>
+</section>
+
+<!-- 8.7 CTA: dimmer slide -->
+<section class="r7 sec p3s p3m" style="--h:560px;--hm:780px" data-m-section aria-labelledby="r7-h">
+  <div class="mz">
+    <ObjImg raw={s7dr} src={s7d} class="ab dn-m r7-art" style="--x:0px;--y:-40px" />
+    <ObjImg raw={s7mr} src={s7m} class="am dn-d r7-art" style="--mx:0px;--my:0px" />
+    <a class="r7-dim ab" href={SITE.tel} style={P(1010, -40, 126, 500, 230, 138)} aria-label={`Turn it up: call ${SITE.phone}`}></a>
+    <Eyebrow text="Your job next" class="ab r7-eb" style={P(120, 120, 20, 56)} data-t="1" />
+    <h2 class="h2 r7-h ab" id="r7-h" style={P(116, 152, 18, 84)} data-t="2"><span class="l1"><span class="dn-m">First reviews start</span><span class="dn-d">Reviews start</span></span><span class="l2">with the next job.</span></h2>
+    <p class="lead r7-p ab" style={P(120, 292, 20, 184, 500, 350)} data-t="3"><span class="dn-m">Panels, lighting, EV chargers and renos. Call or text a photo of what you need, anywhere in Surrey.</span><span class="dn-d">Panels, lighting, EV chargers and renos. Call or text a photo of what you need.</span></p>
+    <div class="r7-b ab" style={P(120, 396, 20, 276)} data-t="4"><Btn v="call" class="btn-deep r7-bc" /><Btn v="text" class="btn-ink r7-bt" /></div>
+    <p class="tech r7-s ab" style={P(120, 492, 20, 440)} data-t="5"><span class="dn-m">1 Call or text   ·   2 Say your town   ·   3 Add a photo</span><span class="dn-d">Call or text  ·  Add a photo</span></p>
+  </div>
+</section>
+
+<style>
+  .p3m :global(.obj.ab), .p3m :global(.obj.am) { width: auto; }
+  .p3m h3 { margin: 0; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* 8.1 */
+  .r1 { background: var(--deep); z-index: 3; }
+  .r1 :global(.r1-art) { z-index: 1; }
+  .r1-mk { font-family: var(--f-marker); font-size: 26px; line-height: 38px; color: var(--amber); white-space: nowrap; }
+  .r1-mk i { display: block; width: 300px; height: 3px; margin: 4px 0 0 2px; border-radius: 2px; background: var(--amber); }
+  .r1-p { font-size: 19px; line-height: 30px; color: var(--mist); }
+  .r1-b { display: flex; gap: 14px; }
+  .r1-b :global(.r1-bc) { width: 235px; } .r1-b :global(.r1-bt) { width: 206px; }
+  .r1-lg { height: 124px; padding: 16px 20px; border-radius: 10px; background: var(--indigo); }
+  .r1-lt { font-size: 10px; line-height: 14px; color: var(--mist); }
+  .r1-li { position: absolute; left: 20px; top: 44px; display: grid; grid-template-columns: 34px 160px; column-gap: 0; }
+  .r1-li2 { left: 246px; }
+  .r1-li .mb { grid-row: 1 / 3; position: relative; width: 22px; height: 44px; border-radius: 3px; background: #A7ADB9; box-shadow: inset 0 0 0 1px #7E8696; }
+  .r1-li .mb::before { content: ''; position: absolute; left: 4px; top: 13px; width: 14px; height: 18px; border-radius: 2px; background: #fff; }
+  .r1-li .mb.wired::after { content: ''; position: absolute; left: 9px; top: 31px; width: 4px; height: 14px; background: #F5C518; }
+  .r1-li b { font-weight: 600; font-size: 15px; line-height: 19px; color: #fff; }
+  .r1-li > span:last-child { margin-top: 1px; font-size: 13px; line-height: 18px; color: var(--mist); }
+  .r1-ct { font-size: 10px; line-height: 16px; color: var(--mist); white-space: pre; }
+  /* 8.2 */
+  .r2 { background: var(--panel); z-index: 1; }
+  .r2-l { margin: 0; padding: 0; list-style: none; }
+  .r2-j { z-index: 2; height: 410px; transform: rotate(var(--r)); transform-origin: 0 0; }
+  .r2-j > * { position: absolute; margin: 0; }
+  .r2-lab { left: 0; top: 38px; width: 100%; text-align: center; font-size: 10px; line-height: 14px; color: #fff; white-space: pre; }
+  .r2-ph { left: 12px; top: 76px; width: 160px; height: 168px; overflow: hidden; border-radius: 3px; background: var(--deep); }
+  .r2-t { left: 12px; top: 256px; width: 160px; font-family: var(--f-display); font-weight: 800; font-size: 19px; line-height: 22px; color: var(--ink); }
+  .r2-d { left: 12px; top: calc(256px + var(--tl, 1) * 22px + 6px); width: 160px; font-size: 14px; line-height: 20px; color: var(--steel); }
+  .r2-j:nth-child(2) .r2-d, .r2-j:nth-child(3) .r2-d, .r2-j:nth-child(6) .r2-d { --tl: 2; }
+  .r2-tw { left: 12px; top: 380px; font-size: 10px; line-height: 14px; color: var(--steel); }
+  .r2-cta { display: flex; align-items: center; gap: 25px; }
+  .r2-cta :global(.r2-bc) { width: 235px; }
+  .r2-cta p { display: grid; gap: 4px; }
+  .r2-cta b { font-weight: 600; font-size: 17px; line-height: 22px; color: var(--ink); }
+  .r2-cta a { font-size: 15px; line-height: 19px; color: var(--indigo); }
+  .r2-cta a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  /* 8.3 */
+  .r3 { background: #fff; z-index: 1; }
+  .r3-cap { font-family: var(--f-marker); font-size: 20px; line-height: 29px; color: var(--steel); transform: rotate(-1deg); white-space: nowrap; }
+  .r3-src { display: grid; grid-template-columns: 68px 1fr; align-content: center; height: 84px; padding: 0 18px; border-radius: 10px; background: var(--panel); }
+  .r3-av { grid-row: 1 / 3; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--deep); }
+  .r3-src b { font-weight: 600; font-size: 17px; line-height: 22px; color: var(--ink); }
+  .r3-src .tech { margin-top: 6px; font-size: 10px; line-height: 14px; color: var(--steel); }
+  .r3-src:hover b { text-decoration: underline; text-underline-offset: 3px; }
+  .r3-b { display: flex; gap: 14px; }
+  .r3-b :global(.r3-bc) { width: 235px; } .r3-b :global(.r3-bt) { width: 200px; }
+  .r3-l { margin: 0; padding: 0; list-style: none; }
+  .r3-l li { display: flex; align-items: center; height: 38px; padding-left: 22px; border-bottom: 1px solid #E4E6EB; position: relative; }
+  .r3-l li:last-child { border-bottom: 0; }
+  .r3-l li::before { content: ''; position: absolute; left: 0; top: 9px; width: 6px; height: 20px; border-radius: 1px; background: var(--c); }
+  .r3-l a { white-space: nowrap; }
+  .r3-l .tech { width: 200px; font-size: 11px; line-height: 16px; letter-spacing: .08em; color: var(--steel); }
+  .r3-l a { font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); }
+  .r3-l a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  /* 8.4 */
+  .r4 { background: var(--indigo); z-index: 3; }
+  .r4 :global(.r4-art) { z-index: 1; }
+  .r4-m { z-index: 2; }
+  .r4-o { display: flex; gap: 4px; height: 66px; padding: 6px; border-radius: 8px; background: #23265E; box-shadow: inset 0 0 0 1px #3A3E78; }
+  .r4-d { position: relative; width: 34px; height: 54px; overflow: hidden; border-radius: 4px; background: var(--deep); }
+  .r4-d > span { display: flex; flex-direction: column; transform: translateY(calc(var(--d) * -54px)); }
+  .r4-d i { display: grid; place-items: center; height: 54px; font-style: normal; font-family: var(--f-display); font-weight: 800; font-size: 30px; color: #fff; }
+  .r4-c { align-self: flex-end; width: 6px; margin: 0 -2px; font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 40px; color: var(--mist); }
+  :global(.odo-ready) .r4-d > span { transform: translateY(0); }
+  :global(.odo-ready) .r4-m.run .r4-d > span { transform: translateY(calc((var(--d) + 10) * -54px)); transition: transform calc(1.1s + var(--i) * .35s) cubic-bezier(.2, .7, .2, 1) calc((3 - var(--i)) * .12s); }
+  .r4-l { margin-top: 10px; font-size: 10px; line-height: 14px; color: var(--mist); }
+  .r4-hr { z-index: 2; height: 1px; background: rgba(174, 180, 198, .4); }
+  .r4 :global(.r4-bt) { z-index: 2; width: 220px; }
+  .r4-call { z-index: 2; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--amber); }
+  .r4-call:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .r4-av { z-index: 2; height: 70px; object-fit: contain; }
+  .r4-t { z-index: 2; height: 201px; overflow: hidden; background: var(--deep); }
+  /* 8.5 */
+  .r5 { background: var(--panel); z-index: 2; }
+  .r5-logo { z-index: 2; height: 80px; object-fit: contain; }
+  .r5-stk { z-index: 2; height: 44px; border-radius: 22px; }
+  .r5-l { margin: 0; padding: 0; list-style: none; }
+  .r5-l li { position: relative; display: grid; align-content: start; height: 62px; padding: 0 0 0 40px; }
+  .r5-l li + li::before { content: ''; position: absolute; left: 40px; top: -11px; width: 460px; height: 1px; background: #C9CCD6; }
+  .r5-l li b { font-weight: 600; font-size: 17px; line-height: 22px; color: var(--ink); }
+  .r5-l li > span:last-child { font-size: 15px; line-height: 19px; color: var(--steel); }
+  .r5-tg { position: absolute; left: 0; top: 1px; width: 22px; height: 34px; border-radius: 4px; background: var(--deep); }
+  .r5-tg i { position: absolute; left: 5px; top: 4px; width: 12px; height: 14px; border-radius: 2px; background: var(--amber); }
+  .r5-b { display: flex; gap: 14px; }
+  .r5-b :global(.r5-bc) { width: 260px; } .r5-b :global(.r5-bt) { width: 226px; }
+  /* 8.6 */
+  .r6 { background: #fff; z-index: 2; }
+  .r6 :global(.r6-eb) { white-space: nowrap; }
+  .r6-c { text-align: center; }
+  .r6-c .l1, .r6-c .l2 { white-space: normal !important; }
+  .r6-rec { z-index: 2; height: 124px; border-radius: 50%; transition: transform .25s var(--ease-out); }
+  .r6-rec:hover { transform: scale(1.04); } .r6-rec:active { transform: scale(.96); }
+  .r6-b { display: flex; gap: 14px; }
+  .r6-b :global(.r6-bc) { width: 250px; } .r6-b :global(.r6-bt) { width: 220px; }
+  /* 8.7 */
+  .r7 { background: var(--amber); z-index: 3; overflow: visible; }
+  .r7 :global(.r7-art) { z-index: 2; }
+  .r7-dim { z-index: 3; height: 380px; border-radius: 16px; }
+  .r7 :global(.r7-eb) { color: var(--ink); }
+  .r7 :global(.r7-eb svg path) { fill: var(--ink); }
+  .r7-h { font-size: 56px; line-height: 60px; color: var(--ink); } .r7-h .l2 { color: var(--h2b); }
+  .r7-p { color: var(--ink); }
+  .r7-b { display: flex; gap: 26px; }
+  .r7-b :global(.r7-bc) { width: 237px; } .r7-b :global(.r7-bt) { width: 230px; }
+  .r7-s { font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--ink); white-space: pre; }
+  @media (max-width: 1023px) {
+    .r1-p { font-size: 16px; line-height: 25px; }
+    .r1-b, .r3-b, .r5-b, .r6-b, .r7-b { flex-direction: column; gap: 12px; }
+    .r1-b :global(.btn), .r2-cta :global(.btn), .r3-b :global(.btn), .r5-b :global(.btn), .r6-b :global(.btn), .r7-b :global(.btn), .r4 :global(.r4-bt) { width: 350px !important; min-height: 62px; }
+    .r1-lg { height: 96px; padding: 0; }
+    .r1-li { left: 16px; top: 18px; grid-template-columns: 30px 120px; }
+    .r1-li2 { left: 186px; }
+    .r1-li .mb { width: 20px; height: 40px; } .r1-li .mb::before { left: 3px; top: 12px; }
+    .r1-li b { font-size: 14px; line-height: 18px; } .r1-li > span:last-child { font-size: 12px; line-height: 16px; }
+    .r2-j { height: 340px; transform: none; }
+    .r2-lab { top: 30px; font-size: 11px; line-height: 16px; }
+    .r2-ph { left: 10px; top: 66px; width: 145px; height: 132px; }
+    .r2-t { top: 208px; width: 141px; font-size: 16px; line-height: 19px; }
+    .r2-d { left: 12px; top: calc(208px + var(--tlm, 1) * 19px + 4px); width: 141px; font-size: 13px; line-height: 18px; }
+    .r2-j:nth-child(3) .r2-d, .r2-j:nth-child(6) .r2-d { --tlm: 2; }
+    .r2-tw { top: 314px; font-size: 11px; line-height: 16px; }
+    .r3-cap { font-size: 15px; line-height: 22px; }
+    .r3-src { grid-template-columns: 56px 1fr; height: 72px; padding: 0 14px; }
+    .r3-av { width: 44px; height: 44px; } .r3-av img { width: 26px; height: auto; }
+    .r3-src b { font-size: 15px; line-height: 19px; } .r3-src .tech { margin-top: 4px; font-size: 11px; line-height: 16px; letter-spacing: .04em; white-space: nowrap; }
+    .r4-o { gap: 3px; height: 46px; padding: 4px; border-radius: 6px; }
+    .r4-d { width: 24px; height: 38px; border-radius: 3px; }
+    .r4-d > span { transform: translateY(calc(var(--d) * -38px)); }
+    .r4-d i { height: 38px; font-size: 22px; }
+    :global(.odo-ready) .r4-m.run .r4-d > span { transform: translateY(calc((var(--d) + 10) * -38px)); }
+    .r4-c { font-size: 22px; line-height: 30px; }
+    .r4-l { margin-top: 10px; font-size: 11px; line-height: 16px; }
+    .r4-av { height: 47px; } .r4-t { height: 124px; }
+    .r5-logo { height: 60px; } .r5-stk { height: 40px; }
+    .r5-l li { height: 58px; padding-left: 34px; }
+    .r5-l li + li::before { display: none; }
+    .r5-tg { width: 20px; height: 32px; } .r5-tg i { left: 4px; width: 12px; }
+    .r5-l li b { font-size: 16px; line-height: 20px; } .r5-l li > span:last-child { font-size: 14px; line-height: 18px; }
+    .r6-rec { height: 96px; }
+    .r7-dim { height: 228px; border-radius: 10px; }
+    .r7-h { font-size: 40px; line-height: 44px; }
+    .r7-s { font-size: 11px; line-height: 16px; letter-spacing: .06em; }
+  }
+  @media (prefers-reduced-motion: reduce) { :global(.odo-ready) .r4-m.run .r4-d > span { transition: none; } }
+</style>
+<script>
+  // 8.4 meters: roll up from 0 once when the strip comes into view (right drum first). Reduced motion: stay settled.
+  const odos = document.querySelectorAll<HTMLElement>('[data-odo]');
+  if (odos.length && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('odo-ready');
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { (e.target as HTMLElement).classList.add('run'); io.unobserve(e.target); } }), { threshold: 0.6 });
+    odos.forEach((o) => io.observe(o));
+  }
+</script>

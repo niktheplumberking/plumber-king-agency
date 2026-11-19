@@ -1,0 +1,46 @@
+---
+// Part 1 route stub: every page a real route (title, meta, one H1, G1-G3 and the endings), so all links resolve.
+// Builders 2 and 3 replace the body with the Figma sections (BUILDERS.md). Copy here is Figma / PAGE-SHEET text only.
+import Base from '../../layouts/Base.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Endings from '../endings/Endings.astro';
+import { breadcrumbSchema } from '../../lib/schema';
+interface Props {
+  title: string; description: string; path: string; eyebrow: string; h1: [string, string]; lead: string;
+  crumbs?: { name: string; path: string }[]; town?: string; form?: boolean; noindex?: boolean; jsonld?: object[]; navPath?: string;
+}
+const { title, description, path, eyebrow, h1, lead, crumbs = [], town, form = true, noindex, jsonld = [], navPath } = Astro.props;
+const trail = [{ name: 'Home', path: '/' }, ...crumbs];
+---
+<Base title={title} description={description} path={path} noindex={noindex} navPath={navPath}
+  jsonld={[...(crumbs.length ? [breadcrumbSchema(trail)] : []), ...jsonld]}>
+  <section class="stub sec on-dark" style="--h:560px" data-m-section data-m-hero aria-labelledby="h1">
+    <div class="ab" style="--x:120px;--y:110px;--w:760px">
+      {crumbs.length > 0 && (
+        <nav class="crumbs tech" aria-label="Breadcrumb"><ol role="list">{trail.map((c, i) => <li>{i < trail.length - 1 ? <a href={c.path}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol></nav>
+      )}
+      <Eyebrow text={eyebrow} data-t="1" />
+      <h1 class="h1 st-h" id="h1" data-t="2"><span class="l1">{h1[0]}</span><span class="l2">{h1[1]}</span></h1>
+      <p class="lead st-lead" data-t="3">{lead}</p>
+      <div class="st-cta" data-t="4" data-stagger><Btn v="call" /><Btn v="text" tone="dark" /></div>
+    </div>
+    <slot />
+  </section>
+  <Endings slot="end" town={town} form={form} />
+</Base>
+<style>
+  .stub { background: var(--indigo); z-index: 3; }
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; padding: 0; font-size: 10px; line-height: 14px; color: var(--mist); }
+  .crumbs li + li::before { content: '/'; margin-right: 8px; }
+  .crumbs a:hover { color: #fff; }
+  .st-h { margin-top: 19px; }
+  .st-lead { margin-top: 22px; width: 600px; max-width: 100%; color: #DCDFEA; }
+  .st-cta { display: flex; gap: 14px; margin-top: 36px; }
+  @media (max-width: 1023px) {
+    .stub { padding: 56px 20px 64px; }
+    .st-h { margin-top: 10px; }
+    .st-cta { flex-direction: column; gap: 10px; }
+    .st-cta :global(.btn) { width: 100%; }
+  }
+</style>

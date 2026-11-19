@@ -1,0 +1,71 @@
+---
+// G2 header (Figma 708:447, 1440x92 white; mobile 723:886, 390x64). Real logo, 6 links (Services + Areas open mega menus,
+// ui.ts data-mega-*), "Text a photo", amber 2-line call button with the breaker toggle. Sticky; hides going down.
+// Active page: 3 px amber bar under its nav item (per-page variant). Below 1024 px: compact Call + menu -> MobileMenu.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-no-tagline-crop.png';
+import Btn from '../kit/Btn.astro';
+import Toggle from '../kit/Toggle.astro';
+import Mega from './Mega.astro';
+import MobileMenu from './MobileMenu.astro';
+import { SITE, NAV } from '../../data/site';
+interface Props { path?: string }
+const { path = '/' } = Astro.props;
+const cur = (href: string) => path === href || path.startsWith(href);
+const arrow = '<svg viewBox="0 0 10 8" width="10" height="8" aria-hidden="true"><path d="M0 4h8.5M5.5 1l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+---
+<header class="hdr" data-header>
+  <div class="hdr-bar">
+    <a href="/" class="hdr-logo" data-intro="brand" aria-label={`${SITE.name}, home`}>
+      <Image src={logo} alt="" width={180} height={128} loading="eager" fetchpriority="low" />
+    </a>
+    <nav class="nav dn-m" aria-label="Main">
+      <ul role="list" class="nav-list">
+        {NAV.map((n) => (
+          <li data-mega-item={'menu' in n ? n.menu : undefined}>
+            {'menu' in n ? (
+              <button type="button" class:list={['nl', cur(n.href) && 'is-cur']} aria-expanded="false" aria-controls={`mega-${n.menu}`} data-mega-btn={n.menu}>{n.label}</button>
+            ) : (
+              <a href={n.href} class:list={['nl', cur(n.href) && 'is-cur']} aria-current={cur(n.href) ? 'page' : undefined}>{n.label}</a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="cta">
+      <a class="hdr-text dn-m" href={SITE.sms}>Text a photo <Fragment set:html={arrow} /></a>
+      <Btn v="call" class="hdr-call dn-m" />
+      <a href={SITE.tel} class="m-call dn-d" aria-label={`Call ${SITE.phone}`}><Toggle kind="badge" />Call</a>
+      <button type="button" class="menu-btn dn-d" aria-expanded="false" aria-controls="mnav" data-menu-open>
+        <svg viewBox="0 0 18 12" width="18" height="12" aria-hidden="true"><path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="2"/></svg><span class="sr-only">Menu</span>
+      </button>
+    </div>
+  </div>
+  <Mega />
+</header>
+<MobileMenu path={path} />
+<style>
+  .hdr { position: sticky; top: 0; z-index: var(--z-header); transition: transform .5s var(--ease-out); }
+  .hdr.is-hidden { transform: translateY(calc(-100% - 4px)); }
+  .hdr-bar { position: relative; height: 92px; background: #fff; border-bottom: 1px solid var(--line); transition: box-shadow .4s; }
+  .is-scrolled .hdr-bar { box-shadow: 0 8px 24px -12px rgba(13, 15, 51, .25); }
+  .hdr-logo { position: absolute; left: 120px; top: 14px; width: 90px; }
+  .hdr-logo :global(img) { width: 100%; height: auto; }
+  .nav { position: absolute; left: 374px; top: 26px; }
+  .nav-list { display: flex; gap: 34px; margin: 0; padding: 0; }
+  .nl { position: relative; display: inline-flex; align-items: center; height: 40px; font-weight: 500; font-size: 16px; line-height: 20px; color: var(--ink); white-space: nowrap; }
+  .nl::after { content: ''; position: absolute; left: 0; right: 0; top: 36px; height: 3px; background: var(--amber); transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease-out); }
+  .nl:hover::after, .nl.is-cur::after, .nl[aria-expanded='true']::after { transform: scaleX(1); transform-origin: left; }
+  .cta { position: absolute; right: 120px; top: 13px; display: flex; align-items: center; }
+  .hdr-text { display: inline-flex; align-items: center; gap: 8px; margin-right: 28px; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--indigo); }
+  .hdr-text :global(svg) { transition: transform .3s var(--ease-out); }
+  .hdr-text:hover :global(svg) { transform: translateX(4px); }
+  .cta :global(.hdr-call) { width: 235px; }
+  .m-call { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 9px 12px; border-radius: 8px; background: var(--amber); font-weight: 600; font-size: 15px; color: var(--ink); }
+  .menu-btn { display: grid; place-items: center; width: 44px; height: 44px; margin-left: 8px; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--line); color: var(--indigo); }
+  @media (max-width: 1023px) {
+    .hdr-bar { height: 64px; }
+    .hdr-logo { left: 20px; top: 10px; width: 62px; }
+    .cta { right: 18px; top: 10px; }
+  }
+</style>

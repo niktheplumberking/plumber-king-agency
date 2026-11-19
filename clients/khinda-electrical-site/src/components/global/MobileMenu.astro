@@ -1,0 +1,72 @@
+---
+// Mobile menu dialog (below 1024 px): full-screen deep sheet revealed from the menu button (ui.ts data-mnav: circle reveal,
+// focus trap, Escape, scroll lock). Big Saira links, Services and Areas as disclosures, call + text buttons.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-no-tagline-crop.png';
+import Btn from '../kit/Btn.astro';
+import { SERVICES, TOWNS, SITE } from '../../data/site';
+interface Props { path: string }
+const { path } = Astro.props;
+const LINKS = [
+  { label: 'Our work', href: '/our-work/' }, { label: 'Reviews', href: '/reviews/' }, { label: 'About', href: '/about/' },
+  { label: 'FAQ', href: '/faq/' }, { label: 'Contact', href: '/contact/' },
+];
+---
+<div class="mnav on-dark" id="mnav" role="dialog" aria-modal="true" aria-label="Menu" data-mnav hidden>
+  <div class="mn-top">
+    <a href="/" class="mn-logo" aria-label={`${SITE.name}, home`}><Image src={logo} alt="" width={124} height={88} loading="lazy" /></a>
+    <button type="button" class="mn-close" data-menu-close>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="sr-only">Close menu</span>
+    </button>
+  </div>
+  <nav class="mn-body" aria-label="Mobile">
+    <ul role="list" class="mn-list">
+      <li data-mn-item>
+        <details class="mn-d" data-acc name="mnav">
+          <summary>Services<span class="pm" aria-hidden="true"></span></summary>
+          <ul role="list" class="mn-sub">
+            {SERVICES.map((s) => <li><a href={s.href}>{s.name}</a></li>)}
+            <li><a href="/services/" class="mn-all">All services →</a></li>
+          </ul>
+        </details>
+      </li>
+      <li data-mn-item>
+        <details class="mn-d" data-acc name="mnav">
+          <summary>Areas<span class="pm" aria-hidden="true"></span></summary>
+          <ul role="list" class="mn-sub">
+            {TOWNS.map((t) => <li><a href={t.href}>{t.name}</a></li>)}
+            <li><a href="/areas/" class="mn-all">All areas →</a></li>
+          </ul>
+        </details>
+      </li>
+      {LINKS.map((l) => <li data-mn-item><a class="mn-a" href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a></li>)}
+    </ul>
+    <div class="mn-cta" data-mn-item>
+      <Btn v="call" />
+      <Btn v="text" tone="dark" />
+    </div>
+  </nav>
+</div>
+<style>
+  .mnav { position: fixed; inset: 0; z-index: var(--z-menu); display: flex; flex-direction: column; background: var(--deep); overflow-y: auto; overscroll-behavior: contain; }
+  .mnav[hidden] { display: none; }
+  .mn-top { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 18px 0 20px; background: #fff; flex: none; }
+  .mn-logo { width: 62px; }
+  .mn-logo :global(img) { width: 100%; height: auto; }
+  .mn-close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 8px; color: var(--indigo); box-shadow: inset 0 0 0 1px var(--line); }
+  .mn-body { display: grid; gap: 28px; padding: 12px 20px 40px; }
+  .mn-list { margin: 0; padding: 0; }
+  .mn-list > li { border-bottom: 1px solid var(--line-d); }
+  .mn-a, .mn-d summary { display: flex; align-items: center; justify-content: space-between; min-height: 60px; font-family: var(--f-display); font-weight: 800; font-size: 28px; line-height: 34px; cursor: pointer; list-style: none; }
+  .mn-d summary::-webkit-details-marker { display: none; }
+  .mn-a[aria-current='page'] { color: var(--amber); }
+  .pm { position: relative; width: 18px; height: 18px; }
+  .pm::before, .pm::after { content: ''; position: absolute; left: 0; top: 8px; width: 18px; height: 2px; background: var(--amber); transition: transform .3s var(--ease-out); }
+  .pm::after { transform: rotate(90deg); }
+  .mn-d[open]:not(.acc-off) .pm::after { transform: rotate(0); }
+  .mn-sub { display: grid; margin: 0 0 14px; padding: 0; }
+  .mn-sub a { display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #fff; }
+  .mn-sub .mn-all { color: var(--amber); font-weight: 600; }
+  .mn-cta { display: grid; gap: 12px; }
+  .mn-cta :global(.btn) { width: 100%; }
+</style>

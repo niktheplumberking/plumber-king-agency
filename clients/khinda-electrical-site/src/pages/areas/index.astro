@@ -1,0 +1,16 @@
+---
+import Stub from '../../components/stub/Stub.astro';
+import { TOWNS } from '../../data/site';
+---
+<Stub title="Areas We Serve · Khinda Electrical" path="/areas/"
+  description="Khinda Electrical is based in Surrey, BC: Newton, Fleetwood, Guildford, Cloverdale, South Surrey, City Centre, plus Delta, Langley and White Rock."
+  eyebrow="Areas · Surrey, BC" h1={['Electrician Serving', 'Surrey & Nearby']} crumbs={[{ name: 'Areas', path: '/areas/' }]}
+  lead="One electrician, based in Surrey. Panels, lighting, EV chargers and renos for homes and shops in the city and the towns next door.">
+  <ul class="st-list ab" role="list" style="--x:920px;--y:150px;--w:400px">{TOWNS.map((t) => <li><a href={t.href}>{t.name}</a></li>)}</ul>
+</Stub>
+<style>
+  .st-list { display: grid; gap: 10px; margin: 0; padding: 0; }
+  .st-list a { font-weight: 600; font-size: 18px; line-height: 24px; color: #fff; }
+  .st-list a:hover { color: var(--amber); }
+  @media (max-width: 1023px) { .st-list { margin-top: 36px; } }
+</style>

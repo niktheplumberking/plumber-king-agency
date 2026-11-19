@@ -1,0 +1,31 @@
+---
+// G1 utility bar (Figma Home 708:440, 1440x40 deep; mobile 723:882, 390x32). "TSBC LICENCE #" exactly as in Figma: the
+// number is a "Khinda to confirm" item, so the slot stays empty (README).
+import Bolt from '../kit/Bolt.astro';
+import { SITE } from '../../data/site';
+---
+<aside class="ub" data-intro="topbar" aria-label="Khinda Electrical at a glance">
+  <p class="ub-l tech dn-m">Surrey, BC &nbsp;·&nbsp; Domestic &nbsp;·&nbsp; Commercial &nbsp;·&nbsp; Renovations</p>
+  <p class="ub-lic tech dn-m"><i aria-hidden="true"></i>TSBC licence #</p>
+  <i class="ub-div dn-m" aria-hidden="true"></i>
+  <a class="ub-r tech" href={SITE.tel}><Bolt w={9} h={12} /><span class="ub-k">Call / text</span><span class="ub-n">{SITE.phone}</span></a>
+</aside>
+<style>
+  .ub { position: relative; height: 40px; background: var(--deep); color: var(--mist); font-size: 11px; line-height: 16px; }
+  .ub .tech { letter-spacing: .12em; }
+  .ub-l { position: absolute; left: 120px; top: 13px; white-space: nowrap; }
+  .ub-lic { position: absolute; left: 826px; top: 12px; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .ub-lic i { width: 10px; height: 10px; border: 1px solid rgba(174, 180, 198, .6); border-radius: 2px; }
+  .ub-div { position: absolute; left: 1020px; top: 10px; width: 1px; height: 20px; background: rgba(174, 180, 198, .35); }
+  .ub-r { position: absolute; left: 1052px; top: 12px; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+  .ub-k { color: rgba(174, 180, 198, .65); }
+  .ub-n { color: #fff; }
+  .ub-r:hover .ub-n { color: var(--amber); }
+  @media (max-width: 1023px) {
+    .ub { height: 32px; display: flex; justify-content: center; align-items: center; }
+    .ub .tech { letter-spacing: .1em; }
+    .ub-r { position: static; gap: 8px; min-height: 32px; }
+    .ub-r :global(svg) { width: 7px; height: 10px; }
+    .ub-k { color: var(--mist); }
+  }
+</style>

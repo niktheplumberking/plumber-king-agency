@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="478.348 3568.364 113.754 108.503" width="390" height="372" fill="none" aria-hidden="true" focusable="false" overflow="visible"><defs><filter id="filter65_d_481_468" x="476.817" y="3590.23" width="121.118" height="97.128" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="2.3334"/>
+<feGaussianBlur stdDeviation="1.4584"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.05 0 0 0 0 0.06 0 0 0 0 0.2 0 0 0 0.28 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_481_468"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_481_468" result="shape"/>
+</filter>
+</defs><path d="M507.37 3595.19L508.245 3601.03" stroke="#14152B" stroke-width="0.437513" stroke-linecap="round" stroke-linejoin="round" class="tagstr"/>
+<g filter="url(#filter65_d_481_468)" class="cd">
+<path d="M595.018 3595.19H493.515C480.973 3595.19 480.973 3613.86 493.515 3613.86H576.934C589.476 3613.86 589.476 3632.53 576.934 3632.53H493.515C480.973 3632.53 480.973 3651.19 493.515 3651.19H565.851C577.518 3651.19 580.434 3655.86 580.434 3664.61V3682.11" stroke="#6B7286" stroke-width="8.75027" stroke-linejoin="round"/>
+</g>
+<path d="M595.018 3595.19H493.515C480.973 3595.19 480.973 3613.86 493.515 3613.86H576.934C589.476 3613.86 589.476 3632.53 576.934 3632.53H493.515C480.973 3632.53 480.973 3651.19 493.515 3651.19H565.851C577.518 3651.19 580.434 3655.86 580.434 3664.61V3682.11" stroke="#F4F4F4" stroke-width="7.29189" stroke-linejoin="round" class="cd jk"/>
+<path d="M595.018 3593.15H493.515C480.973 3593.15 480.973 3611.82 493.515 3611.82H576.934C589.476 3611.82 589.476 3630.49 576.934 3630.49H493.515C480.973 3630.49 480.973 3649.15 493.515 3649.15H565.851C577.518 3649.15 580.434 3653.82 580.434 3662.57V3680.07" stroke="white" stroke-opacity="0.85" stroke-width="0.875027" stroke-linejoin="round" class="cd"/>
+</svg>

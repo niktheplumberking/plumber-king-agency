@@ -1,0 +1,128 @@
+---
+// 1.1 Hero (Figma Home 708:472, 1440x800 panel; mobile 723:900) + 1.2 breaker picker (708:534 / 723:948).
+// The panel cover opened: his finished panel (ig61) in a cover plate with 4 screws, the opened cover edge at the right,
+// tape "His finished panel" on its corner. H1 left, marker line, lead, call + text, badges, towns line.
+// The picker card straddles 1.1 / 1.3 (z above both): chips are breaker toggles (forms.ts [data-picker]).
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Tape from '../kit/Tape.astro';
+import Screw from '../kit/Screw.astro';
+import Toggle from '../kit/Toggle.astro';
+import Bolt from '../kit/Bolt.astro';
+import Art from '../kit/Art.astro';
+import art from '../../art/hero-d.svg?raw';
+import { SITE } from '../../data/site';
+const CHIPS = [
+  ['Breaker keeps tripping', 'tripping'], ['Lights flicker', 'flicker'], ['Need a bigger panel', 'bigger panel'], ['EV charger', 'EV charger'],
+  ['New lights', 'new lights'], ['Reno or suite', 'reno'], ['Something else', 'something else'],
+];
+const BADGES = [['1,521', 'on Instagram'], ['Homes', '+ shops'], ['Permit', 'on regulated work']];
+---
+<section class="hero sec" style="--h:800px" data-m-section data-m-hero aria-labelledby="h1">
+  <Art svg={art} class="dn-m hero-art" />
+  <div class="hero-copy ab" style="--x:116px;--y:78px;--w:690px">
+    <Eyebrow text="Electrician · Surrey, BC" data-t="1" class="hero-eb" />
+    <h1 class="h1" id="h1" data-t="2"><span class="l1">Electrician in</span><span class="l2">Surrey, BC</span></h1>
+    <p class="hero-mk marker" data-t="3" data-fx="write">Every circuit labelled.<svg class="mk-u" viewBox="0 0 300 6" preserveAspectRatio="none" aria-hidden="true"><path d="M2 3.5C80 1.5 190 2 298 3" stroke="#F5A833" stroke-width="5" stroke-linecap="round" fill="none"/></svg></p>
+    <p class="lead hero-lead" data-t="3">Panels, lighting, EV chargers and renos. All domestic, commercial work and renovations<span class="dn-m">, from his own Instagram</span>.</p>
+    <div class="hero-btns" data-t="4" data-stagger>
+      <Btn v="call" class="hb-call" />
+      <Btn v="text" class="hb-text" href={SITE.sms} />
+    </div>
+    <ul role="list" class="badges" data-t="4" data-stagger>
+      {BADGES.map(([a, b]) => <li><Toggle kind="badge" /><span><b>{a}</b> {b}</span></li>)}
+    </ul>
+    <p class="towns" data-t="5"><span class="tech">Towns</span><i aria-hidden="true"></i><span class="tl">Newton · Fleetwood · Guildford · Cloverdale · South Surrey</span></p>
+  </div>
+  <Tape text="His finished panel" rot={-6} size={22} class="ab hero-tape" style="--x:820px;--y:96px" data-t="4" data-fx="pop" aria-hidden="true" />
+  <figure class="plate ab" style="--x:856px;--y:70px" data-t="3" data-fx="frame">
+    <div class="ph"><Img name="residential-electrical-panel-finished-labelled-surrey" alt="Khinda Electrical's finished residential panel in Surrey, every circuit labelled" sizes="(min-width: 1024px) 442px, calc(100vw - 60px)" box={442 / 772} boxM={330 / 410} priority widths={[360, 540, 720, 973]} /></div>
+    <Screw class="hs hs1" /><Screw class="hs hs2" rot={110} /><Screw class="hs hs3" rot={70} /><Screw class="hs hs4" rot={155} />
+    <figcaption class="sr-only">His finished panel</figcaption>
+  </figure>
+  <div class="pk ab" style="--x:120px;--y:690px;--w:690px" data-picker data-t="5">
+    <div class="pk-h"><Bolt w={13} h={18} /><h2 class="pk-t">What's off at your place?</h2><p class="pk-s marker dn-m">Flip one, then text him a photo.</p></div>
+    <fieldset class="pk-chips">
+      <legend class="sr-only">What's off? Pick any that apply</legend>
+      {CHIPS.map(([c, s]) => <label class="pk-c"><input type="checkbox" value={c} data-short={s} /><Toggle kind="chip" on={false} /><span>{c}</span></label>)}
+      <p class="pk-ro tech" aria-live="polite" data-pk-ro>0 PICKED</p>
+    </fieldset>
+    <div class="pk-row">
+      <p class="pk-f"><span><span class="dn-m">WhatsApp or text · </span><span class="dn-d">To </span>{SITE.phone}</span><span class="pk-for" data-pk-for hidden></span></p>
+      <a class="pk-send" href={SITE.sms} data-pk-send>Text a photo <svg viewBox="0 0 10 8" width="10" height="8" aria-hidden="true"><path d="M0 4h8.5M5.5 1l3 3-3 3" fill="none" stroke="#F5A833" stroke-width="2"/></svg></a>
+    </div>
+  </div>
+</section>
+<style>
+  .hero { background: var(--panel); z-index: 3; }
+  .hero-copy :global(.hero-eb) { margin-left: 4px; }
+  .hero .h1 { margin-top: 17px; width: 680px; }
+  .hero-mk { position: relative; display: inline-block; margin: 20px 0 0 6px; font-size: 28px; line-height: 41px; color: var(--indigo); transform: rotate(2deg); transform-origin: 0 0; }
+  .mk-u { position: absolute; left: 2px; top: 44px; width: 300px; height: 6px; }
+  .hero-lead { width: 560px; margin: 26px 0 0 4px; font-size: 20px; line-height: 30px; }
+  .hero-btns { display: flex; gap: 14px; margin: 46px 0 0 4px; }
+  .hero-btns :global(.hb-call) { width: 235px; }
+  .hero-btns :global(.hb-text) { width: 200px; }
+  .badges { display: flex; gap: 12px; margin: 34px 0 0 4px; padding: 0; }
+  .badges li { display: flex; align-items: center; gap: 10px; height: 44px; padding: 10px 14px; background: #fff; border: 1px solid var(--line); border-radius: 8px; font-size: 15px; line-height: 19px; white-space: nowrap; }
+  .badges b { font-weight: 600; }
+  .towns { display: flex; align-items: center; gap: 10px; margin: 24px 0 0 4px; font-weight: 500; font-size: 15px; line-height: 19px; }
+  .towns .tech { font-size: 11px; color: var(--steel); }
+  .towns i { width: 24px; height: 2px; background: var(--amber); }
+  .plate { position: absolute; width: 470px; height: 800px; margin: 0; padding: 14px; background: #fff; border-radius: 6px; box-shadow: 0 18px 40px rgba(13, 15, 51, .28); z-index: 1; }
+  .ph { width: 100%; height: 100%; border-radius: 2px; overflow: hidden; }
+  .plate :global(.hs) { position: absolute; }
+  .plate :global(.hs1) { left: 3px; top: 3px; } .plate :global(.hs2) { right: 3px; top: 3px; } .plate :global(.hs3) { left: 3px; bottom: 3px; } .plate :global(.hs4) { right: 3px; bottom: 3px; }
+  .hero :global(.hero-tape) { position: absolute; z-index: 2; }
+  .hero :global(.hero-art) { z-index: 0; }
+  /* picker */
+  .pk { z-index: 4; display: grid; gap: 14px; padding: 24px 28px; background: #fff; border-radius: 12px; box-shadow: 0 20px 44px rgba(13, 15, 51, .25); }
+  .pk-h { display: flex; align-items: center; gap: 12px; height: 38px; }
+  .pk-t { font-family: var(--f-display); font-weight: 800; font-size: 24px; line-height: 38px; color: var(--indigo); }
+  .pk-s { font-size: 18px; line-height: 26px; color: var(--steel); }
+  .pk-chips { display: flex; flex-wrap: wrap; gap: 9px 8px; width: 634px; }
+  .pk-c { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 7px 10px; border-radius: 6px; background: var(--panel); font-weight: 500; font-size: 14px; line-height: 18px; color: var(--ink); cursor: pointer; transition: background-color .25s, color .25s; }
+  .pk-c input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .pk-c:hover { background: #dcdfe4; }
+  .pk-c:has(input:checked) { background: var(--indigo); color: #fff; }
+  .pk-c:has(input:checked) :global(.tg) { background: var(--amber); }
+  .pk-c:has(input:checked) :global(.tg i) { background: var(--deep); transform: none; }
+  .pk-c:has(input:focus-visible) { outline: 3px solid var(--indigo); outline-offset: 2px; }
+  .pk-ro { display: inline-flex; align-items: center; height: 34px; margin-top: -1px; padding: 9px 12px; background: var(--deep); border-radius: 6px; font-size: 11px; line-height: 16px; color: var(--amber); }
+  .pk-row { display: flex; gap: 10px; align-items: center; }
+  .pk-f { display: flex; align-items: center; gap: 10px; width: 463px; height: 53px; padding: 15px 16px; border: 1.5px solid var(--line); border-radius: 8px; font-size: 15px; line-height: 19px; color: var(--steel); white-space: nowrap; overflow: hidden; }
+  .pk-for { font-size: 13px; }
+  .pk-send { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 161px; height: 50px; border-radius: 8px; background: var(--indigo); font-weight: 600; font-size: 16px; color: #fff; transition: background-color .25s; }
+  .pk-send:hover { background: #262a73; }
+  .pk-send svg { transition: transform .3s var(--ease-out); }
+  .pk-send:hover svg { transform: translateX(3px); }
+  @media (max-width: 1023px) {
+    .hero { padding: 32px 20px 0; }
+    .hero-copy :global(.hero-eb) { margin: 0; font-size: 10px; line-height: 14px; gap: 8px; }
+    .hero .h1 { width: auto; margin: 10px 0 0 -2px; }
+    .hero-mk { margin: 6px 0 0 2px; font-size: 22px; line-height: 32px; }
+    .mk-u { top: 34px; width: 230px; height: 4px; }
+    .hero-lead { width: auto; margin: 18px 0 0; font-size: 17px; line-height: 26px; }
+    .hero-btns { flex-direction: column; gap: 10px; margin: 16px 0 0; }
+    .hero-btns :global(.btn) { width: 100% !important; }
+    .badges { flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+    .badges li { height: 36px; gap: 8px; padding: 8px 10px; font-size: 13px; line-height: 17px; }
+    .towns { display: block; margin: 16px 0 0; font-size: 13px; line-height: 20px; }
+    .towns .tech { font-size: 13px; letter-spacing: 0; }
+    .towns i { display: none; }
+    .towns .tech::after { content: '  ·  '; white-space: pre; }
+    .plate { position: relative; width: auto; height: auto; aspect-ratio: 350 / 430; margin-top: 28px; padding: 10px; }
+    .plate :global(.hs) { width: 10px; height: 10px; }
+    .hero :global(.hero-tape) { position: absolute; left: auto; right: 18px; top: auto; margin-top: 14px; z-index: 3; font-size: 17px; transform: rotate(-5deg); transform-origin: 100% 0; }
+    .pk { position: relative; margin: -70px 0 -285px; gap: 12px; padding: 18px; }
+    .pk-h { height: 31px; gap: 8px; }
+    .pk-h :global(svg) { width: 10px; height: 14px; }
+    .pk-t { font-size: 20px; line-height: 31px; }
+    .pk-chips { width: auto; gap: 6px; }
+    .pk-c { height: 29px; padding: 6px 8px; gap: 6px; font-size: 13px; }
+    .pk-row { flex-direction: column; align-items: stretch; gap: 12px; }
+    .pk-f { width: auto; height: 48px; padding: 13px 14px; font-size: 15px; }
+    .pk-send { width: auto; height: 45px; font-size: 15px; }
+  }
+</style>

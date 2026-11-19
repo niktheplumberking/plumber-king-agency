@@ -1,0 +1,173 @@
+---
+// 1.4 Services (Figma Home 713:437, 1440x1060 panel; mobile 724:437) = the circuit directory. Six breakers with marker
+// labels; the tape bar slides to the hovered / focused row (STATE "HOVER · CCT 04, BAR SLIDES DOWN"); a click on a row's
+// breaker turns that circuit ON and opens its photo in the cover plate (rows without a photo of his keep the current one).
+// The indigo lip and bolt cut at the top are the seam from 1.3.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Tape from '../kit/Tape.astro';
+import Screw from '../kit/Screw.astro';
+import Art from '../kit/Art.astro';
+import d from '../../art/svc-d.svg?raw';
+import m from '../../art/svc-m.svg?raw';
+import { SITE } from '../../data/site';
+const ROWS = [
+  { t: 'Panel upgrades', s: '100A to 200A, room for EV and heat pumps.', h: '/services/panel-upgrades/', p: 'residential-electrical-panel-rough-in-surrey', cap: 'Panel upgrade, rough-in' },
+  { t: 'Pot lights & lighting', s: 'Pot lights, chandeliers, soffit lights.', h: '/services/lighting-pot-lights/', p: 'living-room-pot-lights-feature-wall-surrey', cap: 'Pot lights, feature wall' },
+  { t: 'EV chargers', s: 'On a permit. Rebates may apply.', h: '/services/ev-charger-installation/' },
+  { t: 'Renos & basement suites', s: 'Rough-in to finish, new builds too.', h: '/services/renovations-basement-suites/' },
+  { t: 'Commercial electrical', s: 'Shop fit-outs, barbershops, fire alarm.', h: '/services/commercial-electrical/', p: 'commercial-electrical-control-panel-surrey', cap: 'Commercial control panel' },
+  { t: 'Repairs & troubleshooting', s: 'Tripping breakers, flicker, dead outlets.', h: '/services/repairs-troubleshooting/' },
+];
+const PH = [
+  ['residential-electrical-panel-rough-in-surrey', 'Residential electrical panel rough-in by Khinda Electrical in Surrey'],
+  ['living-room-pot-lights-feature-wall-surrey', 'Living room pot lights and feature wall lighting by Khinda Electrical'],
+  ['commercial-electrical-control-panel-surrey', 'Commercial electrical control panel wired by Khinda Electrical in Surrey'],
+];
+---
+<section class="svc sec" style="--h:1060px" data-m-section aria-labelledby="svc-h" data-dir>
+  <Art svg={d} class="dn-m" />
+  <Art svg={m} class="dn-d" />
+  <div class="svc-head ab" style="--x:320px;--y:170px;--w:800px">
+    <Eyebrow text="Services · the panel directory" data-t="1" class="svc-eb" />
+    <h2 class="h2" id="svc-h" data-t="2"><span class="l1">Domestic, commercial</span><span class="l2">and renovations.</span></h2>
+    <p class="lead svc-lead" data-t="3">Six circuits, one electrician. Flip the one that matches your job<span class="dn-m">, then call or text a photo</span>.</p>
+  </div>
+  <div class="dir ab" style="--x:120px;--y:420px;--w:760px" data-t="3" data-fx="frame">
+    <Screw class="ds ds1" rot={20} /><Screw class="ds ds2" rot={80} /><Screw class="ds ds3" rot={140} /><Screw class="ds ds4" rot={10} />
+    <div class="dir-h"><p class="tech">Circuit directory</p><p class="tech dir-b dn-m">Khinda Electrical · Surrey</p></div>
+    <i class="bar" aria-hidden="true" data-bar></i>
+    <ol role="list" class="rows" data-flips>
+      {ROWS.map((r, i) => (
+        <li class:list={['row', i === 0 && 'is-on']} data-flip={i === 0 ? '' : undefined} data-row data-photo={r.p} data-cap={r.p ? `CCT 0${i + 1} · ${r.cap}` : undefined}>
+          <span class="cct tech dn-m">CCT 0{i + 1}</span>
+          <button type="button" class="bk" aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`Turn on ${r.t}`} data-bk><i></i></button>
+          <span class="st tech" aria-hidden="true"><span class="dn-m">{i === 0 ? 'ON' : 'OFF'}</span><span class="dn-d">0{i + 1}</span></span>
+          <a class="rt marker" href={r.h}>{r.t}</a>
+          <p class="rs">{r.s}</p>
+          <p class="ra"><a href={SITE.tel} aria-label={`Call about ${r.t.toLowerCase()}`}>Call</a><a href={SITE.sms} aria-label={`Text a photo about ${r.t.toLowerCase()}`}>Text<span class="dn-d"> a photo</span></a></p>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <figure class="cp ab" style="--x:850px;--y:400px" data-t="3" data-fx="frame">
+    <div class="ph" data-ph>
+      {PH.map(([n, a], i) => <div class:list={['phi', i === 0 && 'on']} data-phi={n}><Img name={n} alt={a} sizes="(min-width: 1024px) 392px, 230px" box={392 / 512} boxM={230 / 310} widths={[230, 392, 460, 784]} /></div>)}
+    </div>
+    <Screw class="hs hs1" /><Screw class="hs hs2" rot={110} /><Screw class="hs hs3" rot={70} /><Screw class="hs hs4" rot={155} />
+    <Tape text="Most asked" rot={4} size={22} class="svc-tape" aria-hidden="true" />
+    <figcaption class="tech cp-cap" data-cap>CCT 01 · Panel upgrade, rough-in</figcaption>
+  </figure>
+  <div class="thumb ab t1" style="--x:1236px;--y:560px" data-t="4" aria-hidden="true"><div class="ti"><Img name="living-room-pot-lights-feature-wall-surrey" alt="" sizes="104px" box={104 / 144} widths={[104, 208]} /></div><span class="marker">Lighting</span></div>
+  <div class="thumb ab t2" style="--x:1222px;--y:980px" data-t="4" aria-hidden="true"><div class="ti"><Img name="commercial-electrical-control-panel-surrey" alt="" sizes="104px" box={104 / 144} widths={[104, 208]} /></div><span class="marker">Commercial</span></div>
+  <div class="svc-cta ab" style="--x:120px;--y:968px" data-t="4">
+    <Btn v="call" main="Call about a panel" sub={`${SITE.phone} · tap to call`} class="svc-call" />
+    <p class="svc-not"><a href={SITE.sms}><b>Not sure which circuit?</b> <span>Text a photo of it to the same number.</span></a></p>
+  </div>
+</section>
+<style>
+  .svc { background: var(--panel); z-index: 2; }
+  .svc-head { text-align: center; }
+  .svc-head :global(.svc-eb) { justify-content: center; margin-left: -21px; }
+  .svc .h2 { margin-top: 19px; }
+  .svc-lead { width: 700px; margin: 16px auto 0; }
+  .dir { height: 520px; padding: 16px 40px 24px; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 14px 36px rgba(13, 15, 51, .18); z-index: 1; }
+  .dir :global(.ds) { position: absolute; }
+  .dir :global(.ds1) { left: 14px; top: 14px; } .dir :global(.ds2) { right: 14px; top: 14px; } .dir :global(.ds3) { left: 14px; bottom: 14px; } .dir :global(.ds4) { right: 14px; bottom: 14px; }
+  .dir-h { display: flex; justify-content: space-between; align-items: center; height: 26px; border-bottom: 2px solid var(--indigo); padding-bottom: 8px; box-sizing: content-box; }
+  .dir-h .tech { font-size: 11px; line-height: 16px; letter-spacing: .14em; color: var(--indigo); }
+  .dir-h .dir-b { font-size: 10px; letter-spacing: .12em; color: var(--steel); }
+  .bar { position: absolute; left: 28px; top: 64px; width: 704px; height: 66px; background: var(--tape); border-radius: 2px; box-shadow: 0 3px 6px rgba(0, 0, 13, .12); transition: transform .55s var(--ease-io); transform: translateY(var(--by, 0px)); }
+  .rows { position: relative; margin: 14px 0 0; padding: 0; }
+  .row { position: relative; display: grid; grid-template-columns: 70px 32px 36px 1fr auto; grid-template-rows: 30px 20px; align-items: center; height: 72px; padding: 8px 0 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .cct { grid-row: 1 / 3; font-size: 10px; line-height: 14px; color: var(--steel); }
+  .row.is-on .cct { color: var(--indigo); }
+  .bk { grid-row: 1 / 3; position: relative; width: 24px; height: 38px; border-radius: 4px; background: var(--deep); }
+  .bk i { position: absolute; left: 5px; top: 5px; width: 14px; height: 13px; border-radius: 2px; background: var(--mist); transform: translateY(15px); transition: transform .45s var(--ease-back), background-color .3s; }
+  .row.is-on .bk i { transform: none; background: var(--amber); }
+  .bk::after { content: ''; position: absolute; inset: -6px -10px; }
+  .st { grid-row: 1 / 3; font-size: 8px; line-height: 11px; letter-spacing: .1em; color: var(--steel); }
+  .row.is-on .st { color: var(--indigo); }
+  .rt { grid-column: 4; font-size: 21px; line-height: 31px; color: var(--ink); width: max-content; }
+  .rt:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .rs { grid-column: 4; grid-row: 2; font-size: 15px; line-height: 19px; color: var(--steel); }
+  .ra { grid-column: 5; grid-row: 1 / 3; display: flex; gap: 14px; padding-right: 30px; }
+  .ra a { font-weight: 600; font-size: 14px; line-height: 18px; color: var(--indigo); }
+  .ra a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .cp { position: absolute; width: 420px; height: 540px; margin: 0; padding: 14px; background: #fff; border-radius: 6px; box-shadow: 0 18px 40px rgba(13, 15, 51, .28); z-index: 2; }
+  .ph { position: relative; width: 100%; height: 512px; overflow: hidden; border-radius: 2px; }
+  .phi { position: absolute; inset: 0; opacity: 0; transition: opacity .5s var(--ease-io); }
+  .phi.on { opacity: 1; }
+  .cp :global(.hs) { position: absolute; }
+  .cp :global(.hs1) { left: 3px; top: 3px; } .cp :global(.hs2) { right: 3px; top: 3px; } .cp :global(.hs3) { left: 3px; bottom: 3px; } .cp :global(.hs4) { right: 3px; bottom: 3px; }
+  .cp-cap { position: absolute; left: 14px; top: 550px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); white-space: nowrap; text-transform: none; }
+  .cp :global(.svc-tape) { position: absolute; left: 300px; top: -20px; z-index: 3; }
+  .thumb { z-index: 3; width: 120px; height: 160px; padding: 9px 8px; background: #fff; border-radius: 4px; box-shadow: 0 10px 20px rgba(13, 15, 51, .3); transform: rotate(4deg); transform-origin: 0 0; }
+  .ti { width: 104px; height: 144px; overflow: hidden; }
+  .thumb span { position: absolute; font-size: 16px; line-height: 23px; color: var(--ink); white-space: nowrap; }
+  .t1 span { left: 26px; top: 166px; } .t2 span { left: 10px; top: 166px; transform: rotate(-7deg); }
+  .svc-cta { display: flex; align-items: center; gap: 20px; }
+  .svc-cta :global(.svc-call) { width: 235px; }
+  .svc-not a { display: grid; gap: 2px; }
+  .svc-not b { font-weight: 600; font-size: 16px; line-height: 20px; color: var(--indigo); }
+  .svc-not span { font-size: 15px; line-height: 19px; color: var(--steel); }
+  .svc-not a:hover b { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 1023px) {
+    .svc { padding-top: 104px; padding-bottom: 20px; display: flex; flex-direction: column; }
+    .svc-head :global(.svc-eb) { margin: 0; font-size: 10px; line-height: 14px; gap: 8px; }
+    .svc .h2 { margin-top: 10px; }
+    .svc-lead { width: auto; margin-top: 10px; }
+    .dir { position: relative; height: auto; margin-top: 14px; padding: 18px 20px 44px; }
+    .dir :global(.ds) { display: none; }
+    .dir-h { height: 13px; padding-bottom: 7px; }
+    .dir-h .tech { font-size: 9px; line-height: 13px; }
+    .bar { left: 10px; right: 10px; width: auto; top: 50px; height: 80px; background: #F3F4F6; box-shadow: none; border-radius: 6px; }
+    .rows { margin-top: 10px; }
+    .row { grid-template-columns: 36px 1fr; grid-template-rows: auto auto auto; height: auto; height: 84px; min-height: 0; padding: 8px 0 0; align-items: start; box-sizing: border-box; overflow: hidden; }
+    .cct { display: none; }
+    .bk { grid-column: 1; grid-row: 1 / 3; width: 22px; height: 34px; margin-top: 16px; }
+    .bk i { left: 4px; width: 14px; height: 12px; transform: translateY(14px); }
+    .st { grid-column: 1; grid-row: 3; font-size: 8px; padding-left: 4px; }
+    .rt { grid-column: 2; grid-row: 1; font-size: 17px; line-height: 25px; }
+    .rs { grid-column: 2; grid-row: 2; font-size: 13px; line-height: 18px; }
+    .ra { grid-column: 2; grid-row: 3; padding: 4px 0 0; gap: 24px; }
+    .ra a { font-size: 13px; line-height: 17px; }
+    .ra a + a { position: relative; } .ra a + a::before { content: ''; position: absolute; left: -12px; top: 3px; width: 1px; height: 11px; background: var(--line); }
+    .cp { position: relative; width: calc(250 / 350 * 100%); height: auto; aspect-ratio: 250 / 330; margin: -40px 0 0 20px; padding: 10px; }
+    .ph { height: 100%; }
+    .cp :global(.hs) { width: 10px; height: 10px; }
+    .cp-cap { top: auto; bottom: -22px; left: 0; font-size: 8px; }
+    .cp :global(.svc-tape) { left: 160px; top: -12px; font-size: 17px; }
+    .thumb { position: absolute; width: 92px; height: 124px; padding: 8px; }
+    .thumb.t1 { left: calc(282 / 390 * 100%); top: 886px; transform: rotate(4deg); } .thumb.t2 { left: calc(276 / 390 * 100%); top: 1026px; transform: rotate(-3deg); }
+    .ti { width: 76px; height: 108px; } .thumb span { display: none; }
+    .svc-cta { flex-direction: column; align-items: stretch; gap: 12px; margin-top: 40px; }
+    .svc-cta :global(.svc-call) { width: 100%; }
+    .svc-not a { display: block; font-size: 14px; line-height: 20px; }
+    .svc-not b, .svc-not span { display: inline; font-weight: 400; font-size: 14px; line-height: 20px; color: var(--steel); }
+  }
+</style>
+<script>
+  // Directory: the tape bar follows the hovered / focused row; a breaker click turns that circuit ON (one at a time) and
+  // opens its photo in the cover plate.
+  document.querySelectorAll<HTMLElement>('[data-dir]').forEach((sec) => {
+    const bar = sec.querySelector<HTMLElement>('[data-bar]');
+    const rows = Array.from(sec.querySelectorAll<HTMLElement>('[data-row]'));
+    const cap = sec.querySelector<HTMLElement>('[data-cap]');
+    let on = rows.findIndex((r) => r.classList.contains('is-on'));
+    const move = (i: number) => { if (bar) bar.style.setProperty('--by', `${rows[i].offsetTop - rows[0].offsetTop}px`); };
+    rows.forEach((r, i) => {
+      r.addEventListener('pointerenter', () => move(i));
+      r.addEventListener('focusin', () => move(i));
+      r.querySelector('[data-bk]')?.addEventListener('click', () => {
+        rows.forEach((x, k) => { x.classList.toggle('is-on', k === i); x.querySelector('[data-bk]')?.setAttribute('aria-pressed', String(k === i)); const st = x.querySelector('.st .dn-m'); if (st) st.textContent = k === i ? 'ON' : 'OFF'; });
+        on = i;
+        const p = r.dataset.photo;
+        if (p) { sec.querySelectorAll<HTMLElement>('[data-phi]').forEach((ph) => ph.classList.toggle('on', ph.dataset.phi === p)); if (cap && r.dataset.cap) cap.textContent = r.dataset.cap; }
+      });
+    });
+    sec.querySelector('.rows')?.addEventListener('pointerleave', () => move(Math.max(0, on)));
+  });
+</script>

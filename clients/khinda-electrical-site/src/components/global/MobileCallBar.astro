@@ -1,0 +1,24 @@
+---
+// Sticky mobile call bar (Figma 728:677, 390x84 white, shadow up). Below 1024 px; shows once the hero has scrolled away and
+// steps aside over the final form and the footer wordmark (ui.ts data-mbar).
+import Toggle from '../kit/Toggle.astro';
+import { SITE } from '../../data/site';
+---
+<nav class="mbar" data-mbar aria-label="Call or text">
+  <a href={SITE.tel} class="mb-call"><Toggle kind="btn" /><span><b>Call {SITE.phone}</b><small>Tap to call</small></span></a>
+  <a href={SITE.sms} class="mb-text"><span><b>Text</b><small>a photo</small></span></a>
+</nav>
+<style>
+  .mbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-callbar); display: none; gap: 8px; padding: 12px 12px calc(11px + env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -6px 18px rgba(0, 0, 26, .2); transform: translateY(115%); transition: transform .5s var(--ease-out); }
+  .mbar.is-on { transform: none; }
+  .mb-call, .mb-text { display: flex; align-items: center; gap: 12px; min-height: 61px; padding: 11px 18px; border-radius: 10px; }
+  .mb-call { flex: 1; background: var(--amber); color: var(--ink); }
+  .mb-call :global(.tg-btn) { width: 20px; height: 30px; }
+  .mb-call :global(.tg-btn i) { width: 10px; height: 12px; }
+  .mb-text { flex: 0 0 auto; min-width: 122px; box-shadow: inset 0 0 0 2px var(--indigo); color: var(--indigo); }
+  .mbar b { display: block; font-weight: 600; font-size: 17px; line-height: 22px; white-space: nowrap; }
+  .mbar small { display: block; font-size: 12px; line-height: 15px; }
+  .mb-text small { color: var(--steel); }
+  @media (max-width: 1023px) { .mbar { display: flex; } }
+  @media (max-width: 370px) { .mb-call { padding-inline: 12px; gap: 10px; } .mbar b { font-size: 15px; } .mb-text { min-width: 0; } }
+</style>

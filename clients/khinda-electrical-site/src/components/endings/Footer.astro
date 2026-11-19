@@ -1,0 +1,138 @@
+---
+// G6 footer (Figma Home 721:450, 1440x940 deep; mobile 728:609, 390x1297): a closed panel cover with 4 screws, logo plate,
+// NAP, services as directory rows with mini breakers (hover flips the breaker ON), towns, company links. The G5 cable ends
+// in a plug at the cover inlet. Then the KHINDA wordmark rises through the floor line on scroll (motion.ts kWordmark) and
+// the status band switches on. "TSBC LICENCE #" exactly as in Figma (number = Khinda to confirm).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-no-tagline-crop.png';
+import Screw from '../kit/Screw.astro';
+import Bolt from '../kit/Bolt.astro';
+import Art from '../kit/Art.astro';
+import d from '../../art/g6-d.svg?raw';
+import m from '../../art/g6-m.svg?raw';
+import { SITE, TOWNS } from '../../data/site';
+const DIR = [
+  ['Panel upgrades', '/services/panel-upgrades/'], ['Pot lights & lighting', '/services/lighting-pot-lights/'],
+  ['EV chargers', '/services/ev-charger-installation/'], ['Renos & basement suites', '/services/renovations-basement-suites/'],
+  ['Commercial electrical', '/services/commercial-electrical/'], ['Repairs & troubleshooting', '/services/repairs-troubleshooting/'],
+];
+const CO = [['About', '/about/'], ['Our work', '/our-work/'], ['Reviews', '/reviews/'], ['FAQ', '/faq/'], ['Contact', '/contact/'], ['Areas', '/areas/']];
+---
+<footer class="ft sec on-dark" style="--h:940px" data-footer>
+  <Art svg={d} class="dn-m ft-art" />
+  <Art svg={m} class="dn-d ft-art" />
+  <div class="ft-cover ab" style="--x:120px;--y:80px;--w:1200px">
+    <Screw s={16} class="fts fts1" /><Screw s={16} rot={110} class="fts fts2" /><Screw s={16} rot={75} class="fts fts3" /><Screw s={16} rot={160} class="fts fts4" />
+    <div class="ft-id">
+      <a href="/" class="ft-logo" aria-label={`${SITE.name}, home`}><Image src={logo} alt="" width={150} height={107} loading="lazy" /></a>
+      <p class="ft-name">{SITE.name}</p>
+      <p class="ft-city">Surrey, BC</p>
+      <a class="ft-ph" href={SITE.tel}>{SITE.phone}</a>
+      <p class="ft-cw">Calls + WhatsApp<span class="dn-d"> · <a href={SITE.social.instagram}>{SITE.igHandle}</a></span></p>
+      <a class="ft-ig dn-m" href={SITE.social.instagram}>{SITE.igHandle}</a>
+      <p class="ft-mk marker">All domestic / commercial work / Renovations</p>
+    </div>
+    <nav class="ft-dir" aria-label="Services">
+      <p class="ft-h tech">Services · directory</p>
+      <ul role="list">{DIR.map(([n, h], i) => <li><a href={h}><span class="br" aria-hidden="true"><i></i></span><span class="no tech">0{i + 1}</span><span>{n}</span></a></li>)}</ul>
+    </nav>
+    <nav class="ft-towns" aria-label="Towns">
+      <p class="ft-h tech">Towns</p>
+      <ul role="list">{TOWNS.map((t) => <li><a href={t.href}>{t.name}</a></li>)}</ul>
+    </nav>
+    <nav class="ft-co" aria-label="Company">
+      <p class="ft-h tech">Company</p>
+      <ul role="list">{CO.map(([n, h]) => <li><a href={h}>{n}</a></li>)}</ul>
+    </nav>
+  </div>
+  <div class="ft-wm ab" style="--x:120px;--y:520px;--w:1200px" aria-hidden="true"><span data-wordmark>KHINDA</span></div>
+  <i class="ft-floor ab" style="--x:120px;--y:756px;--w:1200px" aria-hidden="true"></i>
+  <div class="ft-band ab" style="--x:120px;--y:782px;--w:1200px" data-band>
+    <p class="tech"><Bolt w={9} h={12} /><span>Surrey, BC · <span class="dn-m">Text a photo any time</span><span class="dn-d">Domestic</span></span></p>
+    <p class="tech ft-band2 dn-d">Text a photo any time</p>
+    <a class="dn-m" href={SITE.tel}>{SITE.phone} →</a>
+  </div>
+  <i class="ft-rule ab dn-m" style="--x:120px;--y:864px;--w:1200px" aria-hidden="true"></i>
+  <div class="ft-base ab" style="--x:120px;--y:882px;--w:1200px">
+    <p class="ft-lic tech dn-m"><Bolt w={9} h={12} />TSBC licence #</p>
+    <p class="ft-copy">© 2026 {SITE.name} · Surrey, BC</p>
+    <p class="ft-legal"><a href="/privacy/">Privacy</a><a href="/sitemap-index.xml">Sitemap</a></p>
+  </div>
+</footer>
+<style>
+  .ft { background: var(--deep); overflow: clip; }
+  .ft :global(.ft-art) { z-index: 2; }
+  .ft-cover { position: relative; height: 430px; background: var(--indigo); border: 2px solid var(--line-d); border-radius: 16px; }
+  :global(.fts) { position: absolute; } :global(.fts1) { left: 16px; top: 16px; } :global(.fts2) { right: 16px; top: 16px; } :global(.fts3) { left: 16px; bottom: 16px; } :global(.fts4) { right: 16px; bottom: 16px; }
+  .ft-id { position: absolute; left: 54px; top: 54px; }
+  .ft-logo { display: block; width: 170px; height: 120px; padding: 6px 10px; background: #fff; border-radius: 8px; }
+  .ft-logo :global(img) { width: 150px; height: 108px; object-fit: cover; }
+  .ft-name { margin-top: 20px; font-family: var(--f-display); font-weight: 800; font-size: 24px; line-height: 38px; }
+  .ft-city { margin-top: -2px; font-size: 16px; line-height: 20px; color: var(--mist); }
+  .ft-ph { display: block; margin-top: 6px; font-family: var(--f-display); font-weight: 800; font-size: 28px; line-height: 34px; color: var(--amber); }
+  .ft-ph:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .ft-cw { margin-top: 4px; font-size: 14px; line-height: 18px; color: var(--mist); }
+  .ft-ig { display: block; margin-top: 16px; font-weight: 500; font-size: 15px; line-height: 19px; }
+  .ft-ig:hover, .ft-cw a:hover { color: var(--amber); }
+  .ft-mk { margin-top: 17px; font-size: 16px; line-height: 23px; color: var(--mist); }
+  .ft-h { padding-bottom: 6px; border-bottom: 1px solid var(--amber); font-size: 11px; line-height: 16px; letter-spacing: .14em; color: var(--mist); }
+  .ft-dir { position: absolute; left: 418px; top: 56px; width: 300px; }
+  .ft-dir ul { margin: 0; padding: 0; }
+  .ft-dir li { border-bottom: 1px solid var(--line-d); }
+  .ft-dir a { display: flex; align-items: center; gap: 0; height: 40px; font-weight: 500; font-size: 15px; transition: background-color .25s; }
+  .ft-dir li:first-child a { height: 44px; padding-top: 4px; }
+  .ft-dir a:hover, .ft-dir a:focus-visible { background: var(--row-d); }
+  .br { position: relative; flex: none; width: 14px; height: 23px; margin-right: 10px; border-radius: 3px; background: var(--line-d); }
+  .br i { position: absolute; left: 3px; top: 3px; width: 8px; height: 8px; border-radius: 1.5px; background: var(--mist); transform: translateY(9px); transition: transform .4s var(--ease-back), background-color .25s; }
+  .ft-dir a:hover .br i, .ft-dir a:focus-visible .br i { transform: none; background: var(--amber); }
+  .no { width: 32px; font-size: 10px; letter-spacing: .1em; color: var(--mist); }
+  .ft-towns { position: absolute; left: 778px; top: 56px; width: 160px; }
+  .ft-co { position: absolute; left: 998px; top: 56px; width: 140px; }
+  .ft-towns ul, .ft-co ul { display: grid; gap: 0; margin: 8px 0 0; padding: 0; }
+  .ft-towns a, .ft-co a { display: inline-block; font-size: 15px; line-height: 30px; }
+  .ft-towns a:hover, .ft-co a:hover { color: var(--amber); }
+  .ft-wm { height: 236px; overflow: hidden; }
+  .ft-wm span { position: absolute; left: 0; top: -136px; font-family: var(--f-display); font-weight: 800; font-size: 324px; line-height: 510px; letter-spacing: -.02em; color: var(--mark); white-space: nowrap; }
+  .ft-floor { height: 2px; background: var(--line-d); }
+  .ft-band { display: flex; align-items: center; justify-content: space-between; height: 50px; padding: 0 22px; background: var(--indigo); border: 1px solid var(--line-d); border-radius: 8px; transition: opacity .6s; }
+  .ft-band p { display: flex; align-items: center; gap: 13px; font-size: 12px; line-height: 17px; }
+  .ft-band a { font-weight: 600; font-size: 16px; color: var(--amber); }
+  .ft-band a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  :global(html.motion) .ft-band:not(.is-on) { opacity: .45; }
+  .ft-rule { height: 1px; background: var(--line-d); }
+  .ft-base { display: flex; justify-content: space-between; align-items: center; font-size: 13px; line-height: 17px; color: var(--mist); }
+  .ft-lic { display: flex; align-items: center; gap: 12px; font-size: 10px; line-height: 14px; }
+  .ft-copy { position: absolute; left: 400px; }
+  .ft-legal { display: flex; gap: 24px; }
+  .ft-legal a:hover { color: #fff; }
+  @media (max-width: 1023px) {
+    .ft { padding: 70px 20px 40px; }
+    .ft-cover { position: relative; height: auto; padding: 38px 26px 48px; border-radius: 14px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+    :global(.fts) { width: 14px; height: 14px; } :global(.fts1), :global(.fts3) { left: 12px; } :global(.fts2), :global(.fts4) { right: 12px; } :global(.fts1), :global(.fts2) { top: 12px; } :global(.fts3), :global(.fts4) { bottom: 12px; }
+    .ft-id, .ft-dir, .ft-towns, .ft-co { position: static; width: auto; }
+    .ft-id, .ft-dir { grid-column: 1 / -1; }
+    .ft-logo { width: 120px; height: 86px; padding: 5px 8px; }
+    .ft-logo :global(img) { width: 104px; height: 76px; }
+    .ft-name { margin-top: 16px; font-size: 22px; line-height: 35px; }
+    .ft-city { font-size: 15px; line-height: 19px; }
+    .ft-ph { margin-top: 5px; font-size: 26px; line-height: 32px; }
+    .ft-cw { font-size: 13px; line-height: 17px; }
+    .ft-mk { margin-top: 11px; font-size: 13px; line-height: 19px; }
+    .ft-dir { margin-top: 28px; }
+    .ft-dir a { height: 36px; font-size: 14px; }
+    .ft-dir li:first-child a { height: 40px; }
+    .br { width: 11px; height: 18px; margin-right: 7px; } .br i { width: 7px; height: 6px; left: 2px; top: 2px; transform: translateY(8px); }
+    .no { width: 28px; font-size: 11px; letter-spacing: 0; }
+    .ft-towns, .ft-co { margin-top: 30px; }
+    .ft-towns a, .ft-co a { font-size: 13px; line-height: 21px; min-height: 21px; }
+    .ft-wm { position: relative; margin-top: 16px; height: calc(66 / 350 * (100vw - 40px)); }
+    .ft-wm span { left: 1px; top: calc(-39 / 350 * (100vw - 40px)); font-size: calc(94 / 350 * (100vw - 40px)); line-height: 1.574; }
+    .ft-floor { display: block; position: relative; }
+    .ft-band { position: relative; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px; height: 62px; margin-top: 16px; padding: 0 16px; }
+    .ft-band p { gap: 11px; font-size: 11px; line-height: 16px; }
+    .ft-band2 { padding-left: 18px; color: var(--mist); }
+    .ft-base { position: relative; margin-top: 68px; font-size: 12px; line-height: 15px; }
+    .ft-copy { position: static; }
+    .ft-legal { gap: 20px; }
+  }
+</style>

@@ -1,0 +1,20 @@
+---
+// Page curtain (kit/curtain.ts drives it; Mike's MOTION.md section 3): 8 horizontal blinds, deep / indigo like the loader's
+// panel, the K-bolt mark in the middle. Resting CSS state = covering (what html.pt-in needs at first paint); elsewhere it
+// is hidden until the script parks it off-screen.
+import { Image } from 'astro:assets';
+import mark from '../../assets/brand/logo-mark-K-bolt.png';
+---
+<div class="pt" data-pt aria-hidden="true">
+  {Array.from({ length: 8 }, () => <i class="pt-blind"></i>)}
+  <span class="pt-mark"><Image src={mark} alt="" width={120} height={102} loading="eager" decoding="async" fetchpriority="low" /></span>
+</div>
+<style>
+  .pt { position: fixed; inset: 0; z-index: var(--z-curtain); pointer-events: none; visibility: hidden; display: flex; flex-direction: column; overflow: hidden; }
+  .pt.is-on, :global(html.pt-in) .pt { visibility: visible; }
+  .pt-blind { flex: 1 1 0; margin-bottom: -1px; background: var(--deep); will-change: transform; }
+  .pt-blind:nth-child(even) { background: var(--indigo); }
+  .pt-mark { position: absolute; left: 50%; top: 50%; width: 96px; translate: -50% -50%; opacity: 0; padding: 10px; background: #fff; border-radius: 12px; }
+  :global(html.pt-in) .pt-mark { opacity: 1; }
+  .pt-mark :global(img) { width: 100%; height: auto; }
+</style>

@@ -1,0 +1,6 @@
+---
+import Bolt from './Bolt.astro';
+interface Props { text: string; class?: string; style?: string; [k: string]: any }
+const { text, class: cls, style, ...rest } = Astro.props;
+---
+<p class:list={['eyebrow', cls]} style={style} {...rest}><Bolt />{text}</p>

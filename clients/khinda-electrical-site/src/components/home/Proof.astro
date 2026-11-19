@@ -1,0 +1,109 @@
+---
+// 1.3 Proof (Figma Home 709:437, 1440x860 indigo; mobile 723:986). No reviews online yet (FACT): a multimeter LCD reads his
+// Instagram (1,521 followers / 66 posts, counted 17 Nov 2026; data-count rolls them up) + 3 job slips with his photos.
+// Probe leads run from the meter to the slips (drawn on scroll). Yellow note beside the frame (real Google reviews replace
+// the slips) is in README "Khinda to confirm".
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Art from '../kit/Art.astro';
+import art from '../../art/proof-d.svg?raw';
+import { SITE } from '../../data/site';
+const SLIPS = [
+  { x: 690, y: 150, r: -2.2, rm: -2, img: 'crystal-chandelier-installed-surrey', t: 'Crystal chandelier', c: 'Lighting · Home', cm: 'Lighting · Home', alt: 'Crystal chandelier installed by Khinda Electrical in a Surrey home' },
+  { x: 904, y: 186, r: 1.6, rm: 2, img: 'barbershop-commercial-lighting-surrey', f: '50% 72%', t: 'Barbershop lights', c: 'Commercial fit-out', cm: 'Commercial', alt: 'Barbershop lighting fit-out by Khinda Electrical in Surrey' },
+  { x: 1116, y: 160, r: -1.2, rm: -1.5, img: 'fire-alarm-panels-commercial-surrey', f: '50% 62%', t: 'Fire alarm panels', c: 'Fire alarm · Shop', cm: 'Fire alarm · Shop', alt: 'Fire alarm panels installed by Khinda Electrical in a Surrey shop' },
+];
+const arrow = '<svg viewBox="0 0 10 8" width="10" height="8" aria-hidden="true"><path d="M0 4h8.5M5.5 1l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+---
+<section class="proof sec on-dark" style="--h:860px" data-m-section aria-labelledby="proof-h">
+  <Art svg={art} class="dn-m" data-draw="rev" data-start="top 70%" data-end="center 40%" />
+  <div class="pr-copy ab" style="--x:120px;--y:200px;--w:560px">
+    <Eyebrow text="Proof · from his Instagram" data-t="1" />
+    <h2 class="h2" id="proof-h" data-t="2"><span class="l1">No reviews online yet.</span><span class="l2">66 posts on camera.</span></h2>
+    <p class="lead pr-lead" data-t="3">His Google reviews are on their way. Until then, the work speaks<span class="dn-m">: panels, chandeliers and shop fit-outs,</span><span class="dn-d">,</span> posted job by job on {SITE.igHandle}.</p>
+  </div>
+  <ul role="list" class="slips" data-t="4" data-stagger>
+    {SLIPS.map((s) => (
+      <li class="slip ab" style={`--x:${s.x}px;--y:${s.y}px;--r:${-s.r}deg;--rm:${-s.rm}deg`}>
+        <a href={SITE.social.instagram} rel="noopener">
+          <div class="sp"><Img name={s.img} alt={s.alt} focus={(s as any).f} sizes="(min-width: 1024px) 180px, 147px" box={180 / 240} boxM={147 / 180} widths={[180, 300, 360, 540]} /></div>
+          <p class="st marker">{s.t}</p>
+          <p class="sc tech"><span class="dn-m">{s.c}</span><span class="dn-d">{s.cm}</span></p>
+          <p class="sf">From his Instagram</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <div class="meter ab" style="--x:500px;--y:540px" data-t="4" data-fx="pop" role="img" aria-label={`Instagram meter reading: ${SITE.igFollowers} followers, ${SITE.igPosts} posts, counted ${SITE.igDate}`}>
+    <div class="m-in">
+      <div class="lcd" aria-hidden="true">
+        <span class="lk tech l1k">Followers</span><b class="lv" data-count="1521" data-sep>1,521</b>
+        <span class="lk tech l2k">Posts</span><b class="lv2" data-count="66">66</b><span class="ld tech">17.11.26</span>
+      </div>
+      <span class="dial" aria-hidden="true"><i></i></span><span class="dv tech" aria-hidden="true">V</span><span class="da tech" aria-hidden="true">A</span><span class="do tech" aria-hidden="true">Ω</span>
+      <span class="jr" aria-hidden="true"></span><span class="jb" aria-hidden="true"></span>
+    </div>
+  </div>
+  <div class="pr-cta ab" style="--x:120px;--y:478px" data-t="4">
+    <Btn v="text" tone="dark" main="See the 66 posts" sub={SITE.igHandle} href={SITE.social.instagram} class="pr-ig" />
+    <a class="pr-call" href={SITE.tel}>Or call {SITE.phone} <Fragment set:html={arrow} /></a>
+  </div>
+  <p class="pr-note ab" style="--x:120px;--y:588px" data-t="5">Meter reading: {SITE.igHandle}, <span class="dn-m">counted </span>{SITE.igDate}</p>
+</section>
+<style>
+  .proof { background: var(--indigo); z-index: 2; }
+  .proof .h2 { margin-top: 19px; }
+  .pr-lead { width: 470px; margin-top: 20px; }
+  .slips { margin: 0; padding: 0; }
+  .slip { width: 204px; height: 372px; padding: 12px 12px 0; background: #fff; border-radius: 4px; box-shadow: 0 16px 30px rgba(5, 5, 26, .4); transform: rotate(var(--r)); transform-origin: 0 0; color: var(--ink); transition: transform .5s var(--ease-out); z-index: 1; }
+  .slip:hover { transform: rotate(var(--r)) translateY(-6px); }
+  .sp { width: 180px; height: 240px; border-radius: 2px; overflow: hidden; }
+  .st { margin: 12px 0 0 -8px; font-size: 19px; line-height: 24px; }
+  .sc { margin: 10px 0 0 -9px; font-size: 9px; line-height: 13px; color: var(--steel); }
+  .sf { margin: 7px 0 0 -10px; padding-top: 7px; border-top: 1px solid var(--line); width: 176px; font-size: 12px; line-height: 15px; color: var(--steel); }
+  .meter { z-index: 2; width: 250px; height: 250px; padding: 11px 13px; background: var(--amber); border-radius: 30px; box-shadow: 0 22px 40px rgba(5, 5, 26, .5); transform: rotate(-4deg); transform-origin: 0 0; }
+  .m-in { position: relative; width: 226px; height: 226px; background: var(--deep); border-radius: 22px; }
+  .lcd { position: absolute; left: 17px; top: 15px; width: 194px; height: 120px; background: #D9DDD0; border-radius: 6px; color: var(--ink); }
+  .lk { position: absolute; font-size: 8px; line-height: 11px; color: #42485A; }
+  .l1k { left: 13px; top: 9px; } .l2k { left: 17px; top: 75px; }
+  .lv { position: absolute; left: 13px; top: 19px; font-family: var(--f-display); font-weight: 800; font-size: 40px; line-height: 44px; }
+  .lv2 { position: absolute; left: 116px; top: 62px; font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 28px; }
+  .ld { position: absolute; right: 2px; top: 0; font-size: 8px; line-height: 11px; letter-spacing: .08em; color: #42485A; }
+  .dial { position: absolute; left: 90px; top: 146px; width: 66px; height: 66px; border-radius: 50%; background: var(--line-d); border: 2px solid var(--mist); }
+  .dial i { position: absolute; left: 29px; top: -2px; width: 4px; height: 22px; border-radius: 2px; background: var(--amber); }
+  .dv, .da, .do { position: absolute; font-size: 9px; line-height: 13px; color: var(--mist); letter-spacing: 0; }
+  .dv { left: 65px; top: 162px; } .da { left: 118px; top: 132px; } .do { left: 173px; top: 154px; }
+  .jr, .jb { position: absolute; width: 16px; height: 16px; border-radius: 50%; }
+  .jr { left: 35px; top: 192px; background: var(--c-red); } .jb { left: 201px; top: 181px; background: #111; border: 1px solid var(--mist); }
+  .pr-cta { display: flex; align-items: center; gap: 24px; }
+  .pr-cta :global(.pr-ig) { width: 190px; min-height: 70px; }
+  .pr-call { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--amber); }
+  .pr-call :global(svg) { transition: transform .3s var(--ease-out); }
+  .pr-call:hover :global(svg) { transform: translateX(4px); }
+  .pr-note { font-size: 13px; line-height: 17px; color: var(--mist); }
+  @media (max-width: 1023px) {
+    .proof { padding-top: 320px; display: flex; flex-direction: column; }
+    .proof .h2 { margin-top: 12px; }
+    .pr-lead { width: auto; margin-top: 14px; }
+    .slips { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px; }
+    .slip { position: relative; width: auto; height: auto; aspect-ratio: 165 / 280; padding: 9px 9px 0; transform: rotate(var(--rm)); transform-origin: 50% 50%; }
+    .slip:nth-child(2) { margin-top: 14px; }
+    .sp { width: 100%; height: auto; aspect-ratio: 147 / 180; }
+    .st { margin: 9px 0 0 -5px; font-size: 15px; line-height: 19px; }
+    .sc { margin: 9px 0 0 -6px; font-size: 7px; line-height: 10px; }
+    .sf { width: 100%; margin: 6px 0 0 -6px; padding-top: 7px; font-size: 11px; line-height: 14px; }
+    .meter { position: absolute; right: 29px; top: calc(320px + 520px + 6px); width: 165px; height: 170px; padding: 7px 9px; border-radius: 22px; transform: rotate(-4deg); transform-origin: 50% 50%; }
+    .m-in { width: 149px; height: 154px; border-radius: 16px; }
+    .lcd { left: 10px; top: 10px; width: 129px; height: 82px; border-radius: 5px; }
+    .lv { left: 9px; top: 14px; font-size: 26px; line-height: 30px; } .l1k { left: 9px; top: 6px; font-size: 6px; } .l2k { left: 11px; top: 52px; font-size: 6px; }
+    .lv2 { left: 78px; top: 44px; font-size: 16px; line-height: 20px; } .ld { font-size: 6px; }
+    .dial { left: 61px; top: 98px; width: 42px; height: 42px; } .dial i { left: 17px; height: 14px; width: 3px; }
+    .dv, .da, .do { display: none; }
+    .jr { left: 23px; top: 131px; width: 11px; height: 11px; } .jb { left: 132px; top: 123px; width: 11px; height: 11px; }
+    .pr-note { order: 5; margin-top: 20px; font-size: 12px; line-height: 15px; }
+    .pr-cta { order: 6; flex-direction: column; align-items: stretch; gap: 16px; margin-top: 15px; }
+    .pr-cta :global(.pr-ig) { width: 100%; min-height: 65px; }
+    .pr-call { font-size: 15px; line-height: 19px; }
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+// G3 emergency strip (Figma 708:466, 1440x46 indigo; mobile 723:897, 390x56). "What to do" opens the safety steps on Home
+// (1.9) and goes to /contact/ elsewhere (no emergency page until Khinda confirms urgent calls).
+import Bolt from '../kit/Bolt.astro';
+import { SITE } from '../../data/site';
+interface Props { home?: boolean }
+const { home = false } = Astro.props;
+---
+<aside class="es" aria-label="Electrical emergency">
+  <p class="es-t"><Bolt w={11} h={16} /><span>Sparks, a burning smell or no power? Step away and call <a href={SITE.tel}>{SITE.phone}</a>.</span></p>
+  <a class="es-w tech dn-m" href={home ? '#emergency' : '/contact/'}>What to do</a>
+</aside>
+<style>
+  .es { display: flex; align-items: center; justify-content: center; gap: 12px; height: 46px; padding: 0 20px; background: var(--indigo); color: #fff; }
+  .es-t { display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 15px; line-height: 19px; }
+  .es-t :global(svg) { flex: none; }
+  .es-t a { font-weight: 700; color: var(--amber); }
+  .es-t a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .es-w { display: inline-flex; align-items: center; height: 24px; padding: 4px 12px; border: 1px solid var(--amber); border-radius: 4px; font-size: 10px; line-height: 14px; color: var(--amber); transition: background-color .3s, color .3s; }
+  .es-w:hover { background: var(--amber); color: var(--deep); }
+  @media (max-width: 1023px) {
+    .es { height: auto; min-height: 56px; justify-content: flex-start; padding: 10px 20px; }
+    .es-t { align-items: flex-start; gap: 14px; font-size: 13px; line-height: 18px; }
+    .es-t :global(svg) { width: 10px; height: 14px; margin-top: 4px; }
+  }
+</style>

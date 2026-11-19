@@ -1,0 +1,50 @@
+/* Khinda Electrical tokens. Source: plan/DESIGN-SYSTEM.md + the Figma v5 export (build-cache). Colours from his logo and
+   panel: indigo / deep navy, panel grey, amber handles, tape labels, cable jacket colours (cables only). */
+@font-face { font-family: 'Saira'; font-style: normal; font-weight: 800; font-display: swap; src: url('/fonts/saira-latin-800-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Saira'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/saira-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/onest-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/onest-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/onest-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Onest'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/onest-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Michroma'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/michroma-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Permanent Marker'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/permanent-marker-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Saira Fallback'; src: local('Arial Black'), local('Arial'); size-adjust: 92%; ascent-override: 100%; descent-override: 26%; }
+@font-face { font-family: 'Onest Fallback'; src: local('Arial'); size-adjust: 102%; ascent-override: 96%; descent-override: 26%; }
+
+:root {
+  --panel: #E7E9EC;   /* light sections: the panel grey */
+  --white: #FFFFFF;
+  --indigo: #15174A;  /* brand indigo: H2 line 1, dark sections */
+  --deep: #0D0F33;    /* G1, process, F, G6 */
+  --ink: #14152B;     /* body text on light */
+  --steel: #5B6275;   /* meta on light */
+  --mist: #AEB4C6;    /* meta / body on dark */
+  --amber: #F5A833;   /* breaker handles, primary buttons, accents on dark */
+  --tape: #F3E7C8;    /* tape labels */
+  --h2b: #3D4677;     /* H2 second line on light */
+  --line: #C9CDD6;    /* hairlines on light */
+  --line-d: #2A2D63;  /* hairlines on deep */
+  --line-d2: #4A4F86; /* outlines on indigo */
+  --row-d: #1E2160;   /* row hover on indigo */
+  --row-l: #F1F2F5;   /* row hover on white */
+  --field: #F3F4F7;
+  --mark: #1C1F5C;    /* footer wordmark */
+  --c-red: #C8362F; --c-blue: #2C5FB8; --c-yellow: #F2C230; --c-white: #EDEDED; --copper: #C47A45; /* cable jackets only */
+  --screw: #D7DAE0; --screw-s: #8F95A3; --screw-slot: #6B7282;
+
+  --f-display: 'Saira', 'Saira Fallback', 'Arial Black', sans-serif;
+  --f-sans: 'Onest', 'Onest Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --f-tech: 'Michroma', 'Arial', sans-serif;
+  --f-marker: 'Permanent Marker', 'Comic Sans MS', cursive;
+
+  /* Desktop CSS is written in Figma px at 1440 (content x 120 -> 1320). Base.astro zooms the page by width/1440 from
+     1024 px up, so 1024-1920+ keep Figma proportions. Below 1024: the 390 mobile frames, fluid. */
+  --gutter: 120px;
+  --zoom: 1; --vw100: calc(100vw / var(--zoom));
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.65, 0, .35, 1);
+  --ease-back: cubic-bezier(.34, 1.56, .64, 1);
+  --z-seam: 5; --z-header: 50; --z-menu: 60; --z-callbar: 45; --z-curtain: 90; --z-loader: 100;
+  --header-h: 92px;
+}
+@media (max-width: 1023px) { :root { --gutter: 20px; --header-h: 64px; } }

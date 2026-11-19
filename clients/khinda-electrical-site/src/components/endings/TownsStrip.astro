@@ -1,0 +1,61 @@
+---
+// G5 towns strip (Figma Home 721:437, 1440x300; mobile 728:596). One white NMD90 cable from the form's gland to the footer
+// plug, the nine towns printed along its jacket like real cable print. Desktop: the print is a live <textPath> that runs
+// along the cable (motion.ts kTowns: marquee along the path, pauses on hover); each town links to its page and shows the
+// tag "<Town> · see the page →" on hover / focus. Mobile: the cable snakes in four runs, towns printed on each run.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Art from '../kit/Art.astro';
+import d from '../../art/g5-d.svg?raw';
+import m from '../../art/g5-m.svg?raw';
+import { TOWNS, SITE } from '../../data/site';
+const up = (s: string) => s.toUpperCase();
+// mobile print positions (Figma 390 frame, x / y of each word)
+const MP: [number, number][] = [[61, 84], [158, 84], [271, 84], [61, 148], [194, 148], [61, 212], [185, 212], [253, 212], [61, 276]];
+const c = (px: number) => `${(px / 3.9).toFixed(3)}cqi`;
+const run = (k: number) => TOWNS.map((t, i) => `<a href="${t.href}" data-town="${t.name}"><tspan class="tw">${up(t.name)}</tspan></a><tspan class="dot"> · </tspan>`).join('');
+---
+<section class="g5 sec" style="--h:300px" aria-labelledby="g5-h" data-g5>
+  <Art svg={d} class="dn-m g5-art" />
+  <div class="ab g5-head" style="--x:120px;--y:40px">
+    <Eyebrow text="Towns on the line" id="g5-h" />
+    <p class="g5-sub dn-m">Nine towns printed on the jacket. Is yours on it?</p>
+  </div>
+  <svg class="g5-print dn-m" viewBox="11.667 2731.254 420.013 87.503" width="1440" height="300" aria-label="Towns he works in">
+    <text dy="1.05"><textPath href="#g5-path" startOffset="0" data-g5-tp set:html={run(0) + run(1)} /></text>
+  </svg>
+  <p class="g5-tag dn-m" data-g5-tag hidden><i aria-hidden="true"></i><span data-g5-tagt>Newton</span> · see the page →</p>
+  <div class="g5-m dn-d">
+    <Art svg={m} class="g5-mart" />
+    <ul role="list" class="g5-mlist">
+      {TOWNS.map((t, i) => <li style={`left:${c(MP[i][0])};top:${c(MP[i][1])}`}><a class="tech" href={t.href}>{up(t.name)}</a></li>)}
+      <li style={`left:${c(187)};top:${c(276)}`} class="g5-nmd tech" aria-hidden="true">NMD90 14/2</li>
+    </ul>
+  </div>
+  <a class="ab g5-call" style="--x:1057px;--y:248px" href={SITE.tel}>Town not on it? Call {SITE.phone} →</a>
+</section>
+<style>
+  .g5 { background: var(--panel); overflow: clip; overflow-clip-margin: 40px; z-index: 1; }
+  .g5-sub { margin-top: 11px; font-size: 15px; line-height: 19px; color: var(--steel); }
+  .g5-print { position: absolute; left: 0; top: 0; width: 1440px; height: 300px; overflow: visible; z-index: 2; }
+  .g5-print text { font-family: var(--f-tech); font-size: 3.21px; letter-spacing: .385px; fill: var(--ink); }
+  .g5-print :global(a) { cursor: pointer; }
+  .g5-print :global(a:hover .tw), .g5-print :global(a:focus-visible .tw) { fill: var(--indigo); text-decoration: underline; }
+  .g5-print :global(a:focus) { outline: none; }
+  .g5-print :global(.dot) { fill: var(--steel); }
+  .g5-tag { position: absolute; z-index: 3; display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 22px 0 7px; background: var(--tape); border-radius: 3px; box-shadow: 0 4px 8px rgba(0,0,13,.18); font-weight: 600; font-size: 14px; color: var(--ink); white-space: nowrap; transform: rotate(2deg); pointer-events: none; }
+  .g5-tag i { width: 5px; height: 5px; border-radius: 50%; background: #8C93A8; }
+  .g5-call { font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); z-index: 2; }
+  .g5-call:hover { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 1023px) {
+    .g5 { container-type: inline-size; height: calc(372 / 390 * 100vw); padding: 0; }
+    .g5-head { position: absolute; left: 5.128cqi; top: 7.18cqi; z-index: 2; }
+    .g5-m { position: absolute; inset: 0; }
+    .g5-mlist { position: absolute; inset: 0; margin: 0; padding: 0; z-index: 2; }
+    .g5-mlist li { position: absolute; }
+    .g5-mlist a, .g5-nmd { position: relative; display: inline-block; font-size: max(10px, 2.82cqi); line-height: 4.1cqi; letter-spacing: .06em; color: var(--ink); border-radius: 3px; }
+    .g5-mlist a::after { content: ''; position: absolute; inset: -14px -4px; }
+    .g5-mlist a:hover, .g5-mlist a:focus-visible { background: var(--amber); }
+    .g5-nmd { color: var(--steel); }
+    .g5-call { position: absolute; left: 5.128cqi; top: 85.64cqi; font-size: 14px; line-height: 18px; z-index: 2; }
+  }
+</style>

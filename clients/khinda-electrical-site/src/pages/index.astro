@@ -1,0 +1,35 @@
+---
+// Home (Figma Home desktop 1440 / mobile 390, figma/v5/01-home-*.png). Each component holds its own section; the endings
+// (F panel-schedule form, G5 towns strip, G6 footer) come in through the layout's "end" slot.
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import Proof from '../components/home/Proof.astro';
+import Services from '../components/home/Services.astro';
+import About from '../components/home/About.astro';
+import Work from '../components/home/Work.astro';
+import Why from '../components/home/Why.astro';
+import Process from '../components/home/Process.astro';
+import Emergency from '../components/home/Emergency.astro';
+import Areas from '../components/home/Areas.astro';
+import Faq from '../components/home/Faq.astro';
+import Endings from '../components/endings/Endings.astro';
+import { faqSchema } from '../lib/schema';
+import { HOME_FAQ } from '../data/faq';
+---
+<Base title="Electrician in Surrey, BC · Khinda Electrical"
+  description="Electrician in Surrey, BC: panels, lighting, EV chargers, renos and commercial work. Every circuit labelled. Call or text 236-818-2664."
+  path="/" jsonld={[faqSchema(HOME_FAQ.map((f) => ({ q: f.q, a: f.a })))]}
+  og="residential-electrical-panel-finished-labelled-surrey" ogAlt="Khinda Electrical's finished residential panel in Surrey, every circuit labelled"
+  preload={{ name: 'residential-electrical-panel-finished-labelled-surrey', sizes: '(min-width: 1024px) 442px, calc(100vw - 60px)', widths: [360, 540, 720, 973] }}>
+  <Hero />
+  <Proof />
+  <Services />
+  <About />
+  <Work />
+  <Why />
+  <Process />
+  <Emergency />
+  <Areas />
+  <Faq />
+  <Endings slot="end" />
+</Base>

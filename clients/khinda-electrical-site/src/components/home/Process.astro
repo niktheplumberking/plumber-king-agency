@@ -1,0 +1,92 @@
+---
+// 1.8 Process (Figma Home 718:437, 1440x800 deep; mobile 726:437). A circuit: wall switch -> five junction boxes -> the
+// bulb. Signature: as you scroll, the amber current runs along the wire box by box (scripts/khinda.ts [data-current]); each
+// box passed gets a marker tick and its outline goes amber; at step 05 the bulb's glass fills warm (no glow) and reads ON.
+// The bulb hangs across the join into 1.9. Static / reduced motion = the finished state (all ticks, bulb lit).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Art from '../kit/Art.astro';
+import d from '../../art/proc-d.svg?raw';
+import m from '../../art/proc-m.svg?raw';
+import { SITE } from '../../data/site';
+const S = [
+  ['Call or text\na photo', `${SITE.phone}. A photo of the panel or fixture helps.`],
+  ['He looks,\nthen prices it', 'You hear the price before any work starts.'],
+  ['Permit\ntaken out', 'Surrey issues the electrical permit for regulated work.'],
+  ['The work,\nlabelled', 'Every circuit named on the panel door.'],
+  ['Inspection\n+ clean-up', 'Inspected where required. Site left tidy.'],
+];
+---
+<section class="proc sec on-dark" style="--h:800px" data-m-section aria-labelledby="proc-h" data-current>
+  <Art svg={d} class="dn-m pc-art" data-bulb />
+  <Art svg={m} class="dn-d pc-art" data-bulb />
+  <div class="pc-head ab" style="--x:320px;--y:120px;--w:800px">
+    <Eyebrow text="The circuit · 5 boxes" data-t="1" class="pc-eb" />
+    <h2 class="h2" id="proc-h" data-t="2"><span class="l1">From your first text</span><span class="l2">to the lights on.</span></h2>
+    <p class="lead pc-lead" data-t="3">One circuit, five boxes. The bulb <span class="dn-m">only </span>comes on at the end, once the work is inspected.</p>
+  </div>
+  <ol class="steps" role="list">
+    {S.map(([t, b], i) => (
+      <li class="step is-on" data-step style={`--x:${240 + i * 200}px`}>
+        <span class="jb" aria-hidden="true"><i class="ko ki"></i><i class="ko kx"></i><b>0{i + 1}</b><i class="wt"></i><small class="tech">Step</small><svg class="tick" viewBox="0 0 18 15"><path d="M2 8l5 5L16 2" fill="none" stroke="#F5A833" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3 class="sn"><span class="sr-only">Step {i + 1}: </span>{t.split('\n').map((l, k) => <>{k > 0 && <br class="dn-m" />}{k > 0 && ' '}{l}</>)}</h3>
+        <p class="sb">{b}</p>
+      </li>
+    ))}
+  </ol>
+  <p class="bulb-on tech ab dn-m" style="--x:1340px;--y:870px" aria-hidden="true">On</p>
+  <div class="pc-cta ab" style="--x:496px;--y:680px" data-t="4">
+    <Btn v="call" main="Start step 1" sub={`Call or text ${SITE.phone}`} class="pc-call" />
+    <p class="marker pc-mk dn-m">Step 1 starts here.</p>
+  </div>
+</section>
+<style>
+  .proc { background: var(--deep); z-index: 6; }
+  .pc-art { z-index: 3; }
+  .pc-art :global(.bulbglass), .pc-art :global(.bulbcore) { transition: fill .6s var(--ease-io), opacity .6s; }
+  :global(html.motion) .pc-art:not(.is-on) :global(.bulbglass) { fill: #2A2D63; }
+  :global(html.motion) .pc-art:not(.is-on) :global(.bulbcore) { opacity: 0; }
+  .pc-head { text-align: center; }
+  .pc-head :global(.pc-eb) { justify-content: center; }
+  .proc .h2 { margin-top: 19px; }
+  .pc-lead { width: 720px; margin: 16px auto 0; }
+  .steps { margin: 0; padding: 0; }
+  .step { position: absolute; left: var(--x); top: 380px; width: 180px; text-align: center; z-index: 4; }
+  .jb { position: relative; display: block; width: 120px; height: 120px; margin: 0 auto; background: var(--line-d); border: 2px solid var(--line-d2); border-radius: 10px; box-shadow: 0 10px 20px rgba(0, 0, 13, .35); transition: border-color .4s; }
+  .jb b { display: block; padding-top: 20px; font-family: var(--f-display); font-weight: 800; font-size: 52px; line-height: 60px; color: #fff; transition: color .4s; }
+  .jb small { display: block; margin-top: 10px; font-size: 8px; line-height: 11px; letter-spacing: .14em; color: var(--mist); }
+  .ko { position: absolute; top: 50px; width: 12px; height: 16px; border-radius: 2px; background: #8F95A3; }
+  .ki { left: -10px; } .kx { right: -10px; }
+  .wt { position: absolute; left: 0; right: 0; top: 58px; height: 2px; background: rgba(237, 237, 237, .35); }
+  .tick { position: absolute; right: -4px; top: -16px; width: 18px; height: 15px; opacity: 1; transition: opacity .3s; }
+  :global(html.motion) .step:not(.is-on) .tick { opacity: 0; }
+  .step:last-child .jb { border: 3px solid var(--amber); }
+  .step:last-child .jb b { color: var(--amber); }
+  :global(html.motion) .step:last-child:not(.is-on) .jb { border: 2px solid var(--line-d2); }
+  :global(html.motion) .step:last-child:not(.is-on) .jb b { color: #fff; }
+  .sn { margin-top: 26px; font-family: var(--f-display); font-weight: 800; font-size: 20px; line-height: 24px; }
+  .sb { margin-top: 8px; font-size: 15px; line-height: 22px; color: var(--mist); }
+  .bulb-on { font-size: 9px; line-height: 13px; letter-spacing: .14em; color: var(--amber); z-index: 3; }
+  .pc-cta { display: flex; align-items: center; gap: 20px; }
+  .pc-cta :global(.pc-call) { width: 234px; }
+  .pc-mk { font-size: 22px; line-height: 32px; color: var(--amber); }
+  @media (max-width: 1023px) {
+    .proc { padding: 64px 20px 8px; display: flex; flex-direction: column; container-type: inline-size; }
+    .pc-head { text-align: left; }
+    .pc-head :global(.pc-eb) { justify-content: flex-start; font-size: 10px; line-height: 14px; gap: 8px; }
+    .proc .h2 { margin-top: 10px; }
+    .pc-lead { width: auto; margin: 12px 0 0; }
+    .steps { margin-top: 156px; display: grid; gap: 0; }
+    .step { position: relative; left: auto; top: auto; width: auto; min-height: 124px; padding-left: 84px; text-align: left; }
+    .jb { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 8px; text-align: center; }
+    .jb b { padding-top: 10px; font-size: 28px; line-height: 32px; }
+    .jb small, .wt, .ko { display: none; }
+    .ko { top: 24px; width: 6px; height: 10px; } .ki { left: -5px; } .kx { right: -5px; }
+    .wt { top: 30px; }
+    .tick { right: -18px; top: -8px; width: 14px; height: 12px; }
+    .sn { margin-top: 4px; font-size: 19px; line-height: 23px; }
+    .sb { margin-top: 5px; font-size: 14px; line-height: 21px; }
+    .pc-cta { margin: -38px 0 0 84px; }
+    .pc-cta :global(.pc-call) { width: 100%; }
+  }
+</style>

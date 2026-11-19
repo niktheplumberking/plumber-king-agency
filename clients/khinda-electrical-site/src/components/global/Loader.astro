@@ -1,0 +1,51 @@
+---
+// First-visit-per-session loader (BUILD-BRIEF section 4): Khinda's panel powers up. Six circuit breakers flip ON one by
+// one (CCT 01-06, Michroma readout "CCT n / 6 ON"), then the MAIN flips last and the panel splits into 8 blinds that slide
+// off (the page curtain is the same 8 blinds). kit/loader.ts runs it: max 3.4 s, any click / tap / key skips, shown only
+// under html.intro (Base.astro: once per session, never under reduced motion).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-no-tagline-crop.png';
+---
+<div class="ld" data-loader aria-hidden="true">
+  <div class="ld-blinds">{Array.from({ length: 8 }, () => <i class="ld-blind"></i>)}</div>
+  <div class="ld-stage">
+    <div class="ld-panel">
+      <div class="ld-top"><span class="ld-logo"><Image src={logo} alt="" width={90} height={64} loading="eager" fetchpriority="low" /></span><span class="ld-ro"><b class="ld-n">CCT 0 / 6 ON</b><small>KHINDA ELECTRICAL · SURREY</small></span></div>
+      <div class="ld-row">
+        {Array.from({ length: 6 }, (_, i) => (
+          <span class="ld-cct"><span class="ld-br"><i></i></span><small>CCT 0{i + 1}</small></span>
+        ))}
+        <span class="ld-cct ld-main"><span class="ld-br"><i></i></span><small>MAIN</small></span>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="ld-skip" tabindex="-1">Skip intro →</button>
+</div>
+<style>
+  .ld { display: none; }
+  :global(html.intro) .ld { display: block; position: fixed; inset: 0; z-index: var(--z-loader); overflow: hidden; }
+  .ld-blinds { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .ld-blind { position: relative; flex: 1 1 0; margin-bottom: -1px; background: var(--deep); will-change: transform; }
+  .ld-blind::after { content: ''; position: absolute; top: 0; bottom: 0; left: 100%; width: 8px; background: var(--amber); }
+  .ld-blind:nth-child(even)::after { left: auto; right: 100%; background: var(--panel); }
+  .ld-stage { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; }
+  .ld-panel { width: min(560px, 100%); padding: 22px 26px 26px; background: var(--panel); border-radius: 14px; }
+  .ld-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 2px solid var(--amber); }
+  .ld-logo { width: 72px; }
+  .ld-logo :global(img) { width: 100%; height: auto; }
+  .ld-ro { display: grid; justify-items: end; gap: 4px; padding: 8px 12px; background: var(--deep); border-radius: 6px; font-family: var(--f-tech); letter-spacing: .12em; }
+  .ld-ro b { font-weight: 400; font-size: 14px; line-height: 20px; color: var(--amber); }
+  .ld-ro small { font-size: 9px; line-height: 12px; color: var(--mist); }
+  .ld-row { display: flex; justify-content: space-between; gap: 8px; padding-top: 22px; }
+  .ld-cct { display: grid; justify-items: center; gap: 8px; }
+  .ld-cct small { font-family: var(--f-tech); font-size: 9px; letter-spacing: .1em; color: var(--steel); }
+  .ld-br { position: relative; display: block; width: 36px; height: 60px; border-radius: 6px; background: var(--indigo); }
+  .ld-br i { position: absolute; left: 8px; top: 8px; width: 20px; height: 22px; border-radius: 3px; background: var(--mist); transform: translateY(22px); transition: transform .32s var(--ease-back), background-color .2s; }
+  .ld-cct.on .ld-br i { transform: none; background: var(--amber); }
+  .ld-main .ld-br { width: 52px; background: var(--deep); }
+  .ld-main .ld-br i { left: 10px; width: 32px; }
+  .ld-main small { color: var(--indigo); }
+  .ld-skip { position: absolute; right: clamp(12px, 4vw, 40px); bottom: clamp(12px, 4vh, 32px); min-height: 44px; padding: 0 8px; font-family: var(--f-tech); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
+  .ld-skip:hover { color: #fff; }
+  @media (max-width: 480px) { .ld-br { width: 30px; height: 50px; } .ld-br i { left: 6px; width: 18px; height: 18px; transform: translateY(20px); } .ld-main .ld-br { width: 40px; } .ld-main .ld-br i { width: 28px; left: 6px; } .ld-cct small { font-size: 7px; } }
+</style>

@@ -1,0 +1,173 @@
+---
+// 1.10 Areas (Figma Home 718:1863, 1440x860 white; mobile 726:537). His real Google Maps screenshot with a breaker pin at
+// the base, and a breaker legend (towns as circuits CCT 01-09) straddling the map's corner and the join into 1.11.
+// STATE: hover / focus a legend row -> a junction-box pin pops on that town, a cable runs from the base, tag "CCT 0n · Town"
+// (Figma draws CCT 03 Guildford; that is the resting state). Pin spots are read off the map screenshot (1568x784).
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Screw from '../kit/Screw.astro';
+import { SITE, TOWNS } from '../../data/site';
+// pin centre in % of the full screenshot (x = (mapX + 60) / 880, y = mapY / 440 at the 760x440 desktop crop)
+const AT: Record<string, [number, number]> = {
+  newton: [47.5, 58.0], fleetwood: [55.9, 40.9], guildford: [58.5, 27.0], cloverdale: [60.6, 59.3], 'south-surrey': [55.5, 80.5],
+  'city-centre': [44.3, 34.1], delta: [27.5, 67.3], langley: [72.7, 63.9], 'white-rock': [55.1, 93.4],
+};
+const rows = TOWNS.map((t, i) => ({ ...t, n: `0${i + 1}`, at: AT[t.slug] }));
+const REST = 2; // Guildford
+const cols = [['Surrey', rows.slice(0, 6)], ['Nearby', rows.slice(6)]] as const;
+---
+<section class="areas sec" style="--h:860px" data-m-section aria-labelledby="ar-h">
+  <div class="ab" style="--x:120px;--y:130px;--w:720px">
+    <Eyebrow text="Where he works" data-t="1" />
+    <h2 class="h2" id="ar-h" data-t="2"><span class="l1">Wired into Surrey.</span><span class="l2">Newton to South Surrey.</span></h2>
+  </div>
+  <p class="lead ar-lead ab" style="--x:920px;--y:150px;--w:400px" data-t="3">Based in Surrey, BC. Homes, suites and shops across the city and the towns next door.<span class="dn-m"> Not sure if you’re close enough? Ask.</span></p>
+  <div class="ar-cta ab" style="--x:920px;--y:262px" data-t="4"><Btn v="call" main="Check your street" sub={`Call ${SITE.phone}`} class="ar-call" /></div>
+  <div class="map ab" style="--x:120px;--y:340px" data-t="3" data-fx="frame" data-map>
+    <div class="mp-z">
+    <Img name="google-maps-surrey-bc-base" alt="Google Maps view of Surrey, BC and the towns next door: Delta, Langley and White Rock" sizes="(min-width: 1024px) 880px, 210vw" box={2} boxM={2} widths={[880, 1200, 1568]} />
+    <div class="mp-ov" style={`--tx:${rows[REST].at[0]}%;--ty:${rows[REST].at[1]}%`} data-ov>
+      <svg class="mp-cab" viewBox="0 0 880 440" preserveAspectRatio="none" aria-hidden="true"><path class="co" d="" /><path class="ci" d="" /></svg>
+      <span class="bp" aria-hidden="true"><i></i></span>
+      <span class="jp" aria-hidden="true"><i></i></span>
+      <span class="ptag" aria-hidden="true" data-ptag><span class="dn-m">CCT </span><span data-ptag-t>{rows[REST].n} · {rows[REST].name}</span></span>
+    </div>
+    </div>
+    <p class="mp-base tech"><svg viewBox="0 0 9 12" width="8" height="11" aria-hidden="true"><path d="M5.14 0 0 6.86h3.94L2.57 12l6-7.37H4.8L6.34 0z" fill="#F5A833"/></svg>Base · Surrey, BC</p>
+    <p class="mp-cr">Map data ©2026 Google</p>
+  </div>
+  <nav class="lg ab" style="--x:800px;--y:540px" aria-label="Towns he covers" data-t="4" data-fx="pop" data-legend>
+    <Screw s={12} rot={20} class="lsc" style="left:12px;top:12px" /><Screw s={12} rot={70} class="lsc" style="right:12px;top:12px" />
+    <Screw s={12} rot={110} class="lsc" style="left:12px;bottom:12px" /><Screw s={12} rot={160} class="lsc" style="right:12px;bottom:12px" />
+    <p class="lg-t tech">Towns · circuit legend</p>
+    <div class="lg-cols">
+      {cols.map(([h, list]) => (
+        <div class="lg-c">
+          <p class="lg-h tech">{h}</p>
+          <ul role="list">
+            {list.map((t) => (
+              <li><a href={t.href} class:list={['lg-r', t.slug === rows[REST].slug && 'is-hot']} data-x={t.at[0]} data-y={t.at[1]} data-n={t.n} data-name={t.name}>
+                <span class="lb" aria-hidden="true"><i></i></span><span class="lc tech"><span class="dn-m">CCT </span>{t.n}</span><span class="ln">{t.name}</span>
+              </a></li>
+            ))}
+          </ul>
+          {h === 'Nearby' && <p class="lg-f"><span class="marker"><span class="dn-m">Town not listed?</span><span class="dn-d">Not listed?</span></span><a href={SITE.tel}><span class="dn-m">Call and ask: {SITE.phone}</span><span class="dn-d">Call and ask.</span></a></p>}
+        </div>
+      ))}
+    </div>
+  </nav>
+</section>
+<style>
+  .areas { background: #fff; z-index: 4; }
+  .areas .h2 { margin-top: 19px; }
+  .ar-cta :global(.ar-call) { width: 229px; }
+  .map { width: 760px; height: 440px; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; box-shadow: 0 14px 30px rgba(13, 15, 51, .18); }
+  .map :global(img) { position: absolute; inset: 0; }
+  /* the screenshot (2:1) at Figma's crop: desktop = cover (880 wide, centred); mobile = Figma's zoom (808 wide, left -134, top -45) */
+  .mp-z { position: absolute; left: -7.895%; top: 0; width: 115.79%; aspect-ratio: 2; }
+  .mp-ov { position: absolute; inset: 0; }
+  .mp-cab { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .mp-cab path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .mp-cab .co { stroke: #14152B; stroke-width: 5; } .mp-cab .ci { stroke: #fff; stroke-width: 3; }
+  .bp { position: absolute; left: 49.66%; top: 30.9%; width: 30px; height: 44px; transform: translate(-50%, -100%); filter: drop-shadow(0 4px 4px rgba(0, 0, 0, .3)); }
+  .bp::before { content: ''; position: absolute; left: 0; top: 0; width: 30px; height: 36px; border-radius: 5px; background: var(--deep); }
+  .bp::after { content: ''; position: absolute; left: 13px; top: 35px; width: 4px; height: 9px; background: var(--deep); }
+  .bp i { position: absolute; left: 8px; top: 6px; width: 14px; height: 14px; border-radius: 2px; background: var(--amber); }
+  .jp { position: absolute; left: var(--tx); top: var(--ty); width: 30px; height: 30px; transform: translate(-50%, -50%); background: var(--indigo); border: 2px solid #fff; border-radius: 4px; box-shadow: 0 6px 10px rgba(0, 0, 13, .3); transition: left .45s var(--ease-io), top .45s var(--ease-io); }
+  .jp i { position: absolute; left: 50%; top: 50%; width: 8px; height: 3px; transform: translate(-50%, -50%); border-radius: 1px; background: var(--mist); }
+  .ptag { position: absolute; left: var(--tx); top: var(--ty); margin: -23px 0 0 21px; padding: 6px 10px; white-space: nowrap; background: var(--tape); border-radius: 3px; box-shadow: 0 6px 10px rgba(0, 0, 13, .2); font-weight: 600; font-size: 13px; line-height: 17px; color: var(--ink); transform: rotate(2deg); transform-origin: 0 0; transition: left .45s var(--ease-io), top .45s var(--ease-io); }
+  .ptag.flip { margin-left: -21px; translate: -100% 0; }
+  .ar-pop { animation: arpop .45s var(--ease-back); }
+  @keyframes arpop { from { scale: .6; opacity: 0; } }
+  .mp-base { position: absolute; left: 16px; top: 16px; display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 12px; background: #fff; border-radius: 6px; box-shadow: 0 4px 10px rgba(13, 15, 51, .2); font-size: 10px; line-height: 14px; letter-spacing: .12em; color: var(--indigo); }
+  .mp-cr { position: absolute; left: 16px; bottom: 7px; font-size: 10px; line-height: 13px; color: var(--steel); }
+  .lg { z-index: 4; width: 520px; height: 380px; padding: 30px 36px 0; background: var(--indigo); border-radius: 12px; box-shadow: 0 18px 40px rgba(13, 15, 51, .35); color: #fff; }
+  .lg :global(.lsc) { position: absolute; }
+  .lg-t { font-size: 11px; line-height: 16px; letter-spacing: .14em; }
+  .lg-cols { display: flex; gap: 0; margin-top: 10px; padding-top: 18px; border-top: 2px solid var(--amber); }
+  .lg-c:first-child { width: 254px; }
+  .lg-h { font-size: 10px; line-height: 14px; letter-spacing: .12em; color: var(--mist); }
+  .lg ul { display: grid; gap: 14px; margin: 12px 0 0; padding: 0; }
+  .lg-r { position: relative; display: flex; align-items: center; height: 26px; color: #fff; isolation: isolate; }
+  .lg-r::before { content: ''; position: absolute; left: -10px; top: -4px; width: 240px; height: 34px; border-radius: 6px; background: #1E2160; opacity: 0; transition: opacity .25s; z-index: -1; }
+  .lg-r.is-hot::before { opacity: 1; }
+  .lg-r:focus-visible { outline: 2px solid var(--amber); outline-offset: 6px; border-radius: 4px; }
+  .lb { position: relative; flex: none; width: 16px; height: 26px; border: 1px solid #4A4F86; border-radius: 3px; background: var(--deep); }
+  .lb i { position: absolute; left: 3px; top: 3px; width: 8px; height: 8px; border-radius: 1px; background: var(--amber); transition: transform .3s var(--ease-back); }
+  .lg-r:hover .lb i, .lg-r.is-hot .lb i { transform: translateY(1px); }
+  .lc { width: 64px; margin-left: 12px; font-size: 9px; line-height: 13px; letter-spacing: .1em; color: var(--mist); }
+  .ln { font-weight: 500; font-size: 16px; line-height: 20px; }
+  .lg-f { display: grid; gap: 4px; margin-top: 26px; }
+  .lg-f .marker { font-size: 18px; line-height: 26px; color: var(--amber); }
+  .lg-f a { font-weight: 500; font-size: 14px; line-height: 18px; color: #fff; }
+  .lg-f a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 1023px) {
+    .areas { padding: 110px 20px 0; display: flex; flex-direction: column; }
+    .areas .h2 { margin-top: 10px; font-size: 28px; line-height: 31px; }
+    .areas :global(.eyebrow) { font-size: 10px; line-height: 14px; gap: 8px; }
+    .ar-lead { margin-top: 14px; }
+    .ar-cta { margin-top: 6px; } .ar-cta :global(.ar-call) { width: 100%; min-height: 61px; }
+    .map { position: relative; width: 100%; height: auto; aspect-ratio: 350 / 250; margin-top: 24px; }
+    .mp-z { left: -38.29%; top: -18%; width: 230.86%; }
+    .bp { width: 18px; height: 26px; } .bp::before { width: 18px; height: 22px; border-radius: 3px; } .bp::after { left: 7px; top: 21px; width: 3px; height: 5px; } .bp i { left: 5px; top: 4px; width: 8px; height: 8px; }
+    .jp { width: 24px; height: 24px; border-radius: 3px; }
+    .ptag { margin: -20px 0 0 16px; padding: 5px 8px; font-size: 12px; line-height: 15px; transform: none; }
+    .ptag.flip { margin-left: -16px; }
+    .mp-base { left: 12px; top: 12px; height: 23px; gap: 6px; padding: 0 10px 0 8px; font-size: 8px; line-height: 11px; }
+    .mp-cr { left: 12px; bottom: 5px; font-size: 9px; line-height: 11px; }
+    .lg { position: relative; width: auto; height: 330px; margin: -40px 10px -40px; padding: 26px 24px 0; }
+    .lg-t { font-size: 9px; line-height: 13px; }
+    .lg-cols { margin-top: 9px; padding-top: 14px; }
+    .lg-c:first-child { width: 156px; }
+    .lg-h { font-size: 8px; line-height: 11px; }
+    .lg ul { gap: 14px; margin-top: 11px; }
+    .lg-r { height: 24px; }
+    .lg-r::before { left: -8px; width: 150px; height: 32px; }
+    .lb { width: 14px; height: 24px; } .lb i { left: 2px; top: 3px; width: 8px; height: 7px; }
+    .lc { width: auto; margin: 0 6px 0 8px; font-size: 8px; line-height: 11px; letter-spacing: 0; }
+    .ln { font-size: 15px; line-height: 19px; }
+    .lg-f { margin-top: 26px; gap: 4px; }
+    .lg-f .marker { font-size: 16px; line-height: 23px; } .lg-f a { font-size: 13px; line-height: 17px; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-legend]').forEach((lg) => {
+    const sec = lg.closest('section')!;
+    const ov = sec.querySelector<HTMLElement>('[data-ov]');
+    const tag = sec.querySelector<HTMLElement>('[data-ptag]');
+    const tagT = sec.querySelector<HTMLElement>('[data-ptag-t]');
+    const paths = Array.from(sec.querySelectorAll<SVGPathElement>('.mp-cab path'));
+    const map = sec.querySelector<HTMLElement>('[data-map]');
+    const rows = Array.from(lg.querySelectorAll<HTMLAnchorElement>('.lg-r'));
+    if (!ov || !tag || !tagT || !map) return;
+    const BX = 437, BY = 128; // base pin foot, in the 880x440 overlay box
+    const cable = (x: number, y: number) => {
+      const tx = (x / 100) * 880, ty = (y / 100) * 440;
+      const ex = tx + (tx >= BX ? -15 : 15);
+      const sag = Math.min(60, 12 + Math.hypot(ex - BX, ty - BY) * 0.12);
+      return `M${BX} ${BY}C${BX} ${BY + sag} ${ex} ${Math.max(BY, ty) + sag * 0.6} ${ex} ${ty}`;
+    };
+    const fit = () => {
+      tag.classList.remove('flip');
+      const t = tag.getBoundingClientRect(), m = map.getBoundingClientRect();
+      if (t.right > m.right - 6) tag.classList.add('flip');
+    };
+    const set = (a: HTMLAnchorElement, pop: boolean) => {
+      const x = +a.dataset.x!, y = +a.dataset.y!;
+      ov.style.setProperty('--tx', `${x}%`); ov.style.setProperty('--ty', `${y}%`);
+      tagT.textContent = `${a.dataset.n} · ${a.dataset.name}`;
+      paths.forEach((p) => p.setAttribute('d', cable(x, y)));
+      rows.forEach((r) => r.classList.toggle('is-hot', r === a));
+      if (pop) { tag.classList.remove('ar-pop'); void tag.offsetWidth; tag.classList.add('ar-pop'); }
+      requestAnimationFrame(fit);
+      setTimeout(fit, 500);
+    };
+    set(rows.find((r) => r.classList.contains('is-hot')) || rows[0], false);
+    rows.forEach((a) => {
+      a.addEventListener('pointerenter', () => set(a, true));
+      a.addEventListener('focus', () => set(a, true));
+    });
+    window.addEventListener('resize', fit, { passive: true });
+  });
+</script>

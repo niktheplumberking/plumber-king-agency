@@ -1,0 +1,78 @@
+---
+// 1.9 Emergency (Figma Home 718:1208, 1440x640 indigo; mobile 726:499). Three safety steps, call + text, and an ANSI-style
+// hazard label straddling his night photo (ig09) and the band below. No urgent-call promise: "urgent calls" is a Khinda to
+// confirm item, so the copy only says what to do. id="emergency" = target of the G3 "What to do" link.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Bolt from '../kit/Bolt.astro';
+import { SITE } from '../../data/site';
+const STEPS = ['Step away. Don’t touch the panel or the outlet.', `Call ${SITE.phone} and say what you see or smell.`, 'Smoke or flames: get out and call 911 first.'];
+---
+<section class="em sec on-dark" id="emergency" style="--h:640px" data-m-section aria-labelledby="em-h">
+  <div class="em-ph ab" style="--x:820px;--y:0px" data-t="3" data-fx="frame"><Img name="house-exterior-soffit-lights-surrey" focus="50% 10%" alt="House exterior with soffit lights at night, wired by Khinda Electrical in Surrey" sizes="(min-width: 1024px) 620px, 100vw" box={620 / 640} boxM={390 / 300} widths={[390, 620, 675]} /></div>
+  <div class="em-copy ab" style="--x:120px;--y:110px;--w:660px">
+    <Eyebrow text="Emergency · what to do" data-t="1" />
+    <h2 class="h2" id="em-h" data-t="2"><span class="l1"><span class="dn-m">Sparks, smell or no power?</span><span class="dn-d">Sparks, smell, no power?</span></span><span class="l2">Step back. Call.</span></h2>
+    <ol class="em-steps" role="list" data-t="3" data-stagger>
+      {STEPS.map((s, i) => <li><span class="n tech" aria-hidden="true">{i + 1}</span><span>{s}</span></li>)}
+    </ol>
+    <div class="em-cta" data-t="4">
+      <Btn v="call" sub={`Say "no power" or "sparks"`} class="em-call" />
+      <Btn v="text" tone="dark" sub="Only if it’s safe to take one" class="em-text" />
+    </div>
+  </div>
+  <div class="hz ab" style="--x:900px;--y:400px" data-t="4" data-fx="pop">
+    <div class="hz-band"><span class="tri" aria-hidden="true"><b>!</b></span><p class="hz-w">Warning</p></div>
+    <div class="hz-body">
+      <Bolt w={24} h={34} color="var(--ink)" class="hz-bolt" />
+      <p class="tech hz-k">Hazardous voltage</p>
+      <p class="hz-t">Keep the panel door shut. Work inside it is for a licensed electrician with a permit.</p>
+    </div>
+    <div class="hz-foot"><p class="tech">Khinda Electrical</p><a href={SITE.tel}>{SITE.phone}</a><span class="marker">Surrey, BC</span></div>
+  </div>
+</section>
+<style>
+  .em { background: var(--indigo); z-index: 5; }
+  .em-ph { position: absolute; width: 620px; height: 640px; overflow: hidden; }
+  .em-ph::after { content: ''; position: absolute; inset: 0; background: rgba(13, 15, 51, .18); }
+  .em .h2 { margin-top: 19px; }
+  .em-steps { display: grid; gap: 18px; margin: 24px 0 0; padding: 0; }
+  .em-steps li { display: flex; align-items: center; gap: 16px; font-weight: 500; font-size: 17px; line-height: 22px; }
+  .n { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 6px; background: var(--amber); color: var(--ink); font-size: 12px; letter-spacing: 0; }
+  .em-cta { display: flex; gap: 14px; margin-top: 44px; }
+  .em-cta :global(.em-call) { width: 239px; } .em-cta :global(.em-text) { width: 207px; }
+  .hz { z-index: 3; width: 400px; height: 300px; padding: 3px; background: #fff; border: 3px solid var(--ink); border-radius: 8px; box-shadow: 0 20px 40px rgba(0, 0, 13, .45); color: var(--ink); transform: rotate(2deg); transform-origin: 0 0; }
+  .hz-band { display: flex; align-items: center; gap: 16px; height: 76px; margin: -3px; padding: 0 18px; background: var(--amber); border-radius: 5px; }
+  .tri { position: relative; width: 60px; height: 52px; background: var(--ink); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+  .tri b { position: absolute; left: 0; right: 0; top: 10px; text-align: center; font-family: var(--f-display); font-weight: 800; font-size: 34px; line-height: 36px; color: var(--amber); }
+  .hz-w { font-family: var(--f-display); font-weight: 800; font-size: 44px; line-height: 50px; text-transform: uppercase; color: var(--ink); }
+  .hz-body { position: relative; padding: 26px 20px 0 72px; min-height: 134px; border-bottom: 1px solid rgba(20, 21, 43, .3); margin: 0 14px; padding-left: 58px; }
+  .hz-body :global(.hz-bolt) { position: absolute; left: 5px; top: 26px; }
+  .hz-k { font-size: 13px; line-height: 18px; letter-spacing: .1em; }
+  .hz-t { margin-top: 6px; font-weight: 500; font-size: 16px; line-height: 23px; }
+  .hz-foot { position: relative; padding: 15px 14px 0; }
+  .hz-foot .tech { font-size: 10px; line-height: 14px; color: var(--steel); }
+  .hz-foot a { display: block; margin-top: 4px; font-family: var(--f-display); font-weight: 800; font-size: 26px; line-height: 30px; color: var(--indigo); }
+  .hz-foot span { position: absolute; right: 28px; bottom: 6px; font-size: 18px; line-height: 26px; }
+  @media (max-width: 1023px) {
+    .em { padding: 0 20px 0; display: flex; flex-direction: column; }
+    .em-ph { position: relative; width: auto; height: auto; aspect-ratio: 390 / 300; margin: 0 -20px; }
+    .em-copy { margin-top: 36px; }
+    .em-copy :global(.eyebrow) { font-size: 10px; line-height: 14px; gap: 8px; }
+    .em .h2 { margin-top: 10px; font-size: 27px; line-height: 31px; }
+    .em-steps { gap: 10px; margin-top: 18px; }
+    .em-steps li { align-items: flex-start; gap: 14px; font-size: 15px; line-height: 21px; }
+    .n { width: 28px; height: 28px; }
+    .em-cta { flex-direction: column; gap: 10px; margin-top: 36px; }
+    .em-cta :global(.btn) { width: 100% !important; }
+    .hz { position: relative; width: calc(100% - 20px); height: auto; margin: 36px 0 -74px 10px; transform: rotate(2deg); transform-origin: 50% 50%; }
+    .hz-band { height: 60px; gap: 12px; padding: 0 14px; }
+    .tri { width: 46px; height: 40px; } .tri b { top: 8px; font-size: 26px; line-height: 28px; }
+    .hz-w { font-size: 34px; line-height: 40px; }
+    .hz-body { min-height: 0; padding: 18px 6px 14px 44px; margin: 0 10px; }
+    .hz-body :global(.hz-bolt) { top: 18px; width: 18px; height: 26px; }
+    .hz-k { font-size: 11px; } .hz-t { font-size: 14px; line-height: 20px; }
+    .hz-foot { padding: 10px 10px 12px; } .hz-foot a { font-size: 20px; line-height: 24px; } .hz-foot span { right: 14px; bottom: 12px; font-size: 15px; }
+  }
+</style>

@@ -1,0 +1,126 @@
+---
+// 1.7 Why (Figma Home 716:437, 1440x800 panel; mobile 724:664). Four plug-in outlet testers on a power strip that crosses
+// the frame edge, each one reason. STATE "flex-grow outlet testers": the hovered / tapped tester widens to the open pane and
+// its lamps read CORRECT (two amber lit, the third off); the others shrink to rails with vertical labels and unlit lamps.
+// Open copy for 01 / 03 / 04 reuses lines from Figma (process step 4, about lead, process step 1): only 02 is drawn open.
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Art from '../kit/Art.astro';
+import d from '../../art/why-d.svg?raw';
+import m from '../../art/why-m.svg?raw';
+import { SITE } from '../../data/site';
+const T = [
+  { k: 'Every circuit labelled', t: 'Every circuit labelled', b: 'Every circuit named on the panel door.' },
+  { k: 'Plugged in', t: 'Permit on regulated work', b: 'Surrey issues its own electrical permits. He works to the BC code, CEC 26th edition.', bm: 'Surrey issues its own permits. He works to the BC code, CEC 26th ed.', photo: true },
+  { k: 'Homes, suites and shops', t: 'Homes, suites and shops', b: 'Khinda Electrical is based in Surrey, BC, and comes to you: homes, basement suites and shops.' },
+  { k: 'A photo before the visit', t: 'A photo before the visit', b: `${SITE.phone}. A photo of the panel or fixture helps.` },
+];
+const lamp = (on: boolean) => `<svg viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8.4" fill="${on ? '#F5A833' : '#4D5275'}" stroke="${on ? '#B9761C' : '#AEB4C6'}" stroke-width="1.5"/>${on ? '<circle cx="11" cy="11" r="6.2" fill="#FFD27F" fill-opacity=".9"/>' : ''}<circle cx="6.8" cy="6" r="2.9" fill="#fff" fill-opacity=".55"/></svg>`;
+---
+<section class="why sec" style="--h:800px" data-m-section aria-labelledby="why-h">
+  <Art svg={d} class="dn-m" />
+  <Art svg={m} class="dn-d why-mart" />
+  <div class="ab" style="--x:120px;--y:100px;--w:500px">
+    <Eyebrow text="Why Khinda" data-t="1" />
+    <h2 class="h2" id="why-h" data-t="2"><span class="l1">The neat panel</span><span class="l2">is the proof.</span></h2>
+  </div>
+  <p class="lead why-lead ab" style="--x:640px;--y:144px;--w:360px" data-t="3">Four things you can check before he arrives.<span class="dn-m"> Each tester reads one of them.</span></p>
+  <div class="testers ab" style="--x:120px;--y:262px;--w:1176px" data-testers data-t="4" data-fx="frame">
+    {T.map((x, i) => (
+      <div class:list={['ts', i === 1 && 'open']} data-ts>
+        <button type="button" class="ts-b" aria-expanded={i === 1 ? 'true' : 'false'} aria-controls={`ts-${i}`} id={`tsb-${i}`}>
+          <span class="lf"><span class="lamps"><Fragment set:html={lamp(true)} /><Fragment set:html={lamp(true)} /><Fragment set:html={lamp(false)} /></span><span class="ok tech">Correct</span></span>
+          <span class="rail tech">0{i + 1} · {x.k}</span>
+          <span class="mn"><span class="tech">0{i + 1}</span><span>{x.t}</span></span>
+          <span class="plus" aria-hidden="true">+</span>
+        </button>
+        <div class="ts-p" id={`ts-${i}`} role="region" aria-labelledby={`tsb-${i}`}>
+          <p class="tech pk">0{i + 1} · {x.k}</p>
+          <h3 class="pt">{x.t}</h3>
+          <p class="pb">{x.bm ? <><span class="dn-m">{x.b}</span><span class="dn-d">{x.bm}</span></> : x.b}</p>
+          {x.photo && <figure class="pp"><div class="ppi"><Img name="spiral-wall-sconce-surrey" alt="Spiral wall sconce installed by Khinda Electrical" sizes="(min-width: 1024px) 184px, 92px" box={184 / 194} boxM={92 / 108} widths={[184, 368]} /></div><figcaption>His wall sconce job</figcaption></figure>}
+        </div>
+      </div>
+    ))}
+  </div>
+  <div class="why-cta ab" style="--x:120px;--y:670px" data-t="4">
+    <Btn v="call" class="w-call" />
+    <Btn v="text" class="w-text" />
+  </div>
+</section>
+<style>
+  .why { background: var(--panel); z-index: 1; }
+  .why .h2 { margin-top: 19px; }
+  .testers { display: flex; gap: 24px; height: 258px; z-index: 1; }
+  .ts { position: relative; flex: 0 0 150px; height: 258px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 8px 18px rgba(0, 0, 13, .12); overflow: hidden; transition: flex-basis .6s var(--ease-io), border-color .3s; }
+  .ts.open { flex-basis: 654px; border: 2px solid var(--amber); box-shadow: 0 8px 18px rgba(0, 0, 13, .22); }
+  .ts-b { position: absolute; inset: 0; width: 100%; text-align: left; cursor: pointer; }
+  .ts.open .ts-b { pointer-events: none; }
+  .lf { position: absolute; left: 23px; top: 23px; display: flex; flex-direction: column; align-items: center; justify-content: space-around; width: 44px; height: 120px; padding: 8px 0; background: var(--deep); border-radius: 8px; transition: all .5s var(--ease-io); }
+  .lamps { display: flex; flex-direction: column; gap: 12px; }
+  .lamps :global(svg) { width: 22px; height: 22px; }
+  .lamps :global(svg circle:nth-child(2)) { transition: opacity .3s; }
+  .ts:not(.open) .lamps :global(svg circle[fill='#F5A833']) { fill: #4D5275; stroke: #AEB4C6; }
+  .ts:not(.open) .lamps :global(svg circle[fill='#FFD27F']) { opacity: 0; }
+  .ok { display: none; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--mist); }
+  .ts.open .lf { left: 26px; top: 26px; width: 190px; height: 58px; flex-direction: row; justify-content: flex-start; gap: 12px; padding: 0 16px; flex-wrap: wrap; align-content: center; }
+  .ts.open .lamps { flex-direction: row; gap: 12px; }
+  .ts.open .ok { display: block; width: 100%; margin-top: -4px; }
+  .rail { position: absolute; left: 96px; bottom: 16px; font-size: 10px; line-height: 14px; letter-spacing: .06em; color: var(--indigo); white-space: nowrap; transform: rotate(-90deg); transform-origin: 0 0; translate: 0 0; writing-mode: horizontal-tb; }
+  .rail { left: 82px; bottom: auto; top: 243px; }
+  .ts.open .rail { opacity: 0; }
+  .mn { display: none; }
+  .plus { position: absolute; left: 120px; top: 222px; font-weight: 600; font-size: 20px; line-height: 26px; color: var(--steel); }
+  .ts.open .plus { display: none; }
+  .ts-p { position: absolute; left: 26px; top: 110px; width: 380px; opacity: 0; visibility: hidden; transition: opacity .4s .15s, visibility 0s .55s; }
+  .ts.open .ts-p { opacity: 1; visibility: visible; transition: opacity .45s .25s, visibility 0s; }
+  .pk { font-size: 11px; line-height: 16px; color: var(--steel); }
+  .pt { margin-top: 4px; font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 34px; color: var(--indigo); }
+  .pb { margin-top: 8px; font-size: 16px; line-height: 24px; }
+  .pp { position: absolute; left: 398px; top: -86px; width: 200px; margin: 0; }
+  .ppi { width: 200px; height: 210px; padding: 8px; background: #fff; border-radius: 3px; box-shadow: 0 10px 20px rgba(13, 15, 51, .25); transform: rotate(2deg); }
+  .ppi :global(picture), .ppi :global(img) { border-radius: 1px; }
+  .pp figcaption { margin-top: -6px; padding-left: 4px; font-size: 12px; line-height: 15px; color: var(--steel); }
+  .why-cta { display: flex; gap: 14px; }
+  .why-cta :global(.w-call) { width: 235px; } .why-cta :global(.w-text) { width: 200px; }
+  @media (max-width: 1023px) {
+    .why { padding: 56px 20px 76px; display: flex; flex-direction: column; }
+    .why :global(.why-mart) { height: 100%; } .why :global(.why-mart svg) { height: auto; }
+    .why .h2 { margin-top: 10px; width: 240px; }
+    .why-lead { margin-top: 16px; width: 320px; max-width: 100%; }
+    .testers { flex-direction: column; gap: 12px; height: auto; margin: 26px 37px 0 24px; }
+    .ts { flex: none; height: 76px; border-radius: 14px; transition: height .55s var(--ease-io); }
+    .ts.open { height: 340px; flex-basis: auto; }
+    .lf { left: 14px; top: 14px; width: 104px; height: 48px; flex-direction: row; justify-content: center; padding: 0; }
+    .lamps { flex-direction: row; gap: 8px; } .lamps :global(svg) { width: 20px; height: 20px; }
+    .ts.open .lf { left: 18px; top: 18px; width: 196px; height: 54px; flex-wrap: nowrap; gap: 12px; padding: 0 12px; }
+    .ts.open .ok { width: auto; margin: 0; }
+    .rail { display: none; }
+    .mn { position: absolute; left: 132px; top: 14px; right: 30px; display: grid; gap: 2px; }
+    .mn .tech { font-size: 11px; line-height: 16px; color: var(--steel); }
+    .mn span:last-child { font-weight: 600; font-size: 15px; line-height: 19px; }
+    .ts.open .mn { display: none; }
+    .plus { left: auto; right: 12px; top: 24px; }
+    .ts-p { left: 18px; top: 88px; width: auto; right: 14px; }
+    .pt { margin-top: 2px; font-size: 24px; line-height: 28px; }
+    .pb { width: 150px; font-size: 15px; line-height: 22px; }
+    .ts-p:not(:has(.pp)) .pb { width: auto; }
+    .pp { left: auto; right: 0; top: 88px; width: 104px; }
+    .ppi { width: 104px; height: 120px; padding: 6px; transform: rotate(3deg); }
+    .pp figcaption { margin-top: 2px; font-size: 11px; }
+    .why-cta { flex-direction: column; gap: 10px; margin-top: 16px; }
+    .why-cta :global(.btn) { width: 100% !important; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-testers]').forEach((g) => {
+    const ts = Array.from(g.querySelectorAll<HTMLElement>('[data-ts]'));
+    const open = (t: HTMLElement) => ts.forEach((x) => { x.classList.toggle('open', x === t); x.querySelector('.ts-b')?.setAttribute('aria-expanded', String(x === t)); });
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
+    ts.forEach((t) => {
+      t.querySelector('.ts-b')?.addEventListener('click', () => open(t));
+      t.addEventListener('pointerenter', () => { if (fine.matches) open(t); });
+    });
+  });
+</script>

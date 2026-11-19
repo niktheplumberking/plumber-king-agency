@@ -1,0 +1,11 @@
+---
+// Inline art layer cut from the Figma section export (tools: build-cache tools/art.py). The SVG's viewBox covers its whole
+// section, so it sits at left 0 / top 0 at the section's full width: desktop 1440 (page zoom does the rest), mobile 100 %.
+interface Props { svg: string; class?: string; style?: string; [k: string]: any }
+const { svg, class: cls, style, ...rest } = Astro.props;
+---
+<div class:list={['art', cls]} style={style} aria-hidden="true" {...rest}><Fragment set:html={svg} /></div>
+<style>
+  .art { position: absolute; left: 0; top: 0; width: 100%; pointer-events: none; z-index: 0; }
+  .art :global(svg) { width: 100%; height: auto; overflow: visible; }
+</style>

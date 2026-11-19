@@ -1,0 +1,11 @@
+---
+// The three endings every page shares (F -> G5 -> G6). `town` = the city-page variant of F.
+import FinalForm from './FinalForm.astro';
+import TownsStrip from './TownsStrip.astro';
+import Footer from './Footer.astro';
+interface Props { town?: string; form?: boolean }
+const { town, form = true } = Astro.props;
+---
+{form && <FinalForm town={town} />}
+<TownsStrip />
+<Footer />

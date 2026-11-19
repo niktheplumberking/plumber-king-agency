@@ -1,0 +1,80 @@
+---
+// 1.6 Work (Figma Home 715:437, 1440x860 indigo; mobile 724:570). A cable tray across the section with six of his photos
+// hung from it by cable ties, each with a job tag (job · type). Four cables leave the tray and run down across the join into
+// the 1.7 junction box (join A; drawn on scroll).
+import Img from '../ui/Img.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Art from '../kit/Art.astro';
+import d from '../../art/work-d.svg?raw';
+import m from '../../art/work-m.svg?raw';
+import { SITE } from '../../data/site';
+const H = [
+  { img: 'modern-chandelier-installed-surrey', h: 300, mh: 200, t: 'Modern chandelier', mt: 'Chandelier', c: 'Lighting', r: -3, alt: 'Modern chandelier installed by Khinda Electrical' },
+  { img: 'ring-chandelier-installed-surrey', h: 340, mh: 224, t: 'Ring chandelier', mt: 'Ring lights', c: 'Lighting', r: 3, alt: 'Ring chandelier installed by Khinda Electrical' },
+  { img: 'starry-sky-ceiling-lights-surrey', h: 290, mh: 210, t: 'Starry-sky ceiling', mt: 'Star ceiling', c: 'Feature ceiling', r: -3, alt: 'Starry-sky feature ceiling lights wired by Khinda Electrical' },
+  { img: 'condo-hallway-lights-surrey', f: '50% 85%', h: 330, mh: 200, t: 'Condo hallway', mt: 'Condo hall', c: 'Commercial', r: 3, alt: 'Condo hallway lighting by Khinda Electrical in Surrey' },
+  { img: 'shop-reception-lighting-surrey', f: '50% 75%', h: 300, mh: 224, t: 'Shop reception', mt: 'Shop desk', c: 'Commercial', r: -3, alt: 'Shop reception lighting by Khinda Electrical in Surrey' },
+  { img: 'pendant-lights-installed-surrey', h: 336, mh: 210, t: 'Pendant lights', mt: 'Pendants', c: 'Lighting', r: 3, alt: 'Pendant lights installed by Khinda Electrical' },
+];
+---
+<section class="work sec on-dark" style="--h:860px" data-m-section aria-labelledby="work-h">
+  <Art svg={d} class="dn-m" data-draw="" data-start="top 40%" data-end="bottom 20%" />
+  <Art svg={m} class="dn-d" data-draw="" data-start="top 10%" data-end="bottom 10%" />
+  <div class="wk-head ab" style="--x:120px;--y:110px;--w:560px">
+    <Eyebrow text="Our work" data-t="1" />
+    <h2 class="h2" id="work-h" data-t="2"><span class="l1">Straight off</span><span class="l2">his Instagram.</span></h2>
+  </div>
+  <p class="lead wk-lead ab" style="--x:760px;--y:140px;--w:480px" data-t="3">Chandeliers, pot lights, shop fit-outs and condo hallways, each one posted by him<span class="dn-m"> the week he did it</span>.</p>
+  <div class="wk-cta ab" style="--x:760px;--y:244px" data-t="4">
+    <Btn v="text" tone="dark" main="See all work" sub="Sorted by job type" href="/our-work/" class="wk-all" />
+    <a class="wk-call" href={SITE.tel}>Call {SITE.phone} <svg viewBox="0 0 10 8" width="10" height="8" aria-hidden="true"><path d="M0 4h8.5M5.5 1l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2"/></svg></a>
+  </div>
+  <ul role="list" class="hung" data-t="4" data-stagger>
+    {H.map((p, i) => (
+      <li class="hp" style={`--x:${120 + i * 204}px;--h:${p.h}px;--mh:${p.mh}px;--r:${-p.r}deg;--i:${i}`}>
+        <a href="/our-work/">
+          <span class="fr"><span class="im"><Img name={p.img} alt={p.alt} focus={(p as any).f} sizes="(min-width: 1024px) 164px, 88px" box={164 / (p.h - 16)} boxM={88 / (p.mh - 16)} widths={[164, 328]} /></span><i class="hole" aria-hidden="true"></i></span>
+          <span class="tag"><i aria-hidden="true"></i><span class="tt marker"><span class="dn-m">{p.t}</span><span class="dn-d">{p.mt}</span></span><span class="tc tech dn-m">{p.c}</span></span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+<style>
+  .work { background: var(--indigo); z-index: 2; }
+  .work .h2 { margin-top: 19px; }
+  .wk-cta { display: flex; align-items: center; gap: 22px; }
+  .wk-cta :global(.wk-all) { width: 159px; min-height: 70px; }
+  .wk-call { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--amber); }
+  .wk-call:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .hung { margin: 0; padding: 0; }
+  .hp { position: absolute; left: var(--x); top: 414px; width: 180px; z-index: 1; }
+  .hp a { display: block; transform-origin: 50% -30px; transition: transform .6s var(--ease-out); }
+  .hp a:hover, .hp a:focus-visible { transform: rotate(calc(var(--r) * -0.7)); }
+  .fr { position: relative; display: block; height: var(--h); padding: 8px; background: #fff; border-radius: 3px; box-shadow: 0 18px 30px rgba(5, 5, 26, .45); }
+  .im { display: block; width: 164px; height: calc(var(--h) - 16px); border-radius: 2px; overflow: hidden; }
+  .hole { position: absolute; left: 84px; top: -2px; width: 12px; height: 12px; border-radius: 50%; background: var(--deep); }
+  .tag { position: absolute; left: 10px; top: calc(var(--h) - 26px); display: block; width: 176px; height: 52px; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 6px 12px rgba(5, 5, 26, .35); transform: rotate(var(--r)); transform-origin: 0 0; color: var(--ink); }
+  .tag i { position: absolute; left: 7px; top: 20px; width: 10px; height: 10px; border-radius: 50%; background: var(--indigo); }
+  .tt { position: absolute; left: 24px; top: 6px; font-size: 14px; line-height: 20px; white-space: nowrap; }
+  .tc { position: absolute; left: 22px; top: 32px; font-size: 8px; line-height: 11px; color: var(--steel); }
+  @media (max-width: 1023px) {
+    .work { padding: 56px 20px 36px; container-type: inline-size; display: flex; flex-direction: column; }
+    .wk-cta { order: 5; }
+    .work .h2 { margin-top: 10px; }
+    .wk-head :global(.eyebrow) { font-size: 10px; line-height: 14px; gap: 8px; }
+    .wk-lead { margin-top: 12px; }
+    .hung { position: relative; display: grid; grid-template-columns: repeat(3, calc(104 / 390 * 100cqi)); column-gap: calc(10 / 390 * 100cqi); row-gap: 0; margin-top: 74px; }
+    .hp { position: relative; left: auto; top: auto; width: auto; height: 300px; }
+    .fr { height: var(--mh); padding: 8px; }
+    .im { width: 100%; height: calc(var(--mh) - 16px); }
+    .hole { display: none; }
+    .tag { left: 4px; top: calc(var(--mh) - 18px); width: calc(100% - 4px); height: 30px; }
+    .tag i { left: 5px; top: 11px; width: 7px; height: 7px; }
+    .tt { left: 18px; top: 7px; font-size: 11px; line-height: 16px; }
+    .wk-cta { flex-direction: column; align-items: stretch; gap: 16px; margin-top: -16px; width: calc(320 / 390 * 100cqi); }
+    .wk-cta :global(.wk-all) { width: 100%; min-height: 65px; }
+    .wk-call { font-size: 15px; line-height: 19px; }
+  }
+</style>

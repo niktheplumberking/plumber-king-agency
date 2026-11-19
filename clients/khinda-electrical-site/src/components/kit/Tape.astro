@@ -1,0 +1,9 @@
+---
+// Tape label (Permanent Marker on cream tape, slight turn, soft drop shadow 0 2 4 @ .18-.25).
+interface Props { text: string; size?: number; rot?: number; class?: string; style?: string; [k: string]: any }
+const { text, size = 22, rot = -4, class: cls, style = '', ...rest } = Astro.props;
+---
+<span class:list={['tape', cls]} style={`--fs:${size}px;--r:${-rot}deg;${style}`} {...rest}>{text}</span>
+<style>
+  .tape { display: inline-block; padding: 6px 16px; background: var(--tape); color: var(--ink); font-family: var(--f-marker); font-size: var(--fs); line-height: 1.45; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,.2); transform: rotate(var(--r)); transform-origin: 0 0; }
+</style>

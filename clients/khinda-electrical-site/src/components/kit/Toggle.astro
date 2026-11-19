@@ -1,0 +1,25 @@
+---
+// Breaker toggles (Figma primitives at 1:1). `on` moves the knob up and paints it amber where the design does.
+//   btn    22x34 deep, white knob 12x14 (2-line buttons)      chip   12x18 chip handle (amber body when ON)
+//   badge  14x22 deep, amber knob                            breaker 18x30 indigo, the schedule / legend breakers
+interface Props { kind?: 'btn' | 'chip' | 'badge' | 'breaker'; on?: boolean; class?: string }
+const { kind = 'btn', on = true, class: cls } = Astro.props;
+---
+<span class:list={['tg', `tg-${kind}`, on && 'is-on', cls]} aria-hidden="true"><i></i></span>
+<style>
+  .tg { position: relative; display: inline-block; flex: none; background: var(--deep); }
+  .tg i { position: absolute; display: block; transition: transform .45s var(--ease-back), background-color .3s; }
+  .tg-btn { width: 22px; height: 34px; border-radius: 4px; }
+  .tg-btn i { left: 5px; top: 4px; width: 12px; height: 14px; border-radius: 2px; background: #fff; transform: translateY(12px); }
+  .tg-btn.is-on i { transform: none; }
+  .tg-chip { width: 12px; height: 18px; border-radius: 2px; }
+  .tg-chip i { left: 3px; top: 2px; width: 6px; height: 7px; border-radius: 1px; background: var(--mist); transform: translateY(9px); }
+  .tg-chip.is-on { background: var(--amber); }
+  .tg-chip.is-on i { background: var(--deep); transform: none; }
+  .tg-badge { width: 14px; height: 22px; border-radius: 3px; }
+  .tg-badge i { left: 3px; top: 3px; width: 8px; height: 8px; border-radius: 1.5px; background: var(--amber); transform: translateY(8px); }
+  .tg-badge.is-on i { transform: none; }
+  .tg-breaker { width: 18px; height: 30px; border-radius: 4px; background: var(--indigo); }
+  .tg-breaker i { left: 4px; top: 4px; width: 10px; height: 11px; border-radius: 2px; background: var(--mist); transform: translateY(11px); }
+  .tg-breaker.is-on i { background: var(--amber); transform: none; }
+</style>

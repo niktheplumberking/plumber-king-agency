@@ -1,0 +1,6 @@
+---
+// The eyebrow tick / G1-G3 bolt (Figma "bolt" vector, 9x12 at 1:1; re-normalised from the export path).
+interface Props { w?: number; h?: number; color?: string; class?: string }
+const { w = 10, h = 14, color = 'var(--amber)', class: cls } = Astro.props;
+---
+<svg class={cls} viewBox="0 0 9 12" width={w} height={h} aria-hidden="true" focusable="false"><path d="M5.14 0 0 6.86h3.94L2.57 12l6-7.37H4.8L6.34 0z" fill={color}/></svg>

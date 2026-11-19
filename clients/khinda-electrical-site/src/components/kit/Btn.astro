@@ -1,0 +1,39 @@
+---
+// Two-line buttons (Figma "btn call primary" / "btn secondary"): action + reassurance, breaker toggle at left on the call.
+//   v="call"   amber, ink text, toggle, tel: link        v="text"  2px outline, sms: link (or href)
+//   v="indigo" indigo fill, white text (small forms)       tone="dark" outline + text white for dark sections
+import Toggle from './Toggle.astro';
+import { SITE } from '../../data/site';
+interface Props { v?: 'call' | 'text' | 'indigo'; main?: string; sub?: string; href?: string; tone?: 'light' | 'dark'; class?: string; style?: string; type?: 'submit' | 'button'; [k: string]: any }
+const { v = 'call', main, sub, href, tone = 'light', class: cls, style, type, ...rest } = Astro.props;
+const label = main ?? (v === 'call' ? `Call ${SITE.phone}` : 'Text a photo');
+const second = sub ?? (v === 'call' ? 'Tap to call · he picks up' : 'WhatsApp · same number');
+const link = href ?? (v === 'call' ? SITE.tel : SITE.sms);
+const Tag = type ? 'button' : 'a';
+---
+<Tag class:list={['btn', `btn-${v}`, tone === 'dark' && 'btn-dark', cls]} style={style} href={type ? undefined : link} type={type} {...rest}>
+  {v === 'call' && <Toggle kind="btn" />}
+  <span class="bt"><span class="b1">{label}</span><span class="b2">{second}</span></span>
+</Tag>
+<style>
+  .btn { position: relative; display: inline-flex; align-items: center; gap: 14px; min-height: 66px; padding: 12px 20px; border-radius: 10px; text-align: left; white-space: nowrap; transition: background-color .3s, color .3s, box-shadow .3s, transform .3s var(--ease-out); isolation: isolate; }
+  .bt { display: flex; flex-direction: column; gap: 2px; }
+  .b1 { font-weight: 600; font-size: 18px; line-height: 23px; }
+  .b2 { font-size: 13px; line-height: 17px; }
+  .btn-call { background: var(--amber); color: var(--ink); }
+  .btn-call:hover { background: #F7B54F; }
+  .btn-call:hover :global(.tg i) { animation: flick .5s var(--ease-io); }
+  @keyframes flick { 40% { transform: translateY(12px); } }
+  .btn-call:active { transform: translateY(1px); }
+  .btn-text { box-shadow: inset 0 0 0 2px var(--indigo); color: var(--indigo); padding-left: 22px; }
+  .btn-text .b2 { color: var(--steel); }
+  .btn-text:hover { background: var(--indigo); color: #fff; }
+  .btn-text:hover .b2 { color: var(--mist); }
+  .btn-dark.btn-text { box-shadow: inset 0 0 0 2px #fff; color: #fff; }
+  .btn-dark.btn-text .b2 { color: var(--mist); }
+  .btn-dark.btn-text:hover { background: #fff; color: var(--indigo); }
+  .btn-dark.btn-text:hover .b2 { color: var(--steel); }
+  .btn-indigo { background: var(--indigo); color: #fff; min-height: 50px; }
+  .btn-indigo:hover { background: #22256a; }
+  @media (max-width: 1023px) { .btn { min-height: 61px; padding: 11px 18px; gap: 12px; } .b1 { font-size: 17px; line-height: 22px; } .b2 { font-size: 12px; line-height: 15px; } }
+</style>

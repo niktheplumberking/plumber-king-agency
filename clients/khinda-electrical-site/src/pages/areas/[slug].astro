@@ -1,0 +1,13 @@
+---
+// Town pages (Figma 05 Newton is the template, with the F town variant). Towns are a Khinda to confirm item.
+import Stub from '../../components/stub/Stub.astro';
+import { TOWNS } from '../../data/site';
+export function getStaticPaths() { return TOWNS.map((t) => ({ params: { slug: t.slug } })); }
+const t = TOWNS.find((x) => x.slug === Astro.params.slug)!;
+const inSurrey = t.city === 'Surrey';
+const place = inSurrey ? `${t.name}, Surrey` : `${t.name}, BC`;
+---
+<Stub title={`Electrician in ${place} · Khinda`} path={t.href} navPath="/areas/" town={t.name}
+  description={`Khinda Electrical, based in Surrey, BC: panels, lighting, EV chargers and renos in ${place}. Call or text 236-818-2664.`}
+  eyebrow={`Areas · ${place}`} h1={['Electrician in', `${place}`]} crumbs={[{ name: 'Areas', path: '/areas/' }, { name: t.name, path: t.href }]}
+  lead={`Khinda Electrical is based in Surrey, BC. Panels, lighting, EV chargers and renos for homes and shops in ${t.name}.`} />

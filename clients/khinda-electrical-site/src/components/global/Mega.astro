@@ -1,0 +1,69 @@
+---
+// Mega menus under the header (no Figma frame: built from the Home parts). Services = the circuit directory (mini breakers,
+// CCT numbers); Areas = the town legend (Surrey / Nearby). White panel card with screws, deep emergency card.
+import Toggle from '../kit/Toggle.astro';
+import Screw from '../kit/Screw.astro';
+import { SERVICES, TOWNS, SITE } from '../../data/site';
+const arrow = '<svg viewBox="0 0 10 8" width="10" height="8" aria-hidden="true"><path d="M0 4h8.5M5.5 1l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+---
+<div class="mega" id="mega-services" data-mega="services" hidden>
+  <div class="mg-card">
+    <Screw class="mg-s1" /><Screw class="mg-s2" rot={110} />
+    <div class="mg-col mg-wide" data-mg-col>
+      <p class="mg-h tech">Circuit directory · services</p>
+      <ul role="list" class="mg-grid">
+        {SERVICES.map((s, i) => <li><a href={s.href}><Toggle kind="chip" on={false} /><span class="mg-c tech">CCT 0{i + 1}</span><span>{s.name}</span></a></li>)}
+      </ul>
+      <a class="mg-all" href="/services/">All services <Fragment set:html={arrow} /></a>
+    </div>
+    <aside class="mg-em on-dark" data-mg-col>
+      <p class="mg-h tech">Sparks or no power?</p>
+      <p class="mg-emh">Step away and call.</p>
+      <a class="mg-call" href={SITE.tel}>{SITE.phone}</a>
+      <a class="mg-emlink" href={SITE.sms}>Text a photo instead <Fragment set:html={arrow} /></a>
+    </aside>
+  </div>
+</div>
+<div class="mega" id="mega-areas" data-mega="areas" hidden>
+  <div class="mg-card">
+    <Screw class="mg-s1" rot={70} /><Screw class="mg-s2" rot={20} />
+    {(['Surrey', 'Nearby'] as const).map((g) => (
+      <div class="mg-col" data-mg-col>
+        <p class="mg-h tech">{g}</p>
+        <ul role="list" class="mg-list">
+          {TOWNS.map((t, i) => ({ t, i })).filter(({ t }) => t.city === g).map(({ t, i }) => <li><a href={t.href}><Toggle kind="chip" on={false} /><span class="mg-c tech">CCT 0{i + 1}</span><span>{t.name}</span></a></li>)}
+        </ul>
+      </div>
+    ))}
+    <aside class="mg-em on-dark" data-mg-col>
+      <p class="mg-h tech">Based in Surrey, BC</p>
+      <p class="mg-emh">Town not listed?</p>
+      <a class="mg-call" href={SITE.tel}>{SITE.phone}</a>
+      <a class="mg-emlink" href="/areas/">All areas <Fragment set:html={arrow} /></a>
+    </aside>
+  </div>
+</div>
+<style>
+  .mega { position: absolute; left: 0; right: 0; top: 100%; padding: 0 120px; }
+  .mg-card { position: relative; display: grid; grid-template-columns: 1fr 1fr 320px; background: #fff; color: var(--ink); border-radius: 0 0 14px 14px; box-shadow: 0 24px 48px -16px rgba(13, 15, 51, .45); overflow: hidden; }
+  #mega-services .mg-card { grid-template-columns: 1fr 320px; }
+  .mg-card :global(.mg-s1), .mg-card :global(.mg-s2) { position: absolute; bottom: 12px; }
+  .mg-card :global(.mg-s1) { left: 12px; } .mg-card :global(.mg-s2) { right: 332px; }
+  .mg-col { padding: 30px 32px 34px; }
+  .mg-col + .mg-col { border-left: 1px solid var(--line); }
+  .mg-h { margin-bottom: 14px; font-size: 11px; line-height: 16px; color: var(--steel); }
+  .mg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 24px; margin: 0; padding: 0; }
+  .mg-list { display: grid; gap: 2px; margin: 0; padding: 0; }
+  .mg-grid a, .mg-list a { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 8px 10px; margin-inline: -10px; border-radius: 6px; font-weight: 600; font-size: 16px; line-height: 20px; transition: background-color .25s; }
+  .mg-c { font-size: 9px; color: var(--steel); width: 48px; flex: none; }
+  .mg-grid a:hover, .mg-list a:hover, .mg-grid a:focus-visible, .mg-list a:focus-visible { background: var(--row-l); }
+  .mg-grid a:hover :global(.tg), .mg-list a:hover :global(.tg) { background: var(--amber); }
+  .mg-grid a:hover :global(.tg i), .mg-list a:hover :global(.tg i) { background: var(--deep); transform: none; }
+  .mg-all, .mg-emlink { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; font-weight: 600; font-size: 15px; color: var(--indigo); }
+  .mg-em { display: grid; align-content: start; gap: 8px; padding: 30px 32px; background: var(--deep); }
+  .mg-em .mg-h { color: var(--mist); margin: 0; }
+  .mg-emh { font-family: var(--f-display); font-weight: 800; font-size: 26px; line-height: 30px; }
+  .mg-call { font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 36px; color: var(--amber); }
+  .mg-em .mg-emlink { color: #fff; }
+  @media (max-width: 1023px) { .mega { display: none; } }
+</style>

@@ -1,0 +1,23 @@
+---
+// Service pages (Figma 03 Panel upgrades is the template; builders 2-3 build them out). H1s and titles: SEO-PLAN.md.
+import Stub from '../../components/stub/Stub.astro';
+import { SERVICES } from '../../data/site';
+import { serviceSchema } from '../../lib/schema';
+const META: Record<string, { title: string; h1: [string, string]; lead: string }> = {
+  'panel-upgrades': { title: 'Panel & 200A Service Upgrades in Surrey · Khinda', h1: ['Panel Upgrades in', 'Surrey, BC'], lead: '100A to 200A, full panels, and adding space for an EV charger or a heat pump. Done on a permit, with every circuit labelled on the door.' },
+  'ev-charger-installation': { title: 'EV Charger Installation in Surrey, BC · Khinda', h1: ['EV Charger Installation', 'in Surrey'], lead: 'EV chargers, on a permit. Rebates may apply.' },
+  'lighting-pot-lights': { title: 'Pot Lights & Lighting Installation Surrey · Khinda', h1: ['Pot Lights & Lighting', 'in Surrey'], lead: 'Pot lights, chandeliers, soffit lights.' },
+  'new-construction-wiring': { title: 'New Home & Suite Wiring in Surrey · Khinda', h1: ['New Construction Wiring', 'in Surrey'], lead: 'Rough-in to finish, new builds too.' },
+  'renovations-basement-suites': { title: 'Renovation & Basement Suite Wiring Surrey', h1: ['Renovation Electrical', 'in Surrey'], lead: 'Rough-in to finish for renos and basement suites.' },
+  'commercial-electrical': { title: 'Commercial Electrician in Surrey, BC · Khinda', h1: ['Commercial Electrical', 'in Surrey'], lead: 'Shop fit-outs, barbershops, fire alarm.' },
+  'fire-alarm-systems': { title: 'Fire Alarm Electrical Work in Surrey · Khinda', h1: ['Fire Alarm', 'Systems'], lead: 'Fire alarm panels for shops and commercial spaces in Surrey.' },
+  'repairs-troubleshooting': { title: 'Electrical Repairs in Surrey, BC · Khinda', h1: ['Electrical Repairs', '& Troubleshooting'], lead: 'Tripping breakers, flicker, dead outlets.' },
+};
+export function getStaticPaths() { return SERVICES.map((s) => ({ params: { slug: s.slug } })); }
+const s = SERVICES.find((x) => x.slug === Astro.params.slug)!;
+const m = META[s.slug];
+const description = `${m.lead} Khinda Electrical, Surrey, BC. Call or text 236-818-2664.`.slice(0, 155);
+---
+<Stub title={m.title} path={s.href} description={description} eyebrow={`${s.name} · Surrey, BC`} h1={m.h1} lead={m.lead} navPath="/services/"
+  crumbs={[{ name: 'Services', path: '/services/' }, { name: s.name, path: s.href }]}
+  jsonld={[serviceSchema({ name: s.name, path: s.href, description: m.lead })]} />

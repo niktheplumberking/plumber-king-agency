@@ -1,0 +1,86 @@
+---
+// 4.3 Towns (Figma 776:437, 1440x800 white; mobile 783:437). The knockout box: Surrey on side A (6), nearby towns on side
+// B (3), each knockout a town tag that links to its page; "Not listed?" is the amber call tag. The service drop cable
+// leaves the "Not listed?" knockout and runs down into the 4.4 coverage map base (art, drawn on scroll).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Obj from '../p3/Obj.astro';
+import dropD from '../../art/p3/04/drop-d.svg?raw';
+import dropM from '../../art/p3/04/drop-m.svg?raw';
+import { SITE, TOWNS } from '../../data/site';
+const A = TOWNS.filter((t) => t.city === 'Surrey');
+const B = TOWNS.filter((t) => t.city !== 'Surrey');
+// desktop: Surrey tags in a 3 x 2 grid (x 150 / 382 / 614), nearby in 2 columns from x 874; mobile: 2 columns
+---
+<section class="tw sec p3s" id="towns" style="--h:800px" data-m-section aria-labelledby="tw-h">
+  <Obj svg={dropD} class="tw-drop ab dn-m" style="--x:940px;--y:522px" data-draw="" data-start="top 40%" data-end="bottom 20%" />
+  <Obj svg={dropM} class="tw-drop dn-d" data-draw="" data-start="bottom 90%" data-end="bottom 30%" />
+  <div class="ab" style="--x:120px;--y:92px;--w:600px">
+    <Eyebrow text="Towns · One box, two sides" data-t="1" />
+    <h2 class="h2 tw-h" id="tw-h" data-t="2"><span class="l1">Surrey on side A.</span><span class="l2"><span class="dn-m">Nearby towns on side B.</span><span class="dn-d">Nearby on side B.</span></span></h2>
+  </div>
+  <div class="tw-r ab" style="--x:780px;--y:128px;--w:500px" data-t="3">
+    <p class="lede">Six Surrey neighbourhoods on one side of the box, three towns next door on the other. Each one has its own page.</p>
+    <a class="lk tw-lk" href={SITE.tel}><span class="dn-m">Call {SITE.phone} to check your street →</span><span class="dn-d">Call to check your street →</span></a>
+  </div>
+  <div class="tw-box ab" style="--x:120px;--y:300px" data-t="4">
+    <i class="tw-sc s1" aria-hidden="true"></i><i class="tw-sc s2" aria-hidden="true"></i><i class="tw-sc s3" aria-hidden="true"></i><i class="tw-sc s4" aria-hidden="true"></i>
+    <div class="tw-side">
+      <p class="tech tw-st">Side A · Surrey · 6</p>
+      <ul role="list" class="tw-g" data-stagger>{A.map((t) => <li><a class="tw-t" href={t.href}><i class="ko" aria-hidden="true"></i><span class="tw-n">{t.name}</span><span class="tw-s">Surrey · <span class="dn-m">see the </span>page →</span></a></li>)}</ul>
+    </div>
+    <i class="tw-div" aria-hidden="true"></i>
+    <div class="tw-side tw-b">
+      <p class="tech tw-st">Side B · Nearby · 3</p>
+      <ul role="list" class="tw-g" data-stagger>
+        {B.map((t) => <li><a class="tw-t" href={t.href}><i class="ko" aria-hidden="true"></i><span class="tw-n">{t.name}</span><span class="tw-s">Nearby · <span class="dn-m">see the </span>page →</span></a></li>)}
+        <li><a class="tw-t tw-x" href={SITE.tel}><i class="ko" aria-hidden="true"></i><span class="tw-n">Not listed?</span><span class="tw-s">Call {SITE.phone}<span class="dn-m"> →</span></span></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+<style>
+  .tw { background: #fff; z-index: 3; }
+  .tw :global(.tw-drop) { z-index: 5; }
+  .tw-h { margin-top: 15px; }
+  .tw-lk { margin-top: 32px; }
+  .tw-box { display: flex; width: 1200px; height: 290px; padding: 30px 0 0 30px; background: var(--panel); border: 2px solid var(--mist); border-radius: 12px; box-shadow: 0 10px 24px rgba(13, 15, 51, .18); }
+  .tw-sc { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #9AA0AE; box-shadow: inset 0 0 0 2px #D5D8DE; }
+  .tw-sc::after { content: ''; position: absolute; left: 2px; top: 5px; width: 8px; height: 2px; background: #5B6275; transform: rotate(-30deg); }
+  .s1 { left: 14px; top: 12px; } .s2 { right: 14px; top: 12px; } .s3 { left: 14px; bottom: 14px; } .s4 { right: 14px; bottom: 14px; }
+  .tw-side { width: 694px; }
+  .tw-b { width: 446px; }
+  .tw-st { font-size: 11px; line-height: 16px; color: var(--steel); }
+  .tw-g { display: grid; grid-template-columns: repeat(3, 214px); gap: 16px 18px; margin: 24px 0 0; padding: 0; }
+  .tw-b .tw-g { grid-template-columns: repeat(2, 214px); }
+  .tw-div { width: 2px; height: 230px; margin: 0 22px 0 0; background: var(--line); align-self: flex-start; }
+  .tw-t { position: relative; display: block; width: 214px; height: 84px; padding: 28px 0 0 68px; }
+  .tw-t::before { content: ''; position: absolute; left: 54px; top: 0; width: 160px; height: 84px; background: #fff; border: 1px solid var(--line); border-radius: 8px; transition: box-shadow .3s, transform .3s var(--ease-out); }
+  .tw-t:hover::before { box-shadow: 0 10px 20px rgba(13, 15, 51, .16); transform: translateY(-3px); }
+  .tw-x::before { background: var(--amber); border-color: var(--amber); }
+  .ko { position: absolute; left: 0; top: 20px; width: 44px; height: 44px; border-radius: 50%; background: #D5D8DE; box-shadow: inset 0 0 0 2px var(--mist); }
+  .ko::after { content: ''; position: absolute; inset: 7px; border-radius: 50%; background: var(--panel); box-shadow: inset 0 0 0 1.5px #9AA0AE; transition: background-color .3s; }
+  .tw-x .ko::after, .tw-t:hover .ko::after { background: var(--amber); }
+  .tw-n, .tw-s { position: relative; display: block; }
+  .tw-n { font-family: var(--f-display); font-weight: 800; font-size: 20px; line-height: 31px; color: var(--indigo); margin-top: -3px; }
+  .tw-s { margin-top: -3px; font-weight: 600; font-size: 12px; line-height: 15px; color: var(--steel); }
+  .tw-x .tw-n, .tw-x .tw-s { color: var(--ink); }
+  @media (max-width: 1023px) {
+    .tw { padding: 56px 20px 160px; }
+    .tw :global(.tw-drop) { position: absolute; left: calc(100% - 90px); top: 805px; width: 90px; }
+    .tw-h { margin-top: 10px; }
+    .tw-r { margin-top: 16px; }
+    .tw-lk { margin-top: 12px; }
+    .tw-box { position: relative; flex-direction: column; width: 100%; height: auto; margin-top: 20px; padding: 22px 14px 22px 14px; border-radius: 10px; }
+    .tw-side, .tw-b { width: auto; }
+    .tw-st { font-size: 11px; }
+    .tw-g, .tw-b .tw-g { grid-template-columns: 1fr 1fr; gap: 12px 8px; margin-top: 10px; }
+    .tw-div { width: auto; height: 2px; margin: 20px 0 0; align-self: stretch; }
+    .tw-b .tw-st { margin-top: 10px; }
+    .tw-t { width: auto; height: 72px; padding: 21px 0 0 30px; }
+    .tw-t::before { left: 16px; width: calc(100% - 16px); height: 72px; }
+    .ko { top: 20px; width: 32px; height: 32px; }
+    .ko::after { inset: 5px; }
+    .tw-n { font-size: 18px; line-height: 24px; white-space: nowrap; }
+    .tw-s { margin-top: 2px; font-size: 11px; }
+  }
+</style>

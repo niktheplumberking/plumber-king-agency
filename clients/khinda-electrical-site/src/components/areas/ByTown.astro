@@ -1,0 +1,142 @@
+---
+// 4.6 Reviews by town (Figma 777:492, 1440x900 deep; mobile 783:664). A rocker plate, one rocker per town. No reviews
+// exist yet: flipping a town files its jobs forward like folders (STATES 4.6): the front folder is one full Instagram job,
+// the two behind show only their tab. Town of each job is "Surrey area" until Khinda confirms (README).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const JOBS = [
+  { img: 'condo-hallway-lights-surrey', alt: 'Condo hallway with new ceiling fixtures wired by Khinda Electrical', t: 'Condo hallway lights', ty: 'Commercial', d: 'Ceiling fixtures wired and installed along the hallway, from his Instagram.' },
+  { img: 'barbershop-commercial-lighting-surrey', alt: 'Barbershop with new lighting from a fit-out by Khinda Electrical', t: 'Barbershop lighting', ty: 'Shop fit-out', d: 'Lighting for a barbershop fit-out, from his Instagram.' },
+  { img: 'living-room-pot-lights-feature-wall-surrey', alt: 'Living room with pot lights and a lit feature wall by Khinda Electrical', t: 'Pot lights + feature wall', ty: 'Home', d: 'Pot lights and a lit feature wall in a living room, from his Instagram.' },
+];
+const TOWNS = [
+  { k: 'Newton', n: 'Newton' }, { k: 'Fleetwood', n: 'Fleetwood' }, { k: 'Guildford', n: 'Guildford' },
+  { k: 'Cloverdale', n: 'Cloverdale' }, { k: 'S. Surrey', n: 'South Surrey' }, { k: 'Nearby', n: 'nearby-town' },
+];
+---
+<section class="bt6 sec on-dark p3s" style="--h:900px" data-m-section aria-labelledby="bt6-h" data-bytown>
+  <div class="ab" style="--x:120px;--y:110px;--w:440px">
+    <Eyebrow text="What each town says" data-t="1" />
+    <h2 class="h2 bt6-h" id="bt6-h" data-t="2"><span class="l1">Pick your town.</span><span class="l2">See jobs near you.</span></h2>
+    <p class="lede bt6-p" data-t="3">His Google reviews are on their way. Until each town has its own, the switch shows work he posted on his Instagram.</p>
+  </div>
+  <div class="bt6-cta ab" style="--x:120px;--y:384px" data-t="3"><Btn v="call" class="bw" /><Btn v="text" tone="dark" main={`See the ${SITE.igPosts} posts`} sub={SITE.igHandle} href={SITE.social.instagram} class="bw" /></div>
+  <div class="bt6-plate ab" style="--x:600px;--y:100px" role="group" aria-label="Pick a town" data-t="4">
+    <i class="bt6-sc l" aria-hidden="true"></i><i class="bt6-sc r" aria-hidden="true"></i>
+    {TOWNS.map((t, i) => (
+      <button type="button" class:list={['bt6-rk', i === 0 && 'on']} aria-pressed={i === 0 ? 'true' : 'false'} data-rk={i}>
+        <span class="bt6-sw" aria-hidden="true"><b></b></span><span class="tech bt6-k">{t.k}</span>
+      </button>
+    ))}
+  </div>
+  <i class="bt6-feed ab" style="--x:684px;--y:270px" aria-hidden="true" data-feed></i>
+  <div class="bt6-drawer ab" style="--x:600px;--y:312px" aria-live="polite">
+    {TOWNS.map((t, i) => (
+      <div class="bt6-set" hidden={i !== 0} data-set={i}>
+        {[2, 1].map((b, z) => { const j = JOBS[(i + b) % 3]; return <div class:list={['bt6-fold', `f${z}`]} aria-hidden="true"><span class="tech bt6-ft">{j.t}<span class="dn-m"> · Surrey area</span></span></div>; })}
+        <div class="bt6-card">
+          <span class="tech bt6-tab">{t.k} · Switch on</span>
+          <h3 class="bt6-q">No {t.n === 'nearby-town' ? 'nearby-town' : t.n} reviews online yet.</h3>
+          <p class="bt6-s"><span class="dn-m">Here is work he posted while they come in. Flip a town to file its jobs forward.</span><span class="dn-d">Here is work he posted while they come in:</span></p>
+          <div class="bt6-job dn-m">
+            <div class="bt6-ph"><Img name={JOBS[i % 3].img} alt={JOBS[i % 3].alt} sizes="300px" box={300 / 236} focus="50% 50%" /></div>
+            <div class="bt6-jt">
+              <h4 class="bt6-jh">{JOBS[i % 3].t}</h4>
+              <p class="tech bt6-jy">{JOBS[i % 3].ty} · Surrey area</p>
+              <p class="bt6-jd">{JOBS[i % 3].d}</p>
+              <p class="tech bt6-jf">Folder 1 of 3 · {t.k}</p>
+            </div>
+          </div>
+          <ul role="list" class="bt6-three dn-d">
+            {[0, 1, 2].map((o) => { const j = JOBS[(i + o) % 3]; return <li><span class="bt6-mp"><Img name={j.img} alt={j.alt} sizes="98px" box={98 / 140} /></span><span class="bt6-mt">{j.t}</span><span class="tech bt6-my">{j.ty === 'Shop fit-out' ? 'Shop' : j.ty}</span></li>; })}
+          </ul>
+          <a class="lk bt6-lk" href={SITE.tel}><span class="dn-m">Be the first {t.n === 'nearby-town' ? 'nearby' : t.n} review: call {SITE.phone} →</span><span class="dn-d">Be the first {t.n === 'nearby-town' ? 'nearby' : t.n} review →</span></a>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+<style>
+  .bt6 { background: var(--deep); z-index: 1; }
+  .bt6-h { margin-top: 15px; }
+  .bt6-p { margin-top: 20px; width: 420px; }
+  .bt6-cta { display: grid; gap: 16px; width: 237px; }
+  .bt6-cta :global(.btn) { width: 237px; }
+  .bt6-plate { display: flex; gap: 26px; width: 720px; height: 170px; padding: 18px 0 0 44px; background: #fff; border-radius: 14px; box-shadow: 0 12px 24px rgba(13, 15, 51, .45); }
+  .bt6-sc { position: absolute; top: 80px; width: 10px; height: 10px; border-radius: 50%; background: #D7DAE0; box-shadow: inset 0 0 0 1px #8F95A3; }
+  .bt6-sc.l { left: 16px; } .bt6-sc.r { right: 16px; }
+  .bt6-rk { display: block; width: 84px; text-align: center; line-height: 14px; }
+  .bt6-sw { position: relative; display: block; width: 84px; height: 104px; background: #F4F5F7; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .bt6-sw::before, .bt6-sw b { content: ''; position: absolute; left: 6px; right: 6px; border-radius: 4px; transition: background-color .3s, transform .35s var(--ease-back); }
+  .bt6-sw::before { top: 6px; height: 44px; background: #fff; box-shadow: 0 1px 0 #DADDE3; }
+  .bt6-sw b { bottom: 6px; height: 44px; background: #fff; }
+  .bt6-rk:hover .bt6-sw::before { transform: translateY(2px); }
+  .bt6-rk.on .bt6-sw::before { background: #F5A833; }
+  .bt6-rk.on .bt6-sw b { background: #E5A02F; }
+  .bt6-k { display: block; margin-top: 10px; font-size: 10px; line-height: 14px; letter-spacing: .08em; color: var(--steel); white-space: nowrap; margin-inline: -12px; }
+  .bt6-rk.on .bt6-k { color: var(--ink); }
+  .bt6-feed { width: 3px; height: 60px; background: var(--amber); transform: translateX(calc(var(--fi, 0) * 110px)); transition: transform .45s var(--ease-out); z-index: 2; }
+  .bt6-drawer { width: 720px; height: 508px; perspective: 1200px; }
+  .bt6-set { position: absolute; inset: 0; }
+  .bt6-set.in .bt6-card { animation: btup .5s var(--ease-out) both; }
+  .bt6-set.in .bt6-fold { animation: btup .45s var(--ease-out) both; }
+  .bt6-set.in .f1 { animation-delay: .05s; }
+  @keyframes btup { from { transform: translateY(26px) rotateX(-6deg); opacity: 0; } }
+  .bt6-fold { position: absolute; height: 64px; background: #fff; border: 1px solid #D5D8DE; border-radius: 10px; box-shadow: 0 4px 12px rgba(13, 15, 51, .12); }
+  .f0 { left: 48px; top: 18px; width: 624px; } .f1 { left: 24px; top: 50px; width: 672px; }
+  .bt6-ft { position: absolute; left: 24px; top: -18px; height: 26px; padding: 6px 12px; background: #fff; border: 1px solid #D5D8DE; border-radius: 6px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); white-space: nowrap; }
+  .bt6-card { position: absolute; left: 0; top: 88px; width: 720px; height: 420px; padding: 30px 32px 0; background: #fff; border-radius: 14px; box-shadow: 0 16px 30px rgba(13, 15, 51, .45); color: var(--ink); }
+  .bt6-tab { position: absolute; left: 24px; top: -20px; height: 28px; padding: 8px 12px; background: #fff; border-radius: 6px; font-size: 11px; line-height: 16px; letter-spacing: .12em; color: var(--steel); }
+  .bt6-q { font-family: var(--f-display); font-weight: 800; font-size: 28px; line-height: 44px; color: var(--indigo); }
+  .bt6-s { font-size: 16px; line-height: 20px; color: var(--steel); }
+  .bt6-job { display: flex; gap: 32px; margin-top: 30px; }
+  .bt6-ph { flex: none; width: 300px; height: 236px; border-radius: 8px; overflow: hidden; background: var(--deep); }
+  .bt6-jh { margin-top: 6px; font-family: var(--f-display); font-weight: 800; font-size: 26px; line-height: 41px; color: var(--indigo); }
+  .bt6-jy { margin-top: -3px; font-size: 11px; line-height: 16px; letter-spacing: .1em; color: var(--steel); }
+  .bt6-jd { width: 320px; margin-top: 12px; font-size: 16px; line-height: 25px; }
+  .bt6-jf { margin-top: 54px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .bt6-lk { margin-top: 18px; color: var(--indigo) !important; }
+  @media (max-width: 1023px) {
+    .bt6 { display: flex; flex-direction: column; padding: 56px 20px 56px; }
+    .bt6 > div:first-child { order: 1; }
+    .bt6-h { margin-top: 10px; }
+    .bt6-p { width: auto; margin-top: 16px; }
+    .bt6-plate { order: 2; position: relative; display: grid; grid-template-columns: repeat(3, 90px); justify-content: space-between; gap: 14px 0; width: 100%; height: 250px; margin-top: 43px; padding: 28px 26px 0; }
+    .bt6-sc.l, .bt6-sc.r { top: 8px; left: 50%; right: auto; margin-left: -5px; }
+    .bt6-sc.r { display: none; }
+    .bt6-rk { width: 90px; }
+    .bt6-sw { width: 90px; height: 70px; }
+    .bt6-sw::before, .bt6-sw b { height: 27px; left: 5px; right: 5px; }
+    .bt6-sw::before { top: 5px; } .bt6-sw b { bottom: 5px; }
+    .bt6-k { margin-top: 6px; font-family: var(--f-sans); font-weight: 600; font-size: 11px; line-height: 14px; letter-spacing: .04em; }
+    .bt6-feed { order: 3; position: relative; height: 40px; margin-left: 71px; transform: translateX(calc(var(--fx, 0) * 104px)); }
+    .bt6-drawer { order: 4; position: relative; width: 100%; height: 440px; }
+    .f0 { left: 24px; top: 0; width: calc(100% - 48px); } .f1 { left: 12px; top: 26px; width: calc(100% - 24px); }
+    .bt6-ft { font-size: 11px; line-height: 16px; letter-spacing: .04em; top: -18px; }
+    .bt6-card { top: 56px; width: 100%; height: 384px; padding: 20px 20px 0; }
+    .bt6-tab { position: static; display: block; height: auto; padding: 0; font-size: 11px; letter-spacing: .1em; }
+    .bt6-q { margin-top: 4px; font-size: 20px; line-height: 31px; }
+    .bt6-s { margin-top: 6px; font-size: 14px; line-height: 18px; }
+    .bt6-three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 39px 0 0; padding: 0; }
+    .bt6-mp { display: block; height: 140px; border-radius: 6px; overflow: hidden; background: var(--deep); }
+    .bt6-mt { display: block; margin-top: 8px; font-weight: 600; font-size: 12px; line-height: 15px; }
+    .bt6-my { display: block; margin-top: 4px; font-family: var(--f-sans); font-weight: 600; font-size: 11px; line-height: 14px; letter-spacing: .04em; color: var(--steel); }
+    .bt6-lk { margin-top: 12px; font-size: 15px; line-height: 19px; }
+    .bt6-cta { order: 5; width: 100%; gap: 12px; margin-top: 36px; }
+    .bt6-cta :global(.btn) { width: 100%; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-bytown]').forEach((s) => {
+    const rks = Array.from(s.querySelectorAll<HTMLButtonElement>('[data-rk]'));
+    const sets = Array.from(s.querySelectorAll<HTMLElement>('[data-set]'));
+    const feed = s.querySelector<HTMLElement>('[data-feed]');
+    rks.forEach((r, i) => r.addEventListener('click', () => {
+      rks.forEach((x, k) => { x.classList.toggle('on', k === i); x.setAttribute('aria-pressed', String(k === i)); });
+      sets.forEach((x, k) => { const was = !x.hidden; x.hidden = k !== i; if (k === i && !was) { x.classList.remove('in'); void x.offsetWidth; x.classList.add('in'); } });
+      feed?.style.setProperty('--fi', String(i)); feed?.style.setProperty('--fx', String(i % 3));
+    }));
+  });
+</script>

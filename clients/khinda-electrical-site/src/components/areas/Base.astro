@@ -1,0 +1,121 @@
+---
+// 4.2 One base (Figma 774:437, 1440x740 panel; mobile 782:526). NAP rows left; the real Google Maps screenshot with the
+// meter base plate over its edge (art cut from Figma) and a lead wire from the plate's service tag to the base pin. The
+// pin is a junction box: hover / tap / focus opens the NAP plate tooltip with a "Copy number" chip (STATES 4.2).
+// No street address (Khinda to confirm).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import Obj from '../p3/Obj.astro';
+import meterD from '../../art/p3/04/meter-d.svg?raw';
+import meterM from '../../art/p3/04/meter-m.svg?raw';
+import leadD from '../../art/p3/04/lead-d.svg?raw';
+import pinD from '../../art/p3/04/pin-d.svg?raw';
+import { SITE } from '../../data/site';
+const ROWS = [['Name', SITE.name], ['Base', 'Surrey, BC'], ['Phone', `${SITE.phone}`], ['Instagram', SITE.igHandle]];
+---
+<section class="ab4 sec p3s" style="--h:740px" data-m-section aria-labelledby="ab4-h">
+  <div class="ab4-l ab" style="--x:120px;--y:120px;--w:420px">
+    <Eyebrow text="The base · Name, area, phone" data-t="1" />
+    <h2 class="h2 ab4-h" id="ab4-h" data-t="2"><span class="l1">One base.</span><span class="l2">Surrey, BC.</span></h2>
+    <p class="lede ab4-p" data-t="3">Khinda Electrical is based in Surrey, BC, and comes to you: homes, basement suites and shops.</p>
+  </div>
+  <div class="ab4-map ab" style="--x:660px;--y:170px" data-t="4" data-fx="frame">
+    <Img name="google-maps-surrey-bc-base" alt="Google Maps screenshot of Surrey, BC and the towns around it" sizes="(min-width: 1024px) 660px, calc(100vw - 40px)" box={660 / 440} boxM={350 / 230} focus="40% 45%" />
+  </div>
+  <div class="ab4-pinw ab" style="--x:972px;--y:266px">
+    <button type="button" class="ab4-pin" aria-expanded="true" aria-controls="ab4-tip" data-pin>
+      <Obj svg={pinD} class="ab4-pi" /><span class="sr-only">Show Khinda Electrical's name, area and phone</span>
+    </button>
+    <span class="tag-cap ab4-pl" aria-hidden="true">Base · Surrey, BC</span>
+    <div class="ab4-tip" id="ab4-tip" data-tip>
+      <p class="tech ab4-tk">Base · Name, area, phone</p>
+      <p class="ab4-tn">{SITE.name}</p>
+      <p class="ab4-ta">Surrey, BC</p>
+      <a class="ab4-tp" href={SITE.tel}>{SITE.phone}</a>
+      <div class="ab4-tr"><button type="button" class="ab4-cp" data-copy={SITE.phone}>Copy number</button><span class="tech">Calls + WhatsApp</span></div>
+    </div>
+  </div>
+  <Obj svg={leadD} class="ab4-lead ab dn-m" style="--x:796px;--y:280px" />
+  <Obj svg={meterD} class="ab4-meter ab dn-m" style="--x:560px;--y:196px" data-t="4" />
+  <div class="ab4-mrow">
+    <Obj svg={meterM} class="ab4-meter dn-d" />
+    <dl class="ab4-rows ab" style="--x:120px;--y:370px" data-t="3">
+      {ROWS.map(([k, v]) => <div><dt class="tech">{k}</dt><dd>{k === 'Phone' ? <><a href={SITE.tel}>{v}</a><span class="dn-m"> · calls + WhatsApp</span></> : k === 'Instagram' ? <a href={SITE.social.instagram}>{v}</a> : v}</dd></div>)}
+    </dl>
+  </div>
+  <div class="ab4-cta ab" style="--x:120px;--y:600px" data-t="3"><Btn v="call" class="bw" /><a class="lk" href={SITE.social.instagram}>His Instagram →</a></div>
+</section>
+<style>
+  .ab4 { background: var(--panel); z-index: 3; }
+  .ab4-h { margin-top: 15px; }
+  .ab4-p { margin-top: 24px; width: 400px; }
+  .ab4-map { width: 660px; height: 440px; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 6px #fff, 0 14px 30px 6px rgba(13, 15, 51, .25); background: var(--deep); }
+  .ab4-map :global(img) { width: 133.3%; max-width: none; margin-left: -110px; }
+  .ab4 :global(.ab4-meter) { z-index: 3; }
+  :global(.ab4-lead) { z-index: 2; }
+  .ab4-pinw { z-index: 4; width: 28px; height: 28px; }
+  .ab4-pin { position: relative; display: block; width: 28px; height: 28px; border-radius: 50%; }
+  .ab4-pin::before { content: ''; position: absolute; inset: -6px; border: 2px solid var(--amber); border-radius: 50%; opacity: 0; transform: scale(.8); transition: opacity .25s, transform .35s var(--ease-back); }
+  .ab4-pin:hover::before, .ab4-pin[aria-expanded="true"]::before, .ab4-pin:focus-visible::before { opacity: 1; transform: none; }
+  .ab4-pl { position: absolute; left: 38px; top: -4px; padding: 8px 10px; color: #fff; white-space: nowrap; }
+  .ab4-tip { position: absolute; left: -24px; top: 44px; width: 304px; height: 170px; padding: 16px 18px 0; background: #fff; border: 1px solid #D5D8DE; border-radius: 10px; box-shadow: 0 10px 24px rgba(13, 15, 51, .28); animation: tipin .3s var(--ease-out); }
+  @keyframes tipin { from { opacity: 0; transform: translateY(8px); } }
+  .ab4-tk { font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .ab4-tn { margin-top: 4px; font-family: var(--f-display); font-weight: 800; font-size: 20px; line-height: 31px; color: var(--indigo); }
+  .ab4-ta { margin-top: -3px; font-size: 15px; line-height: 19px; }
+  .ab4-tp { display: inline-block; margin-top: 5px; font-weight: 600; font-size: 20px; line-height: 26px; }
+  .ab4-tr { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .ab4-tr .tech { white-space: nowrap; font-size: 10px; line-height: 14px; letter-spacing: .08em; color: var(--steel); }
+  .ab4-cp { white-space: nowrap; height: 30px; padding: 0 12px; background: var(--indigo); border-radius: 6px; font-weight: 600; font-size: 13px; color: #fff; transition: background-color .25s, color .25s; }
+  .ab4-cp:hover { background: var(--deep); }
+  .ab4-cp.is-done { background: var(--amber); color: var(--ink); }
+  .ab4-rows { width: 420px; margin: 0; }
+  .ab4-rows > div { display: flex; align-items: center; height: 46px; border-top: 1px solid var(--line); }
+  .ab4-rows > div:last-child { border-bottom: 1px solid var(--line); }
+  .ab4-rows dt { width: 130px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .ab4-rows dd { font-weight: 600; font-size: 16px; line-height: 20px; color: var(--ink); }
+  .ab4-rows a:hover { color: var(--indigo); text-decoration: underline; }
+  .ab4-cta { display: flex; align-items: center; gap: 25px; }
+  @media (max-width: 1023px) {
+    .ab4 { display: flex; flex-direction: column; padding: 758px 20px 48px; }
+    .ab4-h { margin-top: 10px; }
+    .ab4-p { width: auto; margin-top: 12px; }
+    .ab4-map { position: relative; width: 100%; height: 230px; margin-top: 28px; box-shadow: 0 0 0 4px #fff, 0 10px 20px 4px rgba(13, 15, 51, .2); }
+    .ab4-map :global(img) { width: 131.5%; margin-left: -55px; }
+    .ab4-pinw { position: relative; width: 24px; height: 24px; margin: -185px 0 0 161px; }
+    .ab4-pin { width: 24px; height: 24px; }
+    .ab4-pin :global(.obj) { width: 24px; }
+    .ab4-pl { left: 30px; top: 0; padding: 4px 8px; }
+    .ab4-tip { left: -150px; top: 34px; width: 300px; z-index: 5; }
+    .ab4-tip:not(.js) { display: none; }
+    .ab4-mrow { display: flex; gap: 22px; margin-top: 101px; }
+    .ab4-mrow :global(.ab4-meter) { flex: none; width: 180px; }
+    .ab4-rows { width: auto; flex: 1; margin-top: 80px; }
+    .ab4-rows > div { display: block; height: 58px; padding-top: 10px; }
+    .ab4-rows > div:last-child { border-bottom: 0; }
+    .ab4-rows dt { width: auto; font-size: 11px; line-height: 16px; }
+    .ab4-rows dd { font-size: 14px; line-height: 18px; }
+    .ab4-cta { flex-direction: column; align-items: flex-start; gap: 20px; margin-top: 32px; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('.ab4').forEach((s) => {
+    const pin = s.querySelector<HTMLButtonElement>('[data-pin]')!;
+    const tip = s.querySelector<HTMLElement>('[data-tip]')!;
+    const wrap = pin.parentElement!;
+    tip.classList.add('js');
+    const set = (on: boolean) => { tip.hidden = !on; pin.setAttribute('aria-expanded', String(on)); };
+    let pinned = matchMedia('(min-width: 1024px)').matches;
+    set(pinned);
+    pin.addEventListener('click', () => { pinned = !pinned || tip.hidden; set(pinned); });
+    if (matchMedia('(hover: hover)').matches) {
+      wrap.addEventListener('pointerenter', () => set(true));
+      wrap.addEventListener('pointerleave', () => { if (!pinned) set(false); });
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !tip.hidden) { pinned = false; set(false); pin.focus(); } });
+    s.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(b.dataset.copy || ''); b.textContent = 'Copied'; b.classList.add('is-done'); setTimeout(() => { b.textContent = 'Copy number'; b.classList.remove('is-done'); }, 2000); } catch { location.href = 'tel:+12368182664'; }
+    }));
+  });
+</script>

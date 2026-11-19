@@ -1,16 +1,31 @@
 ---
-import Stub from '../../components/stub/Stub.astro';
-import { TOWNS } from '../../data/site';
+// Areas hub (Figma 04 Areas hub desktop 1440 / mobile 390, figma/v5/04-areas-hub-*.png). Endings: F, G5, G6.
+import '../../components/p3/p3.css';
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/areas/Hero.astro';
+import OneBase from '../../components/areas/Base.astro';
+import Towns from '../../components/areas/Towns.astro';
+import Rings from '../../components/areas/Rings.astro';
+import Rules from '../../components/areas/Rules.astro';
+import ByTown from '../../components/areas/ByTown.astro';
+import Thermo from '../../components/areas/Thermo.astro';
+import Cta from '../../components/areas/Cta.astro';
+import Endings from '../../components/endings/Endings.astro';
+import { breadcrumbSchema, faqSchema } from '../../lib/schema';
+import { AREAS_FAQ } from '../../data/areas';
 ---
-<Stub title="Areas We Serve · Khinda Electrical" path="/areas/"
+<Base title="Areas We Serve · Khinda Electrical" path="/areas/"
   description="Khinda Electrical is based in Surrey, BC: Newton, Fleetwood, Guildford, Cloverdale, South Surrey, City Centre, plus Delta, Langley and White Rock."
-  eyebrow="Areas · Surrey, BC" h1={['Electrician Serving', 'Surrey & Nearby']} crumbs={[{ name: 'Areas', path: '/areas/' }]}
-  lead="One electrician, based in Surrey. Panels, lighting, EV chargers and renos for homes and shops in the city and the towns next door.">
-  <ul class="st-list ab" role="list" style="--x:920px;--y:150px;--w:400px">{TOWNS.map((t) => <li><a href={t.href}>{t.name}</a></li>)}</ul>
-</Stub>
-<style>
-  .st-list { display: grid; gap: 10px; margin: 0; padding: 0; }
-  .st-list a { font-weight: 600; font-size: 18px; line-height: 24px; color: #fff; }
-  .st-list a:hover { color: var(--amber); }
-  @media (max-width: 1023px) { .st-list { margin-top: 36px; } }
-</style>
+  og="house-exterior-soffit-lights-surrey" ogAlt="House exterior in Surrey with soffit lights wired by Khinda Electrical"
+  preload={{ name: 'house-exterior-soffit-lights-surrey', sizes: '(min-width: 1024px) 680px, calc(100vw - 40px)', widths: [360, 540, 720, 960] }}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Areas', path: '/areas/' }]), faqSchema(AREAS_FAQ.map((f) => ({ q: f.q, a: f.a })))]}>
+  <Hero />
+  <OneBase />
+  <Towns />
+  <Rings />
+  <Rules />
+  <ByTown />
+  <Thermo />
+  <Cta />
+  <Endings slot="end" />
+</Base>

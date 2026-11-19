@@ -1,0 +1,12 @@
+---
+// Part 3: one drawn object cut from the Figma page SVG (scripts/cut-obj.py) with a tight viewBox. Its width is the SVG's
+// own Figma width; it scales down with its box (max-width 100 %). Decorative: aria-hidden.
+interface Props { svg: string; class?: string; style?: string; [k: string]: any }
+const { svg, class: cls, style = '', ...rest } = Astro.props;
+const w = svg.match(/<svg[^>]*\swidth="(\d+)"/)?.[1] ?? '100';
+---
+<div class:list={['obj', cls]} style={`--ow:${w}px;${style}`} aria-hidden="true" {...rest}><Fragment set:html={svg} /></div>
+<style>
+  .obj { width: var(--ow); max-width: 100%; pointer-events: none; }
+  .obj :global(svg) { display: block; width: 100%; height: auto; overflow: visible; }
+</style>

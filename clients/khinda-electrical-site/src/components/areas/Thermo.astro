@@ -1,0 +1,148 @@
+---
+// 4.7 FAQ (Figma 778:437, 1440x800 white; mobile 784:437). Two questions; a round thermostat shows the picked answer.
+// STATES 4.7: the ring is the control: drag it (or tap a question / a stop) and it snaps to the Q1 / Q2 stop with a short
+// pull; the display text rolls up to the new answer; the picked question on the left follows. Keyboard: the questions
+// are a tablist (arrows switch). FAQPage schema: AREAS_FAQ (page).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Obj from '../p3/Obj.astro';
+import thD from '../../art/p3/04/thermo-d.svg?raw';
+import thM from '../../art/p3/04/thermo-m.svg?raw';
+import mkD from '../../art/p3/04/mark-d.svg?raw';
+import mkM from '../../art/p3/04/mark-m.svg?raw';
+import { SITE } from '../../data/site';
+import { AREAS_FAQ } from '../../data/areas';
+---
+<section class="th sec p3s" style="--h:800px" data-m-section aria-labelledby="th-h" data-thermo>
+  <div class="ab" style="--x:120px;--y:110px;--w:520px">
+    <Eyebrow text="Questions · Areas" data-t="1" />
+    <h2 class="h2 th-h" id="th-h" data-t="2"><span class="l1">Two questions</span><span class="l2">every town asks.</span></h2>
+    <p class="lede th-p" data-t="3"><span class="dn-m">Pick a question and the display shows the answer. Each one ends the same way: call or text {SITE.phone}.</span><span class="dn-d">Pick a question and the display shows the answer. Each ends the same way: call or text.</span></p>
+  </div>
+  <div class="th-dial ab" style="--x:750px;--y:160px" data-t="4" data-dial>
+    <Obj svg={thD} class="dn-m" /><Obj svg={thM} class="dn-d" />
+    <div class="th-mk" data-mk><Obj svg={mkD} class="dn-m" /><Obj svg={mkM} class="dn-d" /></div>
+    <div class="th-disp" aria-live="polite">
+      {AREAS_FAQ.map((f, i) => (
+        <div class="th-a" id={`thp-${i}`} role="tabpanel" aria-labelledby={`tht-${i}`} hidden={i !== 0} data-ta>
+          <p class="tech th-ak">{f.disp}</p>
+          <p class="th-at">{f.a}</p>
+          <a class="th-al" href={SITE.tel}>Call {SITE.phone} →</a>
+        </div>
+      ))}
+    </div>
+    <p class="tech th-brand" aria-hidden="true">Khinda · Areas</p>
+    <button type="button" class="th-stop s1 on tech" data-stop="0" tabindex="-1" aria-hidden="true">Q1 · Nearby</button>
+    <button type="button" class="th-stop s2 tech" data-stop="1" tabindex="-1" aria-hidden="true">Q2 · Travel fee</button>
+    <p class="tech th-pick" aria-hidden="true">Two questions · Pick one</p>
+  </div>
+  <div class="th-qs ab" style="--x:120px;--y:370px" role="tablist" aria-label="Questions" data-t="4" data-stagger>
+    {AREAS_FAQ.map((f, i) => (
+      <button type="button" role="tab" class:list={['th-q', i === 0 && 'on']} id={`tht-${i}`} aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`thp-${i}`} tabindex={i === 0 ? 0 : -1} data-q>
+        <span class="tech th-qk">Q{i + 1}<span class="th-on"> · On the display</span></span>
+        <span class="th-qt">{f.q}</span>
+      </button>
+    ))}
+  </div>
+  <div class="th-ask ab" style="--x:120px;--y:600px" data-t="4">
+    <p class="th-ah">Your town,<br class="dn-m" /> your question.</p>
+    <p class="th-as">Ask him directly.</p>
+    <div class="th-ab"><Btn v="call" main="Call" sub={SITE.phone} class="th-c" /><Btn v="text" main="Text" sub="WhatsApp" href={SITE.whatsapp} class="th-t" /></div>
+  </div>
+</section>
+<style>
+  .th { background: #fff; z-index: 1; }
+  .th-h { margin-top: 15px; }
+  .th-p { margin-top: 20px; width: 470px; }
+  .th-dial { width: 520px; height: 520px; touch-action: none; cursor: grab; }
+  .th-dial.drag { cursor: grabbing; }
+  .th-mk { position: absolute; inset: 0; transform: rotate(var(--rot, 0deg)); transition: transform .45s var(--ease-back); pointer-events: none; }
+  .th-dial.drag .th-mk { transition: none; }
+  .th-disp { position: absolute; left: 90px; top: 90px; width: 340px; height: 340px; border-radius: 50%; overflow: hidden; }
+  .th-a { position: absolute; inset: 0; padding: 52px 45px 0; text-align: center; }
+  .th-a.in { animation: throll .45s var(--ease-out) both; }
+  @keyframes throll { from { transform: translateY(26px); opacity: 0; } }
+  .th-ak { font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--amber); }
+  .th-at { margin-top: 16px; font-size: 17px; line-height: 26px; color: #fff; }
+  .th-al { display: inline-block; margin-top: 18px; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--amber); }
+  .th-al:hover { text-decoration: underline; }
+  .th-brand { position: absolute; left: 0; right: 0; top: 422px; text-align: center; font-size: 10px; line-height: 14px; letter-spacing: .12em; color: var(--steel); pointer-events: none; }
+  .th-pick { position: absolute; left: 0; right: 0; top: 484px; text-align: center; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .th-stop { position: absolute; top: 26px; height: 28px; padding: 0 10px; border: 1.5px solid var(--indigo); border-radius: 6px; background: #fff; font-size: 11px; line-height: 16px; letter-spacing: .08em; color: var(--indigo); white-space: nowrap; transition: background-color .25s, color .25s; }
+  .th-stop.s1 { left: 20px; width: 128px; } .th-stop.s2 { left: 358px; width: 158px; }
+  .th-stop.on { background: var(--indigo); color: var(--amber); }
+  .th-qs { display: grid; gap: 14px; width: 520px; }
+  .th-q { position: relative; display: block; width: 520px; height: 92px; padding: 18px 28px 0; line-height: 22px; background: #fff; border: 1px solid var(--line); border-radius: 12px; text-align: left; overflow: hidden; transition: background-color .3s, border-color .3s; }
+  .th-q:hover { border-color: var(--indigo); }
+  .th-q.on { background: var(--deep); border-color: var(--deep); }
+  .th-q.on::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--amber); }
+  .th-qk { display: block; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .th-on { display: none; }
+  .th-q.on .th-qk { color: var(--amber); } .th-q.on .th-on { display: inline; }
+  .th-qt { display: block; margin-top: 8px; font-weight: 600; font-size: 17px; line-height: 22px; color: var(--indigo); }
+  .th-q.on .th-qt { color: #fff; }
+  .th-ask { width: 520px; height: 110px; padding: 22px 0 0 24px; background: var(--panel); border-radius: 12px; }
+  .th-ah { font-family: var(--f-display); font-weight: 800; font-size: 20px; line-height: 24px; color: var(--indigo); }
+  .th-as { margin-top: 6px; font-size: 14px; line-height: 18px; color: var(--steel); }
+  .th-ab { position: absolute; left: 226px; top: 22px; display: flex; gap: 12px; }
+  .th-ab :global(.th-c) { width: 150px; padding-left: 16px; } .th-ab :global(.th-t) { width: 110px; }
+  @media (max-width: 1023px) {
+    .th { display: flex; flex-direction: column; padding: 56px 20px 11px; }
+    .th-h { margin-top: 10px; }
+    .th-p { width: auto; margin-top: 16px; }
+    .th-dial { position: relative; width: 330px; height: 330px; margin: 40px auto 0; }
+    .th-disp { left: 57px; top: 57px; width: 216px; height: 216px; }
+    .th-a { padding: 24px 18px 0; }
+    .th-ak { font-size: 11px; line-height: 16px; letter-spacing: .08em; }
+    .th-at { margin-top: 6px; font-size: 14px; line-height: 20px; }
+    .th-al { margin-top: 10px; font-size: 13px; line-height: 17px; }
+    .th-brand { display: none; }
+    .th-pick { top: 307px; font-size: 11px; line-height: 16px; }
+    .th-stop { top: 17px; height: 24px; padding: 0 8px; font-size: 11px; border-radius: 4px; }
+    .th-stop.s1 { left: 13px; width: 121px; } .th-stop.s2 { left: 177px; width: 151px; }
+    .th-qs { width: 100%; margin-top: 32px; gap: 12px; }
+    .th-q { width: 100%; height: auto; min-height: 72px; padding: 16px 24px 14px; }
+    .th-q.on { min-height: 92px; }
+    .th-qk { font-size: 11px; line-height: 16px; letter-spacing: .08em; }
+    .th-qt { margin-top: 4px; font-size: 16px; line-height: 20px; }
+    .th-ask { width: 100%; height: 160px; margin-top: 20px; padding: 18px 20px 0; }
+    .th-ah { font-size: 20px; line-height: 28px; }
+    .th-as { margin-top: 0; }
+    .th-ab { left: 20px; right: 20px; top: 76px; gap: 10px; }
+    .th-ab :global(.th-c) { width: 165px; flex: 1.2; } .th-ab :global(.th-t) { width: 135px; flex: 1; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-thermo]').forEach((s) => {
+    const qs = Array.from(s.querySelectorAll<HTMLButtonElement>('[data-q]'));
+    const as = Array.from(s.querySelectorAll<HTMLElement>('[data-ta]'));
+    const stops = Array.from(s.querySelectorAll<HTMLButtonElement>('[data-stop]'));
+    const dial = s.querySelector<HTMLElement>('[data-dial]')!;
+    const mk = s.querySelector<HTMLElement>('[data-mk]')!;
+    const ANG = [0, 67]; // the set mark sits on the Q1 stop at rest; the Q2 stop is ~67 deg clockwise
+    let cur = 0;
+    const pick = (k: number, focus = false) => {
+      cur = k;
+      qs.forEach((q, i) => { const on = i === k; q.classList.toggle('on', on); q.setAttribute('aria-selected', String(on)); q.tabIndex = on ? 0 : -1; });
+      stops.forEach((b, i) => b.classList.toggle('on', i === k));
+      as.forEach((a, i) => { const was = !a.hidden; a.hidden = i !== k; if (i === k && !was) { a.classList.remove('in'); void a.offsetWidth; a.classList.add('in'); } });
+      mk.style.setProperty('--rot', `${ANG[k]}deg`);
+      if (focus) qs[k].focus();
+    };
+    qs.forEach((q, i) => {
+      q.addEventListener('click', () => pick(i));
+      q.addEventListener('keydown', (e) => { if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) { e.preventDefault(); pick(1 - i, true); } });
+    });
+    stops.forEach((b, i) => b.addEventListener('click', (e) => { e.stopPropagation(); pick(i); }));
+    // drag the ring: the mark follows the pointer angle, then snaps to the nearer stop
+    let base = 0, start = 0, drag = false;
+    const ang = (e: PointerEvent) => { const r = dial.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; };
+    dial.addEventListener('pointerdown', (e) => {
+      if ((e.target as HTMLElement).closest('a, button')) return;
+      drag = true; start = ang(e); base = ANG[cur]; dial.classList.add('drag'); dial.setPointerCapture(e.pointerId);
+    });
+    dial.addEventListener('pointermove', (e) => { if (!drag) return; const d = Math.max(-20, Math.min(90, base + ang(e) - start)); mk.style.setProperty('--rot', `${d}deg`); });
+    const end = () => { if (!drag) return; drag = false; dial.classList.remove('drag'); const d = parseFloat(mk.style.getPropertyValue('--rot')) || 0; pick(d > ANG[1] / 2 ? 1 : 0); };
+    dial.addEventListener('pointerup', end); dial.addEventListener('pointercancel', end);
+  });
+</script>

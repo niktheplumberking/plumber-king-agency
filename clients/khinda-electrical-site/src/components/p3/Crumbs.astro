@@ -1,0 +1,15 @@
+---
+// Part 3 breadcrumb (Figma: Michroma 10 / 12 %, "HOME  /  AREAS"). The JSON-LD BreadcrumbList comes from the page.
+interface Props { trail: { name: string; path: string }[]; class?: string; style?: string; [k: string]: any }
+const { trail, class: cls, style, ...rest } = Astro.props;
+---
+<nav class:list={['p3c tech', cls]} style={style} aria-label="Breadcrumb" {...rest}>
+  <ol role="list">{trail.map((c, i) => <li>{i < trail.length - 1 ? <a href={c.path}>{c.name}</a> : <span aria-current="page">{c.name}</span>}</li>)}</ol>
+</nav>
+<style>
+  .p3c ol { display: flex; flex-wrap: wrap; gap: 0 10px; margin: 0; padding: 0; font-size: 10px; line-height: 14px; letter-spacing: .12em; color: var(--mist); }
+  .p3c li + li::before { content: '/'; margin-right: 10px; }
+  .p3c a { display: inline-block; padding: 8px 0; margin: -8px 0; }
+  .p3c a:hover { color: #fff; }
+  @media (max-width: 1023px) { .p3c ol { font-size: 11px; line-height: 16px; letter-spacing: .1em; } }
+</style>

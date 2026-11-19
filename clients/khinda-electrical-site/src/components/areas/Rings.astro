@@ -1,0 +1,89 @@
+---
+// 4.4 Closer means faster (Figma 776:546, 1440x820 indigo; mobile 783:535). A mini map of coverage rings around the base
+// (art cut from Figma, rings + town labels classed so CSS can light them). The three ring cards are tabs (STATES 4.4):
+// the selected card gets the amber edge and lifts; its ring lights amber dashed on the map and its towns show at full
+// strength; the other rings drop to a thin steel line. No times are shown (Khinda to confirm).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Obj from '../p3/Obj.astro';
+import mapD from '../../art/p3/04/rings-d.svg?raw';
+import mapM from '../../art/p3/04/rings-m.svg?raw';
+import { SITE } from '../../data/site';
+const RINGS = [
+  { k: 'Ring 1', t: 'Surrey neighbourhoods', d: 'Newton · Fleetwood · Guildford · Cloverdale · South Surrey · City Centre' },
+  { k: 'Ring 2', t: 'The towns next door', d: 'Delta · Langley · White Rock' },
+  { k: 'Ring 3', t: 'Further out', d: 'Call and ask: he tells you straight.' },
+];
+---
+<section class="rg sec on-dark p3s" style="--h:820px" data-m-section aria-labelledby="rg-h" data-rings>
+  <div class="ab" style="--x:120px;--y:110px;--w:440px">
+    <Eyebrow text="Closer means faster" data-t="1" />
+    <h2 class="h2 rg-h" id="rg-h" data-t="2"><span class="l1">Closer to Surrey,</span><span class="l2">sooner at your door.</span></h2>
+    <p class="lede rg-p" data-t="3">He starts from Surrey, so the city’s own neighbourhoods are the shortest drive. Towns next door are the next ring out. Call and he tells you when he can come.</p>
+  </div>
+  <div class="rg-map ab" style="--x:580px;--y:110px" data-t="4" data-ring="1">
+    <Obj svg={mapD} class="dn-m" /><Obj svg={mapM} class="dn-d" />
+    <p class="sr-only">Map, not to scale: Surrey neighbourhoods are ring 1 around his Surrey base, Delta, Langley and White Rock are ring 2.</p>
+  </div>
+  <div class="rg-cards ab" style="--x:120px;--y:390px" role="group" aria-label="Coverage rings: pick one to light it on the map" data-t="4" data-stagger>
+    {RINGS.map((r, i) => (
+      <button type="button" class:list={['rg-c', i === 0 && 'on']} aria-pressed={i === 0 ? 'true' : 'false'} data-rc={i + 1}>
+        <svg class:list={['rg-ic', i === 2 && 'st']} viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18.3" stroke-opacity=".35"/><circle cx="22" cy="22" r="11.3" stroke-opacity=".6"/><circle cx="22" cy="22" r="4.3"/><circle cx="22" cy="22" r="3" fill="#0D0F33" stroke="none"/></svg>
+        <span class="rg-k tech">{r.k}<span class="dn-d"> · </span></span><span class="rg-t">{r.t}</span>
+        <span class="rg-d">{r.d}</span>
+      </button>
+    ))}
+  </div>
+  <div class="rg-cta ab" style="--x:120px;--y:706px" data-t="3"><Btn v="call" sub="Ask when he can come" class="bw" /><Btn v="text" tone="dark" sub="With your street name" class="bw rg-tx" /></div>
+</section>
+<style>
+  .rg { background: var(--indigo); z-index: 2; }
+  .rg-h { margin-top: 15px; }
+  .rg-p { margin-top: 20px; width: 430px; }
+  .rg-map { width: 740px; height: 600px; border-radius: 16px; overflow: hidden; }
+  @media (min-width: 1024px) {
+  .rg-map :global(.rg1), .rg-map :global(.rg2), .rg-map :global(.rg3) { transition: stroke .4s, stroke-opacity .4s, stroke-width .4s; stroke: #AEB4C6; stroke-opacity: .45; stroke-width: .5; stroke-dasharray: none; }
+  .rg-map :global(.t1), .rg-map :global(.t2) { transition: opacity .4s; }
+  .rg-map[data-ring="1"] :global(.rg1), .rg-map[data-ring="2"] :global(.rg2), .rg-map[data-ring="3"] :global(.rg3) { stroke: #F5A833; stroke-opacity: 1; stroke-width: 1.35; stroke-dasharray: 4 2.7; }
+  }
+  .rg-map[data-ring="2"] :global(.t1), .rg-map[data-ring="3"] :global(.t1), .rg-map[data-ring="3"] :global(.t2) { opacity: .45; }
+  .rg-cards { width: 560px; display: grid; gap: 14px; }
+  .rg-c { position: relative; display: block; width: 560px; height: 86px; padding: 16px 0 0 80px; background: #fff; border-radius: 10px; text-align: left; line-height: 20px; overflow: hidden; transition: transform .35s var(--ease-out), box-shadow .35s; }
+  .rg-c::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--amber); transform: scaleY(0); transition: transform .35s var(--ease-out); }
+  .rg-c.on { box-shadow: 0 8px 20px rgba(13, 15, 51, .25); transform: translateY(-2px); }
+  .rg-c.on::before { transform: none; }
+  .rg-c:hover { transform: translateY(-2px); }
+  .rg-ic { position: absolute; left: 18px; top: 21px; width: 44px; height: 44px; fill: none; stroke: #F5A833; stroke-width: 2.5; }
+  .rg-ic.st { stroke: #8F95A3; }
+  .rg-k { display: inline-block; width: 70px; font-size: 10px; line-height: 14px; color: var(--steel); vertical-align: 2px; }
+  .rg-t { font-weight: 600; font-size: 16px; line-height: 20px; color: var(--ink); }
+  .rg-d { display: block; margin-top: 9px; font-size: 13px; line-height: 17px; color: var(--steel); }
+  .rg-c:nth-child(n+2) .rg-d { font-size: 14px; line-height: 18px; }
+  .rg-cta { display: flex; gap: 26px; }
+  .rg-cta :global(.rg-tx) { width: 230px; }
+  @media (max-width: 1023px) {
+    .rg { padding: 56px 20px 56px; }
+    .rg-h { margin-top: 10px; }
+    .rg-p { width: auto; margin-top: 16px; }
+    .rg-map { position: relative; width: 100%; height: auto; aspect-ratio: 1; margin-top: 38px; border-radius: 14px; }
+    .rg-cards { position: relative; width: 100%; gap: 10px; margin-top: -40px; }
+    .rg-c { width: 100%; height: auto; min-height: 64px; padding: 12px 14px 12px 62px; }
+    .rg-ic { left: 14px; top: 14px; width: 36px; height: 36px; }
+    .rg-k { display: inline; width: auto; font-family: var(--f-sans); font-weight: 600; font-size: 14px; line-height: 18px; letter-spacing: 0; color: var(--ink); vertical-align: 0; }
+    .rg-t { font-size: 14px; line-height: 18px; }
+    .rg-d, .rg-c:nth-child(n+2) .rg-d { margin-top: 4px; font-size: 13px; line-height: 18px; }
+    .rg-cta { flex-direction: column; gap: 12px; margin-top: 26px; }
+    .rg-cta :global(.rg-tx) { width: 100%; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rings]').forEach((s) => {
+    const tabs = Array.from(s.querySelectorAll<HTMLButtonElement>('[data-rc]'));
+    const map = s.querySelector<HTMLElement>('.rg-map')!;
+    const pick = (k: number) => {
+      tabs.forEach((t, i) => { const on = i === k; t.classList.toggle('on', on); t.setAttribute('aria-pressed', String(on)); });
+      map.dataset.ring = String(k + 1);
+    };
+    tabs.forEach((t, i) => t.addEventListener('click', () => pick(i)));
+  });
+</script>

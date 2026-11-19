@@ -1,0 +1,76 @@
+---
+// 4.8 CTA (Figma 778:471, 1440x600 amber; mobile 784:471). One big wall switch plate crossing up into 4.7 (art cut from
+// Figma; the lever is HTML so it can flip). Flip it = call: hovering pulls the lever down a little, clicking flips it OFF
+// -> ON and opens the call link. Three cables leave the plate and run down into the F MAIN breaker (drawn on scroll).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Tape from '../kit/Tape.astro';
+import Obj from '../p3/Obj.astro';
+import plateD from '../../art/p3/04/plate-d.svg?raw';
+import cabD from '../../art/p3/04/cables-d.svg?raw';
+import cabM from '../../art/p3/04/cables-m.svg?raw';
+import { SITE } from '../../data/site';
+---
+<section class="c8 sec p3s" style="--h:600px" data-m-section aria-labelledby="c8-h">
+  <div class="ab" style="--x:120px;--y:120px;--w:540px">
+    <Eyebrow text="Town not listed" class="c8-eb" data-t="1" />
+    <h2 class="h2 c8-h" id="c8-h" data-t="2"><span class="l1">Town not listed?</span><span class="l2">Flip it: call.</span></h2>
+    <p class="c8-p" data-t="3">If your street is just past these towns, call and ask. He tells you straight if he can come.</p>
+    <div class="c8-b" data-t="3"><Btn v="call" class="btn-deep bw" /><Btn v="text" class="btn-ink bw c8-tx" /></div>
+    <p class="tech c8-steps" data-t="5"><span class="dn-m">1 Flip it   ·   2 Say your town   ·   3 He tells you straight</span><span class="dn-d">Flip it  ·  Say your town  ·  He tells you</span></p>
+  </div>
+  <Obj svg={cabD} class="c8-cab ab dn-m" style="--x:900px;--y:502px" data-draw="" data-start="top 60%" data-end="bottom 60%" />
+  <div class="c8-sw ab" style="--x:830px;--y:-60px" data-t="4">
+    <Obj svg={plateD} class="c8-plate" />
+    <a class="c8-lever" href={SITE.tel} aria-label={`Flip the switch: call ${SITE.phone}`} data-flipcall><i aria-hidden="true"></i></a>
+    <span class="tech c8-on" aria-hidden="true">On</span><span class="tech c8-off" aria-hidden="true">Off</span>
+    <Tape text="Flip = call" rot={3} size={22} class="c8-tape" />
+  </div>
+  <Obj svg={cabM} class="c8-cab dn-d" data-draw="" data-start="bottom 95%" data-end="bottom 60%" />
+</section>
+<style>
+  .c8 { background: var(--amber); z-index: 3; }
+  .c8 :global(.c8-eb) { color: var(--ink); }
+  .c8 :global(.c8-eb svg path) { fill: var(--ink); }
+  .c8-h { margin-top: 15px; font-size: 56px; line-height: 60px; color: var(--ink); }
+  .c8-p { margin-top: 20px; width: 500px; font-size: 18px; line-height: 28px; color: var(--ink); }
+  .c8-b { display: flex; gap: 26px; margin-top: 48px; }
+  .c8-b :global(.c8-tx) { width: 230px; }
+  .c8-steps { margin-top: 30px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--ink); white-space: pre; }
+  .c8 :global(.c8-cab) { z-index: 3; }
+  .c8-sw { z-index: 4; width: 280px; height: 580px; }
+  .c8-lever { position: absolute; left: 98px; top: 126px; width: 84px; height: 206px; border-radius: 22px; }
+  .c8-lever::before { content: ''; position: absolute; left: 0; top: 122px; width: 84px; height: 84px; border-radius: 50%; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); }
+  .c8-lever i { position: absolute; left: 20px; top: 0; width: 44px; height: 156px; border-radius: 22px; background: #F7F8FA; box-shadow: inset 0 0 0 1px var(--line), 0 6px 10px rgba(13, 15, 51, .3); transform-origin: 50% 144px; transition: transform .45s var(--ease-back); }
+  .c8-lever i::before { content: ''; position: absolute; left: 10px; top: 10px; width: 24px; height: 6px; border-radius: 3px; background: #D5D8DE; transition: background-color .3s; }
+  .c8-lever:hover i { transform: scaleY(.92); }
+  .c8-lever.flip i { transform: scaleY(-1); }
+  .c8-lever.flip i::before { background: var(--amber); }
+  .c8-on, .c8-off { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; line-height: 17px; letter-spacing: .14em; }
+  .c8-on { top: 96px; color: var(--ink); } .c8-off { top: 420px; color: var(--steel); }
+  .c8-sw :global(.c8-tape) { position: absolute; left: 44px; top: 454px; }
+  @media (max-width: 1023px) {
+    .c8 { padding: 56px 20px 0; }
+    .c8-h { margin-top: 10px; font-size: 40px; line-height: 44px; }
+    .c8-p { width: auto; margin-top: 12px; font-size: 16px; line-height: 25px; }
+    .c8-b { flex-direction: column; gap: 12px; margin-top: 42px; }
+    .c8-b :global(.c8-tx) { width: 100%; }
+    .c8-steps { margin-top: 20px; font-size: 11px; line-height: 16px; letter-spacing: .06em; white-space: normal; }
+    .c8-sw { position: relative; width: 168px; height: 348px; margin: 18px auto 0; }
+    .c8-sw :global(.c8-plate) { width: 168px; }
+    .c8-lever { left: 59px; top: 76px; width: 50px; height: 124px; }
+    .c8-lever::before { top: 73px; width: 50px; height: 50px; }
+    .c8-lever i { left: 12px; width: 26px; height: 94px; border-radius: 13px; transform-origin: 50% 86px; }
+    .c8-lever i::before { left: 6px; top: 6px; width: 14px; height: 4px; }
+    .c8-on { top: 58px; font-size: 11px; } .c8-off { top: 252px; font-size: 11px; }
+    .c8-sw :global(.c8-tape) { left: 26px; top: 272px; font-size: 13px !important; padding: 3px 10px; }
+    .c8 :global(.c8-cab) { position: relative; width: 120px; margin: -19px 0 -81px calc(100% - 120px); }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-flipcall]').forEach((a) => a.addEventListener('click', (e) => {
+    if (a.classList.contains('flip')) return;
+    e.preventDefault(); a.classList.add('flip');
+    setTimeout(() => { location.href = a.href; setTimeout(() => a.classList.remove('flip'), 1500); }, 380);
+  }));
+</script>

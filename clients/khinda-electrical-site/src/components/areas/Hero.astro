@@ -1,0 +1,214 @@
+---
+// 4.1 Hero (Figma Areas 772:472, 1440x780 deep; mobile 782:456). Left: crumbs, H1, tape, lead, call / text, town chips.
+// Right: his soffit-lights house photo behind an indigo plate edge with 4 screws. The in-use cover form card (772:520)
+// asks town -> phone -> job, one question per screen (STATES 4.1): the step bar is three toggles that flip ON as each
+// answer is given; number keys 1-6 pick a town chip; Enter goes next; the last step says "Send it".
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Tape from '../kit/Tape.astro';
+import Screw from '../kit/Screw.astro';
+import Img from '../ui/Img.astro';
+import Crumbs from '../p3/Crumbs.astro';
+import { SITE, TOWNS } from '../../data/site';
+const CHIPS = ['Newton', 'Fleetwood', 'Guildford', 'Cloverdale', 'South Surrey', 'Somewhere else'];
+const JUMP = TOWNS.slice(0, 5);
+---
+<section class="ah sec on-dark p3s" style="--h:780px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="ah-ph ab" style="--x:760px;--y:0px" data-fx="frame" data-t="4">
+    <Img name="house-exterior-soffit-lights-surrey" alt="House exterior in Surrey at dusk with soffit lights on, wired by Khinda Electrical" sizes="(min-width: 1024px) 680px, calc(100vw - 40px)" box={680 / 780} boxM={350 / 300} focus="50% 40%" priority />
+    <span class="tag-cap ah-cap">Soffit lights · his job</span>
+  </div>
+  <Tape text="Soffits on." rot={4} size={22} class="ah-t2 ab" style="--x:820px;--y:66px" />
+  <i class="ah-edge ab dn-m" style="--x:752px;--y:0px" aria-hidden="true">{[60, 300, 540, 720].map((t, i) => <Screw s={10} rot={30 + i * 40} style={`top:${t}px`} />)}</i>
+  <div class="ah-l ab" style="--x:120px;--y:56px;--w:600px">
+    <Crumbs trail={[{ name: 'Home', path: '/' }, { name: 'Areas', path: '/areas/' }]} data-t="1" />
+    <Eyebrow text="Areas · Surrey + Nearby" class="ah-eb" data-t="1" />
+    <h1 class="h1 ah-h" id="h1" data-t="2"><span class="l1">Electrician Serving</span><span class="l2">Surrey &amp; Nearby</span></h1>
+    <Tape text="Based in Surrey." rot={-3} size={22} class="ah-t1" />
+    <p class="lead ah-lead" data-t="3">One electrician, based in Surrey. Panels, lighting, EV chargers and renos for homes and shops in the city and the towns next door.</p>
+    <div class="ah-cta" data-t="3" data-stagger><Btn v="call" class="bw" /><Btn v="text" tone="dark" class="bw" /></div>
+    <div class="ah-jump dn-m" data-t="5">
+      <p class="tech ah-jt">Jump to your town</p>
+      <ul role="list" class="ah-chips">{JUMP.map((t) => <li><a href={t.href}>{t.name}<span aria-hidden="true">  →</span></a></li>)}</ul>
+      <a class="lk ah-all" href="#towns">All nine towns below →</a>
+    </div>
+  </div>
+  <div class="ah-card ab" style="--x:1000px;--y:122px" data-t="4" data-fx="frame">
+    <div class="ac-lid" aria-hidden="true"><span class="tech">In-use cover · Town check</span><Screw s={10} rot={45} class="ac-ls" /><i class="hg hg1"></i><i class="hg hg2"></i></div>
+    <form class="ac-f" data-towncheck method="post" action="/thank-you/" novalidate>
+      <h2 class="ac-h">Ask about your town</h2>
+      <p class="ac-s">Three short steps. Goes straight to Khinda.</p>
+      <ol class="ac-bar" role="list" aria-label="Steps">
+        {['Town', 'Phone', 'Job'].map((s, i) => <li class:list={['tech', i === 0 && 'cur']} data-stp><i class:list={['ac-tg', i === 0 && 'on']} aria-hidden="true"><b></b></i>{s}</li>)}
+      </ol>
+      <fieldset class="ac-st" data-step="0">
+        <legend><span class="tech ac-n">Step 1 of 3</span><span class="ac-q">Where is the job?</span></legend>
+        <div class="ac-chips">
+          {CHIPS.map((c, i) => <label class="ac-chip"><input type="radio" name="town" value={c} checked={i === 0} data-key={i + 1} /><span>{c}</span></label>)}
+        </div>
+        <Btn v="call" type="button" main="Next: your number" sub="Or press Enter" class="ac-go" data-go />
+      </fieldset>
+      <fieldset class="ac-st" data-step="1">
+        <legend><span class="tech ac-n">Step 2 of 3</span><span class="ac-q">What’s your number?</span></legend>
+        <label class="sr-only" for="ac-phone">Your phone number</label>
+        <input class="ac-in" id="ac-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Your phone number" />
+        <Btn v="call" type="button" main="Next: the job" sub="Or press Enter" class="ac-go" data-go />
+      </fieldset>
+      <fieldset class="ac-st" data-step="2">
+        <legend><span class="tech ac-n">Step 3 of 3</span><span class="ac-q">What needs doing?</span></legend>
+        <label class="sr-only" for="ac-job">What needs doing</label>
+        <input class="ac-in" id="ac-job" name="job" type="text" placeholder="e.g. pot lights, EV charger" />
+        <Btn v="call" type="submit" main="Send it" sub="Town, phone, job. That’s all." class="ac-go" data-send />
+        <p class="ac-pv">Your number is only used to reach you about this job.</p>
+      </fieldset>
+      <p class="ac-msg" data-msg role="status" aria-live="polite"></p>
+    </form>
+    <i class="ac-rule" aria-hidden="true"></i>
+    <p class="tech ac-or">Or call</p>
+    <a class="ac-ph" href={SITE.tel}>{SITE.phone}</a>
+    <p class="ac-ct">Calls + WhatsApp texts</p>
+    <Screw s={9} rot={30} class="ac-s1" /><Screw s={9} rot={120} class="ac-s2" />
+  </div>
+</section>
+<style>
+  .ah { background: var(--deep); z-index: 4; }
+  .ah-ph { width: 680px; height: 780px; overflow: hidden; background: var(--deep); }
+  .ah-cap { position: absolute; left: 24px; bottom: 24px; padding: 8px 12px; }
+  :global(.ah-t2) { z-index: 2; }
+  .ah-edge { width: 16px; height: 780px; background: var(--indigo); z-index: 2; }
+  .ah-edge :global(.screw) { position: absolute; left: 3px; }
+  .ah :global(.ah-eb) { margin-top: 26px; }
+  .ah-h { margin-top: 17px; }
+  .ah :global(.ah-t1) { margin-top: 30px; margin-left: 2px; }
+  .ah-lead { margin-top: 26px; width: 560px; font-size: 20px; line-height: 30px; color: #DCDFEA; }
+  .ah-cta { display: flex; gap: 26px; margin-top: 18px; }
+  .ah-cta :global(.btn-text) { width: 220px; }
+  .ah-jt { margin-top: 44px; font-size: 11px; line-height: 16px; color: var(--mist); }
+  .ah-chips { display: flex; gap: 8px; margin: 10px 0 0; padding: 0; }
+  .ah-chips a { display: block; height: 40px; padding: 10px 12px; background: var(--indigo); border: 1px solid #3A3E7A; border-radius: 20px; font-weight: 600; font-size: 14px; line-height: 18px; color: #fff; white-space: pre; transition: background-color .25s, border-color .25s, color .25s; }
+  .ah-chips a:hover { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+  .ah-all { margin-top: 18px; }
+  /* the in-use cover form card */
+  .ah-card { z-index: 3; width: 340px; height: 613px; padding: 0 24px; background: #fff; border-radius: 14px; box-shadow: 0 20px 40px rgba(13, 15, 51, .45); color: var(--ink); }
+  .ac-lid { position: relative; height: 40px; margin: 0 -24px; padding: 13px 24px 0; background: #D5D8DE; border-radius: 14px 14px 0 0; }
+  .ac-lid .tech { display: block; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--ink); }
+  .ac-lid :global(.ac-ls) { position: absolute; right: 18px; top: 14px; }
+  .hg { position: absolute; top: 34px; width: 20px; height: 12px; background: #9AA0AE; border-radius: 3px; }
+  .hg1 { left: 40px; } .hg2 { right: 40px; }
+  .ac-h { margin-top: 23px; font-family: var(--f-display); font-weight: 800; font-size: 26px; line-height: 41px; color: var(--indigo); }
+  .ac-s { margin-top: -3px; margin-right: -12px; font-size: 15px; line-height: 19px; color: var(--steel); white-space: nowrap; }
+  .ac-bar { display: flex; gap: 0; margin: 11px 0 0; padding: 0; }
+  .ac-bar li { display: flex; align-items: center; gap: 8px; width: 100px; font-size: 10px; line-height: 14px; letter-spacing: .08em; color: var(--steel); }
+  .ac-bar li.cur, .ac-bar li:has(.on) { color: var(--ink); }
+  .ac-tg { position: relative; display: block; width: 18px; height: 28px; border-radius: 4px; background: #fff; box-shadow: inset 0 0 0 1px #9AA0AE; transition: background-color .3s; }
+  .ac-tg b { position: absolute; left: 4px; top: 4px; width: 10px; height: 10px; border-radius: 2px; background: #9AA0AE; transform: translateY(10px); transition: transform .45s var(--ease-back), background-color .3s; }
+  .ac-tg.on { background: var(--deep); box-shadow: none; }
+  .ac-tg.on b { transform: none; background: var(--amber); }
+  .ac-st { margin-top: 16px; }
+  .ac-st legend { display: block; padding: 0; }
+  .ac-n { display: block; font-size: 10px; line-height: 14px; color: var(--steel); }
+  .ac-q { display: block; margin-top: 2px; font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 35px; color: var(--indigo); }
+  .ac-chips { display: flex; flex-wrap: wrap; gap: 8px; width: 292px; height: 134px; margin-top: 5px; padding: 13px 13px 0; background: #F4F5F7; border: 1px solid var(--line); border-radius: 8px; }
+  .ac-chip { position: relative; cursor: pointer; }
+  .ac-chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .ac-chip span { display: block; height: 30px; padding: 6px 11px; background: #fff; border: 1px solid var(--line); border-radius: 6px; font-weight: 500; font-size: 13px; line-height: 17px; color: var(--ink); transition: background-color .2s, color .2s, border-color .2s; }
+  .ac-chip:hover span { border-color: var(--indigo); }
+  .ac-chip input:checked + span { background: var(--deep); border-color: var(--deep); color: #fff; }
+  .ac-chip input:focus-visible + span { outline: 3px solid var(--indigo); outline-offset: 2px; }
+  .ah-card :global(.ac-go) { width: 292px; margin-top: 20px; }
+  .ac-in { width: 292px; height: 50px; margin-top: 8px; padding: 0 16px; background: #F4F5F7; border: 1px solid var(--line); border-radius: 8px; font-size: 15px; }
+  .ac-in::placeholder { color: var(--steel); }
+  .ac-in[aria-invalid="true"] { border-color: var(--c-red); }
+  .ac-pv { margin-top: 12px; font-size: 12px; line-height: 16px; color: var(--steel); }
+  .ac-msg { font-size: 13px; line-height: 17px; color: var(--c-red); }
+  .ac-msg:empty { display: none; }
+  .ac-rule { position: absolute; left: 24px; right: 24px; top: 476px; height: 1px; background: var(--line); }
+  .ac-or { position: absolute; left: 24px; top: 494px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .ac-ph { position: absolute; left: 24px; top: 512px; font-family: var(--f-display); font-weight: 800; font-size: 30px; line-height: 47px; color: var(--indigo); }
+  .ac-ph:hover { color: var(--h2b); }
+  .ac-ct { position: absolute; left: 24px; top: 556px; font-size: 13px; line-height: 17px; color: var(--steel); }
+  .ah-card :global(.ac-s1), .ah-card :global(.ac-s2) { position: absolute; top: 591px; }
+  .ah-card :global(.ac-s1) { left: 14px; } .ah-card :global(.ac-s2) { right: 15px; }
+  /* JS: one step at a time */
+  :global(.js-tc) .ac-st:not(.cur) { display: none; }
+  @media (min-width: 1024px) {
+    .ac-st:not(:first-of-type) { display: none; }
+    :global(.js-tc) .ac-st.cur { display: block; }
+  }
+  @media (max-width: 1023px) {
+    .ah { display: flex; flex-direction: column; padding: 24px 20px 0; }
+    .ah-l { display: contents; }
+    .ah :global(.p3c) { order: 1; }
+    .ah :global(.ah-eb) { order: 2; margin-top: 10px; }
+    .ah-h { order: 3; margin-top: 12px; font-size: 40px; line-height: 44px; }
+    .ah-h .l1 { width: 300px; }
+    .ah :global(.ah-t1) { order: 4; align-self: flex-start; margin-top: 18px; font-size: 20px; padding: 5px 16px; }
+    .ah-lead { order: 5; width: auto; margin-top: 18px; font-size: 16px; line-height: 25px; }
+    .ah-cta { order: 6; flex-direction: column; gap: 12px; margin-top: 45px; }
+    .ah-cta :global(.btn-text) { width: 100%; }
+    .ah-ph { order: 8; position: relative; width: 100%; height: 300px; margin-top: 26px; border-radius: 12px; }
+    .ah-cap { left: 12px; top: 16px; bottom: auto; padding: 5px 10px; }
+    .ah :global(.ah-t2) { order: 7; position: relative; z-index: 3; align-self: flex-end; margin: 12px 20px -40px 0; font-size: 20px; padding: 5px 16px; }
+    .ah-card { order: 9; position: relative; width: 340px; max-width: calc(100% - 10px); margin: -50px auto -543px; }
+    .ac-chips, .ac-in, .ah-card :global(.ac-go) { width: 100%; }
+    .ac-bar li { width: 100px; font-size: 11px; line-height: 16px; }
+    .ac-lid .tech { font-size: 11px; line-height: 16px; }
+    .ac-or, .ac-n { font-size: 11px; line-height: 16px; }
+  }
+</style>
+<script>
+  import { FORM_ENDPOINT, THANK_YOU } from '../../lib/form';
+  import { SITE } from '../../data/site';
+  document.querySelectorAll<HTMLFormElement>('form[data-towncheck]').forEach((f) => {
+    const steps = Array.from(f.querySelectorAll<HTMLFieldSetElement>('[data-step]'));
+    const bar = Array.from(f.querySelectorAll<HTMLElement>('[data-stp]'));
+    const msg = f.querySelector<HTMLElement>('[data-msg]')!;
+    const phone = f.querySelector<HTMLInputElement>('input[name="phone"]')!;
+    const job = f.querySelector<HTMLInputElement>('input[name="job"]')!;
+    let cur = 0;
+    f.classList.add('js-tc');
+    const show = (i: number, focus = true) => {
+      cur = i;
+      steps.forEach((s, k) => s.classList.toggle('cur', k === i));
+      bar.forEach((b, k) => { b.classList.toggle('cur', k === i); b.querySelector('.ac-tg')?.classList.toggle('on', k <= i); });
+      if (!focus) return;
+      const t = i === 0 ? f.querySelector<HTMLInputElement>('input[name="town"]:checked') : i === 1 ? phone : job;
+      t?.focus({ preventScroll: true });
+    };
+    const digits = (v: string) => v.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
+    const ok = (i: number) => {
+      if (i !== 1) return true;
+      const bad = digits(phone.value).length !== 10;
+      phone.toggleAttribute('aria-invalid', bad); if (bad) phone.setAttribute('aria-invalid', 'true');
+      msg.textContent = bad ? 'Please add a 10-digit phone number, so Khinda can reach you.' : '';
+      if (bad) phone.focus();
+      return !bad;
+    };
+    f.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => { if (ok(cur)) show(Math.min(cur + 1, 2)); }));
+    f.addEventListener('keydown', (e) => {
+      if (cur === 0 && /^[1-6]$/.test(e.key) && !(e.target as HTMLElement).matches('input[type="tel"], input[type="text"]')) {
+        const r = f.querySelector<HTMLInputElement>(`input[data-key="${e.key}"]`); if (r) { r.checked = true; r.focus(); }
+      }
+      if (e.key === 'Enter' && cur < 2) { e.preventDefault(); if (ok(cur)) show(cur + 1); }
+    });
+    phone.addEventListener('input', () => { phone.removeAttribute('aria-invalid'); msg.textContent = ''; });
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!ok(1)) { show(1, false); phone.focus(); return; }
+      const btn = f.querySelector<HTMLButtonElement>('[data-send]')!;
+      btn.disabled = true;
+      try {
+        if (FORM_ENDPOINT) {
+          const fd = new FormData(f); fd.append('page', location.pathname);
+          const r = await fetch(FORM_ENDPOINT, { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+          if (!r.ok) throw new Error(`The form service answered ${r.status}.`);
+        }
+        location.href = THANK_YOU;
+      } catch (err) {
+        msg.textContent = `Sorry, that didn't send. Please call or text ${SITE.phone}.`;
+        btn.disabled = false;
+      }
+    });
+    show(0, false);
+  });
+</script>

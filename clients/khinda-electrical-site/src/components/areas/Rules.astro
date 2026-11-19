@@ -1,0 +1,115 @@
+---
+// 4.5 Local rules (Figma 777:438, 1440x900 panel; mobile 783:608). His code book (CEC 26th, art cut from Figma) with four
+// index tabs = a real tablist (STATES 4.5): a tab pulls out and the page wipes in from the spine (clip-path 350 ms) with
+// one fact and its source. Facts: PAGE-SHEET (Surrey Bylaw 15596, CEC 26th 4 Mar 2025, TSBC strata, BC Hydro guide).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Obj from '../p3/Obj.astro';
+import bookD from '../../art/p3/04/book-d.svg?raw';
+import bookM from '../../art/p3/04/book-m.svg?raw';
+import { SITE } from '../../data/site';
+export const RULES = [
+  { k: '01 Permits', s: 'Permits', h: 'Surrey issues its own electrical permits.', p: 'The City of Surrey runs electrical permits under Bylaw 15596. A licensed contractor applies for regulated work.', src: 'City of Surrey Bylaw 15596', bg: '#F5A833' },
+  { k: '02 Code', s: 'Code', h: 'BC works to the CEC, 26th edition.', p: 'In force in BC since 4 March 2025. New electrical work is done to this edition.', src: 'BC Electrical Code', bg: '#F3E7C8' },
+  { k: '03 Strata', s: 'Strata', h: 'Strata owners can’t get a homeowner permit.', p: 'In a condo or strata townhouse, a licensed contractor takes out the permit for you.', src: 'Technical Safety BC', bg: '#FFFFFF' },
+  { k: '04 EV rebate', s: 'EV rebate', h: 'BC Hydro pays up to 50% of a home charger.', p: 'Up to $350, when a licensed electrician installs it with a permit.', src: 'BC Hydro guide, 15 Jul 2026', bg: '#AEB4C6' },
+];
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="lr sec p3s" style="--h:900px" data-m-section aria-labelledby="lr-h" data-rules>
+  <div class="lr-head ab" style="--x:220px;--y:96px;--w:1000px">
+    <Eyebrow text="Local rules · Surrey + BC" class="lr-eb" data-t="1" />
+    <h2 class="h2 lr-h" id="lr-h" data-t="2"><span class="l1">The local rules,</span><span class="l2">tabbed like his code book.</span></h2>
+    <p class="lede lr-p" data-t="3">Four facts that change how an electrical job in Surrey gets done.<span class="dn-m"> Each tab shows where it comes from.</span></p>
+  </div>
+  <div class="lr-book ab" style="--x:170px;--y:330px" data-t="4"><Obj svg={bookD} class="dn-m" /><Obj svg={bookM} class="dn-d" /></div>
+  <div class="lr-tabs ab" style="--x:566px;--y:360px" role="tablist" aria-label="Local rules">
+    {RULES.map((r, i) => (
+      <button type="button" role="tab" class:list={['lr-tab tech', i === 0 && 'on']} style={`--bg:${r.bg};--i:${i}`} id={`lrt-${i}`} aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`lrp-${i}`} tabindex={i === 0 ? 0 : -1} data-tab>{r.k}</button>
+    ))}
+  </div>
+  <div class="lr-card ab" style="--x:700px;--y:330px" data-t="4">
+    {RULES.map((r, i) => (
+      <div class="lr-pg" id={`lrp-${i}`} role="tabpanel" aria-labelledby={`lrt-${i}`} hidden={i !== 0} data-pg>
+        <span class="tech lr-chip dn-d" aria-hidden="true">{r.k}</span>
+        <p class="tech lr-n">Page {pad(i + 1)} / 04 · <span class="dn-m">{r.s}</span><span class="dn-d">Tap a tab</span></p>
+        <h3 class="lr-q">{r.h}</h3>
+        <p class="lr-a">{r.p}</p>
+        <i class="lr-rule dn-m" aria-hidden="true"></i>
+        <p class="tech lr-src">Source · {r.src}</p>
+        <button type="button" class="tech lr-next dn-m" data-go={i < 3 ? i + 1 : i - 1}>{i < 3 ? `Next · ${RULES[i + 1].k} →` : `Back · ${RULES[i - 1].k} ←`}</button>
+      </div>
+    ))}
+  </div>
+  <div class="lr-cta ab" style="--x:700px;--y:810px" data-t="3"><Btn v="call" main="Ask about your permit" sub={`Call ${SITE.phone}`} class="bw" /><a class="lk" href={SITE.whatsapp}>Or text a photo of the job →</a></div>
+</section>
+<style>
+  .lr { background: var(--panel); z-index: 2; }
+  .lr-head { text-align: center; }
+  .lr :global(.lr-eb) { justify-content: center; }
+  .lr-h { margin-top: 15px; }
+  .lr-p { width: 700px; margin: 22px auto 0; }
+  .lr-book { width: 430px; z-index: 1; }
+  .lr-tabs { z-index: 3; width: 160px; height: 420px; }
+  .lr-tab { position: absolute; left: 26px; top: calc(var(--i) * 117px); width: 132px; height: 56px; padding: 0 0 0 18px; text-align: left; background: var(--bg); border-radius: 6px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--ink); opacity: .7; transition: left .35s var(--ease-out), opacity .3s, box-shadow .3s; }
+  .lr-tab:hover { left: 18px; opacity: .9; }
+  .lr-tab.on { left: 0; opacity: 1; box-shadow: 0 6px 14px rgba(13, 15, 51, .2); }
+  .lr-card { z-index: 2; width: 620px; height: 456px; padding: 40px 52px 0; background: #fff; border-radius: 10px; box-shadow: 0 12px 28px rgba(13, 15, 51, .18); }
+  .lr-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--indigo); border-radius: 10px 0 0 10px; }
+  .lr-pg.in { animation: lrwipe .35s var(--ease-io) both; }
+  @keyframes lrwipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  .lr-n { font-size: 11px; line-height: 16px; color: var(--steel); }
+  .lr-q { width: 500px; margin-top: 14px; font-family: var(--f-display); font-weight: 800; font-size: 34px; line-height: 38px; color: var(--ink); }
+  .lr-a { width: 500px; margin-top: 18px; font-size: 19px; line-height: 29px; color: var(--steel); }
+  .lr-rule { display: block; width: 500px; height: 1px; margin-top: 28px; background: var(--line); }
+  .lr-src { margin-top: 16px; font-size: 11px; line-height: 16px; letter-spacing: .1em; color: var(--steel); }
+  .lr-next { position: absolute; right: 50px; top: 410px; font-size: 11px; line-height: 16px; color: var(--steel); }
+  .lr-next:hover { color: var(--indigo); }
+  .lr-cta { display: flex; align-items: center; gap: 31px; }
+  .lr-cta :global(.btn) { width: 269px; }
+  @media (max-width: 1023px) {
+    .lr { display: flex; flex-direction: column; padding: 56px 20px 56px; }
+    .lr-head { text-align: left; }
+    .lr :global(.lr-eb) { justify-content: flex-start; }
+    .lr-h { margin-top: 10px; }
+    .lr-h .l2 { max-width: 240px; }
+    .lr-p { width: auto; margin: 14px 0 0; }
+    .lr-bt { position: relative; }
+    .lr-book { position: relative; width: 237px; margin-top: 20px; }
+    .lr-tabs { position: relative; width: 100%; height: 0; }
+    .lr-tab { left: auto; right: -9px; top: calc(-254px + var(--i) * 58px); width: 128px; height: 44px; padding: 0 0 0 14px; font-size: 11px; letter-spacing: .08em; opacity: 1; box-shadow: 0 3px 6px rgba(13, 15, 51, .25); }
+    .lr-tab:nth-child(4) { width: 145px; right: -4px; }
+    .lr-tab:hover { left: auto; }
+    .lr-tab.on { left: auto; right: -9px; }
+    .lr-card { position: relative; width: 100%; height: auto; min-height: 177px; margin-top: 36px; padding: 20px 18px 6px; box-shadow: 0 6px 14px rgba(13, 15, 51, .14); }
+    .lr-card::before { display: none; }
+    .lr-chip { position: absolute; left: 12px; top: -12px; padding: 4px 8px; background: var(--amber); border-radius: 4px; font-size: 11px; line-height: 16px; letter-spacing: .04em; box-shadow: 0 2px 4px rgba(13, 15, 51, .2); }
+    .lr-n { font-size: 11px; }
+    .lr-q { width: auto; margin-top: 4px; font-family: var(--f-sans); font-weight: 600; font-size: 16px; line-height: 20px; }
+    .lr-a { width: auto; margin-top: 10px; font-size: 14px; line-height: 20px; }
+    .lr-src { margin-top: 10px; letter-spacing: .04em; }
+    .lr-cta { flex-direction: column; align-items: flex-start; gap: 20px; margin-top: 21px; }
+    .lr-cta :global(.btn) { width: 100%; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-rules]').forEach((s) => {
+    const tabs = Array.from(s.querySelectorAll<HTMLButtonElement>('[data-tab]'));
+    const pgs = Array.from(s.querySelectorAll<HTMLElement>('[data-pg]'));
+    const open = (k: number, focus = false) => {
+      tabs.forEach((t, i) => { const on = i === k; t.classList.toggle('on', on); t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      pgs.forEach((p, i) => { const was = !p.hidden; p.hidden = i !== k; if (i === k && !was) { p.classList.remove('in'); void p.offsetWidth; p.classList.add('in'); } });
+      if (focus) tabs[k].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => open(i));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length; let k = -1;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') k = (i + 1) % n; else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') k = (i - 1 + n) % n;
+        else if (e.key === 'Home') k = 0; else if (e.key === 'End') k = n - 1;
+        if (k >= 0) { e.preventDefault(); open(k, true); }
+      });
+    });
+    s.querySelectorAll<HTMLButtonElement>('[data-go]').forEach((b) => b.addEventListener('click', () => open(Number(b.dataset.go), true)));
+  });
+</script>

@@ -1,0 +1,25 @@
+/* Part 3 shared bits (areas, town, about, contact, reviews, our-work, faq, privacy, thank-you). Scoped to .p3s sections. */
+.p3s .lk { display: inline-block; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--indigo); }
+.p3s .lk:hover { text-decoration: underline; text-underline-offset: 3px; }
+.p3s.on-dark .lk, .p3s .on-dark .lk { color: var(--amber); }
+.p3s .btn.btn-deep { background: var(--deep); color: #fff; }
+.p3s .btn.btn-deep .b2 { color: var(--mist); }
+.p3s .btn.btn-deep:hover { background: var(--indigo); }
+.p3s .btn.btn-deep .tg { background: var(--amber); }
+.p3s .btn.btn-deep .tg i { background: var(--deep); }
+.p3s .btn.btn-ink.btn-text { box-shadow: inset 0 0 0 2px var(--ink); color: var(--ink); }
+.p3s .btn.btn-ink.btn-text .b2 { color: var(--ink); }
+.p3s .btn.btn-ink.btn-text:hover { background: var(--ink); color: var(--amber); }
+.p3s .btn.btn-ink.btn-text:hover .b2 { color: #fff; }
+.p3s .h2 .l1, .p3s .h2 .l2 { white-space: nowrap; }
+.p3s .lede { font-size: 17px; line-height: 27px; }
+.p3s.on-dark .lede, .p3s .on-dark .lede { color: #DCDFEA; }
+.p3s .tag-cap { display: inline-block; padding: 8px 12px; background: var(--deep); border-radius: 4px; font-family: var(--f-tech); font-size: 10px; line-height: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--mist); }
+@media (max-width: 1023px) {
+  .p3s .eyebrow { font-size: 11px; line-height: 16px; letter-spacing: .1em; }
+  .p3s .h2 { font-size: 32px; line-height: 36px; }
+  .p3s .h2 .l1, .p3s .h2 .l2 { white-space: normal; }
+  .p3s .lede { font-size: 16px; line-height: 25px; }
+  .p3s .bw { width: 100%; }
+  .p3s .tag-cap { font-size: 11px; line-height: 16px; letter-spacing: .04em; padding: 5px 10px; }
+}

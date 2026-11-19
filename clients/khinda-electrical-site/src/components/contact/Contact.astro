@@ -96,7 +96,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
           {'num' in b ? <Btn v="call" main="Call now" class="btn-deep c2-btn" style={`--t:${b.top[4]}px;--tm:${b.topm[4]}px`} />
             : <a class="c2-cta" href={b.href} style={`--t:${b.top[3]}px;--tm:${b.topm[3]}px`}>{b.cta}</a>}
           <p class="tech c2-rank dn-m" style={`--t:${b.top[b.top.length - 1]}px`}>{b.rank}</p>
-          {b.big && <span class="c2-big dn-m" aria-hidden="true">{b.big}</span>}
+          {b.big && <span class="c2-big dn-m" aria-hidden="true" data-big={b.big}></span>}
         </li>
       ))}
     </ol>
@@ -131,8 +131,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <p class="tech c4-ch">Khinda Electrical · Base</p>
       <dl class="c4-dl">
         {NAP.map(([k, v, c, vm]) => (
-          <div><dt class="tech">{k}</dt><dd>{k === 'Phone' ? <a href={SITE.tel}>{v}</a> : k === 'Instagram' ? <a href={SITE.social.instagram}>{v}</a> : vm ? <><span class="dn-m">{v}</span><span class="dn-d">{vm}</span></> : v}</dd>
-            {c && <button type="button" class:list={['tech c4-cp', k === 'Instagram' && 'dn-m']} data-copy={c} aria-label={`Copy ${k.toLowerCase()}: ${c}`}>Copy</button>}</div>
+          <div><dt class="tech">{k}</dt><dd>{k === 'Phone' ? <a href={SITE.tel}>{v}</a> : k === 'Instagram' ? <a href={SITE.social.instagram}>{v}</a> : vm ? <><span class="dn-m">{v}</span><span class="dn-d">{vm}</span></> : v}
+            {c && <button type="button" class:list={['tech c4-cp', k === 'Instagram' && 'dn-m']} data-copy={c} aria-label={`Copy ${k.toLowerCase()}: ${c}`}>Copy</button>}</dd></div>
         ))}
       </dl>
       <Btn v="call" main="Ask if he covers you" sub={`Call ${SITE.phone}`} class="c4-btn" />
@@ -263,6 +263,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .c2-c :global(.c2-btn) { position: absolute; left: 26px; top: var(--t); width: 217px; }
   .c2-rank { font-size: 10px; line-height: 14px; color: var(--steel); }
   .c2-big { left: auto !important; right: 16px; top: auto !important; bottom: 50px; font-family: var(--f-display); font-weight: 800; font-size: 120px; line-height: 120px; }
+  .c2-big::after { content: attr(data-big); }
   .c2-c3 .c2-big { color: rgba(255, 255, 255, .08); } .c2-c4 .c2-big { color: rgba(20, 21, 43, .12); }
   .c2-c { transition: transform .35s var(--ease-out), box-shadow .35s; }
   .c2-c:hover { transform: translateY(-6px); }

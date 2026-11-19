@@ -33,3 +33,41 @@
   .p3m .mz :is(.ab, .am) { position: absolute; left: var(--mx, 20px); top: var(--my, 0); width: var(--mw, auto); }
   .p3m .mz .flowm { position: static; }
 }
+/* Plain pages (/privacy/, /thank-you/): no Figma frame, built from the system: indigo hero, panel field, schedule card. */
+.pl-hero { background: var(--indigo); padding: 62px 120px 96px; }
+.pl-in { position: relative; max-width: 1200px; margin: 0 auto; }
+.pl-hero .eyebrow { margin-top: 22px; }
+.pl-hero .h1 { margin: 18px 0 0; }
+.pl-hero .lead { margin: 22px 0 0; max-width: 560px; font-size: 19px; line-height: 30px; }
+.pl-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+.pl-field { background: var(--panel); padding: 96px 120px 120px; }
+.pl-card { max-width: 1200px; margin: 0 auto; padding: 32px 40px 36px; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px #D9DCE3, 0 10px 30px rgba(13,15,51,.12); }
+.pl-ch { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 14px; border-bottom: 2px solid var(--indigo); font-size: 11px; line-height: 16px; color: var(--steel); }
+.pl-ch b { font-weight: 400; color: var(--indigo); }
+.pl-rows { margin: 0; padding: 0; list-style: none; }
+.pl-row { display: grid; grid-template-columns: 96px 44px 1fr; column-gap: 20px; align-items: start; padding: 22px 0; border-bottom: 1px solid #E4E6EB; }
+.pl-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.pl-cct { padding-top: 6px; font-size: 11px; line-height: 16px; color: var(--steel); }
+.pl-brk { display: block; position: relative; width: 28px; height: 44px; border-radius: 4px; background: var(--deep); }
+.pl-brk::after { content: ''; position: absolute; left: 5px; top: 23px; width: 18px; height: 16px; border-radius: 2px; background: var(--mist); }
+.pl-brk.on::after { top: 5px; background: var(--amber); }
+.pl-brk + .pl-st { display: block; margin-top: 6px; font-size: 9px; line-height: 12px; letter-spacing: .1em; color: var(--steel); text-align: center; width: 28px; }
+.pl-row h2 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 28px; color: var(--indigo); }
+.pl-row p { margin: 6px 0 0; max-width: 720px; font-size: 16px; line-height: 26px; color: var(--ink); }
+.pl-row a { font-weight: 600; color: var(--indigo); text-decoration: underline; text-underline-offset: 3px; }
+.pl-foot { max-width: 1200px; margin: 24px auto 0; font-size: 10px; line-height: 14px; color: var(--steel); }
+@media (max-width: 1023px) {
+  .pl-hero { padding: 30px 20px 64px; }
+  .pl-hero .lead { font-size: 16px; line-height: 25px; }
+  .pl-cta { flex-direction: column; gap: 10px; }
+  .pl-cta .btn { width: 100%; }
+  .pl-field { padding: 56px 16px 72px; }
+  .pl-card { padding: 22px 20px 26px; }
+  .pl-ch { flex-direction: column; gap: 4px; }
+  .pl-row { grid-template-columns: 34px 1fr; column-gap: 14px; row-gap: 4px; }
+  .pl-cct { grid-column: 1 / -1; padding: 0; }
+  .pl-row h2 { font-size: 19px; line-height: 24px; }
+  .pl-row p { font-size: 15px; line-height: 24px; }
+}
+/* Part 3 sections never widen the page: art that bleeds past a 360 px screen is clipped at the section edge. */
+@media (max-width: 1023px) { .sec.p3s { overflow-x: clip; } }

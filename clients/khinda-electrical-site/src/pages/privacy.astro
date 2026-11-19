@@ -1,4 +1,58 @@
 ---
-import Stub from '../components/stub/Stub.astro';
+// Privacy (no Figma frame): plain and true, set as a circuit directory. Checked against the build (19 Nov 2026): no
+// analytics, tracking, ads or cookies anywhere in src; fonts are self-hosted; the only browser storage is two
+// sessionStorage flags (ke-intro, ke-nav) for the intro / page curtain; Maps, Instagram and WhatsApp are plain links (no
+// embeds). The form line follows PUBLIC_FORM_ENDPOINT at build: unset = the preview form sends nothing.
+import '../components/p3/p3.css';
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/kit/Eyebrow.astro';
+import Btn from '../components/kit/Btn.astro';
+import Crumbs from '../components/p3/Crumbs.astro';
+import Endings from '../components/endings/Endings.astro';
+import { breadcrumbSchema } from '../lib/schema';
+import { FORM_ENDPOINT } from '../lib/form';
+import { SITE } from '../data/site';
+const trail = [{ name: 'Home', path: '/' }, { name: 'Privacy', path: '/privacy/' }];
+const FORM = FORM_ENDPOINT
+  ? 'Only what you type or attach: your name, number, town, the job, a photo if you add one, and the best time to reach you. It goes to Khinda Electrical, to answer you about your job.'
+  : `Right now the form on this site sends nothing: it checks what you typed, then opens a thank-you page. To reach him, call or text ${SITE.phone}.`;
+// [title, on/off/null, text]
+const ROWS: [string, boolean | null, string][] = [
+  ['Analytics and tracking', false, 'None. This site has no analytics, no tracking pixels and no ads, so nobody counts or follows your visit.'],
+  ['Cookies', false, 'None. The site sets no cookies.'],
+  ['The form', !!FORM_ENDPOINT, FORM],
+  ['Calls, texts and WhatsApp', true, `If you call, text or WhatsApp ${SITE.phone}, your number and message reach him through your phone company or WhatsApp, under their own rules. He uses them to answer you about your job.`],
+  ['Your browser', true, 'Two small notes in your browser’s session storage stop the opening animation from playing on every page. They hold nothing about you and are gone when you close the tab.'],
+  ['The web host', true, 'Like most websites, the company that hosts this one may keep standard server logs, such as an IP address and the page asked for, to run and protect the site.'],
+  ['Links to other sites', null, 'Instagram, Google Maps and WhatsApp links open their own sites, with their own privacy rules.'],
+  ['Selling or sharing', false, `Your details are not sold or passed on for marketing. To ask what he has from you, or to have it deleted, call or text ${SITE.phone}.`],
+];
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
-<Stub title="Privacy · Khinda Electrical" path="/privacy/" description="How Khinda Electrical uses the details you send through this site: only to answer you about your job." eyebrow="Privacy" h1={['Privacy', 'on this site']} lead="Your number is only used for this job." crumbs={[{ name: 'Privacy', path: '/privacy/' }]} form={false} />
+<Base title="Privacy · Khinda Electrical" path="/privacy/" description="Privacy on the Khinda Electrical site in plain words: no analytics, no tracking, no cookies. What the form and your calls are used for."
+  jsonld={[breadcrumbSchema(trail)]}>
+  <section class="pl-hero on-dark p3s" data-m-section data-m-hero aria-labelledby="h1">
+    <div class="pl-in">
+      <Crumbs trail={trail} data-t="1" />
+      <Eyebrow text="Privacy · in plain words" data-t="1" />
+      <h1 class="h1" id="h1" data-t="2"><span class="l1">Privacy</span><span class="l2">on this site</span></h1>
+      <p class="lead" data-t="3">No analytics, no tracking, no cookies. Below is everything the site keeps or sends, one circuit at a time.</p>
+    </div>
+  </section>
+  <section class="pl-field p3s" data-m-section aria-label="Privacy, circuit by circuit">
+    <div class="pl-card">
+      <p class="tech pl-ch"><b>Circuit directory · privacy</b><span>Khinda Electrical · Surrey</span></p>
+      <ol class="pl-rows" role="list">
+        {ROWS.map(([t, on, p], i) => (
+          <li class="pl-row">
+            <span class="tech pl-cct">CCT {pad(i + 1)}</span>
+            <span>{on !== null && <><span class:list={['pl-brk', on && 'on']} aria-hidden="true"></span><span class="tech pl-st">{on ? 'On' : 'Off'}</span></>}</span>
+            <div><h2>{t}</h2><p>{p}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <p class="tech pl-foot">Last updated 19 Nov 2026</p>
+  </section>
+  <Endings slot="end" form={false} />
+</Base>

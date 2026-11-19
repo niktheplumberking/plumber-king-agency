@@ -132,4 +132,15 @@ Answers and content:
   - Towns outside the mobile crop (Langley, White Rock) have no visible pin on mobile.
 - Figma's SVG export leaves corner radii and drop-shadow offsets / blurs in px inside a scaled drawing. `tools/fixrx.py`
   scales them; art.py applies it automatically.
-- The static cables in Hero, F, G5 and G6 are not scroll-drawn. Only the join cables are.
+- The shared endings cable (F -> G5 -> G6) draws in as it enters, like the join cables (`data-draw` with
+  `data-start` / `data-end` on each Art). The Home hero underline is the marker line's own `write` effect (the duplicate
+  art copy was removed).
+- 360-389 px: pages reflow, except the service template (`<Base fit390>`), whose mobile drawing is fixed at 390 and is
+  scaled down with zoom = width / 390 like 391-1023.
+- Mobile buttons are 66 px high (Figma 02-07, 10); Home draws them 61 px and Our work / FAQ 62 px (`--btn-mh` per page).
+- Small stand-alone links on mobile get a 44 px hit area with a `::before` halo (global.css); the footer and G5 lists keep
+  Figma's row pitch.
+- Seven Instagram photos had reel text burned in (barbershop, condo hallway, crystal chandelier, fire alarm, garden,
+  shop reception, spiral sconce): the source files in `src/assets/photos/` are cropped to drop the text bands.
+- `build-cache/tools/art.py` reads each page's own export scale from `sec/bbox-<page>.json` (it used Home's 0.291676 for
+  every page; the 02 / 03 art already in `src/art` was cut at the right scale).

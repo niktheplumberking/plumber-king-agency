@@ -19,9 +19,11 @@ import Curtain from '../components/kit/Curtain.astro';
 interface Props {
   title: string; description: string; path: string; og?: string; ogAlt?: string; jsonld?: object[];
   noindex?: boolean; loader?: boolean; navPath?: string;
+  /** below 390 px scale the 390 layout down (zoom = width / 390) instead of reflowing: pages whose mobile drawing is fixed at 390 */
+  fit390?: boolean;
   preload?: { name: string; sizes: string; widths: number[] };
 }
-const { title, description, path, og = 'residential-electrical-panel-finished-labelled-surrey', ogAlt, jsonld = [], noindex, loader = true, navPath, preload } = Astro.props;
+const { title, description, path, og = 'residential-electrical-panel-finished-labelled-surrey', ogAlt, jsonld = [], noindex, loader = true, navPath, preload, fit390 } = Astro.props;
 const envNoindex = String(import.meta.env.PUBLIC_NOINDEX ?? 'true').toLowerCase() !== 'false';
 const robots = noindex || envNoindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
 const canonical = abs(path);
@@ -47,7 +49,7 @@ const pageNode = noindex || is404 ? [] : [webPageSchema({ path, title, descripti
 const ld = [businessSchema(logoUrl, new URL(entityImg.src, Astro.site).href), websiteSchema(), ...pageNode, ...jsonld.filter((o) => o !== ownPage)];
 ---
 <!doctype html>
-<html lang="en-CA" data-loader={loader ? undefined : 'off'}>
+<html lang="en-CA" data-loader={loader ? undefined : 'off'} data-fit390={fit390 ? '' : undefined}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -84,7 +86,8 @@ const ld = [businessSchema(logoUrl, new URL(entityImg.src, Astro.site).href), we
   {/* Zoom fit (Mike's Base): from 1024 px up the whole 1440 Figma layout is scaled with CSS zoom = width / 1440, so every
      desktop width keeps Figma proportions (1024-1279 = the tablet pass, same layout smaller). Below 1024: the 390 frames,
      fluid 360-390; 391-1023 renders the 390 layout scaled up (zoom = width / 390), because the mobile art layers are drawn to
-     the 390 frame and drift from the reflowed copy on a wider column. */}
+     the 390 frame and drift from the reflowed copy on a wider column. Pages with fit390 (the service template, whose
+     mobile drawing is fixed at 390) also scale 360-389 down the same way, so nothing clips or scrolls sideways. */}
   <script is:inline>
     (function () {
       var d = document.documentElement, sb = 0;
@@ -92,7 +95,7 @@ const ld = [businessSchema(logoUrl, new URL(entityImg.src, Astro.site).href), we
       function fit() {
         var w = d.clientWidth || window.innerWidth;
         if (!document.body) w = window.innerWidth - sb;
-        var z = w >= 1024 ? Math.round(w / 1440 * 10000) / 10000 : w > 390 ? Math.round(w / 390 * 10000) / 10000 : 1;
+        var z = w >= 1024 ? Math.round(w / 1440 * 10000) / 10000 : (w > 390 || (w < 390 && d.hasAttribute('data-fit390'))) ? Math.round(w / 390 * 10000) / 10000 : 1;
         var s = z !== 1 ? String(z) : '';
         if (d.style.zoom !== s) { d.style.zoom = s; d.style.setProperty('--zoom', String(z)); }
       }

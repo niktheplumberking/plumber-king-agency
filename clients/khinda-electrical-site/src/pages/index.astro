@@ -33,3 +33,7 @@ import { HOME_FAQ } from '../data/faq';
   <Faq />
   <Endings slot="end" />
 </Base>
+<style>
+  /* Figma draws this page's mobile buttons 61px high (the other pages: 66) */
+  @media (max-width: 1023px) { :global(#main) { --btn-mh: 61px; } }
+</style>

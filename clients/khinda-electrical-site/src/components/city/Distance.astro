@@ -93,3 +93,15 @@ const rows = [['Base', 'Surrey, BC'], [d.N, d.where], ['Permits', d.issuer]];
     .c2 :global(.c2-tape) { position: absolute; left: 10px; top: -22px; z-index: 4; }
   }
 </style>
+<script>
+  // Keep the "<Town> · your street" label inside the map on narrow screens (Langley / South Surrey sit near the right edge).
+  const fitLabels = () => document.querySelectorAll<HTMLElement>('.c2-lt').forEach((l) => {
+    const m = l.closest<HTMLElement>('.c2-map'); if (!m) return;
+    l.style.translate = '';
+    const z = parseFloat(document.documentElement.style.zoom) || 1;
+    const over = (l.getBoundingClientRect().right - (m.getBoundingClientRect().right - 6)) / z;
+    if (over > 0) l.style.translate = `${-Math.ceil(over)}px 0`;
+  });
+  fitLabels();
+  addEventListener('resize', fitLabels);
+</script>

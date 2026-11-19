@@ -7,8 +7,11 @@ const [axePath, ...paths] = process.argv.slice(2);
 const src = fs.readFileSync(axePath, 'utf8');
 const srv = await serveDist(); const b = await chromium.launch(); let bad = 0;
 for (const w of [1440, 390]) for (const p of paths.length ? paths : ['/']) {
-  const pg = await (await b.newContext({ viewport: { width: w, height: 900 }, reducedMotion: 'reduce' })).newPage();
-  await pg.goto(srv.url + p, { waitUntil: 'networkidle' }); await pg.addScriptTag({ content: src });
+  const pg = await (await b.newContext({ viewport: { width: w, height: 900 }, reducedMotion: process.env.MOTION ? 'no-preference' : 'reduce' })).newPage();
+  if (process.env.MOTION) { await pg.addInitScript(() => { try { sessionStorage.setItem('ke-intro', '1'); } catch (e) {} }); }
+  await pg.goto(srv.url + p, { waitUntil: 'networkidle' });
+  if (process.env.MOTION) { await pg.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 400) { scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } scrollTo(0, 0); }); await pg.waitForTimeout(1500); }
+  await pg.addScriptTag({ content: src });
   const r = await pg.evaluate(async () => (await window.axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'] })).violations.map((v) => ({ id: v.id, n: v.nodes.length, t: v.nodes.slice(0, 3).map((x) => x.target.join(' ')) })));
   bad += r.length; console.log(w, p, r.length ? JSON.stringify(r) : 'OK'); await pg.close();
 }

@@ -38,7 +38,7 @@ const secs = plan.filter(([, C]) => C).map(([k, C, b]) => {
 });
 const ans = p.quick.answer;
 ---
-<Base title={p.title} description={p.description} path={path} navPath="/services/" og={p.hero.plate?.name ?? 'residential-electrical-panel-finished-labelled-surrey'}
+<Base fit390 title={p.title} description={p.description} path={path} navPath="/services/" og={p.hero.plate?.name ?? 'residential-electrical-panel-finished-labelled-surrey'}
   ogAlt={p.hero.plate?.alt}
   jsonld={[
     breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Services', path: '/services/' }, { name: p.name, path }]),

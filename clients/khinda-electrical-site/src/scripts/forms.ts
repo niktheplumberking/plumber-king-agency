@@ -62,7 +62,8 @@ function schedule(form: HTMLFormElement) {
       if (e.key === 'Enter') { e.preventDefault(); r.querySelector<HTMLButtonElement>('[data-next]')?.click(); }
     }));
     // A done row reopens on click (edit it); the rows after it keep their state.
-    r.addEventListener('click', () => { if (r.classList.contains('done') && cur !== i) { r.classList.remove('done'); go(i); } });
+    // (The Next click that just finished this row bubbles up here too: ignore it.)
+    r.addEventListener('click', (e) => { if ((e.target as Element).closest('[data-next]')) return; if (r.classList.contains('done') && cur !== i) { r.classList.remove('done'); go(i); } });
     // Choosing a time is the last row: it counts as done straight away.
     if (i === rows.length - 1) r.querySelectorAll('input').forEach((inp) => inp.addEventListener('change', () => { r.classList.add('done'); cur = rows.length; paint(); }));
   });

@@ -24,7 +24,7 @@ const tape = d.surrey ? `${d.N} is Surrey.` : `Next door to Surrey.`;
     <h1 class="h1 c1-h" id="h1" data-t="2"><span class="l1">{d.h1[0]}</span><span class="l2">{d.h1[1]}</span></h1>
     <div class="c1-qa" data-t="3">
       <p class="tech c1-ql">The quick answer</p>
-      <p class="c1-qt">{d.quick}</p>
+      <p class="c1-qt">{d.quick.split(SITE.phone).map((t, i) => <>{i > 0 && <span class="nw">{SITE.phone}</span>}{t}</>)}</p>
     </div>
     <div class="c1-b" data-t="3" data-stagger><Btn v="call" /><Btn v="text" tone="dark" /></div>
     <p class="tech c1-svc" data-t="5">Panels · Pot lights · EV chargers · Basement suites</p>
@@ -49,13 +49,14 @@ const tape = d.surrey ? `${d.N} is Surrey.` : `Next door to Surrey.`;
   .c1-qa { width: 600px; margin-top: 32px; padding: 22px 30px 26px; background: #fff; border-left: 6px solid var(--amber); border-radius: 12px; box-shadow: 0 12px 24px rgba(13, 15, 51, .35); }
   .c1-ql { font-size: 10px; line-height: 14px; color: var(--steel); }
   .c1-qt { margin-top: 10px; font-size: 17px; line-height: 27px; color: var(--ink); }
+  .c1-qt .nw { white-space: nowrap; }
   .c1-b { display: flex; gap: 26px; margin-top: 46px; }
   .c1-svc { margin-top: 34px; font-size: 10px; line-height: 14px; color: var(--mist); }
   .c1 :global(.c1-pole) { z-index: 2; }
   .c1-tag { z-index: 3; width: 300px; height: 190px; background: #C9CED6; border: 2px solid #9AA0AE; border-radius: 8px; box-shadow: 0 8px 18px rgba(13, 15, 51, .4); transform: rotate(3deg); transform-origin: 0 0; text-align: center; }
   .nl { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle, #5B6275 0 2px, #8A909C 2.5px); box-shadow: inset 0 0 0 1px #6B7282; }
   .c1-t1 { position: absolute; left: 0; right: 0; white-space: nowrap; top: 23px; font-size: 10px; line-height: 14px; letter-spacing: .14em; color: var(--ink); }
-  .c1-tn { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-54%); font-family: var(--f-display); font-weight: 800; font-size: var(--fs); line-height: 1; letter-spacing: .04em; color: #5B6275; text-shadow: 0 2px 0 rgba(255, 255, 255, .9), 0 -1px 1px rgba(51, 56, 71, .6); white-space: nowrap; }
+  .c1-tn { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-54%); font-family: var(--f-display); font-weight: 800; font-size: var(--fs); line-height: 1; letter-spacing: .04em; color: #464C5E; text-shadow: 0 2px 0 rgba(255, 255, 255, .9), 0 -1px 1px rgba(51, 56, 71, .6); white-space: nowrap; }
   .c1-t2 { position: absolute; left: 0; right: 0; white-space: nowrap; top: 140px; font-size: 10px; line-height: 14px; color: var(--ink); }
   .c1-ph { z-index: 7; width: 210px; height: 96px; background: #C9CED6; border: 2px solid #9AA0AE; border-radius: 6px; box-shadow: 0 6px 14px rgba(13, 15, 51, .35); transform: rotate(-2deg); transform-origin: 0 0; text-align: center; transition: transform .35s var(--ease-out); }
   .c1-ph:hover { transform: rotate(-2deg) translateY(-3px); }
@@ -64,14 +65,15 @@ const tape = d.surrey ? `${d.N} is Surrey.` : `Next door to Surrey.`;
   .c1-ph b { display: block; margin-top: 8px; font-family: var(--f-display); font-weight: 800; font-size: 24px; line-height: 30px; color: var(--steel); text-shadow: 0 1px 0 rgba(255, 255, 255, .9); }
   .c1 :global(.c1-tape) { z-index: 4; }
   @media (max-width: 1023px) {
-    .c1 { padding: 40px 20px 154px; }
+    .c1 { padding: 40px 20px 115px; }
     .c1 :global(.c1-eb) { margin-top: 18px; }
     .c1-h { margin: 14px 0 0; font-size: 40px; line-height: 45px; }
-    .c1-qa { width: auto; margin-top: 24px; padding: 22px 24px 24px 30px; }
+    .c1-qa { width: auto; margin-top: 24px; padding: 22px 24px 24px 24px; }
     .c1-ql { font-size: 11px; line-height: 16px; }
     .c1-qt { margin-top: 8px; }
     .c1-b { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; }
-    .c1-svc { margin-top: 24px; max-width: 230px; font-size: 11px; line-height: 16px; }
+    .c1-b :global(.btn-call) { width: 237px; } .c1-b :global(.btn-text) { width: 220px; }
+    .c1-svc { margin-top: 24px; max-width: 220px; font-size: 11px; line-height: 16px; }
     .c1-tag { position: absolute; right: 20px; bottom: -54px; width: 186px; height: 118px; border-width: 1.2px; border-radius: 5px; }
     .c1-tag .nl { width: 7px; height: 7px; background: radial-gradient(circle, #5B6275 0 1px, #8A909C 1.5px); }
     .c1-tag .nl:nth-child(1) { left: 9px !important; top: 11px !important; } .c1-tag .nl:nth-child(2) { left: 168px !important; top: 19px !important; }

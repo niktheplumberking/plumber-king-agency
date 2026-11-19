@@ -81,6 +81,8 @@ const lede = d.surrey
     .c6-in { transform: scale(.565); }
     .c6-b { order: 6; flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 28px; }
   }
+  /* 360-389: the 390 drawing scaled to the narrower column so the open door never clips */
+  @media (max-width: 389px) { .c6-box { height: 331px; } .c6-in { transform: scale(.516); } }
 </style>
 <script>
   document.querySelectorAll<HTMLButtonElement>('[data-peel]').forEach((b) => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));

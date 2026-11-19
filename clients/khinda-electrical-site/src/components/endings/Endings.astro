@@ -7,5 +7,5 @@ interface Props { town?: string; form?: boolean }
 const { town, form = true } = Astro.props;
 ---
 {form && <FinalForm town={town} />}
-<TownsStrip />
+<TownsStrip jbox={!form} />
 <Footer />

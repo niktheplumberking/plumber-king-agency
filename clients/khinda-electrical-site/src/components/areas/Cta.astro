@@ -55,7 +55,7 @@ import { SITE } from '../../data/site';
     .c8-p { width: auto; margin-top: 12px; font-size: 16px; line-height: 25px; }
     .c8-b { flex-direction: column; gap: 12px; margin-top: 42px; }
     .c8-b :global(.c8-tx) { width: 100%; }
-    .c8-steps { margin-top: 20px; font-size: 11px; line-height: 16px; letter-spacing: .06em; white-space: normal; }
+    .c8-steps { margin-top: 20px; font-size: 11px; line-height: 16px; letter-spacing: .06em; white-space: pre-wrap; }
     .c8-sw { position: relative; width: 168px; height: 348px; margin: 18px auto 0; }
     .c8-sw :global(.c8-plate) { width: 168px; }
     .c8-lever { left: 59px; top: 76px; width: 50px; height: 124px; }
@@ -64,7 +64,8 @@ import { SITE } from '../../data/site';
     .c8-lever i::before { left: 6px; top: 6px; width: 14px; height: 4px; }
     .c8-on { top: 58px; font-size: 11px; } .c8-off { top: 252px; font-size: 11px; }
     .c8-sw :global(.c8-tape) { left: 26px; top: 272px; font-size: 13px !important; padding: 3px 10px; }
-    .c8 :global(.c8-cab) { position: relative; width: 120px; margin: -19px 0 -81px calc(100% - 120px); }
+    .c8 { padding-bottom: 62px; }
+    .c8 :global(.c8-cab) { position: absolute; right: 20px; bottom: -79px; width: 120px; margin: 0; }
   }
 </style>
 <script>

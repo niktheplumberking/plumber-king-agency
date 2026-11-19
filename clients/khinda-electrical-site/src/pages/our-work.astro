@@ -15,3 +15,7 @@ import { breadcrumbSchema } from '../lib/schema';
   <OurWork />
   <Endings slot="end" />
 </Base>
+<style>
+  /* Figma draws this page's mobile buttons 62px high (the other pages: 66) */
+  @media (max-width: 1023px) { :global(#main) { --btn-mh: 62px; } }
+</style>

@@ -76,3 +76,10 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+
+/* Mobile tap halo: small stand-alone links keep their Figma size but get a 44 px high hit area (no layout change).
+   Dense lists (footer towns / company) keep the Figma row pitch, so their halos meet the neighbour's halfway. */
+@media (max-width: 1023px) {
+  :is(.ub-r, .g5-call, .p3c a, .ft-legal a, .ft-ph, .ft-ig, .ft-towns a, .ft-co a, .p3s a.lk:not(.c3-c .lk)) { position: relative; }
+  :is(.ub-r, .g5-call, .p3c a, .ft-legal a, .ft-ph, .ft-ig, .ft-towns a, .ft-co a, .p3s a.lk:not(.c3-c .lk))::before { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 44px; translate: 0 -50%; }
+}

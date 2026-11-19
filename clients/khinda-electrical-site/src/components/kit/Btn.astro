@@ -35,5 +35,5 @@ const Tag = type ? 'button' : 'a';
   .btn-dark.btn-text:hover .b2 { color: var(--steel); }
   .btn-indigo { background: var(--indigo); color: #fff; min-height: 50px; }
   .btn-indigo:hover { background: #22256a; }
-  @media (max-width: 1023px) { .btn { min-height: 61px; padding: 11px 18px; gap: 12px; } .b1 { font-size: 17px; line-height: 22px; } .b2 { font-size: 12px; line-height: 15px; } }
+  @media (max-width: 1023px) { .btn { min-height: var(--btn-mh, 66px); padding: 11px 18px; gap: 12px; } .b1 { font-size: 17px; line-height: 22px; } .b2 { font-size: 12px; line-height: 15px; } }
 </style>

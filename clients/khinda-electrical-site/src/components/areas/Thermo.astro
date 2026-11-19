@@ -25,7 +25,7 @@ import { AREAS_FAQ } from '../../data/areas';
     <div class="th-disp" aria-live="polite">
       {AREAS_FAQ.map((f, i) => (
         <div class="th-a" id={`thp-${i}`} role="tabpanel" aria-labelledby={`tht-${i}`} hidden={i !== 0} data-ta>
-          <p class="tech th-ak">{f.disp}</p>
+          <p class="tech th-ak">{f.disp.replace(' towns', '')}<span class="dn-m">{f.disp.endsWith(' towns') ? ' towns' : ''}</span></p>
           <p class="th-at">{f.a}</p>
           <a class="th-al" href={SITE.tel}>Call {SITE.phone} →</a>
         </div>
@@ -87,7 +87,7 @@ import { AREAS_FAQ } from '../../data/areas';
   .th-ab { position: absolute; left: 226px; top: 22px; display: flex; gap: 12px; }
   .th-ab :global(.th-c) { width: 150px; padding-left: 16px; } .th-ab :global(.th-t) { width: 110px; }
   @media (max-width: 1023px) {
-    .th { display: flex; flex-direction: column; padding: 56px 20px 11px; }
+    .th { display: flex; flex-direction: column; padding: 56px 20px 64px; }
     .th-h { margin-top: 10px; }
     .th-p { width: auto; margin-top: 16px; }
     .th-dial { position: relative; width: 330px; height: 330px; margin: 40px auto 0; }
@@ -105,7 +105,7 @@ import { AREAS_FAQ } from '../../data/areas';
     .th-q.on { min-height: 92px; }
     .th-qk { font-size: 11px; line-height: 16px; letter-spacing: .08em; }
     .th-qt { margin-top: 4px; font-size: 16px; line-height: 20px; }
-    .th-ask { width: 100%; height: 160px; margin-top: 20px; padding: 18px 20px 0; }
+    .th-ask { position: relative; width: 100%; height: 160px; margin-top: 20px; padding: 18px 20px 0; }
     .th-ah { font-size: 20px; line-height: 28px; }
     .th-as { margin-top: 0; }
     .th-ab { left: 20px; right: 20px; top: 76px; gap: 10px; }

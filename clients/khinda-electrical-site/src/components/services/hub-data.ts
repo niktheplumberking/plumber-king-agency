@@ -19,7 +19,7 @@ const P = {
   ig45: { name: 'spiral-wall-sconce-surrey', alt: 'Spiral LED wall sconce installed by Khinda Electrical' },
   ig46: { name: 'starry-sky-ceiling-lights-surrey', alt: 'Starry-sky ceiling with lights from a renovation by Khinda Electrical' },
   ig49: { name: 'garden-light-wiring-surrey', alt: 'Garden light cable run along a fence line' },
-  ig57: { name: 'condo-hallway-lights-surrey', alt: 'Condo hallway with new ceiling lights during a commercial job', focus: '50% 85%' },
+  ig57: { name: 'condo-hallway-lights-surrey', alt: 'Condo hallway with new ceiling lights during a commercial job', focus: '50% 70%' },
   ig61: { name: 'residential-electrical-panel-finished-labelled-surrey', alt: 'Finished residential electrical panel, every breaker labelled' },
 } satisfies Record<string, Pic>;
 export const PICS = P;

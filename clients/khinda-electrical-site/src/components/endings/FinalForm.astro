@@ -28,7 +28,7 @@ const ROWS = [
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <section class="ff sec on-dark" id="schedule" style="--h:960px" data-m-section aria-labelledby="ff-h">
-  <Art svg={d} class="dn-m" />
+  <Art svg={d} class="dn-m" data-draw data-start="80% bottom" data-end="bottom 85%" />
   <div class="ff-main ab" style="--x:900px;--y:70px" data-main aria-hidden="true">
     <span class="mb"><i></i></span><span class="tech" data-main-t>MAIN · OFF</span>
   </div>
@@ -151,7 +151,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .js-steps .row.active .fld { height: 48px; font-size: 16px; }
   .js-steps .row.done .rf, .js-steps .row.done .chips + .rf { display: none; }
   @media (max-width: 1023px) {
-    .ff { padding: 60px 20px 52px; display: flex; flex-direction: column; }
+    .ff { padding: 60px 20px 37px; display: flex; flex-direction: column; }
     .ff-main { position: relative; align-self: center; order: -1; width: 70px; height: 56px; padding-top: 6px; gap: 2px; border-radius: 6px; margin-bottom: 34px; }
     .ff-main .tech { font-family: var(--f-sans); font-weight: 600; font-size: 11px; letter-spacing: .02em; }
     .mb { width: 20px; height: 32px; margin: 0; } .mb i { left: 3px; top: 3px; width: 14px; height: 12px; transform: translateY(14px); }
@@ -167,13 +167,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
     :global(.ffs1), :global(.ffs3) { left: 8px; } :global(.ffs2), :global(.ffs4) { right: 8px; } :global(.ffs1), :global(.ffs2) { top: 8px; } :global(.ffs3), :global(.ffs4) { bottom: 8px; }
     :global(.ffs) { width: 12px; height: 12px; }
     .hinge { display: none; }
-    .ff-sch { position: static; width: auto; height: auto; padding: 17px 17px 18px; }
+    .ff-sch { position: static; width: auto; height: auto; padding: 17px 17px 11px; }
     .ro-bk { left: auto; right: 12px; top: 15px; }
     .js-steps .row.done .rb:has(.fld)::after { content: none; }
-    .ff-ro { position: relative; width: auto; height: 44px; margin: 0 0 12px; padding: 7px 12px; gap: 0; order: 0; }
+    .ff-ro { position: absolute; z-index: 1; left: 37px; right: 37px; top: 82px; width: auto; height: 44px; margin: 0; padding: 7px 12px; gap: 0; }
   .ff-ro b { font-size: 13px; line-height: 18px; }
     .ff-ro small { font-size: 11px; line-height: 16px; }
-    .sch-top { height: auto; margin-bottom: 12px; }
+    .sch-top { height: auto; margin-bottom: 77px; }
     .sch-t { font-size: 11px; }
     .row { grid-template-columns: 26px 1fr auto; margin: 0; padding: 0; min-height: 38px; align-items: center; }
     .row + .row { margin-top: 2px; }
@@ -198,8 +198,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .js-steps .row.active + .row { margin-top: 12px; }
     .rf { flex-direction: column; align-items: stretch; gap: 10px; }
     .next { height: 48px; border-radius: 8px; font-size: 16px; }
-    .ff-sch :global(.sch-send) { height: 61px; margin-top: 16px; }
-    .sch-p { font-size: 12px; line-height: 17px; }
+    .ff-sch :global(.sch-send) { height: 61px; min-height: 61px; margin-top: 24px; }
+    .sch-p { margin-top: 10px; font-size: 12px; line-height: 17px; }
     .ff-sch :global(.sch-done) { position: static; display: block; width: max-content; margin-top: 12px; font-size: 18px; }
   }
 </style>

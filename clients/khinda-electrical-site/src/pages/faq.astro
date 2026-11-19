@@ -1,4 +1,18 @@
 ---
-import Stub from '../components/stub/Stub.astro';
+// FAQ (Figma 10). 12 answers in 5 topics (src/components/faq/faq-data.ts); FAQPage schema lists all 12. Endings: F, G5, G6.
+import '../components/p3/p3.css';
+import Base from '../layouts/Base.astro';
+import Mz from '../components/p3/Mz.astro';
+import Faq from '../components/faq/Faq.astro';
+import Endings from '../components/endings/Endings.astro';
+import { breadcrumbSchema, faqSchema } from '../lib/schema';
+import { FAQ_ALL } from '../components/faq/faq-data';
 ---
-<Stub title="Electrical Questions, Answered · Khinda Electrical" path="/faq/" description="Surrey electrical permits, the BC Hydro EV charger rebate, panel upgrades and commercial work. Ask Khinda Electrical: 236-818-2664." eyebrow="FAQ · Surrey, BC" h1={['Electrical Questions,', 'Answered']} lead="The outlet with TEST and RESET buttons (a GFCI) is the one thing worth checking yourself. Past that, it is a job for a licensed electrician." crumbs={[{ name: 'FAQ', path: '/faq/' }]}  />
+<Base title="Electrical Questions, Answered · Surrey, BC" path="/faq/"
+  description="Surrey electrical permits, panel upgrades, the BC Hydro EV charger rebate, lighting and booking, answered from the rules that apply in Surrey, BC. Still not sure? Call or text 236-818-2664."
+  og="residential-electrical-panel-rough-in-surrey" ogAlt="Residential electrical panel rough-in by Khinda Electrical"
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq/' }]), faqSchema(FAQ_ALL)]}>
+  <Mz />
+  <Faq />
+  <Endings slot="end" />
+</Base>

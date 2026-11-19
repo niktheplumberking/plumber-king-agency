@@ -1,0 +1,347 @@
+---
+// FAQ (Figma 10 FAQ, desktop 1440 / mobile 390; figma/v5/10-faq-*.png). Drawn objects (tester pen, wire strippers, GFCI,
+// panel door + booklets, smoke alarm) are the Figma layers (scripts/cuts-p3.py 10) served as cached SVG files; copy, the
+// question card, tabs, answers and buttons are HTML on top at the Figma coordinates (see p3.css).
+// STATES 10.2: tabbed explorer. Each wire-stripper notch is a topic tab (arrow keys move, Home/End jump); the cable moves
+// into the picked notch and the panel's notch slides under the tab. Questions are breaker toggles: one open at a time,
+// the open one's toggle is ON. 10.4: hover pulls a booklet forward (Figma draws guide 02 forward). 10.5: the smoke alarm's
+// TEST button is the call link (rings pulse on hover; none with reduced motion).
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import ObjImg from '../p3/ObjImg.astro';
+import Crumbs from '../p3/Crumbs.astro';
+import s1dr from '../../art/p3/10/s1-d.svg?raw'; import s1d from '../../art/p3/10/s1-d.svg?url';
+import s1mr from '../../art/p3/10/s1-m.svg?raw'; import s1m from '../../art/p3/10/s1-m.svg?url';
+import s2dr from '../../art/p3/10/s2-d.svg?raw'; import s2d from '../../art/p3/10/s2-d.svg?url';
+import s2mr from '../../art/p3/10/s2-m.svg?raw'; import s2m from '../../art/p3/10/s2-m.svg?url';
+import s3dr from '../../art/p3/10/s3-d.svg?raw'; import s3d from '../../art/p3/10/s3-d.svg?url';
+import s3mr from '../../art/p3/10/s3-m.svg?raw'; import s3m from '../../art/p3/10/s3-m.svg?url';
+import s4dr from '../../art/p3/10/s4-d.svg?raw'; import s4d from '../../art/p3/10/s4-d.svg?url';
+import s4mr from '../../art/p3/10/s4-m.svg?raw'; import s4m from '../../art/p3/10/s4-m.svg?url';
+import s5dr from '../../art/p3/10/s5-d.svg?raw'; import s5d from '../../art/p3/10/s5-d.svg?url';
+import s5mr from '../../art/p3/10/s5-m.svg?raw'; import s5m from '../../art/p3/10/s5-m.svg?url';
+import b1r from '../../art/p3/10/b1-d.svg?raw'; import b1 from '../../art/p3/10/b1-d.svg?url';
+import b2r from '../../art/p3/10/b2-d.svg?raw'; import b2 from '../../art/p3/10/b2-d.svg?url';
+import b3r from '../../art/p3/10/b3-d.svg?raw'; import b3 from '../../art/p3/10/b3-d.svg?url';
+import tpr from '../../art/p3/10/tp-d.svg?raw'; import tp from '../../art/p3/10/tp-d.svg?url';
+import { SITE } from '../../data/site';
+import { TOPICS } from './faq-data';
+const P = (x: number, y: number, mx?: number, my?: number, w?: number, mw?: number) =>
+  `--x:${x}px;--y:${y}px` + (mx != null ? `;--mx:${mx}px;--my:${my}px` : '') + (w ? `;--w:${w}px` : '') + (mw ? `;--mw:${mw}px` : '');
+const pad = (n: number) => String(n).padStart(2, '0');
+// tabs: desktop x, w · mobile x, y, w · notch centre x (in the strippers art, desktop) · ring size
+const TAB = [[591, 134, 20, 420, 124, 639, 36], [749, 83, 152, 420, 76, 790, 40], [879, 122, 236, 420, 112, 940, 34], [1043, 95, 20, 468, 87, 1090, 30], [1166, 149, 115, 468, 138, 1240, 26]] as const;
+const TIPS = [
+  ['Outlet dead?', 'In a bathroom, kitchen or outside, press RESET on the nearest GFCI first. Still dead?', `Call ${SITE.phone}.`, 150],
+  ['Trips again right away?', 'Stop resetting it. Something on that circuit is faulty and needs a look.', `Call ${SITE.phone}.`, 340],
+  ['Warm, scorched or a burning smell?', 'Plug nothing in. Step away from it and', `call ${SITE.phone}.`, 530],
+] as const;
+---
+<!-- 10.1 Hero: tester pen pointed at the question -->
+<section class="fq1 sec on-dark p3s p3m" style="--h:720px;--hm:1080px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="mz">
+    <ObjImg raw={s1dr} src={s1d} class="ab dn-m fq1-art" style="--x:0px;--y:0px" eager />
+    <ObjImg raw={s1mr} src={s1m} class="am dn-d fq1-art" style="--mx:0px;--my:0px" />
+    <Crumbs trail={[{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq/' }]} class="ab" style={P(120, 62, 20, 30)} data-t="1" />
+    <Eyebrow text="FAQ · Surrey, BC" class="ab" style={P(120, 98, 20, 58)} data-t="1" />
+    <h1 class="h1 fq1-h ab" id="h1" style={P(120, 132, 20, 88, 0, 350)} data-t="2"><span class="l1">Electrical Questions,</span><span class="l2">Answered</span></h1>
+    <p class="fq1-mk ab" style={P(120, 290, 20, 230)} data-t="3">Test it before you touch it.</p>
+    <p class="lead fq1-p ab" style={P(120, 360, 20, 272, 500, 350)} data-t="3">Permits, panels, EV chargers, lighting and booking, answered from the rules that apply in Surrey, BC.<span class="dn-m"> Still not sure about your job? Ask him.</span></p>
+    <div class="ab fq-bw" style={P(120, 500, 20, 362, 235, 350)} data-t="4"><Btn v="call" /></div>
+    <div class="ab fq-bw" style={P(369, 500, 20, 436, 216, 350)} data-t="4"><Btn v="text" tone="dark" main="Text your question" /></div>
+    <p class="tech fq1-ct ab" style={P(120, 612, 20, 526)}>5 topics  ·  12 answers<span class="dn-m">  ·  every one ends in a call</span></p>
+    <article class="fq1-card ab" style={P(720, 330, 20, 680, 560, 350)} aria-labelledby="fq1-q" data-t="4">
+      <p class="tech fq1-tag">Q 01  ·  Permits &amp; law</p>
+      <h2 class="fq1-q" id="fq1-q">Do I need an electrical<br class="dn-m" /> permit in Surrey?</h2>
+      <p class="fq1-a">{TOPICS[0].qs[0].a}</p>
+      <p class="tech fq1-src">Source  ·  City of Surrey, Bylaw 15596</p>
+      <a class="fq1-lk" href={SITE.tel}>Not sure your job counts?<br class="dn-d" /> Call {SITE.phone} →</a>
+      <p class="tech fq1-pill" aria-hidden="true">Tested  ·  answered</p>
+    </article>
+  </div>
+</section>
+
+<!-- 10.2 By topic: wire-stripper gauge notches as tabs -->
+<section class="fq2 sec p3s p3m" style="--h:1193px;--hm:1484px" data-m-section aria-labelledby="fq2-h" data-fq>
+  <div class="mz">
+    <Eyebrow text="Questions by topic" class="ab" style={P(120, 110, 20, 96)} data-t="1" />
+    <h2 class="h2 ab" id="fq2-h" style={P(120, 144, 20, 124)} data-t="2"><span class="l1">Pick a gauge.</span><span class="l2">Read the answers.</span></h2>
+    <p class="lead ab" style={P(120, 264, 20, 206, 540, 350)} data-t="3">Every notch on his wire strippers fits one wire size. Here each notch is a topic<span class="dn-m">: pick one and read the answers</span>.</p>
+    <ObjImg raw={s2dr} src={s2d} class="ab dn-m" style="--x:120px;--y:360px" />
+    <ObjImg raw={s2mr} src={s2m} class="am dn-d" style="--mx:20px;--my:290px" />
+    <span class="fq2-sel ab dn-m" style={`--x:${TAB[0][5] - 20}px;--y:452px;--rs:${TAB[0][6]}px`} aria-hidden="true" data-fq-sel><i></i></span>
+    <div class="fq2-tabs" role="tablist" aria-label="FAQ topics">
+      {TOPICS.map((t, i) => (
+        <button type="button" role="tab" class="fq2-tab ab" id={`fq-tab-${t.key}`} aria-controls={`fq-p-${t.key}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
+          style={P(TAB[i][0], 512, TAB[i][2], TAB[i][3], TAB[i][1], TAB[i][4]) + `;--nx:${TAB[i][5]}px;--rs:${TAB[i][6]}px;--tc:${TAB[i][0] + TAB[i][1] / 2}px`}>
+          <span class="sr-only">Gauge {t.gauge}: </span>{t.tab}
+        </button>
+      ))}
+    </div>
+    <span class="fq2-notch ab dn-m" style={`--x:${TAB[0][0] + TAB[0][1] / 2 - 11}px;--y:607px`} aria-hidden="true" data-fq-notch></span>
+    {TOPICS.map((t, i) => (
+      <div class="fq2-pan ab" role="tabpanel" id={`fq-p-${t.key}`} aria-labelledby={`fq-tab-${t.key}`} hidden={i !== 0} style={P(120, 620, 20, 534, 1200, 350)}>
+        <div class="fq2-side">
+          <p class="tech fq2-meta">Topic {pad(i + 1)}  ·  Gauge {t.gauge}</p>
+          <h3 class="fq2-t">{t.title[0]}{t.title[1] && <span class="fq2-t2">{' ' + t.title[1]}</span>}</h3>
+          <p class="fq2-n">{t.qs.length} questions. One opens at a time.</p>
+          <p class="tech fq2-cable" aria-hidden="true">{t.cable}</p>
+          <div class="fq2-ask dn-m"><Btn v="call" main={t.ask} sub={`${SITE.phone} · tap to call`} /></div>
+        </div>
+        <ul class="fq2-qs" role="list">
+          {t.qs.map((q, k) => (
+            <li class="fq2-r">
+              <h4 class="fq2-h"><button type="button" class="fq2-b" aria-expanded={k === 0 ? 'true' : 'false'} aria-controls={`fq-a-${t.key}-${k}`} id={`fq-q-${t.key}-${k}`}>
+                <span class="tech fq2-lab">Q {pad(k + 1)}</span><span class="fq2-q">{q.q}</span><span class="tech fq2-hint dn-m" aria-hidden="true">Click to open</span><span class="fq2-brk" aria-hidden="true"></span>
+              </button></h4>
+              <div class="fq2-a" id={`fq-a-${t.key}-${k}`} role="region" aria-labelledby={`fq-q-${t.key}-${k}`} hidden={k !== 0}>
+                <p class="fq2-at">{q.a}</p>
+                {q.src && <p class="tech fq2-src">Source  ·  {q.src}</p>}
+                {q.link && <a class="fq2-lk" href={q.link.href}><span class="dn-m">{q.link.t}</span><span class="dn-d">{q.link.tm ?? q.link.t}</span></a>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+    <div class="ab fq-bw dn-d" style={P(0, 0, 20, 1342, 0, 350)}><Btn v="call" main="Ask about your job" sub={`${SITE.phone} · tap to call`} /></div>
+  </div>
+</section>
+
+<!-- 10.3 Keep it safe: GFCI outlet + three checks -->
+<section class="fq3 sec p3s p3m" style="--h:780px;--hm:1370px" data-m-section aria-labelledby="fq3-h">
+  <div class="mz">
+    <ObjImg raw={s3dr} src={s3d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s3mr} src={s3m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Keep it safe" class="ab" style={P(120, 120, 24, 64)} data-t="1" />
+    <h2 class="h2 fq-h34 ab" id="fq3-h" style={P(120, 154, 24, 96)} data-t="2"><span class="l1">Three checks,</span><span class="l2">each ends in a call.</span></h2>
+    <p class="lead fq-lg ab" style={P(120, 274, 24, 188, 440, 342)} data-t="3">The outlet with TEST and RESET buttons (a GFCI) is the one thing worth checking yourself. Past that, it is a job for a licensed electrician.</p>
+    <div class="ab fq-bw" style={P(120, 420, 24, 1184, 235, 342)} data-t="4"><Btn v="call" /></div>
+    <a class="fq-lk ab" href={SITE.sms} style={P(120, 506, 24, 1262, 440, 342)}>Or text a photo of the outlet to the same number →</a>
+    <ol class="fq3-tips" role="list">
+      {TIPS.map(([t, b, c, y], i) => (
+        <li class="fq3-tip ab" style={P(980, y, 24, 714 + 150 * i, 340, 342)}>
+          <span class="tech fq3-n">{pad(i + 1)}</span>
+          <h3 class="fq3-t">{t}</h3>
+          <p class="fq3-b">{b} <a href={SITE.tel}><b>{c}</b></a></p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<!-- 10.4 Guides: booklets in the panel door -->
+<section class="fq4 sec p3s p3m" style="--h:760px;--hm:1064px" data-m-section aria-labelledby="fq4-h">
+  <div class="mz">
+    <ObjImg raw={s4dr} src={s4d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s4mr} src={s4m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Guides · coming next" class="ab" style={P(120, 140, 24, 64)} data-t="1" />
+    <h2 class="h2 fq-h34 ab" id="fq4-h" style={P(120, 174, 24, 96)} data-t="2"><span class="l1">Longer answers,</span><span class="l2">written for Surrey.</span></h2>
+    <p class="lead fq-lg fq4-p ab" style={P(120, 294, 24, 188, 460, 342)} data-t="3">Three guides are being written. Until they are up, the quickest answer is still a call, or a photo by text.</p>
+    <div class="ab fq-bw" style={P(120, 410, 24, 862, 235, 342)} data-t="4"><Btn v="call" /></div>
+    <div class="ab fq-bw" style={P(369, 410, 24, 938, 206, 342)} data-t="4"><Btn v="text" /></div>
+    <div class="fq4-bks dn-m" aria-hidden="true">
+      <ObjImg raw={b1r} src={b1} class="ab fq4-bk fq4-b1" style="--x:680px;--y:297px" />
+      <ObjImg raw={b3r} src={b3} class="ab fq4-bk fq4-b3" style="--x:1090px;--y:301px" />
+      <ObjImg raw={b2r} src={b2} class="ab fq4-bk fq4-b2" style="--x:885px;--y:239px" />
+      <ObjImg raw={tpr} src={tp} class="ab fq4-tp" style="--x:1005px;--y:224px" />
+    </div>
+    <ul class="sr-only">
+      <li>Guide 01: 100A vs 200A, which panel do you need? Coming soon.</li>
+      <li>Guide 02: The BC Hydro EV charger rebate, step by step. Coming soon.</li>
+      <li>Guide 03: Surrey electrical permits, explained. Coming soon.</li>
+    </ul>
+    <p class="fq4-mk am dn-d" style={P(0, 0, 24, 798)} aria-hidden="true">Three guides. Coming next.</p>
+  </div>
+</section>
+
+<!-- 10.5 CTA: smoke alarm, test it then ask -->
+<section class="fq5 sec p3s p3m" style="--h:560px;--hm:760px" data-m-section aria-labelledby="fq5-h">
+  <div class="mz">
+    <ObjImg raw={s5dr} src={s5d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s5mr} src={s5m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Still a question" class="ab" style={P(120, 120, 20, 56)} data-t="1" />
+    <h2 class="h2 fq5-h ab" id="fq5-h" style={P(116, 152, 18, 84)} data-t="2"><span class="l1"><span class="dn-m">Not in the answers?</span><span class="dn-d">Still asking?</span></span><span class="l2">Text the question.</span></h2>
+    <p class="lead ab" style={P(120, 292, 20, 184, 500, 350)} data-t="3">Call or text {SITE.phone} with what you want to know. A photo of the panel or fixture helps.</p>
+    <div class="ab fq-bw" style={P(120, 396, 20, 276, 237, 350)} data-t="4"><Btn v="call" class="btn-deep" /></div>
+    <div class="ab fq-bw" style={P(383, 396, 20, 354, 230, 350)} data-t="4"><Btn v="text" class="btn-ink" /></div>
+    <p class="tech fq5-st ab" style={P(120, 492, 20, 440)}><span class="dn-m">1 Call or text   ·   2 Say what’s off   ·   3 Add a photo</span><span class="dn-d">Call or text  ·  Add a photo</span></p>
+    <a class="fq5-test ab" href={SITE.tel} style={P(990, 220, 158, 568, 120, 74)} aria-label={`Test it: call ${SITE.phone}`}></a>
+  </div>
+</section>
+
+<style>
+  .p3m :global(.obj.ab), .p3m :global(.obj.am) { width: auto; }
+  .p3m h3, .p3m h4 { margin: 0; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .fq-bw :global(.btn) { width: 100%; }
+  .fq-lk { font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); }
+  .fq-lk:hover, .fq1-lk:hover, .fq2-lk:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .fq-lg { color: var(--ink); }
+  /* 10.1 */
+  .fq1 { background: var(--indigo); z-index: 3; overflow: visible; }
+  .fq1 :global(.fq1-art) { z-index: 4; }
+  .fq1-h .l1 { white-space: nowrap; }
+  .fq1-mk { font-family: var(--f-marker); font-size: 26px; line-height: 38px; color: var(--amber); white-space: nowrap; }
+  .fq1-p { font-size: 19px; line-height: 30px; }
+  .fq1-ct { font-size: 10px; line-height: 14px; color: var(--mist); white-space: pre; }
+  .fq1-card { z-index: 3; height: 440px; padding: 36px 40px 0 46px; border-radius: 14px; background: #fff; box-shadow: 0 18px 40px rgba(13,15,51,.4); overflow: hidden; }
+  .fq1-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--amber); }
+  .fq1-tag { margin: 0; font-size: 11px; line-height: 16px; color: var(--steel); white-space: pre; }
+  .fq1-q { margin: 10px 0 0; font-family: var(--f-display); font-weight: 800; font-size: 34px; line-height: 38px; color: var(--indigo); }
+  .fq1-a { margin: 18px 0 0; width: 480px; font-size: 17px; line-height: 27px; color: var(--ink); }
+  .fq1-src { margin: 25px 0 0; padding-top: 27px; border-top: 1px solid #D9DCE3; width: 480px; font-size: 10px; line-height: 14px; color: var(--steel); }
+  .fq1-lk { display: inline-block; margin: 14px 0 0; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--indigo); }
+  .fq1-pill { display: inline-flex; align-items: center; justify-content: center; margin: 30px 0 0; width: 232px; height: 36px; border-radius: 18px; background: var(--panel); font-size: 10px; line-height: 14px; color: var(--ink); white-space: pre; }
+  .fq1-card .fq1-pill { display: flex; }
+  /* 10.2 */
+  .fq2 { background: var(--panel); z-index: 2; }
+  .fq2-tab { height: 40px; padding: 0; border: 0; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px #C9CCD6; font-family: var(--f-body, inherit); font-weight: 600; font-size: 15px; line-height: 19px; color: var(--ink); cursor: pointer; transition: background-color .25s, color .25s, transform .25s var(--ease-out); }
+  .fq2-tab:hover { transform: translateY(-2px); }
+  .fq2-tab[aria-selected='true'] { background: var(--indigo); box-shadow: none; color: #fff; }
+  .fq2-tab:focus-visible { outline: 3px solid var(--indigo); outline-offset: 3px; }
+  .fq2-sel { z-index: 2; width: 40px; height: 60px; transition: left .45s var(--ease-out); }
+  .fq2-sel::before { content: ''; position: absolute; left: calc(20px - var(--rs) / 2); top: calc(25px - var(--rs) / 2); width: var(--rs); height: var(--rs); border-radius: 50%; box-shadow: inset 0 0 0 3px var(--amber); transition: all .45s var(--ease-out); }
+  .fq2-sel i { position: absolute; left: 13px; top: 10px; width: 14px; height: 44px; border-radius: 7px; background: #F4F5F7; box-shadow: inset 0 0 0 1.5px #8C94A3; }
+  .fq2-sel i::before { content: ''; position: absolute; left: 4px; top: -6px; width: 6px; height: 20px; border-radius: 2px; background: #C47A45; }
+  .fq2-notch { z-index: 3; width: 22px; height: 14px; transition: left .45s var(--ease-out); }
+  .fq2-notch::before { content: ''; position: absolute; left: 4px; top: 6px; width: 14px; height: 14px; background: #fff; transform: rotate(45deg); box-shadow: -1px -1px 0 #D9DCE3; }
+  .fq2-pan { z-index: 2; display: grid; grid-template-columns: 330px 1fr; min-height: 473px; padding: 31px 26px 31px 0; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px #D9DCE3, 0 10px 30px rgba(13,15,51,.12); }
+  .fq2-pan[hidden] { display: none; }
+  .fq2-side { position: relative; padding: 9px 0 0 40px; border-right: 1px solid #E4E6EB; margin-right: 26px; }
+  .fq2-meta { margin: 0; font-size: 11px; line-height: 16px; letter-spacing: .1em; color: var(--steel); white-space: pre; }
+  .fq2-t { margin: 8px 0 0; font-family: var(--f-display); font-weight: 800; font-size: 40px; line-height: 44px; color: var(--indigo); }
+  .fq2-t2 { display: block; }
+  .fq2-n { margin: 10px 0 0; font-size: 15px; line-height: 19px; color: var(--steel); }
+  .fq2-cable { position: relative; display: inline-block; margin: 21px 0 0; padding: 3px 14px 3px 18px; border-radius: 12px; background: var(--panel); box-shadow: inset 0 0 0 1px #B4BAC6; font-size: 10px; line-height: 14px; letter-spacing: .08em; color: var(--steel); white-space: nowrap; }
+  .fq2-cable::after { content: ''; position: absolute; right: -16px; top: 5px; width: 16px; height: 10px; background: linear-gradient(#C47A45 0 3px, transparent 3px 7px, #C47A45 7px); }
+  .fq2-ask { position: absolute; left: 40px; top: 336px; width: 235px; }
+  .fq2-qs { margin: 0; padding: 0; list-style: none; }
+  .fq2-r + .fq2-r { border-top: 1px solid #E4E6EB; }
+  .fq2-b { display: grid; grid-template-columns: 64px 1fr auto 18px; align-items: center; column-gap: 12px; width: 100%; min-height: 70px; padding: 0 12px 0 14px; border: 0; border-radius: 10px; background: none; text-align: left; cursor: pointer; transition: background-color .2s; }
+  .fq2-b:hover { background: #F2F3F6; }
+  .fq2-b:focus-visible { outline: 3px solid var(--indigo); outline-offset: -3px; }
+  .fq2-lab { font-size: 11px; line-height: 16px; letter-spacing: .08em; color: var(--steel); }
+  .fq2-b[aria-expanded='true'] .fq2-lab { color: var(--ink); }
+  .fq2-q { font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 28px; color: var(--indigo); }
+  .fq2-hint { font-size: 10px; line-height: 14px; color: var(--steel); opacity: 0; transition: opacity .2s; }
+  .fq2-b:hover .fq2-hint { opacity: 1; }
+  .fq2-b[aria-expanded='true'] .fq2-hint { display: none; }
+  .fq2-brk { position: relative; grid-column: 4; width: 18px; height: 28px; border-radius: 3px; background: var(--deep); }
+  .fq2-brk::after { content: ''; position: absolute; left: 4px; top: 14px; width: 10px; height: 10px; border-radius: 2px; background: #8C94A3; transition: top .25s var(--ease-out), background-color .25s; }
+  .fq2-b[aria-expanded='true'] .fq2-brk::after { top: 4px; background: var(--amber); }
+  .fq2-a { padding: 0 20px 22px 90px; }
+  .fq2-at { margin: 0; font-size: 17px; line-height: 27px; color: var(--ink); }
+  .fq2-src { margin: 14px 0 0; font-size: 10px; line-height: 14px; letter-spacing: .08em; color: var(--steel); }
+  .fq2-lk { display: inline-block; margin: 10px 0 0; font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); }
+  /* 10.3 */
+  .fq3 { background: #fff; z-index: 1; }
+  .fq3-tips { margin: 0; padding: 0; list-style: none; }
+  .fq3-tip { min-height: 161px; padding: 20px 22px; border-radius: 12px; background: var(--panel); }
+  .fq3-n { margin: 0; display: block; font-size: 11px; line-height: 16px; color: var(--steel); }
+  .fq3-t { margin: 4px 0 0; font-family: var(--f-display); font-weight: 800; font-size: 20px; line-height: 24px; color: var(--indigo); }
+  .fq3-b { margin: 8px 0 0; font-size: 15px; line-height: 23px; color: var(--ink); }
+  .fq3-b a { color: inherit; } .fq3-b a:hover { text-decoration: underline; }
+  /* 10.4 */
+  .fq4 { background: var(--panel); z-index: 1; }
+  .fq4-p { color: var(--steel); }
+  .fq4-bks :global(.fq4-bk) { transition: transform .45s var(--ease-out); transform-origin: 50% 80%; }
+  .fq4-bks :global(.fq4-tp) { z-index: 3; transition: opacity .3s; }
+  .fq4-bks :global(.fq4-b2) { z-index: 2; transform: translateY(0) scale(1); }
+  .fq4-bks :global(.fq4-b1), .fq4-bks :global(.fq4-b3) { z-index: 1; }
+  @media (hover: hover) and (min-width: 1024px) {
+    .fq4-bks { pointer-events: auto; }
+    .fq4-bks :global(.fq4-bk) { pointer-events: auto; cursor: default; }
+    .fq4-bks:has(:global(.fq4-b1:hover)) :global(.fq4-b1), .fq4-bks:has(:global(.fq4-b3:hover)) :global(.fq4-b3) { z-index: 4; transform: translateY(-22px) scale(1.06); }
+    .fq4-bks:has(:global(.fq4-b1:hover)) :global(.fq4-b2), .fq4-bks:has(:global(.fq4-b3:hover)) :global(.fq4-b2) { transform: translateY(26px) scale(.95); }
+    .fq4-bks:has(:global(.fq4-b1:hover)) :global(.fq4-tp), .fq4-bks:has(:global(.fq4-b3:hover)) :global(.fq4-tp) { opacity: 0; }
+  }
+  .fq4-mk { font-family: var(--f-marker); font-size: 22px; line-height: 32px; color: #3D4677; transform: rotate(2deg); white-space: nowrap; }
+  /* 10.5 */
+  .fq5 { background: var(--amber); z-index: 1; }
+  .fq5 :global(.eyebrow) { color: var(--ink); }
+  .fq5 :global(.eyebrow svg path) { fill: var(--ink); }
+  .fq5-h { font-size: 56px; line-height: 60px; }
+  .fq5-h .l1 { color: var(--ink); } .fq5-h .l2 { color: #3D4677; }
+  .fq5-st { font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--ink); white-space: pre; }
+  .fq5-test { height: 120px; border-radius: 50%; transition: transform .2s var(--ease-out); }
+  .fq5-test::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 2px var(--ink); opacity: 0; }
+  .fq5-test:hover::after { animation: fq5-ring 1.2s var(--ease-out) infinite; }
+  .fq5-test:active { transform: scale(.94); }
+  .fq5-test:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+  @keyframes fq5-ring { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(1.9); } }
+  @media (prefers-reduced-motion: reduce) { .fq5-test:hover::after { animation: none; opacity: .7; } }
+  @media (max-width: 1023px) {
+    .fq1-mk { font-size: 21px; line-height: 31px; }
+    .fq1-p { font-size: 16px; line-height: 25px; }
+    .fq1-h .l1 { white-space: normal; }
+    .fq1-card { padding: 24px 24px 0 24px; }
+    .fq1-card::before { width: 5px; }
+    .fq1-q { margin-top: 8px; font-size: 24px; line-height: 28px; }
+    .fq1-a { margin-top: 14px; width: 302px; font-size: 15px; line-height: 23px; }
+    .fq1-src { margin-top: 28px; padding-top: 27px; width: 302px; font-size: 11px; line-height: 17px; }
+    .fq1-lk { margin-top: 16px; font-size: 15px; line-height: 22px; }
+    .fq1-pill { margin-top: 16px; width: 239px; height: 34px; }
+    .fq2-tab { height: 38px; border-radius: 19px; font-size: 14px; line-height: 18px; }
+    .fq2-pan { display: block; min-height: 784px; padding: 24px 20px; }
+    .fq2-side { padding: 0; border: 0; margin: 0; }
+    .fq2-t { margin-top: 6px; font-size: 28px; line-height: 32px; }
+    .fq2-t2 { display: inline; }
+    .fq2-n { margin-top: 6px; }
+    .fq2-cable { margin-top: 18px; padding: 4px 12px 4px 9px; font-size: 11px; line-height: 16px; letter-spacing: .04em; }
+    .fq2-qs { margin-top: 20px; }
+    .fq2-r { border-top: 1px solid #E4E6EB; }
+    .fq2-b { grid-template-columns: 1fr 20px; grid-template-rows: auto auto; row-gap: 4px; min-height: 0; padding: 20px 0 16px; border-radius: 0; align-items: start; }
+    .fq2-b:hover { background: none; }
+    .fq2-lab { grid-column: 1; grid-row: 1; }
+    .fq2-q { grid-column: 1; grid-row: 2; width: 262px; font-size: 19px; line-height: 24px; }
+    .fq2-brk { grid-column: 2; grid-row: 1 / 3; width: 20px; height: 32px; margin-top: 2px; }
+    .fq2-brk::after { left: 5px; top: 17px; }
+    .fq2-b[aria-expanded='true'] .fq2-brk::after { top: 5px; }
+    .fq2-a { padding: 0 0 22px; }
+    .fq2-at { width: 300px; font-size: 16px; line-height: 25px; }
+    .fq2-src { margin-top: 12px; font-size: 11px; line-height: 16px; letter-spacing: .04em; }
+    .fq2-lk { margin-top: 10px; }
+    .fq-h34 { font-size: 34px; line-height: 38px; }
+    .fq-lg { font-size: 16px; line-height: 24px; color: var(--steel); }
+    .fq-lk { font-weight: 500; font-size: 15px; line-height: 22px; }
+    .fq3-tip { min-height: 136px; padding: 18px 20px 18px 60px; }
+    .fq3-n { position: absolute; left: 16px; top: 18px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--amber); color: var(--ink); }
+    .fq3-t { margin-top: 2px; font-family: inherit; font-weight: 600; font-size: 18px; line-height: 24px; }
+    .fq3-b { margin-top: 6px; font-size: 15px; line-height: 22px; }
+    .fq5-h { font-size: 40px; line-height: 44px; }
+    .fq5-st { font-size: 11px; line-height: 16px; letter-spacing: .06em; }
+    .fq5-test { height: 74px; }
+  }
+</style>
+<script>
+  // 10.2: tabs (roving tabindex, arrows / Home / End) and one-open-at-a-time breaker questions.
+  const root = document.querySelector<HTMLElement>('[data-fq]');
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const sel = root.querySelector<HTMLElement>('[data-fq-sel]');
+    const notch = root.querySelector<HTMLElement>('[data-fq-notch]');
+    const pick = (t: HTMLButtonElement, focus = false) => {
+      tabs.forEach((o) => { const on = o === t; o.setAttribute('aria-selected', String(on)); o.tabIndex = on ? 0 : -1; document.getElementById(o.getAttribute('aria-controls')!)!.hidden = !on; });
+      const cs = getComputedStyle(t);
+      if (sel) { sel.style.setProperty('--x', `${parseFloat(cs.getPropertyValue('--nx')) - 20}px`); sel.style.setProperty('--rs', cs.getPropertyValue('--rs')); }
+      if (notch) notch.style.setProperty('--x', `${parseFloat(cs.getPropertyValue('--tc')) - 11}px`);
+      if (focus) t.focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => pick(t));
+      t.addEventListener('keydown', (e) => {
+        const n = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? i + 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : null;
+        if (n == null) return;
+        e.preventDefault(); pick(tabs[(n + tabs.length) % tabs.length], true);
+      });
+    });
+    root.querySelectorAll<HTMLElement>('[role="tabpanel"]').forEach((p) => {
+      const bs = [...p.querySelectorAll<HTMLButtonElement>('.fq2-b')];
+      bs.forEach((b) => b.addEventListener('click', () => {
+        const open = b.getAttribute('aria-expanded') !== 'true';
+        bs.forEach((o) => { const on = o === b && open; o.setAttribute('aria-expanded', String(on)); document.getElementById(o.getAttribute('aria-controls')!)!.hidden = !on; });
+      }));
+    });
+  }
+</script>

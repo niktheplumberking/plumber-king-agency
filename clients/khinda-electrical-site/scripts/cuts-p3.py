@@ -74,6 +74,24 @@ T += [
  ('09-our-work', 'm', '*', '5,3550,380,430', '09/e2-m', [SH[1], '!photo ig*', '!Frame', '!callout*']),
  ('09-our-work', 'm', '*', '5,3982,380,430', '09/e3-m', [SH[2], '!photo ig*', '!Frame', '!callout*']),
 ]
+S10 = {1: '10.1 Hero · voltage tester pen pointed at the question', 2: '10.2 By topic · wire-stripper gauge notches as topic tabs', 3: '10.3 Keep it safe · GFCI outlet, TEST / RESET hold 3 tips', 4: '10.4 Guides · panel-manual booklets in a door pocket', 5: '10.5 CTA · smoke alarm: test it, then ask'}
+M10 = {1: '10.1 Hero · voltage tester pen at the question (mobile)', 2: '10.2 By topic · wire-stripper notches (mobile)', 3: '10.3 Keep it safe · GFCI test/reset (mobile)', 4: '10.4 Guides · booklets in the panel door (mobile)', 5: '10.5 CTA · smoke alarm (mobile)'}
+T += [
+ ('10-faq', 'd', S10[1], '0,178,1440,720', '10/s1-d', ['+body', '!↓ question card*', '!marker line', '!Vector_7', '!topic count']),
+ ('10-faq', 'd', S10[2], '120,1258,1200,210', '10/s2-d', ['!topic tab*', '!selected ring', '!cable in the notch', '!copper', '!answer panel*', '!panel notch*']),
+ ('10-faq', 'd', S10[3], '0,2091,1440,780', '10/s3-d', ['!tip 0*', '+lead*', '!lead', '!text link']),
+ ('10-faq', 'd', S10[4], '0,2871,1440,760', '10/s4-d', ['!guide booklet*', '!tape · coming soon*']),
+ ('10-faq', 'd', S10[4], '680,3168,250,340', '10/b1-d', ['guide booklet 01']),
+ ('10-faq', 'd', S10[4], '1090,3172,250,340', '10/b3-d', ['guide booklet 03']),
+ ('10-faq', 'd', S10[4], '885,3110,250,350', '10/b2-d', ['guide booklet 02 (hover: pulled forward)']),
+ ('10-faq', 'd', S10[4], '1005,3095,160,70', '10/tp-d', ['tape · coming soon (on hover)']),
+ ('10-faq', 'd', S10[5], '0,3631,1440,560', '10/s5-d', ['!If your street*', '!1 FLIP IT*']),
+ ('10-faq', 'm', M10[1], '0,152,390,1080', '10/s1-m', ['!↓ question card*', '!Test it before*', '!HOME / FAQ', '!5 TOPICS*']),
+ ('10-faq', 'm', M10[2], '20,1522,350,110', '10/s2-m', ['!topic tab*', '!answer panel*']),
+ ('10-faq', 'm', M10[3], '0,2716,390,1370', '10/s3-m', ['!tip 0*', '!The outlet with TEST*', '!Or text a photo*']),
+ ('10-faq', 'm', M10[4], '0,4086,390,1064', '10/s4-m', ['!Three guides are being*']),
+ ('10-faq', 'm', M10[5], '0,5150,390,760', '10/s5-m', ['!If your street*', '!1 FLIP IT*']),
+]
 EXTRA = {}
 want = sys.argv[1] if len(sys.argv) > 1 else ''
 for pg, fr, sec, rect, out, ex in T + EXTRA.get('x', []):

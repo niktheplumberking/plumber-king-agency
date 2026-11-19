@@ -1,0 +1,94 @@
+---
+// 5.4 Top 6 services (Figma 786:567, 1440x740 deep; mobile 793:660). One 6-gang wall plate, turned -1.2 deg, each gang a
+// rocker = a link to that service page. STATES 5.4: the plate tilts a few degrees toward the pointer (spring back on leave,
+// no sheen); the hovered switch flips ON in amber and its "See the page" turns into an amber chip. Mobile: no tilt, 2 x 3
+// grid, the switch flips as it is tapped.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Screw from '../kit/Screw.astro';
+import type { TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+const G = [
+  ['Panel upgrades', '/services/panel-upgrades/'], ['Pot lights & lighting', '/services/lighting-pot-lights/'], ['EV chargers', '/services/ev-charger-installation/'],
+  ['Renos & basement suites', '/services/renovations-basement-suites/'], ['Commercial electrical', '/services/commercial-electrical/'], ['Repairs & troubleshooting', '/services/repairs-troubleshooting/'],
+];
+---
+<section class="c4 sec on-dark p3s" style="--h:740px" data-m-section aria-labelledby="c4-h">
+  <div class="c4-top ab" style="--x:320px;--y:100px;--w:800px">
+    <Eyebrow text={`Top 6 services in ${d.N}`} class="c4-eb" data-t="1" />
+    <h2 class="h2 c4-h" id="c4-h" data-t="2"><span class="l1">Six services,</span><span class="l2">one plate.</span></h2>
+    <p class="lede c4-p" data-t="3">Flip a switch to open that service page. Every page ends the same way: call or text a photo.</p>
+  </div>
+  <div class="c4-wrap ab" style="--x:120px;--y:340px" data-t="4">
+    <ul class="c4-plate" role="list" data-tilt>
+      {G.map(([n, h]) => (
+        <li class="c4-g">
+          <a href={h} class="c4-a">
+            <Screw s={10} rot={30} class="c4-s1" /><Screw s={10} rot={75} class="c4-s2" />
+            <span class="c4-slot" aria-hidden="true"><i></i></span>
+            <span class="c4-n">{n}</span>
+            <span class="c4-see">See the page →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <div class="c4-b ab" style="--x:522px;--y:650px" data-t="3"><Btn v="call" /><Btn v="text" tone="dark" /></div>
+</section>
+<style>
+  .c4 { background: var(--deep); }
+  .c4-top { text-align: center; }
+  .c4 :global(.c4-eb) { justify-content: center; color: var(--mist); }
+  .c4-h { margin-top: 15px; }
+  .c4-p { width: 600px; margin: 22px auto 0; }
+  .c4-wrap { width: 1200px; height: 280px; perspective: 1400px; }
+  .c4-plate { display: grid; grid-template-columns: repeat(6, 1fr); width: 100%; height: 100%; margin: 0; padding: 0; list-style: none; background: #fff; border-radius: 16px; box-shadow: 0 22px 40px rgba(13, 15, 51, .35); transform: rotate(1.2deg) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .6s var(--ease-back); }
+  .c4-plate.tilting { transition: transform .12s linear; }
+  .c4-g + .c4-g { border-left: 1px solid var(--panel); }
+  .c4-a { position: relative; display: block; height: 100%; text-align: center; }
+  .c4-a :global(.c4-s1) { position: absolute; left: 95px; top: 20px; } .c4-a :global(.c4-s2) { position: absolute; left: 90px; top: 254px; }
+  .c4-slot { position: absolute; left: 86px; top: 54px; width: 26px; height: 92px; border-radius: 13px; background: #D5D8DE; }
+  .c4-slot i { position: absolute; left: 2px; top: 24px; width: 22px; height: 66px; border-radius: 11px; background: #F7F8FA; box-shadow: inset 0 0 0 1px var(--line), 0 3px 6px rgba(13, 15, 51, .25); transition: top .35s var(--ease-back), background-color .25s; }
+  .c4-n { position: absolute; left: 12px; right: 12px; top: 166px; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--ink); }
+  .c4-see { position: absolute; left: 50%; top: 193px; transform: translateX(-50%); padding: 6px 10px; border-radius: 13.5px; font-weight: 600; font-size: 12px; line-height: 15px; white-space: nowrap; color: var(--steel); transition: background-color .25s, color .25s; }
+  .c4-g:nth-child(1) .c4-see { color: var(--indigo); }
+  .c4-g:nth-child(4) .c4-see, .c4-g:nth-child(6) .c4-see { top: 213px; }
+  .c4-a:hover .c4-slot i, .c4-a:focus-visible .c4-slot i, .c4-a.on .c4-slot i { top: 2px; background: var(--amber); }
+  .c4-a:hover .c4-see, .c4-a:focus-visible .c4-see, .c4-a.on .c4-see { background: var(--amber); color: var(--ink); }
+  .c4-a:focus-visible { outline-offset: -6px; border-radius: 12px; }
+  .c4-b { display: flex; gap: 26px; }
+  @media (max-width: 1023px) {
+    .c4 { padding: 64px 20px; }
+    .c4-top { text-align: left; }
+    .c4 :global(.c4-eb) { justify-content: flex-start; }
+    .c4-h { margin-top: 14px; font-size: 32px; line-height: 36px; }
+    .c4-p { width: auto; margin: 16px 0 0; }
+    .c4-wrap { width: auto; height: auto; margin-top: 28px; perspective: none; }
+    .c4-plate { grid-template-columns: 1fr 1fr; grid-auto-rows: 245px; border-radius: 14px; box-shadow: 0 16px 31px rgba(13, 15, 51, .5); transform: none; }
+    .c4-g + .c4-g { border-left: 0; }
+    .c4-g:nth-child(even) { border-left: 1px solid var(--panel); }
+    .c4-g:nth-child(n + 3) { border-top: 1px solid var(--panel); }
+    .c4-a :global(.c4-s1) { left: calc(50% - 5px); top: 14px; } .c4-a :global(.c4-s2) { left: calc(50% - 5px); top: 222px; }
+    .c4-slot { left: calc(50% - 13px); top: 44px; }
+    .c4-n { left: 8px; right: 8px; top: 145px; font-size: 14px; line-height: 18px; }
+    .c4-see { top: 166px; font-size: 11px; line-height: 14px; }
+    .c4-g:nth-child(4) .c4-see, .c4-g:nth-child(6) .c4-see { top: 184px; }
+    .c4-b { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 28px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .c4-plate, .c4-slot i { transition: none; } }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((p) => {
+    const fine = matchMedia('(min-width: 1024px) and (pointer: fine)');
+    const calm = matchMedia('(prefers-reduced-motion: reduce)');
+    p.addEventListener('pointermove', (e) => {
+      if (!fine.matches || calm.matches) return;
+      const r = p.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      p.classList.add('tilting'); p.style.setProperty('--ry', `${(x * 6).toFixed(2)}deg`); p.style.setProperty('--rx', `${(-y * 8).toFixed(2)}deg`);
+    });
+    p.addEventListener('pointerleave', () => { p.classList.remove('tilting'); p.style.setProperty('--rx', '0deg'); p.style.setProperty('--ry', '0deg'); });
+    p.querySelectorAll<HTMLAnchorElement>('.c4-a').forEach((a) => a.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') a.classList.add('on'); }));
+  });
+</script>

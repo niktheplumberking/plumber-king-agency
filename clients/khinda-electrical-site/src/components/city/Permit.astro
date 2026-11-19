@@ -1,0 +1,87 @@
+---
+// 5.6 Permits (Figma 787:493, 1440x820 panel; mobile 794:500). His real panel photo inside a grey enclosure with the door
+// open (art cut from Figma); a permit sticker sits over the photo's corner. STATES 5.6: hovering (tap on mobile) peels
+// the sticker's corner up and the rule under it shows. Facts only (PAGE-SHEET + FACTS-CHECK 5.1), no claim about Khinda.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import Obj from '../p3/Obj.astro';
+import enclD from '../../art/p3/05/encl-d.svg?raw';
+import { SITE } from '../../data/site';
+import { PHOTO, type TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+const ph = PHOTO[d.set.encl];
+const rows = [['Who issues it', d.issuer], ['Who applies', 'A licensed contractor'], ['Strata owners', 'Can’t get a homeowner permit'], ['Code', 'CEC 26th edition, from 4 Mar 2025']];
+const lede = d.surrey
+  ? `Yes, for regulated electrical work. ${d.N} is in Surrey, and the City of Surrey issues its own electrical permits (Bylaw 15596). A licensed contractor applies for it.`
+  : `Yes, for regulated electrical work. ${d.N} is its own city, and Technical Safety BC issues the electrical permits there. A licensed contractor applies for it.`;
+---
+<section class="c6 sec p3s" style="--h:820px" data-m-section aria-labelledby="c6-h">
+  <div class="c6-l ab" style="--x:120px;--y:110px;--w:540px">
+    <Eyebrow text={`Permits in ${d.N}`} data-t="1" />
+    <h2 class="h2 c6-h" id="c6-h" data-t="2"><span class="l1">Do you need an electrical</span><span class="l2">permit in {d.N}?</span></h2>
+    <p class="c6-p" data-t="3">{lede}</p>
+    <dl class="c6-rows" data-t="4">{rows.map(([k, v]) => <div><dt class="tech">{k}</dt><dd>{v}</dd></div>)}</dl>
+    <div class="c6-b" data-t="3"><Btn v="call" main="Ask about your permit" sub={`Call ${SITE.phone}`} /><a class="lk" href={SITE.sms}>Or text a photo of the panel →</a></div>
+  </div>
+  <div class="c6-box ab" style="--x:700px;--y:92px" data-t="4">
+    <div class="c6-in">
+      <div class="c6-ph" data-fx="frame"><Img name={ph.name} alt={ph.alt} sizes="(min-width: 1024px) 408px, 232px" box={408 / 568} boxM={408 / 568} /></div>
+      <Obj svg={enclD} class="c6-encl" />
+      <button type="button" class="c6-st" aria-pressed="false" aria-label="Peel the permit sticker" data-peel>
+        <span class="c6-under" aria-hidden="true"><span class="tech">{d.surrey ? 'City of Surrey · Bylaw 15596' : 'Technical Safety BC'}</span><span class="tech">Licensed contractor applies</span></span>
+        <span class="c6-sk">
+          <span class="c6-band tech">Electrical permit</span>
+          <b>Permit needed here</b>
+          <span class="c6-s1">Regulated work · {d.issuer}</span>
+          <span class="c6-s2">{d.surrey ? 'Bylaw 15596 · licensed contractor applies' : 'Licensed contractor applies'}</span>
+          <svg class="c6-ck" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l6 6L21 5" fill="none" stroke="#14152B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</section>
+<style>
+  .c6 { background: var(--panel); }
+  .c6-h { margin: 15px 0 0 -4px; white-space: nowrap; }
+  .c6-p { margin-top: 20px; font-size: 18px; line-height: 28px; color: var(--ink); }
+  .c6-rows { margin-top: 48px; border-top: 1px solid var(--line); }
+  .c6-rows div { display: flex; align-items: baseline; height: 46px; padding-top: 12px; border-bottom: 1px solid var(--line); }
+  .c6-rows dt { flex: none; width: 170px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .c6-rows dd { margin: 0; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--ink); }
+  .c6-b { display: flex; align-items: center; gap: 21px; margin-top: 41px; }
+  .c6-box { width: 620px; height: 640px; }
+  .c6-in { position: relative; width: 620px; height: 640px; transform-origin: 0 0; }
+  .c6-in :global(.c6-encl) { position: absolute; left: 60px; top: 0; }
+  .c6-ph { position: absolute; z-index: 1; left: 86px; top: 34px; width: 408px; height: 568px; border-radius: 4px; overflow: hidden; background: var(--deep); }
+  .c6-encl ~ * { z-index: 2; }
+  .c6-in :global(.c6-encl) { z-index: 0; }
+  .c6-st { position: absolute; z-index: 3; left: 0; top: 428px; width: 340px; height: 210px; padding: 0; background: none; border: 0; text-align: left; cursor: pointer; transform: rotate(4deg); transform-origin: 0 0; }
+  .c6-under { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 0 0 12px 8px; background: var(--indigo); border-radius: 8px; opacity: 0; transition: opacity .3s; }
+  .c6-under .tech { font-size: 11px; line-height: 16px; letter-spacing: .08em; color: #fff; }
+  .c6-under .tech:first-child { color: var(--amber); }
+  .c6-sk { position: absolute; left: 0; top: 0; width: 300px; height: 150px; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 14px rgba(13, 15, 51, .3); overflow: hidden; transform-origin: 0 0; transition: transform .5s var(--ease-back), box-shadow .4s; }
+  .c6-band { display: block; height: 30px; padding: 9px 14px 0; background: var(--amber); font-size: 10px; line-height: 14px; color: var(--ink); }
+  .c6-sk b { display: block; margin: 9px 0 0 12px; font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 28px; color: var(--indigo); }
+  .c6-s1 { display: block; margin: 2px 0 0 12px; font-size: 13px; line-height: 17px; color: var(--ink); }
+  .c6-s2 { display: block; margin: 2px 0 0 12px; font-size: 11px; line-height: 15px; color: var(--steel); }
+  .c6-ck { position: absolute; right: 16px; top: 52px; width: 30px; height: 30px; }
+  .c6-st:hover .c6-sk, .c6-st:focus-visible .c6-sk, .c6-st[aria-pressed='true'] .c6-sk { transform: rotate(-9deg) translate(-6px, -58px); box-shadow: 0 18px 26px rgba(13, 15, 51, .35); }
+  .c6-st:hover .c6-under, .c6-st:focus-visible .c6-under, .c6-st[aria-pressed='true'] .c6-under { opacity: 1; }
+  @media (max-width: 1023px) {
+    .c6 { display: flex; flex-direction: column; padding: 64px 20px; }
+    .c6-l { display: contents; }
+    .c6-h { margin: 14px 0 0; font-size: 29px; line-height: 32px; white-space: normal; }
+    .c6-p { margin-top: 16px; font-size: 16px; line-height: 25px; }
+    .c6-rows { margin-top: 20px; }
+    .c6-rows div { height: auto; min-height: 44px; padding: 14px 0 12px; }
+    .c6-rows dt { width: 130px; font-size: 11px; line-height: 16px; letter-spacing: 0; }
+    .c6-box { order: 5; position: relative; width: 350px; max-width: 100%; height: 362px; margin: 36px auto 0; }
+    .c6-in { transform: scale(.565); }
+    .c6-b { order: 6; flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 28px; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-peel]').forEach((b) => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));
+</script>

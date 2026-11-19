@@ -1,0 +1,52 @@
+---
+// 5.10 Emergency (Figma 788:525, 1440x760 deep; mobile 795:437). A flashlight (art cut from Figma) throws a flat beam across
+// the band onto the number; the number is the call link. Three safety steps, then call / text.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Obj from '../p3/Obj.astro';
+import beamD from '../../art/p3/05/beam-d.svg?raw';
+import beamM from '../../art/p3/05/beam-m.svg?raw';
+import { SITE } from '../../data/site';
+import type { TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+const STEPS = ['Step away. Don’t touch the panel or the outlet.', `Call ${SITE.phone} and say what you see or smell.`, 'Smoke or flames: get out and call 911 first.'];
+---
+<section class="c10 sec on-dark p3s" style="--h:760px" data-m-section aria-labelledby="c10-h">
+  <div class="ab" style="--x:120px;--y:96px">
+    <Eyebrow text={`Power problem in ${d.N}`} class="c10-eb" data-t="1" />
+    <h2 class="h2 c10-h" id="c10-h" data-t="2"><span class="l1">Power out in {d.N}?</span><span class="l2">Sparks or a burning smell?</span></h2>
+  </div>
+  <Obj svg={beamD} class="c10-beam ab dn-m" style="--x:90px;--y:230px" data-t="4" />
+  <Obj svg={beamM} class="c10-beam dn-d" data-t="4" />
+  <div class="c10-num ab" style="--x:470px;--y:300px" data-t="3">
+    <a href={SITE.tel} class="c10-a">{SITE.phone}</a>
+    <p class="tech c10-cap">Tap to call · say “no power” or “sparks”</p>
+  </div>
+  <ol class="c10-st ab" style="--x:120px;--y:560px" role="list" data-stagger>{STEPS.map((s, i) => <li data-t="5"><span>{i + 1}</span>{s}</li>)}</ol>
+  <div class="c10-b ab" style="--x:120px;--y:640px" data-t="3"><Btn v="call" sub="Say “no power” or “sparks”" /><Btn v="text" tone="dark" sub="Only if it’s safe to take one" /></div>
+</section>
+<style>
+  .c10 { background: var(--deep); overflow: hidden; }
+  .c10 :global(.c10-eb) { color: var(--mist); }
+  .c10-h { margin: 15px 0 0 -4px; white-space: nowrap; }
+  .c10 :global(.c10-beam) { pointer-events: none; }
+  .c10-a { display: block; font-family: var(--f-display); font-weight: 800; font-size: 110px; line-height: 120px; color: #fff; white-space: nowrap; transition: color .3s; }
+  .c10-a:hover { color: var(--amber); }
+  .c10-cap { margin: 20px 0 0 6px; font-size: 12px; line-height: 17px; letter-spacing: .14em; color: var(--tape); }
+  .c10-st { display: flex; gap: 0; width: 1200px; margin: 0; padding: 0; list-style: none; }
+  .c10-st li { position: relative; width: 400px; padding: 2px 40px 0 40px; font-size: 16px; line-height: 23px; color: #fff; }
+  .c10-st span { position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 6px; background: var(--amber); font-family: var(--f-display); font-weight: 800; font-size: 16px; line-height: 26px; text-align: center; color: var(--ink); }
+  .c10-b { display: flex; gap: 17px; }
+  @media (max-width: 1023px) {
+    .c10 { padding: 64px 20px; }
+    .c10-h { margin: 14px 0 0; font-size: 27px; line-height: 30px; white-space: normal; }
+    .c10 :global(.c10-beam) { width: auto; margin: 24px -20px 0; max-width: none; }
+    .c10-num { margin-top: -150px; text-align: center; position: relative; }
+    .c10-a { font-size: clamp(40px, 12.4vw, 60px); line-height: 52px; }
+    .c10-cap { margin: 10px -12px 0; font-size: 11px; line-height: 16px; letter-spacing: .06em; }
+    .c10-st { flex-direction: column; gap: 16px; width: auto; margin-top: 104px; }
+    .c10-st li { width: auto; padding: 2px 0 0 40px; }
+    .c10-b { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 26px; }
+  }
+</style>

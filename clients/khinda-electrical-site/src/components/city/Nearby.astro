@@ -1,0 +1,93 @@
+---
+// 5.12 Nearby (Figma 790:503, 1440x680 panel; mobile 795:539). Three cable ends (yellow / blue / white jackets, art cut from
+// Figma) run down into F; each carries a wire-marker flag = a link to the next town page. STATES 5.12: hovering a cable end
+// pushes it out 12 px, its flag band turns amber and reads "<town> page →"; the other two go steel and their flags fade.
+// Touch: the first tap does the same, a second tap opens the page.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Obj from '../p3/Obj.astro';
+import n1 from '../../art/p3/05/near1-d.svg?raw';
+import n2 from '../../art/p3/05/near2-d.svg?raw';
+import n3 from '../../art/p3/05/near3-d.svg?raw';
+import nm from '../../art/p3/05/near-m.svg?raw';
+import type { TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+const ART = [n1, n2, n3];
+const BAND = ['#F2C230', '#2C5FB8', '#AEB4C6'];
+---
+<section class="c12 sec p3s" style="--h:680px" data-m-section aria-labelledby="c12-h" data-ends>
+  <div class="ab" style="--x:120px;--y:100px">
+    <Eyebrow text="Nearby · same number" data-t="1" />
+    <h2 class="h2 c12-h" id="c12-h" data-t="2"><span class="l1">Not in {d.N}?</span><span class="l2">Three towns next door.</span></h2>
+  </div>
+  <div class="c12-r ab" style="--x:820px;--y:138px;--w:460px" data-t="3">
+    <p class="lede c12-p">Same Surrey electrician, same number. Pick the town page closest to you, or just call.</p>
+    <Btn v="call" sub="Any of these towns" class="c12-btn" />
+    <a class="lk c12-all" href="/areas/">All areas he covers →</a>
+  </div>
+  <div class="c12-ends ab dn-m" style="--x:140px;--y:370px" data-t="4">
+    {ART.map((a, i) => <Obj svg={a} class="c12-cab" data-c={i} />)}
+  </div>
+  <ul class="c12-flags" role="list" data-stagger>
+    {d.near.map((t, i) => (
+      <li class="c12-f" data-f={i} style={`--b:${BAND[i]};--i:${i}`} data-t="5">
+        <i class="c12-band" aria-hidden="true"></i>
+        <a href={t.href}><b>{t.name.toUpperCase()}</b><span class="tech" data-lab={t.label} data-open={`${t.name} page →`}>{t.label}</span></a>
+      </li>
+    ))}
+  </ul>
+  <p class="tech c12-cap ab dn-m" style="--x:462px;--y:624px">Three towns next door</p>
+  <Obj svg={nm} class="c12-m dn-d" />
+</section>
+<style>
+  .c12 { background: var(--panel); z-index: 3; }
+  .c12-h { margin: 15px 0 0 -4px; white-space: nowrap; }
+  .c12-p { color: var(--ink); }
+  .c12-r :global(.c12-btn) { margin-top: 38px; }
+  .c12-all { display: block; margin-top: 22px; width: max-content; }
+  .c12-ends { width: 860px; height: 400px; pointer-events: none; }
+  .c12-ends :global(.c12-cab) { position: absolute; left: 0; top: 0; transition: transform .4s var(--ease-out), opacity .3s, filter .3s; }
+  .c12[data-hot='0'] :global([data-c='0']), .c12[data-hot='1'] :global([data-c='1']), .c12[data-hot='2'] :global([data-c='2']) { transform: translate(-12px, -6px); filter: drop-shadow(0 0 0 #0a0b22) contrast(1.08); }
+  .c12[data-hot] :global(.c12-cab:not(.hot)) { filter: grayscale(1) brightness(1.1); opacity: .6; }
+  .c12-flags { margin: 0; padding: 0; list-style: none; }
+  .c12-f { position: absolute; left: calc(250px + var(--i) * 100px); top: calc(384px + var(--i) * 80px); z-index: 2; width: 224px; height: 64px; background: #fff; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 4px 8px rgba(13, 15, 51, .2); transition: transform .4s var(--ease-out), opacity .3s; }
+  .c12-band { position: absolute; left: 0; top: 0; width: 100%; height: 5px; background: var(--b); transition: height .25s, background-color .25s; }
+  .c12-f a { display: block; height: 100%; padding: 14px 12px 0; }
+  .c12-f b { display: block; font-family: var(--f-display); font-weight: 700; font-size: 20px; line-height: 24px; color: var(--indigo); }
+  .c12-f .tech { display: block; margin-top: 2px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .c12-f.hot { transform: translate(-12px, -6px); }
+  .c12-f.hot .c12-band { height: 5px; background: var(--amber); }
+  .c12[data-hot] .c12-f:not(.hot) { opacity: .55; }
+  .c12-cap { font-size: 10px; line-height: 14px; letter-spacing: 0; color: var(--steel); }
+  @media (max-width: 1023px) {
+    .c12 { padding: 64px 20px 0; height: 689px; }
+    .c12-h { margin: 14px 0 0; font-size: 28px; line-height: 31px; white-space: normal; }
+    .c12-p { margin-top: 16px; }
+    .c12-r :global(.c12-btn) { margin-top: 24px; }
+    .c12-all { margin-top: 16px; }
+    .c12 :global(.c12-m) { position: absolute; left: 0; top: 363px; width: 390px; z-index: 1; }
+    .c12-f { left: 56px; top: calc(394px + var(--i) * 96px); width: auto; min-width: 154px; height: 54px; border-width: .6px; border-radius: 2px; }
+    .c12-band { height: 5px; }
+    .c12-f a { padding: 10px 14px 0 7px; }
+    .c12-f b { font-size: 12.4px; line-height: 16px; }
+    .c12-f .tech { font-size: 11px; line-height: 16px; letter-spacing: .04em; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ends]').forEach((s) => {
+    const fs = Array.from(s.querySelectorAll<HTMLElement>('[data-f]'));
+    const cs = Array.from(s.querySelectorAll<HTMLElement>('[data-c]'));
+    const set = (i: number | null) => {
+      if (i === null) delete s.dataset.hot; else s.dataset.hot = String(i);
+      fs.forEach((f, k) => { const on = k === i; f.classList.toggle('hot', on); const l = f.querySelector<HTMLElement>('[data-lab]'); if (l) l.textContent = on ? l.dataset.open! : l.dataset.lab!; });
+      cs.forEach((c, k) => c.classList.toggle('hot', k === i));
+    };
+    fs.forEach((f, i) => {
+      f.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') set(i); });
+      f.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') set(null); });
+      f.addEventListener('focusin', () => set(i)); f.addEventListener('focusout', () => set(null));
+      f.querySelector('a')?.addEventListener('click', (e) => { if (!matchMedia('(hover: hover)').matches && !f.classList.contains('hot')) { e.preventDefault(); set(i); } });
+    });
+  });
+</script>

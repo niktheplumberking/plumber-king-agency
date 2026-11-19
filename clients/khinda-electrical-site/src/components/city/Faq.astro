@@ -1,0 +1,142 @@
+---
+// 5.11 City FAQ (Figma 790:437, 1440x960 white; mobile 795:473). A blue 3-gang box (art cut from Figma), one question per
+// gang. STATES 5.11: pressing a gang plays its answer as a text thread beside the box: the question appears, three grey
+// dots show Khinda typing, then his answer lands bubble by bubble; the pressed gang gets an amber ring and its wires. No
+// times, ticks or read receipts. Every answer is in the HTML (FAQPage schema = the visible text); no JS = all visible.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Obj from '../p3/Obj.astro';
+import gangD from '../../art/p3/05/gang-d.svg?raw';
+import wiresD from '../../art/p3/05/wires-d.svg?raw';
+import { SITE } from '../../data/site';
+import type { TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+---
+<section class="c11 sec p3s" style="--h:960px" data-m-section aria-labelledby="c11-h" data-gangs>
+  <div class="c11-l ab" style="--x:120px;--y:100px">
+    <Eyebrow text={`${d.N} questions`} data-t="1" />
+    <h2 class="h2 c11-h" id="c11-h" data-t="2"><span class="l1">Three {d.N} questions,</span><span class="l2">one in each gang.</span></h2>
+  </div>
+  <div class="c11-box ab" style="--x:790px;--y:250px" data-t="4">
+    <div class="c11-in">
+      <Obj svg={gangD} class="c11-shell" />
+      {d.faq.map((f, i) => (
+        <button type="button" class="c11-g" style={`left:${22 + i * 164}px`} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls={`c11-t${i}`} data-g={i}>
+          <span class="c11-lab"><span class="tech">Gang {i + 1}</span><b>{f.key}</b></span>
+          <span class="c11-ins" aria-hidden="true"><i></i></span>
+          <span class="c11-q" aria-hidden="true">Q{i + 1}</span>
+          <span class="c11-ko" aria-hidden="true"></span>
+          <span class="sr-only">Question {i + 1}: {f.q}</span>
+        </button>
+      ))}
+      <div class="c11-w" aria-hidden="true"><Fragment set:html={wiresD} /></div>
+    </div>
+    <p class="tech c11-cap">Three gangs · three {d.N} answers</p>
+  </div>
+  <i class="c11-link ab dn-m" style="--x:740px;--y:520px" aria-hidden="true"></i>
+  <div class="c11-th ab" style="--x:120px;--y:268px" aria-live="polite">
+    <div class="c11-hd"><span class="c11-av" aria-hidden="true">KE</span><span><b>Khinda Electrical</b><span class="tech" data-sub>Q1 · Gang 1 · {d.faq[0].key}</span></span></div>
+    {d.faq.map((f, i) => (
+      <div class="c11-msgs" id={`c11-t${i}`} data-th={i}>
+        <p class="c11-cu">{f.q}</p>
+        <p class="c11-ty" aria-hidden="true"><i></i><i></i><i></i></p>
+        {f.a.map((a) => <p class="c11-kh">{a}</p>)}
+        <p class="tech c11-src">{f.src}</p>
+      </div>
+    ))}
+    <a class="c11-in2" href={SITE.sms}><span>Text him a photo of the job…</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l16-8-6 16-2-6-8-2z" fill="#15174A"/></svg></a>
+  </div>
+  <div class="c11-b ab" style="--x:120px;--y:820px" data-t="3"><Btn v="call" sub="Ask him your own question" /><a class="lk" href="/faq/">All Surrey FAQs →</a></div>
+</section>
+<style>
+  .c11 { background: #fff; }
+  .c11-h { margin: 15px 0 0 -4px; white-space: nowrap; }
+  .c11-box { width: 520px; height: 520px; }
+  .c11-in { position: relative; width: 520px; height: 470px; transform-origin: 0 0; }
+  .c11-in :global(.c11-shell) { position: absolute; left: 0; top: 0; }
+  .c11-g { position: absolute; top: 44px; width: 148px; height: 382px; padding: 0; border: 0; border-radius: 8px; background: #1F4A94; cursor: pointer; transition: box-shadow .3s; }
+  .c11-g:hover { box-shadow: inset 0 0 0 2px rgba(245, 168, 51, .5); }
+  .c11-g[aria-pressed='true'] { box-shadow: 0 0 0 3px var(--amber); }
+  .c11-lab { position: absolute; left: 14px; top: 16px; display: flex; flex-direction: column; width: 120px; height: 52px; padding: 7px 10px 0; border-radius: 4px; background: var(--tape); text-align: left; color: var(--ink); }
+  .c11-lab .tech { font-size: 10px; line-height: 13px; letter-spacing: .1em; }
+  .c11-lab b { font-family: var(--f-display); font-weight: 700; font-size: 15px; line-height: 22px; text-transform: uppercase; white-space: nowrap; }
+  .c11-g[aria-pressed='true'] .c11-lab { background: var(--amber); }
+  .c11-ins { position: absolute; left: 20px; top: 90px; width: 108px; height: 190px; border-radius: 6px; background: var(--panel); transition: opacity .3s, transform .4s var(--ease-out); }
+  .c11-ins i { position: absolute; left: 44px; top: 86px; width: 20px; height: 20px; border-radius: 50%; background: var(--line); }
+  .c11-q { position: absolute; left: 34px; right: 0; top: 122px; font-family: var(--f-display); font-weight: 800; font-size: 44px; line-height: 69px; color: var(--mist); text-align: center; transition: color .3s, transform .3s; }
+  .c11-g[aria-pressed='true'] .c11-ins { opacity: 0; transform: translateY(-10px); }
+  .c11-g[aria-pressed='true'] .c11-q { color: var(--amber); left: 70px; text-align: left; }
+  .c11-g:not([aria-pressed='true']) .c11-q { left: 0; top: 116px; }
+  .c11-ko { position: absolute; left: 54px; top: 300px; width: 40px; height: 40px; border-radius: 50%; background: #3A6FCC; }
+  .c11-w { position: absolute; inset: 0 0 -50px; pointer-events: none; transition: transform .45s var(--ease-out); }
+  .c11-w :global(svg) { width: 520px; height: 520px; overflow: visible; }
+  .c11[data-on='1'] .c11-w { transform: translateX(164px); } .c11[data-on='2'] .c11-w { transform: translateX(328px); }
+  .c11-cap { position: absolute; left: 150px; top: 492px; font-size: 10px; line-height: 14px; letter-spacing: 0; color: var(--steel); white-space: nowrap; }
+  .c11-link { width: 50px; height: 2px; background: var(--amber); }
+  .c11-th { width: 620px; min-height: 520px; padding-bottom: 72px; background: #F3F4F6; border: 1px solid #DADDE3; border-radius: 20px; box-shadow: 0 12px 32px rgba(13, 15, 51, .16); overflow: hidden; }
+  .c11-hd { display: flex; align-items: center; gap: 14px; height: 64px; padding: 0 20px; background: var(--indigo); color: #fff; }
+  .c11-av { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--amber); font-family: var(--f-display); font-weight: 800; font-size: 13px; line-height: 30px; text-align: center; color: var(--deep); }
+  .c11-hd b { display: block; font-weight: 600; font-size: 16px; line-height: 20px; }
+  .c11-hd .tech { display: block; margin-top: 4px; font-size: 10px; line-height: 14px; letter-spacing: 0; color: var(--mist); }
+  .c11-msgs { display: flex; flex-direction: column; gap: 8px; padding: 20px 16px 0; }
+  .c11-msgs + .c11-msgs { border-top: 1px solid #DADDE3; }
+  .c11-cu, .c11-kh { max-width: 484px; padding: 11px 16px; font-size: 16px; line-height: 24px; color: var(--ink); }
+  .c11-cu { align-self: flex-end; max-width: 460px; background: var(--tape); border-radius: 16px 4px 16px 16px; }
+  .c11-kh { align-self: flex-start; background: #fff; border: 1px solid #DADDE3; border-radius: 4px 16px 16px 16px; }
+  .c11-ty { display: none; align-self: flex-start; gap: 5px; padding: 14px 16px; background: #fff; border: 1px solid #DADDE3; border-radius: 4px 16px 16px 16px; }
+  .c11-ty i { width: 7px; height: 7px; border-radius: 50%; background: var(--mist); animation: c11d 1s infinite; }
+  .c11-ty i:nth-child(2) { animation-delay: .15s; } .c11-ty i:nth-child(3) { animation-delay: .3s; }
+  @keyframes c11d { 50% { transform: translateY(-3px); opacity: .5; } }
+  .c11-src { margin-top: 0; font-size: 10px; line-height: 14px; letter-spacing: 0; color: var(--steel); }
+  .c11-in2 { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 12px; height: 72px; padding: 14px 20px 14px 16px; background: #fff; }
+  .c11-in2 span { flex: 1; height: 44px; padding: 0 18px; border-radius: 22px; background: #F3F4F6; font-size: 15px; line-height: 44px; color: var(--steel); }
+  .c11-in2 svg { width: 24px; height: 24px; }
+  .c11-in2:hover span { box-shadow: inset 0 0 0 1px var(--mist); }
+  .c11-msgs[hidden] { display: none; }
+  .c11-msgs.play .c11-kh, .c11-msgs.play .c11-src { display: none; }
+  .c11-msgs.play .c11-ty { display: flex; }
+  .c11-msgs .land { animation: c11l .4s var(--ease-out); }
+  @keyframes c11l { from { opacity: 0; transform: translateY(8px); } }
+  .c11-b { display: flex; align-items: center; gap: 58px; }
+  @media (max-width: 1023px) {
+    .c11 { display: flex; flex-direction: column; padding: 64px 20px; }
+    .c11-l { display: contents; }
+    .c11-h { margin: 14px 0 0; font-size: 28px; line-height: 31px; white-space: normal; }
+    .c11-box { position: relative; width: 312px; height: 306px; margin: 28px auto 0; }
+    .c11-in { transform: scale(.6); }
+    .c11-cap { left: 50%; top: 288px; transform: translateX(-50%); font-size: 11px; line-height: 16px; }
+    .c11-th { position: relative; width: auto; min-height: 0; margin-top: 18px; }
+    .c11-hd { height: 60px; }
+    .c11-cu, .c11-kh { max-width: 294px; font-size: 15px; line-height: 22px; padding: 10px 14px; }
+    .c11-msgs { padding: 16px 14px 0; }
+    .c11-src { font-size: 11px; line-height: 16px; margin-bottom: 12px; }
+    .c11-in2 { height: 68px; }
+    .c11-b { flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .c11-ty i { animation: none; } }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gangs]').forEach((s) => {
+    const gs = Array.from(s.querySelectorAll<HTMLButtonElement>('[data-g]'));
+    const ths = Array.from(s.querySelectorAll<HTMLElement>('[data-th]'));
+    const sub = s.querySelector<HTMLElement>('[data-sub]');
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timers: number[] = [];
+    const show = (i: number, play: boolean) => {
+      timers.forEach(clearTimeout); timers = [];
+      s.dataset.on = String(i);
+      gs.forEach((g, k) => g.setAttribute('aria-pressed', String(k === i)));
+      ths.forEach((t, k) => { t.hidden = k !== i; t.classList.remove('play'); });
+      const t = ths[i]; if (!t) return;
+      if (sub) sub.textContent = `Q${i + 1} · Gang ${i + 1} · ${gs[i].querySelector('b')?.textContent ?? ''}`;
+      if (!play || calm) return;
+      const ks = Array.from(t.querySelectorAll<HTMLElement>('.c11-kh, .c11-src'));
+      t.querySelector('.c11-cu')?.classList.add('land');
+      t.classList.add('play'); ks.forEach((k) => (k.style.display = 'none'));
+      timers.push(window.setTimeout(() => { t.classList.remove('play'); ks.forEach((k, n) => timers.push(window.setTimeout(() => { k.style.display = ''; k.classList.add('land'); }, n * 450))); }, 900));
+    };
+    gs.forEach((g, i) => g.addEventListener('click', () => show(i, true)));
+    show(0, false);
+  });
+</script>

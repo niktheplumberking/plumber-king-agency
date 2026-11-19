@@ -1,0 +1,77 @@
+---
+// 5.3 Local problems (Figma 786:437, 1440x880 panel; mobile 793:530). A basement-suite floor plan (sheet E-1, art cut from
+// Figma) with amber callouts 1-3; the three problem cards overlap its right edge. Hovering / focusing a card lifts it and
+// grows its callout on the plan.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Tape from '../kit/Tape.astro';
+import Obj from '../p3/Obj.astro';
+import planD from '../../art/p3/05/plan-d.svg?raw';
+import planM from '../../art/p3/05/plan-m.svg?raw';
+import { SITE } from '../../data/site';
+import type { TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+const CARDS = [
+  ['The suite needs its own circuits', `A basement suite gets its own circuits for the kitchen and laundry. That is regulated work: permit from ${d.surrey ? 'the City of Surrey' : 'Technical Safety BC'}.`],
+  ['No room in the panel for an EV charger', 'He checks the panel first. If it is full, the panel or the load gets sorted before the charger goes in.'],
+  ['Old lights to pot lights', 'Dated fixtures swapped for pot lights, like the living room on his Instagram.'],
+];
+const CALL = [[236, 84], [612, 360], [330, 384]];
+const CALLM = [[106, 47], [275, 161], [148, 172]];
+const h2 = d.newton ? ['What Newton homes', 'call him about.'] : [`Jobs for ${d.N} homes,`, 'marked on the plan.'];
+const lede = d.newton ? 'Three jobs Newton homes ask about, marked on a typical house with a basement suite. Each one ends the same way: call or text a photo.' : 'Three common jobs, marked on a typical house with a basement suite. Each one ends the same way: call or text a photo.';
+---
+<section class="c3 sec p3s" style="--h:880px" data-m-section aria-labelledby="c3-h">
+  <div class="ab" style="--x:120px;--y:110px">
+    <Eyebrow text="Local home problems" data-t="1" />
+    <h2 class="h2 c3-h" id="c3-h" data-t="2"><span class="l1">{h2[0]}</span><span class="l2">{h2[1]}</span></h2>
+  </div>
+  <p class="lede c3-p ab" style="--x:780px;--y:150px;--w:520px" data-t="3">{lede}</p>
+  <div class="c3-plan ab" style="--x:120px;--y:300px" data-t="4" data-fx="frame">
+    <div class="dn-m"><Obj svg={planD} class="c3-sheet" />
+    {CALL.map(([x, y], i) => <span class="c3-co" data-co={i} style={`left:${(x / 7.8).toFixed(3)}%;top:${(y / 5.2).toFixed(3)}%`} aria-hidden="true">{i + 1}</span>)}</div>
+    <div class="dn-d"><Obj svg={planM} class="c3-sheet" />
+    {CALLM.map(([x, y], i) => <span class="c3-co" data-co={i} style={`left:${(x / 3.5).toFixed(3)}%;top:${(y / 2.33).toFixed(3)}%`} aria-hidden="true">{i + 1}</span>)}</div>
+    <Tape text={`Typical ${d.N} suite`} rot={-3} size={20} class="c3-tape" />
+  </div>
+  <ol class="c3-cards ab" style="--x:860px;--y:330px" role="list" data-stagger>
+    {CARDS.map(([h, p], i) => <li class="c3-c" data-ci={i} data-t="4"><span class="c3-n" aria-hidden="true">{i + 1}</span><div><h3>{h}</h3><p>{p}</p><a class="lk" href={SITE.tel}>Call about it →</a></div></li>)}
+  </ol>
+</section>
+<style>
+  .c3 { background: var(--panel); }
+  .c3-h { margin: 15px 0 0 -4px; }
+  .c3-p { color: var(--ink); }
+  .c3-plan { width: 780px; height: 520px; }
+  .c3 :global(.c3-sheet) { width: 100%; }
+  .c3-plan > div { position: relative; }
+  .c3-co { position: absolute; width: 4.1%; aspect-ratio: 1; border-radius: 50%; background: var(--amber); font-family: var(--f-display); font-weight: 800; font-size: 16px; line-height: 32px; text-align: center; color: var(--ink); transition: transform .35s var(--ease-back), background-color .3s; }
+  .c3-plan.hl-0 [data-co='0'], .c3-plan.hl-1 [data-co='1'], .c3-plan.hl-2 [data-co='2'] { transform: scale(1.35); background: var(--ink); color: var(--amber); }
+  .c3-plan :global(.c3-tape) { position: absolute; left: 30px; top: -24px; }
+  .c3-cards { display: flex; flex-direction: column; gap: 16px; width: 460px; margin: 0; padding: 0; list-style: none; }
+  .c3-c { position: relative; display: flex; gap: 16px; padding: 20px 24px 20px 20px; background: #fff; border-radius: 12px; box-shadow: 0 10px 20px rgba(13, 15, 51, .18); transition: transform .35s var(--ease-out), box-shadow .35s; }
+  .c3-c:hover, .c3-c:focus-within { transform: translateX(-8px); box-shadow: 0 14px 28px rgba(13, 15, 51, .24); }
+  .c3-n { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--deep); font-family: var(--f-display); font-weight: 800; font-size: 15px; line-height: 30px; text-align: center; color: var(--amber); }
+  .c3-c h3 { margin-top: 2px; font-weight: 600; font-size: 17px; line-height: 22px; color: var(--ink); }
+  .c3-c p { margin-top: 6px; font-size: 14px; line-height: 21px; color: var(--steel); }
+  .c3-c .lk { margin-top: 10px; font-size: 14px; line-height: 18px; }
+  .c3-c .lk::after { content: ''; position: absolute; inset: 0; border-radius: 12px; }
+  @media (max-width: 1023px) {
+    .c3 { padding: 64px 20px 64px; }
+    .c3-h { margin: 14px 0 0; font-size: 32px; line-height: 36px; }
+    .c3-p { margin-top: 16px; }
+    .c3-plan { position: relative; width: 100%; height: auto; margin-top: 36px; }
+    .c3-co { font-size: 11px; line-height: 22px; width: 6.3%; }
+    .c3-plan :global(.c3-tape) { left: 8px; top: -20px; font-size: 15px !important; padding: 2px 12px; }
+    .c3-cards { width: auto; margin-top: 28px; gap: 12px; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('.c3').forEach((s) => {
+    const plan = s.querySelector('.c3-plan');
+    s.querySelectorAll<HTMLElement>('[data-ci]').forEach((c) => {
+      const on = () => plan?.classList.add(`hl-${c.dataset.ci}`), off = () => plan?.classList.remove(`hl-${c.dataset.ci}`);
+      c.addEventListener('pointerenter', on); c.addEventListener('pointerleave', off); c.addEventListener('focusin', on); c.addEventListener('focusout', off);
+    });
+  });
+</script>

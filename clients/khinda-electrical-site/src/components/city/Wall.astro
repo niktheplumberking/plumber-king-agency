@@ -1,0 +1,76 @@
+---
+// 5.7 Reviews (Figma 787:545, 1440x780 white; mobile 794:553). No reviews exist yet, so the wall says so: his own job photo
+// taped to a drywall sheet with marker notes. STATES 5.7: the drywall sits a little dim and a work light follows the
+// pointer (a soft round light: radial mask, no glow ring); hovering the photo locks the light on it. Mobile: the light
+// sits on the photo (no dim). Real reviews go here once they exist (README "Khinda to confirm").
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import Obj from '../p3/Obj.astro';
+import wallD from '../../art/p3/05/wall-d.svg?raw';
+import wallM from '../../art/p3/05/wall-m.svg?raw';
+import tapeD from '../../art/p3/05/wtape-d.svg?raw';
+import tapeM from '../../art/p3/05/wtape-m.svg?raw';
+import wl from '../../art/p3/05/wlight-d.svg?raw';
+import { SITE } from '../../data/site';
+import { PHOTO, type TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+const ph = PHOTO[d.set.wall];
+const l1 = `The first ${d.N} review`;
+const fs = Math.min(46, Math.floor((46 * 23) / l1.length));
+---
+<section class="c7 sec p3s" style="--h:780px" data-m-section aria-labelledby="c7-h">
+  <div class="c7-l ab" style="--x:120px;--y:150px;--w:540px">
+    <Eyebrow text={`What ${d.N} says`} data-t="1" />
+    <h2 class="h2 c7-h" id="c7-h" style={`--fs:${fs}px`} data-t="2"><span class="l1">{l1}</span><span class="l2">goes up on this wall.</span></h2>
+    <p class="lede c7-p" data-t="3">No Google reviews online yet. When {d.N} customers post them, their words go here, next to the job they are about.</p>
+    <div class="c7-b" data-t="3"><Btn v="call" /><a class="lk" href={SITE.social.instagram} rel="noopener">See the job on his Instagram →</a></div>
+  </div>
+  <div class="c7-wall ab" style="--x:700px;--y:90px" data-t="4" data-light>
+    <Obj svg={wallD} class="c7-dw dn-m" /><Obj svg={wallM} class="c7-dw dn-d" />
+    <div class="c7-ph" data-fx="frame" data-lock><Img name={ph.name} alt={ph.alt} sizes="(min-width: 1024px) 300px, 164px" box={300 / 420} boxM={164 / 230} /></div>
+    <Obj svg={tapeD} class="c7-tp dn-m" /><Obj svg={tapeM} class="c7-tp dn-d" />
+    <p class="c7-n1" aria-hidden="true">{d.set.note[0]}</p>
+    <p class="c7-n2" aria-hidden="true">{d.set.note[1]}</p>
+    <i class="c7-dim" aria-hidden="true"></i>
+    <Obj svg={wl} class="c7-wl dn-m" />
+  </div>
+</section>
+<style>
+  .c7 { background: #fff; }
+  .c7-h { margin: 15px 0 0 -4px; white-space: nowrap; font-size: var(--fs); line-height: 1.087; }
+  .c7-p { width: 440px; margin-top: 24px; color: var(--ink); }
+  .c7-b { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; margin-top: 33px; }
+  .c7-wall { width: 640px; height: 600px; background: #F1EEE8; box-shadow: 0 8px 20px rgba(13, 15, 51, .12); overflow: hidden; --mx: 350px; --my: 300px; }
+  .c7 :global(.c7-wl) { position: absolute; z-index: 4; left: 560px; top: 520px; }
+  .c7 :global(.c7-dw), .c7 :global(.c7-tp) { position: absolute; inset: 0; width: 100%; }
+  .c7 :global(.c7-tp) { z-index: 2; }
+  .c7-ph { position: absolute; z-index: 1; left: 14.0625%; top: 15%; width: 46.875%; height: 70%; transform: rotate(-2deg); transform-origin: 0 0; overflow: hidden; background: var(--deep); box-shadow: 0 6px 14px rgba(13, 15, 51, .2); }
+  .c7-n1, .c7-n2 { position: absolute; z-index: 2; font-family: var(--f-marker); transform: rotate(4deg); transform-origin: 0 0; white-space: pre; }
+  .c7-n1 { left: 68.75%; top: 25%; font-size: 28px; line-height: 34px; color: var(--ink); }
+  .c7-n2 { left: 69.7%; top: 40%; font-size: 18px; line-height: 26px; color: var(--steel); }
+  .c7-dim { position: absolute; z-index: 3; inset: 0; background: rgba(13, 15, 51, .3); pointer-events: none; -webkit-mask: radial-gradient(circle 290px at var(--mx) var(--my), transparent 0 97%, #000 100%); mask: radial-gradient(circle 290px at var(--mx) var(--my), transparent 0 97%, #000 100%); transition: opacity .4s; }
+  @media (max-width: 1023px) {
+    .c7 { display: flex; flex-direction: column; padding: 64px 20px; }
+    .c7-l { display: contents; }
+    .c7-h { margin: 14px 0 0; font-size: 30px; line-height: 34px; white-space: normal; }
+    .c7-p { width: auto; margin-top: 16px; }
+    .c7-wall { order: 5; position: relative; width: 100%; height: auto; aspect-ratio: 350 / 328; margin-top: 28px; }
+    .c7-n1 { font-size: 15.3px; line-height: 18.6px; left: 69.4%; top: 25%; }
+    .c7-n2 { font-size: 11px; line-height: 16px; left: 70.3%; top: 40.5%; }
+    .c7-dim { display: none; }
+    .c7-b { order: 6; gap: 16px; margin-top: 28px; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-light]').forEach((w) => {
+    const ph = w.querySelector<HTMLElement>('[data-lock]');
+    let lock = false;
+    const centre = () => { if (!ph) return; const r = w.getBoundingClientRect(), p = ph.getBoundingClientRect(); w.style.setProperty('--mx', `${p.left - r.left + p.width / 2}px`); w.style.setProperty('--my', `${p.top - r.top + p.height / 2}px`); };
+    w.addEventListener('pointermove', (e) => { if (lock) return; const r = w.getBoundingClientRect(); w.style.setProperty('--mx', `${e.clientX - r.left}px`); w.style.setProperty('--my', `${e.clientY - r.top}px`); });
+    ph?.addEventListener('pointerenter', () => { lock = true; centre(); });
+    ph?.addEventListener('pointerleave', () => { lock = false; });
+    w.addEventListener('pointerleave', () => { w.style.removeProperty('--mx'); w.style.removeProperty('--my'); });
+  });
+</script>

@@ -1,13 +1,43 @@
 ---
-// Town pages (Figma 05 Newton is the template, with the F town variant). Towns are a Khinda to confirm item.
-import Stub from '../../components/stub/Stub.astro';
+// Town pages (Figma 05 Newton = the template, desktop 1440 / mobile 390, figma/v5/05-newton-*.png). Newton carries the Figma
+// copy; the other towns swap their name into the same lines (src/data/towns.ts, handoff-copy-areas.md). 5.5 Neighbourhoods
+// shows only where an area list exists (Newton). F = the city variant with CCT 03 Town filled in. Which towns he covers
+// is a "Khinda to confirm" item (README).
+import '../../components/p3/p3.css';
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/city/Hero.astro';
+import Distance from '../../components/city/Distance.astro';
+import Problems from '../../components/city/Problems.astro';
+import Plate from '../../components/city/Plate.astro';
+import Hoods from '../../components/city/Hoods.astro';
+import Permit from '../../components/city/Permit.astro';
+import Wall from '../../components/city/Wall.astro';
+import Cutouts from '../../components/city/Cutouts.astro';
+import Owner from '../../components/city/Owner.astro';
+import Emergency from '../../components/city/Emergency.astro';
+import Faq from '../../components/city/Faq.astro';
+import Nearby from '../../components/city/Nearby.astro';
+import Endings from '../../components/endings/Endings.astro';
+import { breadcrumbSchema, faqSchema } from '../../lib/schema';
 import { TOWNS } from '../../data/site';
+import { townData, PHOTO } from '../../data/towns';
 export function getStaticPaths() { return TOWNS.map((t) => ({ params: { slug: t.slug } })); }
-const t = TOWNS.find((x) => x.slug === Astro.params.slug)!;
-const inSurrey = t.city === 'Surrey';
-const place = inSurrey ? `${t.name}, Surrey` : `${t.name}, BC`;
+const d = townData(Astro.params.slug!);
+const og = PHOTO[d.set.band];
 ---
-<Stub title={`Electrician in ${place} · Khinda`} path={t.href} navPath="/areas/" town={t.name}
-  description={`Khinda Electrical, based in Surrey, BC: panels, lighting, EV chargers and renos in ${place}. Call or text 236-818-2664.`}
-  eyebrow={`Areas · ${place}`} h1={['Electrician in', `${place}`]} crumbs={[{ name: 'Areas', path: '/areas/' }, { name: t.name, path: t.href }]}
-  lead={`Khinda Electrical is based in Surrey, BC. Panels, lighting, EV chargers and renos for homes and shops in ${t.name}.`} />
+<Base title={d.title} description={d.description} path={d.t.href} navPath="/areas/" og={og.name} ogAlt={og.alt}
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Areas', path: '/areas/' }, { name: d.N, path: d.t.href }]), faqSchema(d.faq.map((f) => ({ q: f.q, a: f.a.join(' ') })))]}>
+  <Hero d={d} />
+  <Distance d={d} />
+  <Problems d={d} />
+  <Plate d={d} />
+  {d.hoods && <Hoods d={d} />}
+  <Permit d={d} />
+  <Wall d={d} />
+  <Cutouts d={d} />
+  <Owner d={d} />
+  <Emergency d={d} />
+  <Faq d={d} />
+  <Nearby d={d} />
+  <Endings slot="end" town={d.N} />
+</Base>

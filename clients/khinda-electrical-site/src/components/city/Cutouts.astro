@@ -1,0 +1,81 @@
+---
+// 5.8 Photos (Figma 788:437, 1440x840 indigo; mobile 794:632). Four of his job photos seen through old-work box cut-ins in
+// the drywall. STATES 5.8: hovering / focusing a cutout widens it as if the hole was cut bigger; the photo shows wide with an
+// indigo caption strip and a "See the job" chip (no gradient overlay); the other three narrow and their labels dim. The
+// Figma frame shows the second one open, so that is the rest state. Mobile: 2 x 2, tap opens the caption strip.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+import { PHOTO, type TownData } from '../../data/towns';
+interface Props { d: TownData }
+const { d } = Astro.props;
+const P = d.set.cut.map((k) => PHOTO[k]);
+---
+<section class="c8x sec on-dark p3s" style="--h:840px" data-m-section aria-labelledby="c8x-h">
+  <div class="ab" style="--x:120px;--y:100px">
+    <Eyebrow text={d.newton ? 'Local work · from his Instagram' : 'His work · from his Instagram'} class="c8x-eb dn-m" data-t="1" />
+    <Eyebrow text="From his Instagram" class="c8x-eb dn-d" data-t="1" />
+    <h2 class="h2 c8x-h" id="c8x-h" data-t="2"><span class="l1">Lights he put in,</span><span class="l2">seen through the wall.</span></h2>
+  </div>
+  <p class="lede c8x-p ab" style="--x:820px;--y:138px;--w:480px" data-t="3">Cut-ins like the holes he makes for an old-work box: a look at four finished jobs, posted by him.</p>
+  <ul class="c8x-row ab" style="--x:120px;--y:268px" role="list" data-cuts data-stagger>
+    {P.map((p, i) => (
+      <li class:list={['c8x-c', i === 1 && 'open']} data-t="4">
+        <a href={SITE.social.instagram} rel="noopener" class="c8x-a">
+          <span class="c8x-ear" aria-hidden="true"></span><span class="c8x-ear b" aria-hidden="true"></span>
+          <span class="c8x-hole"><Img name={p.name} alt={p.alt} sizes="(min-width: 1024px) 500px, 160px" box={500 / 340} boxM={155 / 211} /></span>
+          <span class="c8x-strip" aria-hidden="true"><span class="tech">{p.cap} · from his Instagram</span><span class="c8x-chip">See the job →</span></span>
+          <span class="c8x-cap">{p.cap}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <div class="c8x-b ab" style="--x:120px;--y:740px" data-t="3"><Btn v="call" /><Btn v="text" tone="dark" main="See all his work" sub={`${SITE.igPosts} posts on Instagram`} href={SITE.social.instagram} /></div>
+</section>
+<style>
+  .c8x { background: var(--indigo); }
+  .c8x :global(.c8x-eb) { color: var(--mist); }
+  .c8x-h { margin: 15px 0 0 -4px; }
+  .c8x-row { display: flex; gap: 63px; width: 1200px; height: 420px; margin: 0; padding: 0; list-style: none; }
+  .c8x-c { position: relative; flex: 170 1 0; min-width: 0; transition: flex-grow .55s var(--ease-out); }
+  .c8x-c.open { flex-grow: 500; }
+  .c8x-a { position: relative; display: block; height: 100%; }
+  .c8x-hole { position: absolute; left: 0; right: 0; top: 12px; height: 340px; box-shadow: 0 0 0 7px #F1EEE8; border-radius: 1px; overflow: hidden; background: var(--deep); }
+  .c8x-hole::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 6px 14px rgba(0, 0, 0, .55); pointer-events: none; }
+  .c8x-ear { position: absolute; z-index: 2; left: 70px; top: 0; width: 30px; height: 10px; border-radius: 2px; background: var(--c-blue); }
+  .c8x-ear.b { top: 354px; }
+  .c8x-strip { position: absolute; z-index: 2; left: 16px; right: 16px; top: 294px; display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 40px; padding: 0 6px 0 14px; background: var(--indigo); border-radius: 8px; opacity: 0; transform: translateY(8px); transition: opacity .3s, transform .4s var(--ease-out); white-space: nowrap; overflow: hidden; }
+  .c8x-strip .tech { font-size: 10px; line-height: 14px; color: #fff; overflow: hidden; text-overflow: ellipsis; }
+  .c8x-chip { flex: none; padding: 6px 10px; border-radius: 6px; background: var(--amber); font-weight: 600; font-size: 12px; line-height: 15px; color: var(--ink); }
+  .c8x-c.open .c8x-strip { opacity: 1; transform: none; }
+  .c8x-cap { position: absolute; left: 0; top: 384px; font-family: var(--f-marker); font-size: 22px; line-height: 32px; color: var(--mist); white-space: nowrap; transform: rotate(2deg); transform-origin: 0 0; opacity: .6; transition: opacity .3s; }
+  .c8x-c.open .c8x-cap { opacity: 1; }
+  .c8x-b { display: flex; gap: 26px; }
+  @media (max-width: 1023px) {
+    .c8x { padding: 64px 20px; }
+    .c8x-h { margin: 14px 0 0; font-size: 32px; line-height: 36px; }
+    .c8x-p { margin-top: 16px; }
+    .c8x-row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 20px; width: auto; height: auto; margin-top: 32px; }
+    .c8x-a { height: 258px; }
+    .c8x-hole { left: 4px; right: 4px; top: 7px; height: 211px; box-shadow: 0 0 0 4px #F1EEE8; }
+    .c8x-ear { left: 50%; margin-left: -12px; width: 24px; height: 7px; } .c8x-ear.b { top: 221px; }
+    .c8x-strip { left: 8px; right: 8px; top: 180px; height: 32px; padding: 0 4px 0 8px; }
+    .c8x-strip .tech { display: none; }
+    .c8x-chip { margin-left: auto; font-size: 11px; padding: 5px 8px; }
+    .c8x-cap { left: 4px; top: 236px; font-size: 13.6px; line-height: 20px; opacity: 1; }
+    .c8x-b { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 34px; }
+  }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cuts]').forEach((row) => {
+    const cs = Array.from(row.querySelectorAll<HTMLElement>('.c8x-c'));
+    const open = (c: HTMLElement) => cs.forEach((x) => x.classList.toggle('open', x === c));
+    if (!matchMedia('(min-width: 1024px)').matches) cs.forEach((x) => x.classList.remove('open'));
+    cs.forEach((c) => {
+      c.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') open(c); });
+      c.addEventListener('focusin', () => open(c));
+      c.querySelector('a')?.addEventListener('click', (e) => { if (!matchMedia('(hover: hover)').matches && !c.classList.contains('open')) { e.preventDefault(); open(c); } });
+    });
+  });
+</script>

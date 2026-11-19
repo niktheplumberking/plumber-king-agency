@@ -87,7 +87,7 @@
 <rect x="240.543" y="562.892" width="0.270882" height="140.858" fill="#E3E6EC"/>
 <rect x="247.586" y="562.892" width="0.270882" height="140.858" fill="#E3E6EC"/>
 <rect x="254.629" y="562.892" width="0.270882" height="140.858" fill="#E3E6EC"/>
-<path d="M243.793 573.727H54.1763V692.915H243.793V573.727Z" stroke="#14152B" stroke-width="6" stroke-linecap="square" stroke-linejoin="round"/>
+<path d="M243.793 573.727H54.1763V692.915H243.793V573.727Z" stroke="#14152B" stroke-width="1.6253" stroke-linecap="square" stroke-linejoin="round"/>
 <path d="M157.111 573.727V617.068" stroke="#14152B" stroke-width="1.62529" stroke-linecap="square" stroke-linejoin="round"/>
 <path d="M157.111 633.321V692.915" stroke="#14152B" stroke-width="1.62529" stroke-linecap="square" stroke-linejoin="round"/>
 <path d="M54.1763 636.03H89.3909" stroke="#14152B" stroke-width="1.62529" stroke-linecap="square" stroke-linejoin="round"/>
@@ -115,10 +115,10 @@
 <circle cx="143.296" cy="616.797" r="1.43793" fill="white" stroke="#14152B" stroke-width="0.5418"/>
 <rect x="142.213" y="615.714" width="0.541763" height="2.16705" fill="#14152B"/>
 <rect x="143.838" y="615.714" width="0.541763" height="2.16705" fill="#14152B"/>
-<path d="M143.296 614.359C146.276 603.524 184.199 606.233 205.87 591.876" stroke="#14152B" stroke-width="0.541763" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M143.296 614.359C146.276 603.524 184.199 606.233 205.87 591.876" stroke="#14152B" stroke-width="0.541763" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.6253 1.3544"/>
 <circle cx="200.994" cy="674.495" r="4.70939" fill="white" stroke="#14152B" stroke-width="0.6772"/>
 <path d="M198.032 676.662V673.867H199.99V674.411H198.739V674.984H199.8V675.52H198.739V676.118H199.99V676.662H198.032ZM201.085 676.662L200.248 673.867H200.972L201.549 675.914H201.577L202.15 673.867H202.857L202.02 676.662H201.085Z" fill="#14152B"/>
-<path d="M200.994 668.536C203.161 652.283 216.705 617.068 216.705 594.856" stroke="#14152B" stroke-width="0.541763" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5"/>
+<path d="M200.994 668.536C203.161 652.283 216.705 617.068 216.705 594.856" stroke="#14152B" stroke-width="0.541763" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.6253 1.3544"/>
 <circle cx="70.7001" cy="657.971" r="1.9797" fill="white" stroke="#14152B" stroke-width="0.5418"/>
 <path d="M68.8039 656.075L72.5963 659.867M72.5963 656.075L68.8039 659.867" stroke="#14152B" stroke-width="0.406322" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="97.7882" cy="657.971" r="1.9797" fill="white" stroke="#14152B" stroke-width="0.5418"/>

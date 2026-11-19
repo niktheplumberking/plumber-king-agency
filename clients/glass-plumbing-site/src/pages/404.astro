@@ -1,0 +1,54 @@
+---
+// 404 (builder 1). No Figma frame: built from the Home system (paper, Abril headline, pipe rule, Btn). Loader off.
+import Base from '../layouts/Base.astro';
+import Btn from '../components/kit/Btn.astro';
+import { SITE } from '../data/site';
+const links = [
+  { href: '/services', label: 'Services' },
+  { href: '/water-heaters', label: 'Water heaters' },
+  { href: '/drain-cleaning', label: 'Drain cleaning' },
+  { href: '/service-areas', label: 'Service areas' },
+  { href: '/reviews', label: 'Reviews' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+<Base title={`Page not found | ${SITE.name}`} description="That page isn't here. Call or text Mike, or head back to the home page." path="/404" noindex loader={false}>
+  <section class="nf" data-m-section>
+    <div class="nf-in">
+      <p class="nf-eb" data-t>Error 404 · Wrong turn</p>
+      <h1 class="nf-h" data-t>This pipe goes<br />nowhere.</h1>
+      <svg class="nf-pipe" viewBox="0 0 600 40" aria-hidden="true" preserveAspectRatio="none"><path d="M0 20H250" stroke="currentColor" stroke-width="10" stroke-linecap="square"/><rect x="250" y="8" width="26" height="24" rx="3" fill="currentColor"/><path d="M290 30q4 6 0 10" stroke="var(--red)" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+      <p class="nf-p" data-t>The page you were after isn't here. If something's leaking, skip the menus and reach Mike directly.</p>
+      <div class="nf-cta" data-t>
+        <Btn v="dark" sub={`Tap to call · ${SITE.hoursYelp}`} />
+        <Btn v="text" sub="Text a photo of the problem" />
+      </div>
+      <nav class="nf-links" aria-label="Popular pages" data-t>
+        <a href="/">← Back to home</a>
+        {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      </nav>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { background: var(--paper); color: var(--ink); min-height: 72vh; }
+  .nf-in { width: calc(100% - 2 * var(--gutter)); max-width: 1200px; margin-inline: auto; padding: 120px 0 140px; }
+  .nf-eb { font-family: var(--f-label); font-weight: 600; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .nf-h { margin-top: 18px; font-family: var(--f-display); font-weight: 400; font-size: 96px; line-height: .98; }
+  .nf-pipe { display: block; width: min(600px, 100%); height: 40px; margin-top: 34px; color: var(--ink); }
+  .nf-p { margin-top: 28px; max-width: 520px; font-size: 18px; line-height: 28px; color: var(--ink-2); }
+  .nf-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+  .nf-cta :global(.mb-text) { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .nf-cta :global(a.mb-text .mb-s) { color: var(--ink-2); }
+  .nf-cta :global(.mb-text:hover) { background: rgba(14, 13, 11, .06); }
+  .nf-links { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 48px; font-family: var(--f-label); font-weight: 600; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; }
+  .nf-links a { text-decoration: underline; text-decoration-color: var(--tan); text-underline-offset: 6px; text-decoration-thickness: 2px; }
+  .nf-links a:hover { color: var(--tan-dark); }
+  @media (max-width: 767px) {
+    .nf-in { padding: 72px 0 96px; }
+    .nf-h { font-size: 52px; }
+    .nf-p { font-size: 16px; line-height: 25px; }
+    .nf-cta { display: grid; }
+    .nf-cta :global(.mb) { display: flex; width: 100%; }
+  }
+</style>

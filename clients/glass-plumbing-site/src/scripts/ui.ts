@@ -1,0 +1,220 @@
+// Interface behaviour (runs with or without motion): header states, mega menus, mobile menu, accordions (kit), carousels, crew patches, mobile call bar, form niceties. Motion-only polish is gated on html.motion.
+import { initAccordions } from '../components/kit/accordion';
+const html = document.documentElement;
+const MOTION = () => html.classList.contains('motion');
+const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector(s) as T | null;
+const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll(s)) as T[];
+const desktop = window.matchMedia('(min-width: 1200px)');
+
+/* ---------- header: compact after 40 px, hides on the way down, returns on the way up ---------- */
+function header() {
+  const hdr = $('[data-header]');
+  if (!hdr) return;
+  let last = window.scrollY;
+  const onScroll = () => {
+    const y = window.scrollY;
+    hdr.classList.toggle('is-scrolled', y > 40);
+    const menuOpen = !!$('[data-mega]:not([hidden])');
+    if (y > 600 && y > last + 4 && !menuOpen) hdr.classList.add('is-hidden');
+    else if (y < last - 4 || y <= 600) hdr.classList.remove('is-hidden');
+    last = y;
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  hdr.addEventListener('focusin', () => hdr.classList.remove('is-hidden'));
+  onScroll();
+}
+
+/* ---------- mega menus: hover intent on fine pointers, click/Enter everywhere, Escape closes, focus stays sane ---------- */
+function mega() {
+  const btns = $$<HTMLButtonElement>('[data-mega-btn]');
+  if (!btns.length) return;
+  let openKey: string | null = null;
+  let timer = 0;
+  const panel = (k: string) => $(`[data-mega="${k}"]`);
+  const btn = (k: string) => $<HTMLButtonElement>(`[data-mega-btn="${k}"]`);
+  const close = (k = openKey, focus = false) => {
+    if (!k) return;
+    const p = panel(k); const b = btn(k);
+    // Fade out (B1: nothing disappears in one frame); reopening mid-fade cancels it.
+    if (p) { if (MOTION()) { p.getAnimations().forEach((a) => a.cancel()); p.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: 'cubic-bezier(.65,0,.35,1)' }).onfinish = () => { if (openKey !== k) p.hidden = true; }; } else p.hidden = true; }
+    b?.setAttribute('aria-expanded', 'false');
+    if (focus) b?.focus();
+    if (openKey === k) openKey = null;
+  };
+  const open = (k: string) => {
+    if (openKey && openKey !== k) close(openKey);
+    const p = panel(k); if (!p) return;
+    p.getAnimations().forEach((a) => a.cancel());
+    p.hidden = false; btn(k)?.setAttribute('aria-expanded', 'true'); openKey = k;
+    if (MOTION()) {
+      p.animate([{ opacity: 0, transform: 'translateY(-10px)' }, { opacity: 1, transform: 'none' }], { duration: 560, easing: 'cubic-bezier(.65,0,.35,1)' }); // B9: ease-in-out, 0.5-0.7 s
+      $$('[data-mg-col]', p).forEach((c, i) => c.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 60 + i * 55, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' }));
+    }
+  };
+  btns.forEach((b) => {
+    const k = b.dataset.megaBtn!;
+    const li = b.closest('[data-mega-item]') as HTMLElement;
+    b.addEventListener('click', () => (openKey === k ? close(k) : open(k)));
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (fine) {
+      li.addEventListener('pointerenter', () => { clearTimeout(timer); timer = window.setTimeout(() => open(k), 90); });
+      li.addEventListener('pointerleave', () => { clearTimeout(timer); timer = window.setTimeout(() => { if (!panel(k)?.matches(':hover')) close(k); }, 220); });
+      panel(k)?.addEventListener('pointerenter', () => clearTimeout(timer));
+      panel(k)?.addEventListener('pointerleave', () => { clearTimeout(timer); timer = window.setTimeout(() => close(k), 220); });
+    }
+    b.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); open(k); $<HTMLElement>('a', panel(k)!)?.focus(); }
+      // The panel sits elsewhere in the DOM: Tab from an open button goes into it, as in the disclosure pattern (QA r2).
+      else if (e.key === 'Tab' && !e.shiftKey && openKey === k) { const a = $<HTMLElement>('a', panel(k)!); if (a) { e.preventDefault(); a.focus(); } }
+    });
+    // Leaving the panel by Tab continues after its button; Shift+Tab from the first link goes back to the button.
+    panel(k)?.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const links = $$<HTMLElement>('a[href], button', panel(k)!).filter((x) => x.getClientRects().length);
+      if (e.shiftKey && document.activeElement === links[0]) { e.preventDefault(); b.focus(); }
+      else if (!e.shiftKey && document.activeElement === links[links.length - 1]) {
+        const nav = $$<HTMLElement>('a[href], button', li.parentElement!).filter((x) => !panel(k)!.contains(x) && x.getClientRects().length);
+        const next = nav[nav.indexOf(b) + 1];
+        if (next) { e.preventDefault(); close(k); next.focus(); }
+      }
+    });
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && openKey) close(openKey, true); });
+  document.addEventListener('click', (e) => {
+    if (!openKey) return;
+    const t = e.target as Node;
+    if (!panel(openKey)?.contains(t) && !btn(openKey)?.contains(t)) close(openKey);
+  });
+  document.addEventListener('focusin', (e) => {
+    if (!openKey) return;
+    const t = e.target as Node;
+    const li = btn(openKey)?.closest('[data-mega-item]');
+    if (!panel(openKey)?.contains(t) && !li?.contains(t)) close(openKey);
+  });
+  desktop.addEventListener('change', () => close());
+}
+
+/* ---------- mobile menu: dialog with focus trap, Escape, scroll lock; reveals from the menu button ---------- */
+function mobileMenu() {
+  const menu = $<HTMLElement>('[data-mnav]');
+  const openBtn = $<HTMLButtonElement>('[data-menu-open]');
+  if (!menu || !openBtn) return;
+  const closeBtn = $<HTMLButtonElement>('[data-menu-close]', menu);
+  const focusables = () => $$<HTMLElement>('a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])', menu).filter((el) => el.offsetParent !== null);
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') return;
+    const f = focusables(); if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  const open = () => {
+    menu.hidden = false; openBtn.setAttribute('aria-expanded', 'true');
+    html.style.overflow = 'hidden'; (window as any).__pbpLenis?.stop();
+    document.addEventListener('keydown', onKey);
+    if (MOTION()) {
+      const r = openBtn.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      menu.animate([{ clipPath: `circle(0px at ${cx}px ${cy}px)` }, { clipPath: `circle(${Math.hypot(innerWidth, innerHeight) * 1.05}px at ${cx}px ${cy}px)` }], { duration: 620, easing: 'cubic-bezier(.65,0,.35,1)' });
+      $$('[data-mn-item]', menu).forEach((li, i) => li.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 160 + i * 45, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' }));
+    }
+    closeBtn?.focus();
+  };
+  const close = (restore = true) => {
+    if (menu.hidden) return;
+    const done = () => {
+      menu.hidden = true; openBtn.setAttribute('aria-expanded', 'false');
+      html.style.overflow = ''; (window as any).__pbpLenis?.start();
+      document.removeEventListener('keydown', onKey);
+      if (restore) openBtn.focus();
+    };
+    if (MOTION()) menu.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: 'cubic-bezier(.65,0,.35,1)' }).onfinish = done; else done(); // B9: ease-in-out
+  };
+  openBtn.addEventListener('click', open);
+  closeBtn?.addEventListener('click', () => close());
+  // Any link inside closes the menu (hash links like #estimate need it; page links navigate anyway).
+  menu.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) close(false); });
+  desktop.addEventListener('change', (e) => { if (e.matches) close(false); });
+}
+
+/* ---------- accordions: every <details data-acc> (FAQ rows, town FAQ, legal contents pill, mobile menu groups, FAQ topic
+   dropdown) runs on the one kit controller (components/kit/accordion.ts). ---------- */
+
+/* ---------- carousels (mobile rails): dots + "n of 6" follow the scroll position ---------- */
+function carousels() {
+  $$('[data-carousel]').forEach((c) => {
+    const track = $('[data-track]', c); if (!track) return;
+    const slides = $$('[data-slide]', track);
+    const dots = $$('[data-dot]', c);
+    const now = $('[data-count-now]', c);
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const x = track.getBoundingClientRect().left;
+      let best = 0, bestD = Infinity;
+      slides.forEach((s, i) => { const d = Math.abs(s.getBoundingClientRect().left - x - parseFloat(getComputedStyle(track).paddingLeft || '0')); if (d < bestD) { bestD = d; best = i; } });
+      // A track scrolled to its end shows the last slide as current.
+      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) best = slides.length - 1;
+      const di = dots.length && slides.length !== dots.length ? Math.round((best / Math.max(1, slides.length - 1)) * (dots.length - 1)) : best;
+      dots.forEach((d, i) => d.classList.toggle('on', i === di));
+      if (now) now.textContent = String(best + 1);
+    };
+    track.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+  });
+}
+
+/* ---------- crew patches: swap the review bubble; Noah has no pulled review yet -> labelled stand-in ---------- */
+function crew() {
+  $$('[data-crew]').forEach((root) => {
+    const btns = $$<HTMLButtonElement>('[data-crew-btn]', root);
+    const card = $('[data-crew-card]', root);
+    const real = $('[data-crew-real]', root); const stand = $('[data-crew-stand]', root);
+    const q = $('[data-crew-q]', root), by = $('[data-crew-by]', root), meta = $('[data-crew-meta]', root), av = $('[data-crew-av]', root);
+    btns.forEach((b) => b.addEventListener('click', () => {
+      btns.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      const has = !!b.dataset.q;
+      const swap = () => {
+        if (real) real.hidden = !has; if (stand) stand.hidden = has;
+        if (has) { if (q) q.textContent = b.dataset.q!; if (by) by.textContent = b.dataset.by!; if (meta) meta.textContent = b.dataset.meta!; if (av) av.textContent = (b.dataset.by || '?')[0]; }
+      };
+      if (MOTION() && card) {
+        card.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(8px) rotate(-.6deg)' }], { duration: 160, easing: 'ease-in' }).onfinish = () => {
+          swap();
+          card.animate([{ opacity: 0, transform: 'translateY(-8px) rotate(.6deg)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.215,.61,.355,1)' }); // power3.out: calm, no overshoot
+        };
+      } else swap();
+    }));
+  });
+}
+
+/* ---------- mobile call bar: appears once the hero has scrolled away, steps aside over the waterline CTA ---------- */
+function callBar() {
+  const bar = $('[data-mbar]'); if (!bar) return;
+  // "Free estimate" points at the waterline form; pages without one (contact, legal, thank-you, 404) use the contact form.
+  const est = $<HTMLAnchorElement>('a.mb-est[href="#estimate"]', bar); // safety net if a page forgets Base's `estimate`
+  if (est && !document.getElementById('estimate')) est.href = document.getElementById('request') ? '#request' : '/contact'; // a cross-page link opens at the top (fix round 1, B4)
+  const first = $('main section'); const cta = $('#estimate') ?? $('#request');
+  let pastHero = false, atCta = false, atEnd = false;
+  const sync = () => bar.classList.toggle('is-on', pastHero && !atCta && !atEnd);
+  // The footer's giant "MIKE'S" closes the page (B10d): the bar steps aside so it is never covered.
+  const end = $('.ft-big'); if (end) new IntersectionObserver(([e]) => { atEnd = e.isIntersecting; sync(); }).observe(end);
+  if (first) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe(first);
+  else { pastHero = true; sync(); }
+  if (cta) new IntersectionObserver(([e]) => { atCta = e.isIntersecting; sync(); }, { threshold: 0.25 }).observe(cta);
+}
+
+/* ---------- form niceties: select placeholder colour, chosen photo file name ---------- */
+function formBits() {
+  $$<HTMLSelectElement>('select[data-placeholder]').forEach((s) => {
+    const set = () => s.classList.toggle('is-empty', !s.value);
+    s.addEventListener('change', set); set();
+  });
+  $$<HTMLInputElement>('input[data-photo]').forEach((inp) => {
+    const label = inp.parentElement?.querySelector('[data-photo-label]');
+    const orig = label?.textContent ?? '';
+    inp.addEventListener('change', () => { if (label) label.textContent = inp.files?.[0] ? `Photo added: ${inp.files[0].name}` : orig; });
+  });
+}
+
+header(); mega(); mobileMenu(); initAccordions(); carousels(); crew(); callBar(); formBits();

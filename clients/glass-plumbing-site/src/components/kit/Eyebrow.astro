@@ -1,0 +1,59 @@
+---
+// Eyebrow: the ONE eyebrow component (kit/README.md): a small hex-nut outline (or the red live dot) + Oswald caps label.
+// The label is the slot (or `text`). `tone`: tan (on ink) | deep (tan-dark on paper/tan) | ink | mute | red | paper.
+// `dot` = red live dot instead of the nut; `icon={false}` = no mark. `t` = motion tier (data-t; false = none). `as` = tag.
+// `look` = the eyebrow family each page was built with (Phase 1 merged them without changing a pixel):
+//   look="main"   Home: Oswald 600 14/16, +0.1 em, tan; on a `.on-paper` section it turns tan-dark. No data-t by default.
+//   look="town"   town / about / service areas / our work: Oswald 500 14/20, +0.12 em. Default tone deep, data-t="1".
+//   look="page"   reviews / contact / FAQ / legal / thank-you: Oswald 500 14/21, +0.12 em, 12 px on phones. Default tan, data-t="1".
+//   look="figma"  service pages (global .sv-eb): Oswald 500 14/21, 13 px on phones. Default deep, data-t="1".
+type Tone = 'tan' | 'deep' | 'ink' | 'mute' | 'red' | 'paper';
+interface Props { look?: 'main' | 'town' | 'page' | 'figma'; tone?: Tone; text?: string; dot?: boolean; icon?: boolean; t?: string | false; as?: string; class?: string; [k: string]: any }
+const { look = 'main', tone, text, dot = false, icon = true, t, as: Tag = 'p', class: cls, ...rest } = Astro.props;
+const defTone: Record<string, Tone | undefined> = { main: undefined, town: 'deep', page: 'tan', figma: 'deep' };
+const tn = tone ?? defTone[look];
+const dataT = t === undefined ? (look === 'main' ? undefined : '1') : t || undefined;
+const sv = look === 'figma';
+const hex = {
+  main: { vb: '0 0 20 15', d: 'M5 1.2h10l3.8 6.3L15 13.8H5L1.2 7.5z', attrs: {} },
+  town: { vb: '0 0 20 16', d: 'M5 1.5h10l3.6 6.5L15 14.5H5L1.4 8z', attrs: { fill: 'none', stroke: 'currentColor', 'stroke-width': '1.6', 'stroke-linejoin': 'round' } },
+  page: { vb: '0 0 20 15', d: 'M3.14.8h13.32l2.34 6.5-2.34 6.5H3.14L.8 7.3z', attrs: { fill: 'none', stroke: 'currentColor', 'stroke-width': '1.6', 'stroke-linejoin': 'round' } },
+  figma: { vb: '0 0 20 15', d: 'M3.14.8h13.32l2.34 6.5-2.34 6.5H3.14L.8 7.3z', attrs: { fill: 'none', stroke: 'currentColor', 'stroke-width': '1.6', 'stroke-linejoin': 'round' } },
+}[look];
+---
+<Tag class:list={sv ? ['sv-eb', tn && `sv-eb--${tn === 'deep' ? 'dark' : tn}`, cls] : ['eb', `eb-l-${look}`, tn && `eb-c-${tn}`, cls]} data-t={dataT} {...rest}>
+  {icon && (dot
+    ? <span class={sv ? 'sv-eb-dot' : `eb-dot eb-dot-${look}`} aria-hidden="true"></span>
+    : <svg class={sv ? 'sv-eb-hex' : `eb-hex eb-hex-${look}`} viewBox={hex.vb} {...(sv ? { width: 20, height: 15 } : {})} aria-hidden="true" focusable={look === 'page' ? 'false' : undefined}><path d={hex.d} {...hex.attrs} /></svg>)}
+  <span>{text ?? <slot />}</span>
+</Tag>
+<style>
+  /* look="main" (Home) */
+  .eb:where(.eb-l-main) { display: flex; align-items: center; gap: 9px; font-family: var(--f-label); font-weight: 600; font-size: 14px; line-height: 16px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan); }
+  .eb-hex:where(.eb-hex-main) { flex: none; width: 20px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+  .eb-dot:where(.eb-dot-main) { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--red); }
+  :global(:where(.on-paper)) .eb:where(.eb-l-main) { color: var(--tan-dark); }
+  /* look="town" */
+  .eb:where(.eb-l-town) { display: flex; align-items: center; gap: 9px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 20px; letter-spacing: .12em; text-transform: uppercase; color: var(--tan-dark); }
+  .eb-hex:where(.eb-hex-town) { width: 20px; height: 16px; flex: none; }
+  /* look="page" */
+  .eb:where(.eb-l-page) { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; }
+  .eb-hex:where(.eb-hex-page) { width: 20px; height: 15px; flex: none; margin: 0 -1px; }
+  .eb-dot:where(.eb-dot-page) { width: 12px; height: 12px; border-radius: 50%; background: var(--red); flex: none; margin-right: 1px; }
+  /* tones (main uses its own colour rule above) */
+  .eb-c-tan { color: var(--tan); } .eb-c-deep { color: var(--tan-dark); } .eb-c-ink { color: var(--ink); } .eb-c-mute { color: var(--mute); }
+  .eb-c-red { color: var(--red-text); } .eb-c-paper { color: var(--paper); }
+  @media (max-width: 767px) {
+    .eb:where(.eb-l-main) { font-size: 12px; line-height: 14px; gap: 8px; } .eb-hex:where(.eb-hex-main) { width: 18px; height: 13px; }
+    .eb:where(.eb-l-town) { font-size: 14px; }
+    .eb:where(.eb-l-page) { font-size: 12px; line-height: 18px; gap: 8px; }
+  }
+</style>
+<style is:global>
+  /* look="figma" (global: the service pages restyle .sv-eb-hex from their own sections) */
+  .sv-eb { display: flex; align-items: center; gap: 8px; margin: 0; font-family: var(--f-label); font-weight: 500; font-size: 14px; line-height: 21px; letter-spacing: .12em; text-transform: uppercase; }
+  .sv-eb-hex { flex: none; width: 20px; height: 15px; margin-left: -1px; }
+  .sv-eb-dot { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 4px rgba(217, 65, 43, .25); margin: 0 4px 0 2px; }
+  .sv-eb--tan { color: var(--tan); } .sv-eb--dark { color: var(--tan-dark); } .sv-eb--ink { color: var(--ink); } .sv-eb--red { color: var(--red-text); } .sv-eb--paper { color: var(--paper); }
+  @media (max-width: 767px) { .sv-eb { font-size: 13px; line-height: 19px; } }
+</style>

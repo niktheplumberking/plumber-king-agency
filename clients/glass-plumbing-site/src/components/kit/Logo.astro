@@ -1,0 +1,9 @@
+---
+// The real logo (ink or cream PNG) as an image. Decorative unless `alt` is given.
+import { Image } from 'astro:assets';
+import ink from '../../assets/brand/logo-ink.png';
+import cream from '../../assets/brand/logo-cream.png';
+interface Props { w: number; tone?: 'ink' | 'cream'; alt?: string; class?: string; }
+const { w, tone = 'ink', alt = '', class: cls } = Astro.props;
+---
+<Image src={tone === 'ink' ? ink : cream} alt={alt} width={w} widths={[w, w * 2]} sizes={`${w}px`} class={cls} loading="lazy" />

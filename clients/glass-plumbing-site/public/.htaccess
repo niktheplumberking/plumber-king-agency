@@ -1,0 +1,58 @@
+# Hostinger (Apache/LiteSpeed) settings for the live site, https://<live domain, set at launch> (no www, no trailing slash).
+# WFACT hosting law: Hostinger for live sites, Vercel for previews. vercel.json does the same jobs on Vercel; this file is
+# ignored there. Upload it with the rest of dist/ (it is a hidden file).
+Options -Indexes
+ErrorDocument 404 /404.html
+DirectorySlash Off
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # http:// or www. -> https://<live domain, set at launch> in ONE redirect (the old site took two hops for http://www).
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+  # Old-site URLs that changed (research/competitors/BASELINE.md): /home was a copy of the homepage, (Paul example; Mike had no old site).
+  # The old site's sitemap was /sitemap.xml; the new one is /sitemap-index.xml.
+  RewriteRule ^home/?$ / [L,R=301,NC]
+  RewriteRule ^sitemap\.xml$ /sitemap-index.xml [L,R=301]
+
+  # One URL per page: /index.html -> /, /about.html -> /about, /about/ -> /about (canonicals have no .html, no slash).
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [L,R=301,NC]
+  RewriteCond %{THE_REQUEST} \s/+(.+)\.html[\s?] [NC]
+  RewriteRule ^ /%1 [L,R=301]
+  RewriteRule ^(.+)/$ /$1 [L,R=301]
+
+  # Serve /about from about.html (Astro build.format 'file'). /guides is both guides.html and the guides/ folder: the file wins.
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  # Scripts, styles (hashed names in /_astro) and self-hosted fonts never change: cache for a year. Images: /_astro ones are
+  # hashed too, but icons and /flow/*.svg keep their names, so images get 30 days without "immutable".
+  <FilesMatch "\.(js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(avif|webp|jpg|jpeg|png|svg)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(html|xml|txt)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  # The form's thank-you page stays out of the index (it also has a noindex meta tag).
+  <Files "thank-you.html">
+    Header set X-Robots-Tag "noindex, nofollow"
+  </Files>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/javascript application/json image/svg+xml
+</IfModule>

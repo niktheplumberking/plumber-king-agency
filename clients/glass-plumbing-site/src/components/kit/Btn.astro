@@ -1,0 +1,193 @@
+---
+// Button: the ONE button component (kit/README.md). Every button is a real link. One prop vocabulary for every look:
+//   title = first line (defaults to the phone number on call looks), sub = second line, href (defaults to tel:, or sms: for
+//   v="text"), w / h = desktop width / height in px, external = new tab, t = motion tier (data-t), class, other attributes pass.
+// `look` = the button family (each matches a Figma component the pages were built from; Phase 1 merged them without changing
+// a pixel, so the five families stay distinct until a design round unifies them):
+//   look="main"   (default) header / Home / 404 plates. v: call (tan plate, Oswald number, ink disc) | dark (ink plate on
+//                 paper) | text (tan outline, sms:) | flat (one-line tan plate + arrow).
+//   look="call"   town / about / service-area call plate, 300 x 64. v: tan (on ink) | ink (on paper). `plain` = one line.
+//   look="ghost"  town / about outline button, 200 x 64. `dark` = on ink. `plain` = one line. title defaults to
+//                 "Get a free estimate", sub to "Send the form →".
+//   look="bar"    reviews / contact single-line bar. v: tan | line (tan outline, on ink) | lineInk | ink. `arrow` = trailing →,
+//                 `circle` = round arrow tile. The label is the slot (or `title`).
+//   look="figma"  service pages (Figma "btn call" / "btn ghost", 64 tall, radius 6). v: tan | ink | red (Oswald line 1 +
+//                 disc) | out | outInk (outline, Archivo line 1).
+import { SITE } from '../../data/site';
+type Look = 'main' | 'call' | 'ghost' | 'bar' | 'figma';
+interface Props {
+  look?: Look; v?: string; href?: string; title?: string; sub?: string | false; w?: number; h?: number; class?: string;
+  external?: boolean; t?: string | false; plain?: boolean; dark?: boolean; arrow?: boolean; circle?: boolean; [k: string]: any;
+}
+const { look = 'main', v, href, title, sub, w, h, class: cls, external = false, t, plain = false, dark = false, arrow = false, circle = false, ...rest } = Astro.props;
+const ext = external ? { target: '_blank', rel: 'noopener' } : {};
+const slotText = Astro.slots.has('default') ? await Astro.slots.render('default') : undefined;
+
+// look="main"
+const mv = v ?? 'call';
+const mLink = href ?? (mv === 'text' ? SITE.sms : SITE.tel);
+const mT = title ?? (mv === 'text' ? 'Text Mike a photo' : SITE.phone);
+const mPhone = mT === SITE.phone;
+// Accessible name = "Call " (screen readers only) + the visible text, so it contains the label (WCAG 2.5.3, axe 0).
+// look="call"
+const cSub = sub === undefined ? 'Free estimate · tap to call' : sub;
+// look="ghost"
+const gTitle = title ?? 'Get a free estimate';
+const gSub = sub === undefined ? 'Send the form →' : sub;
+// look="figma": accessible name = visible text (WCAG 2.5.3) + the number on a tel: button that does not show it + new-tab note.
+const fv = v ?? 'tan';
+const fHref = href ?? SITE.tel;
+const fL1 = title ?? SITE.phone;
+const fSolid = fv === 'tan' || fv === 'ink' || fv === 'red';
+const fSr = [fHref.startsWith('tel:') && !`${fL1} ${sub || ''}`.includes(SITE.phone) ? `, ${SITE.phone}` : '', external ? ' (opens in a new tab)' : ''].join('');
+const arrowSvg = '<path d="M4 12h16"/><path d="m14 6 6 6-6 6"/>';
+---
+{look === 'main' && (
+  <a href={mLink} class:list={['mb', `mb-${mv}`, cls]} data-t={t || undefined} {...ext} {...rest}>
+    <span class="mb-txt">
+      <span class:list={['mb-t', mPhone && 'mb-ph']}>{mPhone && <span class="sr-only">Call </span>}{mT}</span>
+      {sub && <span class="mb-s">{sub}</span>}
+    </span>
+    {(mv === 'call' || mv === 'dark') && (
+      <span class="mb-c" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={arrowSvg} /></span>
+    )}
+    {mv === 'flat' && <svg class="mb-a" aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={arrowSvg} />}
+  </a>
+)}
+{look === 'call' && (
+  <a href={href ?? SITE.tel} class:list={['cb', `cb--${v ?? 'tan'}`, plain && 'cb--plain', cls]} data-t={t === undefined ? '3' : t || undefined} {...ext} {...rest}>
+    <span class="cb-t">
+      <span class="cb-n">{title ?? `Call ${SITE.phone}`}</span>
+      {!plain && cSub && <span class="cb-s">{cSub}</span>}
+    </span>
+    {!plain && <span class="cb-c" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M3 10h13M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>}
+  </a>
+)}
+{look === 'ghost' && (
+  <a href={href} class:list={['gb', dark && 'gb--dark', plain && 'gb--plain', cls]} style={`--gb-w:${w ?? 200}px`} data-t={t === undefined ? '3' : t || undefined} {...ext} {...rest}>
+    <span class="gb-l">{gTitle}</span>
+    {!plain && gSub && <span class="gb-s">{gSub}</span>}
+  </a>
+)}
+{look === 'bar' && (
+  <a href={href} class:list={['bb', `bb-${v ?? 'tan'}`, circle && 'bb-circ', cls]} style={`${w ? `--bw:${w}px;` : ''}--bh:${h ?? 64}px`} data-t={t || undefined} {...ext} {...rest}>
+    <span class="bb-t">{slotText ? <Fragment set:html={slotText} /> : title}</span>
+    {arrow && <span class="bb-ar" aria-hidden="true">→</span>}
+    {circle && <span class="bb-c" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>}
+  </a>
+)}
+{look === 'figma' && (
+  <a href={fHref} class:list={['sv-btn', `sv-btn--${fv}`, cls]} style={w ? `--bw:${w}px` : undefined}
+    target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined} data-t={t === undefined ? '3' : t || undefined} {...rest}>
+    <span class="sv-btn-txt"><span class:list={['sv-btn-l1', fSolid && 'sv-btn-big']}>{fL1}</span>{sub && <span class="sv-btn-l2">{sub}</span>}{fSr && <span class="sr-only">{fSr}</span>}</span>
+    {fSolid && <span class="sv-btn-disc" aria-hidden="true"><svg viewBox="0 0 15 12" width="15" height="12"><path d="M0 6h13M8.2 1.2 13 6l-4.8 4.8" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>}
+  </a>
+)}
+<style>
+  /* look="main" */
+  .mb { position: relative; display: inline-flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; padding: 0 16px 0 22px; border-radius: 4px; text-align: left; transition: background-color .3s, color .3s, box-shadow .3s, transform .35s var(--ease-out); }
+  .mb-txt { display: grid; gap: 2px; }
+  .mb-t { font-family: var(--f-sans); font-weight: 600; font-size: 16px; line-height: 20px; white-space: nowrap; }
+  .mb-ph { font-family: var(--f-label); font-weight: 600; font-size: 23px; line-height: 27px; letter-spacing: 0; }
+  .mb-s { font-size: 12px; line-height: 15px; white-space: nowrap; }
+  .mb-c { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 50%; transition: transform .35s var(--ease-out); }
+  .mb:hover .mb-c { transform: translateX(3px); }
+  .mb-call { background: var(--tan); color: var(--ink); }
+  .mb-call .mb-s { color: var(--ink-2); }
+  .mb-call .mb-c { background: var(--ink); color: var(--tan); }
+  .mb-call:hover { background: #DDD2B6; }
+  .mb-dark { background: var(--ink); color: var(--tan); }
+  .mb-dark .mb-s { color: var(--mute); }
+  .mb-dark .mb-c { background: var(--tan); color: var(--ink); }
+  .mb-dark:hover { background: #24211C; }
+  .mb-text { background: transparent; color: var(--paper); box-shadow: inset 0 0 0 1.5px var(--tan); padding-right: 22px; }
+  .mb-text .mb-s { color: var(--mute); }
+  .mb-text:hover { background: rgba(210, 197, 166, .1); }
+  .mb-flat { min-height: 44px; padding: 0 20px; background: var(--tan); color: var(--ink); justify-content: center; gap: 8px; }
+  .mb-flat .mb-t { font-size: 15px; }
+  .mb-flat:hover { background: #DDD2B6; }
+  :global(.on-ink) .mb:focus-visible { outline-color: var(--tan); }
+
+  /* look="call" */
+  .cb { position: relative; display: flex; align-items: center; justify-content: space-between; width: 300px; max-width: 100%; height: 64px; padding: 0 16px 0 22px; border-radius: 4px; overflow: hidden; transition: background-color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out); }
+  .cb--tan { background: var(--tan); color: var(--ink); }
+  .cb--ink { background: var(--ink); color: var(--tan); }
+  .cb-t { display: flex; flex-direction: column; margin-top: -4px; }
+  .cb--plain .cb-t { margin-top: 0; }
+  .cb-n { font-family: var(--f-label); font-weight: 600; font-size: 22px; line-height: 33px; letter-spacing: .02em; white-space: nowrap; }
+  .cb-s { font-family: var(--f-sans); font-weight: 500; font-size: 12px; line-height: 13px; margin-top: -2px; opacity: .8; }
+  .cb--ink .cb-s { color: var(--paper); }
+  .cb-c { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: none; transition: transform var(--dur-2) var(--ease-out); }
+  .cb--tan .cb-c { background: var(--ink); color: var(--paper); }
+  .cb--ink .cb-c { background: var(--tan); color: var(--ink); }
+  .cb-c svg { width: 20px; height: 20px; }
+  .cb:hover .cb-c { transform: translateX(3px); }
+  .cb--tan:hover { background: #e0d5bb; }
+  .cb--ink:hover { background: #26231d; }
+  .cb--plain { justify-content: flex-start; }
+
+  /* look="ghost" */
+  .gb { display: flex; flex-direction: column; justify-content: center; width: var(--gb-w); max-width: 100%; height: 64px; padding: 0 20px; border: 1.5px solid var(--ink); border-radius: 4px; color: var(--ink); transition: background-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out); }
+  .gb--dark { border-color: var(--tan); color: var(--paper); }
+  .gb-l { font-family: var(--f-sans); font-weight: 600; font-size: 16px; line-height: 20px; white-space: nowrap; }
+  .gb-s { font-size: 12px; line-height: 14px; margin-top: 3px; opacity: .8; }
+  .gb:hover { background: var(--ink); color: var(--paper); }
+  .gb--dark:hover { background: var(--tan); color: var(--ink); }
+
+  /* look="bar" */
+  .bb { display: inline-flex; align-items: center; gap: 10px; width: var(--bw, auto); min-height: var(--bh); padding: 0 22px; border-radius: 4px;
+    font-family: var(--f-sans); font-weight: 600; font-size: 18px; line-height: 24px; text-decoration: none; position: relative;
+    transition: background-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out); }
+  .bb-ar { font-family: var(--f-sans); font-weight: 600; transition: translate var(--dur-2) var(--ease-out); }
+  .bb:hover .bb-ar, .bb:focus-visible .bb-ar { translate: 4px 0; }
+  .bb-tan { background: var(--tan); color: var(--ink); }
+  .bb-tan:hover { background: var(--paper); }
+  .bb-line { color: var(--tan); box-shadow: inset 0 0 0 1.5px var(--tan); }
+  .bb-line:hover { background: var(--tan); color: var(--ink); }
+  .bb-lineInk { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .bb-lineInk:hover { background: var(--ink); color: var(--tan); }
+  .bb-ink { background: var(--ink); color: var(--tan); }
+  .bb-ink:hover { background: var(--coal); color: var(--paper); }
+  .bb-circ { justify-content: space-between; padding-right: 16px; }
+  .bb-c { width: 36px; height: 36px; border-radius: 50%; background: var(--ink); color: var(--tan); display: grid; place-items: center; flex: none; transition: rotate var(--dur-2) var(--ease-out); }
+  .bb-ink .bb-c { background: var(--tan); color: var(--ink); }
+  .bb:hover .bb-c { rotate: -45deg; }
+  .on-ink .bb:focus-visible, .bb-line:focus-visible { outline-color: var(--tan); }
+
+  @media (max-width: 767px) {
+    .cb { width: 100%; }
+    .gb { width: 100%; align-items: center; } .gb-s { display: none; }
+    .bb { font-size: 16px; }
+  }
+</style>
+<style is:global>
+  /* look="figma" (global: the service pages size it from their own wrappers with :global(.sv-btn)) */
+  .sv-btn { position: relative; display: inline-flex; align-items: flex-start; justify-content: space-between; gap: 12px; box-sizing: border-box;
+    width: var(--bw, auto); height: 64px; padding: 8px 16px 0 22px; border-radius: 6px; text-decoration: none; isolation: isolate;
+    transition: background-color .25s var(--ease-out), color .25s var(--ease-out), box-shadow .25s var(--ease-out); }
+  .sv-btn-txt { display: flex; flex-direction: column; min-width: 0; }
+  .sv-btn-l1 { font-family: var(--f-sans); font-weight: 700; font-size: 16px; line-height: 17px; white-space: nowrap; }
+  .sv-btn-big { font-family: var(--f-label); font-weight: 600; font-size: 22px; line-height: 33px; letter-spacing: .02em; }
+  .sv-btn-l2 { font-family: var(--f-sans); font-weight: 400; font-size: 12px; line-height: 13px; margin-top: 7px; white-space: nowrap; opacity: .8; }
+  .sv-btn--red .sv-btn-l2 { opacity: 1; } /* contrast: 3.3:1 at .8 on red */
+  .sv-btn-big + .sv-btn-l2 { margin-top: -2px; font-weight: 500; }
+  .sv-btn--out, .sv-btn--outInk { padding-top: 10.5px; padding-left: 20.5px; border: 1.5px solid currentColor; }
+  .sv-btn-disc { flex: none; display: grid; place-items: center; width: 36px; height: 36px; margin-top: 6px; border-radius: 50%; transition: transform .35s var(--ease-out); }
+  .sv-btn-disc svg { width: 15px; height: 12px; }
+  .sv-btn:hover .sv-btn-disc { transform: translateX(3px); }
+  .sv-btn--tan { background: var(--tan); color: var(--ink); }
+  .sv-btn--tan .sv-btn-disc { background: var(--ink); color: var(--tan); }
+  .sv-btn--tan:hover { background: #ddd2b6; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
+  .sv-btn--ink { background: var(--ink); color: var(--tan); }
+  .sv-btn--ink .sv-btn-disc { background: var(--tan); color: var(--ink); }
+  .sv-btn--ink:hover { background: #2a2620; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
+  .sv-btn--red { background: var(--red-btn); color: #fff; }
+  .sv-btn--red .sv-btn-disc { background: #fff; color: var(--red); }
+  .sv-btn--red:hover { background: #c3361f; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
+  .sv-btn--out { color: var(--tan); }
+  .sv-btn--out:hover { background: rgba(210, 197, 166, .1); }
+  .sv-btn--outInk { color: var(--ink); }
+  .sv-btn--outInk:hover { background: rgba(14, 13, 11, .06); }
+  .sv-btn:active { translate: 0 1px; }
+  @media (max-width: 767px) { .sv-btn { width: 100%; } }
+</style>

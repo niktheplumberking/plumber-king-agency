@@ -1,0 +1,58 @@
+/* Kit: global rules for the shared parts (kit/README.md). Imported once by styles/global.css. */
+
+/* ---------- Scrub (kit/scrub.ts). The CSS default is the final, static state (no JS, reduced motion). Under html.motion the
+   start state is set here, before first paint, and equals the JS start state, so nothing flashes or pops in when the
+   timelines are built after the hero (fix round 1, A-2: the "beige layer that appears in the pipe"). */
+[data-scrub-path] { stroke-dasharray: 1; }
+html.motion [data-scrub] [data-scrub-path] { stroke-dashoffset: 1; }
+html.motion [data-scrub] [data-scrub-fill] { transform: scaleX(0); }
+html.motion [data-scrub] [data-scrub-fill][data-axis="y"] { transform: scaleY(0); }
+@media (max-width: 767px) {
+  html.motion [data-scrub] [data-scrub-fill][data-axis-m="y"] { transform: scaleY(0); }
+  html.motion [data-scrub] [data-scrub-fill][data-axis-m="x"] { transform: scaleX(0); }
+}
+/* data-rev fills are shades that drain away: hidden in the final state, full at the start of the pass. */
+[data-scrub-fill][data-rev] { transform: scaleX(0); }
+html.motion [data-scrub] [data-scrub-fill][data-rev] { transform: none; }
+
+/* ---------- Accordion (kit/accordion.ts). While a row animates (.acc-anim) its colours and type sizes ease with the height
+   timeline (0.7 s ease-in-out), and min-heights let go so the height tween owns the box. .acc-off = still rendered (open)
+   but styled closed: components write their open look as [open]:not(.acc-off). */
+details[data-acc].acc-anim { min-height: 0 !important; }
+details[data-acc].acc-anim [data-acc-title], details[data-acc] .acc-ghost { transition: none !important; }
+details[data-acc].acc-anim, details[data-acc].acc-anim * {
+  transition-property: background-color, color, border-color, box-shadow, fill, stroke, font-size, line-height, letter-spacing, padding;
+  transition-duration: .7s; transition-timing-function: cubic-bezier(.45, 0, .55, 1);
+}
+/* A swap row (data-acc-title, accordion.ts header; review 11 re-look): its text is faded out from 0 to 0.15 s and back in
+   from 0.35 s, so the background / band switches in between (0.15 -> 0.35 s) and text colours step at 0.25 s, while no
+   text is shown. Sizes keep the 0.7 s height tween. */
+details[data-acc].acc-anim.acc-swap, details[data-acc].acc-anim.acc-swap * {
+  transition: background-color .2s cubic-bezier(.45, 0, .55, 1) .15s, box-shadow .2s cubic-bezier(.45, 0, .55, 1) .15s,
+    color 0s linear .25s, border-color 0s linear .25s, fill 0s linear .25s, stroke 0s linear .25s,
+    font-size .7s cubic-bezier(.45, 0, .55, 1), line-height .7s cubic-bezier(.45, 0, .55, 1),
+    letter-spacing .7s cubic-bezier(.45, 0, .55, 1), padding .7s cubic-bezier(.45, 0, .55, 1);
+}
+
+/* ---------- Hover (fix round 1, B11; kit/README.md "Hover"). Every clickable object answers a fine pointer. Lifts use the
+   individual `translate` / `rotate` / `scale` properties (never `transform`), so they add to entrances, parallax and idle.
+   Under reduced motion only the colour / opacity part stays. */
+@media (hover: hover) and (pointer: fine) {
+  [data-hover], .ft-logo { transition: translate .35s cubic-bezier(.45, 0, .55, 1), rotate .35s cubic-bezier(.45, 0, .55, 1),
+    scale .35s cubic-bezier(.45, 0, .55, 1), box-shadow .35s cubic-bezier(.45, 0, .55, 1), opacity .3s ease-in-out; }
+  html.motion [data-hover="lift"]:hover, html.motion .ft-logo:hover { translate: 0 -4px; }
+  [data-hover="lift"]:hover { box-shadow: 0 14px 28px -14px rgba(14, 13, 11, .45); }
+  html.motion [data-hover="tilt"]:hover { rotate: -1.5deg; scale: 1.02; }
+  [data-hover="nut"] :is([data-nut], .nut) { transition: rotate .5s cubic-bezier(.45, 0, .55, 1); }
+  html.motion [data-hover="nut"]:hover :is([data-nut], .nut) { rotate: 60deg; }
+  html:not(.motion) .ft-logo:hover { opacity: .8; }
+  /* Text links with no class of their own (phone, e-mail, map credit, Yelp, policy links in copy): underline + fade.
+     Zero specificity, so any component's own link style wins. */
+  :where(main, footer) :where(a[href]:not([class])) {
+    text-decoration-line: underline; text-decoration-color: transparent; text-underline-offset: 3px; text-decoration-thickness: 1.5px;
+    transition: text-decoration-color .3s ease-in-out, color .3s ease-in-out, opacity .3s ease-in-out; }
+  :where(main, footer) :where(a[href]:not([class])):hover { text-decoration-color: currentColor; opacity: .72; }
+  /* Carousel dots and other small icon buttons with no hover of their own. */
+  :where(button[class$="-dot"]) { transition: filter .3s ease-in-out, opacity .3s ease-in-out; }
+  :where(button[class$="-dot"]):hover { filter: brightness(1.35); }
+}

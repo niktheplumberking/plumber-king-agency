@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
+.env.*
+!.env.example
+.vercel
+.env*
+qa2/
+
+# fix round 1, phase 1 screenshots (before/after/diff > 40 MB): kept local, see handoff/fixes-r1/phase1/DIFF-REPORT.md
+handoff/fixes-r1/phase1/before/
+handoff/fixes-r1/phase1/after/
+handoff/fixes-r1/phase1/diff/

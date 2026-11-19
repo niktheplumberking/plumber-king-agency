@@ -22,7 +22,7 @@ const tape = d.surrey ? `${d.N} is Surrey.` : `Next door to Surrey.`;
     <Crumbs trail={[{ name: 'Home', path: '/' }, { name: 'Areas', path: '/areas/' }, { name: d.N, path: d.t.href }]} data-t="1" />
     <Eyebrow text={d.surrey ? `${d.N} · Surrey, BC` : `${d.N}, BC · next to Surrey`} class="c1-eb" data-t="1" />
     <h1 class="h1 c1-h" id="h1" data-t="2"><span class="l1">{d.h1[0]}</span><span class="l2">{d.h1[1]}</span></h1>
-    <div class="c1-qa" data-t="3">
+    <div class="c1-qa">{/* no entrance: the quick answer is the LCP and the AEO answer, so it paints at once */}
       <p class="tech c1-ql">The quick answer</p>
       <p class="c1-qt">{d.quick.split(SITE.phone).map((t, i) => <>{i > 0 && <span class="nw">{SITE.phone}</span>}{t}</>)}</p>
     </div>

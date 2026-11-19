@@ -1,0 +1,339 @@
+---
+// Our work (Figma 09 Our work, desktop 1440 / mobile 390; figma/v5/09-our-work-*.png). Every photo is his own, from
+// @khinda__electrical (src/data/towns.ts PHOTO). Drawn objects (drop ceiling, job sheets, film strip, pull-chain light) are
+// the Figma layers (scripts/cuts-p3.py 09) served as cached SVG files; copy, photos, chips, labels and buttons are HTML on top
+// at the Figma coordinates (desktop --x/--y, mobile --mx/--my in the 390 frame, see p3.css).
+// STATES 9.2: a cable chip filters the grid (others dim out, a live line says what shows); hover keeps one card sharp,
+// blurs the rest and lifts its caption. 9.3 (desktop, motion on): the sheets start as a clipboard pile under E-01 and are
+// dealt out to their places while the section is pinned (scrubbed). 9.5: the pull knob drops when pressed, then calls.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Img from '../ui/Img.astro';
+import ObjImg from '../p3/ObjImg.astro';
+import Crumbs from '../p3/Crumbs.astro';
+import s1dr from '../../art/p3/09/s1-d.svg?raw'; import s1d from '../../art/p3/09/s1-d.svg?url';
+import s1mr from '../../art/p3/09/s1-m.svg?raw'; import s1m from '../../art/p3/09/s1-m.svg?url';
+import s4dr from '../../art/p3/09/s4-d.svg?raw'; import s4d from '../../art/p3/09/s4-d.svg?url';
+import s4mr from '../../art/p3/09/s4-m.svg?raw'; import s4m from '../../art/p3/09/s4-m.svg?url';
+import s5dr from '../../art/p3/09/s5-d.svg?raw'; import s5d from '../../art/p3/09/s5-d.svg?url';
+import s5mr from '../../art/p3/09/s5-m.svg?raw'; import s5m from '../../art/p3/09/s5-m.svg?url';
+import e1dr from '../../art/p3/09/e1-d.svg?raw'; import e1d from '../../art/p3/09/e1-d.svg?url';
+import e1mr from '../../art/p3/09/e1-m.svg?raw'; import e1m from '../../art/p3/09/e1-m.svg?url';
+import e2dr from '../../art/p3/09/e2-d.svg?raw'; import e2d from '../../art/p3/09/e2-d.svg?url';
+import e2mr from '../../art/p3/09/e2-m.svg?raw'; import e2m from '../../art/p3/09/e2-m.svg?url';
+import e3dr from '../../art/p3/09/e3-d.svg?raw'; import e3d from '../../art/p3/09/e3-d.svg?url';
+import e3mr from '../../art/p3/09/e3-m.svg?raw'; import e3m from '../../art/p3/09/e3-m.svg?url';
+import { SITE } from '../../data/site';
+import { PHOTO } from '../../data/towns';
+const P = (x: number, y: number, mx?: number, my?: number, w?: number, mw?: number) =>
+  `--x:${x}px;--y:${y}px` + (mx != null ? `;--mx:${mx}px;--my:${my}px` : '') + (w ? `;--w:${w}px` : '') + (mw ? `;--mw:${mw}px` : '');
+const ph = (ig: string) => PHOTO[ig];
+// the Figma image rect inside its clip frame (desktop x, y, w, h, mobile x, y, w, h): photos zoomed past cover keep their crop
+const R = (x: number, y: number, w: number, h: number, mx: number, my: number, mw: number, mh: number) =>
+  `--fx:${x}px;--fy:${y}px;--fw:${w}px;--fh:${h}px;--fmx:${mx}px;--fmy:${my}px;--fmw:${mw}px;--fmh:${mh}px`;
+// 9.1 lit troffers: [photo, tag, desktop x, y, mobile x, y]
+const LIT = [['ig40', 'Lighting', 738, 134, 45, 535], ['ig46', 'Ceiling', 1043, 134, 216, 535], ['ig12', 'Pot lights', 738, 439, 45, 706], ['ig57', 'Commercial', 1043, 439, 216, 706]] as const;
+// 9.2 cable chips: [key, label, jacket, text colour, desktop x, w, mobile x, y, w]
+const CHIPS = [
+  ['all', 'All jobs', '#15174A', '#F5A833', 132, 138, 32, 244, 122],
+  ['panels', 'Panels', '#EDEDED', '#14152B', 310, 123, 182, 244, 107],
+  ['lighting', 'Lighting', '#F2C230', '#14152B', 473, 135, 32, 298, 119],
+  ['commercial', 'Commercial', '#C8362F', '#FFFFFF', 648, 174, 179, 298, 158],
+  ['fire', 'Fire alarm', '#2C5FB8', '#FFFFFF', 862, 159, 32, 352, 143],
+  ['outdoor', 'Outdoor', '#C47A45', '#14152B', 1061, 140, 203, 352, 124],
+] as const;
+const JACKET: Record<string, string> = Object.fromEntries(CHIPS.map((c) => [c[0], c[2]]));
+const LABEL: Record<string, string> = Object.fromEntries(CHIPS.map((c) => [c[0], c[1]]));
+// cards: [photo, type, title desktop, title mobile, desktop x, y, h, focus, mobile x, y, focus]
+const CARDS = [
+  ['ig01', 'panels', 'Commercial control panel', 'Control panel', 120, 396, 520, '50% 50%', 20, 422, '50% 50%'],
+  ['ig45', 'lighting', 'Spiral wall sconce', 'Spiral sconce', 120, 1006, 300, '50% 75%', 20, 722, '50% 75%'],
+  ['ig03', 'fire', 'Fire alarm panels', 'Fire alarm panels', 528, 396, 360, '50% 85%', 205, 452, '50% 85%'],
+  ['ig17', 'lighting', 'Pendant lights', 'Pendant lights', 528, 846, 460, '50% 50%', 20, 1022, '50% 50%'],
+  ['ig49', 'outdoor', 'Garden light wiring', 'Garden lights', 936, 396, 300, '50% 85%', 205, 752, '50% 85%'],
+  ['ig21', 'commercial', 'Shop reception lighting', 'Shop reception', 936, 786, 520, '50% 0%', 205, 1052, '50% 10%'],
+] as const;
+// 9.4 film frames: [photo, label desktop, label mobile, desktop x, y, mobile y, focus]
+const FRAMES = [['ig09', 'Soffit lights', 'Soffits', 38, 245, 416, '50% 60%'], ['ig11', 'New build · rough-in', 'New build', 318, 255, 604, '45% 50%'], ['ig43', 'Ring chandelier', 'Chandelier', 878, 275, 980, '50% 40%']] as const;
+---
+<!-- 9.1 Hero: drop ceiling, 4 lit troffers -->
+<section class="ow1 sec on-dark p3s p3m" style="--h:700px;--hm:960px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="mz">
+    <ObjImg raw={s1dr} src={s1d} class="ab dn-m" style="--x:0px;--y:0px" eager />
+    <ObjImg raw={s1mr} src={s1m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <p class="sr-only">Job types: panels, lighting, commercial, fire alarm, outdoor. Lit in the ceiling: a chandelier, a starry ceiling, pot lights and a condo hallway.</p>
+    <Crumbs trail={[{ name: 'Home', path: '/' }, { name: 'Our work', path: '/our-work/' }]} class="ab" style={P(120, 62, 20, 30)} data-t="1" />
+    <Eyebrow text="Our work · Surrey, BC" class="ab" style={P(120, 98, 20, 58)} data-t="1" />
+    <h1 class="h1 ab" id="h1" style={P(120, 132, 20, 88)} data-t="2"><span class="l1">Recent Work</span><span class="l2">Across Surrey</span></h1>
+    <p class="ow1-mk ab" style={P(120, 290, 20, 186)} data-t="3">Four jobs. All his own.<i class="dn-m" aria-hidden="true"></i></p>
+    <p class="lead ow1-p ab" style={P(120, 360, 20, 226, 480, 350)} data-t="3"><span class="dn-m">Chandeliers, pot lights, shop fit-outs, panels and fire alarm work. Every photo on this page is his own, posted job by job on {SITE.igHandle}.</span><span class="dn-d">Chandeliers, pot lights, shop fit-outs, panels and fire alarm work. Every photo here is his own, from {SITE.igHandle}.</span></p>
+    <div class="ab ow-bw" style={P(120, 500, 20, 340, 235, 350)} data-t="4"><Btn v="call" /></div>
+    <div class="ab ow-bw" style={P(369, 500, 20, 414, 206, 350)} data-t="4"><Btn v="text" tone="dark" main="Open the gallery" sub="Sort by job type ↓" href="#gallery" /></div>
+    <p class="tech ow1-jt ab dn-m" style={P(120, 610)} aria-hidden="true">Panels  ·  Lighting  ·  Commercial  ·  Fire alarm  ·  Outdoor</p>
+    {LIT.map(([ig, tag, x, y, mx, my], i) => (
+      <div class="ow1-ph ab" style={P(x, y, mx, my, 240, 129)}>
+        <Img name={ph(ig).name} alt={ph(ig).alt} sizes="(min-width: 1024px) 240px, 129px" priority={i < 2} />
+        <span class="tech ow1-tag dn-m" aria-hidden="true">{tag}</span>
+      </div>
+    ))}
+    <span class="ow1-tape ab" style={P(1180, 700, 173, 840, 258, 197)} aria-hidden="true">Yours next?</span>
+  </div>
+</section>
+
+<!-- 9.2 Gallery: cable-jacket chips -->
+<section class="ow2 sec p3s p3m" id="gallery" style="--h:1540px;--hm:1492px" data-m-section aria-labelledby="ow2-h">
+  <div class="mz">
+    <Eyebrow text="The gallery · sort by job type" class="ab dn-m" style={P(120, 110)} data-t="1" />
+    <Eyebrow text="The gallery · by job type" class="am dn-d" style={P(0, 0, 20, 64)} />
+    <h2 class="h2 ab" id="ow2-h" style={P(120, 144, 20, 92)} data-t="2"><span class="l1">Pick a cable.</span><span class="l2">See the jobs.</span></h2>
+    <p class="lead ab" style={P(760, 200, 20, 174, 520, 350)} data-t="3">Each job type has its own jacket colour, like the cable he pulls for it.<span class="dn-m"> Tap one to see only those jobs.</span></p>
+    <div class="ow2-chips" role="group" aria-label="Show jobs by type">
+      {CHIPS.map(([k, l, c, t, x, w, mx, my, mw], i) => (
+        <button type="button" class="ow2-chip ab tech" style={P(x, 308, mx, my, w, mw) + `;--c:${c};--t:${t}`} aria-pressed={i === 0 ? 'true' : 'false'} data-cat={k}>{l}</button>
+      ))}
+    </div>
+    <p class="sr-only" aria-live="polite" data-ow-live></p>
+    <ul class="ow2-g" role="list" data-ow-grid>
+      {CARDS.map(([ig, cat, t, tm, x, y, h, f, mx, my, fm]) => (
+        <li class="ow2-c ab" style={P(x, y, mx, my, 384, 165) + `;--ch:${h}px;--c:${JACKET[cat]}`} data-cat={cat}>
+          <div class="ow2-ph dn-m"><Img name={ph(ig).name} alt={ph(ig).alt} sizes="(min-width: 1024px) 384px, 165px" box={384 / h} focus={f} /></div>
+          <div class="ow2-ph dn-d"><Img name={ph(ig).name} alt="" sizes="(min-width: 1024px) 384px, 165px" box={165 / 210} focus={fm} /></div>
+          <div class="ow2-cap">
+            <h3 class="ow2-t"><span class="dn-m">{t}</span><span class="dn-d">{tm}</span></h3>
+            <p class="tech ow2-k"><span>{LABEL[cat]}</span><span class="dn-m">  ·  Surrey area</span></p>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <div class="ab ow-bw" style={P(120, 1410, 20, 1352, 240, 350)}><Btn v="text" main="See all 66 posts" sub={SITE.igHandle} href={SITE.social.instagram} /></div>
+    <a class="ow-lk ow2-lk ab" href={SITE.tel} style={P(390, 1432, 20, 1434)}><span class="dn-m">Want one of these at your place? Call {SITE.phone} →</span><span class="dn-d">Want one of these? Call {SITE.phone} →</span></a>
+  </div>
+</section>
+
+<!-- 9.3 Three stories: job sheets (desktop: a clipboard pile, dealt out on scroll) -->
+<section class="ow3 sec p3s p3m" style="--h:1520px;--hm:2000px" data-m-section aria-labelledby="ow3-h" data-ow-pile>
+  <div class="mz">
+    <Eyebrow text="Three jobs, start to finish" class="ab" style={P(120, 100, 20, 64)} data-t="1" />
+    <h2 class="h2 ab" id="ow3-h" style={P(120, 134, 20, 92)} data-t="2"><span class="l1">Before the drywall.</span><span class="l2">After the lights.</span></h2>
+    <p class="lead ab" style={P(780, 190, 20, 174, 500, 350)} data-t="3"><span class="dn-m">Three jobs from his own posts, laid out like job sheets: what was there, what he did and how it ended up.</span><span class="dn-d">Three jobs from his own posts, laid out like job sheets: what was there, what he did, how it ended up.</span></p>
+    <article class="ow3-sh ow3-e1 ab" style={P(100, 270, 10, 270, 1240, 370)} aria-label="Sheet E-01: residential panel">
+      <ObjImg raw={e1dr} src={e1d} class="ab dn-m" style="--x:0px;--y:0px" />
+      <ObjImg raw={e1mr} src={e1m} class="am dn-d" style="--mx:0px;--my:0px" />
+      <div class="ow3-ph ab" style={P(60, 60, 32, 32, 860, 306) + ';--ph:440px;--phm:230px'}><Img name={ph('ig39').name} alt={ph('ig39').alt} sizes="(min-width: 1024px) 860px, 306px" box={860 / 440} boxM={306 / 230} /></div>
+      <span class="tech ow3-st ab" style={P(72, 72, 40, 40)}>Rough-in · marked up</span>
+      {[[210, 230, 82, 152], [480, 360, 182, 202], [620, 180, 232, 102]].map(([x, y, mx, my], i) => <span class="ow3-co ab" style={P(x, y, mx, my)} aria-hidden="true">{i + 1}</span>)}
+      <dl class="sr-only"><dt>Project</dt><dd>Residential panel</dd><dt>Sheet</dt><dd>E-01 · Panels</dd><dt>Stage 1</dt><dd>Rough-in: cables run to the panel, colour by circuit.</dd><dt>Stage 2</dt><dd>Finished: breakers in, labelled by hand.</dd><dt>By</dt><dd>Khinda Electrical, Surrey</dd><dt>Marked up</dt><dd>1 sorted by colour, 2 every run lands in the panel, 3 each gets its label.</dd></dl>
+    </article>
+    <article class="ow3-sh ow3-e2 ab" style={P(90, 802, 5, 946, 650, 380)} aria-label="Sheet E-02: crystal chandelier">
+      <ObjImg raw={e2dr} src={e2d} class="ab dn-m" style="--x:0px;--y:0px" />
+      <ObjImg raw={e2mr} src={e2m} class="am dn-d" style="--mx:0px;--my:0px" />
+      <div class="ow3-rot ab" style={P(30, 40, 15, 14) + ';--r:1.2deg;--rm:1deg'}>
+        <div class="ow3-ph ab" style={P(35, 37, 22, 22, 300, 150) + ';--ph:468px;--phm:356px'}><div class="ow3-fx" style={R(-20, -123, 345, 612, -43, -55, 237, 420)}><Img name={ph('ig23').name} alt={ph('ig23').alt} sizes="(min-width: 1024px) 345px, 237px" /></div></div>
+        <span class="tech ow3-st ab" style={P(47, 49, 29, 31)}>After</span>
+      </div>
+      <dl class="sr-only"><dt>Project</dt><dd>Crystal chandelier</dd><dt>Sheet</dt><dd>E-02 · Lighting</dd><dt>What he did</dt><dd>Hung, wired and lit, in a home.</dd><dt>Note</dt><dd>Ceiling outlet to fixture.</dd></dl>
+    </article>
+    <article class="ow3-sh ow3-e3 ab" style={P(700, 806, 5, 1378, 650, 380)} aria-label="Sheet E-03: barbershop fit-out">
+      <ObjImg raw={e3dr} src={e3d} class="ab dn-m" style="--x:0px;--y:0px" />
+      <ObjImg raw={e3mr} src={e3m} class="am dn-d" style="--mx:0px;--my:0px" />
+      <div class="ow3-rot ab" style={P(32, 40, 15, 14) + ';--r:-1deg;--rm:-1deg'}>
+        <div class="ow3-ph ab" style={P(37, 35, 22, 22, 300, 150) + ';--ph:468px;--phm:356px'}><div class="ow3-fx" style={R(-63, -169, 419, 743, -102, -162, 350, 620)}><Img name={ph('ig20').name} alt={ph('ig20').alt} sizes="(min-width: 1024px) 419px, 350px" /></div></div>
+        <span class="tech ow3-st ab" style={P(49, 47, 31, 29)}>After</span>
+      </div>
+      <dl class="sr-only"><dt>Project</dt><dd>Barbershop fit-out</dd><dt>Sheet</dt><dd>E-03 · Commercial</dd><dt>What he did</dt><dd>Ceiling panel lights over every chair.</dd></dl>
+    </article>
+    <div class="ab ow-bw" style={P(120, 1418, 20, 1836, 280, 350)}><Btn v="call" main="Call about a job like these" sub={`${SITE.phone} · tap to call`} /></div>
+    <div class="ab ow-bw" style={P(414, 1418, 20, 1910, 206, 350)}><Btn v="text" /></div>
+  </div>
+</section>
+
+<!-- 9.4 Instagram: his reels on a film strip -->
+<section class="ow4 sec on-dark p3s p3m" style="--h:820px;--hm:1320px" data-m-section aria-labelledby="ow4-h">
+  <div class="mz">
+    <ObjImg raw={s4dr} src={s4d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s4mr} src={s4m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text={`On Instagram · ${SITE.igHandle}`} class="ab dn-m" style={P(120, 100)} data-t="1" />
+    <Eyebrow text="On Instagram" class="am dn-d" style={P(0, 0, 20, 64)} />
+    <h2 class="h2 ab" id="ow4-h" style={P(120, 134, 20, 92)} data-t="2"><span class="l1">His reels,</span><span class="l2">frame by frame.</span></h2>
+    <p class="lead ab" style={P(780, 140, 20, 174, 480, 350)} data-t="3">Short videos of the work, posted as he goes: 66 posts and 1,521 followers <span class="dn-m">when we counted </span>on 17 Nov 2026.</p>
+    <div class="ab ow-bw" style={P(780, 222, 20, 262, 270, 350)} data-t="4"><Btn v="text" tone="dark" main={`Follow ${SITE.igHandle}`} sub="Opens Instagram" href={SITE.social.instagram} /></div>
+    <a class="ow-lk ab" href={SITE.tel} style={P(1074, 244, 20, 340)} data-t="4">Or call {SITE.phone} →</a>
+    {FRAMES.map(([ig, l, lm, x, y, my, f]) => (
+      <div class="ow4-fr ab" style={P(x, y + 178, 84, my, 260, 144)}>
+        <Img name={ph(ig).name} alt={ph(ig).alt} sizes="(min-width: 1024px) 260px, 144px" box={260 / 284} boxM={144 / 176} focus={f} />
+        <span class="ow4-play" aria-hidden="true"></span>
+        <span class="tech ow4-lab"><span class="dn-m">{l}</span><span class="dn-d">{lm}</span></span>
+      </div>
+    ))}
+    <p class="sr-only">1,521 followers and 66 posts, counted 17 Nov 2026.</p>
+    <a class="ow4-all ab" href={SITE.social.instagram} style={P(1158, 463, 84, 1168, 260, 144)} aria-label="See all 66 posts on Instagram"></a>
+    {['01A', '02A', '03A', '04A', '05A'].map((t, i) => <span class="tech ow4-n am dn-d" style={P(0, 0, 300, 496 + 188 * i)} aria-hidden="true">{t}</span>)}
+  </div>
+</section>
+
+<!-- 9.5 CTA: pull-chain light -->
+<section class="ow5 sec p3s p3m" style="--h:660px;--hm:800px" data-m-section aria-labelledby="ow5-h">
+  <div class="mz">
+    <ObjImg raw={s5dr} src={s5d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <ObjImg raw={s5mr} src={s5m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Next job · yours" class="ab" style={P(120, 150, 20, 84)} data-t="1" />
+    <h2 class="h2 ow5-h ab" id="ow5-h" style={P(120, 184, 20, 114, 700, 220)} data-t="2"><span class="l1">Want yours next?</span><span class="l2">Pull to call.</span></h2>
+    <p class="lead ab" style={P(120, 320, 20, 440, 520, 350)} data-t="3">A chandelier, pot lights, a panel or a shop fit-out: tell him what you have in mind, or text a photo of the room.</p>
+    <a class="ow5-ph ab" href={SITE.tel} style={P(120, 392, 20, 528)} data-t="3">{SITE.phone}</a>
+    <div class="ab ow-bw" style={P(120, 488, 20, 600, 235, 350)} data-t="4"><Btn v="call" class="btn-deep ow5-bc" /></div>
+    <div class="ab ow-bw" style={P(369, 488, 20, 674, 206, 350)} data-t="4"><Btn v="text" class="ow5-bt" /></div>
+    <a class="ow5-knob ab" href={SITE.tel} style={P(1097, 470, 304, 330, 80, 64)} aria-label={`Pull to call ${SITE.phone}`}>
+      <span class="tech k1">Pull</span><span class="tech k2"><span class="dn-m">To call</span><span class="dn-d">Call</span></span>
+    </a>
+    <span class="ow5-me am dn-d" style={P(0, 0, 200, 360)} aria-hidden="true">Pull me.</span>
+  </div>
+</section>
+
+<style>
+  .p3m :global(.obj.ab), .p3m :global(.obj.am) { width: auto; }
+  .p3m h3 { margin: 0; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ow-bw :global(.btn) { width: 100%; }
+  .ow-lk { font-weight: 600; font-size: 16px; line-height: 20px; color: var(--indigo); white-space: nowrap; }
+  .on-dark .ow-lk { color: var(--amber); }
+  .ow-lk:hover { text-decoration: underline; text-underline-offset: 3px; }
+  /* 9.1 */
+  .ow1 { background: var(--deep); z-index: 3; }
+  .ow1-mk { font-family: var(--f-marker); font-size: 26px; line-height: 38px; color: var(--amber); white-space: nowrap; }
+  .ow1-mk i { display: block; width: 280px; height: 3px; margin: 5px 0 0 2px; border-radius: 2px; background: var(--amber); }
+  .ow1-p { font-size: 19px; line-height: 30px; }
+  .ow1-jt { font-size: 10px; line-height: 14px; color: var(--mist); white-space: pre; }
+  .ow1-ph { width: 240px; height: 240px; overflow: hidden; background: var(--deep); }
+  .ow1-tag { position: absolute; left: 12px; top: 191px; padding: 7px 15px; border-radius: 19px; background: rgba(13,15,51,.88); box-shadow: inset 0 0 0 1px rgba(174,180,198,.35); font-size: 15.3px; line-height: 22px; color: #fff; white-space: nowrap; }
+  .ow1-tape { z-index: 4; width: 258px; height: 41px; padding: 6px 16px; background: var(--tape, #F3E7C8); font-family: var(--f-marker); font-size: 21px; line-height: 29px; color: var(--ink); box-shadow: 0 2px 6px rgba(13,15,51,.14); transform: rotate(3deg); transform-origin: 0 0; white-space: nowrap; }
+  /* 9.2 */
+  .ow2 { background: var(--panel); z-index: 1; }
+  .ow2-chip { height: 44px; padding: 0; border: 0; border-radius: 22px; background: var(--c); color: var(--t); font-size: 11px; line-height: 16px; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(13,15,51,.35); transition: transform .25s var(--ease-out), box-shadow .25s; }
+  .ow2-chip[data-cat='panels'] { box-shadow: inset 0 0 0 1.5px #8C94A3; }
+  .ow2-chip::before, .ow2-chip::after { content: ''; position: absolute; top: 17px; width: 12px; height: 10px; border-radius: 2px; background: #C47A45; z-index: -1; }
+  .ow2-chip::before { left: -11px; } .ow2-chip::after { right: -11px; }
+  .ow2-chip { isolation: isolate; }
+  .ow2-chip:hover { transform: translateY(-2px); }
+  .ow2-chip[aria-pressed='true'] { box-shadow: inset 0 0 0 1px rgba(13,15,51,.35), 0 3px 8px rgba(13,15,51,.3); transform: translateY(-2px); }
+  .ow2-chip:focus-visible { outline: 3px solid var(--indigo); outline-offset: 4px; }
+  .ow2-g { margin: 0; padding: 0; list-style: none; }
+  .ow2-c { --h: var(--ch); height: calc(var(--h) + 48px); transition: opacity .35s, filter .35s; }
+  .ow2-ph { position: absolute; left: 0; top: 0; width: 100%; height: var(--h); overflow: hidden; border-radius: 8px; background: var(--deep); }
+  .ow2-cap { position: absolute; left: 20px; top: calc(var(--h) - 30px); width: 320px; height: 78px; padding: 14px 0 0 26px; border-radius: 8px; background: #fff; box-shadow: 0 6px 16px rgba(13,15,51,.16); overflow: hidden; transition: transform .35s var(--ease-out); }
+  .ow2-cap::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--c); }
+  .ow2-t { font-family: var(--f-display); font-weight: 800; font-size: 19px; line-height: 30px; color: var(--ink); white-space: nowrap; }
+  .ow2-k { margin: 2px 0 0; font-size: 10px; line-height: 14px; color: var(--steel); white-space: pre; }
+  .ow2-c.off { opacity: .16; filter: grayscale(1); }
+  @media (hover: hover) and (min-width: 1024px) {
+    .ow2-g:has(.ow2-c:not(.off):hover) .ow2-c:not(:hover):not(.off) { filter: blur(3px) saturate(.7); opacity: .75; }
+    .ow2-c:not(.off):hover .ow2-cap { transform: translateY(-8px); }
+  }
+  .ow2-lk { font-size: 16px; }
+  /* 9.3 */
+  .ow3 { background: #fff; z-index: 1; }
+  .ow3-sh { width: 650px; height: 620px; }
+  .ow3-e1 { z-index: 1; width: 1240px; } .ow3-e2, .ow3-e3 { z-index: 2; }
+  .ow3-rot { transform: rotate(var(--r)); transform-origin: 0 0; }
+  .ow3-rot, .ow3-st { --w: auto; --mw: auto; }
+  .ow3-co { --w: 32px; --mw: 28px; }
+  .ow3-ph { height: var(--ph); overflow: hidden; background: var(--deep); }
+  .ow3-fx { position: absolute; left: var(--fx); top: var(--fy); width: var(--fw); height: var(--fh); }
+  .ow3-st { padding: 5px 10px; border-radius: 4px; background: var(--deep); font-size: 10px; line-height: 16px; color: #fff; white-space: nowrap; }
+  .ow3-co { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px var(--ink); font-family: var(--f-tech); font-size: 13px; color: var(--ink); }
+  /* 9.4 */
+  .ow4 { background: var(--indigo); z-index: 2; }
+  .ow4-fr { width: 260px; height: 284px; overflow: hidden; border-radius: 4px; background: var(--deep); transform: rotate(2deg); transform-origin: 0 0; }
+  .ow4-play { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: rgba(13,15,51,.72); }
+  .ow4-play::after { content: ''; position: absolute; left: 17px; top: 14px; border-left: 13px solid #fff; border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+  .ow4-lab { position: absolute; left: 6px; bottom: 12px; padding: 7px 8px; border-radius: 3px; background: rgba(13,15,51,.88); box-shadow: inset 0 0 0 1px rgba(174,180,198,.3); font-size: 10px; line-height: 14px; color: #fff; white-space: nowrap; }
+  .ow4-all { width: 260px; height: 284px; border-radius: 4px; transform: rotate(2deg); transform-origin: 0 0; }
+  .ow4-all:hover { box-shadow: inset 0 0 0 2px var(--amber); }
+  .ow4-all:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+  .ow4-n { font-size: 11px; line-height: 16px; color: var(--mist); }
+  /* 9.5 */
+  .ow5 { background: var(--amber); z-index: 1; }
+  .ow5 :global(.eyebrow) { color: var(--ink); }
+  .ow5 :global(.eyebrow svg path) { fill: var(--ink); }
+  .ow5-h { font-size: 56px; line-height: 60px; }
+  .ow5-h .l1 { color: var(--ink); } .ow5-h .l2 { color: var(--indigo); }
+  .ow5-ph { font-family: var(--f-display); font-weight: 800; font-size: 64px; line-height: 101px; color: var(--ink); white-space: nowrap; }
+  .ow5-ph:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+  .p3s :global(.ow5-bc) { background: var(--indigo); color: #fff; }
+  .p3s :global(.ow5-bc .b2) { color: var(--mist); }
+  .p3s :global(.ow5-bc:hover) { background: var(--deep); }
+  .p3s :global(.ow5-bt) { background: #fff; box-shadow: none; }
+  .ow5-knob { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 80px; height: 84px; border-radius: 12px; background: var(--deep); box-shadow: 0 6px 12px rgba(13,15,51,.25); transition: transform .3s var(--ease-out); }
+  .ow5-knob .k1 { font-size: 12px; line-height: 17px; color: #fff; }
+  .ow5-knob .k2 { font-size: 10px; line-height: 14px; color: var(--amber); }
+  .ow5-knob:hover { transform: translateY(6px); }
+  .ow5-knob:active { transform: translateY(16px); transition-duration: .12s; }
+  .ow5-knob:focus-visible { outline: 3px solid var(--deep); outline-offset: 4px; }
+  .ow5-me { font-family: var(--f-marker); font-size: 18px; line-height: 26px; color: var(--ink); transform: rotate(6deg); white-space: nowrap; }
+  @media (max-width: 1023px) {
+    .ow4.sec.p3m { overflow: visible; }
+    .ow1-mk { font-size: 21px; line-height: 31px; }
+    .ow1-p { font-size: 16px; line-height: 25px; }
+    .ow1-ph { width: 129px; height: 129px; }
+    .ow1-tape { width: 197px; height: 31px; padding: 4px 12px; font-size: 16px; line-height: 23px; }
+    .ow2-chip { height: 40px; border-radius: 20px; }
+    .ow2-chip::before, .ow2-chip::after { top: 15px; width: 12px; }
+    .ow2-chip::before { left: -10px; } .ow2-chip::after { right: -10px; }
+    .ow2-c { height: 252px; --h: 210px; }
+    .ow2-ph { border-radius: 6px; }
+    .ow2-cap { left: 8px; top: 186px; width: 149px; height: 66px; padding: 12px 0 0 18px; border-radius: 6px; box-shadow: 0 4px 12px rgba(13,15,51,.16); }
+    .ow2-t { font-size: 15px; line-height: 18px; }
+    .ow2-k { margin-top: 10px; font-size: 11px; line-height: 16px; }
+    .ow2-lk { font-size: 15px; line-height: 19px; }
+    .ow3-sh { width: 380px; height: 430px; }
+    .ow3-e1 { width: 370px; height: 680px; }
+    .ow3-rot { transform: rotate(var(--rm)); }
+    .ow3-ph { height: var(--phm); }
+    .ow3-fx { left: var(--fmx); top: var(--fmy); width: var(--fmw); height: var(--fmh); }
+    .ow3-fx { position: absolute; left: var(--fx); top: var(--fy); width: var(--fw); height: var(--fh); }
+  .ow3-st { padding: 4px 8px; font-size: 10px; line-height: 16px; }
+    .ow3-co { width: 28px; height: 28px; font-size: 12px; }
+    .ow4-fr, .ow4-all { width: 144px; height: 176px; border-radius: 3px; transform: none; }
+    .ow4-play { width: 30px; height: 30px; margin: -15px 0 0 -15px; }
+    .ow4-play::after { left: 11px; top: 8px; border-left-width: 10px; border-top-width: 7px; border-bottom-width: 7px; }
+    .ow4-lab { left: 8px; bottom: 6px; padding: 4px 6px; font-size: 11px; line-height: 16px; }
+    .ow5-h { font-size: 30px; line-height: 34px; }
+    .ow5-h .l1 { white-space: normal; }
+    .ow5-ph { font-size: 40px; line-height: 63px; }
+    .ow5-knob { width: 64px; height: 70px; border-radius: 10px; }
+    .ow5-knob .k1, .ow5-knob .k2 { font-size: 11px; line-height: 16px; }
+    .ow5-knob .k2 { color: var(--amber); }
+  }
+</style>
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+  // 9.2 cable chips: filter the grid (the rest dim out and leave the reading order), live line says what shows.
+  const chips = document.querySelectorAll<HTMLButtonElement>('.ow2-chip');
+  const cards = document.querySelectorAll<HTMLElement>('[data-ow-grid] > li');
+  const live = document.querySelector<HTMLElement>('[data-ow-live]');
+  chips.forEach((c) => c.addEventListener('click', () => {
+    const k = c.dataset.cat!;
+    chips.forEach((o) => o.setAttribute('aria-pressed', String(o === c)));
+    let n = 0;
+    cards.forEach((card) => { const on = k === 'all' || card.dataset.cat === k; card.classList.toggle('off', !on); card.toggleAttribute('aria-hidden', !on); if (on) n++; });
+    if (live) live.textContent = k === 'all' ? `Showing all ${cards.length} jobs.` : `Showing ${n} of ${cards.length} jobs: ${c.textContent}.`;
+  }));
+  // 9.3 clipboard pile (desktop, motion on): E-02 and E-03 start under E-01 and are dealt out while the section is pinned.
+  const pile = document.querySelector<HTMLElement>('[data-ow-pile]');
+  const afterHandoff = (f: () => void) => {
+    let done = false; const go = () => { if (!done) { done = true; f(); } };
+    window.addEventListener('pbp:handoff', go, { once: true }); setTimeout(go, 4000);
+  };
+  if (pile) afterHandoff(() => {
+    if (!document.documentElement.classList.contains('motion')) return;
+    gsap.matchMedia().add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: pile, start: 'top+=230 top', end: '+=900', pin: true, scrub: 0.6 } });
+      // the "before" sheet (E-01) tops the pile until the others are dealt out; then they rest over its edge as in Figma
+      tl.fromTo('.ow3-e1', { zIndex: 3 }, { zIndex: 3, duration: 0.01 }, 0).set('.ow3-e1', { zIndex: 1 }, 1.55);
+      tl.from('.ow3-e2', { x: 230, y: -510, rotation: -2, ease: 'power2.out', duration: 1 }, 0)
+        .from('.ow3-e3', { x: -380, y: -520, rotation: 2.5, ease: 'power2.out', duration: 1 }, 0.6);
+      return () => gsap.set('.ow3-e1', { clearProps: 'zIndex' });
+    });
+  });
+</script>

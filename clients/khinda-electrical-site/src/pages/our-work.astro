@@ -1,4 +1,17 @@
 ---
-import Stub from '../components/stub/Stub.astro';
+// Our work (Figma 09). His own job photos from @khinda__electrical only; Instagram numbers dated 17 Nov 2026. Endings: F, G5, G6.
+import '../components/p3/p3.css';
+import Base from '../layouts/Base.astro';
+import Mz from '../components/p3/Mz.astro';
+import OurWork from '../components/ourwork/OurWork.astro';
+import Endings from '../components/endings/Endings.astro';
+import { breadcrumbSchema } from '../lib/schema';
 ---
-<Stub title="Recent Electrical Projects in Surrey · Khinda" path="/our-work/" description="Chandeliers, pot lights, shop fit-outs and condo hallways from Khinda Electrical's Instagram, each one posted by him. Surrey, BC." eyebrow="Our work · Surrey, BC" h1={['Recent Work', 'Across Surrey']} lead="Chandeliers, pot lights, shop fit-outs and condo hallways, each one posted by him the week he did it." crumbs={[{ name: 'Our work', path: '/our-work/' }]}  />
+<Base title="Our Work · Recent Electrical Jobs Across Surrey, BC" path="/our-work/"
+  description="Recent electrical work by Khinda Electrical across Surrey: chandeliers, pot lights, panels, shop fit-outs and fire alarm work. Every photo is his own. Sort the jobs by type."
+  og="crystal-chandelier-installed-surrey" ogAlt="Crystal chandelier installed by Khinda Electrical"
+  jsonld={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Our work', path: '/our-work/' }]), { '@type': 'CollectionPage' }]}>
+  <Mz />
+  <OurWork />
+  <Endings slot="end" />
+</Base>

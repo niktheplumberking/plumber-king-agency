@@ -57,6 +57,23 @@ T += [
 T += [('08-reviews', 'm', M8[k], f'0,{y},390,{h}', f'08/s{k}-m', ex) for k, y, h, ex in [
  (1, 152, 1260, ['!legend', '!First reviews*']), (2, 1352, 1600, ['!@textall', '!job', '!what he did', '!town', '!JOB 0*']), (3, 2952, 1010, ['!source card', '!marker caption']),
  (4, 3962, 1100, ['!odometer*', '!Rectangle', '+Frame*']), (5, 4982, 1190, ['+Frame*']), (6, 6172, 840, ['+Frame*']), (7, 7012, 780, ['!If your street*', '!1 FLIP IT*'])]]
+S9 = {1: '9.1 Hero · drop ceiling of 9 troffers, 4 lit with his jobs', 4: '9.4 Instagram · his reels on a film strip', 5: '9.5 CTA · pull-chain light: pull to call'}
+M9 = {1: '9.1 Hero · drop ceiling, 4 of 9 troffers lit (mobile)', 4: '9.4 Instagram · vertical film strip (mobile)', 5: '9.5 CTA · pull-chain light (mobile)'}
+SH = ['sheet E-01 · residential panel', 'sheet E-02 · crystal chandelier', 'sheet E-03 · barbershop fit-out']
+T += [
+ ('09-our-work', 'd', S9[1], '0,178,1440,760', '09/s1-d', ['!photo ig*', '!tape label', '!marker line', '!marker underline', '!job types line']),
+ ('09-our-work', 'd', S9[4], '0,3938,1440,820', '09/s4-d', ['!@img', '!Frame']),
+ ('09-our-work', 'd', S9[5], '0,4758,1440,660', '09/s5-d', ['!pull knob = call', '!phone big']),
+ ('09-our-work', 'd', '*', '100,2688,1240,620', '09/e1-d', [SH[0], '!photo ig*', '!stage label', '!callout*']),
+ ('09-our-work', 'd', '*', '90,3220,650,620', '09/e2-d', [SH[1], '!photo ig*', '!stage label', '!callout*']),
+ ('09-our-work', 'd', '*', '700,3224,650,620', '09/e3-d', [SH[2], '!photo ig*', '!stage label', '!callout*']),
+ ('09-our-work', 'm', M9[1], '0,152,390,960', '09/s1-m', ['!photo ig*', '!tape label', '+Frame*']),
+ ('09-our-work', 'm', M9[4], '0,4604,390,1360', '09/s4-m', ['!@img', '!Frame']),
+ ('09-our-work', 'm', M9[5], '0,5924,390,800', '09/s5-m', ['!pull knob = call', '!phone big']),
+ ('09-our-work', 'm', '*', '10,2874,370,680', '09/e1-m', [SH[0], '!photo ig*', '!Frame', '!callout*']),
+ ('09-our-work', 'm', '*', '5,3550,380,430', '09/e2-m', [SH[1], '!photo ig*', '!Frame', '!callout*']),
+ ('09-our-work', 'm', '*', '5,3982,380,430', '09/e3-m', [SH[2], '!photo ig*', '!Frame', '!callout*']),
+]
 EXTRA = {}
 want = sys.argv[1] if len(sys.argv) > 1 else ''
 for pg, fr, sec, rect, out, ex in T + EXTRA.get('x', []):

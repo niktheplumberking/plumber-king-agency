@@ -1,0 +1,59 @@
+---
+// First-visit-per-session loader (no Figma frame; built from Glass's own parts). Frost poster: Kody's logo, one big
+// filter housing (kit/Housing) that fills with water as the page loads, and a mono gauge "042 / 100" under it, like the
+// work-order plates. HUD lines in JetBrains Mono: the business top left, Largo / Pinellas top right, the licence bottom
+// left. Exit = 8 blinds (white / frost, powder band on the moving edge) slide off alternately, the same family as the page
+// curtain (kit/Curtain.astro). Shown only under html.intro (Base.astro: once per session, never under reduced motion).
+// Click, tap or any key skips. Driven by kit/loader.ts (runLoader: --p on the root, the number in [data-ld-num]).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import Housing from '../kit/Housing.astro';
+import { SITE } from '../../data/site';
+const BLINDS = 8;
+---
+<div class="ld" data-loader aria-hidden="true">
+  <div class="ld-blinds">{Array.from({ length: BLINDS }, () => <i class="ld-blind"></i>)}</div>
+  <div class="ld-stage">
+    <div class="ld-core">
+      <span class="ld-logo"><Image src={logo} alt="" width={200} widths={[150, 200, 400]} sizes="(max-width: 767px) 150px, 200px" loading="eager" fetchpriority="low" /></span>
+      <Housing w={150} h={210} wm={116} hm={162} tone="light" shadow={10} shadowm={8} class="ld-hs"><span class="ld-water"></span></Housing>
+      <p class="ld-gauge"><span data-ld-num>000</span> / 100</p>
+    </div>
+    <p class="ld-hud ld-tl">{SITE.name}</p>
+    <p class="ld-hud ld-tr"><span class="ld-dot"></span>{SITE.city}, {SITE.region} · {SITE.county}</p>
+    <p class="ld-hud ld-bl">FL licence {SITE.licence.number} · Licensed &amp; insured</p>
+  </div>
+  <button type="button" class="ld-skip" data-loader-skip tabindex="-1">Skip intro →</button>
+</div>
+<style>
+  .ld { display: none; }
+  :global(html.intro) .ld { display: block; position: fixed; inset: 0; z-index: var(--z-loader); color: var(--ink); overflow: hidden; --p: 0; }
+  .ld-blinds { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .ld-blind { position: relative; flex: 1 1 0; margin-bottom: -1px; background: var(--frost); will-change: transform; }
+  .ld-blind:nth-child(even) { background: var(--white); }
+  /* The moving edge: a powder band just outside each blind (off-screen while the poster shows), so the exit reads on a
+     white hero too. Left-going rows show it on their right edge, right-going rows on their left. */
+  .ld-blind::after { content: ''; position: absolute; top: 0; bottom: 0; left: 100%; width: 10px; background: var(--powder); }
+  .ld-blind:nth-child(even)::after { left: auto; right: 100%; background: var(--pdeep); }
+  .ld-stage { position: absolute; inset: 0; display: grid; place-items: center; }
+  .ld-core { display: flex; flex-direction: column; align-items: center; }
+  .ld-logo { display: block; width: 200px; margin-bottom: 40px; }
+  .ld-logo :global(img) { width: 100%; height: auto; }
+  .ld-core :global(.ld-hs) { margin-top: 7px; }
+  .ld-water { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--p) * 100%); background: var(--powder); transition: height .35s cubic-bezier(.45, 0, .55, 1); }
+  .ld-water::before { content: ''; position: absolute; left: 2px; right: 2px; top: 0; height: 3px; background: rgba(255, 255, 255, .7); }
+  .ld-gauge { margin: 28px 0 0; font-family: var(--f-m); font-weight: 700; font-size: 13px; line-height: 16px; letter-spacing: .1em; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .ld-gauge span { color: var(--pdeep); }
+  .ld-hud { position: absolute; margin: 0; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .ld-tl { left: clamp(20px, 4vw, 48px); top: clamp(20px, 4vh, 40px); font-weight: 700; }
+  .ld-tr { right: clamp(20px, 4vw, 48px); top: clamp(20px, 4vh, 40px); display: flex; align-items: center; gap: 8px; }
+  .ld-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pdeep); }
+  .ld-bl { left: clamp(20px, 4vw, 48px); bottom: clamp(20px, 4vh, 40px); color: var(--muted); }
+  .ld-skip { position: absolute; right: clamp(12px, 4vw, 40px); bottom: clamp(10px, 4vh, 30px); min-height: 44px; padding: 0 8px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); transition: color .3s; }
+  .ld-skip:hover { color: var(--ink); }
+  @media (max-width: 767px) {
+    .ld-logo { width: 150px; margin-bottom: 32px; }
+    .ld-tr { display: none; }
+    .ld-bl { max-width: 60vw; bottom: 28px; font-size: 10px; }
+  }
+</style>

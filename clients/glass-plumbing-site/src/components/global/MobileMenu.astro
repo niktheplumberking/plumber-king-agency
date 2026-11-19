@@ -1,0 +1,61 @@
+---
+// Mobile / tablet menu (below 1200 px). No Figma frame exists for it, so it is built from the header + footer parts of the
+// Glass system: white sheet, the 68 px header row (logo + 48 px close button in the menu button's place), numbered rows
+// (JetBrains index + Schibsted 800) on ink 20 % hairlines like the footer's mobile groups, the red call button and the
+// outline "Text a photo" (the sticky call bar pair), and the licence line with its DBPR link.
+// ui.ts (data-mnav): opens as a circle from the menu button, focus trap, Escape, scroll lock, any link closes it.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import Btn from '../kit/Btn.astro';
+import { MAIN, isCurrent } from './nav';
+import { SITE } from '../../data/site';
+interface Props { path: string; estimate?: string }
+const { path } = Astro.props;
+const LINKS = [{ label: 'Home', href: '/' }, ...MAIN.slice(0, 5), { label: 'FAQ', href: '/faq' }, MAIN[5]];
+---
+<div class="mnav" id="mnav" role="dialog" aria-modal="true" aria-label="Menu" data-mnav hidden>
+  <div class="mn-top">
+    <a href="/" class="mn-logo" aria-label={`${SITE.name}, home`}><Image src={logo} alt="" width={100} widths={[100, 200, 300]} sizes="100px" loading="lazy" /></a>
+    <button type="button" class="mn-close" data-menu-close>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="sr-only">Close menu</span>
+    </button>
+  </div>
+  <nav class="mn-body" aria-label="Mobile">
+    <ul role="list" class="mn-list">
+      {LINKS.map((l, i) => (
+        <li data-mn-item>
+          <a class="mn-a" href={l.href} aria-current={(l.href === '/' ? path === '/' : isCurrent(path, l.href)) ? 'page' : undefined}>
+            <span class="mn-i" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span>{l.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="mn-cta" data-mn-item>
+      <Btn sub="Tap to call · 24/7" block size="l" />
+      <Btn look="line" icon="camera" label="Text a photo" sub={`To ${SITE.phone}`} arrow block size="l" />
+    </div>
+    <p class="mn-meta" data-mn-item>
+      <a href={SITE.licence.url} target="_blank" rel="noopener">FL licence {SITE.licence.number}<span class="sr-only"> (verify on DBPR, opens in a new tab)</span></a> · Licensed &amp; insured<br />
+      {SITE.google.a.value} on Google · {SITE.google.a.count} + {SITE.google.b.count} reviews
+    </p>
+  </nav>
+</div>
+<style>
+  .mnav { position: fixed; inset: 0; z-index: var(--z-menu); display: flex; flex-direction: column; background: var(--white); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
+  .mnav[hidden] { display: none; }
+  .mn-top { display: flex; align-items: center; justify-content: space-between; flex: none; height: 68px; padding: 0 var(--gutter); box-shadow: inset 0 -1px 0 var(--line); }
+  .mn-logo { display: block; width: 100px; }
+  .mn-logo :global(img) { width: 100%; height: auto; }
+  .mn-close { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .mn-body { display: grid; gap: 28px; padding: 12px var(--gutter) 40px; }
+  .mn-list { margin: 0; padding: 0; }
+  .mn-list > li { border-bottom: 1px solid var(--line); }
+  .mn-a { display: flex; align-items: center; gap: 16px; min-height: 60px; font-family: var(--f-h); font-weight: 800; font-size: 28px; line-height: 1.04; letter-spacing: -.02em; }
+  .mn-i { width: 22px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; color: var(--pdeep); }
+  .mn-a[aria-current='page'] { color: var(--pdeep); }
+  .mn-a:hover span:last-child { text-decoration: underline; text-decoration-thickness: 3px; text-decoration-color: var(--pdeep); text-underline-offset: 6px; }
+  .mn-cta { display: grid; gap: 12px; }
+  .mn-meta { font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 20px; letter-spacing: .02em; color: var(--muted); }
+  .mn-meta a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  @media (min-width: 768px) { .mn-body { max-width: 640px; } .mn-top { height: 68px; } }
+</style>

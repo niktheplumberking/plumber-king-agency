@@ -1,0 +1,157 @@
+---
+// /thank-you (noindex). Figma 731:437 desktop / 731:637 mobile: Confirmation (frost: pdeep check disc, two-tone H1, red
+// call button, "Work order" spec plate), What happens next (three numbered housings filling a third at a time), Call or
+// follow (ink, meniscus rise; call panel + Instagram panel), While you wait (two framed photos), Towns strip, footer.
+// "Kody to confirm" (NOTES): how fast he replies, so no reply time is shown; "You hear the price before any work starts"
+// is the Figma copy (home NOTES: Kody to confirm the price-first promise).
+import Base from '../layouts/Base.astro';
+import Btn from '../components/kit/Btn.astro';
+import Eyebrow from '../components/kit/Eyebrow.astro';
+import Housing from '../components/kit/Housing.astro';
+import Plate from '../components/kit/Plate.astro';
+import Seam from '../components/kit/Seam.astro';
+import Img from '../components/ui/Img.astro';
+import TownsStrip from '../components/global/TownsStrip.astro';
+import { SITE } from '../data/site';
+const STEPS = [
+  { n: '1', fill: 0.25, t: 'We read it', p: 'Your message and photos go straight to the crew, not a call centre.' },
+  { n: '2', fill: 0.5, t: 'We call or text back', p: 'We reply to the number you gave us.' },
+  { n: '3', fill: 0.75, t: 'You get the price', p: 'You hear the price before any work starts.' },
+];
+---
+<Base title={`Thank you · ${SITE.name}`} description="Your message is in. Water coming in right now? Call Glass Plumbing Services on (727) 512-0673, 24/7." path="/thank-you" noindex loader={false}>
+  <section class="ty-hero" data-m-section data-m-hero>
+    <div class="wrap ty-hero-in">
+      <span class="ty-check" data-t="5" aria-hidden="true"><svg viewBox="0 0 59 51" width="52" height="45" focusable="false"><path d="M3.25 29.25 21.97 47.45 55.25 3.25" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <h1 class="h1 ty-h" data-t="2">Got it.<br /><span class="tone">Your message is in.</span></h1>
+      <p class="ty-lead" data-t="3"><span class="ty-d">Thanks for reaching out to {SITE.name}. </span>Water coming in right now? Don’t wait for us to reply.</p>
+      <div class="ty-call" data-t="3">
+        <Btn sub="Water coming in? Call now" size="l" w={440} wm={350} class="ty-btn-d" />
+        <Btn sub="Water coming in? Call" size="l" w={440} wm={350} class="ty-btn-m" />
+      </div>
+      <Plate class="ty-plate ty-d" title="Work order · new request" w={520} pad={18} size={12} kx={114} pitch={22} t="4"
+        rows={[['Status', 'Received, in the crew’s inbox'], ['Reply to', 'The phone number you gave us'], ['Urgent', `Call ${SITE.phone}, 24/7`]]} />
+      <Plate class="ty-plate ty-m" title="Work order · new" w={342} pad={16} size={11} kx={92} pitch={21} t="4"
+        rows={[['Status', 'In the crew’s inbox'], ['Reply to', 'Your phone number'], ['Urgent', 'Call 24/7']]} />
+    </div>
+  </section>
+
+  <section class="ty-next" data-m-section>
+    <div class="wrap">
+      <Eyebrow text="What happens next" />
+      <h2 class="h2 ty-h2" data-t="2">Three steps.<br /><span class="tone">No call centre.</span></h2>
+      <ol role="list" class="ty-steps" data-t="4" data-stagger>
+        {STEPS.map((s) => (
+          <li class="ty-step">
+            <Housing w={62} h={84} wm={48} hm={64} r={28} rm={24} tone="frost" fill={s.fill}><span class="ty-n">{s.n}</span></Housing>
+            <div><h3 class="h3 ty-st">{s.t}</h3><p class="ty-sp">{s.p}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="ty-cf on-ink" data-m-section>
+    <Seam from="var(--white)" to="var(--ink)" flip d={48} dm={32} />
+    <div class="wrap ty-cf-in">
+      <div class="ty-panel" data-t="4">
+        <p class="mono-b ty-k">Can’t wait?</p>
+        <h2 class="h2 ty-ph">Call the crew now.</h2>
+        <Btn sub="Call now · 24/7" size="l" block />
+      </div>
+      <div class="ty-panel" data-t="4">
+        <p class="mono-b ty-k">While you wait</p>
+        <h2 class="h2 ty-ph">See real jobs on Instagram.</h2>
+        <Btn look="light" label={SITE.social.instagramHandle} href={SITE.social.instagram} external arrow size="l" block />
+      </div>
+    </div>
+  </section>
+
+  <section class="ty-wait" data-m-section>
+    <div class="wrap">
+      <Eyebrow text="While you wait" />
+      <h2 class="h2 ty-h3" data-t="2">From the crew.</h2>
+      <div class="ty-photos">
+        <figure class="ty-fig" data-t="4">
+          <div class="ty-ph-frame ty-sh-powder"><Img name="van-night" alt="The Glass Plumbing Services van at night, logo and phone number on the side" sizes="(max-width: 767px) 350px, 588px" /></div>
+          <figcaption class="mono-b">The Glass Plumbing van</figcaption>
+        </figure>
+        <figure class="ty-fig" data-t="4">
+          <div class="ty-ph-frame ty-sh-ink"><Img name="water-heater-expansion-tank" alt="A water heater with an expansion tank beside it" sizes="(max-width: 767px) 350px, 588px" /></div>
+          <figcaption class="mono-b">Water heater and expansion tank</figcaption>
+        </figure>
+      </div>
+      <p class="ty-more" data-t="3"><a href="/our-work">See more of our work →</a></p>
+    </div>
+  </section>
+  <TownsStrip />
+</Base>
+<style>
+  .ty-hero { background: var(--frost); }
+  .ty-hero-in { display: flex; flex-direction: column; align-items: center; padding: 80px 0 100px; text-align: center; }
+  .ty-check { display: grid; place-items: center; width: 120px; height: 120px; border-radius: 50%; background: var(--pdeep); }
+  .ty-check svg { margin-top: -1px; }
+  .ty-h { --h1: 64px; --h1m: 32px; margin-top: 36px; line-height: 1.02; }
+  .ty-lead { max-width: 620px; margin-top: 20px; font-size: 18px; line-height: 1.5; }
+  .ty-call { margin-top: 28px; }
+  .ty-btn-m, .ty-m { display: none !important; }
+  .ty-hero :global(.ty-plate) { margin-top: 44px; text-align: left; }
+  .ty-next { padding: 100px 0 72px; background: var(--white); }
+  .ty-h2 { --h2: 52px; --h2m: 28px; margin-top: 16px; }
+  .ty-steps { display: grid; grid-template-columns: repeat(3, 360px); gap: 48px; margin: 75px 0 0; padding: 0; list-style: none; }
+  .ty-step { display: grid; gap: 29px; align-content: start; }
+  .ty-n { font-family: var(--f-h); font-weight: 800; font-size: 30px; line-height: 1.04; letter-spacing: -.02em; margin-top: -14px; }
+  .ty-st { --h3: 24px; }
+  .ty-sp { max-width: 340px; margin-top: 15px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  .ty-cf { position: relative; padding: 110px 0 80px; }
+  .ty-cf-in { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .ty-panel { padding: 32px 32px 46px; border-radius: 6px; background: var(--ink2); box-shadow: inset 0 0 0 1px var(--ink3); }
+  .ty-k { color: var(--powder); }
+  .ty-ph { --h2: 34px; --h2m: 26px; margin: 13px 0 45px; line-height: 1.04; }
+  .ty-wait { padding: 90px 0 70px; background: var(--white); }
+  .ty-h3 { --h2: 44px; --h2m: 28px; margin-top: 16px; }
+  .ty-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 43px; }
+  .ty-fig { margin: 0; }
+  .ty-ph-frame { height: 400px; border-radius: 6px; overflow: hidden; box-shadow: 0 0 0 2px var(--ink); }
+  .ty-sh-powder { box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 2px var(--powder); }
+  .ty-sh-ink { box-shadow: 0 0 0 2px var(--ink), 10px 10px 0 2px var(--ink); }
+  .ty-fig figcaption { margin-top: 24px; color: var(--ink); }
+  .ty-more { margin-top: 41px; }
+  .ty-more a { font-weight: 700; font-size: 15px; line-height: 23px; color: var(--pdeep); text-decoration: underline; text-underline-offset: 3px; }
+  .ty-more a:hover { color: var(--ink); }
+  @media (max-width: 1279px) { .ty-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 1023px) { .ty-cf-in { grid-template-columns: 1fr; } }
+  @media (max-width: 767px) {
+    .ty-d, .ty-btn-d { display: none !important; }
+    .ty-btn-m { display: inline-flex !important; }
+    .ty-m { display: block !important; }
+    .ty-hero-in { padding: 48px 0 56px; }
+    .ty-check { width: 88px; height: 88px; }
+    .ty-check svg { width: 38px; height: 33px; }
+    .ty-h { margin-top: 24px; }
+    .ty-lead { margin-top: 14px; font-size: 16px; }
+    .ty-call { margin-top: 22px; width: 100%; }
+    .ty-hero :global(.ty-plate) { margin-top: 32px; align-self: flex-start; }
+    .ty-next { padding: 48px 0 52px; }
+    .ty-h2 { margin-top: 10px; }
+    .ty-steps { grid-template-columns: 1fr; gap: 14px; margin-top: 15px; }
+    .ty-step { grid-template-columns: 48px 1fr; gap: 18px; align-items: start; }
+    .ty-step > div { padding-top: 18px; }
+    .ty-n { font-size: 22px; margin-top: -10px; }
+    .ty-st { --h3m: 19px; }
+    .ty-sp { margin-top: 8px; font-size: 15px; }
+    .ty-cf { padding: 60px 0 46px; }
+    .ty-cf-in { gap: 0; }
+    .ty-panel { padding: 0; background: none; box-shadow: none; border-radius: 0; }
+    .ty-panel + .ty-panel { margin-top: 36px; padding-top: 25px; border-top: 1px solid var(--line); }
+    .ty-ph { margin: 9px 0 21px; }
+    .ty-panel + .ty-panel .ty-ph { --h2m: 22px; }
+    .ty-wait { padding: 48px 0 40px; }
+    .ty-h3 { margin-top: 10px; }
+    .ty-photos { grid-template-columns: 1fr; gap: 24px; margin-top: 27px; }
+    .ty-ph-frame { height: 240px; }
+    .ty-sh-powder, .ty-sh-ink { box-shadow: 0 0 0 2px var(--ink); }
+    .ty-fig figcaption { margin-top: 14px; --mono: 10px; }
+    .ty-more { margin-top: 33px; }
+  }
+</style>

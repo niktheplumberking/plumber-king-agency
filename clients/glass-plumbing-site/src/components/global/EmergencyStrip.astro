@@ -1,0 +1,22 @@
+---
+// Emergency strip under the header on every page (Figma Home 712:448 y 128, 44 px frost; mobile 715:560 y 102, 56 px).
+// Desktop: pdeep 8 px dot + Public Sans Medium 14/21, centred, the number Bold + underlined. Mobile: 13/18.2 centred over
+// two lines, no dot. `.es > *` is faded in at the handoff by motion.ts (introChrome).
+import { SITE } from '../../data/site';
+---
+<aside class="es" aria-label="Water emergency">
+  <p class="es-t"><span class="es-dot" aria-hidden="true"></span><span>Burst pipe or flooding? Close your main shut-off valve first, then call <a href={SITE.tel}>{SITE.phone}</a>.</span></p>
+</aside>
+<style>
+  .es { display: flex; align-items: center; justify-content: center; height: 44px; padding: 0 var(--gutter); background: var(--frost); color: var(--ink); }
+  .es-t { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--f-b); font-weight: 500; font-size: 14px; line-height: 21px; text-align: center; }
+  .es-t a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; white-space: nowrap; }
+  .es-t a:hover { color: var(--pdeep); }
+  .es-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--pdeep); }
+  @media (max-width: 767px) {
+    .es { height: 56px; padding: 0 20px; }
+    .es-t { font-size: 13px; line-height: 1.4; }
+    .es-dot { display: none; }
+    .es-t a { display: inline-block; padding: 3px 0; margin: -3px 0; }
+  }
+</style>

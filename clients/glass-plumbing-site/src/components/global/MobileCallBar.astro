@@ -1,0 +1,21 @@
+---
+// Sticky call bar on phones and tablets (Figma "sticky call bar (fixed, shows on scroll)", every mobile frame: 390 x 76,
+// white, ink 20 % hairline on top; red call 214 x 56 "(727) 512-0673 / CALL · 24/7" + outline "Text" 124 x 56 with the
+// camera, 12 px apart, 20 px side margins). Hidden until the first section has scrolled away (ui.ts data-mbar), then it
+// stays. `estimate` is accepted for the Base API but Glass's bar has no estimate link (Figma).
+import Btn from '../kit/Btn.astro';
+interface Props { estimate?: string }
+---
+<nav class="mbar" data-mbar aria-label="Call or text" inert>
+  <Btn sub="Call · 24/7" class="mbar-call" shadow={false} block />
+  <Btn look="line" icon="camera" label="Text" class="mbar-text" w={124} />
+</nav>
+<style>
+  .mbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-callbar); display: none; gap: 12px; padding: 10px 20px calc(10px + env(safe-area-inset-bottom)); background: var(--white); box-shadow: inset 0 1px 0 var(--line); translate: 0 110%; transition: translate .5s var(--ease-out); }
+  .mbar.is-on { translate: 0 0; }
+  .mbar :global(.mbar-call) { flex: 1 1 auto; min-width: 0; }
+  .mbar :global(.mbar-text) { flex: none; }
+  @media (max-width: 1023px) { .mbar { display: flex; } }
+  @media (min-width: 768px) and (max-width: 1023px) { .mbar { padding-inline: var(--gutter); } }
+  @media print { .mbar { display: none; } }
+</style>

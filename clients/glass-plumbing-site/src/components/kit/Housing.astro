@@ -1,0 +1,88 @@
+---
+// Housing: Glass's own object, the filter-housing canister (BUILD-BRIEF section 10). Measured from all 56 "housing" frames:
+//   cap   ink bar 6 px wider than the glass on each side, radius 4, height ~6.8 % of the housing (min 14 px)
+//   port  the little neck on top: 36 % of the width, 8 px tall, 7 px above the cap, radius 2 2 0 0, centred
+//   glass starts 2 px above the cap's bottom edge, 2 px outline (1.5 under 60 px wide), round bottom corners (`r`)
+//   water powder, from the bottom, `fill` x the glass height, with a 3 px white meniscus line (70 %) on its top
+//   highlight a vertical white stripe 12 % in from the left (80 % on water housings, 30 % over photos)
+//   shadow optional hard powder offset (12/12 on the big hero housings, 8/8 on the small ones)
+// Props
+//   w, h        size in Figma px at 1440 (the whole object incl. cap and port). wm, hm = the 390 frame's size.
+//   fluid       width 100 % of the parent (max w), height by aspect ratio: for photo housings in fluid columns.
+//   fill        0-1, the water level (default 0 = no water). With motion on, the water rises to it as the housing enters
+//               (data-fill, kit/glass.ts); reduced motion / no JS = already full.
+//   tone        'light' white glass, ink cap (default) | 'frost' frost glass, ink cap | 'ink' dark glass #24211c with
+//               steel cap and outline (on ink sections) | 'photo' the slot is a photo filling the glass (ink cap).
+//   r / rm      bottom radius (default: 28 px on big housings, ~27 % of the width on small ones). cap / capm override.
+//   shadow      offset in px (powder), e.g. 12; shadowm for mobile. `hl={false}` = no highlight.
+//   label       accessible name (role img) when the housing means something on its own; otherwise decorative
+//               (aria-hidden), unless it has a slot (a photo keeps its own alt).
+//   slot        anything inside the glass (a number, an icon, an <Img>): it sits above the water, centred.
+//   t / fx      motion tier / effect on the root.
+interface Props {
+  w: number; h: number; wm?: number; hm?: number; fluid?: boolean; fill?: number; tone?: 'light' | 'frost' | 'ink' | 'photo';
+  r?: number; rm?: number; cap?: number; capm?: number; shadow?: number; shadowm?: number; hl?: boolean;
+  label?: string; t?: string | false; fx?: string; class?: string; [k: string]: any;
+}
+const { w, h, wm, hm, fluid = false, fill = 0, tone = 'light', r, rm, cap, capm, shadow = 0, shadowm, hl = true, label, t, fx, class: cls, ...rest } = Astro.props;
+const geo = (W: number, H: number, R?: number, C?: number) => {
+  const capH = C ?? Math.max(14, Math.round(H * 0.068));
+  const glassTop = capH - 2;
+  const glassH = H - glassTop;
+  const rad = R ?? (W >= 100 ? 28 : Math.max(6, Math.round(W * 0.27)));
+  const port = Math.max(8, Math.round(W * 0.36));
+  const hlW = Math.max(4, Math.round(W * 0.05));
+  const hlH = glassH > 150 ? glassH - 50 : Math.max(10, Math.round(glassH * 0.5));
+  return { capH, glassTop, rad, port, hlX: Math.round(W * 0.12), hlW, hlH, stroke: W < 60 ? 1.5 : 2 };
+};
+const d = geo(w, h, r, cap);
+const m = geo(wm ?? w, hm ?? h, rm ?? r, capm ?? cap);
+const lvl = Math.max(0, Math.min(1, fill));
+const hasSlot = Astro.slots.has('default');
+const vars = [
+  `--hw:${w}px`, `--hh:${h}px`, `--capd:${d.capH}px`, `--gtd:${d.glassTop}px`, `--rd:${d.rad}px`, `--portd:${d.port}px`,
+  `--hlxd:${d.hlX}px`, `--hlwd:${d.hlW}px`, `--hlhd:${d.hlH}px`, `--swd:${d.stroke}px`, `--shd:${shadow}px`,
+  `--hwm:${wm ?? w}px`, `--hhm:${hm ?? h}px`, `--capm:${m.capH}px`, `--gtm:${m.glassTop}px`, `--rm:${m.rad}px`, `--portm:${m.port}px`,
+  `--hlxm:${m.hlX}px`, `--hlwm:${m.hlW}px`, `--hlhm:${m.hlH}px`, `--swm:${m.stroke}px`, `--shm:${shadowm ?? shadow}px`,
+  `--lvl:${lvl}`, `--ar:${w}/${h}`, `--arm:${wm ?? w}/${hm ?? h}`,
+].join(';');
+---
+<div class:list={['hs', `hs-${tone}`, fluid && 'hs-fluid', cls]} style={vars} data-fill={lvl > 0 ? String(lvl) : undefined}
+  role={label ? 'img' : undefined} aria-label={label} aria-hidden={label || hasSlot ? undefined : 'true'} data-t={t || undefined} data-fx={fx} {...rest}>
+  <span class="hs-port"></span>
+  <span class="hs-glass">
+    {lvl > 0 && <span class="hs-water"></span>}
+    {hasSlot && <span class="hs-in"><slot /></span>}
+    {hl && <span class="hs-hl"></span>}
+  </span>
+  <span class="hs-cap"></span>
+</div>
+<style>
+  .hs { --cap: var(--capd); --gt: var(--gtd); --r: var(--rd); --port: var(--portd); --hlx: var(--hlxd); --hlw: var(--hlwd); --hlh: var(--hlhd); --sw: var(--swd); --sh: var(--shd);
+    position: relative; flex: none; width: var(--hw); height: var(--hh); --c: var(--ink); --g: var(--white); --o: var(--ink); --hla: .8; }
+  .hs-fluid { width: 100%; max-width: var(--hw); height: auto; aspect-ratio: var(--ar); }
+  .hs-frost { --g: var(--frost); }
+  .hs-ink { --c: var(--steel2); --g: var(--ink2); --o: var(--steel2); }
+  .hs-photo { --g: var(--frost2); --hla: .3; }
+  .hs-cap { position: absolute; left: -6px; right: -6px; top: 0; height: var(--cap); border-radius: 4px; background: var(--c); }
+  .hs-port { position: absolute; left: 50%; top: -7px; width: var(--port); height: 8px; translate: -50% 0; border-radius: 2px 2px 0 0; background: var(--c); }
+  .hs-glass {
+    position: absolute; left: 0; right: 0; top: var(--gt); bottom: 0; overflow: hidden; isolation: isolate;
+    border-radius: 0 0 var(--r) var(--r); background: var(--g);
+    box-shadow: var(--sh) var(--sh) 0 var(--powder);
+  }
+  /* The outline is drawn on top (inset, like Figma's INSIDE stroke would clip the photo): a separate layer over everything. */
+  .hs-glass::after { content: ''; position: absolute; inset: 0; z-index: 3; border-radius: inherit; box-shadow: inset 0 0 0 var(--sw) var(--o); pointer-events: none; }
+  .hs-water { position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--lvl) * 100%); background: var(--powder); transition: translate 1.2s var(--ease-io); }
+  .hs-water::before { content: ''; position: absolute; left: 2px; right: 2px; top: 0; height: 3px; background: rgba(255, 255, 255, .7); }
+  .hs-in { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; }
+  .hs-photo .hs-in { display: block; }
+  .hs-photo .hs-in > :global(*) { width: 100%; height: 100%; }
+  .hs-hl { position: absolute; z-index: 2; left: var(--hlx); top: 12px; width: var(--hlw); height: var(--hlh); border-radius: 6px; background: rgba(255, 255, 255, var(--hla)); pointer-events: none; }
+  /* kit/glass.ts: under motion the water waits below the glass until the housing enters, then rises (1.2 s). */
+  :global(html.motion) [data-fill]:not(.is-filled) .hs-water { translate: 0 101%; }
+  @media (max-width: 767px) {
+    .hs { width: var(--hwm); height: var(--hhm); --cap: var(--capm); --gt: var(--gtm); --r: var(--rm); --port: var(--portm); --hlx: var(--hlxm); --hlw: var(--hlwm); --hlh: var(--hlhm); --sw: var(--swm); --sh: var(--shm); }
+    .hs-fluid { width: 100%; max-width: var(--hwm); height: auto; aspect-ratio: var(--arm); }
+  }
+</style>

@@ -1,13 +1,14 @@
 ---
 // Breadcrumbs + BreadcrumbList JSON-LD. items: [{ label, href }] excluding Home (added). Last item = current page.
-// Figma (contact 435:2409, guide 439:9750): underlined links, a "/" separator 8 px either side, current page bold navy.
-interface Props { items: { label: string; href: string }[]; dark?: boolean; class?: string; }
-const { items, dark, class: cls } = Astro.props;
+// Figma (services 718:522, privacy 743:492, town 723:437): "Home  /  Services", JetBrains Mono Medium 11 px, +2 %, muted
+// #5B5F61, the "/" with two spaces either side. Links underline on hover. `dark` = on ink (white 70 %).
+interface Props { items: { label: string; href: string }[]; dark?: boolean; class?: string; t?: string | false }
+const { items, dark, class: cls, t = '1' } = Astro.props;
 const all = [{ label: 'Home', href: '/' }, ...items];
 const site = (import.meta.env.SITE as string || 'https://glass-plumbing-largo.vercel.app').replace(/\/$/, '');
 const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: all.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: site + (c.href === '/' ? '' : c.href) })) };
 ---
-<nav class:list={['crumbs', dark && 'dark', cls]} aria-label="Breadcrumb" data-t="1">
+<nav class:list={['crumbs', dark && 'dark', cls]} aria-label="Breadcrumb" data-t={t || undefined}>
   <ol role="list">
     {all.map((c, i) => (
       <li>{i < all.length - 1 ? <><a href={c.href}>{c.label}</a><span class="sep" aria-hidden="true">/</span></> : <span aria-current="page">{c.label}</span>}</li>
@@ -16,10 +17,10 @@ const ld = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemLi
 </nav>
 <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 <style>
-  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 0; font-family: var(--f-label); font-weight: 500; font-size: 13px; line-height: 18px; letter-spacing: .1em; text-transform: uppercase; color: var(--tan-dark); }
-  .crumbs li { display: inline-flex; align-items: center; gap: 8px; }
-  .crumbs a { display: inline-block; padding: 2px 0; text-decoration: underline; text-underline-offset: 3px; }
-  .crumbs a:hover { color: var(--ink); }
-  .crumbs [aria-current] { color: var(--ink); }
-  .dark ol { color: var(--mute); } .dark a:hover, .dark [aria-current] { color: var(--paper); }
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; margin: 0; padding: 0; list-style: none; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
+  .crumbs li { display: inline-flex; align-items: center; }
+  .sep { margin: 0 2ch; }
+  .crumbs a { display: inline-block; padding: 4px 0; margin: -4px 0; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color .25s, color .25s; }
+  .crumbs a:hover { color: var(--ink); text-decoration-color: currentColor; }
+  .dark ol { color: rgba(255, 255, 255, .7); } .dark a:hover { color: var(--white); }
 </style>

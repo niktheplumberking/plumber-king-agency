@@ -188,20 +188,27 @@ function crew() {
   });
 }
 
-/* ---------- mobile call bar: appears once the hero has scrolled away, steps aside over the waterline CTA ---------- */
+/* ---------- mobile call bar (Glass: Call + Text): appears once the hero has scrolled away and then stays on every screen
+   (Figma note: "Mobile keeps the sticky call bar on every screen"); the footer leaves 76 px for it under the bumper. ---------- */
 function callBar() {
   const bar = $('[data-mbar]'); if (!bar) return;
-  // "Free estimate" points at the waterline form; pages without one (contact, legal, thank-you, 404) use the contact form.
-  const est = $<HTMLAnchorElement>('a.mb-est[href="#estimate"]', bar); // safety net if a page forgets Base's `estimate`
-  if (est && !document.getElementById('estimate')) est.href = document.getElementById('request') ? '#request' : '/contact'; // a cross-page link opens at the top (fix round 1, B4)
-  const first = $('main section'); const cta = $('#estimate') ?? $('#request');
-  let pastHero = false, atCta = false, atEnd = false;
-  const sync = () => bar.classList.toggle('is-on', pastHero && !atCta && !atEnd);
-  // The footer's giant "MIKE'S" closes the page (B10d): the bar steps aside so it is never covered.
-  const end = $('.ft-big'); if (end) new IntersectionObserver(([e]) => { atEnd = e.isIntersecting; sync(); }).observe(end);
-  if (first) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe(first);
-  else { pastHero = true; sync(); }
-  if (cta) new IntersectionObserver(([e]) => { atCta = e.isIntersecting; sync(); }, { threshold: 0.25 }).observe(cta);
+  const first = $('main > section, main > *');
+  const sync = (on: boolean) => { bar.classList.toggle('is-on', on); bar.toggleAttribute('inert', !on); };
+  if (first) new IntersectionObserver(([e]) => sync(!e.isIntersecting && e.boundingClientRect.top < 0)).observe(first);
+  else sync(true);
+}
+
+/* ---------- footer columns: disclosure rows on phones (Footer.astro data-fcol); plain open columns from 768 px up ---------- */
+function footerCols() {
+  $$('[data-fcol]').forEach((col) => {
+    const btn = $<HTMLButtonElement>('[data-fcol-btn]', col); if (!btn) return;
+    btn.addEventListener('click', () => {
+      const open = !col.classList.contains('is-open');
+      col.classList.toggle('is-open', open); btn.setAttribute('aria-expanded', String(open));
+      const list = $('ul', col);
+      if (open && list && MOTION()) list.animate([{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }], { duration: 500, easing: 'cubic-bezier(.65,0,.35,1)' });
+    });
+  });
 }
 
 /* ---------- form niceties: select placeholder colour, chosen photo file name ---------- */
@@ -217,4 +224,4 @@ function formBits() {
   });
 }
 
-header(); mega(); mobileMenu(); initAccordions(); carousels(); crew(); callBar(); formBits();
+header(); mega(); mobileMenu(); initAccordions(); carousels(); crew(); callBar(); footerCols(); formBits();

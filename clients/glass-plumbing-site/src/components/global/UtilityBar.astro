@@ -1,0 +1,40 @@
+---
+// Utility bar (Figma Home 712:448 y 0, 40 px ink; mobile 715:560, 34 px). Desktop: stars + "5.0 on Google · 104 + 77
+// reviews" left (two profiles, never summed), licence centre (links to the DBPR lookup, FS 489.119), "24/7 emergency ·
+// phone" right. Mobile copy differs (Figma): "24/7 · (727) 512-0673 · CFC1432488", centred. JetBrains Mono 11 / 10, +2 %.
+// data-intro="topbar": motion.ts fades its children in at the handoff (introChrome).
+import { SITE } from '../../data/site';
+const g = SITE.google;
+// Figma "stars" vector (5 x gold #F9B50D).
+const STARS = '<path d="M6 0L7.58702 3.81565L11.7063 4.1459L8.56785 6.83435L9.52671 10.8541L6 8.7L2.47329 10.8541L3.43215 6.83435L0.293661 4.1459L4.41298 3.81565L6 0Z" /><path d="M21 0L22.587 3.81565L26.7063 4.1459L23.5679 6.83435L24.5267 10.8541L21 8.7L17.4733 10.8541L18.4321 6.83435L15.2937 4.1459L19.413 3.81565L21 0Z" /><path d="M36 0L37.587 3.81565L41.7063 4.1459L38.5679 6.83435L39.5267 10.8541L36 8.7L32.4733 10.8541L33.4321 6.83435L30.2937 4.1459L34.413 3.81565L36 0Z" /><path d="M51 0L52.587 3.81565L56.7063 4.1459L53.5679 6.83435L54.5267 10.8541L51 8.7L47.4733 10.8541L48.4321 6.83435L45.2937 4.1459L49.413 3.81565L51 0Z" /><path d="M66 0L67.587 3.81565L71.7063 4.1459L68.5679 6.83435L69.5267 10.8541L66 8.7L62.4733 10.8541L63.4321 6.83435L60.2937 4.1459L64.413 3.81565L66 0Z" />';
+---
+<aside class="ub" data-intro="topbar" aria-label="Rating, licence and phone">
+  <p class="ub-rate">
+    <svg class="ub-stars" viewBox="0 0 75 12" width="75" height="12" fill="#F9B50D" aria-hidden="true" focusable="false" set:html={STARS} />
+    <span>{g.a.value} on Google · <a href={g.a.url} target="_blank" rel="noopener">{g.a.count}<span class="sr-only"> reviews on Google profile 1 (opens in a new tab)</span></a> + <a href={g.b.url} target="_blank" rel="noopener">{g.b.count}<span class="sr-only"> reviews on Google profile 2 (opens in a new tab)</span></a> reviews</span>
+  </p>
+  <p class="ub-lic"><a href={SITE.licence.url} target="_blank" rel="noopener">FL licence {SITE.licence.number}<span class="sr-only"> (verify on the Florida DBPR site, opens in a new tab)</span></a> · Licensed &amp; insured</p>
+  <p class="ub-call"><span>24/7 emergency ·</span> <a href={SITE.tel}>{SITE.phone}</a></p>
+  <p class="ub-m">24/7 · <a href={SITE.tel}>{SITE.phone}</a> · <a href={SITE.licence.url} target="_blank" rel="noopener">{SITE.licence.number}<span class="sr-only"> (Florida licence, verify on DBPR, opens in a new tab)</span></a></p>
+</aside>
+<style>
+  .ub { position: relative; z-index: calc(var(--z-header) + 1); display: flex; align-items: center; height: 40px; padding: 0 var(--gutter); background: var(--ink); color: var(--white); font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; white-space: nowrap; }
+  .ub p { margin: 0; }
+  .ub a { color: inherit; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color .25s; }
+  .ub a:hover { text-decoration-color: currentColor; }
+  .ub a:focus-visible { outline-color: var(--powder); }
+  .ub-rate { display: flex; align-items: center; gap: 9px; }
+  .ub-stars { flex: none; }
+  .ub-lic { position: absolute; left: 50%; translate: -50% 0; }
+  .ub-call { margin-left: auto !important; font-weight: 700; }
+  .ub-m { display: none; }
+  @media (max-width: 1100px) { .ub-lic { position: static; translate: none; margin-left: auto !important; } .ub-call { margin-left: 24px !important; } }
+  @media (max-width: 900px) { .ub-rate { display: none; } .ub-lic { margin-left: 0 !important; } }
+  @media (max-width: 767px) {
+    .ub { justify-content: center; height: 34px; font-size: 10px; line-height: 13px; }
+    .ub-lic, .ub-call { display: none; }
+    .ub-m { display: block; }
+    /* 24 px tall tap targets inside a 34 px bar without moving the text. */
+    .ub-m a { display: inline-block; padding: 6px 0; margin: -6px 0; }
+  }
+</style>

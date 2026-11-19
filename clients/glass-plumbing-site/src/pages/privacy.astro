@@ -1,0 +1,18 @@
+---
+// /privacy (Figma 743:492 / 743:658). Copy word for word from the frame; marked "Draft, 18 Nov 2026" (Kody to have it
+// checked before launch, privacy NOTES). Legal template: components/global/Legal.astro.
+import Base from '../layouts/Base.astro';
+import Legal from '../components/global/Legal.astro';
+import { SITE } from '../data/site';
+const path = '/privacy';
+const sections = [
+  { id: 'what-we-collect', nav: 'What we collect', t: 'What we collect', body: 'Your name, phone number, town and anything you send us, like photos of the problem, when you fill in a form, call or text.' },
+  { id: 'how-we-use-it', nav: 'How we use it', t: 'How we use it', body: 'Only to reply to you, plan the job and give you a price. We don’t sell your details.' },
+  { id: 'who-sees-it', nav: 'Who sees it', t: 'Who sees it', body: `${SITE.name} and the crew working on your job.` },
+  { id: 'how-long-we-keep-it', nav: 'How long we keep it', t: 'How long we keep it', body: 'As long as we need it for the job and our records.' },
+  { id: 'your-choices', nav: 'Your choices', t: 'Your choices', body: `Ask us to see, fix or delete your details: call <a href="${SITE.tel}">${SITE.phone}</a> or email <a href="mailto:${SITE.email}">${SITE.email}</a>.` },
+];
+---
+<Base title={`Privacy Policy · ${SITE.name}`} description="Short and plain: what Glass Plumbing Services keeps when you contact us, and why. Draft, 18 Nov 2026." path={path}>
+  <Legal title="Privacy policy." crumb="Privacy" path={path} lead="Short and plain: what we keep when you contact us, and why. Draft, 18 Nov 2026." sections={sections} />
+</Base>

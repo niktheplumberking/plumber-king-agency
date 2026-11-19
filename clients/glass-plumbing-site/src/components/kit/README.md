@@ -1,22 +1,24 @@
 # kit: the one shared component and motion kit
 
-Fix round 1 (A-1) merged the four page kits (`home/`, `b3kit/`, `kit-b4/`, `services/kit/`) into this folder. A page never
-gets its own copy of anything here again: if a page needs a variant, it becomes a prop or a data attribute of the kit
-piece. The rule every animation follows is at the top of `MOTION.md` (ease-in-out tweens, CSS start state = JS start
+Every page builds from this folder. A page never gets its own copy of anything here: if a page needs a variant, it
+becomes a prop or a data attribute of the kit piece. The rule every animation follows is at the top of `MOTION.md` (ease-in-out tweens, CSS start state = JS start
 state, no visible jumps).
 
-## Components (Astro)
+## Components (Astro), Glass Plumbing kit (BUILD-BRIEF section 10, props in `handoff/SHARED-STATUS.md`)
 
-| File | What | Props |
+| File | What | Main props |
 |---|---|---|
-| `Wave.astro` | The wave seam between two sections. It sits at the top edge of the lower section (the host, `position: relative`) and paints that section's colour up into the one above. | `d` / `m` geometry (omitted = the standard Figma seam with `shape`/`shapeM`/`rise`/`riseM`; a `waves.ts` key with `hostY`/`hostYM`; a traced `{path,h,w?}`; or a sine `{a,L,phi,clip,x0,x1,W}` with `above`), `fill`, `top`/`topM`, `bottom`, `only` ('d'/'m'), `z` (default 3), `class`, `clear` (default true; `data-wave` for the seam checker). Clearance: content keeps `--wave-clear` (24 px desktop, 16 px mobile). |
-| `waves.ts` | Traced Figma wave vectors, by key. | |
-| `WaveRule.astro` | Thin wavy rule with a hex nut in the middle (footer, Diagnosis). | `color`, `bg`, `nut`, `class` |
-| `Btn.astro` | Every button. Always a real link. | `look` main / call / ghost / bar / figma; `v`, `title`, `sub`, `href` (defaults to `tel:`), `w`, `h`, `external`, `t`, `plain`, `dark`, `arrow`, `circle`. The five looks are the five Figma button families, kept pixel-identical. |
-| `Eyebrow.astro` | The hex-nut (or live red dot) + Oswald caps label. | `look` main / town / page / figma; `tone` tan / deep / ink / mute / red / paper; `text` or the slot, `dot`, `icon`, `t`, `as` |
-| `Logo.astro`, `Stamp.astro` | The real logo as an image / as a rotated rubber stamp (CSS mask). | `w`, `tone` / `color`, `deg`, `opacity`, `t`, `fx` |
-| `Marquee.astro` | Tilted band of review words (CSS marquee today; `marquee.ts` takes it over in Phase 2). | `words`, `star`, `size`, `class` |
-| `Curtain.astro` | The page curtain markup (one panel, one wave edge at each end). `curtain.ts` drives it. | |
+| `Btn.astro` | Every button, always a real link (or `<button>` with `type`). Red only on the call look. | `look` call / ink / line / light / powder, `label`, `sub`, `href` (call -> tel, camera icon -> sms), `icon`, `arrow`, `size` l / m / s, `w`, `wm`, `h`, `hm`, `block`, `shadow`, `external`, `t`, `fx` |
+| `Eyebrow.astro` | Housing tick + JetBrains Mono caps label. | `text` or slot, `tone` pdeep / light / dark, `t`, `as` |
+| `Housing.astro` | The filter housing (glass, cap, port, water, meniscus, highlight). The one motif. | `w`, `h`, `wm`, `hm`, `fluid`, `fill` 0-1, `tone` light / frost / ink / photo, `r`, `rm`, `cap`, `capm`, `shadow`, `shadowm`, `hl`, `label`, slot, `t`, `fx` |
+| `Plate.astro` | Steel spec plate with four rivets, rows as a `<dl>`. | `rows`, `title`, `w`, `wm`, `pad`, `size`, `tsize`, `kx`, `pitch` (+ `...m`), `shadow`, `tone` steel / ink, `label`, `t`, `fx` |
+| `Seam.astro` | The meniscus seam between two sections (dip or rise). | `from`, `to`, `flip`, `d`, `dm`, `only` |
+| `Logo.astro` | The real logo (logo-glass.png). | `w`, `alt`, `class`, `eager` |
+| `Curtain.astro` | The page curtain markup (8 blinds); `curtain.ts` drives it. | |
+
+`glass.ts` (imported by Base): one IntersectionObserver adds `is-filled` to `[data-fill]` (housing water rises),
+`is-in` to `[data-plate]` (rivets pop) and `[data-seam]` (seam grows), after the loader / curtain hand-off. Without
+motion the end state is applied at once.
 
 ## Motion modules (TypeScript)
 
@@ -62,19 +64,18 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
   the page goes to the top under the cover, then the blinds slide off to alternating sides (0.6 s `power2.inOut`);
   `onHandoff` (hero timeline) fires at ~75 % of the blind travel, so the H1 starts as the cover clears (fix round 2,
   review 3); `onDone` (scrollRestoration back to `'auto'`, `pt-in` off) when the last blind is off.
-- Colours (fix round 2, review 3): the blinds are tan / bone alternating (the loader slats' colours), so cover and reveal
-  read on ink heroes too.
+- Colours: the blinds are frost / white alternating with powder / pdeep edge bands, so cover and reveal read on ink
+  heroes too.
 - `interceptLinks()` covers for in-site links to another page, and drops a cross-page `#hash` so a new page always
   opens at the top. Same-page `#` links stay with Lenis (smooth). New tabs, modifier clicks, downloads and
   `data-no-curtain` are skipped.
 - `toTop()`.
 
 ### `loader.ts`: the first-visit loader (fix round 1, B3; markup `global/Loader.astro`)
-`runLoader({ onCover, onDone })`. Base: 21st.dev "Swiss Poster Counter Preloader" (id 35248), vanilla TS + GSAP, 3.1 KB
-minified. A 3 x 7 slat counter counts 000 -> 100 while the page loads (100 forced at 1.8 s), then 8 blinds slide off
-alternately (0.6 s). `onCover` runs while still fully covered (hero start states), `onDone` when the last blind is off
+`runLoader({ onCover, onDone })`. A housing fills (`--p` on `[data-loader]`) and a mono gauge counts 000 / 100 in
+`[data-ld-num]` while the page loads (100 forced at 1.8 s), then 8 blinds slide off alternately (0.6 s). `onCover` runs while still fully covered (hero start states), `onDone` when the last blind is off
 (hero timeline, header, Lenis). Once per session (`sessionStorage mps-intro`), skippable (click, tap, key), max 3.4 s,
-never under reduced motion. The slats move only through their CSS custom properties `--x --y --s` (CSS transition).
+never under reduced motion.
 
 ### `marquee.ts`: the one marquee engine (fix round 1, B8)
 `[data-marquee]` holds two `[data-marquee-track]` copies (`Marquee.astro`, or hand markup like `services/Callout.astro`).
@@ -143,24 +144,6 @@ sway). SVG children: the scheduler sets `transform-box: fill-box` so the origin 
   `transform`, so they combine with entrances. Cards/rows/tags/stamps/strips that are links get `lift` by default from
   `kit.css` selectors; add the attribute on anything else.
 
-### `RouteMap.astro` + `RouteMap.ts`: dashed driving routes out of Riverside (builder P, B13 / B33)
-Used by the Home route map (`home/Areas.astro`) and every town map (`town/TClose.astro`). Put `<RouteMap />` once in the
-component (it holds the CSS start states and loads the module). One scrubbed timeline per **visible** map svg (desktop and
-phone each their own, `gsap.matchMedia`). Sequence: the map unfolds from the Riverside pin (circle clip, 0.9 s
-power2.inOut, once; routes wait for it), Riverside pulses, then route 1 draws, its town dot pops and its tag slides out,
-then route 2 ... in `data-rm-route` order (by distance). Scrub 0.8 s from `top 75%` to `center 40%` by default.
-
-| Attribute | On | Meaning |
-|---|---|---|
-| `data-routemap` (+ `data-start`, `data-end`, `data-lag`) | the trigger box | one route map |
-| `data-rm-unfold` (+ CSS vars `--rm-ox`, `--rm-oy`) | the box that unfolds (may be the same element) | circle clip from the pin |
-| `data-rm-svg` | each layout's svg | builds only while visible |
-| `data-rm-route="i"` | a `pathLength="1"` path (or the mask path that reveals a dashed `.rm-line`) | drawn by `drawTo` |
-| `data-rm-dot="i"` / `data-rm-tag="i"` (`data-rm-from="14"` = slide from the right) | town dot / town tag | pop / slide in after route i |
-| `data-rm-base` / `data-rm-ripple` | the Riverside dot / a ring around it | pulse / ripple |
-
-Line style: class `rm-line` = 3 px ink, dash 10 / 8. QA hook: `window.__rm` lists `{ svg, tl, st }` per built map.
-
 ## One writer per property
 
 Each animated property of an element has exactly one owner. If a second module needs to move the same element, it
@@ -170,7 +153,7 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 |---|---|---|
 | `.pt-blind` | `transform` (xPercent) | `curtain.ts` |
 | `.ld-blind` / `.ld-stage`, `.ld-skip` | `transform` (xPercent) / `opacity`, `visibility` | `loader.ts` |
-| `.ld-slat` | `--x`, `--y`, `--s` (CSS transition on `transform`) | `loader.ts` |
+| `[data-loader]` | `--p` (housing water, gauge) | `loader.ts` |
 | `.pt-mark` | `opacity`, `visibility` | `curtain.ts` |
 | `history.scrollRestoration` | | `curtain.ts` (plus the Base.astro head script, `manual` when arriving under the curtain) |
 | window scroll position | | Lenis (`motion.ts`); `curtain.ts toTop()` only under the cover |

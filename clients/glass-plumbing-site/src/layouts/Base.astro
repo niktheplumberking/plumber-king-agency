@@ -86,6 +86,8 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
   <link rel="preload" href="/fonts/schibsted-grotesk-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/public-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/jetbrains-mono-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/public-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/jetbrains-mono-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
   {!lateOnLoad && <style is:inline set:html={lateCss()} />}
   {extraFonts.map((f) => <link rel="preload" href={`/fonts/${f}.woff2`} as="font" type="font/woff2" crossorigin />)}
   <meta property="og:type" content={type} />
@@ -166,6 +168,6 @@ const ld = [plumberSchema(logoUrl, new URL(entityImg.src, Astro.site).href), web
   <main id="main" tabindex="-1"><slot /></main>
   <Footer />
   <MobileCallBar estimate={estimate} />
-  <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion'; import '../components/kit/scrub'; import '../scripts/late-fonts-load';</script>
+  <script>import '../scripts/ui'; import '../scripts/forms'; import '../scripts/motion'; import '../components/kit/scrub'; import '../components/kit/glass'; import '../scripts/late-fonts-load';</script>
 </body>
 </html>

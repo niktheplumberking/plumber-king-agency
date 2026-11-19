@@ -1,0 +1,75 @@
+---
+// Plate: the steel spec plate with four rivets and mono rows (BUILD-BRIEF section 10). Measured from the 92 "spec plate"
+// frames: fill steel #C7CED1, 1 px steel2 outline, radius 3, rivets 6 px steel2 6 px in from each corner; title JetBrains
+// Mono ExtraBold caps +10 % at y pad+2, a 1 px ink 30 % rule 19 px below it, rows 7 px below the rule: key Medium caps
+// +6 % at 70 %, value Bold +4 %; hard 6/6 offset shadow (ink, pdeep or powder), or none.
+// Props
+//   rows    [[key, value]]; a value may be { text, href, external? } (e.g. the licence -> DBPR lookup).
+//   title?  plate title (no title = rows only, as on the small "Seen on jobs" plates).
+//   w?, wm? width in px at 1440 / under 768 (default: fill the parent).
+//   pad 16 | size 11 (row font px) | tsize 12 (title px) | kx 72 (x of the value column) | pitch 21 (row step px)
+//   -> mobile overrides padm, sizem, tsizem, kxm, pitchm. Footer plate: pad 14, size 10, kx 86 (kxm 78), pitch 19.
+//   shadow  'ink' (default) | 'pdeep' | 'powder' | false.   tone 'steel' (default) | 'ink' (dark plate, white text).
+//   label?  aria-label of the plate (it is a <dl>, so rows read as term / description pairs).
+//   t / fx  motion tier / effect. Rivets pop in after the plate (kit/glass.ts, data-plate) when motion is on.
+type Val = string | { text: string; href: string; external?: boolean };
+interface Props {
+  rows: [string, Val][]; title?: string; w?: number; wm?: number;
+  pad?: number; size?: number; tsize?: number; kx?: number; pitch?: number;
+  padm?: number; sizem?: number; tsizem?: number; kxm?: number; pitchm?: number;
+  shadow?: 'ink' | 'pdeep' | 'powder' | false; tone?: 'steel' | 'ink'; label?: string; t?: string | false; fx?: string; class?: string; [k: string]: any;
+}
+const { rows, title, w, wm, pad = 16, size = 11, tsize = 12, kx = 72, pitch = 21, padm, sizem, tsizem, kxm, pitchm,
+  shadow = 'ink', tone = 'steel', label, t, fx, class: cls, ...rest } = Astro.props;
+const vars = [
+  w && `--pw:${w}px`, wm && `--pwm:${wm}px`, `--padd:${pad}px`, `--fsd:${size}px`, `--tsd:${tsize}px`, `--kxd:${kx}px`, `--pitchd:${pitch}px`,
+  `--padm:${padm ?? pad}px`, `--fsm:${sizem ?? size}px`, `--tsm:${tsizem ?? tsize}px`, `--kxm:${kxm ?? kx}px`, `--pitchm:${pitchm ?? pitch}px`,
+].filter(Boolean).join(';');
+const tid = title ? `pl-${Math.random().toString(36).slice(2, 8)}` : undefined;
+---
+<div class:list={['pl', `pl-${tone}`, shadow && `pl-sh-${shadow}`, cls]} style={vars} data-plate data-t={t || undefined} data-fx={fx} {...rest}>
+  {title && <p class="pl-title" id={tid}>{title}</p>}
+  <dl class="pl-rows" aria-labelledby={label ? undefined : tid} aria-label={label}>
+    {rows.map(([k, v]) => (
+      <div class="pl-row">
+        <dt>{k}</dt>
+        <dd>{typeof v === 'string' ? v : (
+          <a href={v.href} {...(v.external ? { target: '_blank', rel: 'noopener' } : {})}>{v.text}{v.external && <span class="sr-only"> (opens in a new tab)</span>}</a>
+        )}</dd>
+      </div>
+    ))}
+  </dl>
+  <i class="pl-rv" aria-hidden="true"></i><i class="pl-rv" aria-hidden="true"></i><i class="pl-rv" aria-hidden="true"></i><i class="pl-rv" aria-hidden="true"></i>
+</div>
+<style>
+  .pl {
+    --pad: var(--padd); --fs: var(--fsd); --ts: var(--tsd); --kx: var(--kxd); --pitch: var(--pitchd);
+    --bg: var(--steel); --bd: var(--steel2); --tx: var(--ink); --rule: rgba(22, 19, 15, .3); --key: rgba(22, 19, 15, .7); --rv: var(--steel2);
+    position: relative; width: var(--pw, auto); max-width: 100%; padding: calc(var(--pad) + 2px) var(--pad) calc(var(--pad) + 2px);
+    border-radius: 3px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--bd); color: var(--tx); font-family: var(--f-m);
+  }
+  .pl-ink { --bg: var(--ink2); --bd: var(--ink3); --tx: var(--white); --rule: rgba(255, 255, 255, .3); --key: rgba(255, 255, 255, .7); --rv: var(--ink3); }
+  .pl-sh-ink { box-shadow: inset 0 0 0 1px var(--bd), 6px 6px 0 var(--ink); }
+  .pl-sh-pdeep { box-shadow: inset 0 0 0 1px var(--bd), 6px 6px 0 var(--pdeep); }
+  .pl-sh-powder { box-shadow: inset 0 0 0 1px var(--bd), 6px 6px 0 var(--powder); }
+  .pl-title { margin: 0; padding-bottom: calc(var(--ts) * .2 + 1px); border-bottom: 1px solid var(--rule); font-weight: 800; font-size: var(--ts); line-height: calc(var(--ts) * 1.32); letter-spacing: .1em; text-transform: uppercase; }
+  .pl-rows { display: grid; margin: 0; padding: 0; }
+  .pl-title + .pl-rows { margin-top: 6px; }
+  .pl-row { display: grid; grid-template-columns: calc(var(--kx) - var(--pad)) minmax(0, 1fr); align-items: baseline; min-height: var(--pitch); }
+  .pl-row:last-child { min-height: 0; }
+  .pl-row dt { font-weight: 500; font-size: var(--fs); line-height: calc(var(--fs) * 1.32); letter-spacing: .06em; text-transform: uppercase; color: var(--key); }
+  .pl-row dd { margin: 0; font-weight: 700; font-size: var(--fs); line-height: calc(var(--fs) * 1.32); letter-spacing: .04em; overflow-wrap: anywhere; }
+  .pl-row a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .pl-row a:hover { color: var(--pdeep); }
+  .pl-ink .pl-row a:hover { color: var(--powder); }
+  .pl-rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--rv); }
+  .pl-rv:nth-of-type(1) { left: 6px; top: 6px; } .pl-rv:nth-of-type(2) { right: 6px; top: 6px; }
+  .pl-rv:nth-of-type(3) { left: 6px; bottom: 6px; } .pl-rv:nth-of-type(4) { right: 6px; bottom: 6px; }
+  /* kit/glass.ts: the rivets pop once the plate is in view (motion only). */
+  :global(html.motion) [data-plate]:not(.is-in) .pl-rv { scale: 0; }
+  .pl-rv { transition: scale .5s var(--ease-back); }
+  .pl-rv:nth-of-type(2) { transition-delay: .06s; } .pl-rv:nth-of-type(3) { transition-delay: .12s; } .pl-rv:nth-of-type(4) { transition-delay: .18s; }
+  @media (max-width: 767px) {
+    .pl { width: var(--pwm, var(--pw, auto)); --pad: var(--padm); --fs: var(--fsm); --ts: var(--tsm); --kx: var(--kxm); --pitch: var(--pitchm); }
+  }
+</style>

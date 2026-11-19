@@ -1,25 +1,27 @@
 ---
-// Page curtain (kit/curtain.ts drives it; MOTION.md section 3). Fix round 1 B2: the same family as the loader
-// (global/Loader.astro): 8 horizontal blinds in the loader slats' tan / bone (fix round 2, review 3: ink blinds vanished on
-// the ink heroes). Cover = the blinds close in from both sides (odd rows from the left, even
-// rows from the right) in one ease-in-out move; reveal = they slide off the same way the loader's do. One transform
-// channel per blind: GSAP `xPercent` on .pt-blind, nothing else writes its transform (A-3).
+// Page curtain (kit/curtain.ts drives it; MOTION.md section 3). The same family as the loader (global/Loader.astro):
+// 8 horizontal blinds in frost / white with a powder / pdeep band on the moving edge, Kody's logo in the middle while
+// covered. Cover = the blinds close in from both sides (odd rows from the left, even rows from the right) in one
+// ease-in-out move; reveal = they slide off the same way the loader's do. One transform channel per blind: GSAP `xPercent`
+// on .pt-blind, nothing else writes its transform.
 //   xPercent -101 / +101 = parked off-screen (set at boot)      xPercent 0 = covering
 // CSS gives the blinds NO transform: their resting CSS state is "covering", which is exactly what html.pt-in needs at
 // first paint on the page you arrive at; on every other page the curtain is visibility: hidden until the script parks it.
 import { Image } from 'astro:assets';
-import logo from '../../assets/brand/logo-ink.png';
+import logo from '../../assets/brand/logo-glass.png';
 ---
 <div class="pt" data-pt aria-hidden="true">
   {Array.from({ length: 8 }, () => <i class="pt-blind"></i>)}
-  <span class="pt-mark"><Image src={logo} alt="" width={216} height={138} loading="eager" decoding="async" fetchpriority="low" /></span>
+  <span class="pt-mark"><Image src={logo} alt="" width={160} widths={[160, 320]} sizes="160px" loading="eager" decoding="async" fetchpriority="low" /></span>
 </div>
 <style>
   .pt { position: fixed; inset: 0; z-index: var(--z-curtain); pointer-events: none; visibility: hidden; display: flex; flex-direction: column; overflow: hidden; }
   .pt.is-on, :global(html.pt-in) .pt { visibility: visible; }
-  .pt-blind { flex: 1 1 0; margin-bottom: -1px; background: var(--tan); will-change: transform; }
-  .pt-blind:nth-child(even) { background: var(--paper); }
-  .pt-mark { position: absolute; left: 50%; top: 50%; width: 120px; translate: -50% -50%; opacity: 0; }
+  .pt-blind { position: relative; flex: 1 1 0; margin-bottom: -1px; background: var(--frost); will-change: transform; }
+  .pt-blind:nth-child(even) { background: var(--white); }
+  .pt-blind::after { content: ''; position: absolute; top: 0; bottom: 0; left: 100%; width: 10px; background: var(--powder); }
+  .pt-blind:nth-child(even)::after { left: auto; right: 100%; background: var(--pdeep); }
+  .pt-mark { position: absolute; left: 50%; top: 50%; width: 160px; translate: -50% -50%; opacity: 0; }
   :global(html.pt-in) .pt-mark { opacity: 1; }
   .pt-mark :global(img) { width: 100%; height: auto; }
 </style>

@@ -1,0 +1,35 @@
+---
+// Seam: the meniscus seam over a section join (BUILD-BRIEF sections 3, 8, 10). Glass's own motif: the join between two
+// sections curves like the surface of water in a glass. Traced from the Figma "seam · meniscus dip / rise" vectors
+// (identical curve at every width: M0 0H W V1 C .78W 1 .7W D .5W D C .3W D .22W 1 0 1Z).
+// Put it as the FIRST child of the LOWER section (that section needs `position: relative`, or the `.seam-host` class).
+//   from, to  colours of the section above and below (CSS colours or tokens, e.g. 'var(--frost)', 'var(--ink)').
+//   default   "dip": the upper colour hangs down into the lower section (Figma "meniscus dip").
+//   flip      "rise": the lower colour bulges up into the upper section (Figma "meniscus rise").
+//   d / dm    depth in px at 1440 / under 768 (Figma: 40, 48 or 56 / 32 or 36). Default 48 / 32.
+//   only      'd' | 'm': render on desktop+tablet only / phones only.
+// The seam is decorative (aria-hidden), pointer-events none, z-index --z-seam. Content of the host section keeps clear
+// of it by its own padding (the Figma frames already leave the room). With motion on, the curve settles from flat as the
+// join enters (kit/glass.ts, data-seam).
+interface Props { from: string; to: string; flip?: boolean; d?: number; dm?: number; only?: 'd' | 'm'; class?: string }
+const { from, to, flip = false, d = 48, dm = 32, only, class: cls } = Astro.props;
+const dip = 'M0 0H1440V1C1123.2 1 1008 100 720 100C432 100 316.8 1 0 1V0Z';
+const rise = 'M0 99C316.8 99 432 0 720 0C1008 0 1123.2 99 1440 99V100H0V99Z';
+---
+<svg class:list={['sm', flip ? 'sm-rise' : 'sm-dip', only && `sm-only-${only}`, cls]} style={`--sd:${d}px;--sdm:${dm}px`}
+  viewBox="0 0 1440 100" preserveAspectRatio="none" aria-hidden="true" focusable="false" data-seam>
+  <path d={flip ? rise : dip} fill={flip ? to : from} />
+</svg>
+<style>
+  .sm { position: absolute; left: 0; width: 100%; height: var(--sd); z-index: var(--z-seam); pointer-events: none; overflow: visible; }
+  /* +1 px overlap into the neighbour so no hairline of background shows at fractional zoom. */
+  .sm-dip { top: -1px; height: calc(var(--sd) + 1px); transform-origin: 50% 0; }
+  .sm-rise { top: calc(-1 * var(--sd)); height: calc(var(--sd) + 1px); transform-origin: 50% 100%; }
+  .sm { transition: transform 1s var(--ease-io); }
+  :global(html.motion) .sm[data-seam]:not(.is-in) { transform: scaleY(.15); }
+  @media (max-width: 767px) {
+    .sm { --sd: var(--sdm); }
+    .sm-only-d { display: none; }
+  }
+  @media (min-width: 768px) { .sm-only-m { display: none; } }
+</style>

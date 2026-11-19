@@ -1,0 +1,69 @@
+---
+// Header (Figma Home 712:448 y 40, 88 px white, hairline ink 20 % at the bottom; mobile 715:560 y 34, 68 px). Logo 128 x 64
+// at x 120; nav Public Sans SemiBold 15 at x 330 with 30 px gaps (the current page: Bold + a 3 px pdeep bar 3 px under the
+// text, as in the inner-page frames); "Text a photo" outline 196 x 56 and the red call button 256 x 56 at the right edge.
+// No mega menu or dropdown in the Figma, so none here. Sticky; hides going down past 600 px, returns going up (ui.ts
+// data-header). Below 1200 px: logo 100 x 50, red 48 px wrench button + 48 px menu button -> MobileMenu dialog.
+// Motion hooks: data-intro="brand", .nav-list > li and .cta > * fade in at the handoff (motion.ts introChrome).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import Btn from '../kit/Btn.astro';
+import MobileMenu from './MobileMenu.astro';
+import { MAIN, isCurrent } from './nav';
+import { SITE } from '../../data/site';
+interface Props { path?: string; estimate?: string }
+const { path = '/', estimate = '#estimate' } = Astro.props;
+---
+<header class="hdr" data-header>
+  <div class="hdr-in">
+    <a href="/" class="hdr-logo" data-intro="brand" aria-label={`${SITE.name}, home`}>
+      <Image src={logo} alt="" width={128} widths={[128, 256, 384]} sizes="(max-width: 1199px) 100px, 128px" loading="eager" fetchpriority="low" />
+    </a>
+    <nav class="nav" aria-label="Main">
+      <ul role="list" class="nav-list">
+        {MAIN.map((n) => <li style={`--nw:${n.w}px`}><a href={n.href} class="nl" aria-current={isCurrent(path, n.href) ? (path === n.href ? 'page' : 'true') : undefined}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="cta">
+      <Btn look="line" icon="camera" label="Text a photo" class="hb-text" w={196} />
+      <Btn sub="Tap to call · 24/7" class="hb-call" w={256} />
+      <a href={SITE.tel} class="m-call" aria-label={`Call ${SITE.phone}`}>
+        <svg viewBox="0 0 21 21" width="20" height="20" aria-hidden="true" focusable="false"><path d="M11.708 4.513c-1.25-1.25-1.083-3.25.417-3.917l2 2h2v2l2 2c-.667 1.5-2.667 1.667-3.917.417l-9.75 9.75c-.833.833-2.5.833-3.333 0-.834-.834-.834-2.5 0-3.334l10.583-8.916Z" fill="#fff" stroke="#000"/></svg>
+      </a>
+      <button type="button" class="menu-btn" aria-expanded="false" aria-controls="mnav" data-menu-open>
+        <span class="mb-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+<MobileMenu path={path} estimate={estimate} />
+<style>
+  .hdr { position: sticky; top: 0; z-index: var(--z-header); background: var(--white); box-shadow: inset 0 -1px 0 var(--line); transition: translate .5s var(--ease-out); }
+  .hdr.is-hidden { translate: 0 calc(-100% - 4px); }
+  .hdr-in { position: relative; display: flex; align-items: center; height: 88px; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; }
+  .hdr-logo { display: block; flex: none; width: 128px; height: 64px; }
+  .hdr-logo :global(img) { width: 100%; height: 100%; object-fit: contain; }
+  .nav { position: absolute; left: 210px; top: 0; height: 100%; display: flex; align-items: center; }
+  .nav-list { display: flex; align-items: center; gap: 30px; margin: 0; padding: 0; list-style: none; }
+  .nav-list li { min-width: var(--nw); }
+  .nl { position: relative; display: inline-flex; align-items: center; height: 44px; font-family: var(--f-b); font-weight: 600; font-size: 15px; line-height: 23px; color: var(--ink); white-space: nowrap; }
+  .nl::after { content: ''; position: absolute; left: 0; right: 0; top: calc(50% + 14.5px); height: 3px; background: var(--pdeep); transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease-out); }
+  .nl:hover::after, .nl[aria-current]::after { transform: scaleX(1); transform-origin: left; }
+  .nl[aria-current] { font-weight: 700; }
+  .cta { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+  .m-call, .menu-btn { display: none; }
+  @media (min-width: 1200px) and (max-width: 1279px) { .nav { position: static; margin-left: 40px; } .nav-list { gap: 24px; } .cta :global(.hb-text) { display: none; } }
+  @media (max-width: 1199px) {
+    .hdr-in { height: 68px; }
+    .hdr-logo { width: 100px; height: 50px; }
+    .nav, .cta :global(.hb-text) { display: none; }
+    .cta { gap: 10px; }
+    .m-call { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 4px; background: var(--red); transition: background-color .3s var(--ease-io); }
+    .m-call:hover { background: #9E2C31; }
+    .menu-btn { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); }
+    .mb-bars { display: grid; gap: 6px; width: 22px; }
+    .mb-bars i { display: block; height: 2px; border-radius: 1px; background: currentColor; }
+  }
+  @media (min-width: 768px) and (max-width: 1199px) { .m-call { display: none; } .cta :global(.hb-call) { display: inline-flex; } }
+  @media (max-width: 767px) { .cta :global(.hb-call) { display: none; } }
+</style>

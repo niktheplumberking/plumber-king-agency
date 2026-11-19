@@ -1,9 +1,8 @@
 ---
-// The real logo (ink or cream PNG) as an image. Decorative unless `alt` is given.
+// Kody's logo (transparent PNG, logo + mascot) as an image. Decorative unless `alt` is given. `w` = rendered width in px.
 import { Image } from 'astro:assets';
-import ink from '../../assets/brand/logo-ink.png';
-import cream from '../../assets/brand/logo-cream.png';
-interface Props { w: number; tone?: 'ink' | 'cream'; alt?: string; class?: string; }
-const { w, tone = 'ink', alt = '', class: cls } = Astro.props;
+import logo from '../../assets/brand/logo-glass.png';
+interface Props { w: number; alt?: string; class?: string; eager?: boolean }
+const { w, alt = '', class: cls, eager = false } = Astro.props;
 ---
-<Image src={tone === 'ink' ? ink : cream} alt={alt} width={w} widths={[w, w * 2]} sizes={`${w}px`} class={cls} loading="lazy" />
+<Image src={logo} alt={alt} width={w} widths={[w, w * 2]} sizes={`${w}px`} class={cls} loading={eager ? 'eager' : 'lazy'} />

@@ -4,7 +4,9 @@
 @font-face { font-family: 'Schibsted Grotesk'; font-style: normal; font-weight: 800; font-display: swap; src: url('/fonts/schibsted-grotesk-latin-800-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Public Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/public-sans-latin-400-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Public Sans'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/public-sans-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Public Sans'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/public-sans-latin-700-normal.woff2') format('woff2'); }
 @font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/jetbrains-mono-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Grotesk Fallback'; src: local('Arial'); size-adjust: 98%; ascent-override: 96%; descent-override: 26%; }
 @font-face { font-family: 'Public Fallback'; src: local('Arial'); size-adjust: 100%; ascent-override: 95%; descent-override: 22%; }
 @font-face { font-family: 'Mono Fallback'; src: local('Courier New'); size-adjust: 100%; ascent-override: 102%; descent-override: 30%; }
@@ -32,8 +34,11 @@
   --dur-1: .2s; --dur-2: .35s; --dur-3: .6s;
 
   --z-seam: 5; --z-header: 50; --z-menu: 60; --z-callbar: 45; --z-curtain: 90; --z-loader: 100;
-  --header-h: 64px;
+  --header-h: 68px;               /* Figma: 88 desktop, 68 mobile */
+  --shadow-ink: 4px 4px 0 var(--ink);      /* call buttons on light */
+  --shadow-powder: 4px 4px 0 var(--powder);/* call buttons on ink */
+  --line: rgba(22, 19, 15, .2);            /* hairlines: #16130f @ 0.2 */
 }
-@media (min-width: 1280px) { :root { --header-h: 84px; } }
-@media (min-width: 768px) and (max-width: 1279px) { :root { --gutter: clamp(48px, 6.25vw, 80px); --header-h: 76px; } }
+@media (min-width: 1200px) { :root { --header-h: 88px; } }
+@media (min-width: 768px) and (max-width: 1279px) { :root { --gutter: clamp(48px, 6.25vw, 80px); } }
 @media (max-width: 767px) { :root { --gutter: 20px; } }

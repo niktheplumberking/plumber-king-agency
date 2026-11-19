@@ -1,0 +1,22 @@
+---
+// /terms. No own Figma frame: the privacy template (BUILD-BRIEF 11), terms copy adapted from Mike's /terms to Glass facts
+// (generic, no promises), marked draft for Kody / a lawyer to check before launch.
+import Base from '../layouts/Base.astro';
+import Legal from '../components/global/Legal.astro';
+import { SITE } from '../data/site';
+const path = '/terms';
+const sections = [
+  { id: 'using-this-site', nav: 'Using this site', t: 'Using this site', body: `This website tells you about ${SITE.name} and lets you contact us. By using it, you agree to these terms.` },
+  { id: 'information-only', nav: 'Information only', t: 'Information only', body: 'What you read here is general information, not advice for your specific plumbing problem. Every job is different; we talk through yours when you call or text.' },
+  { id: 'prices-and-work', nav: 'Prices and work', t: 'Prices and work', body: 'Sending a form or a text doesn’t book a job. The price and the work are agreed with you directly.' },
+  { id: 'photos-and-reviews', nav: 'Photos and reviews', t: 'Photos and reviews', body: 'Job photos are from our own work. Reviews are quoted word for word from Google and belong to the people who wrote them.' },
+  { id: 'our-name-and-logo', nav: 'Our name and logo', t: 'Our name and logo', body: `The ${SITE.name} name, logo and photos belong to us. Please don’t copy them without asking.` },
+  { id: 'links', nav: 'Links', t: 'Links', body: 'Links to Google, Instagram, the Florida DBPR or other sites are there for your convenience. We don’t control those sites.' },
+  { id: 'limits', nav: 'Limits', t: 'Limits', body: 'We do our best to keep this website accurate and working, but we can’t promise it is always error-free or available.' },
+  { id: 'florida-law', nav: 'Florida law', t: 'Florida law', body: 'These terms are governed by the laws of Florida.' },
+  { id: 'questions', nav: 'Questions', t: 'Questions', body: `Call <a href="${SITE.tel}">${SITE.phone}</a> or email <a href="mailto:${SITE.email}">${SITE.email}</a>.` },
+];
+---
+<Base title={`Terms of Use · ${SITE.name}`} description="The terms for using the Glass Plumbing Services website, in plain English. Draft, 19 Nov 2026." path={path}>
+  <Legal title="Terms of use." crumb="Terms" path={path} lead="Short and plain: the terms for using this website. Draft, 19 Nov 2026." sections={sections} />
+</Base>

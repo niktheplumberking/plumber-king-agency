@@ -1,0 +1,171 @@
+---
+// Footer, round 7 (Figma Home 712:448 y 10830, 874 px; mobile 715:560 y 13075, 999 px; identical on every page's frame).
+// Frost, a 10 px powder band on top (8 px on phones), "Line open now" pill + area line, the giant outlined phone number
+// (Schibsted Black 138, ink outline, fills red on hover) with the 150 px red call circle: ONE tel: link. Then the mono
+// "Call or text" line, logo + the "On the record" spec plate, three link columns (Services / Areas / Company), the 10 %
+// off strip, and the ink bumper (copyright, Privacy, Terms, licence). The "Rather we call you?" call-back bar is REMOVED
+// (BUILD-BRIEF section 8). Phones: number 46 px, an outline "Text a photo" button, the columns become three disclosure rows
+// (ui.ts data-fcol), logo, plate, discount strip, bumper; 76 px under the bumper for the fixed call bar (Figma).
+// Facts: the plate shows "Largo, FL" as the base until Kody confirms the street may be public (site.ts); Figma's
+// Facebook link is left out (no URL in site.ts).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import Btn from '../kit/Btn.astro';
+import Plate from '../kit/Plate.astro';
+import { SERVICES, AREAS, COMPANY } from './nav';
+import { SITE } from '../../data/site';
+const year = new Date().getFullYear();
+const COLS = [
+  { id: 'ft-svc', title: 'Services', links: SERVICES },
+  { id: 'ft-areas', title: 'Areas', links: AREAS },
+  { id: 'ft-co', title: 'Company', links: COMPANY },
+];
+const lic = SITE.licence;
+---
+<footer class="ft">
+  <div class="ft-in">
+    <div class="ft-top">
+      <p class="ft-pill"><span class="ft-live" aria-hidden="true"></span>Line open now · 24/7 emergency</p>
+      <p class="ft-where">Largo, FL · all of Pinellas County</p>
+    </div>
+    <a class="ft-call" href={SITE.tel}>
+      <span class="ft-num"><span class="sr-only">Call </span>{SITE.phone}</span>
+      <span class="ft-circ" aria-hidden="true">
+        <svg viewBox="0 0 49 49" width="48" height="48" focusable="false"><path d="M27.4 9.997c-3-3-2.6-7.8 1-9.4l4.8 4.8H38v4.8l4.8 4.8c-1.6 3.6-6.4 4-9.4 1L10 39.397c-2 2-6 2-8 0s-2-6 0-8L27.4 9.997Z" fill="#fff" stroke="#000"/></svg>
+      </span>
+    </a>
+    <p class="ft-hint">Call or text · a photo helps</p>
+    <div class="ft-mtext"><Btn look="line" icon="camera" label="Text a photo" arrow block /></div>
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <a href="/" class="ft-logo" aria-label={`${SITE.name}, home`}><Image src={logo} alt="" width={180} widths={[150, 180, 360]} sizes="(max-width: 767px) 150px, 180px" loading="lazy" /></a>
+        <Plate class="ft-plate" title="On the record" shadow="powder" w={380} wm={350} pad={14} size={10} kx={86} kxm={78} pitch={19}
+          rows={[
+            ['Licence', { text: lic.number, href: lic.url, external: true }],
+            ['Type', lic.kind],
+            ['Status', `Active · exp ${lic.expires}`],
+            ['Base', `${SITE.city}, ${SITE.region}`],
+            ['Email', { text: SITE.email, href: `mailto:${SITE.email}` }],
+          ]} />
+      </div>
+      {COLS.map((c) => (
+        <nav class="ft-col" aria-labelledby={`${c.id}-h`} data-fcol>
+          <h2 class="ft-h" id={`${c.id}-h`}>
+            <span class="ft-h-d">{c.title}</span>
+            <button type="button" class="ft-tog" aria-expanded="false" aria-controls={c.id} data-fcol-btn>{c.title}<span class="ft-pm" aria-hidden="true"></span></button>
+          </h2>
+          <ul role="list" id={c.id} class="ft-list">
+            {c.links.map((l: { label: string; href: string; external?: boolean }) => (
+              <li><a href={l.href} {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}>{l.label}{l.external && <span class="sr-only"> (opens in a new tab)</span>}</a></li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
+    <p class="ft-off"><b>10% off</b><span>for veterans, first responders, teachers and seniors, up to $100.</span></p>
+  </div>
+  <div class="ft-bar">
+    <div class="ft-bar-in">
+      <p>© {year} {SITE.name}<span class="ft-d"> · {SITE.city}, {SITE.region}</span> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+      <p class="ft-lic"><a href={lic.url} target="_blank" rel="noopener">Licence {lic.number}<span class="sr-only"> (verify on DBPR, opens in a new tab)</span></a></p>
+    </div>
+  </div>
+</footer>
+<style>
+  .ft { position: relative; background: var(--frost); color: var(--ink); box-shadow: inset 0 10px 0 var(--powder); }
+  .ft-in { width: calc(100% - 2 * var(--gutter)); margin-inline: auto; padding: 72px 0 50px; }
+  .ft-top { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .ft-pill { display: inline-flex; align-items: center; gap: 13px; height: 36px; margin: 0; padding: 0 16px 0 17px; border-radius: 18px; background: var(--white); box-shadow: inset 0 0 0 1.2px var(--ink); font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .ft-live { position: relative; width: 10px; height: 10px; border-radius: 50%; background: var(--pdeep); }
+  .ft-live::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--pdeep); opacity: 0; }
+  :global(html.motion) .ft-live::after { animation: ft-pulse 2.4s var(--ease-out) 3; }
+  @keyframes ft-pulse { 0% { opacity: .5; transform: scale(1); } 100% { opacity: 0; transform: scale(2.6); } }
+  .ft-where { margin: 0; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+  .ft-call { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 22px; color: var(--ink); text-decoration: none; }
+  .ft-num {
+    font-family: var(--f-h); font-weight: 900; font-size: 138px; line-height: 1; letter-spacing: -.01em; white-space: nowrap;
+    color: var(--frost); -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; transition: color .4s var(--ease-io);
+  }
+  .ft-circ { display: grid; place-items: center; flex: none; width: 150px; height: 150px; border-radius: 50%; background: var(--red); transition: scale .4s var(--ease-io), background-color .3s var(--ease-io); }
+  @media (hover: hover) and (pointer: fine) {
+    .ft-call:hover .ft-num { color: var(--red); }
+    .ft-call:hover .ft-circ { background: #9E2C31; }
+    :global(html.motion) .ft-call:hover .ft-circ { scale: 1.04; }
+  }
+  .ft-call:focus-visible { outline-offset: 6px; }
+  .ft-hint { margin: 18px 0 0; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .ft-mtext { display: none; }
+
+  .ft-grid { display: grid; grid-template-columns: 520px 230px 230px 1fr; margin-top: 47px; }
+  .ft-logo { display: block; width: 180px; height: 90px; }
+  .ft-logo :global(img) { width: 100%; height: 100%; object-fit: contain; }
+  .ft-brand :global(.ft-plate) { margin-top: 22px; }
+  .ft-h { margin: 6px 0 0; font: inherit; }
+  .ft-h-d { display: block; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .ft-tog { display: none; }
+  .ft-list { margin: 15px 0 0; padding: 0; list-style: none; }
+  .ft-list li { font-family: var(--f-b); font-weight: 500; font-size: 16px; line-height: 24px; }
+  .ft-list li + li { margin-top: 8px; }
+  .ft-list a { position: relative; display: inline-block; padding: 4px 0; margin: -4px 0; transition: color .25s var(--ease-io); }
+  .ft-list a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; background: var(--pdeep); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease-out); }
+  .ft-list a:hover { color: var(--pdeep); }
+  .ft-list a:hover::after { transform: scaleX(1); }
+
+  .ft-off { display: flex; align-items: center; gap: 12px; min-height: 52px; margin: 64px 0 0; padding: 0 16px; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); font-family: var(--f-b); font-size: 16px; line-height: 1.3; }
+  .ft-off b { flex: none; min-width: 64px; white-space: nowrap; font-family: var(--f-m); font-weight: 700; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+
+  .ft-bar { background: var(--ink); color: var(--white); }
+  .ft-bar-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; width: calc(100% - 2 * var(--gutter)); margin-inline: auto; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; }
+  .ft-bar p { margin: 0; }
+  .ft-bar a { display: inline-block; padding: 5px 0; margin: -5px 0; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color .25s; }
+  .ft-bar a:hover { text-decoration-color: currentColor; }
+  .ft-bar a:focus-visible { outline-color: var(--powder); }
+  .ft-lic { font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+
+  @media (max-width: 1279px) {
+    .ft-num { font-size: clamp(64px, 9.4vw, 138px); -webkit-text-stroke-width: 3px; }
+    .ft-circ { width: clamp(96px, 10.4vw, 150px); height: clamp(96px, 10.4vw, 150px); }
+    .ft-grid { grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 32px; }
+    .ft-brand :global(.ft-plate) { width: 100%; }
+  }
+  @media (max-width: 1023px) and (min-width: 768px) {
+    .ft-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .ft-brand { grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 32px; }
+    .ft-brand :global(.ft-plate) { margin-top: 0; max-width: 380px; }
+  }
+  /* Room for the fixed call bar (MobileCallBar, < 1024 px) under the bumper, as in the Figma mobile frames. */
+  @media (max-width: 1023px) { .ft-bar { padding-bottom: calc(76px + env(safe-area-inset-bottom)); } }
+  @media (max-width: 767px) {
+    .ft { box-shadow: inset 0 8px 0 var(--powder); }
+    .ft-in { padding: 40px 0 40px; }
+    .ft-pill { gap: 13px; padding: 0 12px 0 17px; font-size: 10px; line-height: 13px; }
+    .ft-where { display: none; }
+    .ft-call { margin-top: 20px; }
+    .ft-num { font-size: clamp(36px, 11.8vw, 60px); -webkit-text-stroke-width: 2.4px; letter-spacing: .01em; }
+    .ft-circ { display: none; }
+    .ft-hint { margin-top: 17px; }
+    .ft-mtext { display: block; margin-top: 21px; }
+    .ft-grid { display: flex; flex-direction: column; gap: 0; margin-top: 32px; border-top: 1px solid var(--line); }
+    .ft-brand { order: 2; margin-top: 39px; }
+    .ft-logo { width: 150px; height: 75px; }
+    .ft-brand :global(.ft-plate) { margin-top: 21px; width: 100%; }
+    .ft-col { border-bottom: 1px solid var(--line); }
+    .ft-h { margin: 0; }
+    .ft-h-d { display: none; }
+    .ft-tog { display: flex; align-items: center; justify-content: space-between; width: 100%; height: 55px; font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); text-align: left; }
+    .ft-pm { position: relative; width: 44px; height: 44px; margin-right: 0; }
+    .ft-pm::before, .ft-pm::after { content: ''; position: absolute; left: 15px; top: 21px; width: 14px; height: 2px; background: var(--pdeep); transition: transform .35s var(--ease-io); }
+    .ft-pm::after { transform: rotate(90deg); }
+    .ft-tog[aria-expanded='true'] .ft-pm::after { transform: rotate(0); }
+    .ft-list { margin: 0; padding: 0 0 16px; }
+    .ft-list li + li { margin-top: 4px; }
+    .ft-list a { padding: 8px 0; margin: -4px 0; }
+    /* Closed by default once JS runs (ui.ts); without JS every list stays open. */
+    :global(html.js) .ft-col:not(.is-open) .ft-list { display: none; }
+    .ft-off { min-height: 60px; margin-top: 32px; gap: 12px; font-size: 14px; }
+    .ft-off b { min-width: 55px; font-size: 12px; }
+    .ft-bar-in { justify-content: center; height: 56px; font-size: 10px; line-height: 13px; letter-spacing: .01em; text-align: center; }
+    .ft-d, .ft-lic { display: none; }
+  }
+</style>

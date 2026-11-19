@@ -1,0 +1,45 @@
+---
+// Towns strip (Figma "Towns strip", identical on 11 frames: services, water heaters, areas, Seminole, about, contact,
+// reviews, our work, FAQ, thank-you, privacy). Ink2 band 176 px (252 on phones): powder mono label, then the towns in
+// Figma's order: the six bold underlined ones are links (Seminole -> its page, the others -> their row on /areas), the
+// rest plain text, powder "·" between them (phones: no dots, 16 px gaps). Place it right above the footer:
+//   import TownsStrip from '../components/global/TownsStrip.astro';  <TownsStrip />
+import { TOWNS } from '../../data/towns';
+const ORDER = ['Largo', 'Seminole', 'Clearwater', 'St. Petersburg', 'Belleair Bluffs', 'Pinellas Park', 'Dunedin', 'Belleair',
+  'Safety Harbor', 'Palm Harbor', 'Oldsmar', 'Tarpon Springs', 'Kenneth City', 'Gulfport', 'Indian Rocks Beach', 'Madeira Beach',
+  'Treasure Island', 'St. Pete Beach'];
+const LINKED = 6;
+const items = ORDER.map((name, i) => {
+  const t = TOWNS.find((x) => x.name === name);
+  if (!t) throw new Error(`TownsStrip: ${name} is not in towns.ts`);
+  return { name, href: i < LINKED ? (t.page ?? `/areas#town-${t.slug}`) : undefined };
+});
+---
+<section class="tst" aria-labelledby="tst-h">
+  <div class="wrap">
+    <h2 class="tst-h" id="tst-h"><span class="tst-d">Serving all of Pinellas County from Largo</span><span class="tst-m">Serving all of Pinellas from Largo</span></h2>
+    <ul role="list" class="tst-list">
+      {items.map((t) => <li>{t.href ? <a href={t.href}>{t.name}</a> : <span>{t.name}</span>}</li>)}
+    </ul>
+  </div>
+</section>
+<style>
+  .tst { background: var(--ink2); color: var(--white); padding: 40px 0 0; height: 176px; }
+  .tst-h { margin: 0; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .tst-m { display: none; }
+  .tst-list { display: flex; flex-wrap: wrap; margin: 17px 0 0; padding: 0; list-style: none; font-family: var(--f-b); font-size: 15px; line-height: 23px; row-gap: 9px; }
+  .tst-list li { display: inline-flex; align-items: center; }
+  .tst-list li:not(:last-child)::after { content: '·'; margin: 0 20px 0 10px; color: var(--powder); }
+  .tst-list a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .25s; }
+  .tst-list a:hover { color: var(--powder); }
+  .tst-list a:focus-visible { outline-color: var(--powder); }
+  @media (max-width: 1279px) { .tst { height: auto; padding-bottom: 40px; } }
+  @media (max-width: 767px) {
+    .tst { padding: 28px 0 32px; }
+    .tst-d { display: none; } .tst-m { display: inline; }
+    .tst-h { font-size: 10px; line-height: 13px; }
+    .tst-list { margin-top: 15px; font-size: 14px; line-height: 21px; gap: 7px 16px; }
+    .tst-list li:not(:last-child)::after { content: none; }
+    .tst-list a { display: inline-block; padding: 2px 0; margin: -2px 0; }
+  }
+</style>

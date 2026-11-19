@@ -93,3 +93,35 @@ Anything that moves on its own for more than 5 s gets a pause control.
 `reducedMotion: 'reduce'`, screenshot the section, compare side by side with the Figma crop; fix until within a few px.
 4. Then check with motion on (nothing invisible in view, nothing flashing). Keep components in
 `src/components/<page>/`. Never edit another builder's folder; shared changes go through the lead.
+
+## 10. Shared contract (owned by the SHARED builder; page builders use it, never edit it)
+- `src/components/kit/Btn.astro` props: `look`: 'call' (red fill, white text, wrench icon, default href tel:) | 'ink'
+  (ink fill, white text) | 'line' (1.5 px ink outline) | 'light' (white fill on ink) | 'powder' (frost/powder variant as in
+  Figma) ; `label`, `sub?` (second small mono line), `href?`, `icon?` (Icon.astro name), `size?` 'l' | 'm' | 's',
+  `w?` (px width), `block?`, `class?`, `t?` (passes data-t/data-fx), `external?`. Always a real `<a>` (or `<button>` when
+  `type` is given). Match the Figma button families exactly (sizes, radius, offset shadow where the frame has one).
+- `src/components/kit/Eyebrow.astro`: mono caps label with the small housing tick. Props `text`, `tone` 'dark'|'light'|'pdeep',
+  `t?`, `as?`.
+- `src/components/kit/Housing.astro`: the rounded-top canister (cap band + water fill + optional photo/number window).
+  Props `w`, `h`, `fill` (0-1), `tone`, slot. `data-fill` animates the water to `fill` on enter (motion.ts / small script).
+- `src/components/kit/Plate.astro`: steel spec plate with 4 rivets and mono rows. Props `rows` [[k,v]], `title?`, `w?`.
+- `src/components/kit/Seam.astro`: meniscus seam over a section join. Props `from`, `to` colours, `flip?`, `only?` 'd'|'m'.
+- Two-tone heading: `<h2 class="h2">Line one <span class="tone">line two</span></h2>`; `.tone` = pdeep on light,
+  powder on ink (`.on-ink .tone`). Type classes `.h1 .h2 .h3 .lead .mono` live in global.css (SHARED builder).
+Page builders may need the contract before it is final: use it anyway; the SHARED builder lands it first.
+
+## 11. Extraction findings and the call taken (lead, 19 Nov)
+- Contact "We call you back" body text is "." in Figma -> use "Leave your name and number. We call you back on it." 
+- Reviews "Review profile 1/2" labels -> "Google profile · 104 reviews" / "Google profile · 77 reviews" (links in site.ts).
+- Contact mobile flip card 01 has no question -> use the desktop card 01 question.
+- Privacy "Draft, 18 Nov 2026" stays (legal text is a draft for Kody). /terms = same template, terms copy adapted from
+  Mike's `/terms` (generic, no invented promises), also marked draft.
+- "floordrain" image = water heater with expansion tank (`water-heater-expansion-tank.jpg`); caption it that way.
+- Our-work mobile "crew_crawl" = same image as desktop "wh_tank2": map by hash (IMAGE-HASHES.md), not by layer name.
+- Mobile rows wider than 390 (carousels, photo rows, chip rows) = horizontal scrollers inside a clipped container
+  (scroll-snap, no page overflow).
+- Text exported as outline SVGs (Phone labels, "Checked"): build as real text. Outline-only numerals (footer phone, FAQ
+  numbers) = real text with `-webkit-text-stroke` and transparent fill; footer phone fills red on hover.
+- Icons missing from the export (rivets 715:887/889, services mobile carousel icons): reuse the same icon from another
+  frame or the desktop twin.
+- Copy differs desktop vs mobile (utility bar, footer bumper): follow each frame at its width.

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="17.24 1189.01 620.8 336.27" width="1440" height="780" fill="none" aria-hidden="true" focusable="false" overflow="visible"><defs><filter id="s4dfilter13_d_481_468" x="224.25" y="1328.32" width="26.72" height="29.69" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1.72"/>
+<feGaussianBlur stdDeviation="1.72"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.05 0 0 0 0 0.06 0 0 0 0 0.2 0 0 0 0.3 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_481_468"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_481_468" result="shape"/>
+</filter>
+</defs><g>
+<circle cx="228.49" cy="1360.59" r="4.31" stroke="#8E5530" stroke-width="4.74"/>
+<circle cx="228.49" cy="1360.59" r="4.62" stroke="#C47A45" stroke-width="3.45"/>
+<rect x="233.66" y="1345.93" width="10.35" height="12.93" rx="1.29" transform="rotate(35 233.66 1345.93)" fill="#C47A45"/>
+<path d="M256.94 1324.38C301.78 1291.61 357.82 1356.28 406.11 1382.58" stroke="#8F2520" stroke-width="4.31" stroke-linecap="round"/>
+<path d="M256.94 1324.38C301.78 1291.61 357.82 1356.28 406.11 1382.58" stroke="#C8362F" stroke-width="3.02" stroke-linecap="round"/>
+<g filter="url(#s4dfilter13_d_481_468)">
+<rect x="239.7" y="1328.69" width="11.21" height="23.28" rx="3.45" transform="rotate(35 239.7 1328.69)" fill="#C8362F"/>
+</g>
+</g>
+</svg>

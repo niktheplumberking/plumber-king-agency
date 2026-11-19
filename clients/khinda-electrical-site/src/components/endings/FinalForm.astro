@@ -3,7 +3,8 @@
 // one row at a time (scripts/forms.ts schedule()): each finished row flips its breaker ON, the readout counts "0n / 06 ON",
 // "Next" opens the next row; Send flips the MAIN breaker (top, where the FAQ cables land), the tape says "Schedule received.
 // Khinda has it." and the page goes to /thank-you/. Without JS every row is open and the form posts normally.
-// Per-page variant: `town` prefills CCT 03 and names the town in the eyebrow (city pages).
+// Per-page variant: `town` prefills CCT 03 and names the town in the eyebrow (city pages). Contact passes its own
+// `lead` [desktop, mobile] and a slot under the left column (the 7.3 "What happens next" pilot lights).
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
 import Tape from '../kit/Tape.astro';
@@ -12,8 +13,8 @@ import Toggle from '../kit/Toggle.astro';
 import Art from '../kit/Art.astro';
 import d from '../../art/f-d.svg?raw';
 import { SITE } from '../../data/site';
-interface Props { town?: string }
-const { town } = Astro.props;
+interface Props { town?: string; lead?: [string, string] }
+const { town, lead } = Astro.props;
 const OFF = ['Breaker trips', 'Flicker', 'Bigger panel', 'EV charger', 'New lights', 'Reno', 'Other'];
 const TIMES = ['Morning', 'Afternoon', 'Evening'];
 const ROWS = [
@@ -34,7 +35,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   <div class="ff-l ab" style="--x:120px;--y:130px;--w:460px">
     <Eyebrow text={town ? `Get a price in ${town}` : 'Get a price from Khinda'} data-t="1" />
     <h2 class="h2" id="ff-h" data-t="2"><span class="l1">Fill in the schedule.</span><span class="l2">He takes it from there.</span></h2>
-    <p class="lead ff-lead" data-t="3"><span class="dn-m">Six lines on a panel door, one at a time. Each line you fill flips its breaker on. The main breaker sends it straight to Khinda.</span><span class="dn-d">Six lines, one at a time. The main breaker sends it straight to Khinda.</span></p>
+    <p class="lead ff-lead" data-t="3">{lead ? <><span class="dn-m">{lead[0]}</span><span class="dn-d">{lead[1]}</span></> : <><span class="dn-m">Six lines on a panel door, one at a time. Each line you fill flips its breaker on. The main breaker sends it straight to Khinda.</span><span class="dn-d">Six lines, one at a time. The main breaker sends it straight to Khinda.</span></>}</p>
     <div class="ff-alt">
       <p class="tech ff-or">Or skip the form</p>
       <a class="ff-ph" href={SITE.tel}>{SITE.phone}</a>
@@ -42,6 +43,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <Btn v="text" tone="dark" main="Text a photo of the problem" sub={`WhatsApp · ${SITE.phone}`} href={SITE.whatsapp} class="ff-tb" />
       <Tape text="Fastest way: call." rot={-4} size={22} class="ff-tape" />
     </div>
+    <slot />
   </div>
   <div class="ff-door ab" style="--x:600px;--y:120px;--w:720px">
     <Screw s={14} class="ffs ffs1" /><Screw s={14} rot={120} class="ffs ffs2" /><Screw s={14} rot={75} class="ffs ffs3" /><Screw s={14} rot={10} class="ffs ffs4" />

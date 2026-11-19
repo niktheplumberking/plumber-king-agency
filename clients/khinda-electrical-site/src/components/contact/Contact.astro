@@ -1,0 +1,479 @@
+---
+// Contact (Figma 07 Contact, desktop 1440 / mobile 390; figma/v5/07-contact-*.png). Drawn objects are the Figma layers
+// (scripts/cuts-p3.py 07: copy, buttons, cards, drawers and tags taken out); everything people read or press is HTML on top
+// at the Figma coordinates (desktop --x/--y, mobile --mx/--my in the 390 frame, see p3.css). 7.3 is the shared F form
+// (FinalForm) with the contact lede and the "What happens next" pilot lights in its slot.
+// STATES: 7.4 the base tag rolls to "OPEN IN GOOGLE MAPS", phone + Instagram rows have COPY chips (amber "COPIED" 2 s);
+// 7.5 drawers pull out on hover with a dark "What to send" card that follows the pointer, click / tap opens the drawer;
+// 7.6 lockout tags swing on their padlock on hover and flip in 3D to the answer on click / tap.
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
+import Tape from '../kit/Tape.astro';
+import Screw from '../kit/Screw.astro';
+import Bolt from '../kit/Bolt.astro';
+import Img from '../ui/Img.astro';
+import Obj from '../p3/Obj.astro';
+import Crumbs from '../p3/Crumbs.astro';
+import FinalForm from '../endings/FinalForm.astro';
+import s1d from '../../art/p3/07/s1-d.svg?raw';
+import s1m from '../../art/p3/07/s1-m.svg?raw';
+import belld from '../../art/p3/07/bell-d.svg?raw';
+import bellm from '../../art/p3/07/bell-m.svg?raw';
+import s4d from '../../art/p3/07/s4-d.svg?raw';
+import s4m from '../../art/p3/07/s4-m.svg?raw';
+import s5d from '../../art/p3/07/s5-d.svg?raw';
+import s5m from '../../art/p3/07/s5-m.svg?raw';
+import s6d from '../../art/p3/07/s6-d.svg?raw';
+import s6m from '../../art/p3/07/s6-m.svg?raw';
+import s7d from '../../art/p3/07/s7-d.svg?raw';
+import s7m from '../../art/p3/07/s7-m.svg?raw';
+import { SITE } from '../../data/site';
+const P = (x: number, y: number, mx?: number, my?: number, w?: number, mw?: number) =>
+  `--x:${x}px;--y:${y}px` + (mx != null ? `;--mx:${mx}px;--my:${my}px` : '') + (w ? `;--w:${w}px` : '') + (mw ? `;--mw:${mw}px` : '');
+const MAPS = 'https://www.google.com/maps/search/?api=1&query=Surrey%2C+BC';
+// 7.2 signal bars: [bars, label, title, sub, cta, href, rank, numeral, desktop rect, mobile rect, desktop tops, mobile tops]
+const BARS = [
+  { n: 4, lab: '4 bars · fastest', t: 'Call', num: true, d: 'Say what is off and where you are. He tells you what it takes.', dm: 'Say what is off and where you are. He tells you what it takes.', rank: 'Fastest', big: '01',
+    r: [1038, 200, 280, 640], rm: [20, 232, 350, 260], top: [32, 66, 106, 158, 216, 570], topm: [24, 50, 84, 126, 178] },
+  { n: 3, lab: '3 bars', t: 'Text or WhatsApp a photo', d: 'Same number. Send the panel, the fixture or the outlet, plus your town.', dm: 'Same number. Send the panel, the fixture or the outlet.', cta: `Text ${SITE.phone} →`, href: SITE.sms, rank: '2nd fastest', big: '02',
+    r: [732, 350, 280, 490], rm: [20, 504, 330, 178], top: [32, 66, 132, 212, 420], topm: [24, 50, 84, 136] },
+  { n: 2, lab: '2 bars', t: 'The schedule form', d: 'Six lines, further down this page. Add a photo if you have one.', dm: 'Six lines, further down this page.', cta: 'Go to the form ↓', href: '#schedule', rank: '3rd fastest',
+    r: [426, 470, 280, 370], rm: [20, 694, 310, 156], top: [32, 66, 132, 190, 300], topm: [24, 50, 84, 115] },
+  { n: 1, lab: '1 bar', t: 'Instagram DM', d: SITE.igHandle, dm: SITE.igHandle, cta: 'Message him →', href: SITE.social.instagram, rank: '4th fastest',
+    r: [120, 580, 280, 260], rm: [20, 862, 290, 140], top: [32, 66, 106, 142, 190], topm: [24, 50, 84, 115] },
+] as const;
+const NAP: [string, string, string?, string?][] = [['Name', 'Khinda Electrical'], ['Base', 'Surrey, BC'], ['Phone', SITE.phone, SITE.phone], ['Texts', 'WhatsApp, same number'], ['Instagram', SITE.igHandle, SITE.igHandle], ['Works in', 'Surrey + the towns next door', undefined, 'Surrey + towns next door']];
+const DRAWERS = [
+  { k: 'Commercial', t: 'Commercial quote', d: 'Shop fit-out, office or fire alarm? Send the address and what the space is for.', a: 'Call about a commercial job →', href: SITE.tel, send: 'The address, what the space is for, and when it opens.', r: [284, 384, 873, 100], rm: [29, 314, 332, 156] },
+  { k: 'Permit', t: 'Permit question', d: 'Not sure if your job needs a Surrey electrical permit? Ask before you start.', a: 'Ask about a permit →', href: SITE.sms, send: 'The job, your town, and if it is a strata home.', r: [279, 490, 882, 100], rm: [25, 478, 340, 156] },
+  { k: 'Video', t: 'Send a video', d: 'Flicker, buzzing or a breaker that trips? A short video shows him what is going on.', a: 'WhatsApp a video →', href: SITE.whatsapp, send: 'A short video of the problem, plus your town.', r: [294, 604, 852, 100], rm: [36, 642, 318, 156] },
+];
+const TAGS = [
+  { q: 'Can I text a photo?', a: `Yes. Send it by text or WhatsApp to ${SITE.phone}: the panel, the fixture or the outlet, plus your town.`, l: 'Text a photo →', href: SITE.sms, r: [170, 404, 1.5], rm: [30, 386, 1.5] },
+  { q: 'Do you do weekends?', a: `Text the day that suits you to ${SITE.phone} and he will tell you straight if he can make it.`, l: 'Ask about a day →', href: SITE.sms, r: [565, 379, 8], rm: [34, 766, 6] },
+  { q: 'Do you give the price first?', a: 'Yes. You get the price before any work. Then you decide.', l: `Call ${SITE.phone} →`, href: SITE.tel, r: [950, 404, 1], rm: [30, 1186, 1], flipped: true },
+];
+const STEPS = [['He reads it', 'Your lines and photo land on his phone.'], ['You hear from him', 'About the job and what it needs.'], ['Price before work', 'The price comes before any work. Then you decide.']];
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<!-- 7.1 Hero -->
+<section class="c1 sec p3s p3m" style="--h:760px;--hm:1000px" data-m-section data-m-hero aria-labelledby="h1">
+  <div class="mz">
+    <Obj svg={s1d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <Obj svg={s1m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Crumbs trail={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact/' }]} class="ab" style={P(120, 62, 20, 28)} data-t="1" />
+    <Eyebrow text="Contact · Surrey, BC" class="ab" style={P(120, 98, 20, 56)} data-t="1" />
+    <h1 class="h1 c1-h ab" id="h1" style={P(120, 132, 20, 82)} data-t="2"><span class="l1">Get a Quote from</span><span class="l2">Khinda Electrical</span></h1>
+    <p class="c1-mk ab" style={P(120, 284, 20, 182)} data-t="5">A real electrician picks up.</p>
+    <p class="c1-p ab" style={P(120, 350, 20, 236, 540, 350)} data-t="3">Call, text a photo, or fill in the schedule further down. Calls and WhatsApp go to the same number.</p>
+    <a class="c1-n ab" href={SITE.tel} style={P(114, 420, 18, 320)} data-t="3">{SITE.phone}</a>
+    <p class="tech c1-tap ab" style={P(120, 520, 20, 376)} data-t="3">Tap to call  ·  Calls + WhatsApp</p>
+    <div class="c1-b ab" style={P(120, 560, 20, 404)} data-t="4"><Btn v="call" class="c1-bc" /><Btn v="text" class="c1-bt" /></div>
+    <p class="c1-j ab dn-m" style={P(120, 668)} data-t="5"><span>Jump to:</span><a href="#ways">Ways to reach ↓</a><a href="#schedule">The schedule ↓</a><a href="#base">Where he is based ↓</a></p>
+    <a class="c1-bell ab" href={SITE.tel} style={P(990, 225, 115, 671, 220, 160)} aria-label={`Ring the doorbell: call ${SITE.phone}`} data-t="4">
+      <Obj svg={belld} class="dn-m" /><Obj svg={bellm} class="dn-d" />
+    </a>
+    <p class="c1-pt ab" style={P(960, 456, 97, 836, 280, 196)} aria-hidden="true"><span class="tech">Press to call</span><b>{SITE.phone}</b></p>
+    <Tape text="Ring = call." rot={-6} size={22} class="c1-tape ab" style={P(1150, 96, 230, 566)} />
+  </div>
+</section>
+
+<!-- 7.2 Ways to reach -->
+<section class="c2 sec p3s p3m" id="ways" style="--h:820px;--hm:960px" data-m-section aria-labelledby="c2-h">
+  <div class="mz">
+    <Eyebrow text="Ways to reach him · fastest first" class="ab dn-m" style={P(120, 100)} data-t="1" />
+    <Eyebrow text="Fastest first" class="am dn-d" style={P(0, 0, 20, 60)} />
+    <h2 class="h2 ab" id="c2-h" style={P(120, 134, 20, 86)} data-t="2"><span class="l1">Four ways in.</span><span class="l2">A call gets full bars.</span></h2>
+    <p class="lead c2-p ab" style={P(120, 254, 20, 164, 460, 330)} data-t="3"><span class="dn-m">Pick the one that suits you. The more bars, the quicker you reach him.</span><span class="dn-d">The more bars, the quicker you reach him.</span></p>
+    <i class="c2-wt ab" style={P(1085, 198, 356, 230)} aria-hidden="true"></i><i class="c2-wt ab" style={P(1103, 198, 368, 230)} aria-hidden="true"></i>
+    <ol class="c2-l" role="list">
+      {BARS.map((b, i) => (
+        <li class:list={['c2-c ab', `c2-c${b.n}`]} style={P(b.r[0], b.r[1], b.rm[0], b.rm[1], b.r[2], b.rm[2]) + `;--hd:${b.r[3]}px;--hmb:${b.rm[3]}px`} data-t={String(5 - i)}>
+          <p class="tech c2-lab" style={`--t:${b.top[0]}px;--tm:${b.topm[0]}px`}><span class="sb" aria-hidden="true">{[1, 2, 3, 4].map((k) => <i class:list={[k <= b.n && 'on']}></i>)}</span>{b.lab}</p>
+          <h3 class="c2-t" style={`--t:${b.top[1]}px;--tm:${b.topm[1]}px`}>{b.t}</h3>
+          {'num' in b && <a class="c2-num" href={SITE.tel} style={`--t:${b.top[2]}px;--tm:${b.topm[2]}px`}>{SITE.phone}</a>}
+          <p class="c2-d" style={`--t:${b.top['num' in b ? 3 : 2]}px;--tm:${b.topm['num' in b ? 3 : 2]}px`}><span class="dn-m">{b.d}</span><span class="dn-d">{b.dm}</span></p>
+          {'num' in b ? <Btn v="call" main="Call now" class="btn-deep c2-btn" style={`--t:${b.top[4]}px;--tm:${b.topm[4]}px`} />
+            : <a class="c2-cta" href={b.href} style={`--t:${b.top[3]}px;--tm:${b.topm[3]}px`}>{b.cta}</a>}
+          <p class="tech c2-rank dn-m" style={`--t:${b.top[b.top.length - 1]}px`}>{b.rank}</p>
+          {b.big && <span class="c2-big dn-m" aria-hidden="true">{b.big}</span>}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<!-- 7.3 Form + what happens next (shared F) -->
+<FinalForm lead={['Six lines on a panel door. Leave your number and what’s off, and it goes straight to Khinda.', 'Six lines on a panel door. Leave your number and what’s off.']}>
+  <div class="c3-next">
+    <p class="tech c3-nl">What happens next</p>
+    <ol class="c3-ol" role="list">
+      {STEPS.map(([t, d], i) => <li class:list={[i === 0 && 'lit']}><span class="c3-pl" aria-hidden="true"><b>{i + 1}</b></span><h3>{t}</h3><p>{d}</p></li>)}
+    </ol>
+  </div>
+</FinalForm>
+
+<!-- 7.4 Base + map -->
+<section class="c4 sec p3s p3m" id="base" style="--h:780px;--hm:940px" data-m-section aria-labelledby="c4-h">
+  <div class="mz">
+    <Eyebrow text="Where he is based" class="ab" style={P(120, 108, 20, 60)} data-t="1" />
+    <h2 class="h2 ab" id="c4-h" style={P(120, 142, 20, 86)} data-t="2"><span class="l1">Based in Surrey.</span><span class="l2">Out to your street.</span></h2>
+    <p class="lead c4-p ab" style={P(880, 150, 20, 164, 440, 350)} data-t="3">Surrey, BC is his base. Homes, suites and shops across the city and the towns next door.</p>
+    <div class="c4-map ab" style={P(120, 290, 20, 256, 740, 350)} data-fx="frame" data-t="4"><Img name="google-maps-surrey-bc-base" alt="Google Maps screenshot of Surrey, BC, where Khinda Electrical is based" sizes="(min-width: 1024px) 800px, 100vw" box={740 / 400} boxM={350 / 190} /></div>
+    <Obj svg={s4d} class="ab dn-m c4-art" style="--x:0px;--y:0px" />
+    <Obj svg={s4m} class="am dn-d c4-art" style="--mx:0px;--my:0px" />
+    <a class="c4-tag ab" href={MAPS} style={P(380, 432, 36, 406, 220, 200)} target="_blank" rel="noopener" aria-label="Base: Surrey, BC. Open in Google Maps (new tab)" data-t="5">
+      <Bolt /><span class="c4-roll" aria-hidden="true"><span class="tech">Base · Surrey, BC</span><span class="tech">Open in Google Maps ↗</span></span>
+    </a>
+    <p class="c4-src ab" style={P(120, 706, 20, 454)}><span class="dn-m">Map: Google Maps, Surrey BC, Nov 2026</span><span class="dn-d">Map: Google Maps, Nov 2026</span></p>
+    <div class="c4-card ab" style={P(900, 250, 20, 480, 420, 350)} data-t="4">
+      <Screw s={18} class="c4-sc" />
+      <p class="tech c4-ch">Khinda Electrical · Base</p>
+      <dl class="c4-dl">
+        {NAP.map(([k, v, c, vm]) => (
+          <div><dt class="tech">{k}</dt><dd>{k === 'Phone' ? <a href={SITE.tel}>{v}</a> : k === 'Instagram' ? <a href={SITE.social.instagram}>{v}</a> : vm ? <><span class="dn-m">{v}</span><span class="dn-d">{vm}</span></> : v}</dd>
+            {c && <button type="button" class:list={['tech c4-cp', k === 'Instagram' && 'dn-m']} data-copy={c} aria-label={`Copy ${k.toLowerCase()}: ${c}`}>Copy</button>}</div>
+        ))}
+      </dl>
+      <Btn v="call" main="Ask if he covers you" sub={`Call ${SITE.phone}`} class="c4-btn" />
+      <p class="c4-live" role="status" aria-live="polite" data-copy-live></p>
+    </div>
+  </div>
+</section>
+
+<!-- 7.5 Other tasks: tool chest drawers -->
+<section class="c5 sec p3s p3m" style="--h:760px;--hm:860px" data-m-section aria-labelledby="c5-h">
+  <div class="mz">
+    <Obj svg={s5d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <Obj svg={s5m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="Something else?" class="ab c5-eb" style={P(618, 90, 113, 60)} data-t="1" />
+    <h2 class="h2 c5-h ab" id="c5-h" style={P(320, 124, 20, 86, 800, 350)} data-t="2"><span class="l1">Not a repair?</span><span class="l2">Pick a drawer.</span></h2>
+    <p class="lead c5-p ab" style={P(410, 236, 20, 164, 620, 350)} data-t="3"><span class="dn-m">Three other reasons people get in touch. Each drawer ends the same way: call or text {SITE.phone}.</span><span class="dn-d">Three other reasons people get in touch. Each ends the same way: call or text {SITE.phone}.</span></p>
+    <ul class="c5-l" role="list" data-drawers>
+      {DRAWERS.map((d, i) => (
+        <li class="c5-d ab" style={P(d.r[0], d.r[1], d.rm[0], d.rm[1], d.r[2], d.rm[2])} data-drawer>
+          <button type="button" class="c5-hit" aria-expanded="false" aria-controls={`c5-s${i}`}><span class="sr-only">{d.t}: what to send</span></button>
+          <span class="c5-lb tech" aria-hidden="true"><small>Drawer {pad(i + 1)}</small>{d.k}</span>
+          <h3 class="c5-t">{d.t}</h3>
+          <p class="c5-ds">{d.d}</p>
+          <a class="c5-a" href={d.href}>{d.a}</a>
+          <i class="c5-hd" aria-hidden="true"></i>
+          <div class="c5-card" id={`c5-s${i}`} data-card><p class="tech">What to send</p><p>{d.send}</p></div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<!-- 7.6 Three FAQs: lockout tags on a rail -->
+<section class="c6 sec on-dark p3s p3m" style="--h:780px;--hm:1500px" data-m-section aria-labelledby="c6-h">
+  <div class="mz">
+    <Obj svg={s6d} class="ab dn-m" style="--x:0px;--y:0px" />
+    <Obj svg={s6m} class="am dn-d" style="--mx:0px;--my:0px" />
+    <Eyebrow text="3 quick questions" class="ab" style={P(120, 96, 20, 70)} data-t="1" />
+    <h2 class="h2 ab" id="c6-h" style={P(120, 130, 20, 96)} data-t="2"><span class="l1">Three quick ones,</span><span class="l2">tagged on the rail.</span></h2>
+    <p class="lead c6-p ab" style={P(880, 140, 20, 174, 440, 350)} data-t="3">Electricians hang tags on a switch to leave a message. These three carry what people ask first.</p>
+    <ul class="c6-l" role="list">
+      {TAGS.map((g, i) => (
+        <li class="c6-w ab" style={P(g.r[0], g.r[1], g.rm[0], g.rm[1], 320, 330) + `;--r:${g.r[2]}deg;--rm:${g.rm[2]}deg`} data-t="4">
+          <div class:list={['c6-sw', i === 1 && 'mid']}>
+            <div class:list={['c6-tag', g.flipped && 'is-flipped']} data-tag>
+              <div class="c6-f">
+                <span class="c6-band"><i class="c6-gr"></i><span class="tech">Ask · {pad(i + 1)}</span></span>
+                <h3 class="c6-q">{g.q}</h3><i class="c6-ul" aria-hidden="true"></i>
+                <span class="c6-ln" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="tech c6-hint" aria-hidden="true">Answer on the back <svg viewBox="0 0 14 10" width="14" height="10"><path d="M1 8a6 6 0 0 1 11-3M12 1v4H8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span>
+              </div>
+              <div class="c6-b">
+                <span class="c6-band"><i class="c6-gr"></i><span class="tech">Back · {pad(i + 1)}</span></span>
+                <p class="tech c6-bq" aria-hidden="true">{g.q}</p>
+                <p class="c6-a">{g.a}</p>
+                <a class="c6-al" href={g.href} tabindex={g.flipped ? undefined : '-1'}>{g.l}</a>
+              </div>
+            </div>
+            <button type="button" class="c6-hit" aria-pressed={g.flipped ? 'true' : 'false'} aria-label={`${g.q} Flip the tag for the answer`}></button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<!-- 7.7 Phone band: a plug in an outlet, its cord runs into the J-box on the towns line -->
+<section class="c7 sec p3s p3m" style="--h:520px;--hm:640px" data-m-section aria-labelledby="c7-h">
+  <div class="mz">
+    <Eyebrow text="Still deciding?" class="ab c7-eb" style={P(120, 92, 20, 60)} data-t="1" />
+    <h2 class="h2 c7-h ab" id="c7-h" style={P(120, 126, 20, 86)} data-t="2"><span class="l1">Still have a question?</span><span class="l2">Call or text him.</span></h2>
+    <a class="c7-n ab" href={SITE.tel} style={P(114, 238, 18, 164)} data-t="3">{SITE.phone}</a>
+    <div class="c7-b ab" style={P(120, 364, 20, 232)} data-t="4"><Btn v="call" class="btn-deep c7-bc" /><Btn v="text" class="btn-ink c7-bt" /></div>
+    <Obj svg={s7d} class="ab dn-m c7-art" style="--x:1040px;--y:62px" data-t="4" />
+    <Obj svg={s7m} class="am dn-d c7-art" style="--mx:220px;--my:368px" />
+  </div>
+</section>
+
+<style>
+  .p3m :global(.obj.ab), .p3m :global(.obj.am) { width: auto; }
+  .p3m h3 { margin: 0; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  /* 7.1 */
+  .c1 { background: var(--panel); z-index: 3; }
+  .c1-mk { font-family: var(--f-marker); font-size: 26px; line-height: 38px; color: var(--indigo); transform: rotate(-2deg); transform-origin: 0 100%; white-space: nowrap; }
+  .c1-p { font-size: 19px; line-height: 30px; color: var(--ink); }
+  .c1-n { font-family: var(--f-display); font-weight: 800; font-size: 88px; line-height: 94px; color: var(--indigo); white-space: nowrap; }
+  .c1-n:hover, .c7-n:hover { text-decoration: underline; text-decoration-thickness: 4px; text-underline-offset: 8px; }
+  .c1-tap { font-size: 11px; line-height: 16px; color: var(--steel); white-space: pre; }
+  .c1-b { display: flex; gap: 14px; }
+  .c1-b :global(.c1-bc) { width: 235px; } .c1-b :global(.c1-bt) { width: 200px; }
+  .c1-j { display: flex; gap: 22px; font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); }
+  .c1-j span { margin-right: -8px; }
+  .c1-j a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .c1-bell { z-index: 2; width: 220px; height: 220px; border-radius: 50%; }
+  .c1-bell :global(.obj) { width: 100%; transition: transform .25s var(--ease-out); }
+  .c1-bell:hover :global(.obj) { transform: scale(.97); }
+  .c1-bell:active :global(.obj) { transform: scale(.93) translateY(2px); transition-duration: .08s; }
+  .c1-pt { display: grid; justify-items: center; gap: 6px; width: 280px; pointer-events: none; }
+  .c1-pt .tech { font-size: 11px; line-height: 16px; letter-spacing: .14em; color: var(--ink); }
+  .c1-pt b { font-family: var(--f-display); font-weight: 800; font-size: 24px; line-height: 30px; color: var(--indigo); }
+  /* 7.2 */
+  .c2 { background: #fff; z-index: 1; }
+  .c2-p { color: var(--ink); }
+  .c2-wt { z-index: 2; width: 14px; height: 10px; border-radius: 2px; background: #8D93A3; }
+  .c2-l { margin: 0; padding: 0; list-style: none; }
+  .c2-c { height: var(--hd); border-radius: 10px; overflow: hidden; }
+  .c2-c > * { position: absolute; left: 26px; top: var(--t); margin: 0; }
+  .c2-c1 { background: #fff; box-shadow: inset 0 0 0 1.5px var(--line); }
+  .c2-c2 { background: var(--panel); }
+  .c2-c3 { background: var(--indigo); box-shadow: 0 14px 28px rgba(13, 15, 51, .25); }
+  .c2-c4 { background: var(--amber); box-shadow: 0 14px 28px rgba(13, 15, 51, .25); }
+  .c2-lab { display: flex; align-items: flex-end; gap: 14px; font-size: 10px; line-height: 14px; color: var(--steel); }
+  .sb { display: flex; align-items: flex-end; gap: 3px; height: 22px; margin: -8px 0 0; }
+  .sb i { width: 6px; background: var(--line); border-radius: 1px; }
+  .sb i:nth-child(1) { height: 7px; } .sb i:nth-child(2) { height: 12px; } .sb i:nth-child(3) { height: 17px; } .sb i:nth-child(4) { height: 22px; }
+  .sb i.on { background: var(--ink); }
+  .c2-c3 .sb i { background: #3A3E6B; } .c2-c3 .sb i.on { background: #fff; }
+  .c2-c3 .c2-lab, .c2-c3 .c2-d, .c2-c3 .c2-rank { color: var(--mist); }
+  .c2-c4 .c2-lab, .c2-c4 .c2-d, .c2-c4 .c2-rank { color: var(--ink); }
+  .c2-t { width: 232px; font-family: var(--f-display); font-weight: 800; font-size: 26px; line-height: 30px; color: var(--ink); }
+  .c2-c3 .c2-t { color: #fff; }
+  .c2-num { font-family: var(--f-display); font-weight: 800; font-size: 34px; line-height: 54px; color: var(--ink); white-space: nowrap; }
+  .c2-d { width: 232px; font-size: 15px; line-height: 22px; color: var(--steel); }
+  .c2-cta { font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); }
+  .c2-cta:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .c2-c3 .c2-cta { color: var(--amber); }
+  .c2-c :global(.c2-btn) { position: absolute; left: 26px; top: var(--t); width: 217px; }
+  .c2-rank { font-size: 10px; line-height: 14px; color: var(--steel); }
+  .c2-big { left: auto !important; right: 16px; top: auto !important; bottom: 50px; font-family: var(--f-display); font-weight: 800; font-size: 120px; line-height: 120px; }
+  .c2-c3 .c2-big { color: rgba(255, 255, 255, .08); } .c2-c4 .c2-big { color: rgba(20, 21, 43, .12); }
+  .c2-c { transition: transform .35s var(--ease-out), box-shadow .35s; }
+  .c2-c:hover { transform: translateY(-6px); }
+  /* 7.3 slot: what happens next (desktop: under the left column at y 738; mobile: last in the flow) */
+  :global(.ff:has(.c3-next) .ff-alt) { margin-top: 74px; }
+  .c3-next { position: absolute; left: 0; top: 608px; width: 480px; }
+  .c3-nl { font-size: 11px; line-height: 16px; color: var(--mist); }
+  .c3-ol { display: flex; gap: 14px; margin: 12px 0 0; padding: 0; list-style: none; }
+  .c3-ol li { position: relative; width: 150px; min-height: 120px; }
+  .c3-pl { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #9EA4B2; box-shadow: 0 4px 8px rgba(0, 0, 0, .4), inset 0 0 0 5px #C9CDD6; }
+  .c3-pl b { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: #3A3E6B; box-shadow: inset 0 0 0 2px #B06F12; font-family: var(--f-display); font-weight: 800; font-size: 18px; color: #fff; }
+  .lit .c3-pl b { background: var(--amber); color: var(--ink); }
+  .c3-ol li:last-child h3 { width: 96px; }
+  .c3-ol h3 { position: absolute; left: 76px; top: 6px; width: 84px; font-weight: 600; font-size: 15px; line-height: 19px; color: #fff; }
+  .c3-ol p { margin-top: 16px; font-size: 13px; line-height: 18px; color: var(--mist); }
+  /* 7.4 */
+  .c4 { background: var(--panel); z-index: 1; }
+  .c4-p { color: var(--ink); }
+  .c4-map { height: 400px; overflow: hidden; border-radius: 10px; box-shadow: 0 14px 30px rgba(13, 15, 51, .25); background: var(--deep); }
+  .c4 :global(.c4-art) { z-index: 2; }
+  .c4-tag { z-index: 3; display: flex; align-items: center; gap: 10px; width: 220px; height: 32px; padding: 0 14px; border-radius: 6px; background: var(--indigo); color: #fff; overflow: hidden; }
+  .c4-tag :global(svg) { flex: none; }
+  .c4-roll { display: grid; height: 16px; overflow: hidden; }
+  .c4-roll span { font-size: 11px; line-height: 16px; letter-spacing: .1em; white-space: nowrap; transition: transform .35s var(--ease-out); }
+  .c4-tag:hover .c4-roll span, .c4-tag:focus-visible .c4-roll span { transform: translateY(-100%); }
+  .c4-src { font-family: var(--f-tech); font-size: 10px; line-height: 14px; letter-spacing: .08em; color: var(--steel); }
+  .c4-card { z-index: 3; height: 470px; background: #fff; border-radius: 10px; box-shadow: 0 16px 30px rgba(13, 15, 51, .25); }
+  .c4-card :global(.c4-sc) { position: absolute; left: -7px; top: 190px; }
+  .c4-ch { height: 58px; padding: 22px 28px 0; border-radius: 10px 10px 0 0; background: var(--indigo); font-size: 12px; line-height: 17px; color: #fff; }
+  .c4-dl { margin: 14px 28px 0; }
+  .c4-dl div { position: relative; display: flex; align-items: center; height: 46px; border-bottom: 1px solid #E4E6EB; }
+  .c4-dl dt { width: 122px; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .c4-dl dd { margin: 0; font-weight: 600; font-size: 16px; line-height: 20px; color: var(--indigo); }
+  .c4-dl dd a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .c4-cp { position: absolute; right: 0; width: 76px; height: 26px; border-radius: 13px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); font-size: 10px; letter-spacing: .1em; color: var(--steel); transition: background-color .25s, color .25s; }
+  .c4-cp:hover { box-shadow: inset 0 0 0 1px var(--indigo); color: var(--indigo); }
+  .c4-cp.is-done { background: var(--amber); box-shadow: none; color: var(--ink); }
+  .c4-card :global(.c4-btn) { position: absolute; left: 28px; top: 372px; width: 250px; }
+  .c4-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  /* 7.5 */
+  .c5 { background: #fff; z-index: 2; }
+  .c5 :global(.c5-eb) { width: 204px; white-space: nowrap; }
+  .c5-h, .c5-p { text-align: center; }
+  .c5-l { margin: 0; padding: 0; list-style: none; }
+  .c5-d { z-index: 2; height: 100px; }
+  .c5-d::before { content: ''; position: absolute; inset: 0; border-radius: 6px; background: #C9CDD6; box-shadow: 0 2px 0 rgba(13, 15, 51, .25); transition: inset .35s var(--ease-out), box-shadow .35s, background-color .3s; }
+  .c5-d:hover, .c5-d.is-open { z-index: 3; }
+  .c5-d:hover::before, .c5-d.is-open::before { inset: 0 -12px; background: #D2D5DD; box-shadow: 0 14px 26px rgba(13, 15, 51, .35); }
+  .c5-hit { position: absolute; inset: 0; z-index: 1; border-radius: 6px; cursor: pointer; }
+  .c5-lb { position: absolute; left: 22px; top: 20px; z-index: 0; display: flex; flex-direction: column; justify-content: center; width: 164px; height: 60px; padding: 0 12px; background: #fff; box-shadow: inset 0 0 0 3px #8D93A3; border-radius: 3px; font-size: 13px; line-height: 17px; letter-spacing: .08em; color: var(--ink); }
+  .c5-lb small { font-size: 10px; line-height: 14px; color: var(--steel); }
+  .c5-t { position: absolute; left: 199px; top: 16px; font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 28px; color: var(--indigo); }
+  .c5-ds { position: absolute; left: 199px; top: 46px; width: 390px; font-size: 14px; line-height: 21px; color: var(--ink); }
+  .c5-a { position: absolute; left: 619px; top: 22px; z-index: 2; font-weight: 600; font-size: 14px; line-height: 19px; color: var(--indigo); }
+  .c5-a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .c5-hd { position: absolute; left: 619px; top: 58px; width: 198px; height: 8px; border-radius: 4px; background: #8D93A3; box-shadow: inset 0 2px 0 rgba(13, 15, 51, .25); }
+  .c5-card { position: absolute; left: var(--cx, -150px); top: var(--cy, 40px); z-index: 4; width: 210px; padding: 12px 14px; border-radius: 8px; background: var(--deep); box-shadow: 0 12px 24px rgba(13, 15, 51, .35); color: #fff; font-size: 13px; line-height: 18px; opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s; pointer-events: none; }
+  .c5-card .tech { margin-bottom: 4px; font-size: 10px; line-height: 14px; color: var(--amber); }
+  .c5-d:hover .c5-card, .c5-d.is-open .c5-card { opacity: 1; visibility: visible; }
+  /* 7.6 */
+  .c6 { background: var(--indigo); z-index: 1; }
+  .c6-p { color: var(--mist); }
+  .c6-l { margin: 0; padding: 0; list-style: none; }
+  .c6-w { z-index: 2; width: 320px; height: 340px; transform: rotate(var(--r)); transform-origin: 0 0; perspective: 1200px; }
+  .c6-sw { width: 100%; height: 100%; transform-origin: 160px 27px; transition: transform .6s var(--ease-back); }
+  .c6-w:hover .c6-sw { transform: rotate(-8deg); }
+  .c6-w:hover .c6-sw.mid { transform: rotate(6deg); }
+  .c6-tag { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .7s var(--ease-io); }
+  .c6-tag.is-flipped { transform: rotateY(180deg); }
+  .c6-f, .c6-b { position: absolute; inset: 0; border-radius: 10px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 14px 24px rgba(5, 5, 20, .4); }
+  .c6-f { background: #fff; }
+  .c6-b { background: #F3E7C8; transform: rotateY(180deg); }
+  .c6-f > *, .c6-b > * { position: absolute; margin: 0; }
+  .c6-band { left: 0; top: 0; width: 100%; height: 66px; background: var(--amber); }
+  .c6-band .tech { position: absolute; left: 21px; top: 45px; font-size: 11px; line-height: 16px; letter-spacing: .14em; color: var(--ink); }
+  .c6-gr { position: absolute; left: 150px; top: 17px; width: 20px; height: 20px; border-radius: 50%; background: var(--deep); box-shadow: 0 0 0 4px #C9CDD6; }
+  .c6-q { left: 20px; top: 85px; width: 276px; font-family: var(--f-display); font-weight: 800; font-size: 26px; line-height: 30px; color: var(--ink); }
+  .c6-ul { left: 20px; top: 150px; width: 40px; height: 3px; border-radius: 2px; background: var(--amber); }
+  .c6-ln { left: 14px; top: 196px; display: grid; gap: 39px; width: 292px; }
+  .c6-ln i { height: 1px; background: #D9DCE2; }
+  .c6-hint { left: 14px; top: 298px; display: flex; gap: 6px; align-items: center; font-size: 10px; line-height: 14px; letter-spacing: .1em; color: var(--steel); }
+  .c6-bq { left: 21px; top: 82px; width: 276px; font-size: 11px; line-height: 16px; letter-spacing: .08em; color: var(--steel); }
+  .c6-a { left: 20px; top: 108px; width: 276px; font-family: var(--f-marker); font-size: 21px; line-height: 28px; color: var(--indigo); }
+  .c6-al { left: 17px; top: 296px; z-index: 3; font-weight: 600; font-size: 15px; line-height: 19px; color: var(--indigo); pointer-events: none; }
+  .c6-tag.is-flipped .c6-al { pointer-events: auto; }
+  .c6-al:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .c6-sw { position: relative; }
+  .c6-hit { position: absolute; inset: 0; z-index: 2; border-radius: 10px; cursor: pointer; }
+  .c6-sw:has(.is-flipped) .c6-hit { bottom: 56px; }
+  /* 7.7 */
+  .c7 { background: var(--amber); z-index: 4; overflow: visible; }
+  .c7 :global(.c7-eb) { color: var(--ink); }
+  .c7 :global(.c7-eb svg path) { fill: var(--ink); }
+  .c7-h { color: var(--ink); } .c7-h .l2 { color: var(--indigo); }
+  .c7-n { font-family: var(--f-display); font-weight: 800; font-size: 96px; line-height: 100px; color: var(--ink); white-space: nowrap; }
+  .c7-b { display: flex; gap: 14px; }
+  .c7-b :global(.c7-bc) { width: 235px; } .c7-b :global(.c7-bt) { width: 200px; }
+  .c7 :global(.c7-art) { z-index: 5; }
+  @media (prefers-reduced-motion: reduce) { .c6-sw, .c6-tag, .c5-d::before, .c2-c { transition: none; } }
+  @media (max-width: 1023px) {
+    .c1-mk { font-size: 20px; line-height: 29px; }
+    .c1-p { font-size: 16px; line-height: 25px; }
+    .c1-n { font-size: 46px; line-height: 50px; }
+    .c1-tap { white-space: normal; letter-spacing: .1em; }
+    .c1-b { flex-direction: column; gap: 12px; }
+    .c1-b :global(.btn) { width: 350px !important; }
+    .c1-bell { width: 160px; height: 160px; }
+    .c1-pt { width: 196px; gap: 0; }
+    .c1-pt b { font-size: 16.8px; line-height: 26px; }
+    .c1 :global(.c1-tape) { font-size: 16.5px; padding: 4.5px 12px; }
+    .c2-c { height: var(--hmb); }
+    .c2-c > * { left: 20px; top: var(--tm); }
+    .c2-c :global(.c2-btn) { left: 20px; top: var(--tm); width: 220px; }
+    .c2-lab { gap: 8px; font-size: 11px; line-height: 16px; }
+    .sb { margin-top: -6px; height: 20px; } .sb i { width: 5px; }
+    .c2-t { width: 290px; font-size: 22px; line-height: 35px; }
+    .c2-num { font-size: 28px; line-height: 44px; }
+    .c2-d { width: 290px; font-size: 14px; line-height: 21px; }
+    .c2-c4 .c2-d { width: 310px; }
+    .c2-cta { font-size: 14px; line-height: 18px; }
+    .c2-wt { width: 12px; height: 8px; }
+    .c2-c:hover { transform: none; }
+    .c3-next { position: relative; top: auto; width: auto; order: 4; margin-top: 40px; }
+    .c3-ol { flex-direction: column; gap: 14px; margin-top: 12px; }
+    .c3-ol li { width: auto; min-height: 48px; padding-left: 64px; }
+    .c3-pl { position: absolute; left: 0; top: 0; width: 48px; height: 48px; box-shadow: 0 3px 6px rgba(0, 0, 0, .4), inset 0 0 0 4px #C9CDD6; }
+    .c3-pl b { width: 32px; height: 32px; font-size: 15px; }
+    .c3-ol h3, .c3-ol li:last-child h3 { position: static; width: auto; padding-top: 2px; }
+    :global(.ff:has(.c3-next) .ff-alt) { margin-top: 40px; }
+    .c3-ol p { margin-top: 3px; }
+    .c4-map { height: 190px; }
+    .c4-tag { width: 200px; height: 28px; padding: 0 10px; gap: 8px; }
+    .c4-roll span { letter-spacing: .06em; }
+    .c4-src { font-size: 11px; line-height: 16px; letter-spacing: .06em; }
+    .c4-card { height: 420px; }
+    .c4-card :global(.c4-sc) { left: 301px; top: -7px; width: 16px; height: 16px; }
+    .c4-ch { height: 52px; padding: 18px 20px 0; font-size: 11px; line-height: 16px; }
+    .c4-dl { margin: 12px 20px 0; }
+    .c4-dl div { height: 40px; }
+    .c4-dl dt { width: 112px; font-size: 11px; line-height: 16px; letter-spacing: .08em; }
+    .c4-dl dd { font-size: 15px; line-height: 19px; }
+    .c4-cp { width: 60px; }
+    .c4-card :global(.c4-btn) { left: 20px; top: 322px; width: 310px; }
+    .c5 :global(.c5-eb) { width: auto; justify-content: center; left: 20px !important; width: 350px; }
+    .c5-d { height: 156px; }
+    .c5-d:hover::before, .c5-d.is-open::before { inset: 0 -8px; }
+    .c5-d:hover .c5-card { opacity: 0; visibility: hidden; }
+    .c5-d.is-open .c5-card { opacity: 1; visibility: visible; }
+    .c5-lb { left: 12px; top: 12px; width: 150px; height: 42px; padding: 0 10px; box-shadow: inset 0 0 0 2px #8D93A3; font-size: 12px; line-height: 15px; }
+    .c5-lb small { font-size: 9px; line-height: 12px; }
+    .c5-t { left: 12px; top: 60px; font-size: 20px; line-height: 26px; }
+    .c5-ds { left: 12px; top: 86px; width: 306px; font-size: 13px; line-height: 18px; }
+    .c5-a { left: 12px; top: 126px; font-size: 14px; line-height: 18px; }
+    .c5-hd { left: 182px; top: 30px; width: 104px; height: 8px; }
+    .c5-card { left: 8px; top: calc(100% - 6px); width: calc(100% - 16px); }
+    .c6-w { width: 330px; height: 276px; transform: rotate(var(--rm)); }
+    .c6-sw { transform-origin: 165px 22px; }
+    .c6-w:hover .c6-sw, .c6-w:hover .c6-sw.mid { transform: none; }
+    .c6-band { height: 54px; }
+    .c6-band .tech { left: 17px; top: 20px; letter-spacing: .12em; }
+    .c6-gr { left: 155px; top: 12px; }
+    .c6-q { left: 16px; top: 68px; width: 294px; font-size: 22px; line-height: 26px; }
+    .c6-ul { left: 16px; top: 104px; }
+    .c6-ln { left: 12px; top: 140px; gap: 30px; width: 306px; }
+    .c6-hint { left: 12px; top: 242px; font-size: 11px; line-height: 16px; letter-spacing: .06em; }
+    .c6-bq { left: 17px; top: 68px; width: 294px; line-height: 26px; letter-spacing: 0; }
+    .c6-a { left: 16px; top: 106px; width: 294px; font-size: 19px; line-height: 25px; }
+    .c6-al { left: 14px; top: 242px; font-size: 14px; line-height: 18px; }
+    .c7-n { font-size: 46px; line-height: 50px; }
+    .c7-b { flex-direction: column; gap: 12px; }
+    .c7-b :global(.btn) { width: 350px !important; }
+    .sec.p3m.c7 { overflow: visible; }
+  }
+</style>
+<script>
+  // 7.4 copy chips
+  document.querySelectorAll<HTMLButtonElement>('.c4-cp[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const live = document.querySelector<HTMLElement>('[data-copy-live]');
+    try {
+      await navigator.clipboard.writeText(b.dataset.copy || '');
+      b.textContent = 'Copied'; b.classList.add('is-done'); if (live) live.textContent = `Copied ${b.dataset.copy}`;
+      setTimeout(() => { b.textContent = 'Copy'; b.classList.remove('is-done'); }, 2000);
+    } catch { if (live) live.textContent = 'Copy did not work here. The number is 236-818-2664.'; }
+  }));
+  // 7.5 drawers: the "What to send" card follows the pointer on hover (desktop); click / tap opens one drawer at a time
+  const drawers = [...document.querySelectorAll<HTMLElement>('[data-drawer]')];
+  const fine = matchMedia('(min-width: 1024px) and (hover: hover)');
+  drawers.forEach((d) => {
+    const card = d.querySelector<HTMLElement>('[data-card]')!;
+    const btn = d.querySelector<HTMLButtonElement>('.c5-hit')!;
+    d.addEventListener('pointermove', (e) => {
+      if (!fine.matches || d.classList.contains('is-open')) return;
+      const r = d.getBoundingClientRect();
+      card.style.setProperty('--cx', `${e.clientX - r.left + 18}px`); card.style.setProperty('--cy', `${e.clientY - r.top + 18}px`);
+    });
+    btn.addEventListener('click', () => {
+      const open = !d.classList.contains('is-open');
+      drawers.forEach((o) => { o.classList.remove('is-open'); o.querySelector('.c5-hit')!.setAttribute('aria-expanded', 'false'); });
+      if (open) {
+        d.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true');
+        if (fine.matches) { card.style.setProperty('--cx', `${d.offsetWidth - 230}px`); card.style.setProperty('--cy', '78px'); }
+      }
+    });
+  });
+  // 7.6 lockout tags: flip in 3D on click / tap; the back's link is reachable only while the back shows
+  document.querySelectorAll<HTMLElement>('[data-tag]').forEach((t) => {
+    const b = t.parentElement!.querySelector<HTMLButtonElement>('.c6-hit')!; const a = t.querySelector<HTMLAnchorElement>('.c6-al')!;
+    b.addEventListener('click', () => {
+      const on = !t.classList.contains('is-flipped');
+      t.classList.toggle('is-flipped', on); b.setAttribute('aria-pressed', String(on));
+      if (on) a.removeAttribute('tabindex'); else a.setAttribute('tabindex', '-1');
+    });
+  });
+</script>

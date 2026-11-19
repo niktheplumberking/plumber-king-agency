@@ -39,3 +39,5 @@
 ## CONTACT/REVIEWS/OUR-WORK/FAQ builder (19 Nov, update)
 - Towns strip request above is **resolved**: /contact, /reviews, /our-work and /faq now import `global/TownsStrip.astro`;
   my copy `components/contact/TownsStrip.astro` is deleted (nothing else imported it).
+- (HOME builder, 19 Nov, later) Resolved: the kit now writes `-d` / `-m` inline vars; re-checked Home at 390 (hero plate no
+  longer wraps, Housing caps correct). Nothing open from HOME.

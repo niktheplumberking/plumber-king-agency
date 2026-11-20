@@ -1,12 +1,6 @@
 ---
-// Visible mono breadcrumbs ("Home  /  Contact"). JSON-LD: crumbsLd() in ld.ts, passed to Base via jsonld.
-import './cx.css';
+// Round 2 (Nick 20 Nov: "Can we please not do that again?"): NO visible breadcrumb on any page. This component now renders
+// nothing; it stays only so pages that still import it compile. The BreadcrumbList JSON-LD comes from crumbsLd() in ld.ts,
+// passed to Base via `jsonld`. Owners of OwHero / FaqHero: remove the import and fix your hero top spacing.
 interface Props { label: string; class?: string }
-const { label, class: cls } = Astro.props;
 ---
-<nav class:list={['cx-crumbs', cls]} aria-label="Breadcrumb" data-t="1">
-  <ol>
-    <li><a href="/">Home</a><span class="sep" aria-hidden="true">/</span></li>
-    <li><span aria-current="page">{label}</span></li>
-  </ol>
-</nav>

@@ -1,39 +1,81 @@
 ---
-// Home process (Figma 712:448 "Process" y 6023 h 1010; mobile 715:560 y 6801 h 1080). Ink band. Five housings, one per step,
-// each a little fuller than the last (the water rises as each enters: kit/glass.ts), then the "Step 1 starts here." bar
-// with text + call buttons. On phones the steps are rows (housing left) and the two buttons stack.
+// Home process (round 2 rebuild, Nick 20 Nov: "idea good, layout shit, nothing interactive"). Ink band.
+// A pinned scroll sequence (21st.dev hyperiux/timeline "Product Timeline", adapted: no React, no SplitText, no horizontal
+// slide; the kit scrub engine drives it, so Lenis + ScrollTrigger stay the one clock):
+//   the stage sticks while the track scrolls; water runs along one pipe through five filter housings (one per step); each
+//   housing fills as the water reaches it, lifts, and the work-order panel below swaps to that step (its own words plus a
+//   review that says it happened, word for word). Clicking a housing scrolls to its step.
+// Scrub map (kit/scrub.ts): progress p 0-1 over the track. Pipe fills over 0-0.8, so it reaches housing i at p = 0.2 i,
+// which is where housing i fills (window 0.2 i .. 0.2 i + 0.14) and its stop (data-at) turns on; p 0.8-1 dwells on step 5.
+// Reduced motion / no JS / short screens (under 680 px tall, phones under 720): not pinned; housings full, all five panels listed. The section still ends ink, so
+// the meniscus seam into Emergency (Emergency.astro) is unchanged.
 import Btn from '../kit/Btn.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Housing from '../kit/Housing.astro';
-const steps = [
-  { t: 'Call or text a photo', d: 'Any hour. A photo helps us bring the right part.', f: 24.2 / 244 },
-  { t: 'We come out', d: 'Kody or the crew, in the white Glass van.', f: 60.5 / 244 },
-  { t: 'Price before any work', d: 'You hear the price and the plan first.', f: 96.8 / 244 },
-  { t: 'Permit if needed', d: 'Water heater swaps and repipes in Pinellas need one. We file it.', f: 133.1 / 244 },
-  { t: 'Fixed, tested, cleaned up', d: 'We test it with you and leave it clean.', f: 169.4 / 244 },
+import Plate from '../kit/Plate.astro';
+import { quote } from './fig';
+type Step = { t: string; s: string; d: string; q?: { name: string; text: string }; plate?: [string, string][] };
+const steps: Step[] = [
+  { t: 'Call or text a photo', s: 'Call or text', d: 'Any hour. A photo helps us bring the right part.',
+    q: quote('Jen James', 'I took a few pictures of the valve that needed replaced and he was at my home the next day !!') },
+  { t: 'We come out', s: 'We come out', d: 'Kody or the crew, in the white Glass van.',
+    q: quote('John Rooney', 'He always does a great job and shows up when he says he’s going to, with the right equipment and attitude.') },
+  { t: 'Price before any work', s: 'Price first', d: 'You hear the price and the plan first.',
+    q: quote('Parker L', 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.') },
+  { t: 'Permit if needed', s: 'Permit', d: 'Water heater swaps and repipes in Pinellas need one. We file it.',
+    plate: [['Needs one', 'Heater swaps · repipes'], ['Where', 'Pinellas County'], ['Files it', 'We do']] },
+  { t: 'Fixed, tested, cleaned up', s: 'Fixed & clean', d: 'We test it with you and leave it clean.',
+    q: quote('Jacob Gars', 'He even went above and beyond to clean the bathroom spotless after!') },
 ];
+const at = (i: number) => (i * 0.2).toFixed(2);
+const pad = (i: number) => String(i + 1).padStart(2, '0');
 ---
 <section class="pr on-ink" aria-labelledby="pr-h" data-m-section>
-  <div class="wrap">
-    <div class="pr-head">
-      <div>
-        <Eyebrow text="How a job goes" />
-        <h2 id="pr-h" class="h2 pr-h" data-t="2">Five steps. <span class="tone">No surprises.</span></h2>
+  <div class="pr-track" data-pr data-no-px data-scrub data-start="top top" data-end="bottom bottom" data-lag="0.5">
+    <div class="pr-stage">
+      <div class="wrap pr-in">
+        <div class="pr-head">
+          <Eyebrow text="How a job goes" class="pr-eb" />
+          <h2 id="pr-h" class="h2 pr-h" data-t="2">Five steps. <span class="tone">No surprises.</span></h2>
+          <p class="pr-lead" data-t="3">From your first call to a clean floor, this is what happens. <span class="pin-only">Scroll, or pick a step.</span></p>
+        </div>
+
+        <div class="rail-w">
+          <span class="pipe" aria-hidden="true"><span class="pipe-w" data-scrub-fill data-axis="x" data-win="0,0.8"></span></span>
+          <ol class="rail" role="list" aria-label="The five steps">
+            {steps.map((s, i) => (
+              <li class="st" data-stop data-at={at(i)}>
+                <button class="st-b" type="button" data-go={i} aria-controls={`pr-p${i}`} aria-label={`${pad(i)} ${s.s}: step ${i + 1} of 5, ${s.t}`}>
+                  <Housing tone="ink" w={120} h={168} wm={54} hm={78} cap={16} capm={10} r={22} rm={12}>
+                    <span class="wtr" data-scrub-fill data-axis="y" data-win={`${at(i)},${(i * 0.2 + 0.14).toFixed(2)}`} aria-hidden="true"></span>
+                    <span class="num" aria-hidden="true">{pad(i)}</span>
+                  </Housing>
+                  <span class="st-l" aria-hidden="true">{s.s}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div class="pnls">
+          {steps.map((s, i) => (
+            <article class="pnl" id={`pr-p${i}`} data-stop data-at={at(i)} aria-labelledby={`pr-t${i}`}>
+              <div class="pnl-txt">
+                <p class="pnl-k"><span>Step {pad(i)}</span><span class="pnl-of">/ 05</span></p>
+                <h3 id={`pr-t${i}`} class="h3 pnl-t">{s.t}</h3>
+                <p class="pnl-d">{s.d}</p>
+              </div>
+              {s.q
+                ? <figure class="pnl-q"><blockquote><p>“{s.q.text}”</p></blockquote><figcaption>{s.q.name} · Google</figcaption></figure>
+                : <div class="pnl-pl"><Plate title="Permits" rows={s.plate!} w={300} wm={280} pad={14} size={11} kx={104} pitch={21} kxm={96} shadow="powder" tone="steel" /></div>}
+            </article>
+          ))}
+        </div>
       </div>
-      <p class="pr-lead" data-t="3">From your first call to a clean floor, this is what happens.</p>
     </div>
-    <ol class="steps" role="list" data-t="4" data-stagger>
-      {steps.map((s, i) => (
-        <li>
-          <div class="hs-w">
-            <Housing tone="ink" w={170} h={260} wm={76} hm={108} cap={18} capm={14} fill={s.f}>
-              <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            </Housing>
-          </div>
-          <div class="st"><h3 class="h3 stt"><span class="sr-only">Step {i + 1}: </span>{s.t}</h3><p class="std">{s.d}</p></div>
-        </li>
-      ))}
-    </ol>
+  </div>
+
+  <div class="wrap">
     <div class="bar" data-t="3">
       <div class="bar-t"><p class="bt">Step 1 starts here.</p><p class="bs">Call or text any hour</p></div>
       <div class="bar-b">
@@ -43,43 +85,134 @@ const steps = [
     </div>
   </div>
 </section>
+
+<script>
+  // Step buttons: jump to that step's point in the pinned track (Lenis when it runs), or to its panel when not pinned.
+  // aria-current follows the step the scrub engine has reached (the last .is-on).
+  const track = document.querySelector<HTMLElement>('[data-pr]');
+  if (track) {
+    const btns = Array.from(track.querySelectorAll<HTMLButtonElement>('[data-go]'));
+    const steps = Array.from(track.querySelectorAll<HTMLElement>('.st'));
+    const pnls = Array.from(track.querySelectorAll<HTMLElement>('.pnl'));
+    const stage = track.querySelector<HTMLElement>('.pr-stage')!;
+    const pinned = () => getComputedStyle(stage).position === 'sticky' && track.classList.contains('is-scrub');
+    btns.forEach((b, i) => b.addEventListener('click', () => {
+      if (!pinned()) { pnls[i].scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      const r = track.getBoundingClientRect();
+      const run = track.offsetHeight - stage.offsetHeight;
+      const y = window.scrollY + r.top + run * Math.min(0.9, i * 0.2 + 0.1);
+      const lenis = (window as any).__pbpLenis;
+      if (lenis) lenis.scrollTo(y, { duration: 1.1 }); else window.scrollTo({ top: y, behavior: 'smooth' });
+    }));
+    const sync = () => {
+      let cur = 0; steps.forEach((s, i) => { if (s.classList.contains('is-on')) cur = i; });
+      const live = track.classList.contains('is-scrub');
+      btns.forEach((b, i) => { if (live && i === cur) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    };
+    new MutationObserver(sync).observe(track, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    sync();
+  }
+</script>
+
 <style>
-  .pr { position: relative; background: var(--ink); color: var(--white); padding: 110px 0 110px; }
-  .pr-head { display: grid; grid-template-columns: 680px 480px; }
-  .pr-h { margin-top: 16px; color: var(--white); } .pr-h .tone { display: block; }
-  .pr-lead { margin-top: 46px; font-size: 17px; line-height: 1.5; color: var(--white); }
-  .steps { display: flex; gap: 87.5px; margin: 74px 0 0; padding: 0; list-style: none; }
-  .steps li { width: 170px; flex: none; }
-  .num { position: absolute; left: 44px; top: 14px; font-family: var(--f-h); font-weight: 800; font-size: 44px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); }
-  .st { width: 220px; margin-top: 32px; }
-  .stt { min-height: 58px; font-size: 21px; color: var(--white); text-wrap: wrap; }
-  .std { font-size: 15px; line-height: 1.5; color: rgb(255 255 255 / .8); }
-  .bar { display: flex; align-items: center; justify-content: space-between; height: 100px; margin-top: 52px; padding: 0 32px; border: 1px solid var(--ink3); border-radius: 6px; background: var(--ink2); }
+  .pr { position: relative; background: var(--ink); color: var(--white); padding: 0 0 110px; }
+  .pr-track { position: relative; }
+  .pr-stage { padding: 110px 0 0; }
+  .pr-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .pr-h { margin-top: 16px; color: var(--white); }
+  .pr-lead { margin-top: 14px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .85); }
+  .pin-only { display: none; }
+
+  /* Rail: one pipe through five housings. */
+  .rail-w { position: relative; margin-top: 48px; }
+  .pipe { position: absolute; left: 10%; right: 10%; top: 92px; height: 14px; border: 2px solid var(--steel2); border-radius: 7px; background: var(--ink2); overflow: hidden; }
+  .pipe-w { display: block; height: 100%; background: var(--powder); transform-origin: 0 50%; }
+  .rail { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+  .st { display: flex; justify-content: center; }
+  .st-b { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 8px 8px 4px; border: 0; border-radius: 8px; background: none; color: inherit; font: inherit; cursor: pointer; }
+  .st-b :global(.hs) { transition: translate .5s var(--ease-io); }
+  .st-b:hover :global(.hs) { translate: 0 -4px; }
+  .st-b:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .wtr { position: absolute; left: 0; right: 0; bottom: 0; top: 0; background: var(--powder); transform-origin: 50% 100%; }
+  .num { position: relative; z-index: 1; padding: 4px 8px 5px; border-radius: 6px; background: var(--ink); font-family: var(--f-h); font-weight: 800; font-size: 36px; line-height: 1; letter-spacing: -.02em; color: var(--white); }
+  .st-l { font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255 / .7); transition: color .5s var(--ease-io); }
+  .st-b:hover .st-l { color: var(--white); }
+
+  /* Panels: the work order of each step. */
+  .pnls { margin-top: 40px; }
+  .pnl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 48px; padding: 32px 40px; border: 1px solid var(--ink3); border-radius: 8px; background: var(--ink2); }
+  .pnl + .pnl { margin-top: 16px; }
+  .pnl-k { display: flex; gap: 8px; font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .pnl-of { color: rgb(255 255 255 / .6); }
+  .pnl-t { margin-top: 10px; --h3: 40px; color: var(--white); }
+  .pnl-d { margin-top: 12px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .85); }
+  .pnl-q { padding: 20px 24px; border-left: 4px solid var(--powder); background: rgb(255 255 255 / .04); }
+  .pnl-q p { font-family: var(--f-h); font-weight: 700; font-size: 21px; line-height: 1.3; letter-spacing: -.01em; }
+  .pnl-q figcaption { margin-top: 12px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--powder); }
+  .pnl-pl { display: flex; justify-content: center; }
+
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 100px; margin-top: 56px; padding: 0 32px; border: 1px solid var(--ink3); border-radius: 6px; background: var(--ink2); }
   .bt { font-family: var(--f-h); font-weight: 800; font-size: 28px; line-height: 1.04; letter-spacing: -.02em; }
   .bs { margin-top: 8px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
   .bar-b { display: flex; gap: 16px; }
 
+  /* ---- Pinned (motion on, tall enough screen). CSS start state = the scrub's frame 0: step 1 on, others waiting. */
+  @media (min-width: 768px) and (min-height: 680px), (max-width: 767px) and (min-height: 720px) {
+    :global(html.motion) .pr-track { height: calc(var(--vh100) * 3.4); }
+    :global(html.motion) .pr-stage { position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center;
+      height: calc(100svh / var(--zoom)); padding: calc(var(--header-h) + 8px) 0 24px; }
+    :global(html.motion) .pin-only { display: inline; }
+    :global(html.motion) .pr-h .tone { display: inline; }
+    :global(html.motion) .pnls { display: grid; margin-top: 36px; }
+    :global(html.motion) .pnl { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden; translate: 0 16px;
+      transition: opacity .45s var(--ease-io), translate .45s var(--ease-io), visibility 0s linear .45s; }
+    :global(html.motion) .pnl:first-child,
+    :global(html.motion) .pr-track.is-scrub .pnl.is-on:not(:has(~ .is-on)) { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .45s var(--ease-io) .1s, translate .45s var(--ease-io) .1s, visibility 0s; }
+    :global(html.motion) .pr-track.is-scrub .pnl:first-child:has(~ .is-on) { opacity: 0; visibility: hidden; translate: 0 16px; transition: opacity .45s var(--ease-io), translate .45s var(--ease-io), visibility 0s linear .45s; }
+    /* The step the water has reached lifts; steps not reached yet are dimmer. */
+    :global(html.motion) .pr-track.is-scrub .st:not(.is-on) .st-l { color: rgb(255 255 255 / .6); }
+    :global(html.motion) .st.is-on:not(:has(~ .is-on)) .st-l { color: var(--white); }
+    :global(html.motion) .st.is-on:not(:has(~ .is-on)) :global(.hs) { translate: 0 -10px; }
+    :global(html.motion) .bar { margin-top: 8px; }
+  }
+  /* Phones and tablets: keep the panel clear of the sticky call bar (global/MobileCallBar, under 1024). */
+  @media (min-width: 768px) and (max-width: 1023px) and (min-height: 680px), (max-width: 767px) and (min-height: 720px) {
+    :global(html.motion) .pr-stage { padding-bottom: 88px; }
+  }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .pr-head { grid-template-columns: 1fr; } .pr-lead { margin-top: 20px; }
-    .steps { gap: 20px; justify-content: space-between; }
-    .steps li { width: auto; flex: 1; }
-    .hs-w { max-width: 170px; } .hs-w :global(.hs) { width: 100%; height: auto; aspect-ratio: 170 / 260; }
-    .st { width: auto; }
+    .pnl { gap: 28px; padding: 28px; }
+    .pnl-t { --h3: 32px; }
     .bar { flex-wrap: wrap; height: auto; padding: 24px; gap: 20px; }
   }
   @media (max-width: 767px) {
-    .pr { padding: 72px 0 80px; }
-    .pr-head { display: block; }
+    .pr { padding: 0 0 80px; }
+    .pr-stage { padding-top: 72px; }
     .pr-h { margin-top: 10px; }
-    .pr-lead { display: none; }
-    .steps { flex-direction: column; gap: 22px; margin-top: 42px; }
-    .steps li { display: flex; gap: 24px; width: auto; }
-    .num { left: 28px; top: 6px; font-size: 24px; }
-    .st { width: auto; margin-top: 14px; }
-    .stt { min-height: 0; font-size: 19px; }
-    .std { margin-top: 8px; font-size: 14px; line-height: 1.4; }
+    .pr-lead { margin-top: 8px; font-size: 14px; }
+    .rail-w { margin-top: 28px; }
+    .pipe { top: 44px; height: 10px; border-width: 1.5px; }
+    .st-b { gap: 8px; padding: 4px; }
+    .num { padding: 2px 4px 3px; border-radius: 4px; font-size: 17px; }
+    .st-l { display: none; }
+    .pnls { margin-top: 24px; }
+    .pnl { grid-template-columns: 1fr; gap: 16px; padding: 20px 18px; }
+    .pnl-t { --h3m: 24px; margin-top: 6px; }
+    .pnl-d { margin-top: 8px; font-size: 15px; }
+    .pnl-q { padding: 12px 14px; }
+    .pnl-q p { font-size: 16px; }
+    .pnl-q figcaption { margin-top: 8px; font-size: 10px; }
+    .pnl-pl { justify-content: flex-start; }
     .bar { display: block; height: auto; margin-top: 32px; padding: 0; border: 0; background: none; }
     .bar-t { display: none; }
     .bar-b { flex-direction: column-reverse; gap: 12px; }
+  }
+  @media (max-width: 767px) and (min-height: 720px) {
+    :global(html.motion) .pr-stage { padding: calc(var(--header-h) + 4px) 0 84px; }
+    :global(html.motion) .pr-h .tone { display: block; }
+    :global(html.motion) .pin-only { display: none; }
+    :global(html.motion) .pr-lead { display: none; }
+    :global(html.motion) .pnl-q p { font-size: 15px; }
+    :global(html.motion) .st.is-on:not(:has(~ .is-on)) :global(.hs) { translate: 0 -6px; }
   }
 </style>

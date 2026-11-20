@@ -1,46 +1,50 @@
-// Curtain hooks (kit/Curtain.astro; MOTION.md section 3; fix round 1 A-3, B2, B4). 8 blinds, one channel per blind: GSAP
-// `xPercent` on .pt-blind (odd rows park left, even rows park right, like the loader's exit).
-//   park()            boot, every page: blinds off-screen, unless this page arrived under the curtain.
-//   cover(url)        an in-site link: the blinds close in from both sides in one ease-in-out move (full coverage), THEN
-//                     navigate.
-//   reveal(onHandoff) the page we arrived at (html.pt-in): it starts covered (CSS, no transform), the page is put at the top
-//                     under the cover, then the blinds slide off. onHandoff fires when the blinds are ~75 % across (no
-//                     dead time between the cover clearing and the H1; fix round 2).
+// Page curtain, "Clear Water" (kit/Curtain.astro, kit/water.ts; revision round 2: replaces the 8 blinds Mike and Khinda
+// also use). API unchanged:
+//   park()            boot, every page: the water is drained (hidden), unless this page arrived under the curtain.
+//   cover(url)        an in-site link: the water fills the screen (0.9 s, back layer first, the frost front last, logo
+//                     floats up into it), and only once it covers 100 % does the browser navigate.
+//   reveal(onHandoff) the page we arrived at (html.pt-in): it starts covered (resting markup), the page is put at the top
+//                     under the cover, then the water drains down and away (1.0 s, front layer first; the page appears
+//                     from the top). onHandoff fires at 55 % of the drain, as the hero's H1 clears.
 // Navigation rule (B4): a page reached through an in-site link always opens at the top. history.scrollRestoration is
-// 'manual' only while we arrive (so the browser cannot restore a stale position under the cover), and back to 'auto' after
-// the reveal, so back/forward keep the browser's native restore. Same-page # links are not ours (Lenis scrolls them).
+// 'manual' only while we arrive and back to 'auto' after the reveal, so back/forward keep the browser's native restore.
+// Same-page # links are not ours (Lenis scrolls them). One writer: the path `d` (draw) and .pt-mark opacity/transform.
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { draw, sheetOf } from './water';
 
 const html = document.documentElement;
-const DUR = 0.6;
-const STAGGER = 0.012;
-const EASE = 'power2.inOut';
+const FILL = 0.9;
+const DRAIN = 1.0;
 
 const root = () => document.querySelector<HTMLElement>('[data-pt]');
-const blindsOf = (pt: HTMLElement) => Array.from(pt.querySelectorAll<HTMLElement>('.pt-blind'));
-const off = (i: number) => (i % 2 ? 101 : -101);
+const markOf = (pt: HTMLElement) => pt.querySelector<HTMLElement>('.pt-mark');
 
 export function park() {
   const pt = root(); if (!pt) return;
-  if (!html.classList.contains('pt-in')) gsap.set(blindsOf(pt), { xPercent: off });
+  const s = sheetOf(pt);
+  if (!html.classList.contains('pt-in')) draw(s, 0);
   // Back/forward cache restore: never leave the curtain down.
   window.addEventListener('pageshow', (ev) => {
     if (!ev.persisted) return;
-    const b = blindsOf(pt); gsap.killTweensOf(b); pt.classList.remove('is-on'); html.classList.remove('pt-in');
-    gsap.set(b, { xPercent: off }); gsap.set(pt.querySelector('.pt-mark'), { autoAlpha: 0 });
+    gsap.killTweensOf(pt); gsap.killTweensOf(markOf(pt));
+    pt.classList.remove('is-on'); html.classList.remove('pt-in');
+    draw(s, 0); gsap.set(markOf(pt), { autoAlpha: 0, y: 0 });
   });
 }
 
 /** Cover the page, then go to `href`. Returns false when there is no curtain (the caller navigates itself). */
 export function cover(href: string): boolean {
   const pt = root(); if (!pt) return false;
-  const blinds = blindsOf(pt);
+  const s = sheetOf(pt);
   try { sessionStorage.setItem('gps-nav', '1'); } catch (err) { /* no storage: the next page simply shows without the reveal */ }
+  const o = { t: 0 };
+  draw(s, 0);
   pt.classList.add('is-on');
-  gsap.killTweensOf(blinds);
-  gsap.timeline({ onComplete: () => { location.href = href; } })
-    .to(blinds, { xPercent: 0, duration: DUR, ease: EASE, stagger: STAGGER }, 0)
-    .fromTo(pt.querySelector('.pt-mark'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: 'sine.inOut' }, DUR * 0.6);
+  gsap.killTweensOf(o);
+  gsap.timeline({ onComplete: () => { draw(s, 1); location.href = href; } })
+    .to(o, { t: 1, duration: FILL, ease: 'none', onUpdate: () => draw(s, o.t) }, 0)
+    .fromTo(markOf(pt), { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: 'sine.inOut' }, FILL * 0.55);
   return true;
 }
 
@@ -50,28 +54,31 @@ export function toTop() {
   (window as any).__pbpLenis?.scrollTo(0, { immediate: true, force: true });
 }
 
-/** Arrived under the curtain: start covered, put the page at the top, then reveal. False when this page did not arrive so. */
+/** Arrived under the curtain: start covered, put the page at the top, then drain. False when this page did not arrive so. */
 export function reveal(onHandoff: () => void, onDone: () => void = () => {}): boolean {
   const pt = root();
   if (!pt || !html.classList.contains('pt-in')) return false;
-  const blinds = blindsOf(pt);
   try { history.scrollRestoration = 'manual'; } catch (e) { /* old browsers */ }
   toTop();
-  gsap.set(blinds, { xPercent: 0 });
-  // The handoff (header + hero) fires while the blinds are ~75 % across, so the H1 starts as the cover clears, with no
-  // dead time (fix round 2, review 3); the curtain is released at the end.
-  gsap.timeline({
-    delay: 0.05,
-    onComplete: () => {
-      html.classList.remove('pt-in');
-      try { history.scrollRestoration = 'auto'; } catch (e) { /* old browsers */ }
-      onDone();
-    },
-  })
-    .fromTo(pt.querySelector('.pt-mark'), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.25, ease: 'sine.inOut' }, 0)
-    .to(blinds, { xPercent: off, duration: DUR, ease: EASE, stagger: STAGGER }, 0.1)
-    .add(onHandoff, 0.1 + DUR * 0.75);
+  drain(pt, onHandoff, () => {
+    html.classList.remove('pt-in');
+    // ScrollTrigger remembers the value it saw at registration ('manual' while arriving) and re-applies it after every
+    // refresh; hand it 'auto' too, or back/forward would lose the native restore after the first refresh (R2 fix).
+    try { history.scrollRestoration = 'auto'; ScrollTrigger.clearScrollMemory('auto'); } catch (e) { /* old browsers */ }
+    onDone();
+  });
   return true;
+}
+
+/** The drain, shared with the loader's exit: the logo sinks and fades, the water runs out front layer first. */
+export function drain(host: HTMLElement, onHandoff: () => void, onDone: () => void, mark = markOf(host), delay = 0.05) {
+  const s = sheetOf(host);
+  const o = { t: 0 };
+  draw(s, 0, true);
+  return gsap.timeline({ delay, onComplete: () => { draw(s, 1, true); onDone(); } })
+    .to(mark, { autoAlpha: 0, y: 22, duration: 0.3, ease: 'sine.inOut' }, 0)
+    .to(o, { t: 1, duration: DRAIN, ease: 'none', onUpdate: () => draw(s, o.t, true) }, 0.05)
+    .add(onHandoff, 0.05 + DRAIN * 0.55);
 }
 
 /** In-site links: same-origin, plain left click, another page (not a # on this page) -> cover, then navigate. */

@@ -1,0 +1,284 @@
+---
+// /about "On the record" (R2 rebuild, Nick 20 Nov: "promote the licence and Instagram visibly"). Replaces the R1 frost
+// timeline (AboutStory) and the ink numbers row (AboutNumbers), whose facts all live here now. Ink band, meniscus rise
+// over the white hero. Centred head, then a bento of three public records, each one opens the real thing:
+//   1. Licence wallet (21st.dev educalvolpz/wallet-card, re-skinned as Glass spec plates): two stacked cards, the steel
+//      licence card in front and the DBPR record behind; the tabs (or a tap on the card that peeks out) swap them.
+//   2. Instagram profile card (21st.dev shadcnstore/team-1 profile grid, rebuilt as a profile header + a 3 x 2 grid of the
+//      crew's own job photos): verified tick, 653 followers, 34 posts, read 17 Nov 2026 (Nick's browser). Opens the profile.
+//   3. The two Google profiles (5.0, 104 and 77 reviews), each its own tile and link, never added together.
+// Facts: site.ts (licence, google, social) and data.ts (IG counts). Reduced motion / no JS: the licence card shows and the
+// DBPR record is listed right under it as plain rows (both are in the DOM; the tabs only exist with JS).
+import Head from '../areas/Head.astro';
+import Seam from '../kit/Seam.astro';
+import Img from '../ui/Img.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-glass.png';
+import { SITE } from '../../data/site';
+import { STARS } from '../areas/reviews';
+import { IG_POSTS, IG_FOLLOWERS, IG_READ } from './data';
+const L = SITE.licence;
+const g = SITE.google;
+const ig = SITE.social;
+const grid = [
+  { n: 'water-line-excavator', c: 'Water line dig' },
+  { n: 'manifold-install', c: 'Manifold install' },
+  { n: 'tankless-pair', c: 'Two tankless units' },
+  { n: 'crew-crawlspace', c: 'In the crawlspace', f: '50% 30%' },
+  { n: 'shower-remodel', c: 'Finished shower' },
+  { n: 'van-night', c: 'The van, after hours' },
+];
+const recRows: [string, string][] = [
+  ['Licence type', L.kind], ['Number', L.number], ['Status', 'Active'], ['Expires', L.expires], ['Licensees', 'Glass, Dakota K · Glass Plumbing Services LLC'],
+];
+const profiles = [
+  { k: 'Google profile 1', p: g.a },
+  { k: 'Google profile 2', p: g.b },
+];
+const tick = '<path d="M12 1.5l2.6 1.9 3.2-.1 1 3 2.6 1.9-1 3 1 3-2.6 1.9-1 3-3.2-.1L12 22.5l-2.6-1.9-3.2.1-1-3-2.6-1.9 1-3-1-3 2.6-1.9 1-3 3.2.1z" fill="#0095F6"/><path d="M7.8 12.2l2.8 2.8 5.6-5.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+const ext = '<path d="M5 2h7v7M12 2 4.5 9.5M9 12H2V5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
+---
+<section class="brec on-ink" data-m-section aria-labelledby="brec-h">
+  <Seam from="var(--white)" to="var(--ink)" flip />
+  <div class="wrap">
+    <div class="br-head">
+      <Head eyebrow="On the record" l1="What you can check," l2="before you call." dark size={60} sizeM={34} id="brec-h" />
+      <p class="br-lead" data-t="3">Kody holds Florida licence {L.number} and runs Glass Plumbing Services from Largo. Every record below opens the real thing.</p>
+    </div>
+
+    <div class="br-bento">
+      <!-- 1. Licence wallet -->
+      <div class="lw" data-t="4" data-wallet>
+        <div class="lw-tabs" role="tablist" aria-label="Licence records" data-wallet-tabs hidden>
+          <button type="button" role="tab" id="lw-t1" aria-controls="lw-p1" aria-selected="true" data-wallet-tab="0">Licence card</button>
+          <button type="button" role="tab" id="lw-t2" aria-controls="lw-p2" aria-selected="false" tabindex="-1" data-wallet-tab="1">DBPR record</button>
+          <span class="lw-pill" aria-hidden="true"></span>
+        </div>
+        <div class="lw-stack" data-no-px>
+          <div class="lw-card lw-lic" id="lw-p1" role="tabpanel" aria-labelledby="lw-t1" data-wallet-card="0">
+            <p class="lic-band"><span>{L.state}</span><span>Certified Plumbing Contractor</span></p>
+            <p class="lic-k">Licence number</p>
+            <p class="lic-no">{L.number}</p>
+            <dl class="lic-rows">
+              <div><dt>Holder</dt><dd>Glass, Dakota K</dd></div>
+              <div><dt>Business</dt><dd>Glass Plumbing Services LLC</dd></div>
+              <div><dt>Status</dt><dd><span class="lic-dot" aria-hidden="true"></span>Active</dd></div>
+              <div><dt>Expires</dt><dd>{L.expires}</dd></div>
+            </dl>
+            <p class="lic-foot">As listed on DBPR · myfloridalicense.com</p>
+            <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
+          </div>
+          <div class="lw-card lw-rec" id="lw-p2" role="tabpanel" aria-labelledby="lw-t2" data-wallet-card="1">
+            <p class="rec-t">DBPR licence lookup</p>
+            <dl class="rec-rows">
+              {recRows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+            </dl>
+            <blockquote class="rec-q"><p>“Officially up and running as a Licensed and insured master plumber.”</p><footer>Kody, on Instagram</footer></blockquote>
+            <a class="rec-link" href={L.url} target="_blank" rel="noopener">Look up {L.number} on DBPR<svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true" set:html={ext} /><span class="sr-only"> (opens in a new tab)</span></a>
+          </div>
+        </div>
+        <p class="lw-cta"><span class="lw-hint" data-wallet-hint hidden>Tap the card behind to swap.</span><a href={L.url} target="_blank" rel="noopener">Verify {L.number} on DBPR<svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true" set:html={ext} /><span class="sr-only"> (opens in a new tab)</span></a></p>
+      </div>
+
+      <!-- 2. Instagram profile -->
+      <a class="igc" href={ig.instagram} target="_blank" rel="noopener" data-t="4">
+        <span class="ig-top">
+          <span class="ig-av" aria-hidden="true"><Image src={logo} alt="" width={120} height={77} class="ig-logo" /></span>
+          <span class="ig-id">
+            <span class="ig-h">glassplumbingservices<svg class="ig-tick" viewBox="0 0 24 24" width="18" height="18" role="img" aria-label="Verified" set:html={tick} /></span>
+            <span class="ig-n">Glass Plumbing Services · Instagram</span>
+          </span>
+        </span>
+        <span class="ig-stats">
+          <span><b data-count={IG_POSTS}>{IG_POSTS}</b> posts</span>
+          <span><b data-count={IG_FOLLOWERS}>{IG_FOLLOWERS}</b> followers</span>
+          <span class="ig-read">Read {IG_READ}</span>
+        </span>
+        <span class="ig-grid" aria-hidden="true">
+          {grid.map((x) => (
+            <span class="ig-tile">
+              <Img name={x.n} alt="" focus={x.f ?? '50% 50%'} sizes="(min-width:1280px) 140px, (min-width:768px) 14vw, 30vw" box={1} boxM={1} widths={[140, 280, 420]} />
+              <span class="ig-cap">{x.c}</span>
+            </span>
+          ))}
+        </span>
+        <span class="ig-cta">Open {ig.instagramHandle}<svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true" set:html={ext} /></span>
+        <span class="sr-only">: verified Instagram profile, {IG_POSTS} posts and {IG_FOLLOWERS} followers (read {IG_READ}), with job photos from the crew. Opens in a new tab.</span>
+      </a>
+
+      <!-- 3. Google profiles -->
+      <ul class="gp" role="list" data-t="4" data-stagger>
+        {profiles.map((x) => (
+          <li>
+            <a class="gpc" href={x.p.url} target="_blank" rel="noopener">
+              <span class="gp-k"><span class="gp-g" aria-hidden="true">G</span>{x.k}</span>
+              <span class="gp-v">{x.p.value}<svg class="gp-stars" viewBox="0 0 80 13" width="96" height="16" fill="#F9B50D" role="img" aria-label="5 out of 5 stars" set:html={STARS} /></span>
+              <span class="gp-n"><b data-count={x.p.count}>{x.p.count}</b> reviews</span>
+              <span class="gp-open">Open the profile<svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true" set:html={ext} /><span class="sr-only"> (opens in a new tab)</span></span>
+            </a>
+          </li>
+        ))}
+        <li class="gp-note">Two separate profiles, never added together. Read {g.checked}.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Licence wallet: two stacked cards; the tabs (arrow keys move between them) or a click on the card peeking out behind
+  // swap which one is in front. The swap is one CSS transition per card (transform + opacity, 0.7 s ease-in-out); the
+  // stacking order flips at the midpoint, under the moving cards, so nothing jumps. Without JS the tabs stay hidden and
+  // both cards are listed one under the other.
+  document.querySelectorAll<HTMLElement>('[data-wallet]').forEach((w) => {
+    const tabs = [...w.querySelectorAll<HTMLButtonElement>('[data-wallet-tab]')];
+    const cards = [...w.querySelectorAll<HTMLElement>('[data-wallet-card]')];
+    w.querySelector<HTMLElement>('[data-wallet-tabs]')!.hidden = false;
+    w.classList.add('is-js');
+    w.querySelector<HTMLElement>('[data-wallet-hint]')!.hidden = false;
+    let cur = 0;
+    const show = (i: number, focus = false) => {
+      cur = i;
+      w.dataset.front = String(i);
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      cards.forEach((c, k) => { c.inert = k !== i; });
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, k) => {
+      t.addEventListener('click', () => show(k));
+      t.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); show((cur + 1) % 2, true); }
+      });
+    });
+    // The back card is inert (no focus, no clicks), so a click on it lands on the stack: bring it forward.
+    w.querySelector<HTMLElement>('.lw-stack')!.addEventListener('click', (e) => {
+      if (!cards[cur].contains(e.target as Node)) show((cur + 1) % 2);
+    });
+    show(0);
+  });
+</script>
+
+<style>
+  .brec { position: relative; background: var(--ink); color: var(--white); padding: 120px 0 120px; }
+  .br-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .br-head :global(.ah-eb) { justify-content: center; }
+  .br-lead { max-width: 620px; margin-top: 22px; font-size: 18px; line-height: 1.5; color: rgb(255 255 255 / .86); }
+  .br-bento { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4.2fr) minmax(0, 2.8fr); column-gap: 28px; align-items: stretch; margin-top: 56px; }
+
+  /* 1. Licence wallet */
+  .lw { position: relative; display: flex; flex-direction: column; }
+  .lw-tabs { position: relative; display: inline-grid; grid-template-columns: 1fr 1fr; align-self: flex-start; padding: 4px; border-radius: 24px; background: var(--ink2); box-shadow: inset 0 0 0 1px var(--ink3); }
+  .lw-tabs[hidden] { display: none; }
+  .lw-tabs button { position: relative; z-index: 1; min-height: 40px; padding: 0 18px; border: 0; border-radius: 20px; background: none; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255 / .75); cursor: pointer; transition: color .5s var(--ease-io); }
+  .lw-tabs button[aria-selected='true'] { color: var(--ink); }
+  .lw-tabs button:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .lw-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); border-radius: 20px; background: var(--powder); transition: translate .6s var(--ease-io); }
+  .lw[data-front='1'] .lw-pill { translate: 100% 0; }
+  .lw.is-js .lw-stack { cursor: pointer; }
+  .lw-stack { position: relative; display: grid; margin-top: 22px; }
+  .lw.is-js .lw-stack { margin-top: 62px; }
+  .lw-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; margin-top: auto; padding-top: 28px; }
+  .lw-hint { font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: rgb(255 255 255 / .7); }
+  .lw-cta a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 700; font-size: 15px; color: var(--powder); text-decoration: underline; text-underline-offset: 3px; }
+  .lw-cta a:hover { color: var(--white); }
+  .lw-card { position: relative; border-radius: 6px; color: var(--ink); }
+  .lw-lic { display: flex; flex-direction: column; padding: 0 28px 24px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2), 10px 10px 0 var(--powder); overflow: hidden; }
+  .lic-band { display: flex; justify-content: space-between; margin: 0 -28px; padding: 14px 28px; background: var(--pdeep); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  .lic-k { margin-top: 22px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: rgb(22 19 15 / .7); }
+  .lic-no { margin-top: 4px; font-family: var(--f-h); font-weight: 800; font-size: 52px; line-height: 1; letter-spacing: -.01em; color: var(--ink); }
+  .lic-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; margin-top: 22px; padding-top: 18px; border-top: 1px solid rgb(22 19 15 / .3); }
+  .lic-rows dt, .rec-rows dt { font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: rgb(22 19 15 / .7); }
+  .lic-rows dd { margin: 4px 0 0; font-weight: 600; font-size: 15px; line-height: 1.35; }
+  .lic-dot { display: inline-block; width: 9px; height: 9px; margin-right: 7px; border-radius: 50%; background: var(--pdeep); box-shadow: 0 0 0 3px rgb(47 97 120 / .25); }
+  .lic-foot { margin-top: auto; padding-top: 22px; font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .04em; color: rgb(22 19 15 / .75); }
+  .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-of-type(1) { left: 7px; bottom: 7px; } .rv:nth-of-type(2) { right: 7px; bottom: 7px; }
+  .rv:nth-of-type(3) { left: 7px; top: 48px; } .rv:nth-of-type(4) { right: 7px; top: 48px; }
+  .lw-rec { padding: 24px 28px; background: var(--frost); box-shadow: inset 0 0 0 1px var(--steel2), 10px 10px 0 var(--pdeep); }
+  .rec-t { font-family: var(--f-m); font-weight: 800; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; padding-bottom: 12px; border-bottom: 1px solid rgb(22 19 15 / .3); }
+  .rec-rows > div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px dashed rgb(22 19 15 / .2); }
+  .rec-rows dt { padding-top: 2px; }
+  .rec-rows dd { margin: 0; font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 1.4; }
+  .rec-q { margin: 16px 0 0; font-family: var(--f-h); font-weight: 600; font-size: 18px; line-height: 1.25; color: var(--pdeep); }
+  .rec-q footer { margin-top: 6px; font-family: var(--f-m); font-weight: 500; font-size: 10px; color: rgb(22 19 15 / .75); }
+  .rec-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 14px; padding: 0 16px; border-radius: 4px; background: var(--ink); color: var(--white); font-weight: 700; font-size: 14px; text-decoration: none; transition: background-color .3s var(--ease-io); }
+  .rec-link:hover { background: var(--pdeep); }
+  .rec-link:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  /* With JS: one stack; the back card peeks out 18 px above and to the right, and comes forward on a swap. */
+  .lw.is-js .lw-card { grid-area: 1 / 1; transition: transform .7s var(--ease-io), opacity .7s var(--ease-io), z-index 0s linear .35s; }
+  .lw.is-js .lw-card { z-index: 1; transform: translateY(-40px) scale(.94); transform-origin: 50% 0; opacity: .8; }
+  .lw.is-js[data-front='0'] .lw-lic, .lw.is-js[data-front='1'] .lw-rec { z-index: 2; transform: none; opacity: 1; cursor: default; }
+  .lw:not(.is-js) .lw-rec { margin-top: 24px; }
+  @media (prefers-reduced-motion: reduce) { .lw.is-js .lw-card, .lw-pill { transition-duration: 0s, 0s, 0s; } }
+
+  /* 2. Instagram profile */
+  .igc { align-self: start; display: flex; flex-direction: column; padding: 22px 22px 20px; border-radius: 8px; background: var(--white); color: var(--ink); text-decoration: none; box-shadow: 10px 10px 0 var(--powder); transition: box-shadow .4s var(--ease-io), translate .4s var(--ease-io); }
+  .igc:hover { translate: -2px -2px; box-shadow: 12px 12px 0 var(--powder); }
+  .igc:focus-visible { outline: 3px solid var(--powder); outline-offset: 4px; }
+  .ig-top { display: flex; align-items: center; gap: 14px; }
+  .ig-av { display: grid; place-items: center; flex: none; width: 60px; height: 60px; border-radius: 50%; background: var(--cream); box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--pdeep); }
+  .ig-av :global(.ig-logo) { width: 48px; height: auto; }
+  .ig-id { display: flex; flex-direction: column; min-width: 0; }
+  .ig-h { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 17px; line-height: 1.2; overflow-wrap: anywhere; }
+  .ig-tick { flex: none; }
+  .ig-n { margin-top: 3px; font-size: 13px; color: var(--muted); }
+  .ig-stats { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-top: 16px; padding: 12px 0; border-block: 1px solid rgb(22 19 15 / .12); font-size: 14px; }
+  .ig-stats b { font-family: var(--f-h); font-weight: 800; font-size: 22px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .ig-read { margin-left: auto; font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .04em; color: var(--muted); }
+  .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 16px; }
+  .ig-tile { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 2px; background: var(--frost); }
+  .ig-tile :global(img) { position: absolute; inset: 0; transition: scale .6s var(--ease-io); }
+  .ig-cap { position: absolute; inset: auto 0 0; padding: 18px 8px 7px; background: linear-gradient(transparent, rgb(22 19 15 / .78)); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 9px; letter-spacing: .05em; text-transform: uppercase; opacity: 0; translate: 0 6px; transition: opacity .4s var(--ease-io), translate .4s var(--ease-io); }
+  .ig-tile:hover :global(img) { scale: 1.06; }
+  .ig-tile:hover .ig-cap { opacity: 1; translate: 0 0; }
+  .ig-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; margin-top: 8px; padding-top: 8px; font-weight: 700; font-size: 14px; color: var(--pdeep); }
+  .igc:hover .ig-cta { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* 3. Google profiles */
+  .gp { align-self: start; display: grid; grid-template-rows: auto auto auto; row-gap: 20px; }
+  .gp-v + .gp-n { margin-bottom: 18px; }
+  .gpc { display: flex; flex-direction: column; height: 100%; padding: 20px 20px 16px; border-radius: 6px; background: var(--ink2); box-shadow: inset 0 0 0 1px var(--ink3); color: var(--white); text-decoration: none; transition: background-color .4s var(--ease-io), box-shadow .4s var(--ease-io); }
+  .gpc:hover { background: var(--ink3); box-shadow: inset 0 0 0 1px var(--powder); }
+  .gpc:focus-visible { outline: 3px solid var(--powder); outline-offset: 3px; }
+  .gp-k { display: flex; align-items: center; gap: 8px; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .gp-g { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--white); color: #4285F4; font-family: var(--f-h); font-weight: 800; font-size: 13px; letter-spacing: 0; }
+  .gp-v { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-family: var(--f-h); font-weight: 800; font-size: 44px; line-height: 1; letter-spacing: -.02em; }
+  .gp-n { margin-top: 8px; font-size: 14px; color: rgb(255 255 255 / .85); }
+  .gp-n b { font-family: var(--f-h); font-weight: 800; font-size: 20px; color: var(--white); font-variant-numeric: tabular-nums; }
+  .gp-open { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; margin-top: auto; padding-top: 10px; font-weight: 700; font-size: 13px; color: var(--powder); }
+  .gpc:hover .gp-open { text-decoration: underline; text-underline-offset: 3px; }
+  .gp-note { font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 1.45; letter-spacing: .02em; color: var(--powder); }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .brec { padding: 100px 0 100px; }
+    .br-bento { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); row-gap: 40px; }
+    .gp { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; column-gap: 20px; }
+    .gp-note { grid-column: 1 / -1; }
+    .lic-no { font-size: clamp(36px, 4.4vw, 52px); }
+  }
+  @media (max-width: 767px) {
+    .brec { padding: 64px 0 72px; }
+    .br-lead { margin-top: 14px; font-size: 15px; }
+    .br-bento { display: flex; flex-direction: column; gap: 36px; margin-top: 32px; }
+    .lw-tabs { align-self: stretch; }
+    .lw-tabs button { padding: 0 8px; font-size: 10px; }
+    .lw-lic { padding: 0 18px 18px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--powder); }
+    .lic-band { margin: 0 -18px; padding: 12px 18px; font-size: 9px; gap: 10px; }
+    .lic-no { font-size: 38px; }
+    .lic-rows { gap: 12px 14px; }
+    .lic-rows dd { font-size: 13px; }
+    .lw-rec { padding: 18px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--pdeep); }
+    .rec-rows > div { grid-template-columns: 96px 1fr; }
+    .rec-q { font-size: 16px; }
+    .lw.is-js .lw-card { transform: translateY(-34px) scale(.94); }
+    .lw.is-js .lw-stack { margin-top: 50px; }
+    .igc { padding: 18px 16px; box-shadow: 6px 6px 0 var(--powder); }
+    .ig-h { font-size: 15px; }
+    .ig-read { margin-left: 0; flex-basis: 100%; }
+    .ig-cap { display: none; }
+    .gp { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 14px; }
+    .gp-note { grid-column: 1 / -1; }
+    .gpc { padding: 16px 14px 12px; }
+    .gp-v { flex-direction: column; align-items: flex-start; gap: 8px; font-size: 36px; }
+    .gp-stars { width: 80px; height: 13px; }
+  }
+</style>

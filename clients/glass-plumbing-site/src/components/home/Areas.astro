@@ -1,7 +1,9 @@
 ---
 // Home areas (Figma 712:448 "Areas" y 7899 h 840; mobile 715:560 y 8900 h 970). Frost band. The real Google Maps screenshot
 // of Pinellas with the Largo pin and the "Glass Plumbing" plate; right: head, the straight-line-miles note and the 20 towns
-// from towns.ts in four groups. Bold towns are links (Seminole has its page; the others go to their row on /areas).
+// from towns.ts in four groups. Bold towns are links (Seminole has its page; the others go to /areas: no cross-page hash links, round 2).
+// Round 2 polish (rule 15): each row carries a distance line, as long as its straight-line miles (longest = full row), that
+// draws in as the list scrolls through (kit/scrub.ts) and darkens on hover. Reduced motion: drawn.
 import Img from '../ui/Img.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Plate from '../kit/Plate.astro';
@@ -9,6 +11,7 @@ import { TOWNS } from '../../data/towns';
 const LINKED = ['largo', 'belleair-bluffs', 'clearwater', 'seminole', 'pinellas-park', 'st-petersburg'];
 const SHORT: Record<string, string> = { 'indian-rocks-beach': 'Indian Rocks' };
 const col = (g: string) => TOWNS.filter((t) => t.group === g);
+const MAXMI = Math.max(...TOWNS.map((t) => t.mi));
 const cols = [[['Central', col('Central')], ['South', col('South')]], [['North', col('North')], ['Beaches', col('Beaches')]]] as const;
 ---
 <section class="ar" aria-labelledby="ar-h" data-m-section>
@@ -24,7 +27,7 @@ const cols = [[['Central', col('Central')], ['South', col('South')]], [['North',
       <Eyebrow text="Where we work" />
       <h2 id="ar-h" class="h2 ar-h" data-t="2">Based in Largo. <span class="tone">All of Pinellas.</span></h2>
       <p class="note" data-t="3">Miles are straight-line from our base in Largo, not driving miles.</p>
-      <div class="cols" data-t="4">
+      <div class="cols" data-t="4" data-scrub data-start="top 85%" data-end="bottom 55%">
         {cols.map((c) => (
           <div class="col">
             {c.map(([g, towns]) => (
@@ -34,8 +37,9 @@ const cols = [[['Central', col('Central')], ['South', col('South')]], [['North',
                   {towns.map((t) => (
                     <li>
                       {LINKED.includes(t.slug)
-                        ? <a href={t.page ?? `/areas#town-${t.slug}`}>{SHORT[t.slug] ? <><span class="d">{t.name}</span><span class="m">{SHORT[t.slug]}</span></> : t.name}</a>
+                        ? <a href={t.page ?? '/areas'}>{SHORT[t.slug] ? <><span class="d">{t.name}</span><span class="m">{SHORT[t.slug]}</span></> : t.name}</a>
                         : <span class="tn">{SHORT[t.slug] ? <><span class="d">{t.name}</span><span class="m">{SHORT[t.slug]}</span></> : t.name}</span>}
+                      <span class="dist" aria-hidden="true" style={`width:${(t.mi / MAXMI) * 100}%`}><span class="dist-f" data-scrub-fill data-win={`${Math.min(0.6, (t.mi / MAXMI) * 0.3)},${Math.min(1, (t.mi / MAXMI) * 0.3 + 0.4)}`}></span></span>
                       <span class="mi">{t.mi.toFixed(1)}<span class="d"> mi</span><span class="sr-only"> miles</span></span>
                     </li>
                   ))}
@@ -62,10 +66,13 @@ const cols = [[['Central', col('Central')], ['South', col('South')]], [['North',
   .grp + .grp { margin-top: 30px; }
   .gl { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
   .grp ul { margin: 13px 0 0; padding: 0; list-style: none; }
-  .grp li { display: flex; justify-content: space-between; align-items: baseline; height: 26px; border-bottom: 1px solid rgb(22 19 15 / .1); }
+  .grp li { position: relative; display: flex; justify-content: space-between; align-items: baseline; height: 26px; border-bottom: 1px solid rgb(22 19 15 / .1); }
   .grp li a, .tn { font-size: 15px; line-height: 23px; }
   .grp li a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
   .grp li a:hover { color: var(--pdeep); }
+  .dist { position: absolute; left: 0; bottom: -1px; height: 2px; pointer-events: none; }
+  .dist-f { display: block; height: 100%; background: var(--powder); transform-origin: 0 50%; transition: background-color .4s var(--ease-io), height .4s var(--ease-io); }
+  .grp li:hover .dist-f, .grp li:focus-within .dist-f { background: var(--pdeep); height: 3px; }
   .mi { font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; color: var(--muted); }
 
   @media (min-width: 768px) and (max-width: 1279px) {

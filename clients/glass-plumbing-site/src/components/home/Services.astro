@@ -2,7 +2,7 @@
 // Home services (Figma 712:448 "Services" y 1732 h 1388; mobile 715:560 y 2568 h 1106). Meniscus seam from the frost
 // reviews band, head + lead, six service cards (photo, title, line, spec plate, "Call about ..." tel link). On phones each
 // card is a 128 px row (photo left) with the short Figma copy and "Call about it →". The card title links to the service
-// page (water heaters is built; the others go to their family on /services).
+// page (water heaters is built; the others go to /services: no cross-page hash links, round 2).
 import Img from '../ui/Img.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Plate from '../kit/Plate.astro';
@@ -12,15 +12,15 @@ type Card = { name: string; href: string; photo?: string; alt?: string; focus?: 
 const cards: Card[] = [
   { name: 'Water heaters', href: '/services/water-heaters', photo: 'water-heater-tank', alt: 'A new State tank water heater installed in a closet', focus: '50% 42%',
     d: 'Tank and tankless. Repairs, swaps and new installs, often next day.', m: 'Tank and tankless, often next day.', rows: [['Seen on jobs', 'Rheem · Rinnai · State'], ['Types', 'Tank · tankless pairs']], badge: true },
-  { name: 'Leaks & water lines', href: '/services#leaks-lines', photo: 'water-line-excavator', alt: 'A Glass plumber on a mini excavator digging to a water line', focus: '50% 30%',
+  { name: 'Leaks & water lines', href: '/services', photo: 'water-line-excavator', alt: 'A Glass plumber on a mini excavator digging to a water line', focus: '50% 30%',
     d: 'Burst pipes, hidden leaks, and water main repair or replacement.', m: 'Burst pipes and water mains.', rows: [['On the van', 'Mini-excavator'], ['Lines', 'Main to house']] },
-  { name: 'Drains & sewer', href: '/services#drains-fixtures',
+  { name: 'Drains & sewer', href: '/services',
     d: 'Showers that will not drain, clogged sewer lines, floor drains.', m: 'Showers, sewer lines, floor drains.', rows: [['Clears', 'Sinks · showers · sewer'], ['Also', 'Floor drains']] },
-  { name: 'Showers & tubs', href: '/services#drains-fixtures', photo: 'valve', alt: 'A matte black shower valve and hand shower on a travertine wall', focus: '50% 50%',
+  { name: 'Showers & tubs', href: '/services', photo: 'valve', alt: 'A matte black shower valve and hand shower on a travertine wall', focus: '50% 50%',
     d: '“No need to cut open the wall to upgrade your shower valve.”', m: 'No need to cut open the wall.', rows: [['Brands', 'Moen · Gerber · Kohler'], ['Work', 'Valves · trims · tubs']] },
-  { name: 'Softeners & filters', href: '/services#hot-water', photo: 'water-softener', alt: 'A water softener tank and a blue whole-house filter on an outside wall', focus: '50% 45%',
+  { name: 'Softeners & filters', href: '/services', photo: 'water-softener', alt: 'A water softener tank and a blue whole-house filter on an outside wall', focus: '50% 45%',
     d: 'Pinellas water averages 217 ppm hardness. Softeners and whole-house filters fix it.', m: '217 ppm hard water, fixed.', rows: [['Hardness', '217 ppm avg (PCU 2025)'], ['Fits', 'Softener · whole house']] },
-  { name: 'Remodels & commercial', href: '/services#remodel-commercial', photo: 'shower-remodel', alt: 'A finished walk-in shower with white subway tile and a niche', focus: '50% 62%',
+  { name: 'Remodels & commercial', href: '/services', photo: 'shower-remodel', alt: 'A finished walk-in shower with white subway tile and a niche', focus: '50% 62%',
     d: 'Repipes, rough-in, remodels and commercial build-outs.', m: 'Repipes, rough-in, build-outs.', rows: [['For', 'Homes · shops · builders'], ['Work', 'Rough-in · repipe']] },
 ];
 const lc = (s: string) => s.toLowerCase();

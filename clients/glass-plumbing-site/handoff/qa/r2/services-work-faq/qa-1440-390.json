@@ -1,0 +1,166 @@
+{
+ "1440 /services": {
+  "sw": 1440,
+  "W": 1440,
+  "over": [],
+  "tiny": [
+   "sv-chip 110x34",
+   "sv-chip 186x34",
+   "sv-chip 205x34",
+   "sv-chip 196x34",
+   "sy-name 190x22",
+   "sy-call 28x41",
+   "sy-text 82x41",
+   "pr-check 139x43",
+   "sv-link rv-all 116x43",
+   "fq-chip 239x33"
+  ],
+  "errs": [],
+  "ax": []
+ },
+ "1440 /services/water-heaters": {
+  "sw": 1440,
+  "W": 1440,
+  "over": [],
+  "tiny": [
+   "pb-a 178x29",
+   "wy-link 215x43",
+   "A 42x23",
+   "A 68x23",
+   "A 82x23",
+   "A 104x23",
+   "A 96x23"
+  ],
+  "errs": [],
+  "ax": [
+   "color-contrast(13): .pc-ask | li[data-astro-cid-uzbs73z3=\"\"]:nth-child(1) > .pc-row > .pc-tx[data-astro-cid-uzbs73z3=\"\"] > .pc-t[data-astro-cid-uzbs73z3=\"\"] > .pc-q[data-astro-cid-uzbs73z3=\"\"] | li[data-astro-cid-uzbs73z3=\"\"]:nth-child(1) > .pc-row > .pc-tx[data-astro-cid-uzbs73z3=\"\"] > .pc-d[data-astro-cid-uzbs73z3=\"\"]"
+  ]
+ },
+ "1440 /our-work": {
+  "sw": 1440,
+  "W": 1440,
+  "over": [],
+  "tiny": [
+   "A 42x23",
+   "A 68x23",
+   "A 82x23",
+   "A 104x23",
+   "A 96x23"
+  ],
+  "errs": [],
+  "ax": [
+   "scrollable-region-focusable(1): .os-view"
+  ]
+ },
+ "1440 /faq": {
+  "sw": 1440,
+  "W": 1440,
+  "over": [],
+  "tiny": [
+   "fk-rail 23x390",
+   "fk-rail 700x15",
+   "A 42x23",
+   "A 68x23",
+   "A 82x23",
+   "A 104x23",
+   "A 96x23"
+  ],
+  "errs": [],
+  "ax": []
+ },
+ "1440 /thank-you": {
+  "sw": 1440,
+  "W": 1440,
+  "over": [],
+  "tiny": [
+   "A 42x23",
+   "A 68x23",
+   "A 82x23",
+   "A 104x23",
+   "A 96x23"
+  ],
+  "errs": [],
+  "ax": []
+ },
+ "390 /services": {
+  "sw": 390,
+  "W": 390,
+  "over": [],
+  "tiny": [
+   "sy-name 143x18",
+   "sy-name 143x35",
+   "pr-check 139x43",
+   "rv-tab 70x34",
+   "rv-tab 113x34",
+   "rv-tab is-first 141x34",
+   "rv-tab 158x34",
+   "rv-tab 199x34",
+   "sv-link rv-all 116x43",
+   "fq-tab 87x33"
+  ],
+  "errs": [],
+  "ax": []
+ },
+ "390 /services/water-heaters": {
+  "sw": 390,
+  "W": 390,
+  "over": [],
+  "tiny": [
+   "pb-am 190x43",
+   "A 39x25",
+   "A 64x25",
+   "A 76x25",
+   "A 99x25",
+   "A 88x25"
+  ],
+  "errs": [],
+  "ax": [
+   "color-contrast(7): .pc-ask | li[data-astro-cid-uzbs73z3=\"\"]:nth-child(1) > .pc-row > .pc-tx[data-astro-cid-uzbs73z3=\"\"] > .pc-d[data-astro-cid-uzbs73z3=\"\"] | li[data-astro-cid-uzbs73z3=\"\"]:nth-child(2) > .pc-row > .pc-tx[data-astro-cid-uzbs73z3=\"\"] > .pc-d[data-astro-cid-uzbs73z3=\"\"]"
+  ]
+ },
+ "390 /our-work": {
+  "sw": 390,
+  "W": 390,
+  "over": [],
+  "tiny": [
+   "A 39x25",
+   "A 64x25",
+   "A 76x25",
+   "A 99x25",
+   "A 88x25"
+  ],
+  "errs": [],
+  "ax": [
+   "scrollable-region-focusable(1): .os-view"
+  ]
+ },
+ "390 /faq": {
+  "sw": 390,
+  "W": 390,
+  "over": [],
+  "tiny": [
+   "fk-rail 310x15",
+   "A 39x25",
+   "A 64x25",
+   "A 76x25",
+   "A 99x25",
+   "A 88x25"
+  ],
+  "errs": [],
+  "ax": []
+ },
+ "390 /thank-you": {
+  "sw": 390,
+  "W": 390,
+  "over": [],
+  "tiny": [
+   "A 39x25",
+   "A 64x25",
+   "A 76x25",
+   "A 99x25",
+   "A 88x25"
+  ],
+  "errs": [],
+  "ax": []
+ }
+}

@@ -14,7 +14,8 @@ state, no visible jumps).
 | `Plate.astro` | Steel spec plate with four rivets, rows as a `<dl>`. | `rows`, `title`, `w`, `wm`, `pad`, `size`, `tsize`, `kx`, `pitch` (+ `...m`), `shadow`, `tone` steel / ink, `label`, `t`, `fx` |
 | `Seam.astro` | The meniscus seam between two sections (dip or rise). | `from`, `to`, `flip`, `d`, `dm`, `only` |
 | `Logo.astro` | The real logo (logo-glass.png). | `w`, `alt`, `class`, `eager` |
-| `Curtain.astro` | The page curtain markup (8 blinds); `curtain.ts` drives it. | |
+| `Curtain.astro` | The page curtain, "Clear Water" (R2): `Water.astro` sheet + floating logo; `curtain.ts` drives it. | |
+| `Water.astro` | The three-layer water sheet (powder, pdeep, frost + white meniscus line) shared by curtain and loader. | `empty` (loader: starts drained) |
 
 `glass.ts` (imported by Base): one IntersectionObserver adds `is-filled` to `[data-fill]` (housing water rises),
 `is-in` to `[data-plate]` (rivets pop) and `[data-seam]` (seam grows), after the loader / curtain hand-off. Without
@@ -53,28 +54,25 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
 - `home/flow.ts` (the "How a job goes" pipe with its bead, stops, chevrons and gauge) is the one bespoke scrub. It uses
   `drawTo`, `settled` and `requestRefresh` from here.
 
-### `curtain.ts`: page transitions (fix round 1, B2: the loader's 8 blinds; one channel: GSAP `xPercent` per `.pt-blind`)
-- The curtain is the same family as the loader: 8 full-width horizontal blinds (`Curtain.astro`), even ones park off to
-  the left (xPercent -101), odd ones to the right (+101). The CSS resting state is "covering", so a page that arrives
-  under the curtain is covered before paint.
-- `park()` (at boot) parks the blinds off-screen, unless this page arrived under the curtain. It also resets the curtain
-  on a bfcache restore.
-- `cover(href)` slides every blind to 0 (0.6 s `power2.inOut`, stagger 0.012 s, alternating sides), THEN navigates.
-- `reveal(onHandoff, onDone)` handles a page that arrives covered (`html.pt-in`): `history.scrollRestoration = 'manual'`,
-  the page goes to the top under the cover, then the blinds slide off to alternating sides (0.6 s `power2.inOut`);
-  `onHandoff` (hero timeline) fires at ~75 % of the blind travel, so the H1 starts as the cover clears (fix round 2,
-  review 3); `onDone` (scrollRestoration back to `'auto'`, `pt-in` off) when the last blind is off.
-- Colours: the blinds are frost / white alternating with powder / pdeep edge bands, so cover and reveal read on ink
-  heroes too.
-- `interceptLinks()` covers for in-site links to another page, and drops a cross-page `#hash` so a new page always
-  opens at the top. Same-page `#` links stay with Lenis (smooth). New tabs, modifier clicks, downloads and
-  `data-no-curtain` are skipped.
-- `toTop()`.
+### `water.ts` + `curtain.ts`: page transitions, "Clear Water" (revision round 2; replaces the 8 blinds)
+- Source: 21st.dev "Page Transition" (su2491251, id 29262), `liquid-wave` variant, rebuilt in vanilla TS + GSAP and re-skinned
+  as Glass's motif. `water.ts draw(sheet, t, drain?, wob?, phase?)` paints the three paths of `Water.astro`: each layer's top
+  edge is a cubic curve through 13 points, each point eases in-out with a small lag across the width, every surface is a
+  meniscus (centre lower than the walls while it moves, flat at rest), the white meniscus line rides the front surface.
+  Fill = back layer first; drain = front layer first. One channel: the paths' `d` attribute, written only by `draw()`.
+- `park()` (boot): draws the sheet empty unless this page arrived under the curtain; resets on a bfcache restore.
+- `cover(href)`: 0.9 s fill (logo floats up into the frost from 55 %), and only at 100 % does it navigate.
+- `reveal(onHandoff, onDone)` (html.pt-in): resting markup is full, so the page is covered at first paint;
+  `history.scrollRestoration = 'manual'`, page to the top under the cover, then `drain()`: logo sinks and fades (0.3 s), the
+  water drains 1.0 s; `onHandoff` (hero timeline) at 55 % of the drain, `onDone` at the end (`pt-in` off, restoration `auto`).
+- `drain(host, onHandoff, onDone, mark?, delay?)`: shared with the loader's exit.
+- `interceptLinks()`, `toTop()`: unchanged (cross-page `#hash` dropped, new tabs / modifiers / downloads / `data-no-curtain` skipped).
 
-### `loader.ts`: the first-visit loader (fix round 1, B3; markup `global/Loader.astro`)
-`runLoader({ onCover, onDone })`. A housing fills (`--p` on `[data-loader]`) and a mono gauge counts 000 / 100 in
-`[data-ld-num]` while the page loads (100 forced at 1.8 s), then 8 blinds slide off alternately (0.6 s). `onCover` runs while still fully covered (hero start states), `onDone` when the last blind is off
-(hero timeline, header, Lenis). Once per session (`sessionStorage mps-intro`), skippable (click, tap, key), max 3.4 s,
+### `loader.ts`: the first-visit loader ("Clear Water", markup `global/Loader.astro`)
+`runLoader({ onCover, onDone })`. The screen is the housing: the three layers rise with the 000 / 100 count (smoothed, a slow
+swell on the surfaces while it waits; 100 forced at 1.8 s), a spec plate with the logo and the gauge floats on top. At 100 it
+tops up (0.35 s), `onCover` runs fully covered, the backdrop goes, then `drain()` like the curtain (plate sinks, water out);
+`onDone` at 55 % of the drain. Once per session (`sessionStorage gps-intro`), skippable (click, tap, key), max ~3.35 s,
 never under reduced motion.
 
 ### `marquee.ts`: the one marquee engine (fix round 1, B8)
@@ -151,10 +149,9 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 
 | Element | Property | Owner |
 |---|---|---|
-| `.pt-blind` | `transform` (xPercent) | `curtain.ts` |
-| `.ld-blind` / `.ld-stage`, `.ld-skip` | `transform` (xPercent) / `opacity`, `visibility` | `loader.ts` |
-| `[data-loader]` | `--p` (housing water, gauge) | `loader.ts` |
-| `.pt-mark` | `opacity`, `visibility` | `curtain.ts` |
+| `Water.astro` paths (`[data-wl]`, `[data-wline]`) | `d` attribute | `water.ts draw()` (called by `curtain.ts`, `loader.ts`) |
+| `.pt-mark`, `.ld-plate` | `opacity`, `visibility`, `transform` (y) | `curtain.ts` / `drain()` |
+| `.ld-hud`, `.ld-skip` | `opacity`, `visibility` | `loader.ts` |
 | `history.scrollRestoration` | | `curtain.ts` (plus the Base.astro head script, `manual` when arriving under the curtain) |
 | window scroll position | | Lenis (`motion.ts`); `curtain.ts toTop()` only under the cover |
 | ScrollTrigger refresh, `lenis.resize()` | | `settle.ts requestRefresh()` |
@@ -176,6 +173,7 @@ animates a different property (for example `translate` vs `transform`) or a wrap
 | `[data-t]` entrance items, parallax | `opacity`, `transform` | `motion.ts` |
 | `[data-marquee-track]` | `transform` (x) | `marquee.ts` |
 | hover lift | `translate` (CSS transition) | component CSS, `finePointer()` |
-| cover photo in a clipping frame (`img[data-drift]`) | `scale` (1.14, set once), `translate` (scrub) | `motion.ts photoDrift()` |
+| cover photo (`img[data-drift]`) | `scale` (1.14, set once), `translate` (scrub), `clip-path` (only when its frame does not clip) | `motion.ts photoDrift()` |
+| section head block (h2 / `.shead`), numerals, plates, housings (R2 text/object parallax) | `translate` (inline, scrub), or GSAP `yPercent` on elements GSAP animates | `motion.ts parallax()`; opt out with `data-no-px` |
 | idle gesture | `rotate` / `scale` / `translate` (WAAPI, `composite: 'add'`, so it adds to any transform) | `idle.ts` |
 | hover lift / tilt (`data-hover`) | `translate` / `rotate` / `scale` (CSS transition) | `kit.css` |

@@ -1,29 +1,45 @@
 ---
-// /about "Owners and crew" (Figma y 2133 h 700 / mobile y 2044 h 702). White. Three steel name plates, no photos (the
-// page says why). Every count is computed from reviews.ts (data.ts): Kody 8, Zak 6 (Zak / Zac / Zach), Chase 2, of 16.
+// /about "Owners and crew" (R2 rebuild: the R1 head-left / note-right + three static plates read as slop under rule 14).
+// White. Centred head + note, then three steel name plates as an expanding row (21st.dev vaib215/expanding-cards,
+// rebuilt in vanilla TS): the open plate grows and shows a word-for-word review that names that person; every plate
+// carries a lying water tube that fills to "named in X of 16 reviews" (counted from reviews.ts, data.ts). Hover, focus or
+// click opens a plate. Phones: all three open, stacked. No photos (the page says why). Reduced motion: no width tween.
 import Head from '../areas/Head.astro';
-import { KODY, ZAK, CHASE, CHASE_BY, REVIEW_TOTAL } from './data';
+import { KODY, ZAK, CHASE, REVIEW_TOTAL } from './data';
+import { quote } from '../areas/reviews';
 import { SITE } from '../../data/site';
-const poss = (n: string) => `${n}’s`;
 const people = [
-  { role: 'Owner · licence holder', name: 'Kody Glass', d: `FL ${SITE.licence.number}. Named in ${KODY} of the ${REVIEW_TOTAL} reviews we read.`, m: `FL ${SITE.licence.number}. Named in ${KODY} of ${REVIEW_TOTAL} reviews.`, foot: 'Owner', key: true },
-  { role: 'Brother · on the crew', name: 'Zak', d: `Commercial and new builds. Named in ${ZAK} reviews.`, m: `Commercial and new builds. Named in ${ZAK}.`, foot: 'Brother · on the crew' },
-  { role: 'On the crew', name: 'Chase', d: `Named in ${CHASE_BY.map(poss).join(' and ')} reviews.`, m: `Named in ${CHASE === 2 ? 'two' : CHASE} reviews.`, foot: 'On the crew' },
+  { id: 'kody', role: 'Owner · licence holder', name: 'Kody Glass', d: `Florida licence ${SITE.licence.number}.`, n: KODY,
+    q: quote('Eduardo “EddieZoRz” Perea', 'Kody was a lifesaver.'), by: 'Eduardo “EddieZoRz” Perea' },
+  { id: 'zak', role: 'Brother · on the crew', name: 'Zak', d: 'Commercial and new builds.', n: ZAK,
+    q: quote('Jordan Carlson', 'Zak was professional, punctual, and very friendly.'), by: 'Jordan Carlson' },
+  { id: 'chase', role: 'On the crew', name: 'Chase', d: 'Named next to Zak in both of his reviews.', n: CHASE,
+    q: quote('Nelson Whitesell', 'Zak and Chase are great to work with.'), by: 'Nelson Whitesell' },
 ];
 ---
 <section class="bcrew" data-m-section aria-labelledby="bcrew-h">
   <div class="wrap">
     <div class="bc-top">
       <Head eyebrow="Who is who" l1="Two brothers." l2="One crew." id="bcrew-h" />
-      <p class="bc-note" data-t="3">We don’t put names on photos, because faces change job to job. Here is who you’ll talk to.</p>
+      <p class="bc-note" data-t="3">We don’t put names on photos, because faces change job to job. Here is who you’ll talk to, and what customers say about each of them.</p>
     </div>
-    <ul class="bc-grid" role="list" data-t="4" data-stagger>
-      {people.map((p) => (
-        <li class:list={['bc', p.key && 'is-key']}>
-          <p class="bc-role">{p.role}</p>
-          <h3 class="bc-name">{p.name}</h3>
-          <p class="bc-d"><span class="d">{p.d}</span><span class="m">{p.m}</span></p>
-          <p class="bc-foot" aria-hidden="true">{p.foot}</p>
+    <ul class="bc-row" role="list" data-t="4" data-crew>
+      {people.map((p, i) => (
+        <li class:list={['bc', i === 0 && 'is-open']} data-crew-item style={`--fill:${(p.n / REVIEW_TOTAL).toFixed(4)}`}>
+          <button class="bc-btn" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`bc-q-${p.id}`} data-crew-btn>
+            <span class="bc-role">{p.role}</span>
+            <span class="bc-name">{p.name}</span>
+          </button>
+          <p class="bc-d">{p.d}</p>
+          <p class="bc-more" aria-hidden="true">Read the review →</p>
+          <figure class="bc-q" id={`bc-q-${p.id}`}>
+            <blockquote><p>“{p.q}”</p></blockquote>
+            <figcaption>{p.by} · Google</figcaption>
+          </figure>
+          <div class="bc-gauge">
+            <span class="bc-tube" aria-hidden="true"><span class="bc-water"></span></span>
+            <span class="bc-gl">Named in <b>{p.n}</b> of {REVIEW_TOTAL} reviews</span>
+          </div>
           <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
         </li>
       ))}
@@ -31,37 +47,77 @@ const people = [
   </div>
 </section>
 
+<script>
+  import { onEnter } from '../areas/inview';
+  // One plate open at a time (desktop/tablet). Opens on hover, focus or click; the row remembers the last one opened.
+  document.querySelectorAll<HTMLElement>('[data-crew]').forEach((row) => {
+    const items = [...row.querySelectorAll<HTMLElement>('[data-crew-item]')];
+    const open = (k: number) => items.forEach((it, i) => {
+      it.classList.toggle('is-open', i === k);
+      it.querySelector('[data-crew-btn]')!.setAttribute('aria-expanded', String(i === k));
+    });
+    items.forEach((it, i) => {
+      it.addEventListener('pointerenter', (e) => { if ((e as PointerEvent).pointerType === 'mouse') open(i); });
+      it.querySelector('[data-crew-btn]')!.addEventListener('click', () => open(i));
+      it.addEventListener('focusin', () => open(i));
+    });
+    onEnter(row, () => row.classList.add('is-in'));
+  });
+</script>
+
 <style>
-  .bcrew { position: relative; background: var(--white); padding: 110px 0 100px; }
-  .bc-top { display: grid; grid-template-columns: 600px 500px; justify-content: space-between; align-items: start; }
-  .bc-note { margin-top: 46px; font-size: 16px; line-height: 1.5; color: var(--muted); }
-  .bc-grid { display: grid; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin-top: 52px; }
-  .bc { position: relative; display: flex; flex-direction: column; height: 300px; padding: 32px 28px 33px; background: var(--steel); border-radius: 4px; box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--ink); }
-  .is-key { box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--pdeep); }
-  .bc-role { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-  .bc-name { margin-top: 13px; font-family: var(--f-h); font-weight: 800; font-size: 40px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
-  .bc-d { margin-top: 22px; max-width: 320px; font-size: 16px; line-height: 1.5; color: var(--ink); }
-  .bc-foot { margin-top: auto; padding-top: 15px; border-top: 1px solid rgb(22 19 15 / .3); font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--ink); }
+  .bcrew { position: relative; background: var(--white); padding: 120px 0 110px; }
+  .bc-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .bc-top :global(.ah-eb) { justify-content: center; }
+  .bc-note { max-width: 560px; margin-top: 20px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  .bc-row { display: flex; gap: 24px; margin-top: 56px; }
+  .bc { position: relative; display: flex; flex-direction: column; flex: 1 1 0; min-width: 0; height: 360px; padding: 30px 28px 28px; overflow: hidden; background: var(--steel); border-radius: 4px;
+    box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--ink); transition: flex-grow .7s var(--ease-io), box-shadow .5s var(--ease-io); }
+  .bc.is-open { flex-grow: 1.9; box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--pdeep); }
+  .bc-btn { display: flex; flex-direction: column; align-items: flex-start; padding: 0; border: 0; background: none; text-align: left; color: var(--ink); cursor: pointer; }
+  .bc-btn:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 2px; }
+  .bc-role { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .bc-name { margin-top: 13px; font-family: var(--f-h); font-weight: 800; font-size: 44px; line-height: 1.04; letter-spacing: -.02em; white-space: nowrap; }
+  .bc-d { width: 240px; margin-top: 12px; font-size: 15px; line-height: 1.5; color: var(--ink); }
+  .bc-more { margin-top: 18px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); transition: opacity .4s var(--ease-io); }
+  .is-open .bc-more { opacity: 0; }
+  .bc-q { position: absolute; left: 28px; top: 170px; width: 480px; max-width: calc(100vw - 80px); margin: 0; opacity: 0; translate: 0 12px; transition: opacity .5s var(--ease-io), translate .5s var(--ease-io); }
+  .is-open .bc-q { opacity: 1; translate: 0 0; transition-delay: .25s; }
+  .bc-q blockquote { margin: 0; font-family: var(--f-h); font-weight: 600; font-size: 26px; line-height: 1.18; letter-spacing: -.01em; color: var(--pdeep); }
+  .bc-q figcaption { margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--ink); }
+  .bc-gauge { margin-top: auto; padding-top: 16px; border-top: 1px solid rgb(22 19 15 / .3); }
+  .bc-tube { position: relative; display: block; height: 22px; background: var(--white); border: 2px solid var(--ink); border-radius: 11px; overflow: hidden; }
+  .bc-water { position: absolute; inset: 0 auto 0 0; width: calc(var(--fill) * 100%); min-width: 14px; background: var(--powder); border-right: 2px solid var(--pdeep); transition: clip-path 1.2s var(--ease-io); clip-path: inset(0 0 0 0); }
+  :global(html.motion) .bc-row:not(.is-in) .bc-water { clip-path: inset(0 100% 0 0); }
+  .bc-gl { display: block; margin-top: 9px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--ink); white-space: nowrap; }
+  .bc-gl b { font-weight: 800; }
   .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
   .rv:nth-of-type(1) { left: 6px; top: 6px; } .rv:nth-of-type(2) { right: 6px; top: 6px; }
   .rv:nth-of-type(3) { left: 6px; bottom: 6px; } .rv:nth-of-type(4) { right: 6px; bottom: 6px; }
-  .m { display: none; }
+  @media (prefers-reduced-motion: reduce) { .bc, .bc-q { transition: none; } }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .bc-top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
-    .bc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-    .bc { height: auto; min-height: 300px; }
+    .bc-row { gap: 16px; }
+    .bc { height: 400px; padding: 26px 20px 22px; }
+    .bc-name { font-size: 34px; }
+    .bc-q { width: 340px; }
+    .bc-q blockquote { font-size: 21px; }
+    .bc-d { width: auto; }
+    .bc-q { left: 20px; top: 190px; }
   }
   @media (max-width: 767px) {
-    .bcrew { padding: 56px 0 56px; }
-    .bc-top { display: block; }
-    .bc-note { display: none; }
-    .bc-grid { grid-template-columns: 1fr; row-gap: 16px; margin-top: 24px; }
-    .bc { height: 150px; padding: 20px 20px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); }
-    .is-key { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--pdeep); }
-    .bc-role { font-size: 9px; line-height: 12px; }
-    .bc-name { margin-top: 10px; font-size: 28px; }
-    .bc-d { margin-top: 19px; font-size: 14px; }
-    .bc-foot { display: none; }
-    .d { display: none; } .m { display: inline; }
+    .bcrew { padding: 56px 0 64px; }
+    .bc-note { font-size: 15px; margin-top: 14px; }
+    .bc-row { flex-direction: column; gap: 18px; margin-top: 28px; }
+    .bc, .bc.is-open { flex: none; height: auto; padding: 22px 20px 20px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); }
+    .bc:first-child { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--pdeep); }
+    .bc-btn { pointer-events: none; }
+    .bc-role { font-size: 10px; }
+    .bc-name { margin-top: 8px; font-size: 30px; }
+    .bc-d { width: auto; margin-top: 8px; font-size: 14px; }
+    .bc-more { display: none; }
+    .bc-q { position: static; width: auto; max-width: none; margin-top: 14px; opacity: 1; translate: none; }
+    .bc-q blockquote { font-size: 20px; font-weight: 700; }
+    .bc-gauge { margin-top: 18px; }
   }
 </style>

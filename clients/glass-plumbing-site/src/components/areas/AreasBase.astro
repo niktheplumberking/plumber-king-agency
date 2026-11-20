@@ -1,59 +1,191 @@
 ---
-// /areas "One base" (Figma 721:525 y 855 h 780 / mobile y 1028 h 759). Frost. The real Google Maps screenshot of Pinellas
-// with the Largo pin, the "Find us" spec plate and the call button. The street address waits for Kody (site.ts), so the
-// plate says "Largo, FL" where the Figma has the street.
+// /areas "One base + towns" (R2 rebuild). R1 had two sections: map-left / plate-right ("One base") and four plain town
+// columns ("Towns grouped"); both read as rule-14 slop. Now one locator (21st.dev support_596fe4b8/interactive-globe-
+// explorer: a list synced with map pins, rebuilt flat on the real Google Maps screenshot of Pinellas):
+//   - centred head; the full portrait map with the Largo base pin and a dot for each of the 20 towns in towns.ts, placed
+//     on that town's label in the screenshot (positions read off the 700 x 1000 file, so they match what the map shows);
+//   - a region filter (All / North / Central / South / Beaches, real radio inputs) that dims the other towns and pins;
+//   - the town index: point at, focus or tap a town and its pin lifts and names itself; Seminole links to its page;
+//   - the "Find us" spec plate overlaps the map's lower corner (depth layer) and the call button closes the column.
+// Every town keeps id="town-<slug>"; arriving on /areas#town-<slug> lights that town up. No JS: map, pins and list all show.
 import Head from './Head.astro';
 import Btn from '../kit/Btn.astro';
 import Plate from '../kit/Plate.astro';
 import Seam from '../kit/Seam.astro';
 import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
+import { TOWNS, type Town } from '../../data/towns';
+// Pin positions in px on the 700 x 1000 map file (each town's label anchor in the screenshot).
+const XY: Record<string, [number, number]> = {
+  'largo': [243, 436], 'belleair': [197, 407], 'belleair-bluffs': [205, 428], 'clearwater': [212, 357], 'seminole': [220, 565],
+  'pinellas-park': [353, 560], 'kenneth-city': [323, 605], 'safety-harbor': [362, 316], 'dunedin': [229, 282], 'oldsmar': [403, 245],
+  'palm-harbor': [259, 172], 'tarpon-springs': [275, 52], 'gulfport': [346, 716], 'st-petersburg': [442, 686], 'belleair-beach': [168, 420],
+  'indian-rocks-beach': [140, 473], 'redington-shores': [176, 598], 'madeira-beach': [211, 634], 'treasure-island': [251, 682], 'st-pete-beach': [278, 725],
+};
+const BASE: [number, number] = [243, 436];
+const GROUPS: Town['group'][] = ['North', 'Central', 'South', 'Beaches'];
+const towns = [...TOWNS].sort((a, b) => GROUPS.indexOf(a.group) - GROUPS.indexOf(b.group) || a.mi - b.mi);
+const pct = (xy: [number, number]) => `left:${(xy[0] / 7).toFixed(2)}%;top:${(xy[1] / 10).toFixed(2)}%`;
 const rows: [string, string][] = [
   ['Name', SITE.name], ['Base', `${SITE.city}, ${SITE.region}`], ['Phone', SITE.phone], ['Hours', '24/7 emergency line'], ['Licence', `FL ${SITE.licence.number}`],
 ];
+const arrow = '<path d="M.9 5.9h12M7.9 10.9l5-5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
 ---
-<section class="abase" data-m-section aria-labelledby="abase-h">
+<section class="abase" id="towns" data-m-section aria-labelledby="abase-h">
   <Seam from="var(--ink)" to="var(--frost)" flip />
-  <div class="wrap abase-grid">
-    <div class="abase-head">
-      <Head eyebrow="One base" l1="Everything leaves" l2="from Largo." size={48} sizeM={28} id="abase-h" />
+  <div class="wrap">
+    <div class="ab-head">
+      <Head eyebrow="One base · 20 towns" l1="Everything leaves" l2="from Largo." size={56} sizeM={32} id="abase-h" />
+      <p class="ab-lead" data-t="3">Four parts of Pinellas, one licensed crew. Point at a town to find it on the map.</p>
     </div>
-    <figure class="abase-map" data-t="4" data-fx="frame">
-      <Img name="map-pinellas" alt="Google Maps view of Pinellas County, with Largo near the middle and the beaches along the west coast" fit="cover"
-        sizes="(min-width:1280px) 700px, (min-width:768px) 52vw, 90vw" widths={[360, 700, 1000, 1400]} />
-      <svg class="abase-pin" viewBox="0 0 30 41" aria-hidden="true"><path d="M15 39S1 23 1 15C1 7 7 1 15 1s14 6 14 14c0 8-14 24-14 24Z" fill="#16130F" stroke="#fff" stroke-width="2" /></svg>
-      <figcaption class="sr-only">Our base: Largo, Florida.</figcaption>
-    </figure>
-    <div class="abase-side">
-      <Plate title="Find us" rows={rows} w={440} wm={350} pad={22} size={12} tsize={14} kx={90} pitch={22} padm={16} sizem={11} tsizem={12} kxm={72} pitchm={21} shadow="pdeep" t="4" />
-      <Btn look="call" sub="Call now · 24/7" size="l" w={440} wm={350} class="abase-btn" t="3" />
+    <div class="ab-grid" data-locator>
+      <div class="ab-mapcol">
+        <figure class="ab-map" data-t="4" data-fx="frame">
+          <Img name="map-pinellas" alt="Google Maps view of Pinellas County, with Largo near the middle and the beaches along the west coast" fit="cover"
+            sizes="(min-width:1280px) 540px, (min-width:768px) 44vw, 92vw" box={0.7} boxM={0.7} widths={[360, 540, 700]} />
+          <ul class="ab-pins" role="list" aria-hidden="true">
+            {towns.map((t) => (
+              <li class="ab-dot" style={pct(XY[t.slug])} data-pin={t.slug} data-group={t.group}><span class="ab-tag">{t.name} · {t.mi} mi</span></li>
+            ))}
+          </ul>
+          <svg class="ab-base" style={pct(BASE)} viewBox="0 0 30 41" aria-hidden="true"><path d="M15 39S1 23 1 15C1 7 7 1 15 1s14 6 14 14c0 8-14 24-14 24Z" fill="#16130F" stroke="#fff" stroke-width="2" /><circle cx="15" cy="15" r="5" fill="#84B3C7" /></svg>
+          <figcaption class="sr-only">Our base: Largo, Florida. Each town below is marked on the map.</figcaption>
+        </figure>
+        <div class="ab-plate">
+          <Plate title="Find us" rows={rows} w={360} wm={330} pad={20} size={12} tsize={13} kx={86} pitch={22} padm={16} sizem={11} tsizem={12} kxm={72} pitchm={21} shadow="pdeep" t="4" />
+        </div>
+      </div>
+      <div class="ab-side">
+        <fieldset class="ab-filter" data-t="3">
+          <legend class="sr-only">Show towns in</legend>
+          <label><input type="radio" name="ab-region" value="all" checked /><span>All <b>{TOWNS.length}</b></span></label>
+          {GROUPS.map((g) => (
+            <label><input type="radio" name="ab-region" value={g} /><span>{g} <b>{TOWNS.filter((t) => t.group === g).length}</b></span></label>
+          ))}
+        </fieldset>
+        <ul class="ab-list" role="list" aria-label="Towns we serve" data-t="4" data-stagger>
+          {towns.map((t) => (
+            <li class="ab-town" id={`town-${t.slug}`} data-town={t.slug} data-group={t.group}>
+              {t.page
+                ? <a class="ab-tb is-page" href={t.page} data-town-btn><span class="ab-n">{t.name}</span><span class="ab-mi">{t.group} · {t.mi} mi</span><svg viewBox="0 0 14 12" width="14" height="12" aria-hidden="true" set:html={arrow} /></a>
+                : <button class="ab-tb" type="button" aria-pressed="false" data-town-btn><span class="ab-n">{t.name}</span><span class="ab-mi">{t.group} · {t.mi} mi</span></button>}
+            </li>
+          ))}
+        </ul>
+        <p class="ab-note" data-t="3">Miles are straight-line from our Largo base (Census map points), not driving miles. Seminole has its own page; for the rest, call and ask.</p>
+        <Btn look="call" sub="Call now · 24/7" size="l" w={340} wm={350} class="ab-btn" t="3" />
+      </div>
     </div>
   </div>
 </section>
 
+<script>
+  // Locator: hover / focus / tap a town -> its pin lifts and shows "Town · x mi"; the region filter dims everything
+  // outside the region (towns stay in the list and stay reachable). Arriving on #town-<slug> lights that town.
+  document.querySelectorAll<HTMLElement>('[data-locator]').forEach((root) => {
+    root.classList.add('is-js');
+    const pins = new Map([...root.querySelectorAll<HTMLElement>('[data-pin]')].map((p) => [p.dataset.pin!, p]));
+    const items = [...root.querySelectorAll<HTMLElement>('[data-town]')];
+    let held = '';
+    const light = (slug: string) => {
+      pins.forEach((p, s) => p.classList.toggle('is-on', s === slug));
+      items.forEach((it) => it.classList.toggle('is-on', it.dataset.town === slug));
+    };
+    items.forEach((it) => {
+      const slug = it.dataset.town!;
+      const btn = it.querySelector<HTMLElement>('[data-town-btn]')!;
+      it.addEventListener('pointerenter', () => light(slug));
+      it.addEventListener('pointerleave', () => light(held));
+      btn.addEventListener('focus', () => light(slug));
+      btn.addEventListener('blur', () => light(held));
+      if (btn.tagName === 'BUTTON') btn.addEventListener('click', () => {
+        held = held === slug ? '' : slug;
+        items.forEach((x) => x.querySelector('button')?.setAttribute('aria-pressed', String(x.dataset.town === held)));
+        light(held);
+      });
+    });
+    root.querySelectorAll<HTMLInputElement>('input[name="ab-region"]').forEach((r) => r.addEventListener('change', () => {
+      root.dataset.region = r.value;
+      const dim = (el: HTMLElement) => el.classList.toggle('is-dim', r.value !== 'all' && el.dataset.group !== r.value);
+      items.forEach(dim); pins.forEach(dim);
+    }));
+    const fromHash = () => {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (id.startsWith('town-') && pins.has(id.slice(5))) { held = id.slice(5); light(held); }
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  });
+</script>
+
 <style>
-  .abase { position: relative; background: var(--frost); padding: 120px 0 100px; }
-  .abase-grid { display: grid; grid-template-columns: 700px 440px; justify-content: space-between; grid-template-areas: 'map head' 'map side'; grid-template-rows: auto 1fr; align-items: start; }
-  .abase-head { grid-area: head; }
-  .abase-side { grid-area: side; padding-top: 40px; }
-  .abase-map { grid-area: map; position: relative; margin: 0; height: 560px; border-radius: 4px; box-shadow: 10px 10px 0 var(--ink); }
-  .abase-map :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 4px; }
-  .abase-map::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 4px; pointer-events: none; }
-  .abase-pin { position: absolute; left: 34.85%; top: 45.5%; width: 30px; height: 41px; transform: translate(-50%, -100%); margin-top: 2px; }
-  .abase-side :global(.abase-btn) { margin-top: 90px; } /* Figma plate is 16 px taller (gap before Licence) */
+  .abase { position: relative; background: var(--frost); padding: 120px 0 110px; }
+  .ab-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .ab-head :global(.ah-eb) { justify-content: center; }
+  .ab-lead { max-width: 560px; margin-top: 18px; font-size: 18px; line-height: 1.5; color: var(--ink); }
+  .ab-grid { display: grid; grid-template-columns: 540px minmax(0, 580px); justify-content: space-between; align-items: start; margin-top: 56px; }
+  .ab-mapcol { position: relative; padding-bottom: 70px; }
+  .ab-map { position: relative; margin: 0; width: 100%; aspect-ratio: 700 / 1000; border-radius: 4px; box-shadow: 10px 10px 0 var(--ink); }
+  .ab-map :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 4px; }
+  .ab-map::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 4px; pointer-events: none; }
+  .ab-pins { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+  .ab-dot { position: absolute; width: 14px; height: 14px; margin: -21px 0 0 -7px; border-radius: 50%; background: var(--pdeep); box-shadow: 0 0 0 2px var(--white), 0 1px 4px rgb(0 0 0 / .35);
+    transition: scale .5s var(--ease-io), opacity .5s var(--ease-io), background-color .5s var(--ease-io); }
+  .ab-dot.is-on { z-index: 3; scale: 1.5; background: var(--ink); }
+  .ab-dot.is-dim { opacity: .2; }
+  .ab-tag { position: absolute; left: 50%; bottom: 100%; margin-bottom: 8px; padding: 4px 9px; border-radius: 12px; background: var(--ink); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 8px; letter-spacing: .04em; white-space: nowrap;
+    translate: -50% 4px; scale: .667; transform-origin: 50% 100%; opacity: 0; transition: opacity .4s var(--ease-io), translate .4s var(--ease-io); }
+  .is-on .ab-tag { opacity: 1; translate: -50% 0; }
+  .ab-base { position: absolute; z-index: 2; width: 34px; height: 46px; transform: translate(-50%, -100%); }
+  .ab-plate { position: absolute; right: -70px; bottom: 0; z-index: 4; }
+
+  .ab-filter { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+  .ab-filter label { position: relative; display: inline-flex; }
+  .ab-filter input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+  .ab-filter span { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 22px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); font-weight: 700; font-size: 14px; color: var(--ink); transition: background-color .5s var(--ease-io), color .5s var(--ease-io); }
+  .ab-filter b { font-family: var(--f-m); font-weight: 700; font-size: 10px; color: var(--pdeep); transition: color .5s var(--ease-io); }
+  .ab-filter input:checked + span { background: var(--ink); color: var(--white); }
+  .ab-filter input:checked + span b { color: var(--powder); }
+  .ab-filter input:focus-visible + span { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+  .ab-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; margin-top: 24px; }
+  .ab-town { border-bottom: 1px solid rgb(22 19 15 / .18); transition: opacity .5s var(--ease-io); }
+  .ab-town.is-dim { opacity: .3; }
+  .ab-tb { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 8px; width: 100%; min-height: 48px; padding: 6px 4px; border: 0; background: none; text-align: left; color: var(--ink); text-decoration: none; cursor: pointer; transition: background-color .4s var(--ease-io), padding .4s var(--ease-io); }
+  .ab-tb.is-page { grid-template-columns: 1fr auto auto; }
+  .ab-n { font-weight: 600; font-size: 16px; line-height: 1.25; }
+  .is-page .ab-n { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+  .ab-mi { font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .03em; color: var(--muted); white-space: nowrap; }
+  .ab-town.is-on .ab-tb { background: var(--white); padding-left: 12px; }
+  .ab-tb:focus-visible { outline: 3px solid var(--pdeep); outline-offset: -3px; }
+  .ab-tb[aria-pressed='true'] .ab-n::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: var(--pdeep); vertical-align: 2px; }
+  .ab-note { margin-top: 22px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+  .ab-side :global(.ab-btn) { margin-top: 28px; }
+  @media (prefers-reduced-motion: reduce) { .ab-dot, .ab-tag, .ab-town, .ab-tb { transition: none; } }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .abase { padding: 96px 0 88px; }
-    .abase-grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); column-gap: 40px; }
-    .abase-map { height: auto; aspect-ratio: 700 / 560; }
-    .abase-side :global(.abase-btn) { margin-top: 40px; }
+    .ab-grid { grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); column-gap: 40px; }
+    .ab-plate { right: -20px; }
+    .ab-plate :global(.pl) { width: 320px; }
+    .ab-list { grid-template-columns: 1fr; }
   }
   @media (max-width: 767px) {
-    .abase { padding: 40px 0 56px; }
-    .abase-grid { display: block; }
-    .abase-map { height: auto; aspect-ratio: 350 / 280; margin-top: 24px; box-shadow: 8px 8px 0 var(--ink); }
-    .abase-pin { width: 22px; height: 30px; }
-    .abase-side { padding-top: 30px; }
-    .abase-side :global(.abase-btn) { margin-top: 24px; }
+    .abase { padding: 56px 0 64px; }
+    .ab-lead { margin-top: 12px; font-size: 15px; }
+    .ab-grid { display: block; margin-top: 28px; }
+    .ab-mapcol { padding-bottom: 0; }
+    .ab-map { box-shadow: 6px 6px 0 var(--ink); }
+    .ab-dot { width: 10px; height: 10px; margin: -14px 0 0 -5px; }
+    .ab-base { width: 26px; height: 35px; }
+    .ab-plate { position: relative; right: auto; margin-top: -40px; margin-left: 12px; }
+    .ab-side { margin-top: 32px; }
+    .ab-filter { flex-wrap: nowrap; min-width: 0; max-width: none; width: calc(100% + 32px); overflow-x: auto; margin: 0 -16px; padding: 4px 16px; scrollbar-width: none; }
+    .ab-filter span { white-space: nowrap; }
+    .ab-list { grid-template-columns: 1fr 1fr; column-gap: 12px; }
+    .ab-tb, .ab-tb.is-page { grid-template-columns: 1fr auto; grid-template-rows: auto auto; min-height: 56px; padding: 8px 2px; }
+    .ab-tb .ab-mi { grid-row: 2; grid-column: 1; margin-top: 3px; }
+    .ab-tb svg { grid-row: 1 / 3; grid-column: 2; }
+    .ab-n { font-size: 15px; }
+    .ab-side :global(.ab-btn) { margin-top: 24px; }
   }
 </style>

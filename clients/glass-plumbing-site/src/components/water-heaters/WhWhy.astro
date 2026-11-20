@@ -54,7 +54,9 @@ const START = 2;
           </button>
           <div class:list={['wy-p', i === START && 'on']} id={`wy-p-${r.n}`} role="region" aria-labelledby={`wy-t-${r.n}`} data-wy-p={i} style={`--o:${i}`} hidden={i !== START}>
             <Housing w={236} h={432} wm={120} hm={250} cap={30} capm={18} r={30} rm={20} tone="photo" class="wy-hs">
-              <Img name={r.photo} alt={r.alt} sizes="(min-width:768px) 236px, 120px" box={236 / 404} boxM={120 / 234} widths={[240, 360, 480, 720]} />
+              {r.photo === 'business-card'
+                ? <span class="wy-bc"><span class="wy-bcf"><Img name="business-card" alt={r.alt} sizes="(min-width:768px) 220px, 120px" fit="contain" widths={[240, 360, 480, 720]} /></span></span>
+                : <Img name={r.photo} alt={r.alt} sizes="(min-width:768px) 236px, 120px" box={236 / 404} boxM={120 / 234} widths={[240, 360, 480, 720]} />}
             </Housing>
             <p class="wy-src">From the crew’s posts</p>
             <div class="wy-body">
@@ -75,6 +77,11 @@ const START = 2;
   </div>
 </section>
 <style>
+  /* The business-card photo is the front and back stacked (1385x1628): show the front face only, cropped to the card's own
+     edges (front y 30-795, x 22-1363; same technique as home/Crew.astro), centred on ink so the logo is whole. */
+  .wy-bc { position: absolute; inset: 0; display: grid; place-items: center; background: var(--ink); }
+  .wy-bcf { position: relative; display: block; width: 90%; aspect-ratio: 1341 / 765; overflow: hidden; border-radius: 4px; rotate: -6deg; box-shadow: 6px 6px 0 var(--powder); }
+  .wy-bcf :global(img) { position: absolute; left: -1.64%; top: -3.92%; width: 103.28%; height: auto; max-width: none; }
   .wy { background: var(--white); padding: 110px 0 120px; }
   .wy-grid { display: grid; grid-template-columns: 520px 620px; grid-template-areas: 'head .' 'list list'; justify-content: space-between; }
   .wy-head { grid-area: head; }
@@ -110,7 +117,7 @@ const START = 2;
   .wy-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
   .wy-chips li { height: 33px; padding: 0 14px; display: inline-flex; align-items: center; border-radius: 16.5px; background: var(--white); box-shadow: inset 0 0 0 1.2px var(--ink); font-weight: 600; font-size: 13px; line-height: 1.5; }
   .wy-body :global(.wy-pl) { width: 288px; max-width: 100%; margin-top: 25px; }
-  .wy-link { margin-top: auto; padding: 10px 0; font-weight: 700; font-size: 15px; line-height: 1.5; color: var(--pdeep); }
+  .wy-link { margin-top: auto; padding: 11px 0; font-weight: 700; font-size: 15px; line-height: 1.5; color: var(--pdeep); }
   .wy-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
   .wy-pause { grid-column: 1; grid-row: 5; align-self: start; display: inline-flex; align-items: center; gap: 8px; width: max-content; min-height: 44px; margin-top: 4px; padding: 0 8px 0 0; border: 0; background: none; cursor: pointer; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }

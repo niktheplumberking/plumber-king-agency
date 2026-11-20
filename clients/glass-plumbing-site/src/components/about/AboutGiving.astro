@@ -1,50 +1,127 @@
 ---
-// /about "Community and licence" (Figma y 5107 h 520 / mobile y 4729 h 450). Ink2. The offer (site.ts) and the Licences
-// plate (phones: shorter values, as the frame), with the DBPR verify link (site.ts licence.url).
+// /about "Giving back" (R2 rebuild: the R1 offer-left / licence-plate-right left an empty field and repeated the licence,
+// which now lives in "On the record"). Ink2. Centred head; a segmented picker of the four groups (21st.dev
+// balick/segmented-control: a sliding pill over real radio inputs) drives a work-order spec plate below it (21st.dev
+// diarmuradi/pricing-5 "live-updating card"): the "For" line changes and the 10 % stamp presses on again. Facts: the
+// offer in site.ts / the business card (10 % off, up to $100, tell us when you call). No JS: the radios still work as a
+// plain group; the plate reads "Veterans, first responders, teachers & seniors".
 import Eyebrow from '../kit/Eyebrow.astro';
-import Plate from '../kit/Plate.astro';
-import { SITE } from '../../data/site';
-const L = SITE.licence;
-const rowsD: [string, string][] = [['Licence', `${L.state} ${L.kind}`], ['Number', L.number], ['Status', `Active · expires ${L.expires}`], ['Checked', 'DBPR, myfloridalicense.com'], ['Insured', '“Licensed & Insured” on the van']];
-const rowsM: [string, string][] = [['Licence', L.kind], ['Number', L.number], ['Status', `Active · exp. ${L.expires}`], ['Checked', 'DBPR'], ['Insured', '“Licensed & Insured” on van']];
+import Btn from '../kit/Btn.astro';
+const groups = [
+  { v: 'veteran', l: 'Veteran', f: 'Veterans' },
+  { v: 'responder', l: 'First responder', f: 'First responders' },
+  { v: 'teacher', l: 'Teacher', f: 'Teachers' },
+  { v: 'senior', l: 'Senior', f: 'Seniors' },
+];
 ---
 <section class="bgive on-ink" data-m-section aria-labelledby="bgive-h">
-  <div class="wrap bg-grid">
-    <div>
-      <Eyebrow text="Giving back" class="bg-eb" />
-      <h2 id="bgive-h" class="bg-h" data-t="2">10% off for veterans, first responders, teachers &amp; seniors.</h2>
-      <p class="bg-p" data-t="3"><span class="d">Up to $100. Just tell us when you call.</span><span class="m">Up to $100. Tell us when you call.</span></p>
+  <div class="wrap bg-wrap">
+    <Eyebrow text="Giving back" class="bg-eb" />
+    <h2 id="bgive-h" class="bg-h" data-t="2">10% off for veterans, first responders, teachers &amp; seniors.</h2>
+    <p class="bg-p" data-t="3">Up to $100. Just tell us when you call.</p>
+
+    <fieldset class="seg" data-t="4" data-seg>
+      <legend class="sr-only">Which one are you?</legend>
+      <span class="seg-pill" aria-hidden="true"></span>
+      {groups.map((g, i) => (
+        <label class="seg-opt">
+          <input type="radio" name="bg-group" value={g.v} data-for={g.f} checked={i === 0} />
+          <span>{g.l}</span>
+        </label>
+      ))}
+    </fieldset>
+
+    <div class="wo" data-t="4" data-wo>
+      <p class="wo-t">Work order · discount line</p>
+      <dl class="wo-rows">
+        <div><dt>For</dt><dd data-wo-for aria-live="polite">Veterans, first responders, teachers &amp; seniors</dd></div>
+        <div><dt>Discount</dt><dd>10% off the job</dd></div>
+        <div><dt>Cap</dt><dd>Up to $100</dd></div>
+        <div><dt>How</dt><dd>Tell us when you call</dd></div>
+      </dl>
+      <span class="wo-stamp" aria-hidden="true" data-wo-stamp><b>10%</b><span>off</span></span>
+      <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
     </div>
-    <div class="bg-side" data-t="4">
-      <Plate title="Licences" rows={rowsD} w={560} pad={24} size={12} tsize={14} kx={134} pitch={22} shadow="powder" class="d-b" />
-      <Plate title="Licences" rows={rowsM} wm={350} pad={16} size={11} tsize={12} kx={92} pitch={21} shadow="powder" class="m-b" />
-      <a class="bg-link" href={L.url} target="_blank" rel="noopener"><span class="d">Verify {L.number} on DBPR</span><span class="m">Verify on DBPR</span> →<span class="sr-only"> (opens in a new tab)</span></a>
-    </div>
+
+    <div class="bg-btn"><Btn look="call" sub="Mention the 10% when you call" size="l" w={340} wm={350} t="3" /></div>
   </div>
 </section>
 
+<script>
+  // The pill slides under the checked option (left + width measured, 0.6 s ease-in-out); the plate's "For" line takes
+  // the group and the stamp presses again. All of it is CSS transitions driven by a class and two custom properties.
+  document.querySelectorAll<HTMLElement>('[data-seg]').forEach((seg) => {
+    const root = seg.closest('section')!;
+    const forEl = root.querySelector<HTMLElement>('[data-wo-for]')!;
+    const stamp = root.querySelector<HTMLElement>('[data-wo-stamp]')!;
+    const inputs = [...seg.querySelectorAll<HTMLInputElement>('input')];
+    const place = () => {
+      const on = inputs.find((i) => i.checked)!.parentElement!;
+      seg.style.setProperty('--x', `${on.offsetLeft}px`);
+      seg.style.setProperty('--y', `${on.offsetTop}px`);
+      seg.style.setProperty('--w', `${on.offsetWidth}px`);
+      seg.style.setProperty('--h', `${on.offsetHeight}px`);
+    };
+    seg.classList.add('is-js');
+    const pick = (i: HTMLInputElement, press = true) => {
+      forEl.textContent = i.dataset.for!;
+      place();
+      if (press) { stamp.classList.remove('is-press'); void stamp.offsetWidth; stamp.classList.add('is-press'); }
+    };
+    inputs.forEach((i) => i.addEventListener('change', () => pick(i)));
+    pick(inputs.find((i) => i.checked)!, false);
+    new ResizeObserver(place).observe(seg);
+  });
+</script>
+
 <style>
-  .bgive { position: relative; background: var(--ink2); color: var(--white); padding: 100px 0 67px; }
-  .bg-grid { display: grid; grid-template-columns: 560px 560px; justify-content: space-between; align-items: start; }
-  .bg-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 36px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); }
-  .bg-p { margin-top: 54px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .9); }
-  .bg-side :global(.m-b) { display: none; }
-  .bg-link { display: inline-block; margin-top: 126px; padding: 10px 0; font-weight: 700; font-size: 15px; line-height: 1.5; color: var(--powder); text-decoration: underline; text-underline-offset: 3px; }
-  .bg-link:hover { color: var(--white); }
-  .m { display: none; }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .bg-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
-    .bg-link { margin-top: 40px; }
-  }
+  .bgive { position: relative; background: var(--ink2); color: var(--white); padding: 110px 0 110px; }
+  .bg-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .bgive :global(.bg-eb) { justify-content: center; }
+  .bg-h { max-width: 820px; margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 48px; line-height: 1.04; letter-spacing: -.02em; color: var(--white); }
+  .bg-p { margin-top: 18px; font-size: 18px; line-height: 1.5; color: rgb(255 255 255 / .9); }
+
+  .seg { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 40px 0 0; padding: 5px; border: 0; border-radius: 30px; background: var(--ink); box-shadow: inset 0 0 0 1px var(--ink3); }
+  .seg-pill { position: absolute; left: 0; top: 0; width: var(--w, 0); height: var(--h, 0); translate: var(--x, 0) var(--y, 0); border-radius: 25px; background: var(--powder); transition: translate .6s var(--ease-io), width .6s var(--ease-io); }
+  .seg:not(.is-js) .seg-pill { display: none; }
+  .seg-opt { position: relative; z-index: 1; display: inline-flex; }
+  .seg-opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .seg-opt span { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 25px; font-weight: 700; font-size: 15px; color: rgb(255 255 255 / .85); transition: color .5s var(--ease-io); }
+  .seg-opt input:checked + span { color: var(--ink); }
+  .seg:not(.is-js) .seg-opt input:checked + span { background: var(--powder); }
+  .seg-opt input:focus-visible + span { outline: 3px solid var(--white); outline-offset: 2px; }
+
+  .wo { position: relative; width: 560px; max-width: 100%; margin-top: 36px; padding: 24px 26px 22px; background: var(--steel); border-radius: 3px; box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--powder); color: var(--ink); text-align: left; font-family: var(--f-m); }
+  .wo-t { padding-bottom: 12px; border-bottom: 1px solid rgb(22 19 15 / .3); font-weight: 800; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
+  .wo-rows > div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 8px 0; }
+  .wo-rows dt { font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: rgb(22 19 15 / .7); padding-top: 1px; }
+  .wo-rows dd { margin: 0; padding-right: 110px; font-weight: 700; font-size: 13px; line-height: 1.4; }
+  .wo-stamp { position: absolute; right: 26px; top: 58px; display: grid; place-items: center; align-content: center; width: 96px; height: 96px; border: 3px solid var(--pdeep); border-radius: 50%; color: var(--pdeep); rotate: -12deg; font-family: var(--f-h); line-height: 1; }
+  .wo-stamp b { font-weight: 800; font-size: 30px; letter-spacing: -.02em; }
+  .wo-stamp span { color: var(--ink); margin-top: 2px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+  .wo-stamp.is-press { animation: wo-press .6s var(--ease-io); }
+  @keyframes wo-press { 0% { scale: 1.35; opacity: 0; } 60% { scale: .94; opacity: 1; } 100% { scale: 1; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .seg-pill { transition: none; } .wo-stamp.is-press { animation: none; } }
+  .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-of-type(1) { left: 6px; top: 6px; } .rv:nth-of-type(2) { right: 6px; top: 6px; }
+  .rv:nth-of-type(3) { left: 6px; bottom: 6px; } .rv:nth-of-type(4) { right: 6px; bottom: 6px; }
+  .bg-btn { margin-top: 40px; }
+
   @media (max-width: 767px) {
-    .bgive { padding: 48px 0 23px; }
-    .bg-grid { display: block; }
-    .bg-h { margin-top: 10px; font-size: 24px; }
-    .bg-p { margin-top: 10px; font-size: 15px; }
-    .bg-side { margin-top: 27px; }
-    .bg-side :global(.d-b) { display: none; }
-    .bg-side :global(.m-b) { display: block; }
-    .bg-link { margin-top: 14px; }
-    .d { display: none; } .m { display: inline; }
+    .bgive { padding: 56px 0 64px; }
+    .bg-h { font-size: 28px; }
+    .bg-p { margin-top: 12px; font-size: 15px; }
+    .seg { margin-top: 28px; border-radius: 16px; }
+    .seg-pill { border-radius: 12px; }
+    .seg-opt { flex: 1 1 calc(50% - 4px); }
+    .seg-opt span { justify-content: center; width: 100%; min-height: 44px; padding: 0 10px; border-radius: 12px; font-size: 14px; }
+    .wo { margin-top: 28px; padding: 18px 16px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--powder); }
+    .wo-rows > div { grid-template-columns: 80px 1fr; }
+    .wo-rows dd { padding-right: 0; }
+    .wo-rows > div:first-child dd { padding-right: 64px; }
+    .wo-stamp { top: 52px; right: 14px; width: 64px; height: 64px; border-width: 2px; }
+    .wo-stamp b { font-size: 19px; }
+    .wo-stamp span { font-size: 9px; }
+    .bg-btn { margin-top: 28px; align-self: stretch; display: flex; justify-content: center; }
   }
 </style>

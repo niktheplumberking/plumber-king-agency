@@ -1,84 +1,219 @@
 ---
-// Reviews hero (Figma 727:437 "Hero" y 172 h 620 / 729:539 y 158 h 640). Two count plates, one per Google profile, each
-// dated; the counts are never added up (BUILD-BRIEF 7).
+// Reviews hero, round 2 (Nick 20 Nov: "pretty empty", breadcrumb must go). Proof at first sight: the two Google profiles as
+// steel meters (5.0 / 104 and 5.0 / 77, read 17 Nov 2026, never summed) + a hand-dealt stack of five real review slips,
+// word for word, over a crew photo. Tap "Next review", press an arrow key or drag the top slip to deal it to the back.
+// 21st.dev refs: "Card Stack" (manuarora700) + "Hero Section with Cards" (scrollxui), adapted to vanilla TS, re-skinned as
+// paper slips on Glass's steel/powder system. No breadcrumb on the page (BreadcrumbList JSON-LD only, in reviews.astro).
+// Without JS: the stack is a static fan (top slip readable), button hidden. Reduced motion: dealing is instant.
 import '../contact/cx.css';
-import Crumbs from '../contact/Crumbs.astro';
 import Stars from '../contact/Stars.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
+import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
+import { REVIEWS } from '../../data/reviews';
 const g = SITE.google;
-const plates = [
-  { n: 1, p: g.a, shadow: 'var(--pdeep)' },
-  { n: 2, p: g.b, shadow: 'var(--ink)' },
+const meters = [
+  { n: 1, p: g.a, sh: 'var(--pdeep)' },
+  { n: 2, p: g.b, sh: 'var(--ink)' },
 ];
+// Five short reviews, newest first, from both profiles (word for word from reviews.ts).
+const PICK = ['Greg Letsch', 'Nelson Whitesell', 'Cody Weaver', 'Emily Van Den Langenberg', 'Jordan Carlson'];
+const slips = PICK.map((n) => { const r = REVIEWS.find((x) => x.name === n); if (!r) throw new Error(`RevHero: no review by ${n}`); return r; });
 ---
 <section class="cx-sec cx-white rh" data-m-section data-m-hero aria-labelledby="rh-h">
   <div class="wrap rh-g">
-    <div>
-      <Crumbs label="Reviews" />
-      <Eyebrow text={`Google reviews · read ${g.checked}`} tone="pdeep" class="rh-eb" />
+    <div class="rh-copy">
+      <Eyebrow text={`Google reviews · read ${g.checked}`} tone="pdeep" />
       <h1 id="rh-h" class="cx-h rh-h" data-t="2"><span class="ln">What Pinellas Says</span> <span class="ln tone">About Glass Plumbing</span></h1>
       <p class="rh-lead lead" data-t="3" data-fx="nudge"><span class="d">Glass Plumbing has two Google profiles. Both show 5.0. We list each count as Google shows it, dated, and never add them up.</span><span class="m">Two Google profiles, both 5.0. Each count as Google shows it, dated, never added up.</span></p>
+      <ul class="rh-meters" role="list" data-t="4" data-stagger>
+        {meters.map(({ n, p, sh }) => (
+          <li class="rh-m" style={`--sh:${sh}`}>
+            <a class="rh-ma" href={p.url} target="_blank" rel="noopener">
+              <span class="rh-rv" aria-hidden="true"></span>
+              <span class="rh-ml">Google profile {n}</span>
+              <span class="rh-mv"><span class="rh-mn">{p.value}</span><Stars w={92} class="rh-mst" /></span>
+              <span class="rh-mc"><b>{p.count}</b> reviews</span>
+              <span class="rh-mo">Open on Google <span aria-hidden="true">→</span></span>
+              <span class="sr-only">: {p.value} out of 5 stars, {p.count} reviews, read {g.checked} (opens in a new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="rh-read" data-t="5">Both read {g.checked} · two profiles, two counts</p>
     </div>
-    <ul class="rh-plates" role="list" data-t="4" data-stagger>
-      {plates.map(({ n, p, shadow }) => (
-        <li class="rh-p" style={`--sh:${shadow}`}>
-          <span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span>
-          <p class="rh-pl"><span class="d">Google profile {n} · read {g.checked}</span><span class="m">Google profile {n} · {g.checked}</span></p>
-          <p class="rh-c"><span class="rh-n">{p.count}</span> <span class="rh-r">reviews</span></p>
-          <p class="rh-v"><span class="rh-s">{p.value}</span><span class="sr-only"> out of 5 stars</span><Stars w={95} class="rh-st" /></p>
-          <a class="rh-a cx-link" href={p.url} target="_blank" rel="noopener">Open on Google →<span class="sr-only"> (profile {n}, opens in a new tab)</span></a>
-        </li>
-      ))}
-    </ul>
+
+    <div class="rh-deck" data-deck data-t="4" data-fx="scale">
+      <figure class="rh-ph" aria-hidden="true">
+        <Img name="crew-selfie" alt="" sizes="(min-width: 1280px) 300px, (min-width: 768px) 34vw, 46vw" focus="50% 66%" box={270 / 230} boxM={170 / 150} />
+      </figure>
+      <ol class="rh-slips" role="list" aria-label="Five Google reviews, newest first" data-deck-list>
+        {slips.map((r, i) => (
+          <li class="rh-s" data-k={i} style={`--k:${i}`}>
+            <article class="rh-sa">
+              <header class="rh-st"><Stars w={84} label="5 out of 5 stars" /><span class="rh-sw">{r.when}</span></header>
+              <blockquote class="rh-sq"><p>{r.text}</p></blockquote>
+              <footer class="rh-sf"><span class="rh-sn">{r.name}</span><span class="rh-sp">Google · profile {r.profile === 'a' ? 1 : 2}</span></footer>
+            </article>
+          </li>
+        ))}
+      </ol>
+      <div class="rh-ctl">
+        <button type="button" class="rh-next" data-deck-next aria-label="Show the next review">
+          <span>Next review</span>
+          <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden="true"><path d="M1 6h13M9 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="rh-cnt" aria-live="polite"><span data-deck-n>1</span> / {slips.length}</p>
+        <p class="rh-hint" aria-hidden="true">or drag the slip</p>
+      </div>
+    </div>
   </div>
 </section>
+<script>
+  // The slip deck: k = position in the stack (0 = top). Next: the top slip flies out (CSS transition on transform via
+  // [data-out]), then takes the last place and slides back in under the others. Drag: CSS `translate` follows the pointer;
+  // past 90 px it deals, else it eases back. Keys: ArrowRight / ArrowLeft on the deck. Reduced motion: instant.
+  const motion = () => document.documentElement.classList.contains('motion');
+  document.querySelectorAll<HTMLElement>('[data-deck]').forEach((deck) => {
+    const slips = Array.from(deck.querySelectorAll<HTMLElement>('.rh-s'));
+    const btn = deck.querySelector<HTMLButtonElement>('[data-deck-next]')!;
+    const nEl = deck.querySelector<HTMLElement>('[data-deck-n]')!;
+    const N = slips.length;
+    let order = slips.map((_, i) => i); // order[k] = slip index at position k
+    let shown = 0; let busy = false;
+    const paint = () => order.forEach((s, k) => { slips[s].dataset.k = String(k); slips[s].style.setProperty('--k', String(k)); slips[s].toggleAttribute('inert', k !== 0); });
+    const deal = (dir = 1) => {
+      if (busy) return;
+      if (dir < 0) { // back: the last slip comes to the top
+        order = [order[N - 1], ...order.slice(0, N - 1)]; shown = (shown - 1 + N) % N; paint(); nEl.textContent = String(shown + 1); return;
+      }
+      const top = slips[order[0]];
+      shown = (shown + 1) % N; nEl.textContent = String(shown + 1);
+      const finish = () => { top.removeAttribute('data-out'); top.style.translate = ''; order = [...order.slice(1), order[0]]; paint(); busy = false; };
+      if (!motion()) { finish(); return; }
+      busy = true;
+      top.setAttribute('data-out', '');
+      window.setTimeout(finish, 420);
+    };
+    btn.addEventListener('click', () => deal(1));
+    deck.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); deal(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); deal(-1); }
+    });
+    // Drag / swipe the top slip.
+    let x0 = 0, y0 = 0, dx = 0, drag: HTMLElement | null = null, horiz = false;
+    deck.addEventListener('pointerdown', (e) => {
+      const s = (e.target as HTMLElement).closest<HTMLElement>('.rh-s');
+      if (!s || s.dataset.k !== '0' || busy || e.button !== 0) return;
+      drag = s; x0 = e.clientX; y0 = e.clientY; dx = 0; horiz = false;
+    });
+    deck.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      dx = e.clientX - x0; const dy = e.clientY - y0;
+      if (!horiz) { if (Math.abs(dx) < 8) return; if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; } horiz = true; drag.setPointerCapture(e.pointerId); drag.classList.add('is-drag'); }
+      drag.style.translate = `${dx}px 0`;
+    });
+    const up = () => {
+      if (!drag) return; const s = drag; drag = null; s.classList.remove('is-drag');
+      if (horiz && Math.abs(dx) > 90) { s.style.translate = ''; deal(1); } else s.style.translate = '';
+    };
+    deck.addEventListener('pointerup', up); deck.addEventListener('pointercancel', up);
+    paint();
+    deck.classList.add('is-ready');
+  });
+</script>
 <style>
-  .rh { padding: 44px 0 70px; }
-  .rh-g { display: grid; grid-template-columns: 1fr 440px; column-gap: 60px; }
-  .rh :global(.rh-eb) { margin-top: 29px; }
-  .rh-h { --fs: 64px; --fs-m: 29px; margin-top: 16px; }
-  .rh-lead { margin-top: 24px; max-width: 560px; font: 400 18px/1.5 var(--f-b); color: var(--ink); }
+  .rh { padding: 64px 0 96px; overflow: clip; }
+  .rh-g { display: grid; grid-template-columns: 1fr 480px; column-gap: 28px; align-items: center; }
+  .rh-h { --fs: 64px; --fs-m: 34px; margin-top: 18px; }
+  .rh-lead { margin-top: 22px; max-width: 540px; font: 400 18px/1.5 var(--f-b); color: var(--ink); }
   .rh-lead .m { display: none; }
-  .rh-plates { margin: 36px 0 0; padding: 0; list-style: none; display: grid; gap: 30px; }
-  .rh-p { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto auto; height: 220px; padding: 28px 32px 0; background: var(--steel);
-    border: 1px solid var(--steel2); border-radius: 6px; box-shadow: 10px 10px 0 var(--sh); }
-  .rv { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--steel2); }
-  .rv:nth-child(1) { left: 9px; top: 9px; } .rv:nth-child(2) { right: 9px; top: 9px; } .rv:nth-child(3) { left: 9px; bottom: 9px; } .rv:nth-child(4) { right: 9px; bottom: 9px; }
-  .rh-pl { grid-column: 1 / -1; margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-  .rh-pl .m { display: none; }
-  .rh-c { display: flex; align-items: flex-end; gap: 12px; margin: -3px 0 0; }
-  .rh-n { font: 800 96px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .rh-r { margin-bottom: 19px; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; }
-  .rh-v { position: absolute; left: 260px; top: 61px; margin: 0; }
-  .rh-s { display: block; font: 800 52px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .rh-v :global(.rh-st) { margin: 10px 0 0 2px; }
-  .rh-a { grid-column: 1 / -1; justify-self: start; margin-top: 2px; color: #275468; } /* pdeep darkened: 5.2:1 on the steel card */
-  .rh-a:hover { color: var(--ink); }
+
+  /* Google profile meters: steel plates with a rivet, big 5.0, stars, the count. Each one links to its own profile. */
+  .rh-meters { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 560px; margin: 34px 0 0; padding: 0; list-style: none; }
+  .rh-ma { position: relative; display: grid; grid-template-rows: auto auto auto auto; padding: 18px 20px 16px; border: 1px solid var(--steel2); border-radius: 6px;
+    background: var(--steel); color: var(--ink); text-decoration: none; box-shadow: 8px 8px 0 var(--sh);
+    transition: transform .45s var(--ease-io), box-shadow .45s var(--ease-io); }
+  .rh-ma:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 var(--sh); }
+  .rh-ma:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 4px; }
+  .rh-rv { position: absolute; right: 10px; top: 10px; width: 9px; height: 9px; border-radius: 50%; background: var(--steel2); box-shadow: -0px 0 0 0 transparent; }
+  .rh-ml { font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; }
+  .rh-mv { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+  .rh-mn { font: 800 56px/1 var(--f-h); letter-spacing: -0.03em; }
+  .rh-mc { margin-top: 4px; font: 600 15px/1.4 var(--f-b); }
+  .rh-mc b { font: 800 22px/1 var(--f-h); letter-spacing: -0.02em; }
+  .rh-mo { margin-top: 10px; font: 700 14px/1.4 var(--f-b); color: #275468; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+  .rh-ma:hover .rh-mo { color: var(--ink); }
+  .rh-read { margin: 22px 0 0; font: 500 11px/15px var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+
+  /* The deck: a crew photo behind, five slips stacked in one grid cell (so the deck is as tall as its tallest slip). */
+  .rh-deck { position: relative; display: grid; grid-template-columns: 1fr; padding: 40px 0 0; outline: none; }
+  .rh-ph { position: absolute; right: 10px; top: 0; width: 270px; height: 230px; margin: 0; overflow: hidden; border: 2px solid var(--ink); border-radius: 6px;
+    box-shadow: 12px 12px 0 var(--powder); rotate: 4deg; }
+  .rh-ph :global(.img) { position: absolute; inset: 0; }
+  .rh-slips { display: grid; margin: 170px 0 0; padding: 0; list-style: none; }
+  .rh-s { --rot: 0deg; --tx: 0px; --ty: 0px; grid-area: 1 / 1; align-self: start; width: 420px; z-index: calc(10 - var(--k));
+    transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); transition: transform .5s var(--ease-io), opacity .5s var(--ease-io), translate .4s var(--ease-io);
+    touch-action: pan-y; }
+  .rh-s[data-k='0'] { --rot: -2deg; }
+  .rh-s[data-k='1'] { --rot: 2deg; --tx: 18px; --ty: -12px; }
+  .rh-s[data-k='2'] { --rot: 4.5deg; --tx: 36px; --ty: -22px; }
+  .rh-s[data-k='3'] { --rot: -4.5deg; --tx: -12px; --ty: -18px; }
+  .rh-s[data-k='4'] { --rot: 9deg; --tx: 64px; --ty: -36px; opacity: .0; }
+  .rh-s[data-out] { --tx: 120%; --ty: -10px; --rot: 14deg; opacity: 0; }
+  .rh-s.is-drag { transition: transform .5s var(--ease-io), opacity .5s var(--ease-io); cursor: grabbing; }
+  .rh-deck.is-ready .rh-s[data-k='0'] { cursor: grab; }
+  .rh-sa { display: flex; flex-direction: column; min-height: 230px; padding: 22px 24px 18px; background: var(--white); border: 1.5px solid var(--ink); border-radius: 6px;
+    box-shadow: 6px 6px 0 var(--ink); user-select: none; -webkit-user-select: none; }
+  .rh-s:not([data-k='0']) .rh-sa { box-shadow: 4px 4px 0 rgba(22, 19, 15, .25); }
+  .rh-st { display: flex; align-items: center; justify-content: space-between; }
+  .rh-sw { font: 500 11px/15px var(--f-m); letter-spacing: .02em; color: var(--muted); }
+  .rh-sq { margin: 16px 0 0; }
+  .rh-sq p { margin: 0; font: 600 20px/1.32 var(--f-h); letter-spacing: -0.015em; color: var(--ink); }
+  .rh-sf { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 16px; border-top: 1px dashed var(--frost3); }
+  .rh-sn { font: 800 16px/1.1 var(--f-h); letter-spacing: -0.02em; }
+  .rh-sp { font: 700 10px/13px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); white-space: nowrap; }
+
+  .rh-ctl { display: flex; align-items: center; gap: 16px; margin-top: 34px; }
+  .rh-next { display: inline-flex; align-items: center; gap: 12px; height: 48px; padding: 0 20px; border-radius: 4px; background: var(--ink); color: var(--white);
+    font: 700 15px/1 var(--f-b); transition: background-color .3s var(--ease-io); }
+  .rh-next:hover { background: var(--ink3); }
+  .rh-next:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .rh-next svg { transition: transform .35s var(--ease-io); }
+  .rh-next:hover svg { transform: translateX(3px); }
+  .rh-cnt { margin: 0; font: 700 13px/1 var(--f-m); letter-spacing: .06em; color: var(--ink); }
+  .rh-hint { margin: 0; font: 500 11px/15px var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .rh-deck:not(.is-ready) .rh-ctl { display: none; }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .rh-g { grid-template-columns: 1fr; }
-    .rh-plates { grid-template-columns: 1fr 1fr; gap: 24px; }
-    .rh-n { font-size: 80px; }
-    .rh-v { left: auto; right: 40px; }
+    .rh-g { grid-template-columns: 1fr; row-gap: 40px; }
+    .rh-deck { max-width: 620px; width: 100%; justify-self: center; }
   }
   @media (max-width: 767px) {
-    .rh { padding: 24px 0 48px; }
-    .rh-g { grid-template-columns: 1fr; }
-    .rh :global(.rh-eb) { margin-top: 15px; }
-    .rh-h { margin-top: 10px; }
+    .rh { padding: 32px 0 64px; }
+    .rh-g { grid-template-columns: 1fr; row-gap: 26px; }
+    .rh-h { margin-top: 12px; }
     .rh-lead { margin-top: 14px; font-size: 16px; }
     .rh-lead .d { display: none; } .rh-lead .m { display: inline; }
-    .rh-plates { margin-top: 28px; gap: 24px; padding-right: 8px; }
-    .rh-p { height: 170px; padding: 21px 20px 0; box-shadow: 8px 8px 0 var(--sh); }
-    .rv { width: 8px; height: 8px; } .rv:nth-child(1) { left: 7px; top: 7px; } .rv:nth-child(2) { right: 7px; top: 7px; } .rv:nth-child(3) { left: 7px; bottom: 7px; } .rv:nth-child(4) { right: 7px; bottom: 7px; }
-    .rh-pl { font-size: 9px; line-height: 12px; }
-    .rh-pl .d { display: none; } .rh-pl .m { display: inline; }
-    .rh-c { margin-top: 6px; gap: 10px; }
-    .rh-n { font-size: 72px; }
-    .rh-r { font-size: 9px; line-height: 12px; margin-bottom: 15px; }
-    .rh-v { left: 218px; top: 47px; }
-    .rh-s { font-size: 40px; }
-    .rh-v :global(.rh-st) { width: 80px; height: 13px; margin-top: 8px; }
-    .rh-a { font-size: 14px; margin-top: 0; }
+    .rh-meters { gap: 14px; margin-top: 24px; }
+    .rh-ma { padding: 14px 12px 12px; box-shadow: 5px 5px 0 var(--sh); }
+    .rh-ml { font-size: 9px; line-height: 12px; }
+    .rh-mv { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .rh-mn { font-size: 40px; }
+    .rh-mv :global(.rh-mst) { width: 76px; height: 12px; }
+    .rh-mc { font-size: 13px; } .rh-mc b { font-size: 18px; }
+    .rh-mo { font-size: 13px; }
+    .rh-read { margin-top: 16px; font-size: 10px; }
+    .rh-deck { padding-top: 24px; }
+    .rh-ph { width: 50%; height: 150px; right: 4px; rotate: 3deg; box-shadow: 8px 8px 0 var(--powder); }
+    .rh-slips { margin-top: 116px; }
+    .rh-s { width: calc(100% - 24px); }
+    .rh-s[data-k='1'] { --tx: 10px; --ty: -10px; }
+    .rh-s[data-k='2'] { --tx: 18px; --ty: -18px; --rot: 4deg; }
+    .rh-s[data-k='3'] { --tx: -6px; --ty: -14px; --rot: -4deg; }
+    .rh-s[data-k='4'] { --tx: 24px; --ty: -24px; }
+    .rh-sa { min-height: 210px; padding: 18px 18px 14px; box-shadow: 5px 5px 0 var(--ink); }
+    .rh-sq p { font-size: 17px; }
+    .rh-ctl { margin-top: 26px; gap: 12px; }
+    .rh-hint { display: none; }
   }
 </style>

@@ -1,39 +1,77 @@
 ---
-// Reviews strip (Figma 719:437 y 5428 h 420 / mobile y 5796 h 395): two water-heater reviews on ink2, word for word from
-// reviews.ts (checked at build time).
+// Reviews strip (Figma 719:437 y 5428 h 420). R2 polish (rule 16: proof looks like proof): a centred Google record on top
+// (both profiles, each with its own count and link, never summed), the two water-heater quotes as tilted review slips
+// with stars and the Google mark that drift in opposite directions as the band scrolls (scroll-driven) and straighten on
+// hover. Quotes word for word from reviews.ts (checked at build time).
 import { REVIEWS } from '../../data/reviews';
+import { SITE } from '../../data/site';
 import { STARS } from '../services/glyphs';
 const R = [
   { by: 'Kevin Kelleman', q: 'Needed a new Water Heater, called and had one installed the next day at a great price.', meta: 'Water heater · next day' },
   { by: 'Parker L', q: 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.', meta: 'Same-day estimate' },
 ];
 for (const r of R) { const t = REVIEWS.find((x) => x.name === r.by)?.text ?? ''; if (!t.includes(r.q)) throw new Error(`WhReviews: quote by ${r.by} is not word for word`); }
+const g = SITE.google;
 ---
-<section class="wr" data-m-section aria-label="Water heater reviews">
-  <div class="wrap wr-grid" data-t="2" data-stagger>
-    {R.map((r) => (
-      <figure class="wr-it">
-        <span class="wr-stars" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
-        <blockquote class="wr-q"><p>“{r.q}”</p></blockquote>
-        <figcaption class="wr-by">{r.by} · Google<span class="d"> · {r.meta}</span></figcaption>
-      </figure>
-    ))}
+<section class="wr" data-m-section data-wr aria-labelledby="wr-h">
+  <div class="wrap">
+    <div class="wr-top" data-t="3">
+      <h2 class="wr-h" id="wr-h">Water heater jobs, in their words</h2>
+      <ul class="wr-rec" role="list">
+        {[g.a, g.b].map((p) => (
+          <li><a class="wr-pf" href={p.url} target="_blank" rel="noopener"><span class="wr-g" aria-hidden="true">G</span><span class="wr-v">{p.value}</span><span class="wr-st" aria-hidden="true" set:html={STARS} /><span class="wr-n">{p.count} Google reviews</span><span class="sr-only"> (opens in a new tab)</span></a></li>
+        ))}
+      </ul>
+    </div>
+    <div class="wr-grid" data-t="4" data-stagger>
+      {R.map((r, i) => (
+        <figure class:list={['wr-it', i ? 'wr-b' : 'wr-a']}>
+          <div class="wr-row"><span class="wr-stars" role="img" aria-label="5 out of 5 stars" set:html={STARS} /><span class="wr-g wr-g2" aria-hidden="true">G</span></div>
+          <blockquote class="wr-q"><p>“{r.q}”</p></blockquote>
+          <figcaption class="wr-by">{r.by} · Google<span class="d"> · {r.meta}</span></figcaption>
+        </figure>
+      ))}
+    </div>
   </div>
 </section>
 <style>
-  .wr { background: var(--ink2); color: var(--white); padding: 110px 0 75px; }
-  .wr-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 560px)); justify-content: space-between; gap: 52px; }
-  .wr-it { margin: 0; display: flex; flex-direction: column; }
-  .wr-stars { display: block; width: 95px; height: 16px; }
-  .wr-stars :global(svg) { display: block; width: 100%; height: auto; }
-  .wr-q { margin: 20px 0 0; font-family: var(--f-h); font-weight: 700; font-size: 28px; line-height: 1.22; letter-spacing: -.02em; min-height: 184px; }
-  .wr-by { font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--powder); }
-  @media (min-width: 768px) and (max-width: 1279px) { .wr-q { font-size: 24px; } }
+  .wr { background: var(--ink2); color: var(--white); padding: 88px 0 96px; --p: 1; overflow: hidden; }
+  .wr-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .wr-h { font: 700 11px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .wr-rec { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .wr-pf { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 18px 6px 8px; border-radius: 26px; background: var(--ink); box-shadow: inset 0 0 0 1px var(--ink3); color: var(--white); transition: box-shadow .35s var(--ease-io); }
+  .wr-pf:hover, .wr-pf:focus-visible { box-shadow: inset 0 0 0 1.5px var(--powder); }
+  .wr-g { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--white); color: #4285F4; font: 800 16px/1 var(--f-h); }
+  .wr-v { font: 800 22px/1 var(--f-h); letter-spacing: -.02em; }
+  .wr-st { display: block; width: 80px; }
+  .wr-st :global(svg), .wr-stars :global(svg) { display: block; width: 100%; height: auto; }
+  .wr-n { font: 500 11px/1 var(--f-m); letter-spacing: .04em; color: var(--powder); text-decoration: underline; text-underline-offset: 3px; }
+
+  .wr-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 540px)); justify-content: center; gap: 48px; margin-top: 48px; }
+  .wr-it { margin: 0; display: flex; flex-direction: column; padding: 30px 32px 28px; border-radius: 6px; background: var(--white); color: var(--ink); box-shadow: 10px 10px 0 var(--powder); transition: rotate .5s var(--ease-io); }
+  .wr-a { rotate: -1.6deg; translate: 0 calc((1 - var(--p)) * 46px); }
+  .wr-b { rotate: 1.4deg; translate: 0 calc((1 - var(--p)) * -46px + 24px); }
+  @media (hover: hover) and (pointer: fine) { .wr-it:hover { rotate: 0deg; } }
+  .wr-row { display: flex; justify-content: space-between; align-items: center; }
+  .wr-stars { display: block; width: 95px; }
+  .wr-g2 { width: 26px; height: 26px; font-size: 14px; box-shadow: inset 0 0 0 1px var(--frost3); }
+  .wr-q { margin: 18px 0 0; font-family: var(--f-h); font-weight: 700; font-size: 26px; line-height: 1.22; letter-spacing: -.02em; flex: 1; }
+  .wr-by { margin-top: 22px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+  @media (min-width: 768px) and (max-width: 1279px) { .wr-q { font-size: 22px; } .wr-grid { gap: 28px; } }
   @media (max-width: 767px) {
-    .wr { padding: 48px 0 43px; }
-    .wr-grid { grid-template-columns: minmax(0, 1fr); gap: 27px; }
-    .wr-stars { width: 80px; height: 13px; }
-    .wr-q { margin-top: 13px; font-size: 20px; line-height: 1.24; min-height: 0; }
-    .wr-by { margin-top: 10px; }
+    .wr { padding: 52px 0 56px; }
+    .wr-pf { padding-right: 14px; gap: 8px; }
+    .wr-st { width: 64px; }
+    .wr-grid { grid-template-columns: minmax(0, 1fr); gap: 22px; margin-top: 30px; }
+    .wr-it { padding: 20px 18px 18px; box-shadow: 6px 6px 0 var(--powder); }
+    .wr-a, .wr-b { translate: none; }
+    .wr-stars { width: 80px; }
+    .wr-q { margin-top: 12px; font-size: 19px; line-height: 1.24; }
+    .wr-by { margin-top: 12px; }
   }
 </style>
+<script>
+  import { scrollProgress } from '../services/progress';
+  const root = document.querySelector<HTMLElement>('[data-wr]');
+  if (root) scrollProgress(root.querySelector<HTMLElement>('.wr-grid')!, { start: 1, end: 0.35, onP: (p) => root.style.setProperty('--p', p.toFixed(4)) });
+</script>

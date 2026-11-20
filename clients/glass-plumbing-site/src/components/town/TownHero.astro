@@ -36,6 +36,8 @@ import { MI, QUICK } from './data';
 </section>
 
 <style>
+  /* R2 (Nick): no visible breadcrumbs on any page; Breadcrumbs stays for its BreadcrumbList JSON-LD. */
+  .thero :global(.th-crumbs) { display: none; }
   .thero { position: relative; background: var(--white); min-height: 676px; }
   .th-media { position: absolute; left: 0; top: 0; bottom: 0; width: 640px; margin: 0; }
   .th-media :global(picture), .th-media :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }

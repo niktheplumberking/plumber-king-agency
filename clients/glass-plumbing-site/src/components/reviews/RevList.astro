@@ -1,43 +1,50 @@
 ---
-// "Newest first." All 16 reviews word for word (reviews.ts; names as written). Figma "All reviews" y 1432 h 2278 (3 columns)
-// / mobile y 1494 h 5481 (one column). Desktop columns follow the Figma frame; the DOM keeps the newest-first order (CSS order
-// on phones). No Review / AggregateRating markup (BUILD-BRIEF 6).
+// "All reviews, newest first", round 2 (Nick 20 Nov: "no motion"; wants the wall where the left and right columns move down
+// while the middle one moves up as you scroll). All 16 reviews word for word (reviews.ts; names as written, date text, stars).
+// 21st.dev refs: "Testimonials Vertical Marquee" (scrollxui) and "Scroll Reel Testimonials" (smammar): the alternating
+// columns, but driven by the scroll (kit/scrub.ts data-scrub + data-scrub-y on Lenis/ScrollTrigger), never by a clock.
+// Geometry: the wall has DRIFT/2 of padding top and bottom (faded by a mask); under html.motion the outer columns start
+// DRIFT/2 up and the middle one DRIFT/2 down (CSS `top`, = frame 0 of the scrub), so no card is ever clipped.
+// Phones (< 768): one column in newest-first order; each card drifts sideways a little against its neighbours (CSS
+// scroll-driven `translate`, native scroll position; static where unsupported and under reduced motion).
+// No Review / AggregateRating markup (BUILD-BRIEF 6).
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Seam from '../kit/Seam.astro';
 import Stars from '../contact/Stars.astro';
 import { REVIEWS } from '../../data/reviews';
-// Newest first, as the 390 frame lists them.
+// Newest first (the date text Google shows).
 const ORDER = ['Peter Van Buskirk', 'Greg Letsch', 'Jen James', 'Michael Marks', 'Nelson Whitesell', 'Cody Weaver', 'Emily Van Den Langenberg', 'David Peek',
   'Kevin Kelleman', 'Cary Cannon', 'Jordan Carlson', 'Eduardo “EddieZoRz” Perea', 'John Rooney', 'Parker L', 'Seth Nye', 'Jacob Gars'];
-// Desktop columns as drawn in the 1440 frame.
-const COLS = [
-  ['Peter Van Buskirk', 'Nelson Whitesell', 'Emily Van Den Langenberg', 'Cary Cannon', 'John Rooney', 'Seth Nye'],
-  ['Greg Letsch', 'Michael Marks', 'David Peek', 'Jordan Carlson', 'Parker L', 'Jacob Gars'],
-  ['Jen James', 'Cody Weaver', 'Kevin Kelleman', 'Eduardo “EddieZoRz” Perea'],
-];
 const byName = new Map(REVIEWS.map((r) => [r.name, r]));
 if (ORDER.length !== REVIEWS.length || ORDER.some((n) => !byName.has(n))) throw new Error('RevList: review names out of sync with reviews.ts');
+// Three columns balanced by length, filled in newest-first order (each review goes to the shortest column so far).
+const COLS: string[][] = [[], [], []];
+const len = [0, 0, 0];
+ORDER.forEach((n) => { const k = len.indexOf(Math.min(...len)); COLS[k].push(n); len[k] += byName.get(n)!.text.length + 260; });
+const DRIFT = 320; // px over the whole pass (768 and up)
 ---
 <section class="cx-sec cx-white rl" data-m-section aria-labelledby="rl-h">
   <Seam from="var(--frost)" to="var(--white)" />
   <div class="wrap">
-    <div class="shead">
-      <Eyebrow text="All 16 reviews, word for word" tone="pdeep" />
+    <div class="shead rl-head">
+      <Eyebrow text="All 16 reviews, word for word" tone="pdeep" class="rl-eb" />
       <h2 id="rl-h" class="cx-h rl-h" data-t="2">Newest first.</h2>
+      <p class="rl-sum" data-t="3"><Stars w={84} /><span>16 reviews · every one 5 stars · from both Google profiles</span></p>
     </div>
-    <div class="rl-g">
-      {COLS.map((col) => (
-        <ul class="rl-col" role="list" data-t="4" data-stagger>
+    <div class="rl-wall" data-no-px data-scrub data-start="top bottom" data-end="bottom top" data-lag="0.8" style={`--drift:${DRIFT}px`}>
+      {COLS.map((col, c) => (
+        <ul class:list={['rl-col', c === 1 ? 'rl-up' : 'rl-down']} role="list" data-scrub-y={c === 1 ? -DRIFT : DRIFT}>
           {col.map((name) => {
             const r = byName.get(name)!;
+            const o = ORDER.indexOf(name);
             return (
-              <li class="rl-c" style={`--o:${ORDER.indexOf(name)}`}>
+              <li class:list={['rl-c', o % 2 && 'rl-odd']} style={`--o:${o}`}>
                 <article>
                   <div class="rl-top"><Stars w={80} label="5 out of 5 stars" /><span class="rl-when">{r.when}</span></div>
                   <blockquote class="rl-t"><p>{r.text}</p></blockquote>
                   <p class="rl-n">{r.name}</p>
-                  <p class="rl-src">Google</p>
+                  <p class="rl-src">Google · profile {r.profile === 'a' ? 1 : 2}</p>
                 </article>
               </li>
             );
@@ -48,26 +55,43 @@ if (ORDER.length !== REVIEWS.length || ORDER.some((n) => !byName.has(n))) throw 
   </div>
 </section>
 <style>
-  .rl { padding: 110px 0 104px; }
-  .rl-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
-  .rl-g { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 24px; align-items: start; margin-top: 45px; }
-  .rl-col { margin: 0; padding: 0; list-style: none; display: grid; gap: 24px; }
-  .rl-c article { position: relative; padding: 28px 24px 18px; border: 1px solid var(--frost3); border-radius: 6px; background: var(--white); overflow: hidden; }
+  .rl { padding: 110px 0 90px; overflow: clip; }
+  .rl-head { display: grid; justify-items: center; text-align: center; }
+  .rl-head :global(.rl-eb) { justify-content: center; }
+  .rl-h { --fs: 56px; --fs-m: 34px; margin-top: 16px; }
+  .rl-sum { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; font: 500 12px/16px var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+
+  .rl-wall { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 24px; align-items: start; margin-top: 48px; }
+  html.motion .rl-wall { padding: calc(var(--drift) / 2) 0; margin-top: 8px; margin-bottom: calc(-1 * var(--drift) / 2 + 20px);
+    -webkit-mask-image: linear-gradient(transparent, #000 110px, #000 calc(100% - 110px), transparent);
+            mask-image: linear-gradient(transparent, #000 110px, #000 calc(100% - 110px), transparent); }
+  .rl-col { position: relative; margin: 0; padding: 0; list-style: none; display: grid; gap: 24px; }
+  html.motion .rl-down { top: calc(-1 * var(--drift) / 2); }
+  html.motion .rl-up { top: calc(var(--drift) / 2); }
+
+  .rl-c article { position: relative; padding: 28px 24px 18px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--white); overflow: hidden;
+    transition: box-shadow .45s var(--ease-io), transform .45s var(--ease-io); }
+  .rl-up .rl-c article { background: var(--frost); }
   .rl-c article::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--powder); }
+  .rl-c article:hover { box-shadow: 8px 8px 0 var(--powder); transform: translate(-2px, -2px); }
   .rl-top { display: flex; align-items: center; justify-content: space-between; height: 13px; }
   .rl-when { font: 500 10px/13px var(--f-m); letter-spacing: .01em; color: var(--muted); }
   .rl-t { margin: 15px 0 0; }
   .rl-t p { margin: 0; font: 400 15px/1.5 var(--f-b); color: var(--ink); white-space: pre-wrap; overflow-wrap: break-word; }
   .rl-n { margin: 16px 0 0; font: 800 16px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .rl-src { margin: 9px 0 0; font: 500 9px/12px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .rl-src { margin: 9px 0 0; font: 700 9px/12px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .rl-g { column-gap: 16px; } .rl-col { gap: 16px; }
-    .rl-c article { padding: 24px 18px 20px; }
+    .rl-wall { column-gap: 14px; }
+    .rl-col { gap: 14px; }
+    .rl-c article { padding: 22px 16px 16px; }
+    .rl-t p { font-size: 14px; }
   }
   @media (max-width: 767px) {
     .rl { padding: 60px 0 60px; }
     .rl-h { margin-top: 12px; }
-    .rl-g { display: flex; flex-direction: column; gap: 16px; margin-top: 30px; }
+    .rl-sum { flex-direction: column; gap: 8px; font-size: 10px; line-height: 14px; }
+    .rl-wall, html.motion .rl-wall { display: flex; flex-direction: column; gap: 16px; margin: 30px 0 0; padding: 0; -webkit-mask-image: none; mask-image: none; }
     .rl-col { display: contents; }
     .rl-c { order: var(--o); }
     .rl-c article { padding: 23px 18px 15px; }
@@ -76,5 +100,12 @@ if (ORDER.length !== REVIEWS.length || ORDER.some((n) => !byName.has(n))) throw 
     .rl-t { margin-top: 13px; }
     .rl-n { margin-top: 14px; font-size: 15px; }
     .rl-src { margin-top: 8px; }
+    /* Gentle opposite drift: even cards slide one way, odd ones the other, as each passes through the viewport. */
+    @supports (animation-timeline: view()) {
+      html.motion .rl-c { animation: rl-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+      html.motion .rl-c.rl-odd { animation-name: rl-drift-b; }
+    }
   }
+  @keyframes rl-drift { from { translate: -14px 0; rotate: -1deg; } to { translate: 14px 0; rotate: 1deg; } }
+  @keyframes rl-drift-b { from { translate: 14px 0; rotate: 1deg; } to { translate: -14px 0; rotate: -1deg; } }
 </style>

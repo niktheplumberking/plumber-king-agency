@@ -2,6 +2,8 @@
 // "Send us the job" form + "What happens next" (Figma "Form and next steps" y 1512 h 794 / mobile y 1300 h 1042).
 // Ink band; a meniscus seam rises into the white band above. The form is data-estimate-form (forms.ts).
 // The three housings fill with water as they enter (Housing data-fill); 01 / 02 / 03 = 24 / 54 / 83 % as in the frame.
+// Round 2 polish (rules 14-15): the steps answer the form. 01 lights when the job is described or a photo is added, 02 when
+// name + phone are in, 03 when both are: its housing fills to the top and a READY tag shows. No JS: static steps.
 import './cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Housing from '../kit/Housing.astro';
@@ -42,21 +44,42 @@ const steps = [
     </form>
     <div class="cf-next">
       <Eyebrow text="What happens next" tone="light" />
-      <ol class="cf-steps" role="list">
+      <ol class="cf-steps" role="list" data-no-px>
         {steps.map((s) => (
-          <li class="cf-s" data-t="3">
+          <li class="cf-s" data-t="3" data-step={s.n}>
             <Housing w={60} h={96} wm={44} hm={70} fill={s.f} tone="ink" class="cf-hs" />
             <div>
               <p class="cf-n" aria-hidden="true">{s.n}</p>
-              <h3 class="cf-st">{s.t}</h3>
+              <h3 class="cf-st">{s.t} <span class="cf-ok" aria-hidden="true">Ready</span></h3>
               <p class="cf-sd">{s.d}</p>
             </div>
           </li>
         ))}
       </ol>
+      <p class="cf-live" data-steps-live role="status" aria-live="polite"></p>
     </div>
   </div>
 </section>
+<script>
+  // Steps follow the form (class only; the colour / water changes ride CSS transitions). Status for screen readers: the
+  // live line under the steps.
+  document.querySelectorAll<HTMLFormElement>('#estimate [data-estimate-form]').forEach((f) => {
+    const sec = f.closest('section')!;
+    const st = (n: string) => sec.querySelector<HTMLElement>(`[data-step="${n}"]`);
+    const live = sec.querySelector<HTMLElement>('[data-steps-live]');
+    let last = '';
+    const upd = () => {
+      const v = (n: string) => ((f.elements.namedItem(n) as HTMLInputElement | null)?.value || '').trim();
+      const photo = (f.querySelector<HTMLInputElement>('[data-photo]')?.files?.length ?? 0) > 0;
+      const a = v('message').length >= 3 || photo;
+      const b = v('name').length >= 2 && v('phone').replace(/\D/g, '').length >= 10;
+      st('01')?.classList.toggle('is-on', a); st('02')?.classList.toggle('is-on', b); st('03')?.classList.toggle('is-on', a && b);
+      const msg = a && b ? 'All set. Send it to Kody.' : '';
+      if (live && msg !== last) { live.textContent = msg; last = msg; }
+    };
+    f.addEventListener('input', upd); f.addEventListener('change', upd);
+  });
+</script>
 <style>
   .cf { padding: 110px 0 110px; }
   .cf-g { display: grid; grid-template-columns: 620px 1fr; column-gap: 60px; align-items: start; }
@@ -90,6 +113,16 @@ const steps = [
   .cf-s { display: grid; grid-template-columns: 60px 1fr; column-gap: 24px; }
   .cf-n { margin: 8px 0 0; font: 800 20px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--powder); }
   .cf-st { margin: 7px 0 0; font: 800 24px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--white); }
+  .cf-s :global(.hs-water) { transition: translate 1.2s var(--ease-io), height .7s var(--ease-io); }
+  .cf-s.is-on :global(.hs-water) { height: 94%; }
+  .cf-st { transition: color .5s var(--ease-io); }
+  .cf-ok { display: inline-block; vertical-align: 4px; margin-left: 8px; padding: 3px 7px; border-radius: 3px; background: var(--powder); color: var(--ink);
+    font: 700 10px/13px var(--f-m); letter-spacing: .08em; text-transform: uppercase; opacity: 0; transform: translateY(4px); transition: opacity .5s var(--ease-io), transform .5s var(--ease-io); }
+  .cf-s.is-on .cf-ok { opacity: 1; transform: none; }
+  .cf-s.is-on .cf-n { color: var(--white); }
+  .cf-n { transition: color .5s var(--ease-io); }
+  .cf-live { margin: 28px 0 0 84px; font: 700 12px/16px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+  .cf-live:empty { display: none; }
   .cf-sd { margin: 11px 0 0; font: 400 15px/1.5 var(--f-b); color: rgba(255, 255, 255, .8); max-width: 420px; }
   @media (min-width: 768px) and (max-width: 1279px) {
     .cf-g { grid-template-columns: 1fr; row-gap: 56px; }

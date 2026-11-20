@@ -1,52 +1,184 @@
 ---
-// Contact hero (Figma 724:1091 "Hero" y 172 h 600 / 725:701 y 158 h 420): crumbs, eyebrow, H1, the steel number plate.
+// Contact hero, round 2 (Nick 20 Nov: the hero + "Fastest first: 5 ways to reach us" were "really empty and bold"; no
+// visible breadcrumb, BreadcrumbList JSON-LD only). One object now: the SWITCHBOARD. A steel console with a display and
+// five keys (Call, Text a photo, Form, Email, Instagram DM), fastest first. Each key is a filter housing that fills with
+// water when you point at it or pick it; the display shows that way's number / address, its note and its button.
+// Phone first: Call is picked at load, so the number and the red call button are the first thing on the console.
+// Keys are real links (tap = act: tel, sms, the form, mailto, Instagram), so the board works without JS; with JS, hover /
+// focus previews a way in the display and a click on a key that is not a direct action (Form) scrolls to it.
+// 21st.dev refs: "Contact Card" (aadixc0de: Call / Email / Copy actions with an open-now state) + "Contact Cards"
+// (serafimcloud), rebuilt as Glass's own console (steel plate, rivets, kit Housing keys, powder offset shadow).
 import './cx.css';
-import Crumbs from './Crumbs.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
+import Housing from '../kit/Housing.astro';
 import { SITE } from '../../data/site';
+const ways = [
+  { id: 'call', n: '01', t: 'Call', key: SITE.phone, href: SITE.tel, state: 'Line open · 24/7 emergencies', d: 'Fastest. Any hour for emergencies.',
+    big: SITE.phone, btn: { look: 'call' as const, label: 'Call now', sub: '24/7', href: SITE.tel } },
+  { id: 'text', n: '02', t: 'Text a photo', key: SITE.phone, href: SITE.sms, state: 'Photos and videos welcome', d: '“I took a few pictures of the valve that needed replaced and he was at my home the next day !!” Jen James',
+    big: SITE.phone, btn: { look: 'line' as const, label: 'Text a photo', sub: `To ${SITE.phone}`, href: SITE.sms, icon: 'camera' } },
+  { id: 'form', n: '03', t: 'Form', key: 'Below', href: '#estimate', state: 'Name, number, the job', d: 'We call you back.',
+    big: 'Send us the job', btn: { look: 'ink' as const, label: 'Go to the form', href: '#estimate', arrow: true } },
+  { id: 'email', n: '04', t: 'Email', key: SITE.email, href: `mailto:${SITE.email}`, state: 'Bids and paperwork', d: 'For bids and paperwork.',
+    big: SITE.email, btn: { look: 'ink' as const, label: 'Write an email', href: `mailto:${SITE.email}`, arrow: true } },
+  { id: 'ig', n: '05', t: 'Instagram DM', key: SITE.social.instagramHandle, href: SITE.social.instagram, ext: true, state: 'Verified · our jobs', d: 'See our jobs, send a message.',
+    big: SITE.social.instagramHandle, btn: { look: 'ink' as const, label: 'Open Instagram', href: SITE.social.instagram, arrow: true, external: true } },
+];
 ---
 <section class="cx-sec cx-frost ch" data-m-section data-m-hero aria-labelledby="ch-h">
   <div class="wrap">
-    <Crumbs label="Contact" class="ch-cr" />
-    <Eyebrow text="A real plumber picks up" tone="pdeep" class="ch-eb" />
-    <h1 id="ch-h" class="cx-h ch-h" data-t="2"><span class="ln">Call or Text</span> <span class="ln tone">Glass Plumbing</span></h1>
-    <div class="ch-plate" data-t="4" data-fx="scale">
+    <div class="ch-head">
+      <Eyebrow text="A real plumber picks up" tone="pdeep" class="ch-eb" />
+      <h1 id="ch-h" class="cx-h ch-h" data-t="2"><span class="ln">Call or Text</span> <span class="ln tone">Glass Plumbing</span></h1>
+      <p class="ch-sub" data-t="3" data-fx="nudge">Fastest first: five ways to reach us.</p>
+    </div>
+
+    <div class="ch-board" data-board data-t="4" data-fx="scale" data-no-px>
       <span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span>
-      <p class="ch-lbl">Call or text · 24/7 emergency</p>
-      <a class="ch-num" href={SITE.tel}><span class="sr-only">Call </span>{SITE.phone}</a>
-      <Btn look="call" label="Call now" sub="24/7" href={SITE.tel} w={280} size="l" class="ch-btn" />
+      <div class="ch-screen on-ink">
+        {ways.map((w, i) => (
+          <div class="ch-disp" data-disp={w.id} hidden={i !== 0 ? true : undefined}>
+            <p class="ch-dl"><span class="ch-lamp" aria-hidden="true"></span>{w.n} · {w.t} <span class="ch-ds">· {w.state}</span></p>
+            {w.id === 'call'
+              ? <a class="ch-big ch-num" href={SITE.tel}><span class="sr-only">Call </span>{w.big}</a>
+              : <p class:list={['ch-big', (w.id === 'email' || w.id === 'ig') && 'ch-big-s']}>{w.big}</p>}
+            <p class="ch-dd">{w.d}</p>
+            <div class="ch-act">
+              <Btn look={w.btn.look} label={w.btn.label} sub={w.btn.sub} href={w.btn.href} icon={w.btn.icon} arrow={w.btn.arrow} external={w.btn.external} size="l" w={260} class="ch-btn" />
+              {w.id === 'email' && <button type="button" class="ch-copy" data-copy={SITE.email}><span data-copy-l>Copy address</span></button>}
+              {w.id === 'call' && <button type="button" class="ch-copy" data-copy={SITE.phone}><span data-copy-l>Copy number</span></button>}
+            </div>
+          </div>
+        ))}
+      </div>
+      <ol class="ch-keys" role="list" aria-label="Five ways to reach us, fastest first">
+        {ways.map((w, i) => (
+          <li>
+            <a class:list={['ch-k', i === 0 && 'is-sel']} href={w.href} data-key={w.id} aria-current={i === 0 ? 'true' : undefined}
+              target={w.ext ? '_blank' : undefined} rel={w.ext ? 'noopener' : undefined}>
+              <span class="ch-hs"><Housing w={54} h={92} wm={36} hm={60} fill={0.2} tone="light" shadow={5} shadowm={3} /></span>
+              <span class="ch-kt"><span class="ch-kn">{w.n}</span><b>{w.t}</b><span class="ch-kv">{w.key}</span></span>
+              <span class="ch-ka" aria-hidden="true">→</span>
+              {w.ext && <span class="sr-only"> (opens in a new tab)</span>}
+            </a>
+          </li>
+        ))}
+      </ol>
     </div>
   </div>
 </section>
+<script>
+  // Switchboard: pointer over / focus on a key previews that way in the display (fade + rise, WAAPI, ease-in-out); the
+  // picked key keeps its water full. Copy buttons put the number / address on the clipboard. Reduced motion: instant.
+  const motion = () => document.documentElement.classList.contains('motion');
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  document.querySelectorAll<HTMLElement>('[data-board]').forEach((board) => {
+    const keys = Array.from(board.querySelectorAll<HTMLAnchorElement>('[data-key]'));
+    const disps = new Map(Array.from(board.querySelectorAll<HTMLElement>('[data-disp]')).map((d) => [d.dataset.disp!, d]));
+    let cur = keys[0].dataset.key!;
+    const show = (id: string) => {
+      if (id === cur) return;
+      const from = disps.get(cur)!, to = disps.get(id)!;
+      keys.forEach((k) => { const on = k.dataset.key === id; k.classList.toggle('is-sel', on); if (on) k.setAttribute('aria-current', 'true'); else k.removeAttribute('aria-current'); });
+      cur = id;
+      from.getAnimations().forEach((a) => a.cancel());
+      from.hidden = true; to.hidden = false;
+      if (motion()) to.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 420, easing: 'cubic-bezier(.65,0,.35,1)' });
+    };
+    keys.forEach((k) => {
+      k.addEventListener('pointerenter', (e) => { if (fine.matches && e.pointerType === 'mouse') show(k.dataset.key!); });
+      k.addEventListener('focus', () => show(k.dataset.key!));
+    });
+    board.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+      const l = b.querySelector<HTMLElement>('[data-copy-l]')!; const t0 = l.textContent;
+      b.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(b.dataset.copy!); l.textContent = 'Copied'; } catch { l.textContent = b.dataset.copy!; }
+        window.setTimeout(() => { l.textContent = t0; }, 2200);
+      });
+    });
+    board.classList.add('is-ready');
+  });
+</script>
 <style>
-  .ch { padding: 44px 0 80px; }
-  .ch :global(.ch-eb) { margin-top: 29px; }
-  .ch-h { --fs: 64px; --fs-m: 38px; margin-top: 16px; max-width: 700px; }
-  .ch-plate { position: relative; margin-top: 80px; height: 190px; padding: 32px 0 0 48px; background: var(--steel); border: 1px solid var(--steel2);
-    border-radius: 6px; box-shadow: 10px 10px 0 var(--ink); }
-  .rv { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--steel2); }
-  .rv:nth-child(1) { left: 11px; top: 11px; } .rv:nth-child(2) { right: 11px; top: 11px; }
-  .rv:nth-child(3) { left: 11px; bottom: 11px; } .rv:nth-child(4) { right: 11px; bottom: 11px; }
-  .ch-lbl { margin: 0; font: 700 12px/16px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-  .ch-num { display: inline-block; margin: 10px 0 0 -4px; font: 800 110px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; text-decoration: none; }
-  .ch-num:hover { color: var(--pdeep); }
-  .ch :global(.ch-btn) { position: absolute; right: 39px; top: 61px; }
+  .ch { padding: 64px 0 110px; }
+  .ch-head { display: grid; justify-items: center; text-align: center; }
+  .ch-head :global(.ch-eb) { justify-content: center; }
+  .ch-h { --fs: 72px; --fs-m: 38px; margin-top: 16px; }
+  .ch-sub { margin: 18px 0 0; font: 700 13px/18px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+
+  /* The console: steel plate, four rivets, ink offset shadow. Display on top, five keys below. */
+  .ch-board { position: relative; margin: 48px auto 0; max-width: 1200px; padding: 28px 28px 26px; background: var(--steel); border: 1px solid var(--steel2); border-radius: 10px;
+    box-shadow: 12px 12px 0 var(--ink); }
+  .rv { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--steel2); box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .5); }
+  .rv:nth-child(1) { left: 10px; top: 10px; } .rv:nth-child(2) { right: 10px; top: 10px; }
+  .rv:nth-child(3) { left: 10px; bottom: 10px; } .rv:nth-child(4) { right: 10px; bottom: 10px; }
+
+  .ch-screen { position: relative; min-height: 236px; padding: 30px 36px 30px; border-radius: 6px; background: var(--ink); color: var(--white);
+    box-shadow: inset 0 0 0 2px var(--ink3), inset 0 18px 40px rgba(0, 0, 0, .35); }
+  .ch-dl { display: flex; align-items: center; gap: 10px; margin: 0; font: 700 12px/16px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .ch-ds { color: rgba(255, 255, 255, .7); font-weight: 500; }
+  .ch-lamp { width: 10px; height: 10px; border-radius: 50%; background: var(--powder); box-shadow: 0 0 0 4px rgba(132, 179, 199, .22); }
+  html.motion [data-disp='call'] .ch-lamp { animation: ch-lamp 1.6s var(--ease-io) 3; }
+  @keyframes ch-lamp { 50% { box-shadow: 0 0 0 9px rgba(132, 179, 199, 0); } }
+  .ch-big { display: block; margin: 12px 0 0 -4px; font: 800 104px/1.02 var(--f-h); letter-spacing: -0.03em; color: var(--white); white-space: nowrap; text-decoration: none; }
+  .ch-big-s { font-size: 64px; margin-top: 26px; margin-bottom: 14px; white-space: normal; overflow-wrap: anywhere; }
+  a.ch-big:hover { color: var(--powder); }
+  .ch-dd { max-width: 720px; margin: 10px 0 0; font: 400 17px/1.5 var(--f-b); color: rgba(255, 255, 255, .85); }
+  .ch-act { position: absolute; right: 36px; top: 30px; display: grid; justify-items: end; gap: 10px; }
+  .ch-copy { min-height: 44px; padding: 0 14px; border-radius: 4px; color: var(--white); font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase;
+    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .5); transition: box-shadow .3s var(--ease-io), background-color .3s var(--ease-io); }
+  .ch-copy:hover { box-shadow: inset 0 0 0 1.5px var(--powder); background: rgba(132, 179, 199, .12); }
+  .ch-copy:focus-visible { outline: 3px solid var(--powder); outline-offset: 3px; }
+  .ch-board:not(.is-ready) .ch-copy { display: none; }
+
+  .ch-keys { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin: 22px 0 0; padding: 0; list-style: none; }
+  .ch-k { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: end; column-gap: 14px; height: 100%; padding: 16px 14px 14px 16px; border-radius: 6px;
+    background: var(--frost); color: var(--ink); text-decoration: none; border: 1.5px solid var(--steel2);
+    transition: background-color .45s var(--ease-io), border-color .45s var(--ease-io), transform .45s var(--ease-io), box-shadow .45s var(--ease-io); }
+  .ch-k:hover, .ch-k.is-sel { border-color: var(--ink); background: var(--white); }
+  .ch-k.is-sel { transform: translateY(-4px); box-shadow: 5px 5px 0 var(--pdeep); }
+  .ch-k:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .ch-hs { display: block; padding-top: 7px; }
+  /* The key's water: the kit housing fills to 20 % on enter (glass.ts writes translate); picking or pointing raises the level. */
+  .ch-hs :global(.hs-water) { transition: translate 1.2s var(--ease-io), height .6s var(--ease-io); }
+  .ch-k:hover .ch-hs :global(.hs-water), .ch-k.is-sel .ch-hs :global(.hs-water) { height: 92%; }
+  .ch-kt { display: grid; gap: 3px; min-width: 0; padding-bottom: 2px; }
+  .ch-kn { font: 700 11px/15px var(--f-m); letter-spacing: .06em; color: var(--pdeep); }
+  .ch-kt b { font: 800 19px/1.1 var(--f-h); letter-spacing: -0.02em; }
+  .ch-kv { font: 500 11px/15px var(--f-m); letter-spacing: .01em; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ch-ka { position: absolute; right: 12px; top: 12px; font: 700 16px/1 var(--f-b); color: var(--pdeep); opacity: 0; transform: translateX(-4px); transition: opacity .35s var(--ease-io), transform .35s var(--ease-io); }
+  .ch-k:hover .ch-ka, .ch-k.is-sel .ch-ka { opacity: 1; transform: none; }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .ch-num { font-size: clamp(56px, 8.4vw, 100px); }
-    .ch :global(.ch-btn) { position: static; margin-top: 16px; }
-    .ch-plate { height: auto; padding-bottom: 32px; }
+    .ch-big { font-size: clamp(56px, 8.2vw, 96px); }
+    .ch-big-s { font-size: clamp(34px, 5vw, 56px); }
+    .ch-act { position: static; justify-items: start; grid-auto-flow: column; justify-content: start; margin-top: 20px; }
+    .ch-keys { grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .ch-k { grid-template-columns: 1fr; row-gap: 10px; padding: 12px 10px; }
+    .ch-kt b { font-size: 16px; }
+    .ch-kv { display: none; }
   }
   @media (max-width: 767px) {
-    .ch { padding: 24px 0 56px; }
-    .ch :global(.ch-eb) { margin-top: 15px; }
+    .ch { padding: 32px 0 64px; }
     .ch-h { margin-top: 10px; }
-    .ch-plate { margin-top: 28px; height: 180px; padding: 21px 18px 0 20px; box-shadow: 8px 8px 0 var(--ink); }
+    .ch-sub { margin-top: 12px; font-size: 11px; }
+    .ch-board { margin-top: 28px; padding: 16px 14px 14px; box-shadow: 7px 7px 0 var(--ink); }
     .rv { width: 8px; height: 8px; }
-    .rv:nth-child(1) { left: 7px; top: 7px; } .rv:nth-child(2) { right: 7px; top: 7px; }
-    .rv:nth-child(3) { left: 7px; bottom: 7px; } .rv:nth-child(4) { right: 7px; bottom: 7px; }
-    .ch-lbl { font-size: 9px; line-height: 12px; }
-    .ch-num { font-size: 40px; margin: 7px 0 0 -2px; }
-    .ch :global(.ch-btn) { position: static; width: 100%; height: 56px; margin-top: 18px; }
+    .rv:nth-child(1) { left: 5px; top: 5px; } .rv:nth-child(2) { right: 5px; top: 5px; } .rv:nth-child(3) { left: 5px; bottom: 5px; } .rv:nth-child(4) { right: 5px; bottom: 5px; }
+    .ch-screen { min-height: 0; padding: 18px 16px 18px; }
+    .ch-dl { font-size: 10px; line-height: 14px; flex-wrap: wrap; }
+    .ch-ds { display: none; }
+    .ch-big { font-size: 42px; margin: 8px 0 0 -2px; }
+    .ch-big-s { font-size: 24px; margin-top: 12px; }
+    .ch-dd { font-size: 14px; }
+    .ch-act { position: static; justify-items: stretch; margin-top: 16px; }
+    .ch-act :global(.ch-btn) { width: 100%; }
+    .ch-keys { grid-template-columns: 1fr; gap: 8px; margin-top: 14px; }
+    .ch-k { grid-template-columns: auto 1fr auto; align-items: center; padding: 10px 14px 10px 12px; }
+    .ch-k.is-sel { transform: none; box-shadow: 4px 4px 0 var(--pdeep); }
+    .ch-hs { padding-top: 7px; }
+    .ch-kt b { font-size: 17px; }
+    .ch-ka { position: static; opacity: 1; transform: none; }
   }
 </style>

@@ -1,5 +1,6 @@
 // Site navigation for the global chrome (header, mobile menu, footer). Every href is a built route (BUILD-BRIEF section 2):
-// services without their own page go to their family card on /services, towns without a page to their row on /areas.
+// services without their own page go to /services, towns without a page to /areas (R2: no cross-page #hash links;
+// tankless goes to /services/water-heaters, which covers tank and tankless).
 import { SITE } from '../../data/site';
 
 /** Header nav. `w` = the Figma text box width at 1440 (items sit at Figma x with 30 px gaps whatever the font rasteriser does). */
@@ -15,23 +16,23 @@ export const MAIN: { label: string; href: string; w: number }[] = [
 /** Footer "Services" column (Figma footer, all pages). */
 export const SERVICES = [
   { label: 'Water heaters', href: '/services/water-heaters' },
-  { label: 'Tankless water heaters', href: '/services#hot-water' },
-  { label: 'Softeners & filters', href: '/services#hot-water' },
-  { label: 'Drain cleaning', href: '/services#drains-fixtures' },
-  { label: 'Leak repair', href: '/services#leaks-lines' },
-  { label: 'Water line repair', href: '/services#leaks-lines' },
-  { label: 'Repiping', href: '/services#leaks-lines' },
-  { label: 'Emergency plumber', href: '/services#leaks-lines' },
+  { label: 'Tankless water heaters', href: '/services/water-heaters' },
+  { label: 'Softeners & filters', href: '/services' },
+  { label: 'Drain cleaning', href: '/services' },
+  { label: 'Leak repair', href: '/services' },
+  { label: 'Water line repair', href: '/services' },
+  { label: 'Repiping', href: '/services' },
+  { label: 'Emergency plumber', href: '/services' },
 ];
 
 /** Footer "Areas" column. */
 export const AREAS = [
-  { label: 'Largo', href: '/areas#town-largo' },
+  { label: 'Largo', href: '/areas' },
   { label: 'Seminole', href: '/areas/seminole' },
-  { label: 'Clearwater', href: '/areas#town-clearwater' },
-  { label: 'St. Petersburg', href: '/areas#town-st-petersburg' },
-  { label: 'Belleair Bluffs', href: '/areas#town-belleair-bluffs' },
-  { label: 'Pinellas Park', href: '/areas#town-pinellas-park' },
+  { label: 'Clearwater', href: '/areas' },
+  { label: 'St. Petersburg', href: '/areas' },
+  { label: 'Belleair Bluffs', href: '/areas' },
+  { label: 'Pinellas Park', href: '/areas' },
   { label: 'All areas →', href: '/areas' },
 ];
 

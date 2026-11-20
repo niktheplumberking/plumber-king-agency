@@ -1,8 +1,12 @@
 ---
-// "Keep it healthy" (Figma y 3791 h 874 / mobile y 2697 h 1167). Ink band, meniscus rise from the white Questions band.
-// INTERACTION note (884:628): each glyph draws itself (stroke dash, 1 s) as its card scrolls in; hover lifts the card and
-// turns its call line underlined. The draw runs only with motion on (html.motion); reduced motion / no JS = drawn.
-// Card 02 is powder (ink type), 01 and 03 are ink2 with a hairline. Glyph paths are the Figma vectors.
+// "Keep it healthy", R2 rebuild (watch list: three equal cards = simple layout). "Three habits" as hover-expand columns:
+// the open column is wide and shows the habit, the question and the call line; the other two fold to tall ink rails with
+// their glyph, number and the title turned on its side. Hover (fine pointers), focus or a tap on a rail opens it; the
+// glyph of the open column draws itself (stroke dash, 1 s), its water band rises. Centred head (rule 17).
+// 21st.dev: "Hover Expand" (educalvolpz, id 28111: panels expand on hover / keyboard focus, the rest collapse to a strip
+// with a rotated label) + "Collapsing Cards Accordion" (aloksivastava1025, id 45440), re-skinned: ink rails, powder open
+// panel with a meniscus water band, the Figma glyphs. Phones / no JS / reduced motion: three open panels stacked.
+// Glyph paths are the Figma vectors (884:628); copy and sources unchanged.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Seam from '../kit/Seam.astro';
@@ -16,14 +20,15 @@ const cards = [
 <section class="cx-sec cx-ink fk on-ink" data-m-section aria-labelledby="fk-h">
   <Seam from="var(--white)" to="var(--ink)" flip />
   <div class="wrap">
-    <div class="shead">
+    <div class="shead fk-top">
       <Eyebrow text="Keep it healthy" tone="light" />
       <h2 id="fk-h" class="cx-h fk-h" data-t="2"><span class="ln">Three habits.</span> <span class="ln tone">Then call us.</span></h2>
     </div>
-    <ul class="fk-l" role="list" data-t="3" data-stagger>
-      {cards.map((c) => (
-        <li class:list={['fk-c', c.powder && 'is-powder']}>
-          <p class="fk-n" aria-hidden="true">{c.n}</p>
+    <ul class="fk-l" role="list" data-t="3" data-fk>
+      {cards.map((c, i) => (
+        <li class:list={['fk-c', i === 1 && 'is-open']} data-fk-c>
+          <span class="fk-wat" aria-hidden="true"></span>
+          <button type="button" class="fk-rail" aria-expanded={i === 1 ? 'true' : 'false'} aria-controls={`fk-p${i}`} data-fk-b><span class="fk-n">{c.n}</span><span class="fk-rt">{c.t}</span><span class="sr-only">: open</span></button>
           {c.g === 'storm' && (
             <svg class="fk-g" viewBox="0 0 122 122" aria-hidden="true" data-draw>
               <path pathLength="1" d="M15.6132 54.6996C-3.58676 54.6996 -3.58676 23.4996 18.0132 23.4996C20.4132 -0.500391 56.4132 -7.70039 66.0132 16.2996C90.0132 11.4996 104.413 33.0996 90.0132 54.6996H15.6132Z" />
@@ -50,11 +55,13 @@ const cards = [
               <rect class="f" x="76.8" y="57.6" width="12" height="3" />
             </svg>
           )}
+          <div class="fk-body" id={`fk-p${i}`}>
           <h3 class="fk-t">{c.t}</h3>
           <p class="fk-d">{c.d}</p>
           <div class="fk-f">
             <p class="fk-q">{c.q}</p>
             <a class="fk-call" href={SITE.tel}>{`Call ${SITE.phone} `}<span aria-hidden="true">→</span></a>
+          </div>
           </div>
         </li>
       ))}
@@ -63,67 +70,100 @@ const cards = [
   </div>
 </section>
 <script>
-  // Glyphs draw in (1 s stroke dash) when their card enters. Without html.motion the CSS shows them drawn.
-  const glyphs = document.querySelectorAll<SVGElement>('.fk-g[data-draw]');
-  if (glyphs.length && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-drawn'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -15% 0px' });
-    glyphs.forEach((g) => io.observe(g));
-  } else glyphs.forEach((g) => g.classList.add('is-drawn'));
+  // Glyphs draw in (1 s stroke dash) when their column is open and on screen. Without html.motion the CSS shows them drawn.
+  const list = document.querySelector<HTMLElement>('[data-fk]');
+  if (list) {
+    const cols = [...list.querySelectorAll<HTMLElement>('[data-fk-c]')];
+    const wide = matchMedia('(min-width: 768px)');
+    const open = (c: HTMLElement) => {
+      cols.forEach((x) => { const on = x === c; x.classList.toggle('is-open', on); x.querySelector('[data-fk-b]')!.setAttribute('aria-expanded', String(on || !wide.matches)); });
+      if (seen) c.querySelector('.fk-g')?.classList.add('is-drawn');
+    };
+    let seen = false;
+    list.classList.add('is-js');
+    cols.forEach((c) => {
+      c.querySelector('[data-fk-b]')!.addEventListener('click', () => open(c));
+      c.addEventListener('focusin', () => open(c));
+      c.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && wide.matches) open(c); });
+    });
+    const drawOpen = () => { seen = true; const c = cols.find((x) => x.classList.contains('is-open')); c?.querySelector('.fk-g')?.classList.add('is-drawn'); if (!wide.matches) cols.forEach((x) => x.querySelector('.fk-g')?.classList.add('is-drawn')); };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { drawOpen(); io.disconnect(); } }), { rootMargin: '0px 0px -15% 0px' });
+      io.observe(list);
+    } else drawOpen();
+    const sync = () => cols.forEach((x) => x.querySelector('[data-fk-b]')!.setAttribute('aria-expanded', String(x.classList.contains('is-open') || !wide.matches)));
+    wide.addEventListener?.('change', sync); sync();
+  }
 </script>
 <style>
-  .fk { padding: 120px 0 0; height: 874px; box-sizing: border-box; }
+  .fk { padding: 120px 0 104px; }
+  .fk-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .fk-h { --fs: 52px; --fs-m: 34px; margin-top: 16px; }
-  .fk-l { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 48px 0 0; padding: 0; list-style: none; }
-  .fk-c { position: relative; display: flex; flex-direction: column; height: 420px; padding: 28px 28px 21px; box-sizing: border-box; border-radius: 10px;
-    background: var(--ink2); box-shadow: inset 0 0 0 1px #322e27; color: var(--white); transition: translate .3s var(--ease-out, ease); }
-  .fk-c.is-powder { background: var(--powder); box-shadow: none; color: var(--ink); }
-  .fk-n { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; color: var(--powder); }
-  .is-powder .fk-n { color: var(--ink); }
-  .fk-g { position: absolute; right: 28px; top: 28px; width: 120px; height: 120px; overflow: visible; }
-  .fk-g path, .fk-g rect:not(.f), .fk-g circle:not(.f) { fill: none; stroke: var(--powder); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-  .fk-g .f { fill: var(--powder); }
-  .is-powder .fk-g path, .is-powder .fk-g rect:not(.f), .is-powder .fk-g circle:not(.f) { stroke: var(--ink); }
-  .is-powder .fk-g .f { fill: var(--ink); }
-  :global(html.motion) .fk-g [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1s var(--ease-io, ease-in-out); }
-  :global(html.motion) .fk-g .f { opacity: 0; transition: opacity .4s .7s; }
+  .fk-l { display: flex; flex-direction: column; gap: 14px; margin: 48px 0 0; padding: 0; list-style: none; }
+  .fk-c { position: relative; display: flex; flex-direction: column; min-height: 360px; padding: 26px 28px 21px; box-sizing: border-box; border-radius: 10px; overflow: hidden; isolation: isolate;
+    background: var(--ink2); box-shadow: inset 0 0 0 1px var(--ink3); color: var(--white); transition: flex-grow .7s var(--ease-io), background-color .6s var(--ease-io), color .6s var(--ease-io); }
+  .fk-c.is-open { background: var(--powder); color: var(--ink); box-shadow: none; }
+  .fk-wat { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; z-index: -1; background: rgba(255,255,255,.22); transform-origin: 50% 100%; scale: 1 0; transition: scale .9s var(--ease-io); }
+  .fk-wat::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: rgba(255,255,255,.7); }
+  .fk-c.is-open .fk-wat { scale: 1 1; }
+  .fk-rail { all: unset; display: flex; align-items: center; gap: 14px; min-height: 44px; cursor: pointer; border-radius: 4px; }
+  .fk-rail:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; }
+  .fk-n { font: 700 11px/15px var(--f-m); letter-spacing: .06em; color: var(--powder); transition: color .6s var(--ease-io); }
+  .is-open .fk-n { color: var(--ink); }
+  .fk-rt { display: none; font: 800 22px/1.05 var(--f-h); letter-spacing: -.02em; white-space: nowrap; }
+  .fk-g { position: absolute; right: 28px; top: 26px; width: 110px; height: 110px; overflow: visible; transition: scale .7s var(--ease-io), translate .7s var(--ease-io); }
+  .fk-g path, .fk-g rect:not(.f), .fk-g circle:not(.f) { fill: none; stroke: var(--powder); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; transition: stroke .6s var(--ease-io); }
+  .fk-g .f { fill: var(--powder); transition: fill .6s var(--ease-io); }
+  .is-open .fk-g path, .is-open .fk-g rect:not(.f), .is-open .fk-g circle:not(.f) { stroke: var(--ink); }
+  .is-open .fk-g .f { fill: var(--ink); }
+  :global(html.motion) .fk-g [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1s var(--ease-io, ease-in-out), stroke .6s var(--ease-io); }
+  :global(html.motion) .fk-g .f { opacity: 0; transition: opacity .4s .7s, fill .6s var(--ease-io); }
   :global(html.motion) .fk-g.is-drawn [pathLength] { stroke-dashoffset: 0; }
   :global(html.motion) .fk-g.is-drawn .f { opacity: 1; }
-  .fk-t { margin: 137px 0 0; min-height: 60px; max-width: 320px; font: 800 28px/1.06 var(--f-h); letter-spacing: -0.02em; }
-  .fk-d { margin: 20px 0 0; max-width: 320px; font: 400 16px/1.5 var(--f-b); opacity: .9; }
+  .fk-body { display: flex; flex-direction: column; flex: 1; margin-top: 110px; transition: opacity .5s var(--ease-io); }
+  .fk-t { margin: 0; max-width: 420px; font: 800 30px/1.06 var(--f-h); letter-spacing: -0.02em; }
+  .fk-d { margin: 16px 0 0; max-width: 420px; font: 400 17px/1.5 var(--f-b); }
   .fk-f { margin-top: auto; padding-top: 13px; border-top: 1px solid rgba(255, 255, 255, .3); }
-  .is-powder .fk-f { border-top-color: rgba(22, 19, 15, .3); }
-  .fk-q { margin: 0; font: 600 14px/1.5 var(--f-b); opacity: .8; }
+  .is-open .fk-f { border-top-color: rgba(22, 19, 15, .3); }
+  .fk-q { margin: 0; font: 600 14px/1.5 var(--f-b); opacity: .85; }
   .fk-call { display: inline-flex; align-items: center; align-self: flex-start; min-height: 44px; margin: 2px 0 -10px; font: 700 15px/1.5 var(--f-b); color: var(--powder);
     text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
-  .is-powder .fk-call { color: var(--ink); }
+  .is-open .fk-call { color: var(--ink); }
   .fk-call:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
-  @media (hover: hover) and (pointer: fine) {
-    .fk-call { text-decoration-color: transparent; transition: text-decoration-color .2s; }
-    .fk-c:hover { translate: 0 -6px; }
-    .fk-c:hover .fk-call, .fk-call:focus-visible { text-decoration-color: currentColor; }
-  }
-  .fk-src { margin: 28px 0 0; font: 500 10px/13px var(--f-m); letter-spacing: .02em; color: rgba(255, 255, 255, .6); }
+  .fk-src { margin: 28px 0 0; text-align: center; font: 500 10px/13px var(--f-m); letter-spacing: .02em; color: rgba(255, 255, 255, .6); }
   .m { display: none; }
+
+  /* >= 768 with JS: hover-expand columns. */
+  @media (min-width: 768px) {
+    .fk-l.is-js { flex-direction: row; height: 440px; gap: 16px; }
+    .fk-l.is-js .fk-c { flex: 1 1 0; min-width: 0; min-height: 0; }
+    .fk-l.is-js .fk-c.is-open { flex-grow: 3.4; }
+    .fk-l.is-js .fk-c:not(.is-open) { padding: 26px 0 24px; align-items: center; cursor: pointer; }
+    .fk-l.is-js .fk-c:not(.is-open) .fk-rail { flex-direction: column; gap: 22px; height: 100%; align-self: stretch; }
+    .fk-l.is-js .fk-c:not(.is-open) .fk-rt { display: block; writing-mode: vertical-rl; rotate: 180deg; }
+    .fk-l.is-js .fk-c:not(.is-open) .fk-g { right: 50%; top: auto; bottom: 26px; translate: 50% 0; scale: .5; transform-origin: 50% 100%; }
+    .fk-l.is-js .fk-c:not(.is-open) .fk-body { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); opacity: 0; margin: 0; }
+    .fk-l.is-js .fk-c:not(.is-open):hover { background: var(--ink3); }
+  }
   @media (min-width: 768px) and (max-width: 1279px) {
-    .fk { height: auto; padding-bottom: 100px; }
-    .fk-l { gap: 16px; }
-    .fk-c { padding: 22px; }
-    .fk-g { right: 22px; top: 22px; width: 88px; height: 88px; }
-    .fk-t { margin-top: 110px; font-size: 24px; }
+    .fk-l.is-js { height: 420px; }
+    .fk-g { width: 88px; height: 88px; }
+    .fk-t { font-size: 25px; }
   }
   @media (max-width: 767px) {
-    .fk { height: auto; padding: 80px 0 90px; }
+    .fk { padding: 80px 0 90px; }
     .fk-h { margin-top: 12px; }
-    .fk-l { grid-template-columns: 1fr; gap: 14px; margin-top: 28px; }
-    .fk-c { height: auto; padding: 20px 20px 15px; }
-    .fk-n { font-size: 10px; line-height: 13px; }
-    .fk-g { right: 20px; top: 20px; width: 80px; height: 80px; }
-    .fk-t { margin-top: 83px; min-height: 0; max-width: 300px; font-size: 22px; line-height: 1.04; }
+    .fk-l { margin-top: 28px; }
+    .fk-c { min-height: 0; padding: 20px 20px 15px; background: var(--ink2); color: var(--white); }
+    .fk-c.is-open { background: var(--powder); color: var(--ink); }
+    .fk-rail { cursor: default; }
+    .fk-g { right: 20px; top: 20px; width: 72px; height: 72px; }
+    .fk-body { margin-top: 70px; }
+    .fk-t { font-size: 22px; line-height: 1.04; }
     .fk-d { margin-top: 10px; font-size: 15px; line-height: 23px; }
     .fk-f { margin-top: 14px; padding-top: 0; border-top: 0; }
     .fk-q { font-size: 13px; line-height: 20px; }
-    .fk-call { margin: 1px 0 -10px; min-height: 44px; }
     .d { display: none; } .m { display: inline; }
-    .fk-src { margin-top: 28px; font-size: 9px; line-height: 12px; letter-spacing: .01em; }
+    .fk-src { margin-top: 28px; text-align: left; font-size: 9px; line-height: 12px; letter-spacing: .01em; }
   }
 </style>

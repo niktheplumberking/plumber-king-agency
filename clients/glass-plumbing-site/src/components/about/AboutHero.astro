@@ -1,6 +1,12 @@
 ---
-// /about hero (Figma 724:746 y 172 h 740 / mobile 725:439 y 158 h 932). White. Breadcrumbs, eyebrow, H1 (= SEO H1), lead,
-// the call button, the crew photo (no names on faces: the alt says "a crew member") and Kody's business card at -4 deg.
+// /about hero (Figma 724:746 y 172 h 740 / mobile 725:439 y 158 h 932). White. Eyebrow, H1 (= SEO H1), lead, the call
+// button, the crew photo (no names on faces: the alt says "a crew member") and Kody's business card.
+// R2 (Nick 20 Nov): the photo sat 120 px short of the grid's right edge with the face low in the frame -> the photo now
+// ends on the grid edge and its focal point is the face (52% 80% of the portrait file). The business card used to be a
+// cover crop of the two-sided photo (front + back stacked), which cut the logo in half -> it is now a real two-sided card:
+// the front shows the whole logo, a tap flips it to "Kody Glass, Owner" (21st.dev skyleen77/flip-card, re-skinned). It
+// overlaps the photo's lower-left corner on purpose (the depth layer). Visible breadcrumbs are gone site-wide (Nick):
+// Breadcrumbs stays for its BreadcrumbList JSON-LD and its nav is hidden here.
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
@@ -9,58 +15,114 @@ import Img from '../ui/Img.astro';
 <section class="bhero" data-m-section data-m-hero aria-labelledby="bhero-h">
   <div class="wrap bh-grid">
     <div class="bh-copy">
-      <Breadcrumbs items={[{ label: 'About', href: '/about' }]} class="bh-crumbs" />
+      <Breadcrumbs items={[{ label: 'About', href: '/about' }]} class="bh-crumbs" t={false} />
       <Eyebrow text="Glass Plumbing Services · Largo, FL" t="1" class="bh-eb bh-eb--d" />
       <Eyebrow text="Glass Plumbing Services · Largo" t="1" class="bh-eb bh-eb--m" />
       <h1 id="bhero-h" class="bh-h" data-t="2">Meet the<br /><span class="tone">Glass Brothers</span></h1>
       <p class="bh-lead" data-t="3" data-fx="nudge"><span class="d">A Florida-licensed plumbing contractor, his brother and their crew, fixing homes and businesses across Pinellas County from Largo.</span><span class="m">A Florida-licensed plumbing contractor, his brother and their crew, fixing homes and businesses across Pinellas from Largo.</span></p>
+      <div class="bh-btn"><Btn look="call" sub="Talk to a Glass brother" size="l" w={320} wm={350} t="3" /></div>
     </div>
-    <div class="bh-btn"><Btn look="call" sub="Talk to a Glass brother" size="l" w={320} wm={350} t="3" /></div>
-    <figure class="bh-photo" data-t="4" data-fx="frame">
-      <Img name="crew-selfie" alt="A Glass Plumbing crew member in a cap and sunglasses, taking a selfie in the work van" priority focus="50% 45%"
-        sizes="(min-width:1280px) 420px, (min-width:768px) 36vw, 280px" box={420 / 520} boxM={280 / 340} widths={[280, 420, 560, 840]} />
-    </figure>
-    <figure class="bh-card" data-t="5" data-fx="pop">
-      <Img name="business-card" alt="Kody Glass's business card: Glass Plumbing Services, commercial and residential, (727) 512-0673, 24/7 emergency service, licensed and insured"
-        sizes="(min-width:768px) 300px, 200px" box={300 / 180} boxM={200 / 120} widths={[200, 300, 400, 600]} />
-    </figure>
+    <div class="bh-media">
+      <figure class="bh-photo" data-t="4" data-fx="frame">
+        <Img name="crew-selfie" alt="A Glass Plumbing crew member in a cap and sunglasses, taking a selfie in the work van" priority focus="52% 80%"
+          sizes="(min-width:1280px) 460px, (min-width:768px) 38vw, 280px" box={460 / 560} boxM={280 / 340} widths={[280, 460, 560, 920]} />
+      </figure>
+      <div class="bh-card-wrap" data-t="5" data-fx="pop">
+        <button class="bh-card" type="button" aria-pressed="false" data-bcard>
+          <span class="sr-only" data-bcard-label>Kody Glass's business card, front. Flip to the back</span>
+          <span class="bh-inner" aria-hidden="true">
+            <span class="bh-face bh-front">
+              <Img name="business-card" alt="" sizes="(min-width:768px) 340px, 220px" fit="cover" widths={[340, 520, 700]} />
+            </span>
+            <span class="bh-face bh-back">
+              <Img name="business-card" alt="" sizes="(min-width:768px) 340px, 220px" fit="cover" widths={[340, 520, 700]} />
+            </span>
+          </span>
+          <span class="bh-hint" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M2.5 8a5.5 5.5 0 0 1 9.6-3.7M13.5 8a5.5 5.5 0 0 1-9.6 3.7M12.6 1.6v3h-3M3.4 14.4v-3h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-bcard-hint>Flip the card</span></span>
+        </button>
+        <p class="sr-only">Front: Glass Plumbing Services, commercial and residential, 727-512-0673, 24/7 emergency service, licensed and insured. Back: Kody Glass, Owner, 727-512-0673, kodyglassplumbing@gmail.com, licensed and insured, CFC1432488.</p>
+      </div>
+    </div>
   </div>
 </section>
 
+<script>
+  // Business card flip: a real button (aria-pressed). The 3D turn is a CSS transition (0.8 s ease-in-out); reduced motion
+  // swaps the faces with a short cross-fade instead. Without JS the card shows its front (whole logo) and flips on hover.
+  document.querySelectorAll<HTMLButtonElement>('[data-bcard]').forEach((b) => {
+    const label = b.querySelector<HTMLElement>('[data-bcard-label]')!;
+    const hint = b.querySelector<HTMLElement>('[data-bcard-hint]')!;
+    b.closest('.bh-card-wrap')?.classList.add('is-js');
+    b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(on));
+      label.textContent = on ? "Kody Glass's business card, back: Kody Glass, Owner. Flip to the front" : "Kody Glass's business card, front. Flip to the back";
+      hint.textContent = on ? 'Flip back' : 'Flip the card';
+    });
+  });
+</script>
+
 <style>
-  .bhero { position: relative; background: var(--white); padding: 44px 0 52px; }
-  .bh-grid { display: grid; grid-template-columns: 620px 420px; column-gap: 40px; justify-content: start; grid-template-areas: 'copy photo' 'btn photo' 'card photo'; grid-template-rows: auto auto 1fr; }
-  .bh-copy { grid-area: copy; }
-  .bh-btn { grid-area: btn; margin-top: 29px; }
-  .bh-photo { grid-area: photo; position: relative; align-self: start; margin: 16px 0 0; width: 420px; height: 520px; border-radius: 6px; box-shadow: 12px 12px 0 var(--powder); }
-  .bh-photo :global(picture), .bh-photo :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; }
-  .bh-photo::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 6px; pointer-events: none; }
-  .bh-card { grid-area: card; position: relative; margin: 16px 0 0; width: 300px; height: 180px; rotate: -4deg; border-radius: 5px; box-shadow: 8px 8px 0 var(--ink); }
-  .bh-card :global(picture), .bh-card :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 5px; }
-  .bhero :global(.bh-eb) { margin-top: 29px; }
+  .bhero { position: relative; background: var(--white); padding: 72px 0 84px; }
+  .bhero :global(.bh-crumbs) { display: none; }
+  .bh-grid { display: grid; grid-template-columns: minmax(0, 640px) 460px; justify-content: space-between; align-items: center; }
+  .bhero :global(.bh-eb) { margin-top: 0; }
   .bhero :global(.bh-eb--m) { display: none; }
   .bh-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 88px; line-height: .96; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; }
   .bh-h .tone { color: var(--pdeep); }
   .bh-lead { margin-top: 24px; max-width: 560px; font-size: 19px; line-height: 1.5; color: var(--ink); }
+  .bh-btn { margin-top: 32px; }
+  .bh-media { position: relative; width: 460px; padding-bottom: 80px; }
+  .bh-photo { position: relative; margin: 0; width: 460px; height: 560px; border-radius: 6px; box-shadow: 12px 12px 0 var(--powder); }
+  .bh-photo :global(picture), .bh-photo :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; }
+  .bh-photo::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 6px; pointer-events: none; }
+
+  /* Business card: the source photo holds the front (x 22-1363, y 30-795 of 1385 x 1628) above the back (y 847-1612).
+     Each face is a 1341:765 window onto the same file, so both sides show whole, never cropped. */
+  .bh-card-wrap { position: absolute; left: -150px; bottom: 0; width: 340px; rotate: -4deg; z-index: 2; }
+  .bh-card { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; perspective: 1400px; text-align: left; }
+  .bh-inner { position: relative; display: block; aspect-ratio: 1341 / 765; transform-style: preserve-3d; transition: transform .8s var(--ease-io); }
+  .bh-face { position: absolute; inset: 0; overflow: hidden; border-radius: 6px; background: var(--white); box-shadow: 8px 8px 0 var(--ink); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .bh-face::after { content: ''; position: absolute; inset: 0; border: 1.5px solid var(--ink); border-radius: 6px; pointer-events: none; }
+  .bh-face :global(picture) { display: contents; }
+  .bh-face :global(img) { position: absolute; left: -1.641%; top: 0; width: 103.28%; height: auto; max-width: none; translate: 0 -1.843%; }
+  .bh-back { transform: rotateY(180deg); }
+  .bh-back :global(img) { translate: 0 -52.03%; }
+  .bh-card[aria-pressed='true'] .bh-inner { transform: rotateY(180deg); }
+  :global(html:not(.js)) .bh-card:hover .bh-inner { transform: rotateY(180deg); }
+  .bh-card:hover .bh-face { box-shadow: 10px 10px 0 var(--ink); }
+  .bh-card:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 8px; }
+  .bh-hint { position: absolute; right: 0; bottom: -46px; display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 12px; border-radius: 15px; background: var(--ink); color: var(--white);
+    font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; rotate: 4deg; transition: background-color .3s var(--ease-io); }
+  .bh-card:hover .bh-hint { background: var(--pdeep); }
+  .bh-card-wrap:not(.is-js) .bh-hint { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .bh-inner { transition: none; }
+  }
   .m { display: none; }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .bh-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .7fr); }
-    .bh-h { font-size: clamp(52px, 7vw, 88px); white-space: normal; }
-    .bh-photo { width: 100%; height: auto; aspect-ratio: 420 / 520; }
+    .bh-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .72fr); column-gap: 48px; }
+    .bh-h { font-size: clamp(52px, 6.6vw, 88px); white-space: normal; }
+    .bh-media { width: 100%; }
+    .bh-photo { width: 100%; height: auto; aspect-ratio: 460 / 560; }
+    .bh-card-wrap { left: -80px; width: clamp(220px, 26vw, 320px); }
   }
   @media (max-width: 767px) {
-    .bhero { padding: 24px 0 58px; }
+    .bhero { padding: 32px 0 88px; }
     .bh-grid { display: flex; flex-direction: column; align-items: stretch; }
-    .bhero :global(.bh-crumbs ol) { font-size: 10px; line-height: 13px; letter-spacing: .01em; }
-    .bhero :global(.bh-crumbs .sep) { margin: 0 1ch; }
-    .bhero :global(.bh-eb) { margin-top: 15px; }
     .bhero :global(.bh-eb--d) { display: none; }
     .bhero :global(.bh-eb--m) { display: flex; }
     .bh-h { margin-top: 10px; font-size: 44px; line-height: 1.02; white-space: normal; }
     .bh-lead { margin-top: 14px; font-size: 16px; }
+    .bh-btn { margin-top: 28px; }
     .d { display: none; } .m { display: inline; }
-    .bh-photo { order: 1; align-self: center; width: 280px; height: 340px; margin-top: 28px; box-shadow: 8px 8px 0 var(--powder); }
-    .bh-btn { order: 2; margin-top: 36px; }
-    .bh-card { order: 3; align-self: flex-end; width: 200px; height: 120px; margin-top: 36px; box-shadow: 6px 6px 0 var(--ink); }
+    .bh-media { align-self: center; width: 280px; margin-top: 36px; padding-bottom: 70px; }
+    .bh-photo { width: 280px; height: 340px; box-shadow: 8px 8px 0 var(--powder); }
+    .bh-card-wrap { left: auto; right: -34px; width: 230px; }
+    .bh-face { box-shadow: 6px 6px 0 var(--ink); }
+  }
+  @media (max-width: 374px) {
+    .bh-card-wrap { right: -20px; width: 210px; }
   }
 </style>

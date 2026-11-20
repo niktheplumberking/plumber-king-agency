@@ -1,11 +1,11 @@
 ---
 // /about (Figma 724:746 desktop / 725:439 mobile): every section between the emergency strip and the footer.
+// R2 (20 Nov): Story + Numbers merged into AboutRecord (the public-record showpiece); Crew and Giving rebuilt.
 // SEO-PLAN: title "About Glass Plumbing Services · Largo, FL Plumbers", H1 = the Figma H1. AboutPage JSON-LD (merged into
 // Base's WebPage node), BreadcrumbList from Breadcrumbs.astro. The mobile bar's "Free estimate" goes to /contact (no form here).
 import Base from '../layouts/Base.astro';
 import AboutHero from '../components/about/AboutHero.astro';
-import AboutStory from '../components/about/AboutStory.astro';
-import AboutNumbers from '../components/about/AboutNumbers.astro';
+import AboutRecord from '../components/about/AboutRecord.astro';
 import AboutCrew from '../components/about/AboutCrew.astro';
 import AboutRules from '../components/about/AboutRules.astro';
 import AboutProof from '../components/about/AboutProof.astro';
@@ -19,8 +19,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'AboutPage', about:
 <Base title="About Glass Plumbing Services · Largo, FL Plumbers" description={description} path="/about" og="crew-water-heater-tank"
   ogAlt="A Glass Plumbing crew member carrying a water heater tank" jsonld={jsonld} estimate="/contact">
   <AboutHero />
-  <AboutStory />
-  <AboutNumbers />
+  <AboutRecord />
   <AboutCrew />
   <AboutRules />
   <AboutProof />

@@ -3,7 +3,6 @@
 // (question count + group name + arrow) that jump to the group. Tile 01 is ink with the 6/6 pdeep offset shadow.
 // Phones: shorter eyebrow and lead (as the 390 frame), tiles become a 56 px list with a down arrow.
 import '../contact/cx.css';
-import Crumbs from '../contact/Crumbs.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import { FAQ_GROUPS, FAQ_ALL } from './data';
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -11,7 +10,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <section class="cx-sec cx-frost fh" data-m-section data-m-hero aria-labelledby="fh-h">
   <div class="wrap fh-g">
     <div class="fh-tx">
-      <Crumbs label="FAQ" />
       <Eyebrow tone="pdeep" class="fh-eb"><span class="d">Straight answers from a licensed plumber</span><span class="m">Straight answers</span></Eyebrow>
       <h1 id="fh-h" class="cx-h fh-h" data-t="2"><span class="ln">Plumbing Questions,</span> <span class="ln tone">Answered.</span></h1>
       <p class="fh-lead" data-t="3"><span class="d">{FAQ_ALL.length} questions Pinellas homeowners ask us, in five groups. Where a fact comes from a public source, the source is under the answer.</span><span class="m">{FAQ_ALL.length} questions in five groups. Sources sit under the answers.</span></p>
@@ -29,13 +27,13 @@ const pad = (n: number) => String(n).padStart(2, '0');
   </div>
 </section>
 <style>
-  .fh { padding: 44px 0 0; height: 510px; box-sizing: border-box; }
+  .fh { padding: 76px 0 0; height: 510px; box-sizing: border-box; }
   .fh-g { display: grid; grid-template-columns: 1fr 520px; column-gap: 40px; }
-  .fh-tx :global(.fh-eb) { margin-top: 29px; }
+  .fh-tx :global(.fh-eb) { margin-top: 0; }
   .fh-h { --fs: 64px; --fs-m: 32px; margin-top: 16px; }
   .fh-lead { margin: 24px 0 0; max-width: 540px; font: 400 18px/1.5 var(--f-b); color: var(--ink); }
   .m { display: none; }
-  .fh-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 26px; align-content: start; }
+  .fh-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 0; align-content: start; }
   .fh-tile { position: relative; display: block; height: 116px; padding: 16px 20px; box-sizing: border-box; border-radius: 6px; background: var(--white);
     box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); text-decoration: none; transition: translate .25s var(--ease-out, ease), box-shadow .25s; }
   .fh-tile.is-wide { grid-column: 1 / -1; }
@@ -56,10 +54,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
     .fh-tiles { margin-top: 0; }
   }
   @media (max-width: 767px) {
-    .fh { height: auto; padding: 24px 0 39px; }
+    .fh { height: auto; padding: 44px 0 39px; }
     .fh-g { grid-template-columns: 1fr; }
     .d { display: none; } .m { display: inline; }
-    .fh-tx :global(.fh-eb) { margin-top: 15px; }
+    .fh-tx :global(.fh-eb) { margin-top: 0; }
     .fh-h { margin-top: 10px; }
     .fh-lead { margin-top: 14px; font-size: 16px; }
     .fh-tiles { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }

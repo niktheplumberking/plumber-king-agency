@@ -13,7 +13,7 @@ const path = '/faq';
 <Base title="Plumbing Questions, Answered · Glass Plumbing, Largo"
   description="17 straight answers from a licensed Largo plumber: emergencies, water heaters, Pinellas hard water, permits, booking and price."
   path={path} og="water-heater-tank" ogAlt="A water heater installed by Glass Plumbing Services"
-  jsonld={[crumbsLd('FAQ', path), faqLd(FAQ_ALL.map(({ q, a }) => ({ q, a })))]} estimate="/contact#estimate">
+  jsonld={[crumbsLd('FAQ', path), faqLd(FAQ_ALL.map(({ q, a }) => ({ q, a })))]} estimate="/contact">
   <FaqHero />
   <FaqList />
   <FaqHealthy />

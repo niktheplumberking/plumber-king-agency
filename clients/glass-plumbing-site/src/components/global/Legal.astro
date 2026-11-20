@@ -1,6 +1,6 @@
 ---
 // The one legal template (Figma privacy 743:492 desktop / 743:658 mobile; /terms uses the same layout, BUILD-BRIEF 11).
-// Frost hero (breadcrumb, "Plain English" eyebrow, H1 64/34, lead 18/15), white body: sticky "On this page" rail at x 120
+// Frost hero (BreadcrumbList JSON-LD only, "Plain English" eyebrow, H1 64/34, lead 18/15), white body: sticky "On this page" rail at x 120
 // (current item Bold ink + a 3 px pdeep bar; desktop only) and numbered sections at x 480, 760 wide (mono number, Schibsted
 // 30/22 heading, Public Sans 18/15 at 1.6, ink 20 % rule under each), ink "Questions?" band with the red call button
 // (440 x 64, powder shadow), then the towns strip. The rail follows the scroll (IntersectionObserver, no motion needed).
@@ -58,8 +58,8 @@ const { title, crumb, path, lead, sections } = Astro.props;
   }
 </script>
 <style>
-  .lg-hero { background: var(--frost); padding: 44px 0 80px; }
-  .lg-hero :global(.lg-eb) { margin-top: 29px; }
+  .lg-hero { background: var(--frost); padding: 72px 0 80px; } /* R2: no visible breadcrumb row; eyebrow 72 px under the strip */
+  .lg-hero :global(.lg-eb) { margin-top: 0; }
   .lg-h { --h1: 64px; --h1m: 34px; margin-top: 16px; line-height: 1.02; }
   .lg-lead { max-width: 600px; margin-top: 16px; font-size: 18px; line-height: 1.5; }
   .lg-body { background: var(--white); padding: 80px 0 61px; }
@@ -87,8 +87,8 @@ const { title, crumb, path, lead, sections } = Astro.props;
   @media (max-width: 1279px) { .lg-in { grid-template-columns: 260px minmax(0, 1fr); } .lg-q-in { grid-template-columns: 1fr auto; gap: 32px; } }
   @media (max-width: 1023px) { .lg-in { grid-template-columns: 1fr; } .lg-rail { display: none; } }
   @media (max-width: 767px) {
-    .lg-hero { padding: 24px 0 40px; }
-    .lg-hero :global(.lg-eb) { margin-top: 15px; }
+    .lg-hero { padding: 40px 0 40px; }
+    .lg-hero :global(.lg-eb) { margin-top: 0; }
     .lg-h { margin-top: 10px; }
     .lg-lead { margin-top: 16px; font-size: 15px; }
     .lg-body { padding: 40px 0 34px; }

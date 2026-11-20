@@ -1,12 +1,13 @@
 // Copy for /services, word for word from the Figma frames (services 718:522 / 718:1276). Service pages that are not built
 // in this preview link to their family card on /services (BUILD-BRIEF section 2); water heaters has its own page.
+// R2 (no cross-page hash links): these data are only rendered ON /services, so the family links are same-page anchors.
 export const WH = '/services/water-heaters';
 
 export type Family = {
   id: string; n: string; name: string; nameM?: string; chip: string; chipM: string; photo: string; alt: string; focus?: string;
   services: { name: string; href: string }[];
 };
-const fam = (id: string) => `/services#${id}`;
+const fam = (id: string) => `#${id}`;
 export const FAMILIES: Family[] = [
   { id: 'hot-water', n: '01', name: 'Hot water', chip: 'Hot water', chipM: 'Hot water', photo: 'tankless-pair',
     alt: 'Two tankless water heaters mounted on a brick wall', focus: '50% 40%',

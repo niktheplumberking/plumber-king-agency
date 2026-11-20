@@ -120,6 +120,11 @@ const lic = SITE.licence;
   .ft-bar p { margin: 0; }
   .ft-bar a { display: inline-block; padding: 5px 0; margin: -5px 0; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: text-decoration-color .25s; }
   .ft-bar a:hover { text-decoration-color: currentColor; }
+  /* R2 hit areas (lead): an invisible box centred on each link, >= 24 px tall on desktop and >= 44 px on phones; no visual change. */
+  .ft-list a::before, .ft-bar a::after { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 24px; translate: 0 -50%; }
+  .ft-bar a { position: relative; }
+  @media (max-width: 1023px) { .ft-list a::before, .ft-bar a::after { height: 44px; } }
+
   .ft-bar a:focus-visible { outline-color: var(--powder); }
   .ft-lic { font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 

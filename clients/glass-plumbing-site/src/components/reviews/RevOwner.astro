@@ -1,67 +1,114 @@
 ---
-// "Owner's words" + "Other places to find us" (Figma "Owner and other platforms" y 3710 h 520 / mobile y 6975 h 558).
-// Facebook: no page URL in site.ts yet, so the card names it without a link (Kody to confirm the page).
+// "Owner's words" + "Other places to find us", round 2 (audit against rules 14-18: the R1 section was text left, two grey
+// cards right, empty space = slop). Rebuilt as ONE centred object: Kody's Instagram line set large, its words lighting up
+// one by one as you scroll (kit scrub: data-scrub-tw per word, windows spread over the pass), the logo seal biting the
+// opening quote mark (depth), then a strip of platform tags: Instagram live (verified, 34 posts, 653 followers, read
+// 17 Nov 2026), Facebook named without a link (no URL in site.ts yet), and Angi / Nextdoor / Yelp as empty dashed tags
+// (we only show what we can read). 21st.dev ref: "Text Reveal" scroll-driven word reveal (magicui text-reveal pattern) +
+// "Logo cloud" tags; adapted to the kit scrub engine. Distinct from /about "On the record" (licence wallet + IG grid bento).
+// Reduced motion / no JS: all words full strength.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
+import Seam from '../kit/Seam.astro';
 import { SITE } from '../../data/site';
 import logo from '../../assets/brand/logo-glass.png';
 import { Image } from 'astro:assets';
+const QUOTE = 'Officially up and running as a Licensed and insured master plumber.';
+const words = QUOTE.split(' ');
+const W = words.length;
+// IG counts read 17 Nov 2026 (REVISION-R2 / about/data.ts).
+const IG = { posts: SITE.social.instagramStats.posts, followers: SITE.social.instagramStats.followers, read: SITE.social.instagramStats.checked };
+const tick = '<path d="M12 1.5l2.6 1.9 3.2-.1 1 3 2.6 1.9-1 3 1 3-2.6 1.9-1 3-3.2-.1L12 22.5l-2.6-1.9-3.2.1-1-3-2.6-1.9 1-3-1-3 2.6-1.9 1-3 3.2.1z" fill="#0095F6"/><path d="M7.8 12.2l2.8 2.8 5.6-5.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
 ---
-<section class="cx-sec cx-white ro" data-m-section aria-label="Owner’s words and other places to find us">
-  <div class="wrap ro-g">
-    <figure class="ro-own">
-      <Eyebrow text="Owner’s words" tone="pdeep" as="p" />
-      <blockquote class="ro-q" data-t="2"><p>“Officially up and running as a Licensed and insured master plumber.”</p></blockquote>
+<section class="cx-sec cx-frost ro" data-m-section aria-labelledby="ro-h">
+  <Seam from="var(--white)" to="var(--frost)" />
+  <div class="wrap">
+    <div class="ro-head shead">
+      <Eyebrow text="Owner’s words" tone="pdeep" class="ro-eb" />
+      <h2 id="ro-h" class="sr-only">Owner’s words and other places to find us</h2>
+    </div>
+    <figure class="ro-fig" data-scrub data-start="top 85%" data-end="bottom 55%" data-lag="0.5">
+      <span class="ro-seal" data-t="5" aria-hidden="true"><Image src={logo} alt="" width={120} densities={[1, 2]} /></span>
+      <blockquote class="ro-q" data-t="2" data-fx="up">
+        <p><span class="ro-mk" aria-hidden="true">“</span>{words.map((w, i) => (
+          <><span class="ro-w" data-scrub-tw='{"opacity":0.16}' data-win={`${(i / W) * 0.8},${(i / W) * 0.8 + 0.2}`}>{w}</span>{i < W - 1 ? ' ' : ''}</>
+        ))}<span class="ro-mk" aria-hidden="true">”</span></p>
+      </blockquote>
       <figcaption class="ro-by" data-t="3">Kody, on Instagram</figcaption>
-      <span class="ro-seal" data-t="5" aria-hidden="true"><Image src={logo} alt="" width={154} densities={[1, 2]} /></span>
     </figure>
-    <div class="ro-pl">
-      <Eyebrow text="Other places to find us" tone="pdeep" as="h2" />
-      <ul class="ro-l" role="list" data-t="4" data-stagger>
-        <li class="ro-c">
-          <h3>Instagram</h3>
-          <p>{SITE.social.instagramHandle} · verified · 34 posts</p>
-          <a class="cx-link" href={SITE.social.instagram} target="_blank" rel="noopener">Open Instagram →<span class="sr-only"> (opens in a new tab)</span></a>
+
+    <div class="ro-strip" data-t="4" data-fx="up">
+      <p class="ro-sl">Other places to find us</p>
+      <ul class="ro-tags" role="list">
+        <li>
+          <a class="ro-tag ro-ig" href={SITE.social.instagram} target="_blank" rel="noopener">
+            <svg class="ro-ico" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor"/></svg>
+            <span class="ro-tx"><b>{SITE.social.instagramHandle} <svg class="ro-tick" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" set:html={tick} /></b><span>{IG.posts} posts · {IG.followers} followers · read {IG.read}</span></span>
+            <span class="ro-go" aria-hidden="true">→</span>
+            <span class="sr-only"> (verified Instagram profile, opens in a new tab)</span>
+          </a>
         </li>
-        <li class="ro-c">
-          <h3>Facebook</h3>
-          <p>{SITE.name}</p>
+        <li>
+          <span class="ro-tag ro-fb">
+            <svg class="ro-ico" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.2 19v-6h2.2l.4-2.6h-2.6V8.9c0-.8.3-1.3 1.4-1.3h1.3V5.3a17 17 0 0 0-2-.1c-2 0-3.3 1.2-3.3 3.4v1.8H8.4V13h2.2v6" fill="currentColor"/></svg>
+            <span class="ro-tx"><b>Facebook</b><span>{SITE.name} · link coming</span></span>
+          </span>
         </li>
+        <li><span class="ro-tag ro-empty"><span class="ro-tx"><b>Angi · Nextdoor · Yelp</b><span>Added once we can read them</span></span></span></li>
       </ul>
-      <p class="ro-note" data-t="3"><span class="d">We only show counts we can read ourselves. Angi, Nextdoor or Yelp get added once we can see them.</span><span class="m">We only show counts we can read ourselves.</span></p>
+      <p class="ro-note">We only show counts we can read ourselves.</p>
     </div>
   </div>
 </section>
 <style>
-  .ro { padding: 40px 0 98px; }
-  .ro-g { display: grid; grid-template-columns: 560px 560px; justify-content: space-between; }
-  .ro-own { margin: 0; }
-  .ro-q { margin: 16px 0 0; }
-  .ro-q p { margin: 0; font: 700 30px/1.25 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .ro-by { margin-top: 16px; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
-  .ro-seal { display: grid; place-items: center; width: 96px; height: 96px; margin-top: 25px; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); }
-  .ro-seal :global(img) { width: 77px; height: auto; }
-  .ro-l { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 20px; }
-  .ro-c { height: 130px; padding: 20px 23px 0; border: 1px solid var(--frost3); border-radius: 6px; background: var(--frost); }
-  .ro-c h3 { margin: 0; font: 800 24px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .ro-c p { margin: 10px 0 0; font: 400 15px/1.5 var(--f-b); color: var(--muted); }
-  .ro-c .cx-link { display: inline-block; margin-top: 8px; font-size: 14px; }
-  .ro-note { margin: 28px 0 0; font: 400 14px/1.5 var(--f-b); color: var(--muted); }
-  .ro-note .m { display: none; }
+  .ro { padding: 110px 0 120px; }
+  .ro-head { display: grid; justify-items: center; }
+  .ro-head :global(.ro-eb) { justify-content: center; }
+  .ro-fig { position: relative; max-width: 1060px; margin: 30px auto 0; text-align: center; }
+  .ro-seal { position: absolute; left: 34px; top: -26px; z-index: 1; display: grid; place-items: center; width: 104px; height: 104px; border-radius: 50%;
+    background: var(--cream); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--powder); rotate: -8deg; }
+  .ro-seal :global(img) { width: 80px; height: auto; }
+  .ro-q { position: relative; z-index: 2; margin: 0; }
+  .ro-q p { margin: 0; font: 800 64px/1.06 var(--f-h); letter-spacing: -0.03em; color: var(--ink); text-wrap: balance; }
+  .ro-mk { color: var(--pdeep); }
+  .ro-by { margin-top: 26px; font: 700 12px/16px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+
+  .ro-strip { margin: 72px auto 0; max-width: 1200px; text-align: center; }
+  .ro-sl { margin: 0; font: 700 12px/16px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+  .ro-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .ro-tag { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 18px; border-radius: 8px; text-align: left; color: var(--ink); text-decoration: none;
+    background: var(--white); border: 1.5px solid var(--ink); }
+  .ro-ig { box-shadow: 6px 6px 0 var(--pdeep); transition: transform .45s var(--ease-io), box-shadow .45s var(--ease-io); }
+  .ro-ig:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--pdeep); }
+  .ro-ig:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 4px; }
+  .ro-ig .ro-tick { display: inline-block; vertical-align: -2px; transition: transform .45s var(--ease-back); }
+  .ro-ig:hover .ro-tick { transform: scale(1.25) rotate(-12deg); }
+  .ro-fb { background: var(--white); border-color: var(--frost3); }
+  .ro-empty { border: 1.5px dashed var(--muted2); background: transparent; }
+  .ro-tx { display: grid; gap: 2px; }
+  .ro-tx b { font: 800 17px/1.15 var(--f-h); letter-spacing: -0.02em; }
+  .ro-tx > span { font: 500 11px/15px var(--f-m); letter-spacing: .02em; color: var(--muted); }
+  .ro-go { font: 700 18px/1 var(--f-b); color: var(--pdeep); transition: transform .35s var(--ease-io); }
+  .ro-ig:hover .ro-go { transform: translateX(4px); }
+  .ro-note { margin: 18px 0 0; font: 400 14px/1.5 var(--f-b); color: var(--muted); }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .ro-g { grid-template-columns: 1fr 1fr; column-gap: 48px; }
+    .ro-q p { font-size: 48px; }
+    .ro-seal { left: 0; top: -40px; width: 84px; height: 84px; } .ro-seal :global(img) { width: 64px; }
   }
   @media (max-width: 767px) {
-    .ro { padding: 40px 0 70px; }
-    .ro-g { grid-template-columns: 1fr; row-gap: 40px; }
-    .ro-q { margin-top: 14px; } .ro-q p { font-size: 22px; }
-    .ro-by { font-size: 10px; margin-top: 12px; }
-    .ro-seal { display: none; }
-    .ro-l { margin-top: 12px; gap: 12px; }
-    .ro-c { height: auto; padding: 16px 18px 18px; }
-    .ro-c h3 { font-size: 20px; }
-    .ro-c p { font-size: 13px; margin-top: 8px; }
-    .ro-note { margin-top: 16px; font-size: 13px; }
-    .ro-note .d { display: none; } .ro-note .m { display: inline; }
+    .ro { padding: 64px 0 76px; }
+    .ro-fig { margin-top: 44px; }
+    .ro-seal { left: 50%; top: -34px; translate: -50% 0; width: 64px; height: 64px; box-shadow: 4px 4px 0 var(--powder); }
+    .ro-seal :global(img) { width: 50px; }
+    .ro-q { padding-top: 36px; }
+    .ro-q p { font-size: 30px; }
+    .ro-by { margin-top: 16px; font-size: 10px; }
+    .ro-strip { margin-top: 44px; }
+    .ro-tags { flex-direction: column; align-items: stretch; gap: 10px; }
+    .ro-tag { min-height: 56px; padding: 8px 14px; }
+    .ro-tx b { font-size: 15px; }
+    .ro-tx > span { font-size: 10px; }
+    .ro-note { font-size: 13px; }
   }
 </style>

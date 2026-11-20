@@ -1,27 +1,24 @@
 ---
-// Page curtain (kit/curtain.ts drives it; MOTION.md section 3). The same family as the loader (global/Loader.astro):
-// 8 horizontal blinds in frost / white with a powder / pdeep band on the moving edge, Kody's logo in the middle while
-// covered. Cover = the blinds close in from both sides (odd rows from the left, even rows from the right) in one
-// ease-in-out move; reveal = they slide off the same way the loader's do. One transform channel per blind: GSAP `xPercent`
-// on .pt-blind, nothing else writes its transform.
-//   xPercent -101 / +101 = parked off-screen (set at boot)      xPercent 0 = covering
-// CSS gives the blinds NO transform: their resting CSS state is "covering", which is exactly what html.pt-in needs at
-// first paint on the page you arrive at; on every other page the curtain is visibility: hidden until the script parks it.
+// Page curtain, "Clear Water" (revision round 2: Glass's own, no blinds; kit/curtain.ts drives it, kit/water.ts draws it).
+// Cover = the screen fills like a housing: powder water, then deep water, then a clear frost layer rise from the bottom,
+// each surface a meniscus, the white meniscus line on the front; Kody's logo floats up into the clear water. Reveal on the
+// new page = the water drains down and away, front layer first, so the page appears from the top (header first).
+// Resting markup = covering, which is exactly what html.pt-in needs at first paint; on every other page the curtain is
+// visibility: hidden until a cover starts. One writer: the path `d` attributes (kit/water.ts draw), .pt-mark opacity +
+// transform (curtain.ts).
 import { Image } from 'astro:assets';
 import logo from '../../assets/brand/logo-glass.png';
+import Water from './Water.astro';
 ---
 <div class="pt" data-pt aria-hidden="true">
-  {Array.from({ length: 8 }, () => <i class="pt-blind"></i>)}
-  <span class="pt-mark"><Image src={logo} alt="" width={160} widths={[160, 320]} sizes="160px" loading="eager" decoding="async" fetchpriority="low" /></span>
+  <Water />
+  <span class="pt-mark"><Image src={logo} alt="" width={180} widths={[180, 360]} sizes="180px" loading="eager" decoding="async" fetchpriority="low" /></span>
 </div>
 <style>
-  .pt { position: fixed; inset: 0; z-index: var(--z-curtain); pointer-events: none; visibility: hidden; display: flex; flex-direction: column; overflow: hidden; }
+  .pt { position: fixed; inset: 0; z-index: var(--z-curtain); pointer-events: none; visibility: hidden; overflow: hidden; }
   .pt.is-on, :global(html.pt-in) .pt { visibility: visible; }
-  .pt-blind { position: relative; flex: 1 1 0; margin-bottom: -1px; background: var(--frost); will-change: transform; }
-  .pt-blind:nth-child(even) { background: var(--white); }
-  .pt-blind::after { content: ''; position: absolute; top: 0; bottom: 0; left: 100%; width: 10px; background: var(--powder); }
-  .pt-blind:nth-child(even)::after { left: auto; right: 100%; background: var(--pdeep); }
-  .pt-mark { position: absolute; left: 50%; top: 50%; width: 160px; translate: -50% -50%; opacity: 0; }
+  .pt-mark { position: absolute; left: 50%; top: 50%; width: 180px; margin: -53px 0 0 -90px; opacity: 0; will-change: transform, opacity; }
   :global(html.pt-in) .pt-mark { opacity: 1; }
-  .pt-mark :global(img) { width: 100%; height: auto; }
+  .pt-mark :global(img) { width: 100%; height: auto; display: block; }
+  @media (max-width: 767px) { .pt-mark { width: 140px; margin: -41px 0 0 -70px; } }
 </style>

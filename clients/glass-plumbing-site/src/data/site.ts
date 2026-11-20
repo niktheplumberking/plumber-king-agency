@@ -26,5 +26,7 @@ export const SITE = {
   social: {
     instagram: 'https://www.instagram.com/glassplumbingservices/',
     instagramHandle: '@glassplumbingservices',
+    // Read on the public profile 17 Nov 2026 (R2, lead). Update `checked` whenever the numbers are re-read.
+    instagramStats: { posts: 34, followers: 653, verified: true, checked: '17 Nov 2026' },
   },
 } as const;

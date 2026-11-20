@@ -3,7 +3,6 @@
 // The form is data-estimate-form (forms.ts) at #estimate (the mobile call bar's "Free estimate" target).
 import Base from '../layouts/Base.astro';
 import ConHero from '../components/contact/ConHero.astro';
-import ConWays from '../components/contact/ConWays.astro';
 import ConForm from '../components/contact/ConForm.astro';
 import ConShop from '../components/contact/ConShop.astro';
 import ConOther from '../components/contact/ConOther.astro';
@@ -19,7 +18,6 @@ const path = '/contact';
   path={path} og="van-night" ogAlt="The Glass Plumbing Services van with the phone number on its side"
   jsonld={[contactPageSchema(path), crumbsLd('Contact', path), faqLd(CONTACT_FAQ)]} estimate="#estimate">
   <ConHero />
-  <ConWays />
   <ConForm />
   <ConShop />
   <ConOther />

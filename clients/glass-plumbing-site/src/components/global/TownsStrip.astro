@@ -1,7 +1,7 @@
 ---
 // Towns strip (Figma "Towns strip", identical on 11 frames: services, water heaters, areas, Seminole, about, contact,
 // reviews, our work, FAQ, thank-you, privacy). Ink2 band 176 px (252 on phones): powder mono label, then the towns in
-// Figma's order: the six bold underlined ones are links (Seminole -> its page, the others -> their row on /areas), the
+// Figma's order: the six bold underlined ones are links (Seminole -> its page, the others -> /areas; R2: no #hash links), the
 // rest plain text, powder "·" between them (phones: no dots, 16 px gaps). Place it right above the footer:
 //   import TownsStrip from '../components/global/TownsStrip.astro';  <TownsStrip />
 import { TOWNS } from '../../data/towns';
@@ -12,7 +12,7 @@ const LINKED = 6;
 const items = ORDER.map((name, i) => {
   const t = TOWNS.find((x) => x.name === name);
   if (!t) throw new Error(`TownsStrip: ${name} is not in towns.ts`);
-  return { name, href: i < LINKED ? (t.page ?? `/areas#town-${t.slug}`) : undefined };
+  return { name, href: i < LINKED ? (t.page ?? '/areas') : undefined };
 });
 ---
 <section class="tst" aria-labelledby="tst-h">
@@ -32,6 +32,11 @@ const items = ORDER.map((name, i) => {
   .tst-list li:not(:last-child)::after { content: '·'; margin: 0 20px 0 10px; color: var(--powder); }
   .tst-list a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .25s; }
   .tst-list a:hover { color: var(--powder); }
+  /* R2 hit areas (lead): invisible box, >= 24 px tall on desktop, >= 44 px on phones; no visual change. */
+  .tst-list a { position: relative; }
+  .tst-list a::after { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; height: 24px; translate: 0 -50%; }
+  @media (max-width: 1023px) { .tst-list a::after { height: 44px; } }
+
   .tst-list a:focus-visible { outline-color: var(--powder); }
   @media (max-width: 1279px) { .tst { height: auto; padding-bottom: 40px; } }
   @media (max-width: 767px) {

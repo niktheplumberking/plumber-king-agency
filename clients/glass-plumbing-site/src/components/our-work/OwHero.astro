@@ -2,7 +2,6 @@
 // Our work hero (Figma 727:993 "Hero" y 172 h 690 / 729:1033 y 158 h 540). Ink band, three photos with steel tags
 // (phones: a clipped swipe row with mono captions). Photos mapped by hash (IMAGE-HASHES.md).
 import '../contact/cx.css';
-import Crumbs from '../contact/Crumbs.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
 const shots = [
@@ -13,7 +12,6 @@ const shots = [
 ---
 <section class="cx-sec cx-ink oh on-ink" data-m-section data-m-hero aria-labelledby="oh-h">
   <div class="wrap">
-    <Crumbs label="Our work" />
     <Eyebrow tone="light" class="oh-eb"><span class="d">From our Instagram · @glassplumbingservices</span><span class="m">From our Instagram</span></Eyebrow>
     <h1 id="oh-h" class="cx-h oh-h" data-t="2">Recent Work <span class="tone">Across Pinellas</span></h1>
     <p class="oh-lead lead" data-t="3" data-fx="nudge">Real jobs, real photos, straight from the van. 34 posts and counting.</p>
@@ -31,8 +29,8 @@ const shots = [
   </div>
 </section>
 <style>
-  .oh { padding: 44px 0 90px; }
-  .oh :global(.oh-eb) { margin-top: 29px; }
+  .oh { padding: 76px 0 90px; }
+  .oh :global(.oh-eb) { margin-top: 0; }
   .oh :global(.oh-eb .m), .oh-swipe { display: none; }
   .oh-h { --fs: 76px; --fs-m: 40px; margin-top: 14px; line-height: 1.04; }
   .oh-lead { margin-top: 18px; max-width: 520px; color: var(--white); }
@@ -47,8 +45,8 @@ const shots = [
     .oh-tag { width: auto; right: 16px; }
   }
   @media (max-width: 767px) {
-    .oh { padding: 24px 0 45px; }
-    .oh :global(.oh-eb) { margin-top: 15px; }
+    .oh { padding: 44px 0 45px; }
+    .oh :global(.oh-eb) { margin-top: 0; }
     .oh :global(.oh-eb .d) { display: none; } .oh :global(.oh-eb .m) { display: inline; }
     .oh-h { margin-top: 10px; line-height: 1.02; }
     .oh-h .tone { display: block; }

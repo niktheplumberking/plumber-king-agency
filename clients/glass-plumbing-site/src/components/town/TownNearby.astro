@@ -1,6 +1,6 @@
 ---
 // /areas/seminole "Nearby towns" (Figma y 5943 h 260 / mobile y 5518 h 306). White. Three cards, straight-line miles from
-// towns.ts, each to its row on /areas (no town pages yet besides Seminole).
+// towns.ts, each to /areas (no town pages yet besides Seminole; R2: no cross-page hash links).
 import { TOWNS } from '../../data/towns';
 const near = ['largo', 'pinellas-park', 'madeira-beach'].map((s) => TOWNS.find((t) => t.slug === s)!);
 ---
@@ -9,7 +9,7 @@ const near = ['largo', 'pinellas-park', 'madeira-beach'].map((s) => TOWNS.find((
     <h2 id="tnear-h" class="tn-k" data-t="1">Nearby towns</h2>
     <ul class="tn-grid" role="list" data-t="3" data-stagger>
       {near.map((t) => (
-        <li><a class="tn" href={t.page ?? `/areas#town-${t.slug}`}>
+        <li><a class="tn" href={t.page ?? '/areas'}>
           <span class="tn-t">Plumber in {t.name}</span>
           <span class="tn-mi">{t.mi} mi from base<span class="sr-only"> (straight line)</span></span>
           <svg class="tn-ar" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true"><path d="M1 5h10M7 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>

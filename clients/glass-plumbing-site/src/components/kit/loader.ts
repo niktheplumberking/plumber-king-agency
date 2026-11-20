@@ -1,15 +1,18 @@
-// Loader (global/Loader.astro), Glass look: a frost poster with the logo, one big housing that fills with water while the
-// page loads, and a mono "000 / 100" gauge. Same API and handoff as before (motion.ts relies on it):
+// Loader (global/Loader.astro), "Clear Water" (revision round 2: the same family as the page curtain, kit/water.ts). The
+// screen is the housing: while the page loads, powder water, then deep water, then the clear frost layer rise from the
+// bottom with the count (meniscus surfaces, a slow swell while they wait); Kody's logo and a mono "042 / 100" gauge sit on a
+// spec plate that floats on top. At 100 the screen is full; the plate sinks and the water drains down and away exactly
+// like the curtain's reveal (front layer first), and the page appears from the top. Same API and handoff as before:
 //   runLoader({ onCover, onDone })  onCover: the page may take its pre-states (still fully covered).
-//                                   onDone: the blinds are ~75 % off-screen: header + hero timeline + Lenis start here.
-// Timing: the count runs 0 -> 100 over ~1.2 s with surges and stalls (holds at 99 until `load`, 100 forced at 1.8 s); the
-// water level follows the count (CSS transition on --p, so it moves smoothly between steps); a 0.45 s hold at 100; then
-// the exit (~0.85 s): the stage fades and the 8 blinds slide off alternately left / right (0.6 s power2.inOut, stagger
-// 0.012 s), each with a powder band on its moving edge. onDone fires 0.6 s into the exit (blinds ~75 % across). Max ~3.2 s.
-// Skip: a click, tap or key goes straight to 100 and exits. One writer per property: GSAP xPercent on .ld-blind, opacity on
-// .ld-stage / .ld-skip; the water moves only through the --p custom property.
+//                                   onDone: at 55 % of the drain (the H1 clears): header + hero timeline + Lenis start.
+// Timing: count 0 -> 100 over ~1.2 s with surges and stalls (holds at 99 until `load`, 100 forced at 1.8 s); the water
+// follows the count (smoothed); at 100 it tops up (0.35 s), holds 0.15 s, then drains (1.05 s). Max ~3.35 s.
+// Skip: a click, tap or key goes straight to the top-up and drain. One writer per property: path `d` via draw(), --p not
+// used any more; .ld-plate opacity/transform and .ld-hud opacity by GSAP here.
 // html.cv (Base.astro): sections below the hero skip layout under the loader; they are let back in after `load`.
 import { gsap } from 'gsap';
+import { draw, sheetOf } from './water';
+import { drain } from './curtain';
 
 // Surges and stalls like a real load (time, progress knots).
 const KNOTS = [[0, 0], [0.18, 0.22], [0.3, 0.27], [0.55, 0.61], [0.68, 0.66], [0.86, 0.93], [1, 1]];
@@ -25,6 +28,7 @@ export function runLoader({ onCover = () => {}, onDone }: { onCover?: () => void
   const ld = document.querySelector<HTMLElement>('[data-loader]');
   if (!ld || !html.classList.contains('intro')) { html.classList.remove('cv'); onDone(); return; }
   const num = ld.querySelector<HTMLElement>('[data-ld-num]');
+  const sheet = sheetOf(ld);
   (window as any).__pbpLenis?.stop();
   // Base.astro .cv: the sections below the hero skipped layout for the first paint. Once the page has loaded they are let
   // back in one at a time (small tasks, no long main-thread block), all under the cover.
@@ -42,13 +46,22 @@ export function runLoader({ onCover = () => {}, onDone }: { onCover?: () => void
   if (document.readyState === 'complete') cvStart(); else window.addEventListener('load', cvStart, { once: true });
 
   const t0 = performance.now();
-  const INTRO = 250, COUNT = 1200, FORCE = 1800, STEP = 90, HOLD = 450;
+  const INTRO = 250, COUNT = 1200, FORCE = 1800, STEP = 90;
   let loaded = document.readyState === 'complete';
   if (!loaded) window.addEventListener('load', () => { loaded = true; }, { once: true });
   let shown = -1, timer = 0, leaving = false;
+  // The water follows the count, smoothed, with a slow swell on its surfaces while it waits (gsap ticker, loader only).
+  const w = { v: 0, target: 0, ph: 0, follow: true };
+  draw(sheet, 0);
+  const swell = () => {
+    if (w.follow) w.v += (w.target - w.v) * 0.08;
+    w.ph += 0.05;
+    draw(sheet, w.v, false, 1.4, w.ph);
+  };
+  gsap.ticker.add(swell);
   const show = (p: number) => {
     shown = p;
-    ld.style.setProperty('--p', String(p / 100));
+    w.target = (p / 100) * 0.92; // the last 8 % is the top-up at the end
     if (num) num.textContent = String(p).padStart(3, '0');
   };
   const tick = () => {
@@ -57,34 +70,40 @@ export function runLoader({ onCover = () => {}, onDone }: { onCover?: () => void
     if (p >= 100 && !loaded && el < FORCE) p = 99; // hold at 99 while the page is still loading, up to the cap
     if (el >= FORCE) p = 100;
     if (p > shown) show(p);
-    if (shown >= 100) { leave(HOLD); return; }
+    if (shown >= 100) { leave(); return; }
     timer = window.setTimeout(tick, STEP);
   };
   timer = window.setTimeout(tick, INTRO);
 
-  const leave = (hold: number) => {
+  const leave = () => {
     if (leaving) return; leaving = true; clearTimeout(timer);
     releaseCv(true); // whatever is still skipped lays out now, under the cover (Base.astro .cv)
     if (shown < 100) show(100);
-    onCover(); // fully covered: the hero takes its start states unseen
-    const blinds = Array.from(ld.querySelectorAll<HTMLElement>('.ld-blind'));
     let handed = false;
     const hand = () => {
       if (handed) return; handed = true;
       (window as any).__pbpLenis?.start();
       onDone();
     };
-    gsap.timeline({ delay: hold / 1000, onComplete: () => {
-      html.classList.remove('intro'); ld.style.display = 'none';
-      document.querySelectorAll<HTMLElement>('[style*="content-visibility"]').forEach((el) => { el.style.contentVisibility = ''; });
-      try { sessionStorage.setItem('gps-intro', '1'); } catch (e) { /* storage blocked: the loader may show again */ }
-      hand();
-    } })
-      .to(ld.querySelectorAll('.ld-stage, .ld-skip'), { autoAlpha: 0, duration: 0.2, ease: 'sine.inOut' }, 0)
-      .to(blinds, { xPercent: (i: number) => (i % 2 ? 101 : -101), duration: 0.6, ease: 'power2.inOut', stagger: 0.012 }, 0.15)
-      .add(hand, 0.15 + 0.6 * 0.75);
+    // Top up to full (0.35 s), then the screen is the clear front layer: the page takes its pre-states unseen, the
+    // backdrop goes, and the water drains like the curtain's reveal.
+    w.follow = false;
+    gsap.timeline()
+      .to(w, { v: 1, duration: 0.35, ease: 'sine.inOut' })
+      .to(ld.querySelectorAll('.ld-hud, .ld-skip'), { autoAlpha: 0, duration: 0.25, ease: 'sine.inOut' }, 0)
+      .add(() => {
+        gsap.ticker.remove(swell);
+        onCover(); // fully covered: the hero takes its start states unseen
+        ld.classList.add('is-open'); // backdrop off (under the full front layer, so nothing shows)
+        drain(ld, hand, () => {
+          html.classList.remove('intro'); ld.style.display = 'none';
+          document.querySelectorAll<HTMLElement>('[style*="content-visibility"]').forEach((el) => { el.style.contentVisibility = ''; });
+          try { sessionStorage.setItem('gps-intro', '1'); } catch (e) { /* storage blocked: the loader may show again */ }
+          hand();
+        }, ld.querySelector<HTMLElement>('.ld-plate'), 0.15);
+      }, 0.36);
   };
-  const skip = () => leave(200);
+  const skip = () => leave();
   ld.addEventListener('pointerdown', skip, { once: true });
   window.addEventListener('keydown', skip, { once: true });
 }

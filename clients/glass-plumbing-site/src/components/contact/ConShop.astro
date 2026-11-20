@@ -1,44 +1,100 @@
 ---
-// "Largo base" spec plate + Pinellas map (Figma "Shop and map" y 2306 h 720 / mobile y 2342 h 577). A meniscus seam dips
-// from the ink band above. Street address: site.ts says "Largo, FL" only until Kody confirms (Figma shows the street).
+// "Largo base" + Pinellas map, round 2 (audit against rules 14-18: plate top-left, map right, empty space under the plate =
+// left/right slop). Rebuilt as one centred composition: the whole county map (uncropped, so the pin stays on Largo) in the
+// middle, the "Largo base" spec plate bolted over its left edge and the 24/7 line card over its right edge (depth), and a
+// pin on Largo that drops in and rings when the map enters (CSS, three rings, then still). The plate's phone and email are
+// links. 21st.dev refs: "Location Map" (Mazyar kawa: pulsing marker) + "Expanded Map" (dev.shejanmahamud: card over map),
+// re-skinned with the kit Plate and Glass's powder offset shadows. A meniscus seam dips from the ink band above.
+// Street address: site.ts says "Largo, FL" only until Kody confirms (Figma shows the street).
 import './cx.css';
 import Plate from '../kit/Plate.astro';
 import Seam from '../kit/Seam.astro';
+import Eyebrow from '../kit/Eyebrow.astro';
+import Btn from '../kit/Btn.astro';
 import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
-const rows: [string, string][] = [
+const rows: [string, string | { text: string; href: string; external?: boolean }][] = [
   ['Name', SITE.name],
   ['Base', `${SITE.city}, ${SITE.region}`],
-  ['Phone', SITE.phone],
-  ['Email', SITE.email],
+  ['Phone', { text: SITE.phone, href: SITE.tel }],
+  ['Email', { text: SITE.email, href: `mailto:${SITE.email}` }],
   ['Hours', '24/7 emergency line'],
-  ['Licence', `FL ${SITE.licence.number}`],
+  ['Licence', { text: `FL ${SITE.licence.number}`, href: SITE.licence.url, external: true }],
 ];
 ---
-<section class="cx-sec cx-white cs" data-m-section aria-label="Our base in Largo">
+<section class="cx-sec cx-white cs" data-m-section aria-labelledby="cs-h">
   <Seam from="var(--ink)" to="var(--white)" />
-  <div class="wrap cs-g">
-    <div class="cs-plate" data-t="4" data-fx="left">
-      <Plate rows={rows} title="Largo base" w={480} class="cs-p" />
+  <div class="wrap">
+    <div class="shead cs-head">
+      <Eyebrow text="Largo base" tone="pdeep" class="cs-eb" />
+      <h2 id="cs-h" class="cx-h cs-h" data-t="2"><span class="ln">Based in Largo.</span> <span class="ln tone">All of {SITE.county}.</span></h2>
     </div>
-    <figure class="cs-map" data-t="4" data-fx="frame">
-      <Img name="map-pinellas" alt="Map of Pinellas County, from Clearwater and Dunedin down to St. Petersburg, with Largo in the middle" sizes="(min-width: 1280px) 660px, (min-width: 768px) 80vw, 92vw" fit="cover" focus="50% 50%" />
-    </figure>
+    <div class="cs-stage">
+      <figure class="cs-map" data-t="4" data-fx="frame" data-pin-map data-no-px>
+        <Img name="map-pinellas" alt="Map of Pinellas County, from Tarpon Springs and Clearwater down to St. Petersburg, with Largo in the middle" sizes="(min-width: 1280px) 460px, (min-width: 768px) 46vw, 92vw" fit="cover" focus="50% 50%" box={700 / 1000} boxM={700 / 1000} />
+        <span class="cs-pin" aria-hidden="true"><span class="cs-ring"></span><span class="cs-ring"></span><span class="cs-ring"></span><span class="cs-drop"></span></span>
+        <span class="cs-flag" aria-hidden="true">Glass Plumbing · Largo</span>
+      </figure>
+      <div class="cs-plate" data-t="4" data-fx="left">
+        <Plate rows={rows} title="Largo base" w={420} kx={86} size={12} pitch={24} shadow="pdeep" class="cs-p" />
+      </div>
+      <div class="cs-line on-ink" data-t="4" data-fx="right">
+        <p class="cs-ll">Night or weekend leak?</p>
+        <p class="cs-lt">The 24/7 line is the same number.</p>
+        <Btn look="call" label="Call now" sub={SITE.phone} href={SITE.tel} block class="cs-btn" />
+      </div>
+    </div>
   </div>
 </section>
+<script>
+  // The pin drops and rings once the map is half in view (class only; CSS animations, 3 rings then still).
+  document.querySelectorAll<HTMLElement>('[data-pin-map]').forEach((m) => {
+    if (!document.documentElement.classList.contains('motion') || !('IntersectionObserver' in window)) { m.classList.add('is-pinned'); return; }
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { m.classList.add('is-pinned'); io.disconnect(); } }, { threshold: 0.5 });
+    io.observe(m);
+  });
+</script>
 <style>
-  .cs { padding: 120px 0 100px; }
-  .cs-g { display: grid; grid-template-columns: 480px 660px; justify-content: space-between; align-items: start; }
-  .cs-plate :global(.cs-p) { box-shadow: 6px 6px 0 var(--pdeep); }
-  .cs-map { position: relative; height: 500px; border: 2px solid var(--ink); border-radius: 4px; overflow: hidden; box-shadow: 12px 12px 0 var(--powder); }
+  .cs { padding: 120px 0 120px; }
+  .cs-head { display: grid; justify-items: center; text-align: center; }
+  .cs-head :global(.cs-eb) { justify-content: center; }
+  .cs-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
+  .cs-stage { position: relative; display: grid; grid-template-columns: 1fr 460px 1fr; align-items: center; margin-top: 48px; }
+  .cs-map { grid-column: 2; grid-row: 1; position: relative; aspect-ratio: 700 / 1000; margin: 0; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden;
+    box-shadow: 12px 12px 0 var(--powder); }
+  .cs-map :global(.img) { position: absolute; inset: 0; }
+  /* Largo on the map image: 34.7 % across, 43.6 % down (the label); the drop's tip sits just above it. */
+  .cs-pin { position: absolute; left: 34.7%; top: 41.5%; width: 0; height: 0; z-index: 2; }
+  .cs-drop { position: absolute; left: -15px; top: -40px; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; rotate: -45deg; background: var(--ink);
+    box-shadow: inset 0 0 0 8px var(--ink), inset 0 0 0 15px var(--powder); }
+  .cs-ring { position: absolute; left: -14px; top: -7px; width: 28px; height: 14px; border-radius: 50%; border: 2px solid var(--pdeep); opacity: 0; }
+  html.motion .cs-map:not(.is-pinned) .cs-drop { translate: 0 -40px; opacity: 0; }
+  .cs-drop { transition: translate .7s var(--ease-back), opacity .4s var(--ease-io); }
+  html.motion .cs-map.is-pinned .cs-ring { animation: cs-ring 1.6s var(--ease-io) 3; }
+  html.motion .cs-map.is-pinned .cs-ring:nth-child(2) { animation-delay: .5s; }
+  html.motion .cs-map.is-pinned .cs-ring:nth-child(3) { animation-delay: 1s; }
+  @keyframes cs-ring { 0% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(2.6); } }
+  .cs-flag { position: absolute; left: calc(34.7% + 22px); top: calc(41.5% - 52px); z-index: 2; padding: 6px 9px; border-radius: 3px; background: var(--white); border: 1.5px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink); font: 700 10px/13px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .cs-plate { grid-column: 1; grid-row: 1; justify-self: end; z-index: 3; margin-right: -90px; rotate: -2deg; }
+  .cs-line { grid-column: 3; grid-row: 1; justify-self: start; align-self: end; z-index: 3; width: 320px; margin: 0 0 70px -70px; padding: 22px 22px 22px; border-radius: 8px;
+    background: var(--ink); color: var(--white); box-shadow: 10px 10px 0 var(--powder); rotate: 2deg; }
+  .cs-ll { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .cs-lt { margin: 8px 0 18px; font: 800 22px/1.15 var(--f-h); letter-spacing: -0.02em; }
   @media (min-width: 768px) and (max-width: 1279px) {
-    .cs-g { grid-template-columns: 1fr; row-gap: 48px; }
-    .cs-map { height: auto; aspect-ratio: 660 / 500; }
+    .cs-stage { grid-template-columns: 1fr 46% 1fr; }
+    .cs-plate { margin-right: -120px; }
+    .cs-plate :global(.cs-p) { width: 340px !important; }
+    .cs-line { width: 260px; margin-left: -110px; }
   }
   @media (max-width: 767px) {
-    .cs { padding: 72px 0 56px; }
-    .cs-g { grid-template-columns: 1fr; row-gap: 28px; }
+    .cs { padding: 72px 0 64px; }
+    .cs-h { margin-top: 12px; }
+    .cs-stage { grid-template-columns: 1fr; margin-top: 28px; }
+    .cs-map { grid-column: 1; box-shadow: 8px 8px 0 var(--powder); }
+    .cs-plate { grid-column: 1; grid-row: 2; justify-self: stretch; margin: -70px 10px 0; rotate: -1deg; }
     .cs-plate :global(.cs-p) { width: 100% !important; }
-    .cs-map { height: 260px; box-shadow: 8px 8px 0 var(--powder); }
+    .cs-line { grid-column: 1; grid-row: 3; justify-self: stretch; width: auto; margin: 24px 0 0; rotate: 0deg; box-shadow: 7px 7px 0 var(--powder); }
+    .cs-lt { font-size: 19px; }
   }
 </style>

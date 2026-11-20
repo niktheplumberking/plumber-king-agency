@@ -1,89 +1,273 @@
 ---
-// Home "Why us" (Figma 712:448 y 5097 h 926; mobile 715:560 y 5761 h 1040). Frost band. A water "test strip": five pads,
-// each the number of the 16 Google reviews (read 17 Nov 2026) that mention that thing; then two review quotes word for word.
-// Counts are the Figma's own count of reviews.ts (Kody to confirm nothing changed). On phones the strip stands upright.
+// Home "Why us" (round 2 rebuild, Nick 20 Nov: "really, really terrible", text only). Frost band, centred head.
+// A proof board: the rating line (16 of 16 reviews are five stars), the water "test strip" of six pads, each pad the number
+// of the 16 Google reviews (read 17 Nov 2026) that mention that thing, with a 16-cell bar that fills as the strip scrolls
+// through (kit/scrub.ts). Each pad is a tab: picking one (tap, click, arrows, or hovering it with a mouse) lights the
+// reviewers who said it in the roll of 16 and swaps the reading below to their words, word for word, the matching words
+// underlined by a powder waterline that draws in (idea from 21st.dev dhxwhy/highlight-testimonial-section, adapted: no React,
+// no auto-rotate, no highlighter block: /reviews uses the highlighter) and the stats board of uilayout.contact/advanced-stats.
+// Counts recounted from src/data/reviews.ts on 20 Nov 2026 (the `who` lists below ARE the count; every excerpt and mark is
+// checked against the review text at build time by quote(), so nothing can drift).
+// No JS: every reading shows, one under the other. Reduced motion: bars full, highlights already on, swaps instant.
 import Eyebrow from '../kit/Eyebrow.astro';
-import { quote } from './fig';
-const pads = [
-  { n: 5, t: 'On time', dark: true },
-  { n: 2, t: 'Explains everything', dark: false },
-  { n: 6, t: 'Fair price', dark: true },
-  { n: 4, t: 'Same or next day', dark: true },
-  { n: 2, t: 'Cleans up after', dark: false },
+import { STARS, quote } from './fig';
+import { REVIEWS } from '../../data/reviews';
+
+type Hit = { name: string; text: string; mark: string };
+const hit = (name: string, text: string, mark: string): Hit => {
+  const q = quote(name, text);
+  if (!q.text.includes(mark)) throw new Error(`WhyUs: mark "${mark}" not in excerpt of ${name}`);
+  return { ...q, mark };
+};
+const tallies: { id: string; t: string; hits: Hit[] }[] = [
+  { id: 'time', t: 'On time', hits: [
+    hit('Cody Weaver', 'They do what they say they will and show up on time!', 'show up on time'),
+    hit('Jordan Carlson', 'Zak was professional, punctual, and very friendly.', 'punctual'),
+    hit('Michael Marks', 'Zak and Chase were on time, explained everything in detail, made solid recommendations', 'on time'),
+    hit('David Peek', 'Always very responsive to communications and always on time as scheduled', 'always on time as scheduled'),
+    hit('Cary Cannon', 'He showed up on time, explained everything clearly, and did excellent work without overcharging.', 'showed up on time'),
+  ] },
+  { id: 'explain', t: 'Explains everything', hits: [
+    hit('Michael Marks', 'Zak and Chase were on time, explained everything in detail, made solid recommendations', 'explained everything in detail'),
+    hit('Cary Cannon', 'He showed up on time, explained everything clearly, and did excellent work without overcharging.', 'explained everything clearly'),
+  ] },
+  { id: 'price', t: 'Fair price', hits: [
+    hit('Kevin Kelleman', 'Needed a new Water Heater, called and had one installed the next day at a great price.', 'at a great price'),
+    hit('Parker L', 'He was reliable, professional, knowledgeable, and did great work at an affordable price!', 'at an affordable price'),
+    hit('Seth Nye', 'Also, was able to unclog my sewage lines shortly after my new installation, all for a very good price.', 'for a very good price'),
+    hit('Emily Van Den Langenberg', 'They are efficient, knowledgeable, and their prices are always fair.', 'their prices are always fair'),
+    hit('David Peek', 'Always very responsive to communications and always on time as scheduled and their prices are very reasonable.', 'their prices are very reasonable'),
+    hit('Cary Cannon', 'He was prompt, honest, and affordable.', 'affordable'),
+  ] },
+  { id: 'fast', t: 'Same or next day', hits: [
+    hit('Kevin Kelleman', 'Needed a new Water Heater, called and had one installed the next day at a great price.', 'had one installed the next day'),
+    hit('Parker L', 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.', 'came out the same day I called'),
+    hit('Seth Nye', 'Mr. Glass was here same day to replace pipes/ fittings and new kit and left here good as new!', 'here same day'),
+    hit('Jen James', 'I took a few pictures of the valve that needed replaced and he was at my home the next day !!', 'at my home the next day'),
+  ] },
+  { id: 'pro', t: 'Professional', hits: [
+    hit('Eduardo “EddieZoRz” Perea', 'Professional, reliable, and efficient, turned a plumbing nightmare into a manageable situation.', 'Professional'),
+    hit('Cody Weaver', 'He was efficient and professional throughout the whole experience.', 'efficient and professional'),
+    hit('Parker L', 'He was reliable, professional, knowledgeable, and did great work at an affordable price!', 'professional'),
+    hit('Jordan Carlson', 'Zak was professional, punctual, and very friendly.', 'professional'),
+    hit('Peter Van Buskirk', 'Zac and Kody Glass are an extremely qualified and profeesional plumbing team!', 'extremely qualified and profeesional'),
+    hit('Greg Letsch', 'Zach was very professional and well versed in his knowledge.', 'very professional'),
+  ] },
+  { id: 'clean', t: 'Cleans up after', hits: [
+    hit('Jacob Gars', 'He even went above and beyond to clean the bathroom spotless after!', 'clean the bathroom spotless after'),
+    hit('Michael Marks', 'did the little extras (cleaning up, performance & look) that turn a really good outcome into a great one.', 'cleaning up'),
+  ] },
 ];
-const q1 = quote('Michael Marks', 'Zak and Chase were on time, explained everything in detail, made solid recommendations, and did the little extras (cleaning up, performance & look) that turn a really good outcome into a great one.');
-const q2 = quote('Kevin Kelleman', 'Needed a new Water Heater, called and had one installed the next day at a great price.');
+const SEL = 2; // Fair price open first (the most mentioned, with Professional)
+const TOTAL = REVIEWS.length; // 16
+const short = (n: string) => { const p = n.replace(/“[^”]*”\s*/, '').split(/\s+/); return p.length > 1 ? `${p[0]} ${p[1][0]}.` : p[0]; };
+const initials = (n: string) => n.replace(/“[^”]*”\s*/, '').split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+const roll = REVIEWS.map((r) => ({ name: r.name, s: short(r.name), i: initials(r.name) }));
+const idx = (name: string) => REVIEWS.findIndex((r) => r.name === name);
+const split = (h: Hit) => { const a = h.text.indexOf(h.mark); return [h.text.slice(0, a), h.mark, h.text.slice(a + h.mark.length)]; };
+const allFive = REVIEWS.length; // reviews.ts: "All 5 stars."
 ---
 <section class="why" aria-labelledby="why-h" data-m-section>
   <div class="wrap">
     <div class="why-head">
-      <div>
-        <Eyebrow text="What 16 reviews say" />
-        <h2 id="why-h" class="h2 why-h" data-t="2">Why they call us <span class="tone">again and again.</span></h2>
+      <Eyebrow text="What 16 reviews say" class="why-eb" />
+      <h2 id="why-h" class="h2 why-h" data-t="2">Why they call us <span class="tone">again and again.</span></h2>
+      <p class="why-lead" data-t="3">We read all {TOTAL} Google reviews on 17 Nov 2026 and counted what people mention most. Pick one to read their words.</p>
+    </div>
+
+    <div class="board" data-why data-t="4">
+      <div class="rate">
+        <span class="rate-stars"><Fragment set:html={STARS(140, 24)} /></span>
+        <p class="rate-t"><b>{allFive} of {TOTAL}</b> reviews are five stars</p>
+        <p class="rate-k">Google · read 17 Nov 2026</p>
       </div>
-      <p class="why-lead" data-t="3">We read all 16 Google reviews on 17 Nov 2026 and counted what people mention most.</p>
-    </div>
-    <div class="strip" data-t="4">
-      <p class="hdl"><b>Test strip</b><span>16 reviews</span><span class="dt">17 Nov 2026</span></p>
-      <ul class="pads" role="list" data-stagger data-t="4">
-        {pads.map((p) => (
-          <li><span class:list={['pad', { dk: p.dark }]}><b data-count={p.n}>{p.n}</b><span>of 16</span></span><span class="pt">{p.t}</span></li>
-        ))}
-      </ul>
-    </div>
-    <div class="qs">
-      <figure data-t="3"><blockquote><p>“{q1.text}”</p></blockquote><figcaption>{q1.name} · Google</figcaption></figure>
-      <figure class="q2" data-t="3"><blockquote><p>“{q2.text}”</p></blockquote><figcaption>{q2.name} · Google</figcaption></figure>
+
+      <div class="strip" data-scrub data-start="top 85%" data-end="top 35%" data-start-m="top 90%" data-end-m="bottom 60%">
+        <p class="hdl" aria-hidden="true"><b>Test strip</b><span>{TOTAL} reviews</span></p>
+        <div class="pads" role="tablist" aria-label="What the reviews mention">
+          {tallies.map((t, i) => (
+            <button class="pad" type="button" role="tab" id={`why-tab-${t.id}`} aria-controls={`why-p-${t.id}`}
+              aria-selected={i === SEL ? 'true' : 'false'} tabindex={i === SEL ? 0 : -1} data-i={i}>
+              <span class="pn"><b>{t.hits.length}</b><span class="of">of {TOTAL}</span></span>
+              <span class="pl">{t.t}</span>
+              <span class="bar" aria-hidden="true"><span class="bar-on" style={`width:${(t.hits.length / TOTAL) * 100}%;--n:${t.hits.length}`}><span class="bar-f" data-scrub-fill data-win={`${0.05 + i * 0.1},${0.45 + i * 0.1}`}></span></span></span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="read">
+        <ul class="roll" role="list" aria-hidden="true">
+          {roll.map((r, k) => (
+            <li class:list={['who', { on: tallies[SEL].hits.some((h) => idx(h.name) === k) }]} data-k={k}>
+              <span class="disc">{r.i}</span><span class="wn">{r.s}</span>
+            </li>
+          ))}
+        </ul>
+        <div class="panels">
+          {tallies.map((t, i) => (
+            <div class:list={['pnl', { 'is-active': i === SEL }]} role="tabpanel" id={`why-p-${t.id}`} aria-labelledby={`why-tab-${t.id}`}
+              data-who={t.hits.map((h) => idx(h.name)).join(',')}>
+              <p class="pnl-h"><b>{t.hits.length} of {TOTAL}</b> reviewers mention <span class="pnl-t">“{t.t.toLowerCase()}”</span></p>
+              <ul class="slips" role="list" tabindex="0" aria-label={`What reviewers said about ${t.t.toLowerCase()}`}>
+                {t.hits.map((h, j) => {
+                  const [a, m, b] = split(h);
+                  return (
+                    <li class="slip" style={`--j:${j}`}>
+                      <blockquote><p>“{a}<mark>{m}</mark>{b}”</p></blockquote>
+                      <p class="by"><span>{h.name}</span><Fragment set:html={STARS(55, 9)} /><span class="sr-only">, five stars on Google</span></p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+      <a class="all" href="/reviews">Read all {TOTAL} reviews, word for word →</a>
     </div>
   </div>
 </section>
+
+<script>
+  // Tabs: click / tap, arrows + Home / End (roving tabindex), and a short hover dwell on fine pointers. The panel swap is a
+  // CSS opacity transition (all panels stay rendered in one grid cell: no display toggle). The roll of 16 lights by class.
+  const board = document.querySelector<HTMLElement>('[data-why]');
+  if (board) {
+    const tabs = Array.from(board.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const pnls = Array.from(board.querySelectorAll<HTMLElement>('.pnl'));
+    const who = Array.from(board.querySelectorAll<HTMLElement>('.who'));
+    board.classList.add('is-tabs');
+    const pick = (i: number, focus = false) => {
+      tabs.forEach((t, k) => { const on = k === i; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      pnls.forEach((p, k) => { p.classList.toggle('is-active', k === i); p.toggleAttribute('inert', k !== i); });
+      const lit = new Set((pnls[i].dataset.who || '').split(',').map(Number));
+      who.forEach((w) => w.classList.toggle('on', lit.has(Number(w.dataset.k))));
+      if (focus) tabs[i].focus();
+    };
+    pick(tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true'));
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => pick(i));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length; let j = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = (i + 1) % n;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = (i - 1 + n) % n;
+        else if (e.key === 'Home') j = 0; else if (e.key === 'End') j = n - 1;
+        if (j >= 0) { e.preventDefault(); pick(j, true); }
+      });
+      let tm = 0;
+      t.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse' && matchMedia('(hover: hover)').matches) tm = window.setTimeout(() => pick(i), 140); });
+      t.addEventListener('pointerleave', () => window.clearTimeout(tm));
+    });
+  }
+</script>
+
 <style>
-  .why { position: relative; background: var(--frost); padding: 110px 0 106px; }
-  .why-head { display: grid; grid-template-columns: 680px 480px; }
+  .why { position: relative; background: var(--frost); padding: 112px 0 112px; }
+  .why-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .why-h { margin-top: 16px; } .why-h .tone { display: block; }
-  .why-lead { margin-top: 46px; font-size: 17px; line-height: 1.5; }
-  .strip { display: flex; height: 250px; margin-top: 104px; border: 1px solid var(--frost3); border-radius: 8px; background: var(--white); overflow: hidden; }
-  .hdl { position: relative; display: flex; flex-direction: column; width: 140px; flex: none; padding: 23px 0 0 23px; background: var(--frost2); font-family: var(--f-m); font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
-  .hdl b { font-weight: 700; }
-  .hdl span { margin-top: 5px; font-weight: 500; color: var(--muted); }
-  .hdl .dt { position: absolute; left: 23px; bottom: 25px; font-size: 10px; line-height: 13px; }
-  .pads { display: flex; gap: 25px; margin: 0; padding: 23px 0 0 29px; list-style: none; }
-  .pads li { width: 180px; }
-  .pad { display: flex; flex-direction: column; height: 150px; padding: 10px 20px 0; border-radius: 4px; background: var(--powder); color: var(--ink); }
-  .pad.dk { background: var(--pdeep); color: var(--white); }
-  .pad b { font-family: var(--f-h); font-weight: 800; font-size: 72px; line-height: 1.04; letter-spacing: -.02em; }
-  .pad span { margin-top: 25px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
-  .pt { display: block; margin-top: 14px; font-weight: 700; font-size: 15px; line-height: 23px; }
-  .qs { display: grid; grid-template-columns: 560px 560px; column-gap: 80px; margin-top: 60px; }
-  .qs p { font-family: var(--f-h); font-weight: 700; font-size: 22px; line-height: 1.3; letter-spacing: -.02em; }
-  .qs figcaption { margin-top: 14px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
+  .why-lead { max-width: 560px; margin-top: 20px; font-size: 17px; line-height: 1.5; }
+
+  .board { position: relative; margin-top: 56px; padding: 36px 40px 32px; border: 2px solid var(--ink); border-radius: 8px; background: var(--white); box-shadow: 12px 12px 0 var(--powder); }
+  .rate { display: flex; align-items: center; gap: 20px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .rate-stars { display: flex; }
+  .rate-t { font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.1; letter-spacing: -.02em; }
+  .rate-t b { color: var(--pdeep); }
+  .rate-k { margin-left: auto; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+  /* The test strip: a handle and six pads (tabs). */
+  .strip { display: flex; margin-top: 24px; border: 1px solid var(--frost3); border-radius: 8px; background: var(--frost); }
+  .hdl { display: flex; flex-direction: column; justify-content: center; gap: 4px; width: 112px; flex: none; padding: 0 16px; border-right: 1px solid var(--frost3); font-family: var(--f-m); font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
+  .hdl b { font-weight: 700; } .hdl span { color: var(--muted); }
+  .pads { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; flex: 1; padding: 14px; }
+  .pad {
+    display: flex; flex-direction: column; align-items: flex-start; min-height: 168px; padding: 14px 14px 16px; border: 1.5px solid var(--frost3);
+    border-radius: 6px; background: var(--white); color: var(--ink); text-align: left; font: inherit; cursor: pointer;
+    transition: background-color .45s var(--ease-io), color .45s var(--ease-io), border-color .45s var(--ease-io), translate .45s var(--ease-io), box-shadow .45s var(--ease-io);
+  }
+  .pad:hover { border-color: var(--pdeep); }
+  .pad:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .pad[aria-selected="true"] { background: var(--ink); color: var(--white); border-color: var(--ink); translate: 0 -6px; box-shadow: 6px 6px 0 var(--powder); }
+  .pn { display: flex; align-items: baseline; gap: 6px; }
+  .pn b { font-family: var(--f-h); font-weight: 800; font-size: 64px; line-height: 1; letter-spacing: -.03em; }
+  .of { font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .75; }
+  .pl { margin-top: 10px; font-weight: 700; font-size: 15px; line-height: 1.3; }
+  /* 16 cells; the lit part is count / 16 wide and fills with the scroll. */
+  .bar { position: relative; display: block; width: 100%; height: 10px; margin-top: auto; border-radius: 2px;
+    background: repeating-linear-gradient(90deg, var(--frost2) 0 calc(100% / 16 - 2px), transparent 0 calc(100% / 16)); }
+  .bar-on { position: absolute; left: 0; top: 0; bottom: 0; display: block; }
+  .bar-f { display: block; height: 100%; transform-origin: 0 50%;
+    background: repeating-linear-gradient(90deg, var(--pdeep) 0 calc(var(--cw) - 2px), transparent 0 var(--cw)); }
+  .bar-on { --cw: calc(100% / var(--n)); }
+  .pad[aria-selected="true"] .bar { background: repeating-linear-gradient(90deg, var(--ink3) 0 calc(100% / 16 - 2px), transparent 0 calc(100% / 16)); }
+  .pad[aria-selected="true"] .bar-f { background: repeating-linear-gradient(90deg, var(--powder) 0 calc(var(--cw) - 2px), transparent 0 var(--cw)); }
+
+  /* The reading: roll of 16 + the quotes of the picked pad. */
+  .read { margin-top: 28px; }
+  .roll { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .who { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .disc { display: grid; place-items: center; width: 44px; height: 44px; border: 1.5px solid var(--ink); border-radius: 50%; background: var(--white);
+    font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .02em; border-color: var(--frost3); color: var(--muted); border-style: dashed; transition: border-color .45s var(--ease-io), background-color .45s var(--ease-io), color .45s var(--ease-io), translate .45s var(--ease-io); }
+  .wn { font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; white-space: nowrap; color: var(--muted); transition: color .45s var(--ease-io); }
+  .who.on .wn { color: var(--ink); font-weight: 700; }
+  .who.on .disc { background: var(--pdeep); color: var(--white); border-color: var(--pdeep); border-style: solid; translate: 0 -3px; }
+
+  .panels { margin-top: 24px; }
+  .pnl { min-width: 0; }
+  .pnl + .pnl { margin-top: 32px; }
+  .slips:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 4px; }
+  .pnl-h { font-family: var(--f-m); font-weight: 500; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .pnl-h b { color: var(--ink); font-weight: 700; } .pnl-t { color: var(--pdeep); font-weight: 700; }
+  .slips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 14px 0 0; padding: 0; list-style: none; }
+  .slip { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; padding: 18px 20px 16px; border-left: 4px solid var(--powder); border-radius: 0 6px 6px 0; background: var(--frost); }
+  .slip p { font-family: var(--f-h); font-weight: 700; font-size: 18px; line-height: 1.35; letter-spacing: -.01em; }
+  /* The said words: a powder waterline drawn under them (not the Reviews page's highlighter). */
+  mark { padding: 0 1px 2px; color: var(--pdeep); background: linear-gradient(var(--powder), var(--powder)) left bottom / 100% 4px no-repeat; }
+  .by { display: flex; align-items: center; gap: 10px; font-family: var(--f-m); font-weight: 500; font-size: 11px !important; letter-spacing: .02em; color: var(--pdeep); }
+  .all { display: inline-flex; align-items: center; min-height: 44px; margin-top: 14px; font-weight: 700; font-size: 15px; color: var(--pdeep); text-decoration: underline; text-underline-offset: 4px; }
+  .all:hover { color: var(--ink); }
+
+  /* With JS the panels share one cell (the board keeps the tallest height: nothing below jumps) and cross-fade. */
+  .board.is-tabs .panels { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .board.is-tabs .pnl { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden; transition: opacity .5s var(--ease-io), visibility 0s linear .5s; }
+  .board.is-tabs .pnl.is-active { opacity: 1; visibility: visible; transition: opacity .5s var(--ease-io) .1s, visibility 0s; }
+  /* The highlighter sweeps each time a reading opens (motion only). */
+  :global(html.motion) .board.is-tabs mark { background-size: 0% 4px; transition: background-size .2s var(--ease-io); }
+  :global(html.motion) .board.is-tabs .pnl.is-active mark { background-size: 100% 4px; transition: background-size .7s var(--ease-io) calc(.35s + var(--j) * .08s); }
+  :global(html:not(.motion)) .pad, :global(html:not(.motion)) .who, :global(html:not(.motion)) .disc, :global(html:not(.motion)) .pnl { transition: none !important; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
-    .why-head { grid-template-columns: 1fr; } .why-lead { margin-top: 20px; max-width: 560px; }
-    .strip { height: auto; margin-top: 56px; }
-    .pads { flex: 1; gap: 12px; padding: 20px; }
-    .pads li { flex: 1; width: auto; }
-    .pad { height: 120px; padding: 8px 14px 0; } .pad b { font-size: 52px; } .pad span { margin-top: 12px; }
-    .qs { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+    .board { padding: 28px 24px 24px; }
+    .hdl { display: none; }
+    .pads { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pad { min-height: 140px; } .pn b { font-size: 52px; }
+    .roll { grid-template-columns: repeat(8, minmax(0, 1fr)); row-gap: 14px; }
+    .slips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 767px) {
     .why { padding: 72px 0 80px; }
-    .why-head { display: block; }
     .why-h { margin-top: 10px; }
     .why-lead { margin-top: 12px; font-size: 15px; }
-    .strip { flex-direction: column; height: auto; margin-top: 38px; }
-    .hdl { flex-direction: row; width: auto; height: 44px; padding: 16px 0 0 16px; font-size: 9px; line-height: 12px; }
-    .hdl span, .hdl .dt { position: static; margin: 0; font-weight: 700; color: var(--ink); font-size: 9px; line-height: 12px; }
-    .hdl span::before { content: ' · '; white-space: pre; }
-    .pads { flex-direction: column; gap: 12px; padding: 16px 16px 19px; }
-    .pads li { display: flex; align-items: center; gap: 18px; width: auto; }
-    .pad { width: 72px; height: 72px; flex: none; padding: 8px 0 0 14px; }
-    .pad b { font-size: 40px; }
-    .pad span { margin-top: 2px; font-size: 8px; line-height: 11px; }
-    .pt { margin: 0; font-size: 16px; line-height: 24px; }
-    .qs { display: block; margin-top: 32px; }
-    .qs p { font-size: 19px; }
-    .qs figcaption { margin-top: 10px; font-size: 10px; line-height: 13px; }
-    .q2 { display: none; }
+    .board { margin-top: 36px; padding: 20px 16px 20px; box-shadow: 8px 8px 0 var(--powder); }
+    .rate { flex-wrap: wrap; gap: 8px 12px; padding-bottom: 16px; }
+    .rate-stars :global(svg) { width: 100px; height: 17px; }
+    .rate-t { font-size: 19px; }
+    .rate-k { margin-left: 0; width: 100%; font-size: 10px; }
+    .strip { margin-top: 16px; }
+    .hdl { display: none; }
+    .pads { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 10px; }
+    .pad { min-height: 118px; padding: 10px 12px 12px; }
+    .pad[aria-selected="true"] { translate: 0 -3px; box-shadow: 4px 4px 0 var(--powder); }
+    .pn b { font-size: 44px; } .of { font-size: 10px; }
+    .pl { margin-top: 6px; font-size: 14px; }
+    .roll { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px 4px; }
+    .disc { width: 34px; height: 34px; font-size: 10px; }
+    .wn { display: none; }
+    .read { margin-top: 20px; }
+    .slips { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 84%; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; padding-bottom: 8px; margin-inline: -16px; padding-inline: 16px; scroll-padding-inline: 16px; scrollbar-width: thin; }
+    .slip { scroll-snap-align: start; }
+    .slip { padding: 14px 14px 12px; }
+    .slip p { font-size: 16px; }
+    .all { font-size: 14px; }
   }
 </style>

@@ -61,6 +61,8 @@ const towns = [...TOWNS].sort((a, b) => a.name.localeCompare(b.name));
 </section>
 
 <style>
+  /* R2 (Nick): no visible breadcrumbs on any page; Breadcrumbs stays for its BreadcrumbList JSON-LD. */
+  .ahero :global(.ahero-crumbs) { display: none; }
   .ahero { position: relative; background: var(--ink); color: var(--white); padding: 48px 0 110px; }
   .ahero-grid { display: grid; grid-template-columns: 700px 500px; justify-content: space-between; grid-template-areas: 'copy media' 'form media'; align-items: start; }
   .ahero-copy { grid-area: copy; }

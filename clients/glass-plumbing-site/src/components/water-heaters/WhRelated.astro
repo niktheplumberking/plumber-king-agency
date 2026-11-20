@@ -1,41 +1,78 @@
 ---
-// Related services (Figma 719:437 y 8514 h 300 / mobile y 8921 h 310). Their own pages are not built in this preview, so
-// each links to its family card on /services (BUILD-BRIEF section 2).
+// Related services, R2 rebuild (Nick 20 Nov: three plain white cards = simple layout; every section interactive).
+// "The manifold": one supply pipe runs across the band and feeds three outlets. Each outlet is a valve on a short drop
+// into its card. As the band scrolls in, water runs along the pipe (scroll-driven); hover / focus on a card opens its
+// valve a quarter turn (handle across the drop = closed, along it = open) and the card fills with water from the bottom, the arrow slides. Their own pages are not built in
+// this preview and cross-page hash links are banned (R2), so each card links to the /services page itself.
+// 21st.dev: "Reveal on hover" (youcefbnm, id 1816: card whose hidden layer rises on hover) re-skinned as a Glass
+// manifold: steel pipe, valve handles turning on the valve body (physical logic), meniscus line on the rising water.
 import { ARROW } from '../services/glyphs';
 const R = [
-  { t: 'Tankless water heaters', d: 'On-demand hot water, single or paired.', href: '/services#hot-water' },
-  { t: 'Water softeners & filtration', d: 'For Pinellas hard water.', href: '/services#hot-water' },
-  { t: 'Leak repair', d: 'If the leak is not the heater.', href: '/services#leaks-lines' },
+  { t: 'Tankless water heaters', d: 'On-demand hot water, single or paired.', href: '/services' },
+  { t: 'Water softeners & filtration', d: 'For Pinellas hard water.', href: '/services' },
+  { t: 'Leak repair', d: 'If the leak is not the heater.', href: '/services' },
 ];
 ---
-<section class="rl" data-m-section aria-labelledby="rl-h">
+<section class="rl" data-m-section data-rl aria-labelledby="rl-h">
   <div class="wrap">
     <h2 class="rl-h" id="rl-h" data-t="1">Related services</h2>
-    <ul class="rl-list" role="list" data-t="2" data-stagger>
-      {R.map((r) => (
-        <li><a class="rl-c" href={r.href}><span class="rl-t">{r.t}</span><span class="rl-d">{r.d}</span><span class="rl-ar" set:html={ARROW} /></a></li>
-      ))}
-    </ul>
+    <div class="rl-man">
+      <span class="rl-pipe" aria-hidden="true"><span class="rl-flow"></span></span>
+      <ul class="rl-list" role="list" data-t="2" data-stagger>
+        {R.map((r) => (
+          <li class="rl-li">
+            <span class="rl-drop" aria-hidden="true"><span class="rl-vb"></span><span class="rl-vh"></span></span>
+            <a class="rl-c" href={r.href}>
+              <span class="rl-w" aria-hidden="true"></span>
+              <span class="rl-t">{r.t}</span><span class="rl-d">{r.d}</span><span class="rl-ar" set:html={ARROW} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </div>
 </section>
 <style>
-  .rl { background: var(--frost); padding: 72px 0 64px; }
-  .rl-h { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
-  .rl-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 21px 0 0; padding: 0; list-style: none; }
-  .rl-c { position: relative; display: flex; flex-direction: column; justify-content: space-between; height: 128px; padding: 24px 60px 23px 24px; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); transition: translate .3s var(--ease-io), box-shadow .3s var(--ease-io); }
-  .rl-t { font-family: var(--f-h); font-weight: 800; font-size: 20px; line-height: 1.04; letter-spacing: -.02em; }
-  .rl-d { font-size: 14px; line-height: 1.5; color: var(--muted); }
-  .rl-ar { position: absolute; right: 26px; top: 28px; width: 12px; height: 10px; transition: translate .3s var(--ease-io); }
-  .rl-ar :global(svg) { display: block; width: 12px; height: 10px; }
-  .rl-c:hover { translate: 0 -3px; box-shadow: inset 0 0 0 1.5px var(--ink), 4px 4px 0 var(--powder); }
-  .rl-c:hover .rl-ar { translate: 6px 0; }
-  @media (min-width: 768px) and (max-width: 1279px) { .rl-c { height: auto; min-height: 128px; gap: 16px; } }
+  .rl { background: var(--frost); padding: 72px 0 72px; --p: 1; }
+  .rl-h { text-align: center; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .rl-man { position: relative; margin-top: 22px; }
+  .rl-pipe { position: absolute; left: 0; right: 0; top: 0; height: 14px; border-radius: 7px; background: linear-gradient(var(--steel), var(--steel2)); box-shadow: inset 0 0 0 1.5px var(--ink); overflow: hidden; }
+  .rl-flow { position: absolute; left: 3px; top: 3px; bottom: 3px; width: calc((100% - 6px) * var(--p)); border-radius: 4px; background: var(--powder); }
+  .rl-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
+  .rl-li { position: relative; padding-top: 50px; }
+  .rl-drop { position: absolute; left: 50%; top: 8px; width: 12px; height: 46px; margin-left: -6px; background: linear-gradient(90deg, var(--steel2), var(--steel)); box-shadow: inset 0 0 0 1.5px var(--ink); z-index: 1; }
+  .rl-vb { position: absolute; left: -9px; top: 14px; width: 30px; height: 18px; border-radius: 4px; background: var(--steel); box-shadow: inset 0 0 0 2px var(--ink); }
+  .rl-vh { position: absolute; left: -16px; top: 9px; width: 44px; height: 9px; border-radius: 5px; background: var(--powder); box-shadow: inset 0 0 0 2px var(--ink); transform-origin: 22px 4.5px; rotate: 0deg; transition: rotate .55s var(--ease-io); }
+  .rl-li:hover .rl-vh, .rl-li:focus-within .rl-vh { rotate: 90deg; }
+  .rl-c { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-height: 140px; padding: 26px 60px 24px 24px; border-radius: 6px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); overflow: hidden; isolation: isolate; transition: box-shadow .4s var(--ease-io), translate .4s var(--ease-io); }
+  .rl-w { position: absolute; inset: 0; z-index: -1; background: var(--powder); transform-origin: 50% 100%; scale: 1 0; transition: scale .6s var(--ease-io); }
+  .rl-w::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: rgba(255,255,255,.75); }
+  .rl-t { font-family: var(--f-h); font-weight: 800; font-size: 22px; line-height: 1.06; letter-spacing: -.02em; }
+  .rl-d { font-size: 14px; line-height: 1.5; color: var(--muted); transition: color .4s var(--ease-io); }
+  .rl-ar { position: absolute; right: 26px; top: 30px; width: 14px; height: 12px; transition: translate .4s var(--ease-io); }
+  .rl-ar :global(svg) { display: block; }
+  .rl-c:hover, .rl-c:focus-visible { box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--ink); translate: -2px -2px; }
+  .rl-c:hover .rl-w, .rl-c:focus-visible .rl-w { scale: 1 1; }
+  .rl-c:hover .rl-d, .rl-c:focus-visible .rl-d { color: var(--ink); }
+  .rl-c:hover .rl-ar, .rl-c:focus-visible .rl-ar { translate: 6px 0; }
+  .rl-c:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
   @media (max-width: 767px) {
-    .rl { padding: 40px 0 40px; }
-    .rl-list { grid-template-columns: minmax(0, 1fr); gap: 10px; margin-top: 15px; }
-    .rl-c { height: 60px; padding: 0 40px 0 18px; justify-content: center; }
-    .rl-t { font-size: 16px; }
-    .rl-d { display: none; }
-    .rl-ar { right: 20px; top: 24px; }
+    .rl { padding: 44px 0 44px; }
+    .rl-man { padding-left: 26px; }
+    .rl-pipe { left: 0; right: auto; top: 0; bottom: 0; width: 12px; height: auto; }
+    .rl-flow { left: 3px; right: 3px; top: 3px; bottom: auto; width: auto; height: calc((100% - 6px) * var(--p)); }
+    .rl-list { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .rl-li { padding-top: 0; }
+    .rl-drop { left: -14px; top: 50%; width: 14px; height: 10px; margin: -5px 0 0; background: linear-gradient(var(--steel), var(--steel2)); }
+    .rl-vb, .rl-vh { display: none; }
+    .rl-c { min-height: 64px; padding: 14px 44px 14px 16px; justify-content: center; gap: 4px; }
+    .rl-t { font-size: 17px; }
+    .rl-d { font-size: 13px; }
+    .rl-ar { right: 18px; top: 50%; margin-top: -6px; }
   }
 </style>
+<script>
+  import { scrollProgress } from '../services/progress';
+  const root = document.querySelector<HTMLElement>('[data-rl]');
+  if (root) scrollProgress(root.querySelector<HTMLElement>('.rl-man')!, { start: 0.95, end: 0.45, onP: (p) => root.style.setProperty('--p', p.toFixed(4)) });
+</script>

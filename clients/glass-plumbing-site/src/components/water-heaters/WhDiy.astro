@@ -1,58 +1,110 @@
 ---
-// DIY vs pro (Figma 719:437 y 2408 h 840 / mobile y 2845 h 724): ink section with a meniscus rise. "You can" (frost, ticks)
-// beside "Needs a licensed plumber + permit" (ink2 with a powder outline and offset). Copy word for word.
+// DIY vs licensed, R2 rebuild (Nick 20 Nov: two boxes side by side = slop; every section interactive).
+// "The licence line": one centred column, like the cold-water line on top of the heater. The three things you can do sit
+// above a horizontal pipe with a shut-off valve; the three that need a licensed plumber + permit sit below it. As the
+// section scrolls through, the valve handle turns a quarter turn to closed, each "you can" row ticks on, and an ink fill
+// slides down over the lower rows with a LICENSED + PERMIT stamp. Hovering a row lifts it.
+// 21st.dev: "Stacked Deck Scroll Reveal" (aloksivastava1025, id 45444: one scroll-scrubbed sequence that changes the
+// state of stacked rows) + scroll-progress line ideas, re-skinned: valve on the pipe (physical logic: the handle turns on
+// the valve body, the pipe runs behind it), meniscus seam, ink + powder.
+// Reduced motion / no JS: the end state (valve closed, ticks on, lower rows ink) shows at once.
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
 const CAN = ['Check the breaker (electric) or the pilot (gas).', 'If it leaks, close the cold-water valve on top.', 'Take a photo of the label on the side.'];
 const PRO = ['Replacing the water heater.', 'Anything on the gas line.', 'The relief valve.'];
 ---
-<section class="dy on-ink seam-host" data-m-section>
+<section class="dy on-ink seam-host" data-m-section data-dy>
   <Seam from="var(--white)" to="var(--ink)" flip d={48} dm={32} />
   <div class="wrap">
-    <Eyebrow text="Before you call" />
-    <h2 class="h2 dy-h" data-t="2" style="--h2:52px;--h2m:28px">What you can check.<br /><span class="tone">What needs us.</span></h2>
-    <div class="dy-grid" data-t="3" data-stagger>
-      <div class="dy-col dy-can">
-        <h3 class="dy-t">You can</h3>
-        <ul role="list">{CAN.map((c) => <li><i class="dy-ic" aria-hidden="true"><svg viewBox="0 0 12 8" width="12" height="8"><path d="M1 4l3.2 3L11 1" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg></i>{c}</li>)}</ul>
-      </div>
-      <div class="dy-col dy-pro">
-        <h3 class="dy-t">Needs a licensed plumber + permit</h3>
-        <ul role="list">{PRO.map((c) => <li><i class="dy-ic" aria-hidden="true"></i>{c}</li>)}</ul>
-      </div>
+    <div class="dy-top">
+      <Eyebrow text="Before you call" />
+      <h2 class="h2 dy-h" data-t="2" style="--h2:52px;--h2m:28px">What you can check.<br /><span class="tone">What needs us.</span></h2>
     </div>
-    <Btn sub="CALL A LICENSED PLUMBER" size="l" w={320} h={64} hm={60} class="dy-btn" t="4" />
+    <div class="dy-col" data-t="4">
+      <h3 class="dy-k">You can</h3>
+      <ol class="dy-list dy-can" role="list">
+        {CAN.map((c, i) => (
+          <li class="dy-row" style={`--i:${i}`}><span class="dy-ic" aria-hidden="true"><svg viewBox="0 0 12 8" width="12" height="8"><path d="M1 4l3.2 3L11 1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span class="dy-tx">{c}</span><span class="dy-who">You</span></li>
+        ))}
+      </ol>
+      <div class="dy-line" aria-hidden="true">
+        <span class="dy-pipe"></span>
+        <span class="dy-valve"><span class="dy-body"></span><span class="dy-handle"></span><span class="dy-nut"></span></span>
+        <span class="dy-lab">Licence line</span>
+      </div>
+      <h3 class="dy-k dy-k2">Needs a licensed plumber + permit</h3>
+      <div class="dy-lock">
+        <span class="dy-fill" aria-hidden="true"></span>
+        <ol class="dy-list dy-pro" role="list">
+          {PRO.map((c) => (
+            <li class="dy-row"><span class="dy-ic dy-ic2" aria-hidden="true"></span><span class="dy-tx">{c}</span><span class="dy-who">Licensed</span></li>
+          ))}
+        </ol>
+        <span class="dy-stamp" aria-hidden="true">Licensed<br />+ permit</span>
+      </div>
+      <Btn sub="CALL A LICENSED PLUMBER" size="l" w={320} h={64} hm={60} class="dy-btn" />
+    </div>
   </div>
 </section>
 <style>
-  .dy { position: relative; padding: 110px 0 96px; }
+  .dy { position: relative; padding: 110px 0 100px; --p: 1; }
+  .dy-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .dy-h { margin-top: 16px; color: var(--white); }
-  .dy-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 52px; }
-  .dy-col { min-height: 330px; padding: 32px; border-radius: 6px; }
-  .dy-can { background: var(--frost); color: var(--ink); }
-  .dy-pro { background: var(--ink2); color: var(--white); box-shadow: inset 0 0 0 2px var(--powder), 10px 10px 0 var(--powder); }
-  .dy-t { font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.04; letter-spacing: -.02em; }
-  .dy-col ul { margin: 43px 0 0; padding: 0; list-style: none; display: grid; gap: 38px; }
-  .dy-col li { display: flex; align-items: flex-start; gap: 16px; font-size: 17px; line-height: 1.5; }
-  .dy-ic { flex: none; position: relative; display: grid; place-items: center; width: 24px; height: 24px; margin-top: 2px; border-radius: 50%; }
-  .dy-can .dy-ic { background: var(--pdeep); }
-  .dy-pro .dy-ic { box-shadow: inset 0 0 0 2px var(--powder); }
-  .dy-pro .dy-ic::after { content: ''; width: 12px; height: 2px; background: var(--powder); }
-  .dy :global(.dy-btn) { margin-top: 50px; }
+  .dy-col { position: relative; max-width: 820px; margin: 56px auto 0; display: flex; flex-direction: column; }
+  .dy-k { font: 700 11px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .dy-k2 { margin-top: 30px; }
+  .dy-list { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .dy-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 16px; min-height: 64px; padding: 12px 22px 12px 18px; border-radius: 6px; background: var(--ink2); box-shadow: inset 0 0 0 1px var(--ink3); font-size: 17px; line-height: 1.45; transition: translate .4s var(--ease-io), box-shadow .4s var(--ease-io), background-color .5s var(--ease-io); }
+  @media (hover: hover) and (pointer: fine) { .dy-row:hover { translate: 0 -3px; box-shadow: inset 0 0 0 1px var(--powder), 5px 5px 0 var(--powder); } }
+  .dy-ic { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: var(--ink); box-shadow: inset 0 0 0 2px var(--powder); background: transparent; transition: background-color .45s var(--ease-io), color .45s var(--ease-io); }
+  .dy-can .dy-ic svg { opacity: 0; transition: opacity .45s var(--ease-io); }
+  .dy-can .dy-row.is-on .dy-ic, html:not(.js) .dy-can .dy-row .dy-ic { background: var(--powder); }
+  .dy-can .dy-row.is-on .dy-ic svg, html:not(.js) .dy-can .dy-row .dy-ic svg { opacity: 1; }
+  .dy-can .dy-row.is-on, html:not(.js) .dy-can .dy-row { background: var(--frost); color: var(--ink); box-shadow: none; }
+  .dy-who { font: 700 10px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .dy-can .dy-row.is-on .dy-who, html:not(.js) .dy-can .dy-row .dy-who { color: var(--pdeep); }
+  .dy-ic2::after { content: ''; width: 12px; height: 2px; background: var(--powder); }
+
+  /* The pipe and valve: the handle turns 0 -> 90 deg with the scroll (--p written by progress.ts). */
+  .dy-line { position: relative; height: 70px; margin-top: 26px; }
+  .dy-pipe { position: absolute; left: calc(-1 * min(120px, var(--gutter))); right: calc(-1 * min(120px, var(--gutter))); top: 30px; height: 14px; border-radius: 7px; background: linear-gradient(var(--steel), var(--steel2)); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .dy-valve { position: absolute; left: 50%; top: 0; width: 70px; height: 70px; translate: -50% 0; }
+  .dy-body { position: absolute; left: 13px; top: 22px; width: 44px; height: 30px; border-radius: 6px; background: var(--steel); box-shadow: inset 0 0 0 2px var(--ink); }
+  .dy-handle { position: absolute; left: 6px; top: 6px; width: 58px; height: 12px; border-radius: 6px; background: var(--powder); box-shadow: inset 0 0 0 2px var(--ink); transform-origin: 29px 6px; rotate: calc(var(--p) * 90deg); }
+  .dy-nut { position: absolute; left: 29px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); }
+  .dy-lab { position: absolute; right: 0; top: 52px; font: 700 10px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--muted2); }
+
+  /* Below the line: an ink-ish fill slides down over the rows, then the stamp lands. */
+  .dy-lock { position: relative; }
+  .dy-fill { position: absolute; inset: 14px -14px -14px; border-radius: 8px; background: var(--pdeep); opacity: .45; transform-origin: 50% 0; scale: 1 var(--p); }
+  .dy-pro { position: relative; }
+  .dy-stamp { position: absolute; right: -92px; top: -40px; display: grid; place-items: center; width: 118px; height: 118px; border-radius: 50%; box-shadow: inset 0 0 0 3px var(--powder), inset 0 0 0 7px var(--ink), inset 0 0 0 8.5px var(--powder); background: var(--ink); color: var(--powder); text-align: center; font: 800 13px/1.15 var(--f-m); letter-spacing: .08em; text-transform: uppercase; rotate: -12deg; opacity: clamp(0, (var(--p) - .8) * 5, 1); scale: calc(1.3 - .3 * clamp(0, (var(--p) - .8) * 5, 1)); }
+  .dy :global(.dy-btn) { align-self: center; margin-top: 56px; }
+
+  @media (max-width: 1100px) { .dy-stamp { right: -8px; top: -40px; width: 96px; height: 96px; font-size: 11px; } }
   @media (max-width: 767px) {
-    .dy { padding: 56px 0 56px; }
+    .dy { padding: 60px 0 60px; }
     .dy-h { margin-top: 10px; }
-    .dy-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 28px; }
-    .dy-col { min-height: 0; padding: 18px 18px 20px; }
-    .dy-pro { box-shadow: inset 0 0 0 2px var(--powder), 8px 8px 0 var(--powder); }
-    .dy-t { font-size: 19px; max-width: 300px; }
-    .dy-col ul { margin-top: 16px; gap: 12px; }
-    .dy-pro ul { gap: 12px; }
-    .dy-col li { gap: 12px; font-size: 15px; }
-    .dy-ic { width: 20px; height: 20px; margin-top: 1px; }
-    .dy-ic svg { width: 10px; height: 7px; }
-    .dy-pro .dy-ic::after { width: 10px; }
-    .dy :global(.dy-btn) { width: 100%; margin-top: 24px; }
+    .dy-col { margin-top: 32px; }
+    .dy-row { grid-template-columns: 24px minmax(0, 1fr); gap: 12px; min-height: 56px; padding: 12px 14px; font-size: 15px; }
+    .dy-who { display: none; }
+    .dy-ic { width: 22px; height: 22px; }
+    .dy-line { height: 60px; margin-top: 18px; }
+    .dy-pipe { left: calc(-1 * var(--gutter)); right: calc(-1 * var(--gutter)); top: 26px; height: 12px; }
+    .dy-valve { scale: .85; }
+    .dy-lab { top: 48px; }
+    .dy-fill { inset: 10px -8px -8px; }
+    .dy-stamp { right: -6px; top: -36px; width: 78px; height: 78px; font-size: 9px; }
+    .dy :global(.dy-btn) { width: 100%; margin-top: 32px; }
   }
 </style>
+<script>
+  import { scrollProgress } from '../services/progress';
+  const root = document.querySelector<HTMLElement>('[data-dy]');
+  if (root) {
+    const can = [...root.querySelectorAll<HTMLElement>('.dy-can .dy-row')];
+    const col = root.querySelector<HTMLElement>('.dy-col')!;
+    scrollProgress(col, { start: 0.8, end: 0.15, onP: (p) => { root.style.setProperty('--p', p.toFixed(4)); can.forEach((r, i) => r.classList.toggle('is-on', p > 0.12 + i * 0.16)); } });
+  }
+</script>

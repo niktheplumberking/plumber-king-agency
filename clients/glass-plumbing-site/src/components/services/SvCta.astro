@@ -9,7 +9,7 @@ import { SITE } from '../../data/site';
 ---
 <section class="ct on-ink seam-host" data-m-section>
   <Seam from="var(--frost)" to="var(--ink)" flip d={48} dm={32} />
-  <div class="wrap ct-grid">
+  <div class="wrap ct-grid" data-ct>
     <div class="ct-l">
       <Eyebrow text="Not sure what it’s called?" />
       <h2 class="h2 ct-h" data-t="2" style="--h2:56px;--h2m:30px">Text a photo.<br /><span class="tone">We’ll tell you what it is.</span></h2>
@@ -43,6 +43,10 @@ import { SITE } from '../../data/site';
   .ct-to { position: absolute; left: 16px; top: 48px; font-family: var(--f-m); font-weight: 700; font-size: 9px; line-height: 12px; letter-spacing: .01em; }
   .ct-ph { position: absolute; left: 82px; top: 82px; width: 160px; height: 200px; border-radius: 16px; overflow: hidden; }
   .ct-msg { position: absolute; left: 42px; top: 296px; width: 200px; height: 64px; padding: 20px 16px; border-radius: 16px; background: var(--pdeep); color: var(--white); font-weight: 600; font-size: 14px; line-height: 1.5; }
+  /* R2 polish: the example text arrives like a real one when the phone scrolls in: photo, then message, then "Delivered". */
+  :global(html.motion) .ct-ph, :global(html.motion) .ct-msg, :global(html.motion) .ct-ex { opacity: 0; translate: 0 14px; scale: .96; transition: opacity .5s var(--ease-io), translate .6s var(--ease-io), scale .6s var(--ease-io); }
+  :global(html.motion) .ct-grid.is-in .ct-ph, :global(html.motion) .ct-grid.is-in .ct-msg, :global(html.motion) .ct-grid.is-in .ct-ex { opacity: 1; translate: 0 0; scale: 1; }
+  :global(html.motion) .ct-grid.is-in .ct-msg { transition-delay: .55s; } :global(html.motion) .ct-grid.is-in .ct-ex { transition-delay: 1s; }
   .ct-ex { position: absolute; left: 182px; top: 370px; font-family: var(--f-m); font-weight: 700; font-size: 9px; line-height: 12px; letter-spacing: .01em; color: var(--muted); }
 
   @media (min-width: 768px) and (max-width: 1279px) {
@@ -65,3 +69,10 @@ import { SITE } from '../../data/site';
     .ct-btns :global(.ct-b) { width: 100%; }
   }
 </style>
+<script>
+  const ct = document.querySelector<HTMLElement>('[data-ct]');
+  if (ct) {
+    if ('IntersectionObserver' in window) { const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { ct.classList.add('is-in'); io.disconnect(); } }), { rootMargin: '0px 0px -20% 0px' }); io.observe(ct.querySelector('.ct-phone')!); }
+    else ct.classList.add('is-in');
+  }
+</script>

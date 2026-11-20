@@ -11,18 +11,33 @@ import { quote } from './fig';
 import { SITE } from '../../data/site';
 const dp = quote('David Peek', 'These guys know their stuff - commercial or residential.');
 const crew = [
-  { n: 'Kody', d: `Owner · licence holder · FL ${SITE.licence.number}`, dm: `Owner · licence holder · ${SITE.licence.number}`, c: 8 },
-  { n: 'Zak', d: 'On the crew · commercial and new builds', c: 6 },
-  { n: 'Chase', d: 'On the crew', c: 2 },
+  { n: 'Kody', d: `Owner · licence holder · FL ${SITE.licence.number}`, dm: `Owner · licence holder · ${SITE.licence.number}`, c: 8,
+    q: quote('Eduardo “EddieZoRz” Perea', "I can't tell you other than saying Kody was a lifesaver.") },
+  { n: 'Zak', d: 'On the crew · commercial and new builds', c: 6, q: quote('Jordan Carlson', 'Zak was professional, punctual, and very friendly.') },
+  { n: 'Chase', d: 'On the crew', c: 2, q: quote('Nelson Whitesell', 'Zak and Chase are great to work with.') },
 ];
+// The business card photo is the FRONT and the BACK of the card stacked (1385 x 1628). Round 2 (Nick, 20 Nov: "logo cut in
+// half"): each face shows exactly one side, cropped to the card's own edges (front y 30-795, back y 847-1612, x 22-1363),
+// so nothing is clipped. Tap / click flips it (CSS 3D, 0.8 s ease-in-out); reduced motion flips at once.
 ---
 <section class="crew on-ink" aria-labelledby="crew-h" data-m-section>
   <div class="wrap crew-in">
-    <div class="card" data-t="5" data-fx="pop"><Img name="business-card" alt="Kody Glass's business card: Glass Plumbing Services, commercial and residential, 24/7 emergency service, licensed and insured, 10% off for veterans, seniors, first responders and teachers (up to $100)" sizes="(min-width: 768px) 300px, 250px" widths={[300, 500, 600]} box={300 / 180} boxM={250 / 150} /></div>
-    <div class="ph" data-t="4" data-fx="frame">
+    <div class="ph">
+      <div data-t="4" data-fx="frame">
       <Housing tone="photo" fluid w={330} h={440} wm={250} hm={320} cap={31} capm={22} shadow={12} shadowm={10} class="crew-can">
         <Img name="crew-crawlspace" alt="A Glass plumber in a cap smiling from under a floor in a crawlspace" sizes="(min-width: 768px) 330px, 250px" widths={[250, 330, 500, 660]} box={330 / 411} boxM={250 / 300} focus="50% 45%" />
       </Housing>
+      </div>
+      <div class="bc-w" data-t="5" data-fx="toss">
+        <button class="bc" type="button" aria-pressed="false" data-bc>
+          <span class="sr-only">Kody Glass's business card. Flip it to see the other side.</span>
+          <span class="face fr" aria-hidden="true"><span class="crop"><Img name="business-card" alt="" sizes="(min-width: 768px) 320px, 240px" widths={[320, 480, 640, 960]} fit="contain" /></span></span>
+          <span class="face bk" aria-hidden="true"><span class="crop"><Img name="business-card" alt="" sizes="(min-width: 768px) 320px, 240px" widths={[320, 480, 640, 960]} fit="contain" /></span></span>
+        </button>
+        <p class="bc-hint" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 7a5 5 0 1 1-1.6-3.7M12 1.5V4H9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-bc-l>Flip Kody's card</span></p>
+        <p class="sr-only" aria-live="polite" data-bc-live></p>
+        <p class="sr-only">Front: Glass Plumbing Services, commercial and residential, (727) 512-0673, 24/7 emergency service, licensed and insured. Back: Kody Glass, owner, kodyglassplumbing@gmail.com, licensed and insured, CFC1432488, 10% off for veterans, seniors, first responders and teachers (up to $100).</p>
+      </div>
     </div>
     <div class="txt">
       <Eyebrow text="Who shows up" />
@@ -32,8 +47,17 @@ const crew = [
         <figcaption>Kody, on <a href={SITE.social.instagram} target="_blank" rel="noopener">{SITE.social.instagramHandle}<span class="sr-only"> (opens in a new tab)</span></a></figcaption>
       </figure>
       <ul class="names" role="list" data-t="4" data-stagger>
-        {crew.map((p) => (
-          <li><p class="nm">{p.n}</p><p class="cnt">Named in {p.c} of 16 reviews</p><p class="nd">{p.dm ? <><span class="d">{p.d}</span><span class="m">{p.dm}</span></> : p.d}</p></li>
+        {crew.map((p, i) => (
+          <li>
+            <details class="nrow" data-acc name="crew-names" open={i === 0}>
+              <summary>
+                <span class="nm">{p.n}</span><span class="cnt">Named in {p.c} of 16 reviews</span>
+                <span class="nd">{p.dm ? <><span class="d">{p.d}</span><span class="m">{p.dm}</span></> : p.d}</span>
+                <span class="tg" aria-hidden="true"></span>
+              </summary>
+              <figure class="nq"><blockquote><p>“{p.q.text}”</p></blockquote><figcaption>{p.q.name} · Google</figcaption></figure>
+            </details>
+          </li>
         ))}
       </ul>
       <figure class="dq" data-t="3">
@@ -44,12 +68,37 @@ const crew = [
     </div>
   </div>
 </section>
+<script>
+  // Business card flip: aria-pressed carries the state (CSS turns the card); the hint and a live line follow it.
+  document.querySelectorAll<HTMLButtonElement>('[data-bc]').forEach((b) => {
+    const w = b.parentElement!; const l = w.querySelector('[data-bc-l]'); const live = w.querySelector('[data-bc-live]');
+    b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(on));
+      if (l) l.textContent = on ? 'Flip it back' : "Flip Kody's card";
+      if (live) live.textContent = on ? 'Showing the back: Kody Glass, owner.' : 'Showing the front: Glass Plumbing Services.';
+    });
+  });
+</script>
 <style>
   .crew { position: relative; background: var(--ink); color: var(--white); }
   .m { display: none; }
-  .crew-in { position: relative; display: grid; grid-template-columns: 520px 680px; min-height: 974px; padding: 120px 0 100px; }
-  .card { position: absolute; left: 900px; top: -70px; z-index: 4; width: 300px; height: 180px; rotate: -4deg; transform-origin: 0 0; border-radius: 6px; overflow: hidden; box-shadow: 12px 12px 0 var(--powder); }
-  .card :global(img) { width: 100%; height: 100%; }
+  .crew-in { position: relative; display: grid; grid-template-columns: 520px 680px; min-height: 900px; padding: 112px 0 100px; }
+  /* Business card: its own object over the housing's lower-right corner, the whole card in view (never clipped). */
+  .ph { position: relative; align-self: start; }
+  .bc-w { position: absolute; z-index: 4; left: 110px; top: calc(100% - 110px); width: 300px; rotate: -4deg; perspective: 1400px; }
+  .bc { position: relative; display: block; width: 100%; aspect-ratio: 1341 / 765; padding: 0; border: 0; background: none; cursor: pointer;
+    transform-style: preserve-3d; transition: transform .8s var(--ease-io); }
+  .bc[aria-pressed="true"] { transform: rotateY(180deg); }
+  .bc:focus-visible { outline: 3px solid var(--powder); outline-offset: 6px; border-radius: 6px; }
+  .face { position: absolute; inset: 0; border-radius: 5px; background: var(--white); box-shadow: 10px 10px 0 var(--powder); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .bk { transform: rotateY(180deg); }
+  .crop { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+  .crop :global(img) { position: absolute; left: -1.64%; top: -3.92%; width: 103.28%; height: auto; max-width: none; }
+  .bk .crop :global(img) { top: -110.72%; }
+  .bc:hover { translate: 0 -3px; }
+  .bc-hint { display: flex; align-items: center; gap: 8px; margin-top: 22px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); rotate: 4deg; }
+  :global(html:not(.motion)) .bc { transition: none; }
   /* Figma rot 4 = counter-clockwise about the top-left corner (x/y = that corner); FILL = centred crop. */
   .ph { padding: 140px 0 0 60px; }
   .ph :global(.crew-can) { --c: var(--steel2); --o: var(--white); }
@@ -61,10 +110,22 @@ const crew = [
   .kq figcaption, .dq figcaption { margin-top: 8px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--powder); }
   .kq a:hover { text-decoration: underline; }
   .names { margin: 56px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--ink3); }
-  .names li { display: grid; grid-template-columns: 1fr auto; height: 100px; padding-top: 19px; border-bottom: 1px solid var(--ink3); }
-  .nm { font-family: var(--f-h); font-weight: 800; font-size: 30px; line-height: 1.04; letter-spacing: -.02em; }
+  .names li { border-bottom: 1px solid var(--ink3); }
+  /* Each name opens the review that names them (kit accordion, one open at a time). */
+  .nrow summary { position: relative; display: grid; grid-template-columns: 1fr auto 28px; column-gap: 12px; padding: 19px 0 16px; cursor: pointer; list-style: none; }
+  .nrow summary::-webkit-details-marker { display: none; }
+  .nrow summary:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .nm { font-family: var(--f-h); font-weight: 800; font-size: 30px; line-height: 1.04; letter-spacing: -.02em; transition: color .5s var(--ease-io); }
+  .nrow summary:hover .nm, .nrow[open]:not(.acc-off) .nm { color: var(--powder); }
   .cnt { padding: 10px 6px 0 0; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
-  .nd { grid-column: 1 / -1; margin-top: -1px; font-size: 15px; line-height: 23px; color: rgb(255 255 255 / .8); }
+  .nd { grid-column: 1 / 3; margin-top: 4px; font-size: 15px; line-height: 23px; color: rgb(255 255 255 / .8); }
+  .tg { grid-column: 3; grid-row: 1; align-self: start; position: relative; width: 28px; height: 28px; margin-top: 3px; border: 1.5px solid rgb(255 255 255 / .5); border-radius: 50%; }
+  .tg::before, .tg::after { content: ''; position: absolute; left: 50%; top: 50%; width: 11px; height: 1.5px; background: var(--white); translate: -50% -50%; transition: rotate .5s var(--ease-io); }
+  .tg::after { rotate: 90deg; }
+  .nrow[open]:not(.acc-off) .tg::after { rotate: 0deg; }
+  .nq { margin: 0 0 20px; padding: 2px 0 2px 16px; border-left: 3px solid var(--powder); }
+  .nq p { font-family: var(--f-h); font-weight: 700; font-size: 20px; line-height: 1.3; letter-spacing: -.01em; }
+  .nq figcaption { margin-top: 8px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--powder); }
   .dq { margin-top: 35px; }
   .dq p { font-family: var(--f-h); font-weight: 700; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; }
   .dq figcaption { margin-top: 15px; }
@@ -72,22 +133,25 @@ const crew = [
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .crew-in { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); column-gap: 40px; }
-    .card { left: auto; right: 0; width: 240px; height: 144px; }
+    .bc-w { left: 12%; width: 260px; }
     .ph { padding: 160px 0 0; }
   }
   @media (max-width: 767px) {
     .d { display: none; } .m { display: inline; }
-    .crew-in { display: flex; flex-direction: column; min-height: 0; padding: 150px 0 80px; }
-    .card { left: 10px; top: -46px; width: 250px; height: 150px; box-shadow: 8px 8px 0 var(--powder); }
+    .crew-in { display: flex; flex-direction: column; min-height: 0; padding: 72px 0 80px; }
+    .bc-w { left: auto; right: 8px; top: calc(100% - 64px); width: min(240px, 72%); }
+    .face { box-shadow: 7px 7px 0 var(--powder); }
+    .bc-hint { margin-top: 16px; }
     .txt { display: contents; }
     .crew-h { margin-top: 10px; --h2m: 32px; }
     .kq { margin-top: 47px; } .kq p { font-size: 16px; }
     .kq figcaption, .dq figcaption { margin-top: 6px; font-size: 10px; line-height: 13px; }
-    .ph { order: 1; padding: 30px 0 0 50px; }
+    .ph { order: 1; align-self: stretch; padding: 30px 0 0 50px; margin-bottom: 112px; }
     .dq { order: 2; margin-top: 36px; } .dq p { font-size: 21px; }
     .dq figcaption { margin-top: 10px; }
     .names { order: 3; margin-top: 28px; }
-    .names li { height: 88px; padding-top: 15px; }
+    .nrow summary { padding: 15px 0 13px; }
+    .nq p { font-size: 17px; }
     .nm { font-size: 24px; }
     .cnt { padding: 8px 8px 0 0; font-size: 9px; line-height: 12px; }
     .nd { margin-top: 1px; font-size: 14px; line-height: 21px; }

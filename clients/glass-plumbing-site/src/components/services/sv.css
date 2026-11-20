@@ -12,5 +12,5 @@
 .sv .sv-link:hover { color: var(--ink); }
 .sv .on-ink .sv-link { color: var(--powder); }
 .sv .on-ink .sv-link:hover { color: var(--white); }
-.sv .sv-chip { display: inline-flex; align-items: center; height: 34px; padding: 0 13px; border-radius: 17px; background: var(--white); box-shadow: inset 0 0 0 1.2px var(--ink); font-family: var(--f-b); font-weight: 600; font-size: 14px; line-height: 21px; color: var(--ink); white-space: nowrap; transition: background-color .3s var(--ease-io), color .3s var(--ease-io); }
+.sv .sv-chip { display: inline-flex; align-items: center; height: 44px; padding: 0 15px; border-radius: 22px; background: var(--white); box-shadow: inset 0 0 0 1.2px var(--ink); font-family: var(--f-b); font-weight: 600; font-size: 14px; line-height: 21px; color: var(--ink); white-space: nowrap; transition: background-color .3s var(--ease-io), color .3s var(--ease-io); }
 @media (hover: hover) and (pointer: fine) { .sv a.sv-chip:hover { background: var(--ink); color: var(--white); } }

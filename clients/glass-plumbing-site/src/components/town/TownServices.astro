@@ -1,14 +1,14 @@
 ---
 // /areas/seminole "Top services" (Figma y 2367 h 666 / mobile y 2167 h 608). Ink. Six numbered rows linking to the service
-// families on /services (and the built water-heater page). Phones drop "in Seminole" from each name (as the frame).
+// families on /services (and the built water-heater page). R2: no cross-page hash links (Nick): rows link the real page. Phones drop "in Seminole" from each name (as the frame).
 import Head from '../areas/Head.astro';
 const rows = [
-  { n: 'Drain cleaning', href: '/services#drains-fixtures' },
-  { n: 'Shower & tub valves', href: '/services#drains-fixtures' },
+  { n: 'Drain cleaning', href: '/services' },
+  { n: 'Shower & tub valves', href: '/services' },
   { n: 'Water heaters', href: '/services/water-heaters' },
-  { n: 'Water softeners & filtration', m: 'Softeners & filtration', href: '/services#hot-water' },
-  { n: 'Leak repair', href: '/services#leaks-lines' },
-  { n: 'Toilets & faucets', href: '/services#drains-fixtures' },
+  { n: 'Water softeners & filtration', m: 'Softeners & filtration', href: '/services' },
+  { n: 'Leak repair', href: '/services' },
+  { n: 'Toilets & faucets', href: '/services' },
 ];
 ---
 <section class="tsvc on-ink" data-m-section aria-labelledby="tsvc-h">

@@ -407,7 +407,7 @@ function swooshIn(svg: SVGElement, dur = 0.9): gsap.core.Timeline {
  * property ever has two writers (round 2's glitch was three writers on one img transform). Photos never move inside their
  * frame: the whole media column (frame + its caption/stickers) drifts as one, snapped to whole device pixels so the photo
  * stays crisp. Ranges are capped by the free space around each target so nothing drifts into its neighbours. */
-type PxItem = { el: HTMLElement; a: number; b: number; out: boolean; paint?: () => void; clear?: () => void };
+type PxItem = { el: HTMLElement; a: number; b: number; out: boolean; css?: boolean; paint?: () => void; clear?: () => void };
 const pxItems: PxItem[] = [];
 const devPx = () => (window.devicePixelRatio || 1) * (parseFloat(html.style.zoom) || 1);
 const TEXTY = 'h1, h2, h3, [data-t="2"], p.body, p.lead, .shead, [data-t="3"]:not([data-stagger])';
@@ -451,6 +451,36 @@ function roomAround(el: HTMLElement, sec: HTMLElement): number {
   return Math.max(0, Math.min(up, down) - 8);
 }
 
+/** R2 text/object parallax helpers. `data-no-px` on an element (or any ancestor) opts it out of every drift. */
+const PX_OFF = '[data-no-px], [data-carousel], [data-track], [data-marquee], [data-scrub-track], [data-loader], [data-pt]';
+const OBJ_SEL = '[data-count], [data-plate], [data-px-obj], .hs:not(.hs-photo)';
+const inUsed = (el: HTMLElement, used: Set<Element>) => { for (const u of used) if (u.contains(el) || el.contains(u)) return true; return false; };
+const NUMERAL = /^[\d.,+%$#×/ -]{1,7}$/;
+/** A big standalone numeral (a stat, a step number): digits only, >= 56 px. */
+const isNumeral = (n: HTMLElement) => n.children.length === 0 && NUMERAL.test(n.textContent?.trim() || '') && /\d/.test(n.textContent || '') && parseFloat(getComputedStyle(n).fontSize) >= 56 && shown(n);
+/** True when CSS transitions `translate` on this element (a hover lift): a scrubbed drift there would lag, so skip it. */
+function tweensTranslate(el: HTMLElement) {
+  const cs = getComputedStyle(el); const ps = cs.transitionProperty.split(','), ds = cs.transitionDuration.split(',');
+  return ps.some((pr, i) => /translate|all/.test(pr) && parseFloat(ds[i % ds.length]) > 0);
+}
+/** GSAP animates this element's transform (an entrance or a scrub): GSAP resets the CSS `translate` property on its targets,
+ *  so these drift through GSAP's own `yPercent` component instead (the entrance never touches it). */
+const gsapOwned = (el: HTMLElement) => el.matches('[data-t], [data-stagger] > *, [data-scrub-tw], [data-scrub-y], [data-scrub-fill], [data-scrub-turn], [data-stop], [data-magnetic]') || /(^|;)\s*(translate|rotate|scale):\s*none/.test(el.getAttribute('style') || '');
+/** CSS `translate` does nothing on inline boxes: drift the nearest block-level ancestor instead. */
+function blockOf(el: HTMLElement): HTMLElement {
+  let e: HTMLElement = el;
+  while (e.parentElement && getComputedStyle(e).display === 'inline') e = e.parentElement;
+  return e;
+}
+/** The heading's head block: .shead, else a small parent that holds only eyebrow / heading / lead (no media, < 45 % of the
+ *  viewport tall), else the heading itself. */
+function headBlock(h: HTMLElement, sec: HTMLElement): HTMLElement {
+  const sh = h.closest<HTMLElement>('.shead'); if (sh && sec.contains(sh)) return sh;
+  const p = h.parentElement;
+  if (p && p !== sec && !p.matches('.wrap, .container, section, [data-stagger], [data-m-section]') && p.children.length <= 4 && !p.querySelector('img, picture, video, iframe, form, [data-fx="frame"], ul, ol, details, .btn') && p.getBoundingClientRect().height < window.innerHeight * 0.45) return p;
+  return h;
+}
+
 function parallax() {
   const mm = gsap.matchMedia();
   mm.add({ desk: '(min-width: 1024px)', tab: '(min-width: 640px) and (max-width: 1023px)', mob: '(max-width: 639px)' }, (ctx) => {
@@ -458,12 +488,12 @@ function parallax() {
     const k = c.desk ? 1 : c.tab ? 0.6 : 0.45;
     const items: PxItem[] = [];
     const used = new Set<Element>();
-    const add = (el: HTMLElement, a: number, b: number, room: number, out = false) => {
+    const add = (el: HTMLElement, a: number, b: number, room: number, out = false, css?: boolean) => {
       if (used.has(el)) return;
       const cap = out ? Infinity : room;
       const lim = (v: number) => Math.sign(v) * Math.min(Math.abs(v) * k, cap);
-      const it = { el, a: lim(a), b: lim(b), out };
-      if (Math.max(Math.abs(it.a), Math.abs(it.b)) < 6) return; // too little room to read as depth: leave it still
+      const it: PxItem = { el, a: lim(a), b: lim(b), out, css };
+      if (Math.max(Math.abs(it.a), Math.abs(it.b)) < 4) return; // too little room to read as depth: leave it still (text layer: 4 px, so phones keep it)
       used.add(el); items.push(it);
     };
     $$('[data-m-section]').forEach((sec) => {
@@ -483,10 +513,24 @@ function parallax() {
         $$<HTMLElement>(`${ACCENT_SEL}, [data-fx="toss"], [data-fx="pop"]`, w).filter(shown).forEach((a) => add(a, hero ? 0 : 14, hero ? -28 : -14, 40, hero));
       });
       if (hero) return;
-      // 2. Section heads (eyebrow + headline + lead as one block): lead the page, +24 -> -24 px.
-      $$('.shead', sec).filter(shown).forEach((h) => { if (!h.closest('[data-carousel], [data-track]')) add(h, 10, -10, roomAround(h, sec)); }); // B5: headings +-10 px max
-      // 3. Seals, stamps and stickers that sit on their own (not on a photo): lead, +-28 px.
-      $$<HTMLElement>(ACCENT_SEL, sec).filter((a) => shown(a) && ![...wraps].some((w) => w.contains(a))).forEach((a) => add(a, 14, -14, roomAround(a, sec))); // B5: stamps lead +-14 px
+      // 2. Text layer (R2, Nick 20 Nov: "parallax ... for the text as well"). Every section heading (h2) leads the page by
+      //    +-10 px: its head block (.shead, or a small eyebrow/heading/lead parent) moves as one, so the gap to its own lead
+      //    never changes. Drifts through the CSS `translate` property only (entrances own `transform`), scrub 0.6.
+      const okPx = (el: HTMLElement) => !el.closest(PX_OFF) && !el.matches('a, button, [data-hover]') && !inUsed(el, used) && !tweensTranslate(el) && getComputedStyle(el).translate === 'none';
+      $$<HTMLElement>('h2', sec).filter(shown).forEach((h) => {
+        const t = headBlock(h, sec);
+        if (okPx(t)) add(t, 10, -10, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
+      });
+      // 3. Objects: big numerals ([data-count] blocks, any >= 56 px numeral), spec plates, standalone housings, seals,
+      //    stamps and stickers that are not on a photo: +-14 px.
+      $$<HTMLElement>(`${ACCENT_SEL}, ${OBJ_SEL}`, sec).filter((a) => shown(a) && ![...wraps].some((w) => w.contains(a))).forEach((a) => {
+        const t = blockOf(a);
+        if (okPx(t)) add(t, 14, -14, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
+      });
+      $$<HTMLElement>('p, span, strong, b, div', sec).filter(isNumeral).forEach((n) => {
+        const t = blockOf(n);
+        if (okPx(t)) add(t, 14, -14, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
+      });
       // 4. Decorative flow lines and empty colour blocks behind photos: lag the most, +-48 px.
       $$<HTMLElement>('img[data-flow]', sec).filter(shown).forEach((d) => add(d, -48, 48, roomAround(d, sec) + 40));
       $$<HTMLElement>('[data-t]', sec).filter((d) => shown(d) && isShape(d) && !d.closest('[data-stagger]')).forEach((d) => add(d, -30, 30, 60));
@@ -497,7 +541,8 @@ function parallax() {
       // Two channels, so no property ever has two writers: an element GSAP never animates (a wrapper, a section head, a
       // flow line) drifts through the CSS `translate` property; an element that also has an entrance (a seal, a snapshot)
       // drifts through GSAP's own `yPercent` component, which its entrance (y, rotation, scale) never touches.
-      const gs = el.matches('[data-t], [data-stagger] > *');
+      // css: true = CSS translate, false = GSAP yPercent (R2 text/object layer decides per element); unset = by markup.
+      const gs = it.css === undefined ? el.matches('[data-t], [data-stagger] > *') : !it.css;
       if (gs) el.setAttribute('data-px', '');
       const setPct = gs ? gsap.quickSetter(el, 'yPercent') as (v: number) => void : null;
       const o = { v: a };
@@ -509,7 +554,7 @@ function parallax() {
       it.clear = () => { if (setPct) setPct(0); else el.style.translate = ''; };
       paint();
       gsap.fromTo(o, { v: a }, { v: b, ease: 'none', onUpdate: paint, scrollTrigger: {
-        trigger: out ? el.closest('[data-m-section]') ?? el : el, start: out ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.5,
+        trigger: out ? el.closest('[data-m-section]') ?? el : el, start: out ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6,
       } });
     });
     pxItems.push(...items);
@@ -535,7 +580,8 @@ function photoDrift() {
       if (img.closest('[data-carousel], [data-track], [data-no-px], [data-marquee], .map, [class*="map"], [data-drift-off]')) return;
       const cs = getComputedStyle(img);
       const src = img.currentSrc || img.src;
-      if (cs.objectFit !== 'cover' || src.toLowerCase().includes('.png') || cs.scale !== 'none' || cs.translate !== 'none') return;
+      // R2: the owner's business card must show whole (Nick: logo cut in half), so it never takes the 1.14 overfill.
+      if (cs.objectFit !== 'cover' || src.toLowerCase().includes('.png') || src.includes('business-card') || cs.scale !== 'none' || cs.translate !== 'none') return;
       const r = img.getBoundingClientRect();
       if (r.width < 160 || r.height < 120) return;
       // The frame: the img's own box (or an ancestor of the same box) must clip, so the overfill never shows.
@@ -546,17 +592,27 @@ function photoDrift() {
         if (Math.abs(q.width - r.width) > 2 || Math.abs(q.height - r.height) > 2) break;
         if (/hidden|clip/.test(getComputedStyle(e).overflow)) { clip = true; break; }
       }
-      if (!clip) return;
+      // R2 (site-wide parallax): a photo whose frame does not clip clips itself. Its own clip-path is set to the inverse of
+      // the scale + translate, so exactly its original box stays visible (corners keep its radius). Not when the img is
+      // itself an entrance target (the `frame` reveal owns its clip-path) or already has a clip-path.
+      const selfClip = !clip && !img.hasAttribute('data-t') && cs.clipPath === 'none';
+      if (!clip && !selfClip) return;
       const hero = !!img.closest('[data-m-hero]');
       img.setAttribute('data-drift', '');
-      img.style.scale = '1.14';
+      const S = 1.14;
+      img.style.scale = String(S);
+      const rad = parseFloat(cs.borderTopLeftRadius) || 0;
+      const side = (50 - 50 / S).toFixed(3);
       const o = { v: hero ? 0 : -5 };
-      const paint = () => { img.style.translate = `0 ${o.v.toFixed(3)}%`; };
+      const paint = () => {
+        img.style.translate = `0 ${o.v.toFixed(3)}%`;
+        if (selfClip) img.style.clipPath = `inset(${(50 - (50 + o.v) / S).toFixed(3)}% ${side}% ${(50 - (50 - o.v) / S).toFixed(3)}% ${side}%${rad ? ` round ${(rad / S).toFixed(2)}px` : ''})`;
+      };
       paint();
       gsap.to(o, { v: 5, ease: 'none', onUpdate: paint, scrollTrigger: { trigger: img.closest('div, figure, a, li') ?? img, start: hero ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6 } });
       mine.push(img);
     });
-    return () => { mine.forEach((img) => { img.style.scale = ''; img.style.translate = ''; img.removeAttribute('data-drift'); }); };
+    return () => { mine.forEach((img) => { img.style.scale = ''; img.style.translate = ''; img.style.clipPath = ''; img.removeAttribute('data-drift'); }); };
   });
 }
 
@@ -638,8 +694,8 @@ function introChrome(tl: gsap.core.Timeline) {
   }
 }
 
-// The loader itself lives in kit/loader.ts (fix round 1, B3: slat counter + 8 blinds). The hero and header start in its
-// onDone, once the last blind is fully off-screen; Lenis starts at that same moment.
+// The loader lives in kit/loader.ts (R2: "Clear Water", the same water sheet as the curtain). The hero and header start in
+// its onDone, at 55 % of the drain (the H1 clears); Lenis starts at that same moment.
 
 /* ------------------------------------------------------------------ boot */
 

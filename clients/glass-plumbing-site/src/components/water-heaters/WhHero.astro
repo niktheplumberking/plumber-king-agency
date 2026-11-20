@@ -53,10 +53,10 @@ import { STARS } from '../services/glyphs';
   </div>
 </section>
 <style>
-  .wh { background: var(--white); padding: 44px 0 96px; }
+  .wh { background: var(--white); padding: 80px 0 96px; }
   .wh-grid { display: grid; grid-template-columns: minmax(0, 680px) 460px; grid-template-areas: 'l art' 'act art'; grid-template-rows: auto 1fr; justify-content: space-between; }
   .wh-l { grid-area: l; }
-  .wh-l :global(.wh-eb) { margin-top: 29px; }
+  .wh-l :global(.wh-eb) { margin-top: 0; }
   .wh-h { --h1: 72px; --h1m: 34px; line-height: 1; margin-top: 16px; }
   .wh-lead { margin-top: 22px; max-width: 560px; font-size: 19px; line-height: 1.5; }
   .wh-art { grid-area: art; position: relative; height: 560px; margin-top: 16px; }
@@ -93,9 +93,9 @@ import { STARS } from '../services/glyphs';
     .wh-nw { white-space: nowrap; } /* never a lone "in" */
   }
   @media (max-width: 767px) {
-    .wh { padding: 24px 0 48px; }
+    .wh { padding: 44px 0 48px; }
     .wh-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'art' 'act'; }
-    .wh-l :global(.wh-eb) { margin-top: 15px; }
+    .wh-l :global(.wh-eb) { margin-top: 0; }
     .wh-h { line-height: 1.02; margin-top: 10px; }
     .wh-lead { margin-top: 12px; font-size: 16px; }
     .wh-art { height: 300px; margin: 24px 0 0 40px; }

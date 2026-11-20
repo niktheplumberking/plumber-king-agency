@@ -7,8 +7,8 @@ import { CONTACT_FAQ } from './faqs';
 ---
 <section class="cx-sec cx-white cq" data-m-section aria-labelledby="cq-h">
   <div class="wrap">
-    <div class="shead">
-      <Eyebrow text="Contact questions" tone="pdeep" />
+    <div class="shead cq-head">
+      <Eyebrow text="Contact questions" tone="pdeep" class="cq-eb" />
       <h2 id="cq-h" class="cx-h cq-h" data-t="2"><span class="ln">Quick answers.</span> <span class="ln tone">Tap a card to flip it.</span></h2>
     </div>
     <ul class="cq-g" role="list" data-t="4" data-stagger>
@@ -57,6 +57,8 @@ import { CONTACT_FAQ } from './faqs';
 </script>
 <style>
   .cq { padding: 110px 0 120px; }
+  .cq-head { display: grid; justify-items: center; text-align: center; }
+  .cq-head :global(.cq-eb) { justify-content: center; }
   .cq-h { --fs: 52px; --fs-m: 34px; margin-top: 16px; }
   .cq-g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 48px 0 0; padding: 0; list-style: none; }
   .cq-c { perspective: 1400px; }

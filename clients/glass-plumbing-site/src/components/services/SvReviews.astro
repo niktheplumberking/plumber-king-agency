@@ -8,6 +8,7 @@ import Seam from '../kit/Seam.astro';
 import Img from '../ui/Img.astro';
 import { REVIEWS } from '../../data/reviews';
 import { STARS } from './glyphs';
+import { SITE } from '../../data/site';
 
 type Ticket = { job: string; tag: string; by: string; q: string };
 type Panel = { k: string; tab: string; photo: string; alt: string; focus?: string; by: string; q: string; tickets: Ticket[] };
@@ -55,6 +56,11 @@ const ACTIVE = 'leaks';
         <h2 class="h2 rv-h" data-t="2" style="--h2:52px;--h2m:36px">Find your job.<br /><span class="tone">Read what they said.</span></h2>
       </div>
       <p class="rv-lead" data-t="3"><span class="d">We sorted the 16 Google reviews by the job each one talks about. Tap a job.</span><span class="m">The 16 Google reviews, sorted by the job each one talks about.</span></p>
+      <ul class="rv-rec" role="list" data-t="3">
+        {[SITE.google.a, SITE.google.b].map((p) => (
+          <li><a class="rv-pf" href={p.url} target="_blank" rel="noopener"><span class="rv-g" aria-hidden="true">G</span><b>{p.value}</b><span class="rv-pst" aria-hidden="true" set:html={STARS} /><span class="rv-pn">{p.count} Google reviews</span><span class="sr-only"> (opens in a new tab)</span></a></li>
+        ))}
+      </ul>
     </div>
     <div class="rv-tabs" role="tablist" aria-label="Reviews by job" data-t="3" data-rv-tabs>
       <span class="rv-pill" aria-hidden="true" data-rv-pill></span>
@@ -98,9 +104,17 @@ const ACTIVE = 'leaks';
 </section>
 <style>
   .rv { position: relative; background: var(--white); padding: 110px 0 97px; }
-  .rv-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; }
+  /* R2 polish: centred head with the Google record (each profile its own count + link, never summed). */
+  .rv-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; }
+  .rv-rec { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .rv-pf { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 5px 16px 5px 6px; border-radius: 24px; background: var(--white); box-shadow: inset 0 0 0 1.2px var(--ink); color: var(--ink); transition: box-shadow .35s var(--ease-io); }
+  .rv-pf:hover, .rv-pf:focus-visible { box-shadow: inset 0 0 0 1.2px var(--ink), 4px 4px 0 var(--powder); }
+  .rv-g { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--frost); color: #3367D6; font: 800 16px/1 var(--f-h); }
+  .rv-pf b { font: 800 19px/1 var(--f-h); }
+  .rv-pst { display: block; width: 74px; } .rv-pst :global(svg) { display: block; width: 100%; height: auto; }
+  .rv-pn { font: 500 11px/1 var(--f-m); color: var(--pdeep); text-decoration: underline; text-underline-offset: 3px; }
   .rv-h { margin-top: 16px; }
-  .rv-lead { width: 420px; margin-top: 42px; font-size: 16px; line-height: 1.5; color: var(--muted); }
+  .rv-lead { width: auto; max-width: 520px; margin-top: 18px; font-size: 16px; line-height: 1.5; color: var(--muted); }
   .rv-tabs { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 40px; padding: 4px; height: 56px; border-radius: 28px; background: var(--frost); }
   .rv-pill { position: absolute; left: 0; top: 4px; height: 48px; width: var(--pw, 232px); translate: var(--px, 484px) 0; border-radius: 24px; background: var(--ink); transition: translate .45s var(--ease-io), width .45s var(--ease-io); }
   .rv-tab { position: relative; z-index: 1; height: 48px; border: 0; border-radius: 24px; background: none; font-family: var(--f-b); font-weight: 700; font-size: 15px; line-height: 1.5; color: var(--ink); cursor: pointer; white-space: nowrap; transition: color .3s var(--ease-io); }
@@ -133,7 +147,7 @@ const ACTIVE = 'leaks';
   .tk-q { font-weight: 500; font-size: 17px; line-height: 1.45; }
   .tk-by { margin-top: auto; padding-top: 16px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
   :global(html.motion) .tk:not(.in) .tk-perf { scale: 1 0; }
-  .rv-all { display: inline-block; margin-top: 30px; padding: 10px 0; margin-bottom: -10px; font-weight: 700; font-size: 15px; line-height: 1.5; }
+  .rv-all { display: inline-block; margin-top: 30px; padding: 11px 0; margin-bottom: -11px; font-weight: 700; font-size: 15px; line-height: 1.5; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .rv-top { flex-direction: column; gap: 0; }
@@ -152,7 +166,7 @@ const ACTIVE = 'leaks';
     .rv-tabs { display: flex; gap: 8px; height: 44px; margin: 22px calc(-1 * var(--gutter)) 0 0; padding: 5px var(--gutter) 5px 0; border-radius: 0; background: none; overflow-x: auto; scrollbar-width: none; }
     .rv-tabs::-webkit-scrollbar { display: none; }
     .rv-pill { display: none; }
-    .rv-tab { flex: none; order: 1; height: 34px; padding: 0 14px; border-radius: 17px; background: var(--frost); box-shadow: inset 0 0 0 1.2px var(--frost3); font-weight: 600; font-size: 14px; position: relative; }
+    .rv-tab { flex: none; order: 1; height: 44px; padding: 0 16px; border-radius: 22px; background: var(--frost); box-shadow: inset 0 0 0 1.2px var(--frost3); font-weight: 600; font-size: 14px; position: relative; }
     .rv-tab::after { content: ''; position: absolute; left: 0; right: 0; top: -5px; bottom: -5px; }
     .rv-tab.is-first { order: 0; }
     .rv-tab[aria-selected='true'] { background: var(--ink); box-shadow: inset 0 0 0 1.2px var(--ink); }

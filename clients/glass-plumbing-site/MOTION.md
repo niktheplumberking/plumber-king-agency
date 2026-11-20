@@ -279,41 +279,22 @@ handoff, plays once at their line, puts objects above the viewport in their end 
 
 ## 3. Loader and curtain (the handoff)
 
-- **Loader** (fix round 1, B3; `components/global/Loader.astro` + `kit/loader.ts`, first visit per session only, never under
-  reduced motion). Base: 21st.dev "Swiss Poster Counter Preloader" (id 35248), re-built in vanilla TS + GSAP (3.1 KB
-  minified). An ink poster: Mike's hex badge top left, "Riverside, CA" and `000 / 100` top right, "Friendly ·
-  Transparent · Proficient" bottom left, a 3-digit slat counter in the middle (every digit a 3 x 7 grid of tan and bone
-  2:1 slats that read as pipe sections; a number is drawn by sliding the bars sideways onto the lit cells, so the count
-  shunts and never fades). Timing: slats grow in (0.3 s), the count runs 000 -> 100 over ~1.3 s with surges and stalls
-  while the page loads (it holds at 99 until `load`, 100 is forced at 1.8 s), the last shunt lands (0.52 s), then the
-  exit (~0.85 s): the stage fades (0.2 s) and from 0.15 s the **8 blinds** slide off alternately left / right (0.6 s
-  `power2.inOut`, stagger 0.012 s); each blind's moving edge carries a 10 px band in the slats' tan / bone, so the exit
-  reads on an ink hero. The top-right `NNN / 100` shows the number the slats have LANDED on (it follows each shunt by
-  0.52 s), so it never reads 100 while the slats still read 08x (fix round 2, review 14). The hero takes its start states
-  while still fully covered; the hero timeline, the header and Lenis start at the **handoff, when the blinds are ~75 % off**
-  (0.6 s into the exit), so the H1 starts as the cover clears (measured: H1 starts 125 ms / 59 ms BEFORE the blinds clear
-  at 1440 / 390; fix round 2, review 3). Cleanup (`intro` off, loader hidden) runs at the exit's `onComplete`.
-- **First paint under the loader (fix round 2, QA D12)**: the hero headline, lead and main photo are NOT held at opacity 0
-  under the loader (the cover hides them; their entrance writes transform / clip from the hero timeline), so the LCP
-  element paints at first paint. `html.cv` (added with `intro` by the Base.astro head script) puts `content-visibility:
-  auto` on everything below the hero while the loader runs, so the first layout is the hero only and below-the-fold font
-  weights are not requested before first paint; after `load` the sections are let back in one per 40 ms (small tasks),
-  and at 100 the rest at once. The 3.5 s safety removes `cv` too. Lighthouse mobile LCP: home 3.28 -> ~2.0 s,
-  water-heaters 2.64 -> ~1.7 s, reviews 2.36 -> ~1.8 s. Max 3.4 s; measured 3.13-3.19 s to `intro` removed on a fast
-  network. Any click, tap or key skips to 100 and exits (measured 1.93 s). If the JS has not booted by 3.5 s (very slow
-  networks), the Base.astro safety removes `html.intro` and the page shows without the loader.
-- **Curtain** (fix round 1, B2; `components/kit/Curtain.astro` + `kit/curtain.ts`): the same 8-blind family. One channel,
-  GSAP `xPercent` per `.pt-blind`. A click on an in-site link slides the blinds in from alternating sides (0.6 s
-  `power2.inOut`, stagger 0.012 s; measured cover 0 -> 1 monotonic in ~0.48 s), THEN navigates. The next page starts
-  covered (`html.pt-in`, the CSS rest state is covering), goes to the top under the cover (`history.scrollRestoration =
-  'manual'`, `lenis.scrollTo(0, { immediate: true })`), then the blinds slide off (0.6 s; measured 1 -> 0 monotonic in
-  0.5 s). Fix round 2 (review 3): the curtain blinds are tan / bone (alternating, the slats' colours), so cover and reveal
-  read on an ink hero; the header and utility bar backgrounds stay painted under the cover (only their contents fade in),
-  so no bone strip shows after the blinds; the hero handoff fires at ~75 % of the blind travel (H1 starts 74 / 98 ms before
-  the cover clears at 1440 / 390), and `scrollRestoration` returns to `'auto'` at the end (back/forward keep
-  the native restore, measured 2500 -> 2500). A cross-page link drops its `#hash`. Skipped for new tabs, modifier
-  clicks, downloads, same-page hash links and `data-no-curtain` links.
-- Blinds move by xPercent of their own width, so they stay exact under the wide-screen zoom.
+**Revision round 2 (20 Nov 2026, Glass): "Clear Water".** Nick: the transition must not look like Mike's or Khinda's (both use
+8 sideways blinds with a centred mark, recorded 20 Nov: `handoff/qa/r2/shared/mike-transition-1440.png`,
+`khinda-transition-1440.png`). Glass's curtain and loader are one family built from the Glass motif (housing + water fill +
+meniscus); source 21st.dev "Page Transition" (su2491251, id 29262, `liquid-wave` variant), rebuilt in vanilla TS + GSAP
+(`kit/water.ts`, `kit/Water.astro`, `kit/curtain.ts`, `kit/Curtain.astro`, `kit/loader.ts`, `global/Loader.astro`; API in
+`src/components/kit/README.md`).
+- **Curtain**: an in-site click fills the screen from the bottom: powder water, deep water, then a clear frost layer (0.9 s,
+  every surface a meniscus, the white meniscus line on the front), the logo floats up into the frost, and only at 100 %
+  cover does the browser navigate. The new page starts covered (`html.pt-in`; the SVG's resting markup is full), goes to
+  scrollY 0 under the cover, then the water drains down and away (1.0 s, front layer first), so the page appears from the
+  top, header first. The hero handoff fires at 55 % of the drain. `scrollRestoration` is `manual` only while arriving.
+- **Loader** (first visit per session): the screen is the housing; the three layers rise with the 000 / 100 count, a spec
+  plate (logo + gauge) floats on top; at 100 it tops up, the plate sinks and the water drains exactly like the curtain.
+  Max ~3.35 s, skippable, never under reduced motion; `html.cv` behaviour unchanged.
+- Differences from Mike / Khinda: vertical fill and drain instead of sideways blinds; one continuous curved surface (no
+  strips); three translucent-looking water tones; the page is revealed top-down by a falling meniscus.
 
 You never call either one. Use `Base.astro`; `loader={false}` turns the loader off for a page (404, thank-you).
 
@@ -350,6 +331,19 @@ You never call either one. Use `Base.astro`; `loader={false}` turns the loader o
 | `data-draw-map`, `data-route` | `PinellasMap.astro` | the county outline draws; the dashed truck route then flows once and rests |
 | `data-magnetic` | primary buttons (default on `pri`/`priN`) | the button leans toward the pointer (fine pointers only) |
 | (every `.btn`) | buttons | the hover fill grows from where the pointer entered |
+
+## 4b-R2. Site-wide parallax on images and text (revision round 2, 20 Nov 2026)
+
+Nick: "Apply the parallax effect throughout the website for the images and for the text as well". Added to `parallax()` and
+`photoDrift()` in motion.ts (automatic, motion on only, never the hero at load, scrub 0.6 on Lenis):
+- every non-hero section `h2` drifts +10 -> -10 px on its head block (`.shead` / small eyebrow-heading-lead parent / the h2),
+  through the CSS `translate` property, or GSAP's `yPercent` component when GSAP animates that element (GSAP resets
+  `translate` on its targets); entrances own x / y / scale, so they never fight;
+- objects +14 -> -14 px: `[data-count]`, digits-only numerals >= 56 px, `[data-plate]`, standalone housings, seals/stamps,
+  `[data-px-obj]`;
+- photos: in-frame drift (scale 1.14, translate -5 % -> 5 %) now also on photos whose frame does not clip (inverse
+  `clip-path` on the img keeps exactly its box visible); never the `business-card` photo, carousels, cut-outs;
+- opt-out: `data-no-px` on an element or any ancestor. Details: `handoff/SHARED-STATUS-R2.md`.
 
 ## 4b. Parallax (round 3, automatic)
 

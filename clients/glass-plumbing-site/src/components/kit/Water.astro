@@ -1,0 +1,23 @@
+---
+// The "Clear Water" sheet (kit/water.ts draws it): three water layers (powder, pdeep, clear frost) and the white meniscus
+// line on the front surface. Shared by the page curtain (kit/Curtain.astro) and the loader (global/Loader.astro).
+// Resting markup = full cover (every layer above the top edge), so a page that arrives under the curtain is covered at
+// first paint with no script. Decorative only.
+interface Props { class?: string; empty?: boolean }
+const { class: cls, empty } = Astro.props;
+// `empty` (the loader): the water starts below the bottom edge and rises with the count.
+const FULL = empty ? 'M0 102 V102 H100 V102 Z' : 'M0 102 V-2 H100 V102 Z';
+---
+<svg class:list={['wt', cls]} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <path data-wl class="wt-0" d={FULL} />
+  <path data-wl class="wt-1" d={FULL} />
+  <path data-wl class="wt-2" d={FULL} />
+  <path data-wline class="wt-line" d="M0 -2 H100" />
+</svg>
+<style>
+  .wt { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+  .wt-0 { fill: var(--powder); }
+  .wt-1 { fill: var(--pdeep); }
+  .wt-2 { fill: var(--frost); }
+  .wt-line { fill: none; stroke: rgba(255, 255, 255, .85); stroke-width: 3px; vector-effect: non-scaling-stroke; }
+</style>

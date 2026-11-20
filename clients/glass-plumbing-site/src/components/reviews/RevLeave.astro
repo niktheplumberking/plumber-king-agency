@@ -1,47 +1,79 @@
 ---
-// "Leave a review. It helps your neighbours." (Figma "Leave a review" y 4230 h 340 / mobile y 7533 h 408). Ink band, a
-// meniscus seam rises into the white band above. Button labels per BUILD-BRIEF 11 (no sums, one button per profile);
-// the longer label (3-digit count) gets the 260 px button so the label clears the arrow (still 240 + 20 + 260 = 520).
+// "Leave a review. It helps your neighbours.", round 2 (audit: heading left + two white buttons right on an empty ink band
+// = left/right slop). Rebuilt centred: two blank review slips, one per Google profile (counts never added up), each with
+// five empty stars that fill gold one by one on hover / focus, and dashed lines waiting for your words. The whole slip is
+// the link to that profile. 21st.dev refs: "Star Rate" (ham7a311) staggered star fill + "Photo Review Form" (vovalopuh13)
+// paper slip; adapted to CSS only (no JS needed). Reduced motion: the stars fill at once.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
-import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
 import { SITE } from '../../data/site';
 const g = SITE.google;
+const slips = [{ n: 1, p: g.a, r: '-2deg' }, { n: 2, p: g.b, r: '2deg' }];
+const star = 'M12 2.2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.1l-6.1 3.5 1.5-6.8-5.2-4.6 6.9-.7z';
 ---
 <section class="cx-sec cx-ink rv-l on-ink" data-m-section aria-labelledby="rlv-h">
-  <Seam from="var(--white)" to="var(--ink)" flip />
-  <div class="wrap rlv-g">
-    <div class="shead">
-      <Eyebrow text="Had us out?" tone="light" />
+  <Seam from="var(--frost)" to="var(--ink)" flip />
+  <div class="wrap">
+    <div class="shead rlv-head">
+      <Eyebrow text="Had us out?" tone="light" class="rlv-eb" />
       <h2 id="rlv-h" class="cx-h rlv-h" data-t="2"><span class="ln">Leave a review.</span> <span class="ln tone">It helps your neighbours.</span></h2>
     </div>
-    <div class="rlv-b">
-      <div class="rlv-btns" data-t="3">
-        <Btn look="light" label={`Google profile · ${g.a.count} reviews`} href={g.a.url} external arrow w={g.a.count > g.b.count ? 260 : 240} class="rlv-btn" />
-        <Btn look="light" label={`Google profile · ${g.b.count} reviews`} href={g.b.url} external arrow w={g.a.count > g.b.count ? 240 : 260} class="rlv-btn" />
-      </div>
-      <p class="rlv-n" data-t="3">Both are real Glass Plumbing profiles on Google until they are merged.</p>
-    </div>
+    <ul class="rlv-slips" role="list" data-t="4" data-stagger>
+      {slips.map(({ n, p, r }) => (
+        <li style={`--r:${r}`}>
+          <a class="rlv-s" href={p.url} target="_blank" rel="noopener">
+            <span class="rlv-top"><span class="rlv-k">Google profile {n}</span><span class="rlv-c">{p.value} · {p.count} reviews</span></span>
+            <span class="rlv-stars" aria-hidden="true">
+              {[0, 1, 2, 3, 4].map((i) => <svg width="34" height="34" viewBox="0 0 24 24" style={`--i:${i}`}><path d={star} /></svg>)}
+            </span>
+            <span class="rlv-lines" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="rlv-go">Write yours on Google <span aria-hidden="true">→</span></span>
+            <span class="sr-only"> (Google profile {n}, {p.count} reviews, opens in a new tab)</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="rlv-n" data-t="3">Both are real Glass Plumbing profiles on Google until they are merged.</p>
   </div>
 </section>
 <style>
-  .rv-l { padding: 110px 0 92px; }
-  .rlv-g { display: grid; grid-template-columns: 1fr 520px; column-gap: 40px; }
-  .rlv-h { --fs: 52px; --fs-m: 28px; margin-top: 16px; }
-  .rlv-btns { display: flex; gap: 20px; }
-  .rlv-btns :global(.rlv-btn) { height: 64px; }
-  @media (min-width: 1280px) { .rlv-b { padding-top: 30px; } } /* Figma: buttons at y 140, the heading's top (eyebrow at 110) */
-  .rlv-n { margin: 20px 0 0; font: 400 14px/1.5 var(--f-b); color: rgba(255, 255, 255, .8); }
+  .rv-l { padding: 120px 0 104px; }
+  .rlv-head { display: grid; justify-items: center; text-align: center; }
+  .rlv-head :global(.rlv-eb) { justify-content: center; }
+  .rlv-h { --fs: 56px; --fs-m: 30px; margin-top: 16px; }
+  .rlv-slips { display: flex; justify-content: center; gap: 40px; margin: 52px 0 0; padding: 0; list-style: none; }
+  .rlv-slips li { width: 440px; }
+  .rlv-s { display: flex; flex-direction: column; height: 100%; padding: 24px 26px 22px; border-radius: 6px; background: var(--white); color: var(--ink); text-decoration: none;
+    rotate: var(--r); box-shadow: 10px 10px 0 var(--powder); transition: rotate .5s var(--ease-io), transform .5s var(--ease-io), box-shadow .5s var(--ease-io); }
+  .rlv-s:hover, .rlv-s:focus-visible { rotate: 0deg; transform: translateY(-6px); box-shadow: 14px 14px 0 var(--powder); }
+  .rlv-s:focus-visible { outline: 3px solid var(--powder); outline-offset: 5px; }
+  .rlv-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .rlv-k { font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .rlv-c { font: 800 15px/1.2 var(--f-h); letter-spacing: -0.02em; }
+  .rlv-stars { display: flex; gap: 6px; margin-top: 18px; }
+  .rlv-stars path { fill: transparent; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; transition: fill .35s var(--ease-io), stroke .35s var(--ease-io); }
+  .rlv-stars svg { transition: transform .35s var(--ease-back); }
+  .rlv-s:hover .rlv-stars path, .rlv-s:focus-visible .rlv-stars path { fill: var(--gold); stroke: #9a6c00; transition-delay: calc(var(--i) * 70ms); }
+  .rlv-s:hover .rlv-stars svg, .rlv-s:focus-visible .rlv-stars svg { transform: scale(1.12); transition-delay: calc(var(--i) * 70ms); }
+  .rlv-lines { display: grid; gap: 18px; margin-top: 22px; }
+  .rlv-lines i { display: block; height: 1px; border-top: 1.5px dashed var(--frost3); }
+  .rlv-lines i:last-child { width: 60%; }
+  .rlv-go { margin-top: 22px; font: 700 16px/1.3 var(--f-b); color: var(--pdeep); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+  .rlv-n { margin: 44px 0 0; text-align: center; font: 400 14px/1.5 var(--f-b); color: rgba(255, 255, 255, .8); }
+  html.no-motion .rlv-s, html.no-motion .rlv-stars svg { transition: none; }
   @media (min-width: 768px) and (max-width: 1279px) {
-    .rlv-g { grid-template-columns: 1fr; row-gap: 32px; }
+    .rlv-slips { gap: 24px; } .rlv-slips li { width: auto; flex: 1; max-width: 440px; }
   }
   @media (max-width: 767px) {
-    .rv-l { padding: 64px 0 50px; }
-    .rlv-g { grid-template-columns: 1fr; row-gap: 26px; }
+    .rv-l { padding: 64px 0 56px; }
     .rlv-h { margin-top: 12px; }
-    .rlv-btns { flex-direction: column; gap: 12px; }
-    .rlv-btns :global(.rlv-btn) { width: 100%; height: 56px; }
-    .rlv-n { margin-top: 26px; font-size: 13px; }
+    .rlv-slips { flex-direction: column; align-items: stretch; gap: 22px; margin-top: 30px; }
+    .rlv-slips li { width: auto; }
+    .rlv-s { padding: 18px 18px 16px; box-shadow: 7px 7px 0 var(--powder); rotate: calc(var(--r) / 2); }
+    .rlv-stars svg { width: 28px; height: 28px; }
+    .rlv-lines { gap: 14px; margin-top: 16px; }
+    .rlv-go { margin-top: 16px; font-size: 15px; }
+    .rlv-n { margin-top: 28px; font-size: 13px; }
   }
 </style>

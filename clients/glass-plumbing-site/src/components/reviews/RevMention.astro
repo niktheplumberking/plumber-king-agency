@@ -1,57 +1,210 @@
 ---
-// "Counted from the 16 reviews we read." (Figma "What people mention" y 792 h 640 / mobile y 798 h 696). Counts = Figma.
-// Each dot is one review; the dots fill in as the row enters (CSS transition, staggered; static under reduced motion).
+// "What people mention", round 2 (Nick 20 Nov: "3 text blocks left + tally right = slop"). Rebuilt as a RACK of six filter
+// housings: each housing's water level is that theme's count out of the 16 reviews (Figma counts, checked against
+// reviews.ts below). Picking a housing filters the slips underneath to the reviews that say it, and a powder highlight
+// sweeps over the exact words. Every excerpt is a verbatim sentence of the review (checked at build: it must be a
+// substring of the text in reviews.ts). 21st.dev refs: "Review Filter Bars" (ruixen.ui) for the count-as-object filter,
+// "Highlight Testimonial Section" (dhxwhy) for the highlight sweep; adapted to vanilla TS + the kit Housing.
+// No JS: the first theme ("Fair price") shows; the rest of the reviews are in the wall below.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
-const rows: [string, number][] = [['On time', 5], ['Explained everything', 2], ['Fair price', 6], ['Same or next day', 4], ['Professional', 6], ['Cleaned up after', 2]];
+import Housing from '../kit/Housing.astro';
+import Stars from '../contact/Stars.astro';
+import { REVIEWS } from '../../data/reviews';
+type Ex = [name: string, sentence: string, mark: string];
+const THEMES: { id: string; t: string; ex: Ex[] }[] = [
+  { id: 'price', t: 'Fair price', ex: [
+    ['Kevin Kelleman', 'Needed a new Water Heater, called and had one installed the next day at a great price.', 'at a great price'],
+    ['Parker L', 'He was reliable, professional, knowledgeable, and did great work at an affordable price!', 'at an affordable price'],
+    ['Seth Nye', 'Also, was able to unclog my sewage lines shortly after my new installation, all for a very good price.', 'a very good price'],
+    ['Emily Van Den Langenberg', 'They are efficient, knowledgeable, and their prices are always fair.', 'their prices are always fair'],
+    ['David Peek', 'Always very responsive to communications and always on time as scheduled and their prices are very reasonable.', 'their prices are very reasonable'],
+    ['Cary Cannon', 'He was prompt, honest, and affordable.', 'affordable'],
+  ] },
+  { id: 'pro', t: 'Professional', ex: [
+    ['Peter Van Buskirk', 'Zac and Kody Glass are an extremely qualified and profeesional plumbing team!', 'profeesional'],
+    ['Greg Letsch', 'Zach was very professional and well versed in his knowledge.', 'very professional'],
+    ['Cody Weaver', 'He was efficient and professional throughout the whole experience.', 'efficient and professional'],
+    ['Jordan Carlson', 'Zak was professional, punctual, and very friendly.', 'professional'],
+    ['Parker L', 'He was reliable, professional, knowledgeable, and did great work at an affordable price!', 'professional'],
+    ['Eduardo “EddieZoRz” Perea', 'Professional, reliable, and efficient, turned a plumbing nightmare into a manageable situation.', 'Professional'],
+  ] },
+  { id: 'time', t: 'On time', ex: [
+    ['Michael Marks', 'Zak and Chase were on time, explained everything in detail, made solid recommendations, and did the little extras (cleaning up, performance & look) that turn a really good outcome into a great one.', 'were on time'],
+    ['Cody Weaver', 'They do what they say they will and show up on time!', 'show up on time'],
+    ['Jordan Carlson', 'Zak was professional, punctual, and very friendly.', 'punctual'],
+    ['David Peek', 'Always very responsive to communications and always on time as scheduled and their prices are very reasonable.', 'always on time as scheduled'],
+    ['Cary Cannon', 'He showed up on time, explained everything clearly, and did excellent work without overcharging.', 'showed up on time'],
+  ] },
+  { id: 'fast', t: 'Same or next day', ex: [
+    ['Jen James', 'I took a few pictures of the valve that needed replaced and he was at my home the next day !!', 'he was at my home the next day'],
+    ['Kevin Kelleman', 'Needed a new Water Heater, called and had one installed the next day at a great price.', 'installed the next day'],
+    ['Parker L', 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.', 'came out the same day I called'],
+    ['Seth Nye', 'Hired glass plumbing services for a leaky shower faucet, Mr. Glass was here same day to replace pipes/ fittings and new kit and left here good as new!', 'was here same day'],
+  ] },
+  { id: 'explain', t: 'Explained everything', ex: [
+    ['Michael Marks', 'Zak and Chase were on time, explained everything in detail, made solid recommendations, and did the little extras (cleaning up, performance & look) that turn a really good outcome into a great one.', 'explained everything in detail'],
+    ['Cary Cannon', 'He showed up on time, explained everything clearly, and did excellent work without overcharging.', 'explained everything clearly'],
+  ] },
+  { id: 'clean', t: 'Cleaned up after', ex: [
+    ['Michael Marks', 'Zak and Chase were on time, explained everything in detail, made solid recommendations, and did the little extras (cleaning up, performance & look) that turn a really good outcome into a great one.', 'cleaning up'],
+    ['Jacob Gars', 'He even went above and beyond to clean the bathroom spotless after!', 'clean the bathroom spotless'],
+  ] },
+];
+const byName = new Map(REVIEWS.map((r) => [r.name, r]));
+const themes = THEMES.map((th) => ({
+  ...th,
+  n: th.ex.length,
+  slips: th.ex.map(([name, s, m]) => {
+    const r = byName.get(name);
+    if (!r) throw new Error(`RevMention: no review by ${name}`);
+    if (!r.text.includes(s)) throw new Error(`RevMention: "${s}" is not word for word in ${name}'s review`);
+    const at = s.indexOf(m); if (at < 0) throw new Error(`RevMention: mark "${m}" not in the sentence`);
+    return { name, when: r.when, pre: s.slice(0, at), mark: m, post: s.slice(at + m.length) };
+  }),
+}));
 ---
-<section class="cx-sec cx-frost rm" data-m-section aria-labelledby="rm-h">
-  <div class="wrap rm-g">
-    <div class="rm-head">
-      <div class="shead">
-        <Eyebrow text="What people mention" tone="pdeep" />
-        <h2 id="rm-h" class="cx-h rm-h" data-t="2"><span class="ln">Counted from the</span> <span class="ln tone">16 reviews we read.</span></h2>
-      </div>
-      <p class="rm-note" data-t="3">Each dot is one review. A review can mention more than one thing.</p>
+<section class="cx-sec cx-frost rm" data-m-section aria-labelledby="rm-h" data-rack>
+  <div class="wrap">
+    <div class="shead rm-head">
+      <Eyebrow text="What people mention" tone="pdeep" class="rm-eb" />
+      <h2 id="rm-h" class="cx-h rm-h" data-t="2"><span class="ln">Counted from the</span> <span class="ln tone">16 reviews we read.</span></h2>
+      <p class="rm-note" data-t="3">Each housing fills to its count out of 16. Pick one to read the words people used. A review can mention more than one thing.</p>
     </div>
-    <ul class="rm-l" role="list" data-t="3" data-stagger>
-      {rows.map(([t, n]) => (
-        <li class="rm-r">
-          <span class="rm-t">{t}</span>
-          <span class="rm-d" aria-hidden="true">{Array.from({ length: 16 }, (_, i) => <i class:list={[i < n && 'on']} style={`--i:${i}`}></i>)}</span>
-          <span class="rm-n">{n}/16<span class="sr-only"> reviews</span></span>
-        </li>
+
+    <div class="rm-rack-wrap" data-t="4" data-fx="up" data-no-px>
+      <div class="rm-rack" role="tablist" aria-label="What people mention">
+        {themes.map((th, i) => (
+          <button type="button" role="tab" class="rm-k" id={`rm-t-${th.id}`} aria-controls={`rm-p-${th.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-rack-tab={i}>
+            <span class="rm-hs"><Housing w={76} h={150} wm={42} hm={92} fill={th.n / 16} tone="light" shadow={6} shadowm={4} /></span>
+            <span class="rm-n"><b>{th.n}</b>/16</span>
+            <span class="rm-t">{th.t}</span>
+          </button>
+        ))}
+      </div>
+      <span class="rm-shelf" aria-hidden="true"></span>
+    </div>
+
+    <div class="rm-stage">
+      {themes.map((th, i) => (
+        <div class="rm-p" role="tabpanel" id={`rm-p-${th.id}`} aria-labelledby={`rm-t-${th.id}`} data-rack-panel={i} hidden={i !== 0 ? true : undefined} tabindex="0">
+          <p class="rm-pl"><b>{th.t}</b> · {th.n} of 16 reviews say it</p>
+          <ul class:list={['rm-slips', `rm-c${Math.min(3, th.n)}`]} role="list">
+            {th.slips.map((s, k) => (
+              <li class="rm-s" style={`--i:${k}`}>
+                <blockquote><p>“{s.pre}<mark>{s.mark}</mark>{s.post}”</p></blockquote>
+                <p class="rm-by"><Stars w={60} /><span class="rm-who">{s.name}</span><span class="rm-when">{s.when}</span></p>
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
-    </ul>
+    </div>
   </div>
 </section>
+<script>
+  // Rack tabs: roving tabindex, arrows / Home / End, the panel swaps with a fade + 16 px rise (WAAPI, ease-in-out), then the
+  // highlights sweep in (.is-lit). Reduced motion: instant, highlights already full.
+  const motion = () => document.documentElement.classList.contains('motion');
+  document.querySelectorAll<HTMLElement>('[data-rack]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-rack-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-rack-panel]'));
+    let cur = 0;
+    const lit = (p: HTMLElement) => requestAnimationFrame(() => requestAnimationFrame(() => p.classList.add('is-lit')));
+    const pick = (i: number, focus = false) => {
+      if (focus) tabs[i].focus();
+      if (i === cur) return;
+      const from = panels[cur], to = panels[i];
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      cur = i;
+      if (!motion()) { from.hidden = true; to.hidden = false; to.classList.add('is-lit'); return; }
+      from.getAnimations().forEach((a) => a.cancel());
+      const out = from.animate([{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-12px)' }], { duration: 220, easing: 'cubic-bezier(.65,0,.35,1)' });
+      out.onfinish = () => {
+        from.hidden = true; from.classList.remove('is-lit'); to.hidden = false;
+        to.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 480, easing: 'cubic-bezier(.65,0,.35,1)' });
+        lit(to);
+      };
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => pick(i));
+      t.addEventListener('keydown', (e) => {
+        let n = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (cur + 1) % tabs.length; else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (cur - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = tabs.length - 1;
+        if (n >= 0) { e.preventDefault(); pick(n, true); }
+      });
+    });
+    // The first panel's highlight sweeps when the stage scrolls into view.
+    const first = panels[0];
+    if (!motion() || !('IntersectionObserver' in window)) { first.classList.add('is-lit'); return; }
+    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { lit(panels[cur]); io.disconnect(); } }, { rootMargin: '0px 0px -20% 0px' });
+    io.observe(root.querySelector('.rm-stage')!);
+  });
+</script>
 <style>
-  .rm { padding: 100px 0 153px; }
-  .rm-g { display: grid; grid-template-columns: 600px 1fr; }
-  .rm-h { --fs: 48px; --fs-m: 28px; margin-top: 16px; }
-  .rm-note { margin: 40px 0 0; font: 400 14px/1.5 var(--f-b); color: var(--muted); max-width: 460px; }
-  .rm-l { margin: 16px 0 0; padding: 0; list-style: none; display: grid; row-gap: 49px; }
-  .rm-r { display: grid; grid-template-columns: 260px 1fr auto; align-items: center; height: 21px; }
-  .rm-t { font: 800 20px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .rm-d { display: flex; gap: 4px; }
-  .rm-d i { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--frost3); }
-  .rm-d i.on { background: var(--pdeep); box-shadow: none; }
-  .rm-n { font: 700 11px/15px var(--f-m); letter-spacing: .06em; color: var(--pdeep); }
+  .rm { padding: 110px 0 120px; }
+  .rm-head { display: grid; justify-items: center; text-align: center; }
+  .rm-head :global(.rm-eb) { justify-content: center; }
+  .rm-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
+  .rm-note { max-width: 560px; margin: 18px 0 0; font: 400 16px/1.5 var(--f-b); color: var(--muted); }
+
+  /* The rack: six housings standing on a steel shelf. */
+  .rm-rack-wrap { position: relative; margin: 52px auto 0; max-width: 1040px; }
+  .rm-rack { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+  .rm-shelf { position: absolute; left: -20px; right: -20px; top: 170px; height: 14px; border-radius: 3px; background: var(--steel); border: 1px solid var(--steel2); box-shadow: 0 6px 0 var(--steel2); }
+  .rm-k { display: grid; justify-items: center; align-content: start; min-height: 44px; padding: 8px 6px 14px; border-radius: 8px; background: transparent; color: var(--ink);
+    border: 1.5px solid transparent; cursor: pointer; transition: background-color .45s var(--ease-io), border-color .45s var(--ease-io), box-shadow .45s var(--ease-io); }
+  .rm-hs { display: block; height: 154px; transition: transform .45s var(--ease-io); }
+  .rm-k:hover .rm-hs { transform: translateY(-6px); }
+  .rm-k[aria-selected='true'] .rm-hs { transform: translateY(-10px); }
+  .rm-k[aria-selected='true'] { background: var(--white); border-color: var(--ink); box-shadow: 6px 6px 0 var(--powder); }
+  .rm-k:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .rm-n { margin-top: 26px; font: 700 12px/1 var(--f-m); letter-spacing: .04em; color: var(--pdeep); }
+  .rm-n b { font: 800 34px/1 var(--f-h); letter-spacing: -0.03em; color: var(--ink); }
+  .rm-t { margin-top: 8px; font: 800 17px/1.15 var(--f-h); letter-spacing: -0.02em; text-align: center; }
+  .rm-k:not([aria-selected='true']):hover .rm-t { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* The slips of the picked theme, with the words highlighted. */
+  .rm-stage { margin: 44px auto 0; max-width: 1200px; min-height: 380px; }
+  .rm-p { outline: none; }
+  .rm-p:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 6px; }
+  .rm-pl { margin: 0 0 18px; text-align: center; font: 500 12px/16px var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .rm-pl b { color: var(--ink); }
+  .rm-slips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0; padding: 0; list-style: none; }
+  .rm-c2 { grid-template-columns: repeat(2, minmax(0, 420px)); justify-content: center; }
+  .rm-s { display: flex; flex-direction: column; padding: 22px 22px 16px; background: var(--white); border: 1px solid var(--frost3); border-radius: 6px; rotate: calc((var(--i) - 1) * 0.6deg); }
+  .rm-s:nth-child(even) { rotate: calc(var(--i) * -0.4deg); }
+  .rm-s blockquote { margin: 0; }
+  .rm-s blockquote p { margin: 0; font: 600 18px/1.4 var(--f-h); letter-spacing: -0.012em; color: var(--ink); }
+  .rm-s mark { color: inherit; background: linear-gradient(var(--powder), var(--powder)) no-repeat 0 88% / 100% 46%; padding: 0 2px; border-radius: 2px; }
+  html.motion .rm-s mark { background-size: 0% 46%; transition: background-size .8s var(--ease-io); transition-delay: calc(.12s + var(--i) * .08s); }
+  html.motion .rm-p.is-lit .rm-s mark { background-size: 100% 46%; }
+  .rm-by { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin: auto 0 0; padding-top: 16px; }
+  .rm-who { font: 800 14px/1.1 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .rm-when { font: 500 10px/13px var(--f-m); letter-spacing: .02em; color: var(--muted); }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .rm-g { grid-template-columns: 1fr; row-gap: 48px; }
-    .rm-note { margin-top: 20px; }
+    .rm-rack { gap: 8px; }
+    .rm-t { font-size: 15px; }
+    .rm-slips { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 767px) {
-    .rm { padding: 56px 0 84px; }
-    .rm-g { display: flex; flex-direction: column; }
-    .rm-head { display: contents; }
+    .rm { padding: 60px 0 76px; }
     .rm-h { margin-top: 12px; }
-    .rm-l { order: 2; margin-top: 26px; row-gap: 22px; }
-    .rm-note { order: 3; margin-top: 26px; font-size: 13px; }
-    .rm-r { grid-template-columns: 1fr auto; row-gap: 12px; height: auto; }
-    .rm-t { font-size: 18px; }
-    .rm-d { grid-column: 1 / -1; grid-row: 2; justify-content: space-between; gap: 0; }
-    .rm-d i { width: 15px; height: 15px; }
-    .rm-n { font-size: 10px; grid-row: 1; grid-column: 2; }
+    .rm-note { margin-top: 12px; font-size: 14px; }
+    .rm-rack-wrap { margin-top: 30px; }
+    .rm-rack { grid-template-columns: repeat(3, 1fr); gap: 10px 8px; }
+    .rm-shelf { display: none; }
+    .rm-k { padding: 8px 4px 10px; border-color: var(--frost3); background: var(--white); }
+    .rm-k[aria-selected='true'] { box-shadow: 4px 4px 0 var(--powder); background: var(--white); }
+    .rm-hs { height: 96px; }
+    .rm-k:hover .rm-hs, .rm-k[aria-selected='true'] .rm-hs { transform: translateY(-4px); }
+    .rm-n { margin-top: 10px; } .rm-n b { font-size: 24px; }
+    .rm-t { margin-top: 6px; font-size: 13px; }
+    .rm-stage { margin-top: 28px; min-height: 0; }
+    .rm-slips, .rm-c2 { grid-template-columns: 1fr; gap: 12px; }
+    .rm-s { padding: 16px 16px 12px; rotate: 0deg !important; }
+    .rm-s blockquote p { font-size: 16px; }
   }
 </style>

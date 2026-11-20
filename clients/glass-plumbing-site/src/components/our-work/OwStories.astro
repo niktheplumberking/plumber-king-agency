@@ -1,74 +1,178 @@
 ---
-// "How the job actually went." (Figma "Job stories" y 2428 h 1620 / mobile y 1885 h 1491). Three jobs, alternating sides,
-// steel spec tags on the photos. Copy = Figma.
+// "How the job actually went.", R2 rebuild (Nick 20 Nov: alternating photo/text rows = "text left, text right" slop).
+// "The job reel": on desktop the section pins and the vertical scroll drives a horizontal track of three job cards; each
+// card turns in from depth, settles flat in the middle and tilts back as it leaves, while a pipe-style progress bar fills
+// and the counter reads 01 / 03. Each card: the job photo in a wide frame with its steel spec tag, the outlined job number,
+// title and the Figma line. Scroll-driven only (no autoplay, so no pause needed).
+// 21st.dev: "Cards Rotate Slider" (hyperiux, id 27161: scroll-pinned horizontal track, cards rotate in from depth, settle,
+// tilt out) re-skinned: steel tags, powder offset, pipe progress with a meniscus. Built with CSS sticky + one scroll
+// writer (no GSAP pin), so Lenis and the rest of the page are untouched.
+// Tablet / phone / reduced motion / no JS: the same cards in a native swipe row (scroll-snap) with the progress bar.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Seam from '../kit/Seam.astro';
 import Img from '../ui/Img.astro';
 const JOBS = [
-  { n: '01', t: 'Tankless pair install', tm: 'Tankless pair install', img: 'tankless-pair', alt: 'Two Rinnai tankless water heaters side by side on a brick wall',
+  { n: '01', t: 'Tankless pair install', img: 'tankless-pair', alt: 'Two Rinnai tankless water heaters side by side on a brick wall', focus: '50% 40%',
     rows: [['Units', 'Rinnai RE199E × 2'], ['Setup', 'Primary + secondary']], d: 'Two tankless units on one wall, set up as primary and secondary, for steady hot water.' },
-  { n: '02', t: 'Water main dig', tm: 'Water main dig', img: 'water-line-excavator', alt: 'A crew member in a Glass Plumbing shirt running a mini-excavator in a yard',
+  { n: '02', t: 'Water main dig', img: 'water-line-excavator', alt: 'A crew member in a Glass Plumbing shirt running a mini-excavator in a yard', focus: '50% 45%',
     rows: [['Rig', 'Mini-excavator'], ['Line', '3/4" water main']], d: 'The mini-excavator digs the trench so the new water main goes in without hand-digging the whole yard.' },
-  { n: '03', t: 'Shower valve, rough-in to finish', tm: 'Shower valve,\nrough-in to finish', img: 'shower-valve', alt: 'A new shower valve and trim on a marble-look tiled wall with corner shelves',
+  { n: '03', t: 'Shower valve, rough-in to finish', img: 'shower-valve', alt: 'A new shower valve and trim on a marble-look tiled wall with corner shelves', focus: '50% 50%',
     rows: [['Wall', 'Not cut open'], ['Result', 'New valve + trim']], d: '“No need to cut open the wall to upgrade your shower valve.” Kody, on Instagram.' },
 ];
 ---
-<section class="cx-sec cx-frost os" data-m-section aria-labelledby="os-h">
+<section class="cx-sec cx-frost os" data-m-section aria-labelledby="os-h" data-os>
   <Seam from="var(--white)" to="var(--frost)" />
-  <div class="wrap">
-    <div class="shead">
-      <Eyebrow text="Three jobs, start to finish" tone="pdeep" />
-      <h2 id="os-h" class="cx-h os-h" data-t="2"><span class="ln">How the job</span> <span class="ln tone">actually went.</span></h2>
+  <div class="os-stick" data-os-stick>
+    <div class="wrap os-head">
+      <div class="shead os-sh">
+        <Eyebrow text="Three jobs, start to finish" tone="pdeep" />
+        <h2 id="os-h" class="cx-h os-h" data-t="2"><span class="ln">How the job</span> <span class="ln tone">actually went.</span></h2>
+      </div>
+      <div class="os-prog" aria-hidden="true">
+        <span class="os-cnt"><b data-os-n>01</b> / 03</span>
+        <span class="os-bar"><span class="os-fill" data-os-fill></span></span>
+        <span class="os-hint"><span class="os-h1">Scroll</span><span class="os-h2">Swipe</span></span>
+      </div>
     </div>
-    <ol class="os-l" role="list">
-      {JOBS.map((j, i) => (
-        <li class:list={['os-j', i % 2 === 1 && 'os-flip']}>
-          <figure class="os-ph" data-t="4" data-fx="frame">
-            <Img name={j.img} alt={j.alt} sizes="(min-width: 1280px) 600px, (min-width: 768px) 46vw, 92vw" box={600 / 380} boxM={350 / 240} />
-            <dl class="cx-tag os-tag">{j.rows.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}</dl>
-          </figure>
-          <div class="os-tx">
-            <p class="os-n" data-t="1">Job {j.n}</p>
-            <h3 class="os-t" data-t="3"><span class="d">{j.t}</span><span class="m">{j.tm}</span></h3>
-            <p class="os-d" data-t="3">{j.d}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <div class="os-view" data-os-view data-no-px tabindex="0" role="region" aria-label="Job stories, scroll sideways">
+      <ol class="os-track" role="list" data-os-track>
+        {JOBS.map((j) => (
+          <li class="os-c" data-os-card>
+            <article class="os-in">
+              <figure class="os-ph">
+                <Img name={j.img} alt={j.alt} focus={j.focus} sizes="(min-width: 1280px) 760px, (min-width: 768px) 70vw, 86vw" box={760 / 400} boxM={320 / 220} />
+                <dl class="cx-tag os-tag">{j.rows.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}</dl>
+              </figure>
+              <div class="os-tx">
+                <p class="os-num" aria-hidden="true">{j.n}</p>
+                <div>
+                  <p class="os-n">Job {j.n}</p>
+                  <h3 class="os-t">{j.t}</h3>
+                  <p class="os-d">{j.d}</p>
+                </div>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ol>
+    </div>
   </div>
 </section>
 <style>
-  .os { padding: 110px 0 100px; }
+  .os { padding: 110px 0 100px; --p: 0; }
+  .os-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
   .os-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
-  .os-l { margin: 52px 0 0; padding: 0; list-style: none; display: grid; gap: 40px; }
-  .os-j { display: grid; grid-template-columns: 600px 1fr; column-gap: 40px; align-items: start; }
-  .os-flip { grid-template-columns: 1fr 600px; }
-  .os-flip .os-ph { order: 2; }
-  .os-ph { position: relative; margin: 0; height: 380px; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
-  .os-tag { right: 18px; bottom: 16px; width: 200px; grid-template-columns: 44px 1fr; column-gap: 12px; row-gap: 6px; }
-  .os-flip .os-tag { right: auto; left: 18px; }
-  .os-tx { padding-top: 40px; }
+  .os-prog { display: flex; align-items: center; gap: 14px; padding-bottom: 8px; }
+  .os-cnt { font: 500 12px/1 var(--f-m); letter-spacing: .06em; color: var(--muted); }
+  .os-cnt b { font-weight: 700; color: var(--ink); }
+  .os-bar { position: relative; width: 220px; height: 12px; border-radius: 6px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); overflow: hidden; }
+  .os-fill { position: absolute; left: 3px; top: 3px; bottom: 3px; width: calc((100% - 6px) * (.12 + .88 * var(--p))); border-radius: 3px; background: var(--powder); }
+  .os-fill::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 3px; background: rgba(255,255,255,.8); }
+  .os-hint { font: 700 10px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .os-h1 { display: none; } .os.is-pin .os-h1 { display: inline; } .os.is-pin .os-h2 { display: none; }
+
+  /* Default (no pin): a native swipe row. */
+  .os-view { margin-top: 48px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .os-view::-webkit-scrollbar { display: none; }
+  .os-view:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 4px; }
+  .os-track { display: flex; gap: 32px; margin: 0; padding: 0 var(--gutter) 24px; list-style: none; width: max-content; }
+  .os-c { flex: none; width: min(860px, 78vw); scroll-snap-align: center; perspective: 1400px; }
+  .os-in { height: 100%; padding: 18px 18px 28px; border-radius: 8px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 12px 12px 0 var(--powder); transform-origin: 50% 50%; will-change: transform; }
+  .os-ph { position: relative; margin: 0; height: 400px; border-radius: 5px; overflow: hidden; box-shadow: inset 0 0 0 2px var(--ink); }
+  .os-ph :global(img) { position: relative; z-index: -1; }
+  .os-ph { isolation: isolate; }
+  .os-tag { right: 16px; bottom: 16px; width: 210px; grid-template-columns: 50px 1fr; column-gap: 12px; }
+  .os-tx { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; align-items: start; margin-top: 24px; padding: 0 10px; }
+  .os-num { margin: 0; font: 900 88px/.85 var(--f-h); letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
   .os-n { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
-  .os-t { margin: 15px 0 0; font: 800 34px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .os-t .m { display: none; }
-  .os-d { margin: 55px 0 0; max-width: 480px; font: 400 17px/1.5 var(--f-b); color: var(--ink); }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .os-j, .os-flip { grid-template-columns: 1fr 1fr; }
-    .os-ph { height: auto; aspect-ratio: 600 / 380; }
-    .os-tx { padding-top: 16px; } .os-d { margin-top: 24px; }
-  }
+  .os-t { margin: 8px 0 0; font: 800 30px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .os-d { margin: 12px 0 0; max-width: 520px; font: 400 17px/1.5 var(--f-b); color: var(--ink); }
+
+  /* Desktop with motion: pinned, scroll-driven (the script sets .is-pin and the section height). */
+  .os.is-pin { padding: 0; }
+  .os.is-pin .os-stick { position: sticky; top: 0; height: var(--vh100, 100vh); display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .os.is-pin .os-view { overflow: visible; scroll-snap-type: none; margin-top: 40px; }
+  .os.is-pin .os-track { translate: var(--tx, 0) 0; padding-right: calc((var(--vw100, 100vw) - min(860px, 78vw)) / 2); }
+  .os.is-pin .os-c { width: min(860px, 62vw); }
+  .os.is-pin .os-ph { height: min(400px, 40vh); }
+
+  @media (max-width: 1279px) { .os-ph { height: 340px; } }
   @media (max-width: 767px) {
     .os { padding: 64px 0 48px; }
+    .os-head { flex-direction: column; align-items: flex-start; gap: 18px; }
     .os-h { margin-top: 10px; }
-    .os-l { margin-top: 28px; gap: 44px; }
-    .os-j, .os-flip { display: flex; flex-direction: column; }
-    .os-tx { display: contents; }
-    .os-n { order: 1; font-size: 10px; line-height: 13px; } .os-t { order: 2; margin-top: 9px; font-size: 24px; } .os-ph { order: 3; } .os-d { order: 4; }
-    .os-flip .os-ph { order: 3; }
-    .os-t .d { display: none; } .os-t .m { display: inline; white-space: pre-line; }
-    .os-ph { align-self: stretch; width: 100%; height: 240px; margin-top: 16px; }
-    .os-tag, .os-flip .os-tag { left: auto; right: 16px; bottom: 10px; width: 184px; grid-template-columns: 46px 1fr; font-size: 9px; line-height: 12px; box-shadow: 6px 6px 0 var(--ink); }
-    .os-d { margin-top: 28px; font-size: 15px; }
+    .os-bar { width: 140px; }
+    .os-view { margin-top: 24px; }
+    .os-track { gap: 14px; padding: 0 var(--gutter) 16px; }
+    .os-c { width: 86vw; }
+    .os-in { padding: 10px 10px 18px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+    .os-ph { height: 220px; }
+    .os-tag { right: 10px; bottom: 10px; width: 176px; grid-template-columns: 44px 1fr; font-size: 9px; line-height: 12px; box-shadow: 4px 4px 0 var(--ink); }
+    .os-tx { grid-template-columns: 1fr; gap: 6px; margin-top: 14px; padding: 0 6px; }
+    .os-num { font-size: 44px; }
+    .os-t { font-size: 22px; }
+    .os-d { font-size: 15px; }
   }
 </style>
+<script>
+  import { hasMotion } from '../services/progress';
+  import { requestRefresh } from '../kit/settle';
+  const root = document.querySelector<HTMLElement>('[data-os]');
+  if (root) {
+    const stick = root.querySelector<HTMLElement>('[data-os-stick]')!;
+    const view = root.querySelector<HTMLElement>('[data-os-view]')!;
+    const track = root.querySelector<HTMLElement>('[data-os-track]')!;
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-os-card]')];
+    const nEl = root.querySelector<HTMLElement>('[data-os-n]')!;
+    const desk = matchMedia('(min-width: 1024px)');
+    let dist = 0, raf = 0;
+    const setN = (i: number) => { nEl.textContent = String(i + 1).padStart(2, '0'); };
+    const tilt = () => {
+      const vw = innerWidth, mid = vw / 2;
+      let best = 0, bd = Infinity;
+      cards.forEach((c, i) => {
+        const r = c.getBoundingClientRect(); const d = (r.left + r.width / 2 - mid) / vw;
+        if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; }
+        const inn = c.firstElementChild as HTMLElement;
+        if (!root.classList.contains('is-pin') || !hasMotion()) { inn.style.transform = ''; return; }
+        const k = Math.max(-1, Math.min(1, d * 1.6));
+        inn.style.transform = `rotateY(${(-k * 16).toFixed(2)}deg) translateZ(${(-Math.abs(k) * 90).toFixed(1)}px) scale(${(1 - Math.abs(k) * 0.06).toFixed(3)})`;
+      });
+      setN(best);
+    };
+    const measure = () => {
+      if (desk.matches && hasMotion()) {
+        root.classList.add('is-pin'); view.removeAttribute('tabindex'); view.removeAttribute('role');
+        track.style.removeProperty('--tx');
+        dist = Math.max(0, track.scrollWidth - innerWidth);
+        root.style.height = `${stick.offsetHeight + dist}px`;
+      } else {
+        root.classList.remove('is-pin'); root.style.height = ''; dist = 0; view.tabIndex = 0; view.setAttribute('role', 'region');
+      }
+      run();
+      const h = root.offsetHeight; if (h !== lastH) { lastH = h; requestRefresh(); }
+    };
+    let lastH = 0;
+    const run = () => {
+      raf = 0;
+      if (root.classList.contains('is-pin')) {
+        const r = root.getBoundingClientRect();
+        const p = dist ? Math.min(1, Math.max(0, -r.top / dist)) : 0;
+        track.style.setProperty('--tx', `${(-p * dist).toFixed(1)}px`);
+        root.style.setProperty('--p', p.toFixed(4));
+      } else {
+        const max = view.scrollWidth - view.clientWidth;
+        root.style.setProperty('--p', max > 0 ? (view.scrollLeft / max).toFixed(4) : '0');
+      }
+      tilt();
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(run); }, { passive: true });
+    view.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(run); }, { passive: true });
+    addEventListener('resize', measure, { passive: true });
+    desk.addEventListener?.('change', measure);
+    measure();
+    addEventListener('load', measure);
+    document.fonts?.ready.then(measure);
+  }
+</script>

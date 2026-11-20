@@ -1,28 +1,47 @@
 ---
-// Full list (Figma 718:522 "Full list" y 3350 h 940 / mobile y 3005 h 894): the "parts list" of 15 jobs. Each row is one
-// link (its page, or its family card); the last three are "call" items (tel:). Phone: no "Covers" column.
+// Full list, R2 rebuild (Nick 20 Nov: no "text left, list right"). The "parts catalogue": centred head, a family switch
+// (segmented, the pill slides) that lights the matching jobs and dims the rest, and the 15 jobs in big type in two
+// columns. A powder bar glides to the row under the pointer / focus, and on fine pointers a steel spec tag follows the
+// cursor with that job's number, family and what it covers.
+// 21st.dev: "Interactive List Preview" (hyperiux, id 26256: sliding highlight bar + clipped preview that follows the
+// pointer) + "Segmented Control" (ddoemonn, id 23552), re-skinned: steel plate with rivets, housing tick, Glass tokens.
+// No JS: every row is a plain link and every row shows its "covers" line on phones; the switch is hidden.
 import Eyebrow from '../kit/Eyebrow.astro';
 import { SITE } from '../../data/site';
-import { JOBS } from './data';
+import { JOBS, FAMILIES, WH } from './data';
 import { ARROW } from './glyphs';
 const pad = (n: number) => String(n).padStart(2, '0');
+const famOf = (href?: string) => (!href ? 'ask' : href === WH ? 'hot-water' : href.replace(/^.*#/, ''));
+const famName: Record<string, string> = Object.fromEntries(FAMILIES.map((f) => [f.id, f.chip]));
+famName.ask = 'Call and ask';
+const groups = [
+  { id: 'all', name: 'All', n: JOBS.length },
+  ...FAMILIES.map((f) => ({ id: f.id, name: f.chipM, n: JOBS.filter((j) => famOf(j.href) === f.id).length })),
+  { id: 'ask', name: 'Call and ask', n: JOBS.filter((j) => !j.href).length },
+];
 ---
-<section class="fl" data-m-section>
-  <div class="wrap fl-grid">
-    <div class="fl-l">
+<section class="fl" data-m-section data-fl>
+  <div class="wrap">
+    <div class="fl-top">
       <Eyebrow text="The full list" />
-      <h2 class="h2 fl-h" data-t="2" style="--h2:52px;--h2m:30px">Every job we do.<br /><span class="tone">In one list.</span></h2>
+      <h2 class="h2 fl-h" data-t="2" style="--h2:56px;--h2m:30px">Every job we do.<br /><span class="tone">In one list.</span></h2>
       <p class="fl-lead" data-t="3">Fifteen jobs, all done under one Florida licence. Not on the list? Call and ask.</p>
     </div>
-    <div class="fl-tab" data-t="3">
-      <p class="fl-head" aria-hidden="true"><span>No.</span><span>Job</span><span>Covers</span></p>
-      <ol class="fl-list" role="list" data-stagger>
+    <div class="fl-seg" role="group" aria-label="Show jobs by kind" data-t="3" data-fl-seg hidden>
+      <span class="fl-pill" aria-hidden="true" data-fl-pill></span>
+      {groups.map((g, i) => (
+        <button type="button" class="fl-sb" data-fl-g={g.id} aria-pressed={i === 0 ? 'true' : 'false'}>{g.name}<span class="fl-sn">{g.n}</span></button>
+      ))}
+    </div>
+    <p class="sr-only" aria-live="polite" data-fl-live></p>
+    <div class="fl-cat" data-t="4">
+      <span class="fl-bar" aria-hidden="true" data-fl-bar></span>
+      <ol class="fl-list" role="list">
         {JOBS.map((j, i) => (
-          <li>
-            <a class="fl-row" href={j.href ?? SITE.tel}>
+          <li class="fl-li" data-fam={famOf(j.href)}>
+            <a class="fl-row" href={j.href ?? SITE.tel} data-n={pad(i + 1)} data-fam-name={famName[famOf(j.href)]} data-cov={j.covers} data-go={j.href ? (j.href === WH ? 'Own page' : 'Family card') : 'Call'}>
               <span class="fl-n" aria-hidden="true">{pad(i + 1)}</span>
-              <span class="fl-job">{j.name}</span>
-              <span class="fl-cov">{j.covers}</span>
+              <span class="fl-txt"><span class="fl-job">{j.name}</span><span class="fl-cov">{j.covers}</span></span>
               {j.href ? <span class="fl-ar" set:html={ARROW} /> : <span class="fl-call">Call<span class="sr-only"> {SITE.phone}</span></span>}
             </a>
           </li>
@@ -30,46 +49,151 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </ol>
     </div>
   </div>
+  <div class="fl-tag" aria-hidden="true" data-fl-tag>
+    <i></i><i></i><i></i><i></i>
+    <p class="fl-tk">Job <b data-k="n">01</b></p>
+    <p class="fl-tf" data-k="fam">Hot water</p>
+    <p class="fl-tc" data-k="cov">Tank repair and replacement</p>
+    <p class="fl-tg"><span>Go</span><b data-k="go">Own page</b></p>
+  </div>
 </section>
 <style>
-  .fl { background: var(--white); padding: 110px 0 105px; }
-  .fl-grid { display: grid; grid-template-columns: 420px 760px; justify-content: space-between; align-items: start; }
+  .fl { position: relative; background: var(--white); padding: 110px 0 112px; }
+  .fl-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .fl-h { margin-top: 16px; }
-  .fl-lead { margin-top: 28px; max-width: 380px; font-size: 16px; line-height: 1.5; color: var(--muted); }
-  .fl-head, .fl-row { display: grid; grid-template-columns: 56px 284px minmax(0, 1fr) auto; align-items: start; }
-  .fl-head { padding-bottom: 11px; border-bottom: 2px solid var(--ink); font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .fl-head span:last-child { grid-column: 3; }
-  .fl-list { margin: 0; padding: 0; list-style: none; }
-  .fl-list li:first-child .fl-row { padding-top: 14px; }
-  .fl-row { min-height: 46px; padding: 13px 6px 9px 0; border-bottom: 1px solid rgba(22,19,15,.1); color: var(--ink); transition: background-color .3s var(--ease-io); }
-  .fl-n { padding-top: 3px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; color: var(--pdeep); }
-  .fl-job { font-family: var(--f-h); font-weight: 800; font-size: 18px; line-height: 1.04; letter-spacing: -.02em; }
-  .fl-cov { margin-top: 1px; font-size: 15px; line-height: 1.5; color: var(--muted); }
-  .fl-ar { width: 12px; height: 10px; margin-top: 6px; transition: translate .3s var(--ease-io); }
-  .fl-ar :global(svg) { display: block; width: 12px; height: 10px; }
-  .fl-call { margin-top: 2px; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
-  .fl-row:hover { background: var(--frost); }
-  .fl-row:hover .fl-ar { translate: 6px 0; }
-  .fl-row:hover .fl-job { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+  .fl-lead { margin-top: 22px; max-width: 460px; font-size: 17px; line-height: 1.5; color: var(--muted); }
 
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .fl-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
-    .fl-head, .fl-row { grid-template-columns: 56px minmax(0, 1fr) minmax(0, 1fr) auto; }
+  /* Segmented switch (shown by the script). The pill is the one moving part; buttons only change colour. */
+  .fl-seg { position: relative; display: flex; justify-content: center; gap: 4px; width: max-content; max-width: 100%; margin: 40px auto 0; padding: 5px; border-radius: 30px; background: var(--frost); box-shadow: inset 0 0 0 1px var(--frost3); }
+  .fl-seg[hidden] { display: none; }
+  .fl-pill { position: absolute; top: 5px; left: 0; height: calc(100% - 10px); width: var(--pw, 0); translate: var(--px, 0) 0; border-radius: 25px; background: var(--ink); transition: translate .5s var(--ease-io), width .5s var(--ease-io); }
+  .fl-sb { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 25px; background: none; font: 600 14px/1 var(--f-b); color: var(--ink); white-space: nowrap; cursor: pointer; transition: color .4s var(--ease-io); }
+  .fl-sb[aria-pressed='true'] { color: var(--white); }
+  .fl-sn { font: 700 10px/1 var(--f-m); letter-spacing: .04em; color: var(--pdeep); transition: color .4s var(--ease-io); }
+  .fl-sb[aria-pressed='true'] .fl-sn { color: var(--powder); }
+  .fl-sb:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+
+  /* Catalogue: two columns of 8 / 7, numbered top to bottom. */
+  .fl-cat { position: relative; margin-top: 44px; border-top: 2px solid var(--ink); }
+  .fl-list { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(8, auto); grid-auto-flow: column; column-gap: 64px; margin: 0; padding: 0; list-style: none; }
+  .fl-li { border-bottom: 1px solid var(--line); transition: background-color .5s var(--ease-io), box-shadow .5s var(--ease-io); }
+  .fl-li { position: relative; }
+  .fl-li.is-off .fl-job, .fl-li.is-off .fl-n { color: var(--muted); }
+  .fl-li.is-off .fl-job { font-weight: 600; }
+  .fl-li.is-hit { box-shadow: inset 4px 0 0 var(--pdeep); background: var(--frost); }
+  .fl-row { position: relative; z-index: 1; display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: center; min-height: 72px; padding: 12px 14px 12px 10px; color: var(--ink); }
+  .fl-n { font: 700 11px/1 var(--f-m); letter-spacing: .06em; color: var(--pdeep); transition: color .35s var(--ease-io); }
+  .fl-txt { display: flex; align-items: baseline; gap: 14px; min-width: 0; }
+  .fl-job { font-family: var(--f-h); font-weight: 800; font-size: 25px; line-height: 1.08; letter-spacing: -.02em; transition: color .45s var(--ease-io); }
+  .fl-cov { font-size: 14px; line-height: 1.4; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; translate: -6px 0; transition: opacity .35s var(--ease-io), translate .35s var(--ease-io); }
+  .fl-ar { width: 14px; height: 12px; transition: translate .35s var(--ease-io); }
+  .fl-ar :global(svg) { display: block; }
+  .fl-call { font: 700 10px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); padding: 6px 8px; border-radius: 4px; box-shadow: inset 0 0 0 1px currentColor; }
+  .fl-row:hover .fl-ar, .fl-row:focus-visible .fl-ar { translate: 6px 0; }
+  .fl-row:hover .fl-cov, .fl-row:focus-visible .fl-cov { opacity: 1; translate: 0 0; }
+  .fl-row:focus-visible { outline: 3px solid var(--pdeep); outline-offset: -3px; }
+  /* No JS / no hover: the covers line is always shown. */
+  html:not(.js) .fl-cov { opacity: 1; translate: 0 0; }
+  @media (hover: none) { .fl-cov { opacity: 1; translate: 0 0; } }
+
+  /* The gliding bar: positioned by the script on the hovered / focused row. */
+  .fl-bar { position: absolute; left: 0; top: 0; width: var(--bw, 0); height: var(--bh, 0); translate: var(--bx, 0) var(--by, 0); background: var(--frost); box-shadow: inset 3px 0 0 var(--pdeep); opacity: 0; pointer-events: none; transition: translate .45s var(--ease-io), height .45s var(--ease-io), width .45s var(--ease-io), opacity .3s var(--ease-io); }
+  .fl-bar.is-on { opacity: 1; }
+
+  /* The steel spec tag that follows the pointer (fine pointers only). */
+  .fl-tag { position: absolute; left: 0; top: 0; z-index: 3; width: 236px; padding: 16px 16px 14px; border-radius: 4px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); pointer-events: none; opacity: 0; scale: .9; rotate: -3deg; transition: opacity .3s var(--ease-io), scale .35s var(--ease-io), rotate .35s var(--ease-io); }
+  .fl-tag.is-on { opacity: 1; scale: 1; rotate: -2deg; }
+  .fl-tag i { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--steel2); }
+  .fl-tag i:nth-child(1) { left: 6px; top: 6px; } .fl-tag i:nth-child(2) { right: 6px; top: 6px; } .fl-tag i:nth-child(3) { left: 6px; bottom: 6px; } .fl-tag i:nth-child(4) { right: 6px; bottom: 6px; }
+  .fl-tk { font: 700 11px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; padding-bottom: 8px; border-bottom: 1px solid rgba(22,19,15,.3); }
+  .fl-tk b { color: var(--pdeep); }
+  .fl-tf { margin-top: 10px; font: 800 17px/1.1 var(--f-h); letter-spacing: -.01em; }
+  .fl-tc { margin-top: 6px; font: 500 11px/1.45 var(--f-m); }
+  .fl-tg { display: flex; justify-content: space-between; margin-top: 10px; font: 500 10px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .fl-tg b { color: var(--ink); }
+
+  @media (max-width: 1279px) { .fl-job { font-size: 21px; } .fl-list { column-gap: 32px; } .fl-seg { flex-wrap: wrap; border-radius: 16px; } .fl-pill { display: none; } .fl-sb[aria-pressed='true'] { background: var(--ink); } }
+  @media (max-width: 1023px) {
+    .fl-list { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; }
+    .fl-txt { flex-direction: column; gap: 3px; }
+    .fl-cov { opacity: 1; translate: 0 0; white-space: normal; }
   }
   @media (max-width: 767px) {
-    .fl { padding: 56px 0 58px; }
-    .fl-grid { grid-template-columns: minmax(0, 1fr); }
+    .fl { padding: 60px 0 64px; }
     .fl-h { margin-top: 10px; }
-    .fl-lead, .fl-cov { display: none; }
-    .fl-tab { margin-top: 24px; }
-    .fl-head { padding: 0; height: 0; overflow: hidden; border-bottom-width: 2px; }
-    .fl-head span { visibility: hidden; }
-    .fl-head, .fl-row { grid-template-columns: 40px minmax(0, 1fr) auto; }
-    .fl-row { min-height: 44px; padding: 11px 2px 14px 0; }
-    .fl-list li:first-child .fl-row { padding-top: 17px; }
-    .fl-n { padding-top: 4px; font-size: 10px; line-height: 13px; }
-    .fl-job { font-size: 16px; }
-    .fl-ar { margin-top: 5px; }
-    .fl-call { margin-top: 4px; margin-right: 4px; font-size: 9px; line-height: 12px; }
+    .fl-lead { margin-top: 14px; font-size: 15px; }
+    .fl-seg { justify-content: flex-start; flex-wrap: nowrap; width: auto; margin: 26px calc(-1 * var(--gutter)) 0; padding: 4px var(--gutter); border-radius: 0; background: none; box-shadow: none; overflow-x: auto; scrollbar-width: none; }
+    .fl-sb { box-shadow: inset 0 0 0 1.2px var(--ink); padding: 0 14px; font-size: 13px; }
+    .fl-cat { margin-top: 22px; }
+    .fl-row { grid-template-columns: 36px minmax(0, 1fr) auto; min-height: 60px; padding: 10px 4px 10px 2px; }
+    .fl-job { font-size: 18px; }
+    .fl-cov { font-size: 13px; }
   }
 </style>
+<script>
+  const root = document.querySelector<HTMLElement>('[data-fl]');
+  if (root) {
+    const seg = root.querySelector<HTMLElement>('[data-fl-seg]')!;
+    const pill = root.querySelector<HTMLElement>('[data-fl-pill]')!;
+    const btns = [...root.querySelectorAll<HTMLButtonElement>('[data-fl-g]')];
+    const lis = [...root.querySelectorAll<HTMLElement>('.fl-li')];
+    const live = root.querySelector<HTMLElement>('[data-fl-live]')!;
+    const cat = root.querySelector<HTMLElement>('.fl-cat')!;
+    const bar = root.querySelector<HTMLElement>('[data-fl-bar]')!;
+    const tag = root.querySelector<HTMLElement>('[data-fl-tag]')!;
+    seg.hidden = false;
+    const place = () => {
+      const b = btns.find((x) => x.getAttribute('aria-pressed') === 'true'); if (!b) return;
+      pill.style.setProperty('--px', `${b.offsetLeft}px`); pill.style.setProperty('--pw', `${b.offsetWidth}px`);
+    };
+    btns.forEach((b) => b.addEventListener('click', () => {
+      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      const g = b.dataset.flG!;
+      let n = 0;
+      lis.forEach((li) => { const on = g === 'all' || li.dataset.fam === g; li.classList.toggle('is-off', !on); li.classList.toggle('is-hit', on && g !== 'all'); if (on) n++; });
+      live.textContent = g === 'all' ? 'Showing all 15 jobs.' : `${n} jobs lit: ${b.firstChild?.textContent}.`;
+      place();
+    }));
+    place();
+    addEventListener('resize', place, { passive: true });
+    document.fonts?.ready.then(place);
+
+    // Gliding bar on the hovered / focused row.
+    const rows = [...root.querySelectorAll<HTMLAnchorElement>('.fl-row')];
+    const moveBar = (r: HTMLElement | null) => {
+      if (!r) { bar.classList.remove('is-on'); return; }
+      const c = cat.getBoundingClientRect(), b = r.getBoundingClientRect();
+      bar.style.setProperty('--bx', `${b.left - c.left}px`); bar.style.setProperty('--by', `${b.top - c.top}px`);
+      bar.style.setProperty('--bw', `${b.width}px`); bar.style.setProperty('--bh', `${b.height}px`);
+      bar.classList.add('is-on');
+    };
+    const fill = (r: HTMLElement) => {
+      tag.querySelector('[data-k="n"]')!.textContent = r.dataset.n!;
+      tag.querySelector('[data-k="fam"]')!.textContent = r.dataset.famName!;
+      tag.querySelector('[data-k="cov"]')!.textContent = r.dataset.cov!;
+      tag.querySelector('[data-k="go"]')!.textContent = r.dataset.go!;
+    };
+    const fine = matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
+    const still = () => !document.documentElement.classList.contains('motion');
+    let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, shown = false;
+    const loop = () => {
+      cx += (tx - cx) * (still() ? 1 : 0.18); cy += (ty - cy) * (still() ? 1 : 0.18);
+      tag.style.transform = `translate(${cx}px, ${cy}px)`;
+      raf = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.3 ? requestAnimationFrame(loop) : 0;
+    };
+    rows.forEach((r) => {
+      r.addEventListener('pointerenter', () => { moveBar(r); if (fine.matches) { fill(r); tag.classList.add('is-on'); } });
+      r.addEventListener('focus', () => moveBar(r));
+      r.addEventListener('blur', () => moveBar(null));
+    });
+    cat.addEventListener('pointerleave', () => { moveBar(null); tag.classList.remove('is-on'); shown = false; });
+    cat.addEventListener('pointermove', (e) => {
+      if (!fine.matches) return;
+      const s = root.getBoundingClientRect();
+      tx = e.clientX - s.left + 26; ty = e.clientY - s.top + 22;
+      if (tx + 250 > s.width) tx = e.clientX - s.left - 262;
+      if (!shown) { cx = tx; cy = ty; shown = true; }
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+  }
+</script>

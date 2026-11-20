@@ -62,11 +62,11 @@ const pts = Array.from({ length: 10 }, (_, i) => {
       <span class="notch" aria-hidden="true"></span>
       <div class="card">
         {picks.map((p, i) => (
-          <article class="rv" id={`why-p${i}`} role="tabpanel" aria-labelledby={`why-t${i}`} data-rv={i} hidden={i !== 0 ? true : undefined}>
+          <div class="rv" id={`why-p${i}`} role="tabpanel" aria-labelledby={`why-t${i}`} data-rv={i} hidden={i !== 0 ? true : undefined}>
             <p class="rv-top"><span set:html={STARS(96, 16)} /><span class="sr-only">5 out of 5 stars.</span><span class="rv-w">Google · profile {p.profile} · {p.when}</span></p>
             <blockquote class="rv-q"><p>“{p.text}”</p></blockquote>
             <p class="rv-by"><span class="gm" aria-hidden="true">G</span><b>{p.name}</b><span class="rv-k" aria-hidden="true">Star 0{i + 1} of 05</span></p>
-          </article>
+          </div>
         ))}
       </div>
     </div>

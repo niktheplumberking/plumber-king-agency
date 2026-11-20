@@ -1,8 +1,8 @@
 ---
 // Reviews on /our-work, fix round 3 (D, RECHECK MAJOR 1: the three-slip rail here and the dealt deck in the /reviews hero
-// were the same device twice; the deck stays on /reviews). New form, THE JOB QUILT: six jobs, each next to what its
-// customer wrote about it, set as a checkerboard of ink job tiles and paper review tiles (rows alternate J Q J Q / Q J Q J,
-// so every job sits beside its own review). Pointing at (or focusing) a job lights its review: the review tile lifts on a
+// were the same device twice; the deck stays on /reviews). New form, THE JOB QUILT: three jobs, each next to what its
+// customer wrote about it, set as a checkerboard of ink job tiles and paper review tiles (desktop: three columns, job over
+// review / review over job / job over review; tablet and phone: rows alternate J Q / Q J, so every job sits by its review). Pointing at (or focusing) a job lights its review: the review tile lifts on a
 // powder offset and fills its stars, the other tiles' stars fade (text stays full contrast). Each job tile links to the matching service page.
 // The interaction is CSS only (:has on the grid): no JS on this section at all.
 // 21st.dev: "Testimonial Carousel Section / Checker Quilt Testimonials" (@kedhareswer, id 38036: a full-bleed checkerboard
@@ -11,8 +11,10 @@
 // Nearest match: /reviews RevList (a moving three-column wall), home Reviews (three cards beside two housings), Mike
 // OWall / Khinda Work (photo walls), Mike RevSpotlight (one sheet at a time). None pairs jobs and reviews on a checkerboard.
 // R4 (re-check R3 MINOR, rule 16): the job tiles carry real job photos from the crew's Instagram that are not used anywhere
-// else on /our-work (job-state-heater, job-rough-in, job-vanity, job-supply-lines; cropped below the burnt-in captions, no
-// faces). Only four such photos exist, so the quilt is four jobs; the note says the photo shows that kind of job.
+// else on /our-work (job-state-heater, job-vanity, job-supply-lines; cropped below the burnt-in captions, no
+// faces). R5 (re-check R4 MINOR 7): the "New construction" tile's photo (job-rough-in, an IG video frame) was motion-blurred, and no
+// other sharp, faceless job photo is left unused on /our-work, so that tile is dropped: the quilt is three jobs. The note
+// says the photo shows that kind of job.
 // Quotes: word for word (the build fails if one is not a substring of its review in reviews.ts).
 import '../contact/cx.css';
 import Stars from '../contact/Stars.astro';
@@ -21,7 +23,6 @@ import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
 const Q = [
   { job: 'Water heater', sub: 'New install', href: '/services/water-heaters', img: 'job-state-heater', alt: 'A new State water heater installed against a block wall, copper lines on top', who: 'Kevin Kelleman', q: 'Needed a new Water Heater, called and had one installed the next day at a great price.' },
-  { job: 'New construction', sub: 'Rough-in', href: '/services', img: 'job-rough-in', alt: 'Supply lines run through steel studs on a new build', who: 'John Rooney', q: 'Highly recommend him for any new construction or home remodels/repairs.' },
   { job: 'Bathroom remodel', sub: 'Residential', href: '/services', img: 'job-vanity', alt: 'A new dark vanity with a stone top in a remodelled bathroom', who: 'Peter Van Buskirk', q: 'These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.' },
   { job: 'Pipes & fittings', sub: 'Leak fixed', href: '/services', img: 'job-supply-lines', alt: 'A hand on new braided supply lines under a sink', who: 'Seth Nye', q: 'Hired glass plumbing services for a leaky shower faucet, Mr. Glass was here same day to replace pipes/ fittings and new kit and left here good as new!' },
 ];
@@ -32,7 +33,7 @@ const g = SITE.google;
   <div class="wrap">
     <div class="oq-top">
       <p class="oq-eb" data-t="1">What customers say</p>
-      <h2 class="cx-h oq-h" id="oq-h" data-t="2"><span class="ln">Four jobs.</span> <span class="ln tone">Four customers’ words.</span></h2>
+      <h2 class="cx-h oq-h" id="oq-h" data-t="2"><span class="ln">Three jobs.</span> <span class="ln tone">Three customers’ words.</span></h2>
       <ul class="oq-rec" role="list" data-t="3">
         {[g.a, g.b].map((p, i) => (
           <li><a class="oq-pf" href={p.url} target="_blank" rel="noopener"><span class="oq-g" aria-hidden="true">G</span><b>{p.value}</b><Stars w={70} /><span class="oq-n">{p.count} reviews · profile {i + 1}</span><span class="sr-only"> on Google, read {g.checked} (opens in a new tab)</span></a></li>
@@ -72,11 +73,12 @@ const g = SITE.google;
   .oq-g { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--white); color: #4285F4; font: 800 16px/1 var(--f-h); }
   .oq-n { font: 500 11px/1 var(--f-m); color: var(--powder); text-decoration: underline; text-underline-offset: 3px; }
 
-  /* The quilt: 4 columns, each pair takes two cells; odd rows (pairs 2-3) run review-then-job, so the colours checker. */
-  .quilt { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 48px 0 0; padding: 0; list-style: none; border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; box-shadow: 14px 14px 0 var(--powder); }
-  .pair { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
-  .p2, .p3 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
-  .p2 .job, .p3 .job { order: 2; }
+  /* The quilt (R5, three pairs): desktop = three columns, each pair a job over its review; the middle pair runs review over
+     job, so the colours checker. Tablet / phone = one column of rows that alternate job-review / review-job. */
+  .quilt { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin: 48px 0 0; padding: 0; list-style: none; border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; box-shadow: 14px 14px 0 var(--powder); }
+  .pair { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
+  .p1 { grid-template-rows: 1fr auto; }
+  .p1 .job { order: 2; }
   .job { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 260px; padding: 26px 24px; background: var(--ink); color: var(--white); text-decoration: none;
     box-shadow: inset 0 0 0 1px var(--ink3); transition: background-color .45s var(--ease-io); }
   .job-ph { position: absolute; inset: 0; overflow: hidden; }
@@ -116,20 +118,16 @@ const g = SITE.google;
 
   @media (min-width: 768px) and (max-width: 1023px) {
     .quilt { grid-template-columns: 1fr; }
-    .p2, .p3 { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
-    .p2 .job, .p3 .job { order: 0; }
-    .p1 .job, .p3 .job { order: 2; }
-    .p1, .p3 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+    .pair, .p1 { grid-template-rows: none; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+    .p1 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
   }
   @media (max-width: 767px) {
     .oq { padding: 60px 0 64px; }
     .oq-h { margin-top: 10px; }
     .oq-pf { padding-right: 12px; gap: 7px; }
     .quilt { grid-template-columns: 1fr; margin-top: 30px; box-shadow: 8px 8px 0 var(--powder); }
-    .pair, .p2, .p3 { grid-template-columns: minmax(0, .42fr) minmax(0, .58fr); }
-    .p2 .job, .p3 .job { order: 0; }
-    .p1, .p3 { grid-template-columns: minmax(0, .58fr) minmax(0, .42fr); }
-    .p1 .job, .p3 .job { order: 2; }
+    .pair { grid-template-rows: none; grid-template-columns: minmax(0, .42fr) minmax(0, .58fr); }
+    .p1 { grid-template-rows: none; grid-template-columns: minmax(0, .58fr) minmax(0, .42fr); }
     .job { min-height: 200px; padding: 40px 14px 16px; gap: 4px; }
     .job-n { left: 14px; top: 18px; font-size: 10px; }
     .job .rv:first-child { display: none; }

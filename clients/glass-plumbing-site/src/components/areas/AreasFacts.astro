@@ -13,7 +13,7 @@
 // Nearest match: Glass home Areas (split-flap dispatch board), Glass contact ConHero (switchboard keys), Glass /faq hero
 // (search housing), Khinda areas Rules (tabbed code book), Khinda city Plate (tilt). Neither site has a surface you wipe.
 // Facts and sources: LOCAL-FACTS sections 3, 4 and 5 (unchanged from R3; the 1978 median stays labelled third party).
-// No JS / reduced motion: no fog (reduced motion: a tap clears at once). Keyboard: each pane has its own "Wipe" button.
+// No JS / reduced motion: no fog, the panes are clear (R5: reduced motion builds nothing, no canvas, no wipe buttons). Keyboard: each pane has its own "Wipe" button.
 import Head from './Head.astro';
 const facts = [
   { k: 'Permits', v: 'City or county', t: 'Permits depend on the city.', d: 'Pinellas County handles permits for unincorporated areas. Largo and Clearwater issue their own. Your address decides which office.', s: 'pinellas.gov/express-permits · largo.com · myclearwater.com (read 17 Nov 2026)' },
@@ -54,8 +54,9 @@ const facts = [
   // pointer moves over a pane and once per pane at build (when the section first nears the screen); nothing runs per frame.
   const sec = document.querySelector<HTMLElement>('.afacts');
   const root = sec?.querySelector<HTMLElement>('[data-fg]');
-  if (sec && root && typeof HTMLCanvasElement !== 'undefined') {
-    const reduce = !document.documentElement.classList.contains('motion');
+  // R5 (re-check R4 MINOR 5): with reduced motion (or no motion class) there is no fog at all: the panes are clear glass,
+  // static and complete, and nothing is built.
+  if (sec && root && typeof HTMLCanvasElement !== 'undefined' && document.documentElement.classList.contains('motion')) {
     const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
     const panes = Array.from(root.querySelectorAll<HTMLElement>('[data-fg-pane]'));
     type P = { el: HTMLElement; c: HTMLCanvasElement; x: CanvasRenderingContext2D; w: number; h: number; done: boolean; lx: number; ly: number; n: number };
@@ -95,10 +96,9 @@ const facts = [
       }
       x.globalCompositeOperation = 'destination-out'; x.lineCap = 'round'; x.lineJoin = 'round'; x.strokeStyle = '#000';
     };
-    // A tap (or the button): one wipe runs across the pane in three passes, like a hand; reduced motion clears at once.
+    // A tap (or the button): one wipe runs across the pane in three passes, like a hand.
     const sweep = (p: P) => {
       if (p.done) return;
-      if (reduce) { clearAll(p); return; }
       const rows = [.25, .55, .82]; const t0 = performance.now(); const dur = 650; let last = 0;
       const tick = (now: number) => {
         const t = Math.min(1, (now - t0) / dur);
@@ -119,7 +119,7 @@ const facts = [
         const p: P = { el, c, x, w: 0, h: 0, done: false, lx: -1, ly: -1, n: 0 };
         ps.push(p); draw(p);
         const glass = el.querySelector<HTMLElement>('.fg-glass')!;
-        if (fine && !reduce) {
+        if (fine) {
           let rect: DOMRect | null = null;
           glass.addEventListener('pointerenter', (e) => { rect = glass.getBoundingClientRect(); p.lx = e.clientX - rect.left; p.ly = e.clientY - rect.top; });
           glass.addEventListener('pointermove', (e) => {
@@ -132,7 +132,7 @@ const facts = [
         } else glass.addEventListener('click', () => sweep(p));
         el.querySelector<HTMLButtonElement>('[data-fg-b]')!.addEventListener('click', () => sweep(p));
       });
-      sec.querySelector('[data-fg-all]')?.addEventListener('click', () => ps.forEach((p, i) => setTimeout(() => sweep(p), reduce ? 0 : i * 120)));
+      sec.querySelector('[data-fg-all]')?.addEventListener('click', () => ps.forEach((p, i) => setTimeout(() => sweep(p), i * 120)));
       let rt = 0;
       addEventListener('resize', () => { clearTimeout(rt); rt = window.setTimeout(() => ps.forEach((p) => { if (!p.done) { draw(p); p.n = 0; } }), 250); });
     };
@@ -149,6 +149,7 @@ const facts = [
   .af-head :global(.ah-eb) { justify-content: center; }
   .af-lead { min-height: 26px; margin-top: 16px; text-align: center; font-size: 17px; color: var(--muted); }
   .fog-only { visibility: hidden; }
+  :global(html:not(.motion)) .af-lead, :global(html:not(.motion)) .fg-all-w { display: none; }
   .fg-on .fog-only { visibility: visible; }
   .m { display: none; }
   @media (hover: none), (pointer: coarse) { .d { display: none; } .m { display: inline; } }

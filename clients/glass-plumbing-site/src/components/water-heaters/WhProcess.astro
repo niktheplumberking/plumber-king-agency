@@ -40,7 +40,9 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
       <h2 class="h2 ps-h" id="ps-h" data-t="2" style="--h2:52px;--h2m:28px">From a photo<br /><span class="tone">to hot water.</span></h2>
       <p class="ps-lead" data-t="3">Four panels, in the order it happens.</p>
     </div>
-    <ol class="sb" role="list" data-scrub data-start="top 80%" data-end="bottom 80%" data-start-m="top 85%" data-end-m="bottom 88%" data-lag="0.5">
+    <!-- R5 (re-check R4 MINOR 6): the pass now runs from the strip's top entering to its bottom entering, and every panel
+         finishes by 90 % of it, so all four are drawn by the time the whole strip is on screen (1440: one row). -->
+    <ol class="sb" role="list" data-scrub data-start="top 98%" data-end="bottom 97%" data-start-m="top 92%" data-end-m="bottom 96%" data-lag="0.35">
       {S.map((s, i) => {
         const a = (i / N) * 0.9, b = a + 0.9 / N;
         return (

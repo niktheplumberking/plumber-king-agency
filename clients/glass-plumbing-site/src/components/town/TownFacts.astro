@@ -3,24 +3,32 @@
 // were the same device, four tabs + a "READING 0N" card, sharing 217 ppm and the storm facts; both close to Khinda /areas
 // Rules). The county-wide facts now live on /areas only (and 217 ppm in this page's FAQ, as before); this section keeps
 // what is about Seminole and its homes. New idea, THE TAPE MEASURE: two tapes on one steel bench.
-//   1. Distance: a tape measure case marked LARGO; as the bench scrolls in, the tape runs out of the case, mile marks
-//      0-6, until its hook catches at SEMINOLE, 5.9 mi (kit scrub data-scrub-ft, the scroll drives it).
+//   1. Distance: a tape measure case marked LARGO. R5 (re-check R4 MINOR 2: a line from base to town drawn by the scroll
+//      was the Mike TClose / Khinda Distance interaction): the scroll no longer drives it. YOU pull it: drag the hook out
+//      (pointer events, touch-action pan-y so a sideways pull works on phones), the case window counts the miles, and
+//      past 85 % the hook catches at SEMINOLE, 5.9 mi. Let go early and the tape winds back into the case, like a real
+//      one. A click / tap / Enter on the hook pulls it out (or lets it wind back). The blade is marked like a real tape:
+//      0 at the hook, the miles counting back toward the case, so the case window reads the distance.
+//      R5 (MINOR 3): the clip is horizontal only, so the SEMINOLE tag is never cut; the blade ends at 5.9 at the hook, so
+//      the hook covers no mark; the "Polybutylene years" label sits above the year thumb's reach.
 //   2. Your home: a second tape of build years 1950-2020 with the polybutylene years (1978-1995, third-party, Florida-wide)
 //      hatched on it. Drag the hook (a real range input: arrows, Page Up / Down, Home / End) to your home's build year and
 //      the line under it says whether that year sits inside the window, and what to do (text a photo of the pipe).
-// 21st.dev: "Marks Slider" (@ai2, id 29217: a ruler-style range with labelled ticks) + "Time Ruler" (@romanvasnev,
+// 21st.dev: "Slide Action Button" (@starc007, id 29304: drag a thumb to the end to confirm, it springs back if let go
+// early; R5, the distance pull) + "Marks Slider" (@ai2, id 29217: a ruler-style range with labelled ticks) + "Time Ruler" (@romanvasnev,
 // id 40126: a value picked on a draggable ruler with a badge), rebuilt as a native range input + CSS, re-skinned as a
 // cream tape with ink ticks on a steel bench with rivets.
 // Nearest match: Glass /areas AreasFacts (fogged panes you wipe), Glass home Areas (split-flap board), Glass Seminole
 // TownNearby (stamps with miles), Khinda city Distance (a cable drawn on a map screenshot), Khinda SvPricing (a range that
 // prices a job). No tape measure, and no build-year check, on either site.
 // Facts: miles = Census Gazetteer points (LOCAL-FACTS 1, towns.ts); polybutylene 1978-1995 = third-party, labelled and
-// hedged ("often"), no Seminole count (research has none). No JS: the readout shows the default year's line; the tape is out.
+// hedged ("often"), no Seminole count (research has none). No JS / reduced motion: the tape is out and caught at Seminole (reduced motion: a tap still winds it in and out, at once);
+// the readout shows the default year's line.
 import Head from '../areas/Head.astro';
 import Seam from '../kit/Seam.astro';
 import { TOWN } from './data';
-const MAX = 6;
-const miPct = (TOWN.mi / MAX) * 100;
+// Mile marks on the tape blade, every half mile, counted from the hook (0) back toward the case, like a real tape.
+const MARKS = Array.from({ length: Math.floor(TOWN.mi * 2) }, (_, i) => (i + 1) / 2).filter((m) => m < TOWN.mi - 0.2);
 const Y0 = 1950, Y1 = 2020, PB0 = 1978, PB1 = 1995, DEF = 1985;
 const yPct = (y: number) => ((y - Y0) / (Y1 - Y0)) * 100;
 const verdict = (y: number) => y >= PB0 && y <= PB1
@@ -44,17 +52,19 @@ const verdict = (y: number) => y >= PB0 && y <= PB1
           <p class="rd-v">{TOWN.mi} <small>mi</small></p>
           <p class="rd-d">From our Largo base to Seminole, in a straight line between Census map points. Driving is longer: call and we tell you when we can come.</p>
         </div>
-        <div class="tm" data-scrub data-start="top 85%" data-end="center 45%" data-start-m="top 92%" data-end-m="center 55%" data-lag="0.5" aria-hidden="true">
-          <div class="tm-case"><span class="tm-hub"></span><span class="tm-lb">Largo</span></div>
+        <div class="tm" data-tm>
+          <div class="tm-case" aria-hidden="true"><span class="tm-hub"></span><span class="tm-lb">Largo</span><span class="tm-read" data-tm-read>{TOWN.mi} mi</span></div>
           <div class="tm-run">
-            <div class="tm-tape" data-scrub-ft='{"from":{"x":0,"xPercent":-100},"to":{"x":0,"xPercent":0}}'>
-              <div class="tm-scale" style={`--to:${miPct}%`}>
-                {Array.from({ length: MAX * 2 + 1 }, (_, i) => <span class:list={['tk', i % 2 === 0 && 'tk-big']} style={`left:${(i / (MAX * 2)) * 100}%`}>{i % 2 === 0 && <b>{i / 2}</b>}</span>)}
+            <div class="tm-tape" data-tm-tape>
+              <div class="tm-scale" aria-hidden="true">
+                {MARKS.map((m) => <span class:list={['tk', Number.isInteger(m) && 'tk-big']} style={`right:${(m / TOWN.mi) * 100}%`}>{Number.isInteger(m) && <b>{m}</b>}</span>)}
               </div>
-              <span class="tm-hook" style={`left:${miPct}%`}><span data-scrub-ft='{"from":{"opacity":0},"to":{"opacity":1}}' data-win="0.8,1">Seminole</span></span>
+              <button type="button" class="tm-hook" data-tm-hook aria-pressed="true" disabled><span class="sr-only">Tape measure: pull it out from Largo to Seminole</span></button>
+              <span class="tm-tag" aria-hidden="true">Seminole</span>
             </div>
           </div>
         </div>
+        <p class="tm-hint" aria-hidden="true"><span class="d">Drag the hook out to Seminole, or click it.</span><span class="m">Pull the hook out to Seminole, or tap it.</span> Let go early and it winds back in.</p>
         <p class="sr-only">Seminole is {TOWN.mi} miles from our Largo base in a straight line.</p>
         <p class="src">Source: US Census 2024 Gazetteer points, read 17 Nov 2026</p>
       </div>
@@ -80,6 +90,67 @@ const verdict = (y: number) => y >= PB0 && y <= PB1
 </section>
 
 <script>
+  // Distance tape: one state p (0 = wound in, 1 = out to the hook at Seminole). Written as one CSS variable; no layout reads
+  // while scrolling, a rAF loop only while a pull or a wind-back runs.
+  document.querySelectorAll<HTMLElement>('[data-tm]').forEach((tm) => {
+    const tape = tm.querySelector<HTMLElement>('[data-tm-tape]')!;
+    const hook = tm.querySelector<HTMLButtonElement>('[data-tm-hook]')!;
+    const read = tm.querySelector<HTMLElement>('[data-tm-read]')!;
+    const MI = 5.9;
+    const still = !document.documentElement.classList.contains('motion');
+    let p = 1, raf = 0, drag: { x: number; p0: number; w: number; moved: boolean } | null = null, skipClick = false;
+    const set = (v: number) => {
+      p = Math.max(0, Math.min(1, v));
+      tape.style.setProperty('--p', p.toFixed(4));
+      read.textContent = `${(p * MI).toFixed(1)} mi`;
+      const caught = p > 0.999;
+      tm.classList.toggle('is-caught', caught);
+      hook.setAttribute('aria-pressed', String(caught));
+    };
+    const go = (to: number, dur: number, ease: (t: number) => number) => {
+      cancelAnimationFrame(raf);
+      if (still) { set(to); return; }
+      const from = p, t0 = performance.now();
+      const step = (now: number) => { const t = Math.min(1, (now - t0) / dur); set(from + (to - from) * ease(t)); if (t < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    };
+    const out = (t: number) => 1 - Math.pow(1 - t, 3);
+    const back = (t: number) => t * t; // a wind-back speeds up as the spring takes it
+    const release = () => (p >= 0.85 ? go(1, 260, out) : go(0, 180 + p * 380, back));
+    hook.disabled = false;
+    tm.classList.add('is-js');
+    hook.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      cancelAnimationFrame(raf);
+      drag = { x: e.clientX, p0: p, w: tape.getBoundingClientRect().width || 1, moved: false };
+      hook.setPointerCapture(e.pointerId);
+    });
+    hook.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x;
+      if (!drag.moved && Math.abs(dx) < 4) return;
+      drag.moved = true; tm.classList.add('is-drag');
+      set(drag.p0 + dx / drag.w);
+    });
+    const end = () => { if (!drag) return; const moved = drag.moved; drag = null; tm.classList.remove('is-drag'); if (moved) { skipClick = true; release(); } };
+    hook.addEventListener('pointerup', end);
+    hook.addEventListener('pointercancel', end);
+    hook.addEventListener('click', () => {
+      if (skipClick) { skipClick = false; return; }
+      if (p > 0.999) go(0, 520, back); else go(1, 900, out);
+    });
+    if (still) { set(1); return; }
+    // Motion: the tape starts wound in. When the bench first comes into view the hook gives one short tug, as a hint.
+    set(0);
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => {
+        if (!es.some((x) => x.isIntersecting)) return; io.disconnect();
+        setTimeout(() => { if (p === 0 && !drag) { go(0.07, 300, out); setTimeout(() => { if (!drag && p < 0.08) go(0, 260, back); }, 380); } }, 400);
+      }, { threshold: 0.6 });
+      io.observe(tm);
+    }
+  });
+
   document.querySelectorAll<HTMLElement>('[data-yr]').forEach((row) => {
     const inp = row.querySelector<HTMLInputElement>('[data-yr-in]')!;
     const out = row.querySelector<HTMLOutputElement>('[data-yr-out]')!;
@@ -124,22 +195,34 @@ const verdict = (y: number) => y >= PB0 && y <= PB1
   .tm-case { position: relative; z-index: 2; flex: none; display: grid; place-items: center; width: 108px; height: 108px; border-radius: 26px; background: var(--ink); box-shadow: 6px 6px 0 var(--powder); }
   .tm-hub { width: 46px; height: 46px; border-radius: 50%; background: var(--powder); box-shadow: inset 0 0 0 8px var(--ink2), 0 0 0 2px var(--powder); }
   .tm-lb { position: absolute; bottom: 10px; font: 700 9px/1 var(--f-m); letter-spacing: .14em; text-transform: uppercase; color: var(--frost); }
-  .tm-run { position: relative; flex: 1; margin-left: -4px; padding: 28px 70px 30px 0; overflow: hidden; }
-  .tm-tape { position: relative; height: 48px; }
-  :global(html.motion) .tm:not(.is-scrub) .tm-tape { transform: translateX(-100%); }
-  :global(html.motion) .tm:not(.is-scrub) .tm-hook span { opacity: 0; }
+  .tm-read { position: absolute; top: 9px; font: 700 10px/1 var(--f-m); color: var(--powder); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  /* The run clips only on the left (the blade disappears into the case); the tag above the hook is never cut. */
+  .tm-run { position: relative; flex: 1; margin-left: -4px; padding: 44px 70px 30px 0; clip-path: inset(-80px -120px -80px 0); }
+  .tm-tape { position: relative; height: 48px; transform: translateX(calc((var(--p, 1) - 1) * 100%)); }
   .tm-scale { position: absolute; inset: 0; border-radius: 0 4px 4px 0; background: var(--cream); box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .tk { position: absolute; top: 0; width: 1.5px; height: 12px; margin-left: -.75px; background: var(--ink); }
+  .tk { position: absolute; top: 0; width: 1.5px; height: 12px; margin-right: -.75px; background: var(--ink); }
   .tk-big { height: 22px; }
   .tk b { position: absolute; top: 24px; left: 50%; translate: -50% 0; font: 700 11px/1 var(--f-m); color: var(--ink); }
-  .tm-hook { position: absolute; top: -8px; bottom: -8px; width: 14px; margin-left: -7px; border-radius: 3px; background: var(--ink); }
-  .tm-hook span { position: absolute; left: 50%; bottom: calc(100% + 6px); translate: -50% 0; padding: 5px 9px; border-radius: 4px; background: var(--ink); color: var(--white); font: 700 11px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  /* The hook: an ink lip at the end of the blade; the button around it is the 44 px grip you pull. */
+  .tm-hook { position: absolute; left: 100%; top: -8px; width: 44px; height: 64px; margin-left: 0; padding: 0; border: 0; background: none; cursor: grab; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+  .tm-hook::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; border-radius: 3px; background: var(--ink); box-shadow: 3px 3px 0 var(--powder); transition: background-color .3s var(--ease-io); }
+  .tm-hook:hover::before { background: var(--pdeep); }
+  .tm.is-drag .tm-hook { cursor: grabbing; }
+  .tm-hook:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; border-radius: 4px; }
+  .tm-hook:disabled { cursor: default; }
+  .tm-tag { position: absolute; left: 100%; bottom: calc(100% + 14px); translate: calc(-50% + 1px) 0; padding: 5px 9px; border-radius: 4px; background: var(--ink); color: var(--white); font: 700 11px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; opacity: 0; transition: opacity .3s var(--ease-io); }
+  .tm:not(.is-js) .tm-tag, .tm.is-caught .tm-tag { opacity: 1; }
+  .tm-hint { display: none; margin-top: 6px; font: 500 12px/1.4 var(--f-m); color: var(--ink); }
+  .tm-hint .m { display: none; }
+  .row:has(.tm.is-js) .tm-hint { display: block; }
+  @media (hover: none), (pointer: coarse) { .tm-hint .d { display: none; } .tm-hint .m { display: inline; } }
+  @media (prefers-reduced-motion: reduce) { .tm-tag, .tm-hook::before { transition: none; } }
 
   /* Tape 2: a build-year rule with the polybutylene years hatched; the range input's thumb is the hook. */
-  .yr { position: relative; margin-top: 34px; padding-top: 30px; --th: 28px; }
-  .yr-tape { position: absolute; left: calc(var(--th) / 2); right: calc(var(--th) / 2); top: 30px; height: 48px; border-radius: 4px; background: var(--cream); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .yr { position: relative; margin-top: 34px; padding-top: 34px; --th: 28px; }
+  .yr-tape { position: absolute; left: calc(var(--th) / 2); right: calc(var(--th) / 2); top: 34px; height: 48px; border-radius: 4px; background: var(--cream); box-shadow: inset 0 0 0 1.5px var(--ink); }
   .yr-pb { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(-45deg, rgb(47 97 120 / .35) 0 5px, transparent 5px 10px); box-shadow: inset 0 0 0 1.5px var(--pdeep); }
-  .yr-pb b { position: absolute; bottom: calc(100% + 6px); left: 0; font: 700 11px/1 var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .yr-pb b { position: absolute; bottom: calc(100% + 16px); left: 0; font: 700 11px/1 var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
   .yr-in { position: relative; z-index: 2; display: block; width: 100%; height: 48px; margin: 0; background: none; cursor: pointer; -webkit-appearance: none; appearance: none; }
   .yr-in::-webkit-slider-runnable-track { height: 48px; background: transparent; }
   .yr-in::-moz-range-track { height: 48px; background: transparent; }
@@ -147,7 +230,9 @@ const verdict = (y: number) => y >= PB0 && y <= PB1
   .yr-in::-moz-range-thumb { width: var(--th); height: 64px; border: 0; border-radius: 4px; background: var(--ink); box-shadow: 4px 4px 0 var(--powder); }
   .yr-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 6px; }
   .row-y.is-in .rd-v output { color: var(--pdeep); }
-  .yr-hint { margin-top: 30px; font: 500 12px/1.4 var(--f-m); color: var(--ink); }
+  /* R5: the year numbers sit under the tape, out of the thumb's reach, so the thumb never covers a year. */
+  .yr .tk b { top: 66px; }
+  .yr-hint { margin-top: 44px; font: 500 12px/1.4 var(--f-m); color: var(--ink); }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .bench { padding: 40px 36px; }
@@ -166,11 +251,13 @@ const verdict = (y: number) => y >= PB0 && y <= PB1
     .tm-case { width: 64px; height: 64px; border-radius: 16px; box-shadow: 4px 4px 0 var(--powder); }
     .tm-hub { width: 26px; height: 26px; box-shadow: inset 0 0 0 5px var(--ink2), 0 0 0 1.5px var(--powder); }
     .tm-lb { bottom: 5px; font-size: 7px; }
-    .tm-run { padding: 30px 46px 28px 0; }
+    .tm-run { padding: 40px 46px 28px 0; }
+    .tm-read { top: 6px; font-size: 8px; }
     .tm-tape { height: 38px; }
     .tk-big { height: 16px; }
     .tk b { top: 18px; font-size: 9px; }
-    .tm-hook span { font-size: 9px; padding: 4px 6px; }
+    .tm-tag { font-size: 9px; padding: 4px 6px; }
+    .tm-hook { top: -8px; height: 54px; }
     .yr { --th: 24px; }
     .yr .tk:not(.tk-big) { display: none; }
     .yr .tk b { font-size: 8px; }

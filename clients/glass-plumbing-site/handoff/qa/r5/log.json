@@ -1,0 +1,634 @@
+[
+ {
+  "k": "about-ripple",
+  "tag": "1440",
+  "during": "0.00",
+  "after": {
+   "d": "0.00",
+   "s": "0",
+   "rings": 0
+  }
+ },
+ {
+  "k": "about-buttons",
+  "tag": "1440",
+  "vcf": [
+   {
+    "t": "Call (727) 512-0673 Call now · 24/7",
+    "href": "tel:+17275120673",
+    "dl": null
+   },
+   {
+    "t": "Save to contacts",
+    "href": "data:text/vcard;charset=utf-8,BEGIN%3AVC",
+    "dl": "glass-plumbing.vcf"
+   },
+   {
+    "t": "Text a photo",
+    "href": "sms:+17275120673",
+    "dl": null
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "tape-start",
+  "tag": "1440",
+  "p": "0.0000",
+  "caught": false,
+  "read": "0.0 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 648.25,
+  "thumbTop": 656.25,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-pulling",
+  "tag": "1440",
+  "p": "0.4897",
+  "caught": false,
+  "read": "2.9 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 648.25,
+  "thumbTop": 656.25,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-let-go-early",
+  "tag": "1440",
+  "p": "0.0000",
+  "caught": false,
+  "read": "0.0 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 648.25,
+  "thumbTop": 656.25,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-caught",
+  "tag": "1440",
+  "p": "1.0000",
+  "caught": true,
+  "read": "5.9 mi",
+  "tagOpacity": "1",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 648.25,
+  "thumbTop": 656.25,
+  "pressed": "true"
+ },
+ {
+  "k": "tape-click-windback",
+  "tag": "1440",
+  "p": "0.0000",
+  "caught": false,
+  "read": "0.0 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 648.25,
+  "thumbTop": 656.25,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-enter-pull",
+  "tag": "1440",
+  "p": "1.0000",
+  "caught": true,
+  "read": "5.9 mi",
+  "tagOpacity": "1",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 648.25,
+  "thumbTop": 656.25,
+  "pressed": "true"
+ },
+ {
+  "k": "tape-errs",
+  "tag": "1440",
+  "errs": []
+ },
+ {
+  "k": "fog",
+  "tag": "1440",
+  "fgOn": true,
+  "canvasShown": "block",
+  "errs": []
+ },
+ {
+  "k": "wh",
+  "tag": "1440",
+  "res": [
+   {
+    "frac": 0.94,
+    "st": [
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     }
+    ]
+   },
+   {
+    "frac": 0.99,
+    "st": [
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "quilt",
+  "tag": "1440",
+  "imgs": [
+   "job-state-heater.DbKIn3To_208a3E.avif",
+   "job-vanity.C9UQ_tIp_ZM84hM.avif",
+   "job-supply-lines.DIf5FLL3_MbFBs.avif"
+  ],
+  "errs": []
+ },
+ {
+  "k": "why",
+  "tag": "1440",
+  "panel": {
+   "tag": "DIV",
+   "role": "tabpanel",
+   "hidden": false,
+   "sel": "true"
+  },
+  "errs": []
+ },
+ {
+  "k": "about-rm",
+  "tag": "1440-rm",
+  "s": "0",
+  "live": false
+ },
+ {
+  "k": "about-buttons",
+  "tag": "1440-rm",
+  "vcf": [
+   {
+    "t": "Call (727) 512-0673 Call now · 24/7",
+    "href": "tel:+17275120673",
+    "dl": null
+   },
+   {
+    "t": "Save to contacts",
+    "href": "data:text/vcard;charset=utf-8,BEGIN%3AVC",
+    "dl": "glass-plumbing.vcf"
+   },
+   {
+    "t": "Text a photo",
+    "href": "sms:+17275120673",
+    "dl": null
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "tape-start",
+  "tag": "1440-rm",
+  "p": "1.0000",
+  "caught": true,
+  "read": "5.9 mi",
+  "tagOpacity": "1",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 665.25,
+  "thumbTop": 673.25,
+  "pressed": "true"
+ },
+ {
+  "k": "tape-errs",
+  "tag": "1440-rm",
+  "errs": []
+ },
+ {
+  "k": "fog",
+  "tag": "1440-rm",
+  "fgOn": false,
+  "canvasShown": "none",
+  "errs": []
+ },
+ {
+  "k": "wh",
+  "tag": "1440-rm",
+  "res": [
+   {
+    "frac": 0.94,
+    "st": [
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     }
+    ]
+   },
+   {
+    "frac": 0.99,
+    "st": [
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "quilt",
+  "tag": "1440-rm",
+  "imgs": [
+   "job-state-heater.DbKIn3To_208a3E.avif",
+   "job-vanity.C9UQ_tIp_ZM84hM.avif",
+   "job-supply-lines.DIf5FLL3_MbFBs.avif"
+  ],
+  "errs": []
+ },
+ {
+  "k": "why",
+  "tag": "1440-rm",
+  "panel": {
+   "tag": "DIV",
+   "role": "tabpanel",
+   "hidden": false,
+   "sel": "true"
+  },
+  "errs": []
+ },
+ {
+  "k": "about-ripple",
+  "tag": "390",
+  "during": "0.52",
+  "after": {
+   "d": "0.00",
+   "s": "0",
+   "rings": 0
+  }
+ },
+ {
+  "k": "about-buttons",
+  "tag": "390",
+  "vcf": [
+   {
+    "t": "Call (727) 512-0673 Call now · 24/7",
+    "href": "tel:+17275120673",
+    "dl": null
+   },
+   {
+    "t": "Save to contacts",
+    "href": "data:text/vcard;charset=utf-8,BEGIN%3AVC",
+    "dl": "glass-plumbing.vcf"
+   },
+   {
+    "t": "Text a photo",
+    "href": "sms:+17275120673",
+    "dl": null
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "tape-start",
+  "tag": "390",
+  "p": "0.0000",
+  "caught": false,
+  "read": "0.0 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 699.71875,
+  "thumbTop": 707.71875,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-pulling",
+  "tag": "390",
+  "p": "0.5476",
+  "caught": false,
+  "read": "3.2 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 699.71875,
+  "thumbTop": 707.71875,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-let-go-early",
+  "tag": "390",
+  "p": "0.0000",
+  "caught": false,
+  "read": "0.0 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 699.71875,
+  "thumbTop": 707.71875,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-caught",
+  "tag": "390",
+  "p": "1.0000",
+  "caught": true,
+  "read": "5.9 mi",
+  "tagOpacity": "1",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 699.71875,
+  "thumbTop": 707.71875,
+  "pressed": "true"
+ },
+ {
+  "k": "tape-click-windback",
+  "tag": "390",
+  "p": "1.0000",
+  "caught": true,
+  "read": "5.9 mi",
+  "tagOpacity": "1",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 699.71875,
+  "thumbTop": 707.71875,
+  "pressed": "true"
+ },
+ {
+  "k": "tape-enter-pull",
+  "tag": "390",
+  "p": "0.0000",
+  "caught": false,
+  "read": "0.0 mi",
+  "tagOpacity": "0",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 699.71875,
+  "thumbTop": 707.71875,
+  "pressed": "false"
+ },
+ {
+  "k": "tape-errs",
+  "tag": "390",
+  "errs": []
+ },
+ {
+  "k": "pad-swipe",
+  "tag": "390",
+  "afterLeft": "Step 2 of 5: We come out",
+  "afterLeft2": "Step 3 of 5: Price before any work",
+  "afterRight": "Step 2 of 5: We come out",
+  "touchAction": "auto",
+  "scrollY0": 7016,
+  "errs": []
+ },
+ {
+  "k": "fog",
+  "tag": "390",
+  "fgOn": true,
+  "canvasShown": "block",
+  "errs": []
+ },
+ {
+  "k": "wh",
+  "tag": "390",
+  "res": [
+   {
+    "frac": 0.96,
+    "st": [
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": true,
+      "drawn": 0,
+      "cap": "1"
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "quilt",
+  "tag": "390",
+  "imgs": [
+   "job-state-heater.DbKIn3To_Z2l5XEN.avif",
+   "job-vanity.C9UQ_tIp_r1WYq.avif",
+   "job-supply-lines.DIf5FLL3_iAGPC.avif"
+  ],
+  "errs": []
+ },
+ {
+  "k": "why",
+  "tag": "390",
+  "panel": {
+   "tag": "DIV",
+   "role": "tabpanel",
+   "hidden": false,
+   "sel": "true"
+  },
+  "errs": []
+ },
+ {
+  "k": "about-rm",
+  "tag": "390-rm",
+  "s": "0",
+  "live": false
+ },
+ {
+  "k": "about-buttons",
+  "tag": "390-rm",
+  "vcf": [
+   {
+    "t": "Call (727) 512-0673 Call now · 24/7",
+    "href": "tel:+17275120673",
+    "dl": null
+   },
+   {
+    "t": "Save to contacts",
+    "href": "data:text/vcard;charset=utf-8,BEGIN%3AVC",
+    "dl": "glass-plumbing.vcf"
+   },
+   {
+    "t": "Text a photo",
+    "href": "sms:+17275120673",
+    "dl": null
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "tape-start",
+  "tag": "390-rm",
+  "p": "1.0000",
+  "caught": true,
+  "read": "5.9 mi",
+  "tagOpacity": "1",
+  "tagTopVisible": true,
+  "hookCoversMark": [],
+  "pbLabelBottom": 720.71875,
+  "thumbTop": 728.71875,
+  "pressed": "true"
+ },
+ {
+  "k": "tape-errs",
+  "tag": "390-rm",
+  "errs": []
+ },
+ {
+  "k": "pad-swipe",
+  "tag": "390-rm",
+  "afterLeft": "Step 2 of 5: We come out",
+  "afterLeft2": "Step 3 of 5: Price before any work",
+  "afterRight": "Step 2 of 5: We come out",
+  "touchAction": "auto",
+  "scrollY0": 6970,
+  "errs": []
+ },
+ {
+  "k": "fog",
+  "tag": "390-rm",
+  "fgOn": false,
+  "canvasShown": "none",
+  "errs": []
+ },
+ {
+  "k": "wh",
+  "tag": "390-rm",
+  "res": [
+   {
+    "frac": 0.96,
+    "st": [
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     },
+     {
+      "on": false,
+      "drawn": 0,
+      "cap": "1"
+     }
+    ]
+   }
+  ],
+  "errs": []
+ },
+ {
+  "k": "quilt",
+  "tag": "390-rm",
+  "imgs": [
+   "job-state-heater.DbKIn3To_Z2l5XEN.avif",
+   "job-vanity.C9UQ_tIp_r1WYq.avif",
+   "job-supply-lines.DIf5FLL3_iAGPC.avif"
+  ],
+  "errs": []
+ },
+ {
+  "k": "why",
+  "tag": "390-rm",
+  "panel": {
+   "tag": "DIV",
+   "role": "tabpanel",
+   "hidden": false,
+   "sel": "true"
+  },
+  "errs": []
+ }
+]

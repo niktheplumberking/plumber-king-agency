@@ -1,92 +1,104 @@
 ---
-// /about final CTA, R4 (independent re-check R3 MAJOR 2: Kody's business card turned over here AND in home Crew, the same
-// object and interaction twice; MINOR: its "Tap the card" pill covered the card's 24/7 strip). The card now lives on home
-// Crew only. New idea, THE KEYPAD: the one thing to keep from this page is the number, so the section is a steel phone
-// keypad under an ink display. As the keypad scrolls into view, the display types (727) 512-0673 digit by digit (kit
-// scrub class-mode stops, the scroll drives it). The twelve keys are real buttons: dial it yourself and the display
-// follows; at ten digits it says whether that is our number. The red key under the pad is the real call link (tel:).
-// 21st.dev: "Number Pad" (@bankkroll, id 3711: button + keyboard entry with phone formatting) + "PIN Keypad Unlock"
-// (@ziegfiroyt, id 22111: full keypad, display, backspace), rebuilt in vanilla TS, re-skinned: steel body with rivets,
-// ink keys with the powder offset shadow, a frost-on-ink mono display.
-// Nearest match: Glass /contact ConHero (a switchboard of five channel keys that fill like housings: it picks HOW to reach
-// us, nothing is dialled), Glass footer / home Emergency (the number set huge: static type), Mike drain PhoneCta (giant
-// number), Khinda contact (bell, drawers). None is a keypad you dial.
-// No JS: the display shows the number, the keys are hidden, the call and text buttons stay. Reduced motion: the number is
-// shown at once; the keys still work.
+// /about final CTA, R5 (independent re-check R4 MINOR 1: the R4 keypad was a steel plate with rivets, an ink display
+// headed "LINE OPEN · 24/7", a grid of keys and the red call key: the same skin as the /contact ConHero switchboard).
+// New idea, THE POOL FLOOR: the one thing to keep from this page is the number, so it is set in mosaic tile on the floor
+// of a pool, the way depth marks are tiled into a real pool. Material: water over white floor tile (no steel, no rivets,
+// no offset plate). Layout: one wide, shallow pool across the section with a stone coping, the buttons on its edge.
+// Display: none. The number is part of the floor, seen through the water; there is no screen and no status label.
+//   Scroll: as the pool comes up the screen the water is choppy and the tile number wobbles; it settles to glass-still
+//   as the pool reaches the middle (kit scrub data-scrub-ft on the feDisplacementMap's scale, the scroll drives it).
+//   Touch: run a finger or the pointer through the water and it ripples there: rings spread from the point and the
+//   number bends for a moment, then settles (rAF only while a ripple is alive; nothing runs when it is still).
+//   Act: the red Call button, "Save to contacts" (a real vCard file: name, number, email) and "Text a photo".
+// 21st.dev: "Ripple Distortion" (@ruixen.ui, id 7753: concentric water ripples from the cursor bend the image under them)
+// + "Ripple Buttons" (@ai2, id 26809: a ring spreads from the pointer point, reduced-motion aware), rebuilt without
+// WebGL: one SVG displacement filter + CSS rings, re-skinned as a tiled pool floor in the Glass powder and ink.
+// Nearest match: Glass /contact ConHero (a steel switchboard: display + five channel keys, picks HOW to reach us), Glass
+// /areas AreasFacts (fogged panes you wipe: a canvas you clear; nothing here is cleared, the water only moves), Glass
+// meniscus seam (a section edge, not a surface), Mike kit Wave (section dividers), Mike RouteMap / TClose ripples (a pin
+// pulse on a map), Mike drain PhoneCta (giant static number), Khinda contact (bell, drawers). No pool, no water surface
+// you touch, no tiled number on either site.
+// No JS / reduced motion: still water, the number sharp, no ripples; the three buttons work as plain links.
 import Head from '../areas/Head.astro';
 import Btn from '../kit/Btn.astro';
 import { SITE } from '../../data/site';
 const NUM = SITE.phone; // (727) 512-0673
-const chars = [...NUM];
-const digits = chars.filter((c) => /\d/.test(c)).length;
-let k = 0;
-const at = chars.map((c) => (/\d/.test(c) ? (++k / digits) * 0.85 : null));
-const KEYS: [string, string][] = [['1', ''], ['2', 'ABC'], ['3', 'DEF'], ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'], ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'], ['*', ''], ['0', '+'], ['#', '']];
+const [area, rest] = [NUM.slice(0, 5), NUM.slice(6)];
+const vcf = ['BEGIN:VCARD', 'VERSION:3.0', `FN:${SITE.name}`, `ORG:${SITE.name}`, `TEL;TYPE=WORK,VOICE:${SITE.phoneE164}`, `EMAIL;TYPE=WORK:${SITE.email}`, 'END:VCARD'].join('\r\n');
+const vcfHref = `data:text/vcard;charset=utf-8,${encodeURIComponent(vcf)}`;
 ---
 <section class="bcall" data-m-section aria-labelledby="bcall-h">
   <div class="wrap bk-in">
     <div class="bk-head">
       <Head eyebrow="Keep the number" l1="One number," l2="any hour." size={64} sizeM={40} id="bcall-h" br={false} />
-      <p class="bk-lead" data-t="3">The number on the van and on every page. Call it, or text a photo of the problem first.</p>
+      <p class="bk-lead" data-t="3">The number on the van and on every page. Call it, save it to your phone, or text a photo of the problem first.</p>
     </div>
 
-    <div class="kp" data-kp data-scrub data-start="top 85%" data-end="center 45%" data-start-m="top 90%" data-end-m="center 55%" data-t="4" data-fx="up">
-      <i class="kp-rv" aria-hidden="true"></i><i class="kp-rv" aria-hidden="true"></i><i class="kp-rv" aria-hidden="true"></i><i class="kp-rv" aria-hidden="true"></i>
-      <div class="kp-scr">
-        <p class="kp-lb" aria-hidden="true"><span class="kp-dot"></span><span data-kp-lb>Line open · 24/7</span></p>
-        <p class="kp-num" data-kp-num>
-          <span class="kp-auto"><span class="sr-only">{NUM}</span><span aria-hidden="true">{chars.map((c, i) => at[i] == null ? <span class="ch">{c}</span> : <span class="ch dg" data-stop data-at={at[i]!.toFixed(3)}>{c}</span>)}</span></span>
-          <span class="kp-user" aria-hidden="true" data-kp-user></span>
-        </p>
-        <p class="kp-msg" data-kp-msg aria-live="polite"></p>
+    <div class="pool" data-pool data-t="4" data-fx="up">
+      <div class="pool-w" data-pool-w data-scrub data-start="top 95%" data-end="center 55%" data-start-m="top 98%" data-end-m="center 60%" data-lag="0.6">
+        <svg class="pool-defs" width="0" height="0" aria-hidden="true" focusable="false">
+          <filter id="pool-f" x="-6%" y="-20%" width="112%" height="140%" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="2" seed="7" result="n1" />
+            <feDisplacementMap in="SourceGraphic" in2="n1" scale="0" xChannelSelector="R" yChannelSelector="G" result="d1" data-scrub-ft='{"from":{"attr":{"scale":34}},"to":{"attr":{"scale":0}}}' />
+            <feTurbulence type="turbulence" baseFrequency="0.03 0.08" numOctaves="1" seed="3" result="n2" data-pool-n />
+            <feDisplacementMap in="d1" in2="n2" scale="0" xChannelSelector="R" yChannelSelector="G" data-pool-d />
+          </filter>
+        </svg>
+        <span class="pool-floor" aria-hidden="true"></span>
+        <span class="pool-lite" aria-hidden="true" data-scrub-ft='{"from":{"xPercent":-6,"yPercent":4},"to":{"xPercent":0,"yPercent":0}}'></span>
+        <p class="pool-num" aria-hidden="true"><span class="pn-l">{area}</span> <span class="pn-l">{rest}</span></p>
+        <p class="pool-247" aria-hidden="true">24/7</p>
+        <p class="sr-only">Our number: {NUM}</p>
+        <span class="pool-rings" aria-hidden="true" data-pool-rings></span>
+        <p class="pool-hint" aria-hidden="true"><span class="d">Run the pointer through the water</span><span class="m">Touch the water</span></p>
       </div>
-      <div class="kp-keys" role="group" aria-label="Keypad: dial our number yourself">
-        {KEYS.map(([d, l]) => (
-          <button type="button" class="kk" data-kk={d} aria-label={d === '*' ? 'star' : d === '#' ? 'hash' : d}>
-            <span class="kk-d" aria-hidden="true">{d}</span><span class="kk-l" aria-hidden="true">{l}</span>
-          </button>
-        ))}
+      <div class="pool-edge">
+        <Btn look="call" sub="Call now · 24/7" size="l" w={250} wm={350} hm={60} class="pe-b" />
+        <Btn look="line" label="Save to contacts" icon="user" href={vcfHref} download="glass-plumbing.vcf" size="l" w={250} wm={350} hm={60} class="pe-b" />
+        <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={250} wm={350} hm={60} class="pe-b" />
       </div>
-      <div class="kp-foot">
-        <button type="button" class="kp-clr" data-kp-clr>Clear</button>
-        <Btn look="call" sub="Call now · 24/7" size="l" w={260} wm={200} class="kp-call" />
-      </div>
-    </div>
-
-    <div class="bk-btns">
-      <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={260} wm={350} hm={56} t="3" />
     </div>
   </div>
 </section>
 
 <script>
-  // Keypad: each key types into the user line (formatted like (727) 512-0673); at ten digits the message says whether it
-  // is our number. Clear empties it and brings the scroll-typed number back.
-  document.querySelectorAll<HTMLElement>('[data-kp]').forEach((kp) => {
-    kp.classList.add('is-js');
-    const user = kp.querySelector<HTMLElement>('[data-kp-user]')!;
-    const msg = kp.querySelector<HTMLElement>('[data-kp-msg]')!;
-    const ours = '7275120673';
-    let typed = '';
-    const fmt = (s: string) => {
-      const d = s.replace(/[^0-9]/g, '');
-      if (s !== d || d.length > 10) return s;
-      if (d.length <= 3) return d.length ? `(${d}` : '';
-      if (d.length <= 6) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
-      return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+  // Ripples: only with motion. A pointer move (fine pointers, throttled to one ring per 90 ms) or a tap drops a ring at the
+  // point and kicks the second displacement map; it decays to 0 in ~0.9 s. One rAF loop, alive only while it decays.
+  const html = document.documentElement;
+  document.querySelectorAll<HTMLElement>('[data-pool-w]').forEach((w) => {
+    if (!html.classList.contains('motion')) return;
+    const d = w.querySelector<SVGFEDisplacementMapElement>('[data-pool-d]');
+    const n = w.querySelector<SVGFETurbulenceElement>('[data-pool-n]');
+    const rings = w.querySelector<HTMLElement>('[data-pool-rings]')!;
+    w.classList.add('is-live');
+    let amp = 0, raf = 0, last = 0, t = 0;
+    const loop = () => {
+      amp *= 0.92; t += 0.06;
+      if (amp < 0.3) { amp = 0; raf = 0; }
+      d?.setAttribute('scale', amp.toFixed(2));
+      n?.setAttribute('baseFrequency', `${(0.03 + Math.sin(t) * 0.004).toFixed(4)} ${(0.08 + Math.cos(t) * 0.008).toFixed(4)}`);
+      if (raf) raf = requestAnimationFrame(loop);
     };
-    const paint = () => {
-      kp.classList.toggle('is-user', typed.length > 0);
-      user.textContent = fmt(typed);
-      const d = typed.replace(/[^0-9]/g, '');
-      msg.textContent = typed.length >= 10 ? (d === ours && typed.length === 10 ? 'That’s us. Tap Call.' : 'Not our number. Ours is (727) 512-0673.') : '';
-      kp.classList.toggle('is-ours', d === ours && typed.length === 10);
+    const drop = (e: PointerEvent, big: boolean) => {
+      const r = w.getBoundingClientRect();
+      const z = r.width / w.offsetWidth || 1; // the site zoom (html zoom scales the box)
+      const x = (e.clientX - r.left) / z, y = (e.clientY - r.top) / z;
+      for (let k = 0; k < (big ? 2 : 1); k++) {
+        const s = document.createElement('i');
+        s.style.left = `${x}px`; s.style.top = `${y}px`; s.style.animationDelay = `${k * 0.18}s`;
+        if (big) s.classList.add('big');
+        rings.appendChild(s);
+        s.addEventListener('animationend', () => s.remove(), { once: true });
+      }
+      while (rings.childElementCount > 14) rings.firstElementChild!.remove();
+      amp = Math.min(22, amp + (big ? 16 : 6));
+      w.classList.add('is-touched');
+      if (!raf) raf = requestAnimationFrame(loop);
     };
-    kp.querySelectorAll<HTMLButtonElement>('[data-kk]').forEach((b) => b.addEventListener('click', () => {
-      if (typed.length >= 14) typed = '';
-      typed += b.dataset.kk; paint();
-    }));
-    kp.querySelector('[data-kp-clr]')!.addEventListener('click', () => { typed = ''; paint(); });
+    w.addEventListener('pointerdown', (e) => drop(e, true));
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      w.addEventListener('pointermove', (e) => { const now = performance.now(); if (now - last < 90) return; last = now; drop(e, false); });
+    }
   });
 </script>
 
@@ -95,55 +107,67 @@ const KEYS: [string, string][] = [['1', ''], ['2', 'ABC'], ['3', 'DEF'], ['4', '
   .bk-in { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .bk-head { display: flex; flex-direction: column; align-items: center; }
   .bk-head :global(.ah-eb) { justify-content: center; }
-  .bk-lead { max-width: 520px; margin-top: 18px; font-size: 18px; line-height: 1.5; color: var(--ink); }
+  .bk-lead { max-width: 560px; margin-top: 18px; font-size: 18px; line-height: 1.5; color: var(--ink); }
 
-  /* The keypad: a steel body, an ink display, twelve ink keys, the red call key. */
-  .kp { position: relative; width: 440px; margin-top: 52px; padding: 26px 26px 24px; border-radius: 22px; background: var(--steel); box-shadow: inset 0 0 0 1.5px var(--steel2), 14px 14px 0 var(--powder), 14px 14px 0 1.5px var(--ink); }
-  .kp-rv { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--steel2); box-shadow: inset 0 0 0 1px rgb(22 19 15 / .3); }
-  .kp-rv:nth-child(1) { left: 11px; top: 11px; } .kp-rv:nth-child(2) { right: 11px; top: 11px; }
-  .kp-rv:nth-child(3) { left: 11px; bottom: 11px; } .kp-rv:nth-child(4) { right: 11px; bottom: 11px; }
-  .kp-scr { padding: 16px 18px 14px; border-radius: 10px; background: var(--ink); color: var(--frost); text-align: left; box-shadow: inset 0 3px 0 rgb(0 0 0 / .4); }
-  .kp-lb { display: flex; align-items: center; gap: 8px; font: 700 10px/1 var(--f-m); letter-spacing: .1em; text-transform: uppercase; color: var(--powder); }
-  .kp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--powder); }
-  .kp-num { position: relative; display: grid; margin-top: 12px; font: 700 34px/1.1 var(--f-m); letter-spacing: -.01em; color: var(--white); white-space: nowrap; }
-  .kp-auto, .kp-user { grid-area: 1 / 1; min-height: 1.1em; }
-  .kp-user { display: none; }
-  .kp.is-user .kp-auto { visibility: hidden; }
-  .kp.is-user .kp-user { display: block; }
-  .kp.is-ours .kp-user { color: var(--powder); }
-  .ch { transition: opacity .3s var(--ease-io); }
-  :global(html.motion) .kp:not(.is-scrub) .dg, :global(html.motion) .kp.is-scrub .dg:not(.is-on) { opacity: 0; }
-  .kp-msg { min-height: 18px; margin-top: 8px; font: 500 12px/1.4 var(--f-m); color: var(--frost); }
-  .kp-keys { display: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
-  .kp.is-js .kp-keys { display: grid; }
-  .kk { display: grid; place-items: center; align-content: center; height: 64px; border: 0; border-radius: 12px; background: var(--ink); color: var(--white); cursor: pointer;
-    box-shadow: 0 4px 0 var(--ink3); transition: translate .15s var(--ease-io), box-shadow .15s var(--ease-io), background-color .3s var(--ease-io); }
-  .kk:hover { background: var(--ink2); }
-  .kk:active { translate: 0 3px; box-shadow: 0 1px 0 var(--ink3); }
-  .kk:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
-  .kk-d { font: 800 26px/1 var(--f-h); }
-  .kk-l { min-height: 10px; margin-top: 3px; font: 700 9px/1 var(--f-m); letter-spacing: .14em; color: var(--powder); }
-  .kp-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
-  .kp-clr { display: none; min-height: 56px; padding: 0 18px; border: 0; border-radius: 4px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); font: 700 15px/1 var(--f-b); cursor: pointer; }
-  .kp.is-js .kp-clr { display: block; }
-  .kp-clr:hover { background: var(--frost); }
-  .kp-clr:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
-  .kp:not(.is-js) .kp-foot { justify-content: center; }
-  .bk-btns { display: flex; justify-content: center; gap: 16px; margin-top: 44px; }
-  @media (prefers-reduced-motion: reduce) { .ch, .kk { transition: none; } }
+  /* The pool: stone coping (frost2 with a lighter lip), water over white floor tile, the buttons on the edge. */
+  .pool { width: 100%; max-width: 1080px; margin-top: 52px; padding: 18px; border-radius: 30px; background: var(--frost2);
+    box-shadow: inset 0 2px 0 rgb(255 255 255 / .9), inset 0 -2px 0 var(--frost3), 0 30px 60px -40px rgb(47 97 120 / .55); }
+  .pool-w { position: relative; overflow: hidden; display: grid; place-items: center; align-content: center; height: 360px; border-radius: 16px; touch-action: pan-y;
+    background: #DCEEF4; box-shadow: inset 0 0 0 2px rgb(47 97 120 / .35), inset 0 18px 30px -12px rgb(22 19 15 / .28); }
+  .pool-defs { position: absolute; }
+  /* Floor: 30 px tiles with blue-grey grout, deeper toward the far wall. */
+  .pool-floor { position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgb(47 97 120 / .34) 0%, rgb(132 179 199 / .26) 45%, rgb(132 179 199 / .34) 100%),
+      repeating-linear-gradient(0deg, rgb(47 97 120 / .22) 0 1.5px, transparent 1.5px 30px),
+      repeating-linear-gradient(90deg, rgb(47 97 120 / .22) 0 1.5px, transparent 1.5px 30px),
+      #F4FAFC; }
+  /* Light on the water: soft caustic patches that drift a little with the scroll. */
+  .pool-lite { position: absolute; inset: -10%; pointer-events: none; mix-blend-mode: screen; opacity: .9;
+    background:
+      radial-gradient(40% 22% at 22% 30%, rgb(255 255 255 / .55), transparent 70%),
+      radial-gradient(30% 18% at 70% 22%, rgb(255 255 255 / .45), transparent 70%),
+      radial-gradient(36% 20% at 58% 78%, rgb(255 255 255 / .4), transparent 70%),
+      radial-gradient(26% 16% at 12% 82%, rgb(255 255 255 / .35), transparent 70%); }
+  /* The tile number: ink tiles (grout cut through the letters), seen through the water filter. */
+  .pool-num { position: relative; display: flex; gap: .28em; margin: 0; filter: url(#pool-f); white-space: nowrap;
+    font: 800 112px/1 var(--f-h); letter-spacing: .02em; color: var(--pdeep); }
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .pool-num .pn-l { color: transparent; -webkit-background-clip: text; background-clip: text;
+      background:
+        repeating-linear-gradient(0deg, rgb(244 250 252 / .85) 0 2px, transparent 2px 14px),
+        repeating-linear-gradient(90deg, rgb(244 250 252 / .85) 0 2px, transparent 2px 14px),
+        linear-gradient(180deg, #1F4B5F, var(--pdeep));
+      -webkit-background-clip: text; background-clip: text; }
+  }
+  .pool-247 { position: relative; margin-top: 18px; padding: 6px 12px; border-radius: 4px; filter: url(#pool-f);
+    font: 800 22px/1 var(--f-h); letter-spacing: .12em; color: var(--white); background: var(--pdeep); }
+  .pool-rings { position: absolute; inset: 0; pointer-events: none; }
+  .pool-rings :global(i) { position: absolute; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%;
+    box-shadow: 0 0 0 2px rgb(47 97 120 / .45), inset 0 0 0 2px rgb(255 255 255 / .8); animation: pool-ring 1.1s var(--ease-out) forwards; }
+  .pool-rings :global(i.big) { animation-duration: 1.5s; }
+  @keyframes pool-ring { from { transform: scale(.2); opacity: 1; } to { transform: scale(7); opacity: 0; } }
+  .pool-hint { position: absolute; left: 18px; bottom: 14px; display: none; padding: 6px 10px; border-radius: 4px; background: rgb(255 255 255 / .82);
+    font: 600 11px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); transition: opacity .5s var(--ease-io); }
+  .pool-hint .m { display: none; }
+  .pool-w.is-live .pool-hint { display: block; }
+  .pool-w.is-touched .pool-hint { opacity: 0; }
+  .pool-edge { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; padding-top: 18px; }
 
+  @media (min-width: 768px) and (max-width: 1100px) {
+    .pool-num { font-size: clamp(64px, 9.4vw, 104px); }
+  }
   @media (max-width: 767px) {
     .bcall { padding: 64px 0 88px; }
     .bk-lead { margin-top: 12px; font-size: 16px; }
-    .kp { width: 100%; max-width: 340px; margin-top: 36px; padding: 18px 16px 18px; border-radius: 18px; box-shadow: inset 0 0 0 1.5px var(--steel2), 8px 8px 0 var(--powder), 8px 8px 0 1.5px var(--ink); }
-    .kp-scr { padding: 12px 14px 10px; }
-    .kp-num { font-size: 26px; }
-    .kp-keys { gap: 9px; margin-top: 14px; }
-    .kk { height: 54px; }
-    .kk-d { font-size: 22px; }
-    .kp-foot { margin-top: 14px; }
-    .kp-clr { padding: 0 14px; }
-    .bk-btns { width: 100%; max-width: 350px; margin-top: 36px; }
-    .bk-btns > :global(*) { width: 100%; }
+    .pool { max-width: 380px; margin-top: 36px; padding: 10px; border-radius: 22px; }
+    .pool-w { height: 300px; border-radius: 12px; }
+    .pool-num { flex-direction: column; align-items: center; gap: 4px; font-size: 64px; line-height: 1.02; }
+    .pool-247 { margin-top: 14px; font-size: 18px; }
+    .pool-hint { left: 10px; bottom: 10px; font-size: 10px; }
+    .pool-hint .d { display: none; } .pool-hint .m { display: inline; }
+    .pool-edge { flex-direction: column; align-items: stretch; gap: 10px; padding-top: 10px; }
+    .pool-edge > :global(*) { width: 100%; }
   }
+  @media (prefers-reduced-motion: reduce) { .pool-rings, .pool-hint { display: none !important; } }
 </style>

@@ -1,0 +1,434 @@
+[
+ {
+  "path": "/",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/about",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/about",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/about",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/about",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/about",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/about",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/about",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/about",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/areas/seminole",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/services/water-heaters",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/our-work",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/our-work",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/our-work",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/our-work",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/our-work",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/our-work",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": null
+ },
+ {
+  "path": "/our-work",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ },
+ {
+  "path": "/our-work",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "over": 0,
+  "errs": [],
+  "axe": []
+ }
+]

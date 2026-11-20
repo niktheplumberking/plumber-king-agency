@@ -1,0 +1,492 @@
+{
+ "home-motionclass-1440": "js motion intro lenis",
+ "home-pad-after-next-1440": {
+  "top": 1,
+  "done": 1,
+  "live": "Step 2 of 5: We come out",
+  "focus": "pg-b pg-next"
+ },
+ "home-pad-tick4-1440": {
+  "top": 3,
+  "done": 3,
+  "inert": [
+   true,
+   true,
+   true,
+   false,
+   true
+  ]
+ },
+ "home-pad-key-1440": 4,
+ "home-pad-home-1440": 0,
+ "home-pad-ghost-1440": [
+  [
+   true,
+   "1",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "0",
+   "visible"
+  ]
+ ],
+ "home-wheel-1440": [
+  "matrix(1,0,0,1,0,0)",
+  "matrix(0.76077,0.64903,-0.64903,0.76077,184.1423,-79.5677)",
+  "matrix(0.2562,0.96662,-0.96662,0.2562,351.7502,-37.126)"
+ ],
+ "est-empty1-1440": {
+  "step": "1",
+  "msg": "Pick the closest one. You can change it on the call."
+ },
+ "est-step2-1440": "2",
+ "est-step3-1440": "3",
+ "est-empty3-1440": 2,
+ "est-final-url-1440": "https://glass-plumbing-largo.vercel.app/thank-you",
+ "wh-sb-start-1440": {
+  "on": 0,
+  "dash": [
+   "1px",
+   "1px"
+  ]
+ },
+ "wh-sb-mid-1440": 2,
+ "wh-sb-end-1440": {
+  "on": 4,
+  "capOp": [
+   "1",
+   "1",
+   "1",
+   "1"
+  ]
+ },
+ "about-hero-o-1440": [
+  "1",
+  "0.631113",
+  "0.2993"
+ ],
+ "about-hero-center-1440": {
+  "left": 460,
+  "right": 460,
+  "h1": "center"
+ },
+ "about-after-hero-1440": "What you can check,\nbefore you call.",
+ "about-kp-typed-1440": "1111111000",
+ "about-kp-ours-1440": {
+  "user": "(727) 512-0673",
+  "msg": "That’s us. Tap Call."
+ },
+ "about-kp-other-1440": {
+  "user": "(727) 555-0100",
+  "msg": "Not our number. Ours is (727) 512-0673."
+ },
+ "about-kp-callhref-1440": [
+  "tel:+17275120673 Call (727) 512-0673 CALL NOW · 24/7",
+  "sms:+17275120673 "
+ ],
+ "areas-fog-on-1440": true,
+ "areas-fog-wiped-by-pointer-1440": true,
+ "areas-fog-btn-1440": true,
+ "areas-fog-all-1440": 4,
+ "sem-tape-1440": [
+  "matrix(1, 0, 0, 1, -794, 0)",
+  "matrix(1, 0, 0, 1, -642.795, 0)",
+  "matrix(1, 0, 0, 1, 0, 0)"
+ ],
+ "sem-yr-2020-1440": [
+  "2020",
+  "Outside the 1978–1995 polybutylene windo"
+ ],
+ "sem-yr-1990-1440": [
+  "1990",
+  "Inside the 1978–1995 window. Florida hom"
+ ],
+ "home-motionclass-390": "js motion intro lenis",
+ "home-pad-after-next-390": {
+  "top": 1,
+  "done": 1,
+  "live": "Step 2 of 5: We come out",
+  "focus": "pg-b pg-next"
+ },
+ "home-pad-tick4-390": {
+  "top": 3,
+  "done": 3,
+  "inert": [
+   true,
+   true,
+   true,
+   false,
+   true
+  ]
+ },
+ "home-pad-swipe-390": 3,
+ "home-pad-ghost-390": [
+  [
+   true,
+   "1",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "0",
+   "visible"
+  ]
+ ],
+ "home-wheel-390": [
+  "matrix(1,0,0,1,0,0)",
+  "matrix(0.61695,0.787,-0.787,0.61695,241.88,-76.9595)",
+  "matrix(-0.10924,0.99402,-0.99402,-0.10924,430.5922,34.1364)"
+ ],
+ "est-empty1-390": {
+  "step": "1",
+  "msg": "Pick the closest one."
+ },
+ "est-step2-390": "2",
+ "est-step3-390": "3",
+ "est-empty3-390": 2,
+ "est-final-url-390": "https://glass-plumbing-largo.vercel.app/thank-you",
+ "wh-sb-start-390": {
+  "on": 0,
+  "dash": [
+   "1px",
+   "1px"
+  ]
+ },
+ "wh-sb-mid-390": 1,
+ "wh-sb-end-390": {
+  "on": 4,
+  "capOp": [
+   "1",
+   "1",
+   "1",
+   "1"
+  ]
+ },
+ "about-hero-o-390": [
+  "0.645966",
+  "0.196685",
+  "0.119407"
+ ],
+ "about-hero-center-390": {
+  "left": 35,
+  "right": 35,
+  "h1": "center"
+ },
+ "about-after-hero-390": "What you can check,\nbefore you call.",
+ "about-kp-typed-390": "1111111110",
+ "about-kp-ours-390": {
+  "user": "(727) 512-0673",
+  "msg": "That’s us. Tap Call."
+ },
+ "about-kp-other-390": {
+  "user": "(727) 555-0100",
+  "msg": "Not our number. Ours is (727) 512-0673."
+ },
+ "about-kp-callhref-390": [
+  "tel:+17275120673 Call (727) 512-0673 CALL NOW · 24/7",
+  "sms:+17275120673 "
+ ],
+ "areas-fog-on-390": true,
+ "areas-fog-tap-390": true,
+ "areas-fog-btn-390": true,
+ "areas-fog-all-390": 4,
+ "sem-tape-390": [
+  "matrix(1, 0, 0, 1, -212, 0)",
+  "matrix(1, 0, 0, 1, -168.606, 0)",
+  "matrix(1, 0, 0, 1, 0, 0)"
+ ],
+ "sem-yr-2020-390": [
+  "2020",
+  "Outside the 1978–1995 polybutylene windo"
+ ],
+ "sem-yr-1990-390": [
+  "1990",
+  "Inside the 1978–1995 window. Florida hom"
+ ],
+ "home-motionclass-1440-rm": "js no-motion",
+ "home-pad-after-next-1440-rm": {
+  "top": 1,
+  "done": 1,
+  "live": "Step 2 of 5: We come out",
+  "focus": "pg-b pg-next"
+ },
+ "home-pad-tick4-1440-rm": {
+  "top": 3,
+  "done": 3,
+  "inert": [
+   true,
+   true,
+   true,
+   false,
+   true
+  ]
+ },
+ "home-pad-key-1440-rm": 4,
+ "home-pad-home-1440-rm": 0,
+ "home-pad-ghost-1440-rm": [
+  [
+   true,
+   "1",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "0",
+   "visible"
+  ]
+ ],
+ "home-wheel-1440-rm": [
+  "none",
+  "none",
+  "none"
+ ],
+ "est-empty1-1440-rm": {
+  "step": "1",
+  "msg": "Pick the closest one. You can change it on the call."
+ },
+ "est-step2-1440-rm": "2",
+ "est-step3-1440-rm": "3",
+ "est-empty3-1440-rm": 2,
+ "est-final-url-1440-rm": "https://glass-plumbing-largo.vercel.app/thank-you",
+ "wh-sb-start-1440-rm": {
+  "on": 0,
+  "dash": [
+   "0px",
+   "0px"
+  ]
+ },
+ "wh-sb-mid-1440-rm": 0,
+ "wh-sb-end-1440-rm": {
+  "on": 0,
+  "capOp": [
+   "1",
+   "1",
+   "1",
+   "1"
+  ]
+ },
+ "about-hero-o-1440-rm": [
+  "0",
+  "0",
+  "0"
+ ],
+ "about-hero-center-1440-rm": {
+  "left": 460,
+  "right": 460,
+  "h1": "center"
+ },
+ "about-after-hero-1440-rm": "ON THE RECORD\n\nWhat you can check,\nbefore you call.\n\nThe owner holds Florida licence CFC1432488 and runs Glass Plumbing Services from Largo. Every record below opens the real thing.\n\nLICENCE CARD\nDBPR RECORD\n\nFLORIDA\nCERTIFIED PLUMBING CONTRACTOR\n\nLICENCE NUMBER\n\nCFC1432488\n\nHOLDER\nGlass, Dakota K\nB",
+ "about-kp-typed-1440-rm": "1111111111",
+ "about-kp-ours-1440-rm": {
+  "user": "(727) 512-0673",
+  "msg": "That’s us. Tap Call."
+ },
+ "about-kp-other-1440-rm": {
+  "user": "(727) 555-0100",
+  "msg": "Not our number. Ours is (727) 512-0673."
+ },
+ "about-kp-callhref-1440-rm": [
+  "tel:+17275120673 Call (727) 512-0673 CALL NOW · 24/7",
+  "sms:+17275120673 Text a photo"
+ ],
+ "areas-fog-on-1440-rm": true,
+ "areas-fog-tap-1440-rm": true,
+ "areas-fog-btn-1440-rm": true,
+ "areas-fog-all-1440-rm": 4,
+ "sem-tape-1440-rm": [
+  "none",
+  "none",
+  "none"
+ ],
+ "sem-yr-2020-1440-rm": [
+  "2020",
+  "Outside the 1978–1995 polybutylene windo"
+ ],
+ "sem-yr-1990-1440-rm": [
+  "1990",
+  "Inside the 1978–1995 window. Florida hom"
+ ],
+ "home-motionclass-390-rm": "js no-motion",
+ "home-pad-after-next-390-rm": {
+  "top": 1,
+  "done": 1,
+  "live": "Step 2 of 5: We come out",
+  "focus": "pg-b pg-next"
+ },
+ "home-pad-tick4-390-rm": {
+  "top": 3,
+  "done": 3,
+  "inert": [
+   true,
+   true,
+   true,
+   false,
+   true
+  ]
+ },
+ "home-pad-swipe-390-rm": 3,
+ "home-pad-ghost-390-rm": [
+  [
+   true,
+   "1",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "1",
+   "visible"
+  ],
+  [
+   false,
+   "0",
+   "0",
+   "visible"
+  ]
+ ],
+ "home-wheel-390-rm": [
+  "none",
+  "none",
+  "none"
+ ],
+ "est-empty1-390-rm": {
+  "step": "1",
+  "msg": "Pick the closest one."
+ },
+ "est-step2-390-rm": "2",
+ "est-step3-390-rm": "3",
+ "est-empty3-390-rm": 2,
+ "est-final-url-390-rm": "https://glass-plumbing-largo.vercel.app/thank-you",
+ "wh-sb-start-390-rm": {
+  "on": 0,
+  "dash": [
+   "0px",
+   "0px"
+  ]
+ },
+ "wh-sb-mid-390-rm": 0,
+ "wh-sb-end-390-rm": {
+  "on": 0,
+  "capOp": [
+   "1",
+   "1",
+   "1",
+   "1"
+  ]
+ },
+ "about-hero-o-390-rm": [
+  "0",
+  "0",
+  "0"
+ ],
+ "about-hero-center-390-rm": {
+  "left": 35,
+  "right": 35,
+  "h1": "center"
+ },
+ "about-after-hero-390-rm": "ON THE RECORD\n\nWhat you can check,\nbefore you call.\n\nThe owner holds Florida licence CFC1432488 and runs Glass Plumbing Services from Largo. Every record below opens the real thing.\n\nLICENCE CARD\nDBPR RECORD\n\nFLORIDA\nCERTIFIED PLUMBING CONTRACTOR\n\nLICENCE NUMBER\n\nCFC1432488\n\nHOLDER\nGlass, Dakota K\nB",
+ "about-kp-typed-390-rm": "1111111111",
+ "about-kp-ours-390-rm": {
+  "user": "(727) 512-0673",
+  "msg": "That’s us. Tap Call."
+ },
+ "about-kp-other-390-rm": {
+  "user": "(727) 555-0100",
+  "msg": "Not our number. Ours is (727) 512-0673."
+ },
+ "about-kp-callhref-390-rm": [
+  "tel:+17275120673 Call (727) 512-0673 CALL NOW · 24/7",
+  "sms:+17275120673 Text a photo"
+ ],
+ "areas-fog-on-390-rm": true,
+ "areas-fog-tap-390-rm": true,
+ "areas-fog-btn-390-rm": true,
+ "areas-fog-all-390-rm": 4,
+ "sem-tape-390-rm": [
+  "none",
+  "none",
+  "none"
+ ],
+ "sem-yr-2020-390-rm": [
+  "2020",
+  "Outside the 1978–1995 polybutylene windo"
+ ],
+ "sem-yr-1990-390-rm": [
+  "1990",
+  "Inside the 1978–1995 window. Florida hom"
+ ]
+}

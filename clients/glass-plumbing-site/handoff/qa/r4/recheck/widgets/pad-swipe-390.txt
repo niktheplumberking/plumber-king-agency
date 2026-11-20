@@ -1,0 +1,5 @@
+{
+  ev: [ 'pointerdown:touch', 'pointercancel:touch' ],
+  top: 0,
+  ta: 'auto'
+}

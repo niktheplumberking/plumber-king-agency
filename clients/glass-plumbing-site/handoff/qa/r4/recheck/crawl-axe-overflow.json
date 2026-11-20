@@ -1,0 +1,938 @@
+[
+ {
+  "route": "/",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/about",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/contact",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/faq",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/reviews",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/our-work",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/privacy",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/terms",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/thank-you",
+  "w": 1440,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/about",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/contact",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/faq",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/reviews",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/our-work",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/privacy",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/terms",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/thank-you",
+  "w": 390,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/about",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/contact",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/faq",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/reviews",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/our-work",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/privacy",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/terms",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/thank-you",
+  "w": 1024,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/about",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/contact",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/faq",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/reviews",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/our-work",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/privacy",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/terms",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/thank-you",
+  "w": 768,
+  "rm": false,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/about",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/contact",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/faq",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/reviews",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/our-work",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/privacy",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/terms",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/thank-you",
+  "w": 1440,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/about",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/contact",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/faq",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/reviews",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/our-work",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/privacy",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/terms",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/thank-you",
+  "w": 390,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": []
+ },
+ {
+  "route": "/",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/about",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/contact",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/faq",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/reviews",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/our-work",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/privacy",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/terms",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/thank-you",
+  "w": 1024,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/services/water-heaters",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/areas/seminole",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/about",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/contact",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/faq",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/reviews",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/our-work",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/privacy",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/terms",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ },
+ {
+  "route": "/thank-you",
+  "w": 768,
+  "rm": true,
+  "status": 200,
+  "errs": [],
+  "overflow": 0,
+  "axe": null
+ }
+]

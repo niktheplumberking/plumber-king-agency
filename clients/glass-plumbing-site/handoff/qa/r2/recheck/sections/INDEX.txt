@@ -1,0 +1,275 @@
+Valid section screenshots (file | height | heading). Files in sections/ not listed here are stale duplicates from a first pass with a bad selector; ignore them.
+
+## / @1440
+home-1440-00-hero.png | h=680 | 24/7 Plumber in Largo, FL
+home-1440-01-rv.png | h=879 | Two Google profiles. Both 5.0.
+home-1440-02-sv.png | h=1388 | From a leaky faucet to a tankless pair.
+home-1440-03-crew.png | h=1013 | A licensed plumber. And his crew.
+home-1440-04-wk.png | h=1005 | Real jobs. Real photos.
+home-1440-05-why.png | h=1631 | Why they call us again and again.
+home-1440-06-pr.png | h=3278 | Five steps. No surprises.
+home-1440-07-em.png | h=866 | Water everywhere? Close the main, then call.
+home-1440-08-ar.png | h=1151 | Based in Largo. All of Pinellas.
+home-1440-09-fq.png | h=1140 | Ask the plumber. Get it straight.
+home-1440-10-est.png | h=974 | Tell us what’s wrong. We’ll explain it straight.
+home-1440-11-ft.png | h=874 | Services Services
+
+## /services @1440
+services-1440-00-sh.png | h=682 | Plumbing Services inLargo, FL
+services-1440-01-sy.png | h=820 | Not sure what it’s called?Start with what you see.
+services-1440-02-fm.png | h=1764 | Everything we fix,sorted four ways.
+services-1440-03-fl.png | h=1171 | Every job we do.In one list.
+services-1440-04-pr.png | h=796 | Five thingsyou can check.
+services-1440-05-rv.png | h=1338 | Find your job.Read what they said.
+services-1440-06-fq.png | h=961 | Pick a service.Get the straight answer.
+services-1440-07-ct.png | h=1330 | Point to it.Then text a photo.
+services-1440-08-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+services-1440-09-ft.png | h=874 | Services Services
+
+## /services/water-heaters @1440
+services_water-heaters-1440-00-wh.png | h=752 | Water Heaters inLargo, FL
+services_water-heaters-1440-01-qa.png | h=1150 | Repair or replace?One question usually decides.
+services_water-heaters-1440-02-pb.png | h=1010 | Six ways a water heatertells you something’s wrong.
+services_water-heaters-1440-03-dy.png | h=1124 | What you can check.What needs us.
+services_water-heaters-1440-04-ps.png | h=620 | From a phototo hot water.
+services_water-heaters-1440-05-ty.png | h=1170 | Two ways to gethot water.
+services_water-heaters-1440-06-pc.png | h=1090 | No price list.Here’s what changes it.
+services_water-heaters-1440-07-wr.png | h=543 | Water heater jobs, in their words
+services_water-heaters-1440-08-wy.png | h=872 | Four reasonspeople call back.
+services_water-heaters-1440-09-cr.png | h=1057 | Three thingsto do once a year.
+services_water-heaters-1440-10-wf.png | h=1018 | Asked a lotin Pinellas.
+services_water-heaters-1440-11-rl.png | h=371 | Related services
+services_water-heaters-1440-12-wc.png | h=1042 | Send a photo of yourwater heater label.
+services_water-heaters-1440-13-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+services_water-heaters-1440-14-ft.png | h=874 | Services Services
+
+## /areas @1440
+areas-1440-00-ahero.png | h=667 | Plumber Serving Largo& Pinellas County
+areas-1440-01-abase.png | h=1346 | Everything leavesfrom Largo.
+areas-1440-02-adist.png | h=880 | Largo sits in themiddle of Pinellas.
+areas-1440-03-afacts.png | h=850 | Four local factsthat change the job.
+areas-1440-04-arev.png | h=742 | From Seminoleto St. Pete.
+areas-1440-05-afaq.png | h=988 | Before you ask.We already got this text.
+areas-1440-06-acheck.png | h=1087 | Type your town.We’ll tell you straight.
+areas-1440-07-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+areas-1440-08-ft.png | h=874 | Services Services
+
+## /areas/seminole @1440
+areas_seminole-1440-00-thero.png | h=676 | Plumber inSeminole, FL
+areas_seminole-1440-01-tfacts.png | h=941 | Four things to knowbefore you call.
+areas_seminole-1440-02-tperm.png | h=897 | Do you need a plumbingpermit in Seminole?
+areas_seminole-1440-03-thood.png | h=645 | All overSeminole.
+areas_seminole-1440-04-tsvc.png | h=892 | Six jobs we doin Seminole.
+areas_seminole-1440-05-trev.png | h=1122 | Said in Seminole.Shown in photos.
+areas_seminole-1440-06-tnear.png | h=1282 | One drop in Largo. Every town around it.
+areas_seminole-1440-07-temg.png | h=803 | Burst pipe in Seminole?
+areas_seminole-1440-08-tfaq.png | h=916 | Three thingsSeminole asks.
+areas_seminole-1440-09-tcta.png | h=734 | Get a pricein Seminole.
+areas_seminole-1440-10-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+areas_seminole-1440-11-ft.png | h=874 | Services Services
+
+## /about @1440
+about-1440-00-bhero.png | h=716 | Meet the crewbehind the van.
+about-1440-01-brec.png | h=1121 | What you can check,before you call.
+about-1440-03-bcrew.png | h=855 | The namesin the reviews.
+about-1440-04-brules.png | h=1254 | Four house rules.Said by customers, not us.
+about-1440-05-bproof.png | h=1020 | Real jobs on video.Real words in reviews.
+about-1440-06-bgive.png | h=850 | 10% off for veterans, first responders, teachers & seniors.
+about-1440-07-bcall.png | h=620 | Talk tothe crew.
+about-1440-08-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+about-1440-09-ft.png | h=874 | Services Services
+
+## /contact @1440
+contact-1440-00-cx-sec.png | h=882 | Call or Text Glass Plumbing
+contact-1440-01-cx-sec.png | h=794 | Send us the job
+contact-1440-02-cx-sec.png | h=1040 | Based in Largo. Any hour, same number.
+contact-1440-03-cx-sec.png | h=800 | Builders, landlords and the rest.
+contact-1440-04-cx-sec.png | h=676 | Quick answers. Tap a card to flip it.
+contact-1440-05-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+contact-1440-06-ft.png | h=874 | Services Services
+
+## /reviews @1440
+reviews-1440-00-cx-sec.png | h=744 | What Pinellas Says About Glass Plumbing
+reviews-1440-01-cx-sec.png | h=1195 | Counted from the 16 reviews we read.
+reviews-1440-02-cx-sec.png | h=2754 | Newest first.
+reviews-1440-03-cx-sec.png | h=730 | Owner’s words and other places to find us
+reviews-1440-04-cx-sec.png | h=707 | Leave a review. It helps your neighbours.
+reviews-1440-05-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+reviews-1440-06-ft.png | h=874 | Services Services
+
+## /our-work @1440
+our-work-1440-00-cx-sec.png | h=928 | Recent Work Across Pinellas
+our-work-1440-01-cx-sec.png | h=1560 | 
+our-work-1440-02-cx-sec.png | h=2514 | How the job actually went.
+our-work-1440-03-cx-sec.png | h=928 | Follow the van.
+our-work-1440-04-cx-sec.png | h=638 | What customers say
+our-work-1440-05-cx-sec.png | h=927 | Want your job on this page?
+our-work-1440-06-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+our-work-1440-07-ft.png | h=874 | Services Services
+
+## /faq @1440
+faq-1440-00-cx-sec.png | h=705 | Plumbing Questions, Answered.
+faq-1440-01-cx-sec.png | h=3187 | 01 · Emergencies
+faq-1440-02-cx-sec.png | h=891 | Three habits. Then call us.
+faq-1440-03-cx-sec.png | h=659 | Didn’t see your question? Ask a real plumber.
+faq-1440-04-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+faq-1440-05-ft.png | h=874 | Services Services
+
+## /thank-you @1440
+thank-you-1440-00-ty-hero.png | h=803 | Got it.Your message is in.
+thank-you-1440-01-ty-next.png | h=589 | Three steps.No call centre.
+thank-you-1440-02-ty-cf.png | h=459 | Call the crew now.
+thank-you-1440-03-ty-wait.png | h=785 | From the crew.
+thank-you-1440-04-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+thank-you-1440-05-ft.png | h=874 | Services Services
+
+## /privacy @1440
+privacy-1440-00-lg-hero.png | h=319 | Privacy policy.
+privacy-1440-01-lg-body.png | h=855 | What we collect
+privacy-1440-02-lg-q.png | h=260 | Ask a real person.
+privacy-1440-03-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+privacy-1440-04-ft.png | h=874 | Services Services
+
+## /terms @1440
+terms-1440-00-lg-hero.png | h=292 | Terms of use.
+terms-1440-01-lg-body.png | h=1541 | Using this site
+terms-1440-02-lg-q.png | h=260 | Ask a real person.
+terms-1440-03-tst.png | h=176 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+terms-1440-04-ft.png | h=874 | Services Services
+
+## / @390
+home-390-00-hero.png | h=936 | 24/7 Plumber in Largo, FL
+home-390-01-rv.png | h=1489 | Two Google profiles. Both 5.0.
+home-390-02-sv.png | h=1105 | From a leaky faucet to a tankless pair.
+home-390-03-crew.png | h=1374 | A licensed plumber. And his crew.
+home-390-04-wk.png | h=818 | Real jobs. Real photos.
+home-390-05-why.png | h=1918 | Why they call us again and again.
+home-390-06-pr.png | h=3090 | Five steps. No surprises.
+home-390-07-em.png | h=1020 | Water everywhere? Close the main, then call.
+home-390-08-ar.png | h=1125 | Based in Largo. All of Pinellas.
+home-390-09-fq.png | h=1781 | Ask the plumber. Get it straight.
+home-390-10-est.png | h=1482 | Tell us what’s wrong. We’ll explain it straight.
+home-390-11-ft.png | h=998 | Services Services
+
+## /services @390
+services-390-00-sh.png | h=901 | Plumbing Services inLargo, FL
+services-390-01-sy.png | h=914 | Not sure what it’s called?Start with what you see.
+services-390-02-fm.png | h=1067 | Everything we fix,sorted four ways.
+services-390-03-fl.png | h=1297 | Every job we do.In one list.
+services-390-04-pr.png | h=997 | Five thingsyou can check.
+services-390-05-rv.png | h=1605 | Find your job.Read what they said.
+services-390-06-fq.png | h=888 | Pick a service.Get the straight answer.
+services-390-07-ct.png | h=1046 | Point to it.Then text a photo.
+services-390-08-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+services-390-09-ft.png | h=998 | Services Services
+
+## /services/water-heaters @390
+services_water-heaters-390-00-wh.png | h=1081 | Water Heaters inLargo, FL
+services_water-heaters-390-01-qa.png | h=1366 | Repair or replace?One question usually decides.
+services_water-heaters-390-02-pb.png | h=1090 | Six ways a water heatertells you something’s wrong.
+services_water-heaters-390-03-dy.png | h=896 | What you can check.What needs us.
+services_water-heaters-390-04-ps.png | h=705 | From a phototo hot water.
+services_water-heaters-390-05-ty.png | h=904 | Two ways to gethot water.
+services_water-heaters-390-06-pc.png | h=1183 | No price list.Here’s what changes it.
+services_water-heaters-390-07-wr.png | h=668 | Water heater jobs, in their words
+services_water-heaters-390-08-wy.png | h=963 | Four reasonspeople call back.
+services_water-heaters-390-09-cr.png | h=1605 | Three thingsto do once a year.
+services_water-heaters-390-10-wf.png | h=837 | Asked a lotin Pinellas.
+services_water-heaters-390-11-rl.png | h=358 | Related services
+services_water-heaters-390-12-wc.png | h=802 | Send a photo of yourwater heater label.
+services_water-heaters-390-13-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+services_water-heaters-390-14-ft.png | h=998 | Services Services
+
+## /areas @390
+areas-390-00-ahero.png | h=856 | Plumber Serving Largo& Pinellas County
+areas-390-01-abase.png | h=1764 | Everything leavesfrom Largo.
+areas-390-02-adist.png | h=1038 | Largo sits in themiddle of Pinellas.
+areas-390-03-afacts.png | h=770 | Four local factsthat change the job.
+areas-390-04-arev.png | h=577 | From Seminoleto St. Pete.
+areas-390-05-afaq.png | h=884 | Before you ask.We already got this text.
+areas-390-06-acheck.png | h=1087 | Type your town.We’ll tell you straight.
+areas-390-07-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+areas-390-08-ft.png | h=998 | Services Services
+
+## /areas/seminole @390
+areas_seminole-390-00-thero.png | h=779 | Plumber inSeminole, FL
+areas_seminole-390-01-tfacts.png | h=966 | Four things to knowbefore you call.
+areas_seminole-390-02-tperm.png | h=1117 | Do you need a plumbingpermit in Seminole?
+areas_seminole-390-03-thood.png | h=403 | All overSeminole.
+areas_seminole-390-04-tsvc.png | h=868 | Six jobs we doin Seminole.
+areas_seminole-390-05-trev.png | h=1018 | Said in Seminole.Shown in photos.
+areas_seminole-390-06-tnear.png | h=904 | One drop in Largo. Every town around it.
+areas_seminole-390-07-temg.png | h=680 | Burst pipe in Seminole?
+areas_seminole-390-08-tfaq.png | h=948 | Three thingsSeminole asks.
+areas_seminole-390-09-tcta.png | h=699 | Get a pricein Seminole.
+areas_seminole-390-10-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+areas_seminole-390-11-ft.png | h=998 | Services Services
+
+## /about @390
+about-390-00-bhero.png | h=1008 | Meet the crewbehind the van.
+about-390-01-brec.png | h=1739 | What you can check,before you call.
+about-390-03-bcrew.png | h=1036 | The namesin the reviews.
+about-390-04-brules.png | h=1032 | Four house rules.Said by customers, not us.
+about-390-05-bproof.png | h=946 | Real jobs on video.Real words in reviews.
+about-390-06-bgive.png | h=725 | 10% off for veterans, first responders, teachers & seniors.
+about-390-07-bcall.png | h=776 | Talk tothe crew.
+about-390-08-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+about-390-09-ft.png | h=998 | Services Services
+
+## /contact @390
+contact-390-00-cx-sec.png | h=1042 | Call or Text Glass Plumbing
+contact-390-01-cx-sec.png | h=1071 | Send us the job
+contact-390-02-cx-sec.png | h=1053 | Based in Largo. Any hour, same number.
+contact-390-03-cx-sec.png | h=786 | Builders, landlords and the rest.
+contact-390-04-cx-sec.png | h=821 | Quick answers. Tap a card to flip it.
+contact-390-05-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+contact-390-06-ft.png | h=998 | Services Services
+
+## /reviews @390
+reviews-390-00-cx-sec.png | h=1020 | What Pinellas Says About Glass Plumbing
+reviews-390-01-cx-sec.png | h=1565 | Counted from the 16 reviews we read.
+reviews-390-02-cx-sec.png | h=5998 | Newest first.
+reviews-390-03-cx-sec.png | h=729 | Owner’s words and other places to find us
+reviews-390-04-cx-sec.png | h=720 | Leave a review. It helps your neighbours.
+reviews-390-05-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+reviews-390-06-ft.png | h=998 | Services Services
+
+## /our-work @390
+our-work-390-00-cx-sec.png | h=666 | Recent Work Across Pinellas
+our-work-390-01-cx-sec.png | h=1187 | 
+our-work-390-02-cx-sec.png | h=708 | How the job actually went.
+our-work-390-03-cx-sec.png | h=832 | Follow the van.
+our-work-390-04-cx-sec.png | h=610 | What customers say
+our-work-390-05-cx-sec.png | h=754 | Want your job on this page?
+our-work-390-06-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+our-work-390-07-ft.png | h=998 | Services Services
+
+## /faq @390
+faq-390-00-cx-sec.png | h=755 | Plumbing Questions, Answered.
+faq-390-01-cx-sec.png | h=2026 | 01 · Emergencies
+faq-390-02-cx-sec.png | h=1224 | Three habits. Then call us.
+faq-390-03-cx-sec.png | h=725 | Didn’t see your question? Ask a real plumber.
+faq-390-04-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+faq-390-05-ft.png | h=998 | Services Services
+
+## /thank-you @390
+thank-you-390-00-ty-hero.png | h=576 | Got it.Your message is in.
+thank-you-390-01-ty-next.png | h=476 | Three steps.No call centre.
+thank-you-390-02-ty-cf.png | h=515 | Call the crew now.
+thank-you-390-03-ty-wait.png | h=786 | From the crew.
+thank-you-390-04-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+thank-you-390-05-ft.png | h=998 | Services Services
+
+## /privacy @390
+privacy-390-00-lg-hero.png | h=202 | Privacy policy.
+privacy-390-01-lg-body.png | h=744 | What we collect
+privacy-390-02-lg-q.png | h=211 | Ask a real person.
+privacy-390-03-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+privacy-390-04-ft.png | h=998 | Services Services
+
+## /terms @390
+terms-390-00-lg-hero.png | h=202 | Terms of use.
+terms-390-01-lg-body.png | h=1393 | Using this site
+terms-390-02-lg-q.png | h=211 | Ask a real person.
+terms-390-03-tst.png | h=249 | Serving all of Pinellas County from LargoServing all of Pinellas from 
+terms-390-04-ft.png | h=998 | Services Services

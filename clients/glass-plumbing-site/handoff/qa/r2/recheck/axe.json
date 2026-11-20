@@ -1,0 +1,325 @@
+[
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/services",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/services/water-heaters",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/areas",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/areas/seminole",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/about",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/contact",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/reviews",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/our-work",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/faq",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/thank-you",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/privacy",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 1440,
+  "r": "/terms",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/services",
+  "v": [
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "n": 3,
+    "t": [
+     "li[data-astro-cid-yvvz3clx=\"\"]:nth-child(1) > a[href$=\"areas\"][data-astro-cid-yvvz3clx=\"\"] :: Fix any of the following:\n  Target has insufficient size because it is partially obscured (smallest space is 38.2px by 10px, should be at least 24px by 24px)\n  ",
+     "a[href$=\"seminole\"][data-astro-cid-yvvz3clx=\"\"] :: Fix any of the following:\n  Target has insufficient size because it is partially obscured (smallest space is 62.6px by 10px, should be at least 24px by 24px)\n  ",
+     "li[data-astro-cid-yvvz3clx=\"\"]:nth-child(4) > a[href$=\"areas\"][data-astro-cid-yvvz3clx=\"\"] :: Fix any of the following:\n  Target has insufficient size because it is partially obscured (smallest space is 97px by 11px, should be at least 24px by 24px)\n  Ta"
+    ]
+   }
+  ]
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/services/water-heaters",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/areas",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/areas/seminole",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/about",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/contact",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/reviews",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/our-work",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/faq",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/thank-you",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/privacy",
+  "v": []
+ },
+ {
+  "rm": "no-preference",
+  "w": 390,
+  "r": "/terms",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/services",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/services/water-heaters",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/areas",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/areas/seminole",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/about",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/contact",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/reviews",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/our-work",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/faq",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/thank-you",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/privacy",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 1440,
+  "r": "/terms",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/services",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/services/water-heaters",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/areas",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/areas/seminole",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/about",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/contact",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/reviews",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/our-work",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/faq",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/thank-you",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/privacy",
+  "v": []
+ },
+ {
+  "rm": "reduce",
+  "w": 390,
+  "r": "/terms",
+  "v": []
+ }
+]

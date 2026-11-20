@@ -243,6 +243,7 @@ function entrance(el: HTMLElement, sec: HTMLElement, hero = false, pre?: Fx | nu
 let kbd = false;
 function keyboardRelease() {
   if (kbd) return; kbd = true;
+  sectionIO?.disconnect();
   triggers.forEach((st) => st.kill());
   built.forEach((tl) => tl.progress(1));
   $$('[data-m-section] [data-t]').forEach((el) => el.classList.add('m-built'));
@@ -347,21 +348,47 @@ function buildSection(p: ReturnType<typeof planSection>) {
   });
 }
 
-/** Build every section below the hero in idle slices (all tweens and splits up front, so no layout work
- *  happens mid-scroll; slicing keeps each task short for TBT). `done` runs after the last one. */
+/* R3 (TBT): sections below the hero are built LAZILY, one per task, when they come within ~1.5 viewports of the screen
+ * (IntersectionObserver), instead of all of them up front. A Lighthouse load (no scroll) builds only the first few; the rest
+ * is built while the reader scrolls, always before a section shows (its [data-t] keep the CSS pre-state, opacity 0, until
+ * then). A section already above the viewport when first observed (back/forward, reload mid-page) shows its end state at
+ * once, with no tweens. `done` runs once the first batch is built. */
+const idleCb = (f: () => void, timeout = 300) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 50));
+const NEAR = '0px 0px 150% 0px';
+let sectionIO: IntersectionObserver | null = null;
 function buildRest(done: () => void) {
   const secs = $$('[data-m-section]').filter((s) => !s.hasAttribute('data-m-hero'));
-  const idle = (f: (d?: IdleDeadline) => void) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout: 300 }) : setTimeout(f, 50));
-  const step = (dl?: IdleDeadline) => {
+  const queue: HTMLElement[] = [];
+  const doneSet = new Set<HTMLElement>();
+  let running = false, first = true;
+  const finish = (sec: HTMLElement) => { doneSet.add(sec); sectionIO?.unobserve(sec); };
+  const firstDone = () => { if (first) { first = false; done(); } };
+  const step = () => {
     const t0 = performance.now();
-    while (secs.length && (performance.now() - t0 < 12 || (dl && dl.timeRemaining() > 8))) {
-      // One section per pass (was three): a three-section batch ran 100-150 ms at 4x CPU, one long task each (fix round 2, TBT).
-      const batch = secs.splice(0, 1).map(planSection); // read phase, then its writes
-      batch.forEach(buildSection);
+    while (queue.length && performance.now() - t0 < 8) {
+      const sec = queue.shift()!;
+      if (doneSet.has(sec)) continue;
+      finish(sec);
+      buildSection(planSection(sec)); // read phase, then its writes; one section per task unless the slice stays short
+      sectionReady(sec);
     }
-    if (secs.length) idle(step); else done();
+    if (queue.length) { idleCb(step, 120); return; }
+    running = false;
+    firstDone();
   };
-  idle(step);
+  const kick = () => { if (!running) { running = true; idleCb(step, 120); } };
+  if (!('IntersectionObserver' in window)) { queue.push(...secs); kick(); return; }
+  sectionIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      const sec = e.target as HTMLElement;
+      if (doneSet.has(sec)) return;
+      if (e.isIntersecting) { if (!queue.includes(sec)) queue.push(sec); return; }
+      if (e.boundingClientRect.bottom < 0) { finish(sec); $$('[data-t]', sec).forEach((el) => el.classList.add('m-built')); sectionReady(sec); }
+    });
+    queue.sort((a, b) => secs.indexOf(a) - secs.indexOf(b));
+    if (queue.length) kick(); else if (!running) firstDone();
+  }, { rootMargin: NEAR });
+  secs.forEach((s) => sectionIO!.observe(s));
 }
 
 /** The hero: one ordered timeline played at the handoff. Items in group order (G1, G2, G3), DOM
@@ -481,6 +508,23 @@ function headBlock(h: HTMLElement, sec: HTMLElement): HTMLElement {
   return h;
 }
 
+/* R3 (TBT): parallax and in-frame drift are set up PER SECTION, lazily: a section gets its depth right after its entrance
+ * is built (the same lazy pipeline, see buildRest), each in its own idle task, so nothing measures the whole page in one
+ * long task. The hero is ready at the handoff. On a breakpoint change gsap.matchMedia reverts everything and the new band
+ * re-runs on the sections already built (idle slices), then on the rest as they are built. */
+type SecHook = (sec: HTMLElement) => void;
+const secHooks = new Set<SecHook>();
+const readySecs: HTMLElement[] = [];
+function sectionReady(sec: HTMLElement) {
+  readySecs.push(sec);
+  secHooks.forEach((h) => idleCb(() => { if (secHooks.has(h)) h(sec); }, 250));
+}
+function onSection(h: SecHook) {
+  secHooks.add(h);
+  readySecs.forEach((sec) => idleCb(() => { if (secHooks.has(h)) h(sec); }, 250));
+  return () => { secHooks.delete(h); };
+}
+
 function parallax() {
   const mm = gsap.matchMedia();
   mm.add({ desk: '(min-width: 1024px)', tab: '(min-width: 640px) and (max-width: 1023px)', mob: '(max-width: 639px)' }, (ctx) => {
@@ -488,6 +532,7 @@ function parallax() {
     const k = c.desk ? 1 : c.tab ? 0.6 : 0.45;
     const items: PxItem[] = [];
     const used = new Set<Element>();
+    let alive = true;
     const add = (el: HTMLElement, a: number, b: number, room: number, out = false, css?: boolean) => {
       if (used.has(el)) return;
       const cap = out ? Infinity : room;
@@ -496,9 +541,11 @@ function parallax() {
       if (Math.max(Math.abs(it.a), Math.abs(it.b)) < 4) return; // too little room to read as depth: leave it still (text layer: 4 px, so phones keep it)
       used.add(el); items.push(it);
     };
-    $$('[data-m-section]').forEach((sec) => {
+    const setup = (sec: HTMLElement) => {
+      if (!alive || !sec.isConnected) return;
+      const from = items.length;
       const hero = sec.hasAttribute('data-m-hero');
-      // 1. Media columns (a frame plus its caption and stickers): lag behind the page, +-36 px (hero: drifts 0 -> 64 px
+      // 1. Media columns (a frame plus its caption and stickers): lag behind the page, +-16 px (hero: drifts 0 -> 32 px
       //    as it scrolls away, so nothing moves at load and LCP/CLS are untouched).
       const wraps = new Set<HTMLElement>();
       $$('[data-fx="frame"]', sec).filter(shown).forEach((f) => { if (!f.closest('[data-carousel], [data-track], [data-no-px]')) wraps.add(mediaWrap(f, sec)); });
@@ -512,53 +559,59 @@ function parallax() {
         // Accents riding on the photo (seals, snapshots, chips) drift a little against it: depth inside the column.
         $$<HTMLElement>(`${ACCENT_SEL}, [data-fx="toss"], [data-fx="pop"]`, w).filter(shown).forEach((a) => add(a, hero ? 0 : 14, hero ? -28 : -14, 40, hero));
       });
-      if (hero) return;
-      // 2. Text layer (R2, Nick 20 Nov: "parallax ... for the text as well"). Every section heading (h2) leads the page by
-      //    +-10 px: its head block (.shead, or a small eyebrow/heading/lead parent) moves as one, so the gap to its own lead
-      //    never changes. Drifts through the CSS `translate` property only (entrances own `transform`), scrub 0.6.
-      const okPx = (el: HTMLElement) => !el.closest(PX_OFF) && !el.matches('a, button, [data-hover]') && !inUsed(el, used) && !tweensTranslate(el) && getComputedStyle(el).translate === 'none';
-      $$<HTMLElement>('h2', sec).filter(shown).forEach((h) => {
-        const t = headBlock(h, sec);
-        if (okPx(t)) add(t, 10, -10, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
-      });
-      // 3. Objects: big numerals ([data-count] blocks, any >= 56 px numeral), spec plates, standalone housings, seals,
-      //    stamps and stickers that are not on a photo: +-14 px.
-      $$<HTMLElement>(`${ACCENT_SEL}, ${OBJ_SEL}`, sec).filter((a) => shown(a) && ![...wraps].some((w) => w.contains(a))).forEach((a) => {
-        const t = blockOf(a);
-        if (okPx(t)) add(t, 14, -14, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
-      });
-      $$<HTMLElement>('p, span, strong, b, div', sec).filter(isNumeral).forEach((n) => {
-        const t = blockOf(n);
-        if (okPx(t)) add(t, 14, -14, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
-      });
-      // 4. Decorative flow lines and empty colour blocks behind photos: lag the most, +-48 px.
-      $$<HTMLElement>('img[data-flow]', sec).filter(shown).forEach((d) => add(d, -48, 48, roomAround(d, sec) + 40));
-      $$<HTMLElement>('[data-t]', sec).filter((d) => shown(d) && isShape(d) && !d.closest('[data-stagger]')).forEach((d) => add(d, -30, 30, 60));
-    });
-    obstacleCache.clear();
-    items.forEach((it) => {
-      const { el, a, b, out } = it;
-      // Two channels, so no property ever has two writers: an element GSAP never animates (a wrapper, a section head, a
-      // flow line) drifts through the CSS `translate` property; an element that also has an entrance (a seal, a snapshot)
-      // drifts through GSAP's own `yPercent` component, which its entrance (y, rotation, scale) never touches.
-      // css: true = CSS translate, false = GSAP yPercent (R2 text/object layer decides per element); unset = by markup.
-      const gs = it.css === undefined ? el.matches('[data-t], [data-stagger] > *') : !it.css;
-      if (gs) el.setAttribute('data-px', '');
-      const setPct = gs ? gsap.quickSetter(el, 'yPercent') as (v: number) => void : null;
-      const o = { v: a };
-      const paint = () => {
-        const d = devPx(); const px = Math.round(o.v * d) / d; // whole device pixels: the photo never resamples, so it stays crisp
-        if (setPct) setPct(el.offsetHeight ? (px / el.offsetHeight) * 100 : 0); else el.style.translate = `0 ${px}px`;
-      };
-      it.paint = paint;
-      it.clear = () => { if (setPct) setPct(0); else el.style.translate = ''; };
-      paint();
-      gsap.fromTo(o, { v: a }, { v: b, ease: 'none', onUpdate: paint, scrollTrigger: {
-        trigger: out ? el.closest('[data-m-section]') ?? el : el, start: out ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6,
-      } });
-    });
-    pxItems.push(...items);
-    return () => { items.forEach((it) => { it.clear?.(); it.el.removeAttribute('data-px'); pxItems.splice(pxItems.indexOf(it), 1); }); };
+      if (!hero) {
+        // 2. Text layer (R2, Nick 20 Nov: "parallax ... for the text as well"). Every section heading (h2) leads the page by
+        //    +-10 px: its head block (.shead, or a small eyebrow/heading/lead parent) moves as one, so the gap to its own lead
+        //    never changes. Drifts through the CSS `translate` property only (entrances own `transform`), scrub 0.6.
+        const okPx = (el: HTMLElement) => !el.closest(PX_OFF) && !el.matches('a, button, [data-hover]') && !inUsed(el, used) && !tweensTranslate(el) && getComputedStyle(el).translate === 'none';
+        $$<HTMLElement>('h2', sec).filter(shown).forEach((h) => {
+          const t = headBlock(h, sec);
+          if (okPx(t)) add(t, 10, -10, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
+        });
+        // 3. Objects: big numerals ([data-count] blocks, any >= 56 px numeral), spec plates, standalone housings, seals,
+        //    stamps and stickers that are not on a photo: +-14 px.
+        $$<HTMLElement>(`${ACCENT_SEL}, ${OBJ_SEL}`, sec).filter((a) => shown(a) && ![...wraps].some((w) => w.contains(a))).forEach((a) => {
+          const t = blockOf(a);
+          if (okPx(t)) add(t, 14, -14, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
+        });
+        $$<HTMLElement>('p, span, strong, b, div', sec).filter(isNumeral).forEach((n) => {
+          const t = blockOf(n);
+          if (okPx(t)) add(t, 14, -14, Math.max(6, roomAround(t, sec)), false, !gsapOwned(t));
+        });
+        // 4. Decorative flow lines and empty colour blocks behind photos: lag the most, +-48 px.
+        $$<HTMLElement>('img[data-flow]', sec).filter(shown).forEach((d) => add(d, -48, 48, roomAround(d, sec) + 40));
+        $$<HTMLElement>('[data-t]', sec).filter((d) => shown(d) && isShape(d) && !d.closest('[data-stagger]')).forEach((d) => add(d, -30, 30, 60));
+      }
+      obstacleCache.delete(sec);
+      const fresh = items.slice(from);
+      // Recorded in the matchMedia context, so a breakpoint change reverts these tweens and triggers too.
+      ctx.add(() => fresh.forEach((it) => {
+        const { el, a, b, out } = it;
+        // Two channels, so no property ever has two writers: an element GSAP never animates (a wrapper, a section head, a
+        // flow line) drifts through the CSS `translate` property; an element that also has an entrance (a seal, a snapshot)
+        // drifts through GSAP's own `yPercent` component, which its entrance (y, rotation, scale) never touches.
+        // css: true = CSS translate, false = GSAP yPercent (R2 text/object layer decides per element); unset = by markup.
+        const gs = it.css === undefined ? el.matches('[data-t], [data-stagger] > *') : !it.css;
+        if (gs) el.setAttribute('data-px', '');
+        const setPct = gs ? gsap.quickSetter(el, 'yPercent') as (v: number) => void : null;
+        const h0 = el.offsetHeight; // read once (re-read on refresh), never inside the scrub
+        let hh = h0;
+        const o = { v: a };
+        const paint = () => {
+          const d = devPx(); const px = Math.round(o.v * d) / d; // whole device pixels: the photo never resamples, so it stays crisp
+          if (setPct) setPct(hh ? (px / hh) * 100 : 0); else el.style.translate = `0 ${px}px`;
+        };
+        it.paint = () => { hh = el.offsetHeight; paint(); };
+        it.clear = () => { if (setPct) setPct(0); else el.style.translate = ''; };
+        paint();
+        gsap.fromTo(o, { v: a }, { v: b, ease: 'none', onUpdate: paint, scrollTrigger: {
+          trigger: out ? el.closest('[data-m-section]') ?? el : el, start: out ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6,
+        } });
+      }));
+      pxItems.push(...fresh);
+    };
+    const off = onSection(setup);
+    return () => { alive = false; off(); items.forEach((it) => { it.clear?.(); it.el.removeAttribute('data-px'); const i = pxItems.indexOf(it); if (i > -1) pxItems.splice(i, 1); }); };
   });
   // Triggers are measured without the drift (it would shift every start point by up to the range), then repainted.
   ScrollTrigger.addEventListener('refreshInit', () => pxItems.forEach((it) => it.clear?.()));
@@ -570,49 +623,59 @@ function parallax() {
  * each side) and this scrub writes only its `translate` (0 -5 % -> 0 5 %, scrub 0.6). Entrances never touch the img (the
  * clip reveal is on the frame); media-column drift writes `translate` on the column wrapper, never on the img. Skipped:
  * carousels and tracks, cut-outs (PNG, object-fit contain), maps, small images, anything under [data-no-px]. The hero photo
- * stays still at load and drifts 0 -> 5 % only as the hero scrolls away. Nothing is measured during a scroll: the frames are
- * found once per layout band and the tweens follow ScrollTrigger's own (deferred) refresh. */
+ * stays still at load and drifts 0 -> 5 % only as the hero scrolls away. Nothing is measured during a scroll. R3: per
+ * section (lazy, see onSection), all reads of a section first, then all writes, so there is no read/write thrash. */
 function photoDrift() {
   const mm = gsap.matchMedia();
-  mm.add({ desk: '(min-width: 1024px)', tab: '(min-width: 640px) and (max-width: 1023px)', mob: '(max-width: 639px)' }, () => {
+  mm.add({ desk: '(min-width: 1024px)', tab: '(min-width: 640px) and (max-width: 1023px)', mob: '(max-width: 639px)' }, (ctx) => {
     const mine: HTMLImageElement[] = [];
-    $$<HTMLImageElement>('main img').forEach((img) => {
-      if (img.closest('[data-carousel], [data-track], [data-no-px], [data-marquee], .map, [class*="map"], [data-drift-off]')) return;
-      const cs = getComputedStyle(img);
-      const src = img.currentSrc || img.src;
-      // R2: the owner's business card must show whole (Nick: logo cut in half), so it never takes the 1.14 overfill.
-      if (cs.objectFit !== 'cover' || src.toLowerCase().includes('.png') || src.includes('business-card') || cs.scale !== 'none' || cs.translate !== 'none') return;
-      const r = img.getBoundingClientRect();
-      if (r.width < 160 || r.height < 120) return;
-      // The frame: the img's own box (or an ancestor of the same box) must clip, so the overfill never shows.
-      let clip = false;
-      for (let e = img.parentElement; e && !e.matches('main, section'); e = e.parentElement) {
-        if (getComputedStyle(e).display === 'contents') continue; // <picture>
-        const q = e.getBoundingClientRect();
-        if (Math.abs(q.width - r.width) > 2 || Math.abs(q.height - r.height) > 2) break;
-        if (/hidden|clip/.test(getComputedStyle(e).overflow)) { clip = true; break; }
-      }
-      // R2 (site-wide parallax): a photo whose frame does not clip clips itself. Its own clip-path is set to the inverse of
-      // the scale + translate, so exactly its original box stays visible (corners keep its radius). Not when the img is
-      // itself an entrance target (the `frame` reveal owns its clip-path) or already has a clip-path.
-      const selfClip = !clip && !img.hasAttribute('data-t') && cs.clipPath === 'none';
-      if (!clip && !selfClip) return;
-      const hero = !!img.closest('[data-m-hero]');
-      img.setAttribute('data-drift', '');
-      const S = 1.14;
-      img.style.scale = String(S);
-      const rad = parseFloat(cs.borderTopLeftRadius) || 0;
-      const side = (50 - 50 / S).toFixed(3);
-      const o = { v: hero ? 0 : -5 };
-      const paint = () => {
-        img.style.translate = `0 ${o.v.toFixed(3)}%`;
-        if (selfClip) img.style.clipPath = `inset(${(50 - (50 + o.v) / S).toFixed(3)}% ${side}% ${(50 - (50 - o.v) / S).toFixed(3)}% ${side}%${rad ? ` round ${(rad / S).toFixed(2)}px` : ''})`;
-      };
-      paint();
-      gsap.to(o, { v: 5, ease: 'none', onUpdate: paint, scrollTrigger: { trigger: img.closest('div, figure, a, li') ?? img, start: hero ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6 } });
-      mine.push(img);
-    });
-    return () => { mine.forEach((img) => { img.style.scale = ''; img.style.translate = ''; img.style.clipPath = ''; img.removeAttribute('data-drift'); }); };
+    let alive = true;
+    const run = (imgs: HTMLImageElement[]) => {
+      if (!alive) return;
+      // Read phase.
+      const plan = imgs.map((img) => {
+        if (img.hasAttribute('data-drift') || img.closest('[data-carousel], [data-track], [data-no-px], [data-marquee], .map, [class*="map"], [data-drift-off]')) return null;
+        const cs = getComputedStyle(img);
+        const src = img.currentSrc || img.src;
+        // R2: the owner's business card must show whole (Nick: logo cut in half), so it never takes the 1.14 overfill.
+        if (cs.objectFit !== 'cover' || src.toLowerCase().includes('.png') || src.includes('business-card') || cs.scale !== 'none' || cs.translate !== 'none') return null;
+        const r = img.getBoundingClientRect();
+        if (r.width < 160 || r.height < 120) return null;
+        // The frame: the img's own box (or an ancestor of the same box) must clip, so the overfill never shows.
+        let clip = false;
+        for (let e = img.parentElement; e && !e.matches('main, section'); e = e.parentElement) {
+          if (getComputedStyle(e).display === 'contents') continue; // <picture>
+          const q = e.getBoundingClientRect();
+          if (Math.abs(q.width - r.width) > 2 || Math.abs(q.height - r.height) > 2) break;
+          if (/hidden|clip/.test(getComputedStyle(e).overflow)) { clip = true; break; }
+        }
+        // R2 (site-wide parallax): a photo whose frame does not clip clips itself. Its own clip-path is set to the inverse of
+        // the scale + translate, so exactly its original box stays visible (corners keep its radius). Not when the img is
+        // itself an entrance target (the `frame` reveal owns its clip-path) or already has a clip-path.
+        const selfClip = !clip && !img.hasAttribute('data-t') && cs.clipPath === 'none';
+        if (!clip && !selfClip) return null;
+        return { img, selfClip, rad: parseFloat(cs.borderTopLeftRadius) || 0, hero: !!img.closest('[data-m-hero]') };
+      }).filter(Boolean) as { img: HTMLImageElement; selfClip: boolean; rad: number; hero: boolean }[];
+      // Write phase.
+      ctx.add(() => plan.forEach(({ img, selfClip, rad, hero }) => {
+        img.setAttribute('data-drift', '');
+        const S = 1.14;
+        img.style.scale = String(S);
+        const side = (50 - 50 / S).toFixed(3);
+        const o = { v: hero ? 0 : -5 };
+        const paint = () => {
+          img.style.translate = `0 ${o.v.toFixed(3)}%`;
+          if (selfClip) img.style.clipPath = `inset(${(50 - (50 + o.v) / S).toFixed(3)}% ${side}% ${(50 - (50 - o.v) / S).toFixed(3)}% ${side}%${rad ? ` round ${(rad / S).toFixed(2)}px` : ''})`;
+        };
+        paint();
+        gsap.to(o, { v: 5, ease: 'none', onUpdate: paint, scrollTrigger: { trigger: img.closest('div, figure, a, li') ?? img, start: hero ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6 } });
+        mine.push(img);
+      }));
+    };
+    // Photos outside any motion section (rare) once, then each section as it becomes ready.
+    idleCb(() => run($$<HTMLImageElement>('main img').filter((i) => !i.closest('[data-m-section]'))), 400);
+    const off = onSection((sec) => run($$<HTMLImageElement>('img', sec)));
+    return () => { alive = false; off(); mine.forEach((img) => { img.style.scale = ''; img.style.translate = ''; img.style.clipPath = ''; img.removeAttribute('data-drift'); }); };
   });
 }
 
@@ -768,7 +831,13 @@ function boot() {
     // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front,
     // so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
     const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));
-    buildRest(() => { signatures(); pointer(); initMarquees(); requestRefresh(0); idle(() => { parallax(); photoDrift(); requestRefresh(0); startIdle(); }, 600); });
+    // R3: parallax and drift register per-section hooks (the hero now, the rest as each section is built); counters, pointer,
+    // marquees and idle life wait for the first batch. No page-wide refresh here: each lazy trigger measures itself when it
+    // is created, and the one full refresh runs once fonts, images and the zoom have settled.
+    parallax(); photoDrift();
+    const heroSec = document.querySelector<HTMLElement>('[data-m-section][data-m-hero]');
+    if (heroSec) sectionReady(heroSec);
+    buildRest(() => { signatures(); pointer(); idle(() => { initMarquees(); startIdle(); }, 600); });
   };
   // Arrived through an in-site link: the page starts covered and at the top (kit/curtain.ts reveal), the hero is hidden
   // under the cover, then the panel lifts. Otherwise the loader (first visit) or a plain start.

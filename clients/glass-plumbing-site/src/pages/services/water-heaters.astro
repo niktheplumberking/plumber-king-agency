@@ -19,7 +19,7 @@ import TownsStrip from '../../components/global/TownsStrip.astro';
 import { WH_FAQ } from '../../components/water-heaters/data';
 import { serviceSchema } from '../../lib/schema';
 import '../../components/services/sv.css';
-const description = 'Water heater repair and replacement in Largo and Pinellas County: tank or tankless, often the next day. Licensed plumber, FL CFC1432488.';
+const description = 'Water heater repair and replacement in Largo and Pinellas County: tank or tankless, from a licensed plumber, FL CFC1432488.';
 const faq = {
   '@context': 'https://schema.org', '@type': 'FAQPage',
   mainEntity: WH_FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),

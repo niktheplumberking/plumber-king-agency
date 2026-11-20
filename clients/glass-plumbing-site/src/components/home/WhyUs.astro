@@ -1,46 +1,42 @@
 ---
-// Home "Why us", fix round A (independent R2 review MAJOR 1: the round-2 "test strip" repeated /reviews "What people
-// mention": six themes, counts, tabs, highlighted slips). Rebuilt as a different idea: THE FRIDGE DOOR.
-// "Why they call us again" is answered the way a household answers it: the plumber's number is on the fridge. A brushed
-// steel door (the Glass steel, rivets, handle, powder offset shadow) holds real review notes about coming back (Google,
-// word for word, quote() fails the build on any drift), two job prints from Kody's Instagram and the number itself, each
-// held by a powder magnet. No tallies, no "N of 16", no tabs over themes.
-// Interaction (21st.dev @manuarora700/draggable-card, adapted: no React / motion lib, vanilla pointer events; scatter +
-// tidy idea from @minhxthanh/drag-cards; shortlist also @laziekiki/draggable-photo-stack): drag any note or print around
-// the door (mouse/pen anywhere on it; touch by its magnet so the page still scrolls), arrow keys move a focused note,
-// the picked note comes to the front and straightens; "Straighten up" squares every note (and back to "Scatter").
-// On first view the notes snap on one by one (motion only, armed by the script, so no-JS never hides anything).
-// Reduced motion: no snap-on, moves are instant. No JS: the door shows scattered, everything readable.
-import Img from '../ui/Img.astro';
+// Home "Why us", fix round 3 (D, RECHECK BLOCKER 2: the fridge door of notes and magnets copied Mike's /about AFamily).
+// Nick's original complaint (R2): "text only, no stars, nothing builds credibility". New idea: FIVE STARS, OPENED.
+// The 5.0 rating is drawn as five large stars; each star holds one whole Google review, word for word (quote() fails the
+// build on any drift). Pick a star (tap, click, arrow keys) and it lifts, fills gold from the bottom like a glass filling,
+// and its review opens on the paper card under it, with that review's own stars, date and profile. On first view the five
+// stars fill one after another (5.0). Both Google profiles sit in the head, each with its own count (never added).
+// 21st.dev: "Star Rate" (@ham7a311, id 43963: each selected star pops in, staggered, a line below says what the rating
+// means) + "Star Rating" (@arihantcodes, id 29301: hover preview, rolling value), adapted: the stars are a tablist and the
+// "line below" is the whole review. Vanilla TS, about 1 KB: one click/key handler and one IntersectionObserver (it
+// disconnects after the first fill). No drag, no per-frame work.
+// Nearest match: home Reviews (two housings + three cards), /reviews hero (a dealt deck), /reviews Mention (highlighted
+// words), Mike home Reviews (spotlight carousel with a slide number) and Khinda Thermo (a ring that snaps to answers):
+// none uses the rating stars themselves as the control. Reduced motion / no JS: all stars full, star 1's review open,
+// the other four reviews listed under it.
 import Eyebrow from '../kit/Eyebrow.astro';
 import { STARS, quote } from './fig';
 import { SITE } from '../../data/site';
+import { REVIEWS } from '../../data/reviews';
 
-type Note = { kind: 'q'; id: string; name: string; text: string; ox: number; oy: number; r: number }
-  | { kind: 'ph'; id: string; photo: string; alt: string; cap: string; focus: string; ox: number; oy: number; r: number }
-  | { kind: 'tel'; id: string; ox: number; oy: number; r: number };
-const q = (id: string, name: string, text: string, ox: number, oy: number, r: number): Note => ({ kind: 'q', id, ...quote(name, text), ox, oy, r });
-// Grid order (desktop, 3 columns): quotes left and right, the prints and the number down the middle. ox/oy = scatter (px),
-// r = tilt (deg).
-const notes: Note[] = [
-  q('dp', 'David Peek', 'I’ve had them do work for me in my own home, my daughter’s home, rental properties, my in-laws’ properties and estate properties.', 10, 14, -3),
-  { kind: 'ph', id: 'p1', photo: 'kitchen-faucet-2', alt: 'A new pull-down kitchen faucet and a filtered-water tap over a tiled backsplash', cap: 'Kitchen faucet', focus: '40% 45%', ox: 0, oy: -6, r: 4 },
-  q('jj', 'Jen James', 'A few years ago, someone recommended this company to me.', -8, 28, 2.5),
-  q('pv', 'Peter Van Buskirk', "I wouldn't think of working with anyone else in the Tampa / St. Pete area.", 24, -4, 2),
-  { kind: 'tel', id: 'tel', ox: -6, oy: 10, r: -2.5 },
-  q('pl', 'Parker L', 'I will be using Glass plumbing services again in the future.', -18, -14, -2),
-  q('jr', 'John Rooney', 'As a contractor it’s always hard to find reliable, trustworthy subs you can count on. Kody is one of those guys.', 0, -10, 1.5),
-  { kind: 'ph', id: 'p2', photo: 'water-heater-tank-2', alt: 'A new tank water heater piped in copper, in a laundry closet', cap: 'Tank water heater', focus: '50% 30%', ox: 14, oy: -20, r: -4 },
-  q('ep', 'Eduardo “EddieZoRz” Perea', '10/10 will always use this service and refer friends and family.', -14, 6, -1.5),
-];
+const PICK = ['Kevin Kelleman', 'Michael Marks', 'Cody Weaver', 'Seth Nye', 'Peter Van Buskirk'];
+const picks = PICK.map((n) => {
+  const r = REVIEWS.find((x) => x.name === n)!;
+  const q = quote(n, r.text); // the whole review, checked word for word
+  return { ...q, when: r.when, profile: r.profile === 'a' ? 1 : 2 };
+});
 const g = SITE.google;
+// Star outline (100 x 100 box), the same proportions as the gold Figma star.
+const pts = Array.from({ length: 10 }, (_, i) => {
+  const a = -Math.PI / 2 + (i * Math.PI) / 5, rad = i % 2 === 0 ? 48 : 20.6;
+  return `${(50 + rad * Math.cos(a)).toFixed(2)},${(52 + rad * Math.sin(a)).toFixed(2)}`;
+}).join(' ');
 ---
 <section class="why" aria-labelledby="why-h" data-m-section>
+  <svg class="why-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs><clipPath id="why-star"><polygon points={pts} /></clipPath></defs></svg>
   <div class="wrap">
     <div class="why-head">
-      <Eyebrow text="The number on the fridge" class="why-eb" />
-      <h2 id="why-h" class="h2 why-h" data-t="2">Why they call us <span class="tone">again and again.</span></h2>
-      <p class="why-lead" data-t="3">People who come back, in their own words. <span class="d">Drag a note around the door.</span><span class="m">Hold a magnet to move a note.</span></p>
+      <Eyebrow text="What the reviews say" class="why-eb" />
+      <h2 id="why-h" class="h2 why-h" data-t="2">Five stars. <span class="tone">Open each one.</span></h2>
       <p class="why-rate" data-t="3">
         <span set:html={STARS(90, 15)} />
         <a href={g.a.url} target="_blank" rel="noopener">{g.a.value} · {g.a.count} reviews<span class="sr-only"> on Google profile 1 (opens in a new tab)</span></a>
@@ -50,235 +46,142 @@ const g = SITE.google;
       </p>
     </div>
 
-    <div class="door" data-door data-no-px data-t="4" data-fx="frame">
-      <span class="handle" aria-hidden="true"></span>
-      <span class="rv rv1" aria-hidden="true"></span><span class="rv rv2" aria-hidden="true"></span><span class="rv rv3" aria-hidden="true"></span><span class="rv rv4" aria-hidden="true"></span>
-      <ul class="notes" role="list" aria-label="Notes on the fridge: review quotes, job photos and our number">
-        {notes.map((n, i) => (
-          <li class:list={['nt', `nt-${n.kind}`, `nt-${n.id}`]} style={`--ox:${n.ox}px;--oy:${n.oy}px;--r:${n.r}deg;--i:${i}`} data-note
-            tabindex="0" aria-describedby="why-move">
-            <span class="mag" data-mag aria-hidden="true"></span>
-            {n.kind === 'q' && (
-              <figure class="slip">
-                <p class="slip-top"><span set:html={STARS(70, 12)} /><span>Google</span></p>
-                <blockquote><p>“{n.text}”</p></blockquote>
-                <figcaption><span class="gm" aria-hidden="true">G</span><span>{n.name}</span><span class="sr-only">, five stars on Google</span></figcaption>
-              </figure>
-            )}
-            {n.kind === 'ph' && (
-              <figure class="print">
-                <span class="print-ph"><Img name={n.photo} alt={n.alt} sizes="(min-width: 768px) 240px, 160px" widths={[160, 240, 360, 480]} box={240 / 260} boxM={150 / 170} focus={n.focus} draggable="false" /></span>
-                <figcaption>{n.cap} · from our Instagram</figcaption>
-              </figure>
-            )}
-            {n.kind === 'tel' && (
-              <div class="tel">
-                <p class="tel-k">Keep this one handy</p>
-                <a class="tel-n" href={SITE.tel}>{SITE.phone}</a>
-                <p class="tel-s">Call or text a photo · 24/7</p>
-              </div>
-            )}
-          </li>
+    <div class="sky" data-sky data-t="4" data-no-px style="--sel:0">
+      <div class="row" role="tablist" aria-label="Five Google reviews, one behind each star">
+        {picks.map((p, i) => (
+          <button type="button" role="tab" class="st" id={`why-t${i}`} aria-controls={`why-p${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-st={i} style={`--i:${i}`}>
+            <svg class="st-g" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+              <g clip-path="url(#why-star)"><rect class="st-bg" width="100" height="100" /><rect class="st-w" width="100" height="100" /></g>
+              <polygon class="st-o" points={pts} />
+            </svg>
+            <span class="st-n" aria-hidden="true">0{i + 1}</span>
+            <span class="sr-only">Review {i + 1} of 5, by {p.name}</span>
+          </button>
         ))}
-      </ul>
+      </div>
+      <span class="notch" aria-hidden="true"></span>
+      <div class="card">
+        {picks.map((p, i) => (
+          <article class="rv" id={`why-p${i}`} role="tabpanel" aria-labelledby={`why-t${i}`} data-rv={i} hidden={i !== 0 ? true : undefined}>
+            <p class="rv-top"><span set:html={STARS(96, 16)} /><span class="sr-only">5 out of 5 stars.</span><span class="rv-w">Google · profile {p.profile} · {p.when}</span></p>
+            <blockquote class="rv-q"><p>“{p.text}”</p></blockquote>
+            <p class="rv-by"><span class="gm" aria-hidden="true">G</span><b>{p.name}</b><span class="rv-k" aria-hidden="true">Star 0{i + 1} of 05</span></p>
+          </article>
+        ))}
+      </div>
     </div>
-    <p id="why-move" class="sr-only">Arrow keys move this note on the fridge door.</p>
-    <div class="why-foot" data-t="3">
-      <button class="tidy" type="button" aria-pressed="false" data-tidy hidden>Straighten up</button>
-      <a class="all" href="/reviews">Read every review, word for word →</a>
-    </div>
+    <p class="why-foot" data-t="3"><a class="all" href="/reviews">Read all 16 reviews, word for word →</a></p>
   </div>
 </section>
-
 <script>
-  // The fridge door. One writer: each note's --dx / --dy (drag offset) and its classes; CSS turns them into `translate`
-  // and `rotate` (transition 0.5 s ease-in-out, none while a pointer holds the note).
-  const door = document.querySelector<HTMLElement>('[data-door]');
-  if (door) {
-    const notes = Array.from(door.querySelectorAll<HTMLElement>('[data-note]'));
-    const tidy = document.querySelector<HTMLButtonElement>('[data-tidy]');
-    const html = document.documentElement;
-    let z = 10;
-    const off = new Map<HTMLElement, { x: number; y: number }>(notes.map((n) => [n, { x: 0, y: 0 }]));
-    const set = (n: HTMLElement, x: number, y: number) => {
-      // Keep the note on the door: clamp so at least 60 % of it stays inside.
-      const d = door.getBoundingClientRect(), r = n.getBoundingClientRect(), o = off.get(n)!;
-      const bx = r.left - o.x, by = r.top - o.y; // its box without the drag offset
-      const mx = r.width * 0.4, my = r.height * 0.4;
-      x = Math.max(d.left - bx - mx, Math.min(d.right - bx - r.width + mx, x));
-      y = Math.max(d.top - by - my, Math.min(d.bottom - by - r.height + my, y));
-      o.x = x; o.y = y; n.style.setProperty('--dx', `${x}px`); n.style.setProperty('--dy', `${y}px`);
+  // Tabs: the picked star lifts and fills (CSS, from aria-selected); its review shows. Without JS the panels stay visible
+  // (the script hides 1-4 only when it runs, see the `hidden` handling below).
+  const sky = document.querySelector<HTMLElement>('[data-sky]');
+  if (sky) {
+    const tabs = Array.from(sky.querySelectorAll<HTMLButtonElement>('[data-st]'));
+    const pans = Array.from(sky.querySelectorAll<HTMLElement>('[data-rv]'));
+    sky.classList.add('is-js');
+    const pick = (i: number, focus = false) => {
+      tabs.forEach((t, k) => { const on = k === i; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+      pans.forEach((p, k) => { p.hidden = k !== i; });
+      sky.style.setProperty('--sel', String(i));
+      if (focus) tabs[i].focus();
     };
-    const front = (n: HTMLElement) => { notes.forEach((m) => m.classList.remove('is-top')); n.classList.add('is-top'); n.style.zIndex = String(++z); };
-
-    notes.forEach((n) => {
-      let sx = 0, sy = 0, ox = 0, oy = 0, id = -1, moved = false;
-      n.addEventListener('pointerdown', (e) => {
-        if (e.button !== 0) return;
-        const onMag = (e.target as Element).closest('[data-mag]');
-        if (e.pointerType === 'touch' && !onMag) { front(n); return; } // touch: page scrolls; a tap lifts the note
-        if ((e.target as Element).closest('a')) return; // the phone link stays a link
-        id = e.pointerId; sx = e.clientX; sy = e.clientY; const o = off.get(n)!; ox = o.x; oy = o.y; moved = false;
-        n.setPointerCapture(id); n.classList.add('is-drag'); front(n);
-        e.preventDefault();
-      });
-      n.addEventListener('pointermove', (e) => {
-        if (e.pointerId !== id) return;
-        const dx = e.clientX - sx, dy = e.clientY - sy;
-        if (Math.abs(dx) + Math.abs(dy) > 3) moved = true;
-        set(n, ox + dx, oy + dy);
-      });
-      const end = (e: PointerEvent) => { if (e.pointerId !== id) return; id = -1; n.classList.remove('is-drag'); if (moved) door.classList.add('is-moved'); };
-      n.addEventListener('pointerup', end); n.addEventListener('pointercancel', end);
-      n.addEventListener('focus', () => front(n));
-      n.addEventListener('keydown', (e) => {
-        const k = { ArrowLeft: [-16, 0], ArrowRight: [16, 0], ArrowUp: [0, -16], ArrowDown: [0, 16] }[e.key];
-        if (!k || e.target !== n) return;
-        e.preventDefault(); const o = off.get(n)!; set(n, o.x + k[0], o.y + k[1]); door.classList.add('is-moved');
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => pick(i));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length;
+        const k = e.key === 'ArrowRight' ? (i + 1) % n : e.key === 'ArrowLeft' ? (i - 1 + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : -1;
+        if (k < 0) return; e.preventDefault(); pick(k, true);
       });
     });
-
-    if (tidy) {
-      tidy.hidden = false;
-      tidy.addEventListener('click', () => {
-        const on = tidy.getAttribute('aria-pressed') !== 'true';
-        tidy.setAttribute('aria-pressed', String(on));
-        tidy.textContent = on ? 'Scatter again' : 'Straighten up';
-        door.classList.toggle('is-tidy', on);
-        if (on) { notes.forEach((n) => { off.set(n, { x: 0, y: 0 }); n.style.setProperty('--dx', '0px'); n.style.setProperty('--dy', '0px'); }); door.classList.remove('is-moved'); }
-      });
-    }
-
-    // Snap-on entrance: armed only with motion and only if the door is still below the fold.
-    if (html.classList.contains('motion') && 'IntersectionObserver' in window && door.getBoundingClientRect().top > window.innerHeight * 0.9) {
-      door.classList.add('is-armed');
-      const io = new IntersectionObserver((es) => {
-        if (es.some((x) => x.isIntersecting)) { door.classList.add('is-in'); io.disconnect(); }
-      }, { threshold: 0.12 });
-      io.observe(door);
-      window.setTimeout(() => door.classList.add('is-in'), 12000); // never left empty
+    // First view: the five stars fill one after another (motion only, and only if the row is still below the fold).
+    if (document.documentElement.classList.contains('motion') && 'IntersectionObserver' in window && sky.getBoundingClientRect().top > innerHeight * .9) {
+      sky.classList.add('is-armed');
+      const io = new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting)) { sky.classList.add('is-in'); io.disconnect(); } }, { threshold: .3 });
+      io.observe(sky);
+      setTimeout(() => sky.classList.add('is-in'), 12000);
     }
   }
 </script>
-
 <style>
   .why { position: relative; background: var(--frost); padding: 112px 0 104px; }
-  .m { display: none; }
+  .why-defs { position: absolute; width: 0; height: 0; }
   .why-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .why-h { margin-top: 16px; } .why-h .tone { display: block; }
-  .why-lead { max-width: 640px; margin-top: 20px; font-size: 17px; line-height: 1.5; }
   .why-rate { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 12px; margin-top: 18px; font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .04em; }
   .why-rate a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--frost3); }
   .why-rate a:hover { text-decoration-color: currentColor; color: var(--pdeep); }
   .why-k { font-weight: 500; color: var(--muted); text-transform: uppercase; }
 
-  /* The door: brushed steel, ink edge, powder shadow, a handle down the left, four rivets. */
-  .door { position: relative; margin-top: 44px; padding: 64px 56px 64px 96px; border: 2px solid var(--ink); border-radius: 18px;
-    background: linear-gradient(100deg, rgb(255 255 255 / .35), transparent 30%, rgb(255 255 255 / .25) 62%, transparent 80%),
-      repeating-linear-gradient(0deg, rgb(255 255 255 / .06) 0 2px, transparent 2px 5px),
-      linear-gradient(180deg, #D6DCDF, var(--steel) 55%, #B9C1C5);
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / .5), 14px 14px 0 var(--powder); touch-action: pan-y; }
-  .handle { position: absolute; left: 34px; top: 80px; bottom: 80px; width: 18px; border: 2px solid var(--ink); border-radius: 9px;
-    background: linear-gradient(90deg, var(--steel2), #E7ECEE 45%, var(--steel2)); box-shadow: 5px 5px 0 rgb(22 19 15 / .18); }
-  .rv { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #F2F5F6, var(--steel2) 70%); box-shadow: 0 0 0 1px rgb(22 19 15 / .3); }
-  .rv1 { left: 14px; top: 14px; } .rv2 { right: 14px; top: 14px; } .rv3 { left: 14px; bottom: 14px; } .rv4 { right: 14px; bottom: 14px; }
+  /* The stars: one row, centred; each a tab. The gold "water" (rect .st-w) rises inside the star clip. */
+  .sky { --sel: 0; position: relative; max-width: 920px; margin: 44px auto 0; }
+  .row { display: grid; grid-template-columns: repeat(5, 1fr); }
+  .st { position: relative; display: grid; justify-items: center; padding: 14px 0 26px; border: 0; background: none; cursor: pointer; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+  .st-g { width: 132px; height: 132px; overflow: visible; translate: 0 0; scale: .86; transition: translate .6s var(--ease-io), scale .6s var(--ease-io); }
+  .st-bg { fill: var(--white); }
+  .st-w { fill: #F9B50D; transform-box: view-box; transform: translateY(0%); transition: transform .8s var(--ease-io); }
+  .st-o { fill: none; stroke: var(--ink); stroke-width: 3.2; stroke-linejoin: round; }
+  .st-n { margin-top: 10px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; color: var(--muted); transition: color .4s var(--ease-io); }
+  .st[aria-selected='true'] .st-g { translate: 0 -10px; scale: 1; filter: drop-shadow(8px 8px 0 var(--powder)); }
+  .st[aria-selected='true'] .st-n { color: var(--ink); }
+  @media (hover: hover) and (pointer: fine) { .st:hover .st-g { scale: .94; } .st[aria-selected='true']:hover .st-g { scale: 1; } }
+  .st:focus-visible { outline: none; }
+  .st:focus-visible .st-o { stroke: var(--pdeep); stroke-width: 6; }
+  /* JS: unpicked stars hold a little less water, the picked one is full (a glass filling). */
+  .sky.is-js .st:not([aria-selected='true']) .st-w { transform: translateY(14%); }
+  /* First fill (armed by the script only): empty, then one after another to full. */
+  .sky.is-armed .st .st-w { transform: translateY(100%); }
+  .sky.is-armed.is-in .st .st-w { transform: translateY(0%); transition-delay: calc(var(--i) * .16s); }
+  .sky.is-armed.is-in .st:not([aria-selected='true']) .st-w { transform: translateY(14%); }
 
-  .notes { display: grid; grid-template-columns: minmax(0, 1fr) 260px minmax(0, 1fr); gap: 36px 48px; align-items: center; margin: 0; padding: 0; list-style: none; }
-  .nt { --dx: 0px; --dy: 0px; position: relative; z-index: 1; justify-self: center; width: 100%; max-width: 340px; cursor: grab; user-select: none;
-    translate: calc(var(--ox) + var(--dx)) calc(var(--oy) + var(--dy)); rotate: var(--r);
-    transition: translate .5s var(--ease-io), rotate .5s var(--ease-io), scale .35s var(--ease-io), opacity .45s var(--ease-io); }
-  .nt:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 4px; }
-  .nt.is-top { rotate: calc(var(--r) * .3); }
-  .nt.is-drag { cursor: grabbing; transition: rotate .3s var(--ease-io), scale .3s var(--ease-io); scale: 1.03; }
-  .door.is-tidy .nt { --ox: 0px; --oy: 0px; --r: 0deg; }
-  @media (hover: hover) and (pointer: fine) { .nt:hover { scale: 1.02; } }
-
-  /* The magnet: a powder dome with a highlight, top centre of every note (touch: the grip). */
-  .mag { position: absolute; left: 50%; top: -14px; z-index: 2; width: 30px; height: 30px; margin-left: -15px; border-radius: 50%; border: 2px solid var(--ink);
-    background: radial-gradient(circle at 35% 30%, #CFE3EC, var(--powder) 55%, var(--pdeep)); box-shadow: 3px 3px 0 rgb(22 19 15 / .25); touch-action: none; }
-  .mag::after { content: ''; position: absolute; inset: -8px; } /* 46 px grip */
-
-  /* A review note: paper slip, ink edge, powder offset. */
-  .slip { margin: 0; padding: 26px 22px 18px; border: 1.5px solid var(--ink); border-radius: 4px; background: var(--white); box-shadow: 8px 8px 0 rgb(22 19 15 / .12); }
-  .slip-top { display: flex; align-items: center; justify-content: space-between; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .slip-top span { display: flex; }
-  .slip blockquote { margin: 12px 0 0; }
-  .slip blockquote p { font-family: var(--f-h); font-weight: 800; font-size: 20px; line-height: 1.25; letter-spacing: -.015em; color: var(--ink); }
-  .slip figcaption { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgb(22 19 15 / .3);
-    font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .02em; color: var(--pdeep); }
-  .gm { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--white); font: 800 14px/1 var(--f-h); }
-
-  /* A job print: white border, caption strip. */
-  .print { margin: 0; padding: 10px 10px 12px; border: 1.5px solid var(--ink); border-radius: 3px; background: var(--white); box-shadow: 8px 8px 0 rgb(22 19 15 / .14); }
-  .print-ph { display: block; aspect-ratio: 240 / 260; overflow: hidden; background: var(--frost2); }
-  .print-ph :global(img) { pointer-events: none; -webkit-user-drag: none; }
-  .print figcaption { margin-top: 10px; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-
-  /* The number: an ink plate, the one thing everyone keeps. */
-  .tel { padding: 28px 20px 22px; border: 2px solid var(--ink); border-radius: 6px; background: var(--ink); color: var(--white); text-align: center; box-shadow: 8px 8px 0 var(--pdeep); }
-  .tel-k { font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--powder); }
-  .tel-n { display: inline-flex; align-items: center; min-height: 44px; margin-top: 4px; font: 800 28px/1 var(--f-h); letter-spacing: -.02em; color: var(--white); text-decoration: underline; text-decoration-color: rgb(255 255 255 / .3); text-underline-offset: 6px; }
-  .tel-n:hover { text-decoration-color: var(--powder); }
-  .tel-n:focus-visible { outline: 3px solid var(--powder); outline-offset: 4px; }
-  .tel-s { margin-top: 6px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .04em; color: rgb(255 255 255 / .8); }
-
-  .why-foot { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 28px; margin-top: 40px; }
-  .tidy { min-height: 44px; padding: 0 22px; border: 2px solid var(--ink); border-radius: 6px; background: var(--white); color: var(--ink); font: 700 14px/1 var(--f-b); cursor: pointer;
-    box-shadow: 4px 4px 0 var(--powder); transition: translate .35s var(--ease-io), box-shadow .35s var(--ease-io), background-color .35s var(--ease-io), color .35s var(--ease-io); }
-  .tidy:hover { translate: -2px -2px; box-shadow: 6px 6px 0 var(--powder); }
-  .tidy[aria-pressed="true"] { background: var(--ink); color: var(--white); }
-  .tidy:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  /* The card: the notch points at the picked star (CSS only: --sel), the review is word for word. */
+  .notch { position: absolute; top: calc(132px + 14px + 26px + 22px); left: calc((var(--sel) + .5) * 20%); z-index: 2; width: 28px; height: 28px; margin-left: -14px;
+    background: var(--white); border-left: 2px solid var(--ink); border-top: 2px solid var(--ink); rotate: 45deg; transition: left .6s var(--ease-io); }
+  .card { position: relative; margin-top: 8px; padding: 40px 48px 32px; border: 2px solid var(--ink); border-radius: 8px; background: var(--white); box-shadow: 12px 12px 0 var(--powder); min-height: 286px; }
+  .sky:not(.is-js) .rv[hidden] { display: block; margin-top: 28px; padding-top: 24px; border-top: 1px dashed var(--frost3); }
+  .rv { animation: why-in .55s var(--ease-io); }
+  @keyframes why-in { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+  :global(html:not(.motion)) .rv { animation: none; }
+  :global(html:not(.motion)) .st-g, :global(html:not(.motion)) .st-w, :global(html:not(.motion)) .notch { transition: none; }
+  .rv-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+  .rv-top > span:first-child { display: flex; }
+  .rv-w { font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .rv-q { margin: 18px 0 0; }
+  .rv-q p { font-family: var(--f-h); font-weight: 600; font-size: 24px; line-height: 1.34; letter-spacing: -.012em; color: var(--ink); text-wrap: pretty; }
+  .rv-by { display: flex; align-items: center; gap: 12px; margin-top: 22px; padding-top: 16px; border-top: 1px dashed rgb(22 19 15 / .3); font-size: 16px; }
+  .rv-by b { font-family: var(--f-h); font-weight: 800; letter-spacing: -.015em; }
+  .rv-k { margin-left: auto; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; color: var(--pdeep); }
+  .gm { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--white); font: 800 15px/1 var(--f-h); }
+  .why-foot { display: flex; justify-content: center; margin-top: 36px; }
   .all { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 15px; color: var(--pdeep); text-decoration: underline; text-underline-offset: 4px; }
   .all:hover { color: var(--ink); }
 
-  /* Snap-on (motion, armed by the script only when the door is below the fold). */
-  .door.is-armed .nt { opacity: 0; scale: 1.08; }
-  .door.is-armed .mag { scale: 0; }
-  .door.is-armed.is-in .nt { opacity: 1; scale: 1; transition-delay: calc(var(--i) * .08s); }
-  .door.is-armed.is-in .mag { scale: 1; transition: scale .45s var(--ease-back) calc(var(--i) * .08s + .25s); }
-  .door.is-armed.is-in.is-moved .nt, .door.is-armed.is-in.is-tidy .nt { transition-delay: 0s; }
-  :global(html:not(.motion)) .nt, :global(html:not(.motion)) .tidy { transition: none; }
-
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .door { padding: 56px 32px 56px 72px; }
-    .handle { left: 24px; width: 14px; }
-    .notes { grid-template-columns: minmax(0, 1fr) 200px minmax(0, 1fr); gap: 32px 24px; }
-    .slip { padding: 24px 16px 14px; }
-    .slip blockquote p { font-size: 16px; }
-    .tel-n { font-size: 22px; }
-  }
   @media (min-width: 768px) and (max-width: 1023px) {
-    .notes { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    .nt-tel { grid-column: 1 / -1; max-width: 320px; }
-    .nt-ph { max-width: 240px; }
+    .st-g { width: 104px; height: 104px; }
+    .notch { top: calc(104px + 14px + 26px + 22px); }
+    .card { padding: 32px 32px 26px; }
+    .rv-q p { font-size: 21px; }
   }
   @media (max-width: 767px) {
-    .d { display: none; } .m { display: inline; }
     .why { padding: 72px 0 72px; }
     .why-h { margin-top: 10px; }
-    .why-lead { margin-top: 12px; font-size: 15px; }
     .why-rate { font-size: 11px; gap: 0 10px; }
-    .door { margin-top: 28px; padding: 40px 18px 32px 40px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .5), 8px 8px 0 var(--powder); }
-    .handle { left: 13px; top: 56px; bottom: 56px; width: 12px; border-width: 1.5px; }
-    .rv { width: 7px; height: 7px; } .rv1, .rv3 { left: 9px; } .rv2, .rv4 { right: 9px; } .rv1, .rv2 { top: 9px; } .rv3, .rv4 { bottom: 9px; }
-    .notes { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 30px 14px; }
-    .nt { --ox: 0px !important; --oy: 0px !important; translate: var(--dx) var(--dy); rotate: calc(var(--r) * .5); }
-    /* Two loose columns: long notes span both, short ones pair up, the prints pair up, the number spans. */
-    .nt-dp, .nt-jr, .nt-tel { grid-column: 1 / -1; }
-    .nt-dp { order: 1; } .nt-p1, .nt-p2 { order: 2; } .nt-jj, .nt-pv { order: 3; } .nt-tel { order: 4; } .nt-pl, .nt-ep { order: 5; } .nt-jr { order: 6; }
-    .nt { align-self: stretch; } .nt .slip { height: 100%; }
-    .slip { padding: 20px 12px 12px; box-shadow: 5px 5px 0 rgb(22 19 15 / .12); }
-    .slip blockquote p { font-size: 16px; }
-    .nt-jj .slip blockquote p, .nt-pv .slip blockquote p, .nt-pl .slip blockquote p, .nt-ep .slip blockquote p { font-size: 14px; line-height: 1.28; }
-    .slip-top { font-size: 9px; } .slip-top :global(svg) { width: 56px; height: 10px; }
-    .slip figcaption { gap: 6px; font-size: 10px; } .gm { width: 22px; height: 22px; font-size: 12px; }
     .sep { display: none; }
-    .print { padding: 7px 7px 9px; }
-    .print-ph { aspect-ratio: 150 / 170; }
-    .print figcaption { font-size: 9px; letter-spacing: .04em; }
-    .tel { padding: 24px 14px 18px; }
-    .tel-n { font-size: 26px; }
-    .why-foot { margin-top: 28px; gap: 8px 20px; }
-    .all { font-size: 14px; }
+    .sky { margin-top: 26px; }
+    .st { padding: 8px 0 16px; }
+    .st-g { width: 58px; height: 58px; }
+    .st[aria-selected='true'] .st-g { translate: 0 -6px; filter: drop-shadow(4px 4px 0 var(--powder)); }
+    .st-o { stroke-width: 4.5; }
+    .st-n { margin-top: 6px; font-size: 10px; }
+    .notch { top: calc(58px + 8px + 16px + 22px); width: 20px; height: 20px; margin-left: -10px; }
+    .card { margin-top: 2px; padding: 26px 18px 20px; box-shadow: 7px 7px 0 var(--powder); min-height: 0; }
+    .rv-q { margin-top: 14px; }
+    .rv-q p { font-size: 18px; line-height: 1.4; }
+    .rv-top :global(svg) { width: 80px; height: 13px; }
+    .rv-w { font-size: 10px; }
+    .rv-by { flex-wrap: wrap; gap: 8px 10px; font-size: 15px; }
+    .rv-k { margin-left: 0; width: 100%; }
+    .all { font-size: 14px; text-align: center; }
   }
 </style>

@@ -1,7 +1,11 @@
 ---
-// /areas "Reviews by town" (Figma 721:525 y 3985 h 680 / mobile y 3861 h 460). Frost, meniscus seam rising over the white
-// section above. Three real Google review excerpts (checked word for word against reviews.ts at build). Mobile: a
-// clipped scroll-snap rail with dots (ui.ts data-carousel).
+// /areas "Reviews by town", fix round 3 (E, RECHECK MAJOR 5: three plain white review cards). New idea, ZOOM TO THE WORDS:
+// each review is a short chapter down the centre. Its place (SEMINOLE, TAMPA / ST. PETE, RENTALS) starts huge and pale
+// and settles to its size and full ink as the chapter scrolls up (kit/scrub.ts data-scrub-tw: scale + opacity, the
+// scroll drives it), so the reader "zooms in" on where the job was; the review itself sits under the word in large type
+// with its stars and a Google link. Three real Google review excerpts (checked word for word against reviews.ts at build),
+// both profiles as badges (104 and 77, never summed). 21st.dev: reuno-ui "Text Scroll animation" (words scaling with the
+// scroll) re-skinned with Glass type, powder rule and ink outline. Reduced motion / no JS: the words rest at size 1.
 import Head from './Head.astro';
 import Seam from '../kit/Seam.astro';
 import { quote, STARS } from './reviews';
@@ -10,9 +14,9 @@ import { SITE } from '../../data/site';
 const prof = (n: string) => (REVIEWS.find((r) => r.name === n)!.profile === 'a' ? SITE.google.a : SITE.google.b);
 const ext = '<path d="M5 2h7v7M12 2 4.5 9.5M9 12H2V5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
 const cards = [
-  { chip: 'Seminole', name: 'Cody Weaver', q: quote('Cody Weaver', 'Kody came out and fixed my shower in Seminole that refused to drain.') },
-  { chip: 'Tampa / St. Pete', name: 'Peter Van Buskirk', q: quote('Peter Van Buskirk', "I wouldn't think of working with anyone else in the Tampa / St. Pete area.") },
-  { chip: 'Rentals & family homes', name: 'David Peek', q: quote('David Peek', 'I’ve had them do work for me in my own home, my daughter’s home, rental properties, my in-laws’ properties and estate properties.') },
+  { chip: 'Seminole', big: 'Seminole', name: 'Cody Weaver', q: quote('Cody Weaver', 'Kody came out and fixed my shower in Seminole that refused to drain.') },
+  { chip: 'Tampa / St. Pete', big: 'St. Pete', name: 'Peter Van Buskirk', q: quote('Peter Van Buskirk', "I wouldn't think of working with anyone else in the Tampa / St. Pete area.") },
+  { chip: 'Rentals & family homes', big: 'Rentals', name: 'David Peek', q: quote('David Peek', 'I’ve had them do work for me in my own home, my daughter’s home, rental properties, my in-laws’ properties and estate properties.') },
 ];
 ---
 <section class="arev" data-m-section aria-labelledby="arev-h">
@@ -26,26 +30,34 @@ const cards = [
         ))}
       </ul>
     </div>
-    <div class="arev-rail" data-carousel>
-      <ul class="arev-track" role="list" data-track data-hscroll aria-label="Reviews by town" data-t="4" data-stagger>
-        {cards.map((c) => (
-          <li class="rc" data-slide>
-            <figure>
-              <span class="rc-chip"><svg viewBox="0 0 30 41" width="9" height="12" aria-hidden="true"><path d="M15 39S1 23 1 15C1 7 7 1 15 1s14 6 14 14c0 8-14 24-14 24Z" fill="#84B3C7"/></svg>{c.chip}</span>
-              <svg class="rc-stars" viewBox="0 0 80 13" width="80" height="13" fill="#F9B50D" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
-              <blockquote class="rc-q"><p>“{c.q}”</p></blockquote>
-              <figcaption class="rc-by"><span class="rc-g" aria-hidden="true">G</span>{c.name} · <a href={prof(c.name).url} target="_blank" rel="noopener">Google<span class="sr-only"> profile with this review (opens in a new tab)</span></a></figcaption>
-            </figure>
-          </li>
-        ))}
-      </ul>
-      <div class="arev-dots" aria-hidden="true">{cards.map((_, i) => <span class:list={['dot', i === 0 && 'on']} data-dot></span>)}</div>
-    </div>
+    <ol class="zq" role="list">
+      {cards.map((c, i) => (
+        <li class="zq-ch" data-scrub data-no-px data-start="top 95%" data-end="top 45%" data-start-m="top 98%" data-end-m="top 55%">
+          <p class="zq-big" aria-hidden="true"><span data-scrub-tw='{"scale":2.4,"opacity":0.12}'>{c.big}</span></p>
+          <figure class="zq-fig" data-t="3">
+            <p class="zq-k"><span>0{i + 1}</span> {c.chip}</p>
+            <svg class="rc-stars" viewBox="0 0 80 13" width="96" height="16" fill="#F9B50D" role="img" aria-label="5 out of 5 stars" set:html={STARS} />
+            <blockquote class="zq-q"><p>“{c.q}”</p></blockquote>
+            <figcaption class="rc-by"><span class="rc-g" aria-hidden="true">G</span>{c.name} · <a href={prof(c.name).url} target="_blank" rel="noopener">Google<span class="sr-only"> profile with this review (opens in a new tab)</span></a></figcaption>
+          </figure>
+        </li>
+      ))}
+    </ol>
   </div>
 </section>
 
 <style>
-  .arev { position: relative; background: var(--frost); padding: 110px 0 80px; }
+  .zq { display: grid; gap: 70px; margin: 64px auto 0; padding: 0; max-width: 900px; list-style: none; }
+  .zq-ch { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .zq-big { margin: 0; font-family: var(--f-h); font-weight: 800; font-size: 120px; line-height: .9; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px var(--ink); white-space: nowrap; }
+  .zq-big span { display: inline-block; transform-origin: 50% 70%; }
+  .zq-fig { margin: -18px 0 0; position: relative; width: min(780px, 100%); padding: 30px 40px 26px; background: var(--white); border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--ink), 8px 8px 0 var(--powder); }
+  .zq-k { display: inline-flex; gap: 10px; align-items: center; margin-bottom: 12px; font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .zq-k span { padding: 3px 7px; border-radius: 3px; background: var(--ink); color: var(--white); }
+  .zq-fig .rc-stars { display: block; margin: 0 auto; }
+  .zq-q { margin: 14px 0 0; font-family: var(--f-h); font-weight: 800; font-size: 28px; line-height: 1.22; letter-spacing: -.01em; color: var(--ink); }
+  .zq-fig .rc-by { margin-top: 16px; }
+  .arev { position: relative; overflow-x: clip; background: var(--frost); padding: 110px 0 110px; }
   .arev-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .arev-head :global(.ah-eb) { justify-content: center; }
   .arev-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 26px; }
@@ -55,39 +67,24 @@ const cards = [
   .gb-g, .rc-g { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--frost); color: #4285F4; font-family: var(--f-h); font-weight: 800; font-size: 15px; }
   .gb-v { font-family: var(--f-h); font-weight: 800; font-size: 18px; }
   .gb-n { font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; }
-  .arev-track { display: grid; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin-top: 44px; }
-  .rc figure { transition: translate .45s var(--ease-io), box-shadow .45s var(--ease-io); }
-  .rc:hover figure { translate: 0 -6px; box-shadow: 8px 8px 0 var(--powder); }
-  .rc-chip { display: inline-flex; align-items: center; gap: 7px; }
   .rc-g { width: 20px; height: 20px; margin-right: 6px; font-size: 11px; vertical-align: -5px; background: var(--frost); }
   .rc-by a { display: inline-block; min-width: 44px; padding: 15px 0; margin: -15px 0; text-align: center; color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-  .rc figure { position: relative; display: flex; flex-direction: column; height: 300px; margin: 0; padding: 24px 24px 27px; background: var(--white); border: 1px solid var(--frost3); border-radius: 6px; }
-  .rc-chip { align-self: flex-start; padding: 6.5px 12px; background: var(--ink); border-radius: 16.5px; font-size: 13px; line-height: 20px; font-weight: 600; color: var(--white); }
-  .rc-stars { display: block; margin-top: 19px; }
-  .rc-q { margin: 15px 0 0; font-size: 16px; line-height: 1.48; color: var(--ink); }
   .rc-by { margin-top: auto; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--pdeep); }
-  .arev-dots { display: none; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .arev { padding: 96px 0 80px; }
-    .arev-track { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-    .rc figure { height: 100%; min-height: 300px; }
   }
   @media (max-width: 767px) {
-    .arev { padding: 48px 0 40px; }
-    .arev-rail { margin: 24px calc(-1 * var(--gutter)) 0; overflow: hidden; }
-    .arev-track { display: flex; gap: 16px; margin: 0; padding: 0 var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
-    .arev-track::-webkit-scrollbar { display: none; }
-    .rc { flex: none; width: 280px; scroll-snap-align: start; }
-    .rc figure { height: 240px; padding: 18px 18px 21px; }
-    .rc-chip { padding: 7px 10px; font-size: 12px; line-height: 18px; }
-    .rc-stars { width: 75px; height: 12px; margin-top: 14px; }
-    .rc-q { margin-top: 12px; font-size: 15px; }
+    .arev { padding: 56px 0 64px; }
     .rc-by { font-size: 9px; line-height: 12px; }
     .gb-n { font-size: 10px; }
     .arev-badges { margin-top: 18px; }
-    .arev-dots { display: flex; gap: 6px; margin: 16px 0 0 var(--gutter); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--frost3); transition: background-color .5s var(--ease-io); }
-    .dot.on { background: var(--ink); }
+  }
+  @media (min-width: 768px) and (max-width: 1279px) { .zq-big { font-size: 96px; } }
+  @media (max-width: 767px) {
+    .zq { gap: 44px; margin-top: 36px; }
+    .zq-big { font-size: 58px; -webkit-text-stroke-width: 1.5px; }
+    .zq-fig { margin-top: -8px; padding: 22px 16px 18px; box-shadow: inset 0 0 0 1.5px var(--ink), 5px 5px 0 var(--powder); }
+    .zq-q { font-size: 19px; }
   }
 </style>

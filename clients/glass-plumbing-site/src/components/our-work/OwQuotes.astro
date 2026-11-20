@@ -1,140 +1,136 @@
 ---
-// Reviews strip, R2 rebuild (Nick 20 Nov: three text quotes on ink = text only; proof must look like proof).
-// "Slips on the rail": three word-for-word review slips on an ink band. The centre slip is large and white with stars and
-// the Google mark; the two side slips sit back, smaller and tilted. Arrow buttons, the arrow keys, a click on a side slip
-// or a swipe bring the next slip to the centre (they glide, the stars on the new centre fill in turn). Above them the
-// Google record: each profile with its own rating, count and link (104 and 77, never summed). No autoplay, so no pause.
-// 21st.dev: "Testimonial Section 4" (solaceui, id 19874: three-card carousel, highlighted centre, keyboard arrows) +
-// "Testimonial" (anurag-mishra22, id 32: swipe to change), re-skinned: review slips with powder offset, ink rail.
-// No JS: the three slips sit side by side, all readable.
+// Reviews on /our-work, fix round 3 (D, RECHECK MAJOR 1: the three-slip rail here and the dealt deck in the /reviews hero
+// were the same device twice; the deck stays on /reviews). New form, THE JOB QUILT: six jobs, each next to what its
+// customer wrote about it, set as a checkerboard of ink job tiles and paper review tiles (rows alternate J Q J Q / Q J Q J,
+// so every job sits beside its own review). Pointing at (or focusing) a job lights its review: the review tile lifts on a
+// powder offset and fills its stars, the other tiles' stars fade (text stays full contrast). Each job tile links to the matching service page.
+// The interaction is CSS only (:has on the grid): no JS on this section at all.
+// 21st.dev: "Testimonial Carousel Section / Checker Quilt Testimonials" (@kedhareswer, id 38036: a full-bleed checkerboard
+// of quotes and portraits), adapted: no portraits (no faces next to names), the "portrait" squares are the job tiles in
+// the Glass ink with kit rivets; no carousel.
+// Nearest match: /reviews RevList (a moving three-column wall), home Reviews (three cards beside two housings), Mike
+// OWall / Khinda Work (photo walls), Mike RevSpotlight (one sheet at a time). None pairs jobs and reviews on a checkerboard.
+// Quotes: word for word (the build fails if one is not a substring of its review in reviews.ts).
 import '../contact/cx.css';
 import Stars from '../contact/Stars.astro';
 import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
 const Q = [
-  { who: 'Peter Van Buskirk', q: 'These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.' },
-  { who: 'Nelson Whitesell', q: 'His attention to detail has been excellent on my new home.' },
-  { who: 'Greg Letsch', q: 'Zach was very professional and well versed in his knowledge.' },
+  { job: 'Shower drain', sub: 'Seminole', href: '/services', who: 'Cody Weaver', q: 'Kody came out and fixed my shower in Seminole that refused to drain.' },
+  { job: 'Water heater', sub: 'New install', href: '/services/water-heaters', who: 'Kevin Kelleman', q: 'Needed a new Water Heater, called and had one installed the next day at a great price.' },
+  { job: 'Water softener', sub: 'Replaced', href: '/services', who: 'Parker L', q: 'I hired Glass Plumbing Services to replace my water softener and was thoroughly pleased with the work!' },
+  { job: 'Shower faucet', sub: 'Leak fixed', href: '/services', who: 'Seth Nye', q: 'Hired glass plumbing services for a leaky shower faucet, Mr. Glass was here same day to replace pipes/ fittings and new kit and left here good as new!' },
+  { job: 'Build-out', sub: 'Commercial', href: '/services', who: 'Peter Van Buskirk', q: 'These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.' },
+  { job: 'New home', sub: 'Plumbing', href: '/services', who: 'Nelson Whitesell', q: 'His attention to detail has been excellent on my new home.' },
 ];
-// Guard: every quote must appear in the review word for word.
 Q.forEach(({ who, q }) => { const r = REVIEWS.find((x) => x.name === who); if (!r || !r.text.replace(/\s+/g, ' ').includes(q)) throw new Error(`OwQuotes: "${q}" is not in ${who}'s review`); });
 const g = SITE.google;
 ---
-<section class="cx-sec cx-ink2 oq on-ink" data-m-section aria-labelledby="oq-h" data-oq>
+<section class="cx-sec cx-ink2 oq on-ink" data-m-section aria-labelledby="oq-h">
   <div class="wrap">
-    <div class="oq-top" data-t="3">
-      <h2 class="oq-h" id="oq-h">What customers say</h2>
-      <ul class="oq-rec" role="list">
-        {[g.a, g.b].map((p) => (
-          <li><a class="oq-pf" href={p.url} target="_blank" rel="noopener"><span class="oq-g" aria-hidden="true">G</span><b>{p.value}</b><Stars w={70} /><span class="oq-n">{p.count} Google reviews</span><span class="sr-only"> (opens in a new tab)</span></a></li>
+    <div class="oq-top">
+      <p class="oq-eb" data-t="1">What customers say</p>
+      <h2 class="cx-h oq-h" id="oq-h" data-t="2"><span class="ln">Six jobs.</span> <span class="ln tone">Six customers’ words.</span></h2>
+      <ul class="oq-rec" role="list" data-t="3">
+        {[g.a, g.b].map((p, i) => (
+          <li><a class="oq-pf" href={p.url} target="_blank" rel="noopener"><span class="oq-g" aria-hidden="true">G</span><b>{p.value}</b><Stars w={70} /><span class="oq-n">{p.count} reviews · profile {i + 1}</span><span class="sr-only"> on Google, read {g.checked} (opens in a new tab)</span></a></li>
         ))}
       </ul>
     </div>
-    <div class="oq-rail" data-t="4" data-no-px>
-      <ul class="oq-l" role="list" data-oq-list aria-roledescription="carousel" aria-label="Review slips">
-        {Q.map((x, i) => (
-          <li class="oq-i" data-oq-i={i} aria-roledescription="slide" aria-label={`${i + 1} of ${Q.length}`}>
-            <div class="oq-row"><Stars w={92} label="5 out of 5 stars" class="oq-st" /><span class="oq-g oq-g2" aria-hidden="true">G</span></div>
-            <blockquote><p>“{x.q}”</p><footer>{x.who} · Google</footer></blockquote>
-          </li>
-        ))}
-      </ul>
-      <div class="oq-ctl" data-oq-ctl hidden>
-        <button type="button" class="oq-b" data-oq-prev aria-label="Previous review"><svg viewBox="0 0 20 16" width="18" height="14" aria-hidden="true"><path d="M19 8H1M8 15 1 8l7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
-        <span class="oq-dots" aria-hidden="true">{Q.map(() => <i></i>)}</span>
-        <button type="button" class="oq-b" data-oq-next aria-label="Next review"><svg viewBox="0 0 20 16" width="18" height="14" aria-hidden="true"><path d="M1 8h18M12 15l7-7-7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
-      </div>
-      <p class="sr-only" aria-live="polite" data-oq-live></p>
-    </div>
+    <ul class="quilt" role="list" data-t="4" data-stagger>
+      {Q.map((x, i) => (
+        <li class:list={['pair', `p${i}`]}>
+          <a class="job" href={x.href}>
+            <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
+            <span class="job-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="job-t">{x.job}</span>
+            <span class="job-s">{x.sub}<span class="job-go" aria-hidden="true"> · see the service →</span></span>
+          </a>
+          <figure class="rev">
+            <Stars w={84} label="5 out of 5 stars" class="rev-st" />
+            <blockquote><p>“{x.q}”</p></blockquote>
+            <figcaption>{x.who} · Google</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+    <p class="oq-note" data-t="3"><span class="d">Point at a job to light its review.</span><span class="m">Tap a job to see its service.</span> Every quote is word for word from Google.</p>
   </div>
 </section>
 <style>
-  .oq { padding: 84px 0 92px; background: var(--ink2); overflow: hidden; }
+  .oq { padding: 96px 0 100px; background: var(--ink2); }
   .oq-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
-  .oq-h { font: 700 11px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
-  .oq-rec { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .oq-eb { font: 700 12px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .oq-h { --fs: 52px; margin-top: 14px; }
+  .oq-rec { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 22px 0 0; padding: 0; list-style: none; }
   .oq-pf { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 18px 6px 8px; border-radius: 26px; background: var(--ink); box-shadow: inset 0 0 0 1px var(--ink3); color: var(--white); transition: box-shadow .35s var(--ease-io); }
   .oq-pf:hover, .oq-pf:focus-visible { box-shadow: inset 0 0 0 1.5px var(--powder); }
   .oq-pf b { font: 800 22px/1 var(--f-h); }
   .oq-g { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--white); color: #4285F4; font: 800 16px/1 var(--f-h); }
   .oq-n { font: 500 11px/1 var(--f-m); color: var(--powder); text-decoration: underline; text-underline-offset: 3px; }
 
-  .oq-rail { position: relative; margin-top: 48px; }
-  .oq-l { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
-  .oq-i { display: flex; flex-direction: column; padding: 28px 28px 24px; border-radius: 6px; background: var(--white); color: var(--ink); box-shadow: 8px 8px 0 var(--powder); }
-  .oq-row { display: flex; justify-content: space-between; align-items: center; }
-  .oq-g2 { width: 26px; height: 26px; font-size: 14px; box-shadow: inset 0 0 0 1px var(--frost3); }
-  .oq-i blockquote { margin: 16px 0 0; display: flex; flex-direction: column; flex: 1; }
-  .oq-i p { margin: 0; font: 700 21px/1.3 var(--f-h); letter-spacing: -.01em; }
-  .oq-i footer { margin-top: 20px; font: 500 11px/15px var(--f-m); letter-spacing: .02em; color: var(--pdeep); }
+  /* The quilt: 4 columns, each pair takes two cells; odd rows (pairs 2-3) run review-then-job, so the colours checker. */
+  .quilt { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 48px 0 0; padding: 0; list-style: none; border: 2px solid var(--ink); border-radius: 8px; overflow: hidden; box-shadow: 14px 14px 0 var(--powder); }
+  .pair { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  .p2, .p3 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+  .p2 .job, .p3 .job { order: 2; }
+  .job { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 230px; padding: 26px 24px; background: var(--ink); color: var(--white); text-decoration: none;
+    box-shadow: inset 0 0 0 1px var(--ink3); transition: background-color .45s var(--ease-io); }
+  .job .rv { position: absolute; top: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--ink3); }
+  .job .rv:first-child { left: 12px; } .job .rv:nth-child(2) { right: 12px; }
+  .job-n { position: absolute; left: 24px; top: 26px; font: 700 12px/1 var(--f-m); letter-spacing: .08em; color: var(--powder); }
+  .job-t { font: 800 30px/1.04 var(--f-h); letter-spacing: -.02em; }
+  .job-s { font: 500 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255 / .8); }
+  .job-go { opacity: 0; transition: opacity .35s var(--ease-io); }
+  .job:hover .job-go, .job:focus-visible .job-go { opacity: 1; }
+  .job:hover, .job:focus-visible { background: var(--pdeep); }
+  .job:hover .job-n, .job:focus-visible .job-n { color: var(--white); }
+  .job:focus-visible { outline: 3px solid var(--powder); outline-offset: -6px; }
+  .rev { position: relative; z-index: 1; display: flex; flex-direction: column; margin: 0; padding: 26px 26px 22px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--frost3);
+    transition: translate .5s var(--ease-io), box-shadow .5s var(--ease-io), opacity .5s var(--ease-io); }
+  .rev blockquote { margin: 14px 0 0; flex: 1; }
+  .rev p { margin: 0; font: 700 19px/1.32 var(--f-h); letter-spacing: -.01em; }
+  .rev figcaption { margin-top: 16px; font: 500 11px/15px var(--f-m); letter-spacing: .02em; color: var(--pdeep); }
+  .rev :global(.rev-st path) { transition: opacity .35s var(--ease-io); }
+  /* Point at a job: its own review lifts and its stars fill in turn; the other reviews dim. CSS only. */
+  @media (hover: hover) and (pointer: fine) {
+    .quilt:has(.job:hover) .rev :global(.rev-st path) { opacity: .25; }
+  }
+  .quilt:has(.job:focus-visible) .rev :global(.rev-st path) { opacity: .25; }
+  .pair:has(.job:hover) .rev, .pair:has(.job:focus-visible) .rev { opacity: 1; z-index: 2; translate: -4px -4px; box-shadow: inset 0 0 0 2px var(--ink), 8px 8px 0 var(--powder); }
+  .pair:has(.job:hover) .rev :global(.rev-st path), .pair:has(.job:focus-visible) .rev :global(.rev-st path) { opacity: 1; }
+  .pair:has(.job:hover) .rev :global(.rev-st path:nth-child(2)) { transition-delay: .06s; } .pair:has(.job:hover) .rev :global(.rev-st path:nth-child(3)) { transition-delay: .12s; }
+  .pair:has(.job:hover) .rev :global(.rev-st path:nth-child(4)) { transition-delay: .18s; } .pair:has(.job:hover) .rev :global(.rev-st path:nth-child(5)) { transition-delay: .24s; }
+  .oq-note { margin-top: 30px; text-align: center; font: 500 11px/16px var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: rgb(255 255 255 / .8); }
+  .oq-note .m { display: none; }
+  :global(html:not(.motion)) .rev, :global(html:not(.motion)) .job { transition: none; }
 
-  /* With JS: a three-up rail; the centre slip is big, the side slips sit back. Positions are classes (is-c / is-l / is-r). */
-  .oq.is-js .oq-l { display: block; position: relative; height: var(--rh, 340px); }
-  .oq.is-js .oq-i { position: absolute; left: 50%; top: 0; width: min(560px, 46vw); margin-left: calc(min(560px, 46vw) / -2); cursor: pointer;
-    transition: translate .75s var(--ease-io), scale .75s var(--ease-io), rotate .75s var(--ease-io), opacity .6s var(--ease-io), box-shadow .6s var(--ease-io); }
-  .oq.is-js .oq-i.is-c { z-index: 3; cursor: default; box-shadow: 12px 12px 0 var(--powder); }
-  .oq.is-js .oq-i.is-l { z-index: 2; translate: -78% 34px; scale: .78; rotate: -4deg; }
-  .oq.is-js .oq-i.is-r { z-index: 2; translate: 78% 34px; scale: .78; rotate: 4deg; }
-  .oq-i { position: relative; }
-  .oq-i::after { content: ''; position: absolute; inset: 0; border-radius: 6px; background: var(--ink2); opacity: 0; pointer-events: none; transition: opacity .6s var(--ease-io); }
-  .oq.is-js .oq-i:not(.is-c)::after { opacity: .5; }
-  .oq.is-js .oq-i:not(.is-c):hover::after { opacity: .25; }
-  .oq-st :global(path) { transition: opacity .3s var(--ease-io); }
-  .oq.is-js .oq-i:not(.is-c) .oq-st :global(path) { opacity: .35; }
-  .oq-i.is-c .oq-st :global(path:nth-child(2)) { transition-delay: .08s; } .oq-i.is-c .oq-st :global(path:nth-child(3)) { transition-delay: .16s; }
-  .oq-i.is-c .oq-st :global(path:nth-child(4)) { transition-delay: .24s; } .oq-i.is-c .oq-st :global(path:nth-child(5)) { transition-delay: .32s; }
-  .oq-ctl { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 28px; }
-  .oq-ctl[hidden] { display: none; }
-  .oq-b { display: grid; place-items: center; width: 48px; height: 48px; border: 0; border-radius: 50%; background: var(--ink); color: var(--white); box-shadow: inset 0 0 0 1.5px var(--powder); cursor: pointer; transition: background-color .35s var(--ease-io), color .35s var(--ease-io); }
-  .oq-b:hover { background: var(--powder); color: var(--ink); }
-  .oq-b:focus-visible { outline: 3px solid var(--powder); outline-offset: 3px; }
-  .oq-dots { display: flex; gap: 8px; }
-  .oq-dots i { width: 8px; height: 8px; border-radius: 4px; background: var(--ink3); transition: width .45s var(--ease-io), background-color .45s var(--ease-io); }
-  .oq-dots i.is-on { width: 26px; background: var(--powder); }
-
-  @media (max-width: 1023px) and (min-width: 768px) { .oq.is-js .oq-i { width: 56vw; margin-left: -28vw; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .quilt { grid-template-columns: 1fr; }
+    .p2, .p3 { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+    .p2 .job, .p3 .job { order: 0; }
+    .p1 .job, .p3 .job, .p5 .job { order: 2; }
+    .p1, .p3, .p5 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+  }
   @media (max-width: 767px) {
-    .oq { padding: 52px 0 56px; }
+    .oq { padding: 60px 0 64px; }
+    .oq-h { margin-top: 10px; }
     .oq-pf { padding-right: 12px; gap: 7px; }
-    .oq-l { grid-template-columns: 1fr; gap: 16px; }
-    .oq-rail { margin-top: 30px; }
-    .oq.is-js .oq-i { width: 82vw; margin-left: -41vw; padding: 20px 18px 18px; }
-    .oq.is-js .oq-i.is-l { translate: -92% 20px; scale: .86; }
-    .oq.is-js .oq-i.is-r { translate: 92% 20px; scale: .86; }
-    .oq-i p { font-size: 18px; }
+    .quilt { grid-template-columns: 1fr; margin-top: 30px; box-shadow: 8px 8px 0 var(--powder); }
+    .pair, .p2, .p3 { grid-template-columns: minmax(0, .42fr) minmax(0, .58fr); }
+    .p2 .job, .p3 .job { order: 0; }
+    .p1, .p3, .p5 { grid-template-columns: minmax(0, .58fr) minmax(0, .42fr); }
+    .p1 .job, .p3 .job, .p5 .job { order: 2; }
+    .job { min-height: 0; padding: 40px 14px 16px; gap: 4px; }
+    .job-n { left: 14px; top: 18px; font-size: 10px; }
+    .job .rv:first-child { display: none; }
+    .job-t { font-size: 20px; }
+    .job-s { font-size: 9px; line-height: 12px; }
+    .job-go { display: none; }
+    .rev { padding: 16px 14px 14px; }
+    .rev p { font-size: 15px; line-height: 1.3; }
+    .rev :global(.rev-st) { width: 64px; height: 10px; }
+    .rev figcaption { margin-top: 10px; font-size: 10px; }
+    .oq-note .d { display: none; } .oq-note .m { display: inline; }
   }
 </style>
-<script>
-  const root = document.querySelector<HTMLElement>('[data-oq]');
-  if (root) {
-    const list = root.querySelector<HTMLElement>('[data-oq-list]')!;
-    const items = [...root.querySelectorAll<HTMLElement>('[data-oq-i]')];
-    const dots = [...root.querySelectorAll<HTMLElement>('.oq-dots i')];
-    const live = root.querySelector<HTMLElement>('[data-oq-live]')!;
-    const ctl = root.querySelector<HTMLElement>('[data-oq-ctl]')!;
-    const n = items.length;
-    let c = 0;
-    root.classList.add('is-js'); ctl.hidden = false;
-    const fit = () => { list.style.setProperty('--rh', `${Math.max(...items.map((i) => i.offsetHeight)) + 50}px`); };
-    const show = (k: number, say = false) => {
-      c = (k + n) % n;
-      items.forEach((it, i) => {
-        const d = (i - c + n) % n;
-        it.classList.toggle('is-c', d === 0); it.classList.toggle('is-r', d === 1); it.classList.toggle('is-l', d === n - 1);
-        it.setAttribute('aria-hidden', d === 0 ? 'false' : 'true');
-      });
-      dots.forEach((d, i) => d.classList.toggle('is-on', i === c));
-      if (say) live.textContent = `Review ${c + 1} of ${n}: ${items[c].querySelector('footer')?.textContent ?? ''}`;
-    };
-    root.querySelector('[data-oq-prev]')!.addEventListener('click', () => show(c - 1, true));
-    root.querySelector('[data-oq-next]')!.addEventListener('click', () => show(c + 1, true));
-    items.forEach((it, i) => it.addEventListener('click', () => { if (i !== c) show(i, true); }));
-    root.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') { show(c - 1, true); e.preventDefault(); } else if (e.key === 'ArrowRight') { show(c + 1, true); e.preventDefault(); } });
-    let x0 = 0;
-    list.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
-    list.addEventListener('pointerup', (e) => { const dx = e.clientX - x0; if (Math.abs(dx) > 40) show(c + (dx < 0 ? 1 : -1), true); });
-    show(0); fit();
-    addEventListener('resize', fit, { passive: true });
-    document.fonts?.ready.then(fit);
-  }
-</script>

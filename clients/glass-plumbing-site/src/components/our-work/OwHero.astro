@@ -1,152 +1,195 @@
 ---
-// Our work hero, fix round C (independent R2 review: three equal photo cards under a heading read plain; rule 11 asks for
-// a unique hero). New idea, "Contact sheet": the four newest job photos hang from one film rail (sprocket holes, a shared
-// top edge). The picked frame unrolls to full height and width while the others stay clipped to half height, the band's
-// ink re-grades a shade toward the picked photo's tone, its steel tag slides in, and a frame counter + rail progress
-// follow. Click / tap a frame, or use the arrow keys, Home and End. No autoplay (nothing moves on its own).
-// The Instagram count carries its read date from site.ts (SITE.social.instagramStats).
-// 21st.dev: "Hero Carousel" (@crafterui/hero-carousel, id 24752: a filmstrip whose focused card unfurls to full height while
-// its neighbours stay clipped to half, background re-grades to the focused photo; wheel, drag, click, arrows) + "Thumbnail
-// image viewer" (@ibrandify/thumbnail-image-viewer, id 37501: keyboard-navigable strip with location tags). Adapted to Astro
-// + vanilla TS with CSS transitions (flex-grow / height), re-skinned: film rail in steel with sprocket holes, kit-style steel
-// spec tags, powder offset shadow on the picked frame. No JS: frame 1 is open, the rest show as half-height frames.
+// Our work hero, fix round 3 (D, RECHECK BLOCKER 2: the film rail with sprocket holes = Mike's /our-work OHero contact
+// sheet). New idea, THE TURNTABLE: real jobs from a Largo plumber on a steel turntable. Ten tiles stand in a ring on a
+// steel base: five of the crew's own job photos (no faces) and five ink spec tiles with facts that are on record (the
+// licence, the Instagram count with its read date, Largo as the base, Pinellas County, the handle). Scrolling turns the
+// ring (one tile per ~120 px), a drag or swipe spins it and it settles on the nearest tile, the arrow buttons and arrow
+// keys step it. The tile in front is named in the readout under the base.
+// 21st.dev: "Tweenly Curved Carousel" (@mirukullacode, id 39852: posters on a 3D cylinder, scrolling turns it card by card,
+// drag works too) + "3D Carousel" (@cult-ui, id 1529), adapted to CSS 3D (no three.js / WebGL) + vanilla TS, re-skinned:
+// Glass steel base with rivets, ink spec tiles like the kit plates, powder offset under the front tile.
+// Nearest match: Mike OHero (a flat film strip), Mike OWall / Khinda Work (a wall or tray of photos), Glass home RealWork
+// (a horizontal rail), Glass home Emergency (a wheel that turns on scroll, but it is a valve wheel with steps, not a ring
+// of photos). None is a 3D ring of tiles.
+// JS budget: one passive scroll listener that only runs while the hero is on screen (IntersectionObserver gate) and writes
+// one CSS variable per frame; no layout reads while scrolling. Reduced motion: no scroll turn, steps are instant.
+// No JS: the ring stands still with tile 1 in front, every caption is in the DOM (sr list).
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
 const ig = SITE.social.instagramStats;
-const shots = [
-  { img: 'manifold-install', alt: 'A manifold install with copper lines and valves inside an open wall panel', k: 'Recent install', v: 'Manifold, in the wall', focus: '50% 45%', tone: '#84B3C7' },
-  { img: 'van-night', alt: 'The Glass Plumbing Services van at night, the mascot and phone number on its side', k: 'The van', v: 'Glass Plumbing Services', focus: '45% 50%', tone: '#FDE7B8' },
-  { img: 'water-heater-expansion-tank', alt: 'A new water heater being installed in a closet, its expansion tank on the floor beside it, with the words “Floor Drain Built In” on the photo', k: 'Water heater', v: 'With expansion tank', focus: '50% 55%', tone: '#2F6178' },
-  { img: 'water-heater-tank-2', alt: 'A new tank water heater piped in copper, in a laundry closet', k: 'Tank water heater', v: 'Piped in copper', focus: '50% 30%', tone: '#C7CED1' },
+type Tile = { img?: string; alt?: string; focus?: string; k: string; v: string };
+const tiles: Tile[] = [
+  { img: 'manifold-install', alt: 'A manifold install with copper lines and valves inside an open wall panel', focus: '50% 45%', k: 'Recent install', v: 'Manifold, in the wall' },
+  { k: 'Based in', v: 'Largo, FL' },
+  { img: 'water-heater-expansion-tank', alt: 'A new water heater being installed in a closet, its expansion tank on the floor beside it', focus: '50% 55%', k: 'Water heater', v: 'With expansion tank' },
+  { k: 'FL licence', v: SITE.licence.number },
+  { img: 'van-night', alt: 'The Glass Plumbing Services van at night, the mascot and phone number on its side', focus: '30% 50%', k: 'The van', v: 'Lettered, on call 24/7' },
+  { k: 'On Instagram', v: `${ig.posts} posts · read ${ig.checked}` },
+  { img: 'water-heater-tank-2', alt: 'A new tank water heater piped in copper, in a laundry closet', focus: '50% 30%', k: 'Tank water heater', v: 'Piped in copper' },
+  { k: 'Works across', v: 'Pinellas County' },
+  { img: 'rough-in-plywood', alt: 'A tape measure on plywood checking a rough-in, with the words “Rough Plumbing Long Enough?” on the photo', focus: '50% 40%', k: 'Rough-in', v: 'Tape on the plywood' },
+  { k: 'Handle', v: SITE.social.instagramHandle },
 ];
-const pad = (n: number) => String(n).padStart(2, '0');
+const N = tiles.length;
 ---
-<section class="cx-sec cx-ink oh on-ink" data-m-section data-m-hero aria-labelledby="oh-h" data-oh style={`--tone:${shots[0].tone}`}>
+<section class="cx-sec cx-ink oh on-ink" data-m-section data-m-hero aria-labelledby="oh-h" data-oh>
   <div class="wrap">
     <div class="oh-top">
       <Eyebrow tone="light" class="oh-eb"><span class="d">From our Instagram · {SITE.social.instagramHandle}</span><span class="m">From our Instagram</span></Eyebrow>
       <h1 id="oh-h" class="cx-h oh-h" data-t="2">Recent Work <span class="tone">Across Pinellas</span></h1>
-      <p class="oh-lead lead" data-t="3" data-fx="nudge">Real jobs, real photos, straight from the van.</p>
-      <p class="oh-ig" data-t="3"><b>{ig.posts} posts</b> on Instagram<span class="oh-dot" aria-hidden="true">·</span><span class="oh-read">read {ig.checked}</span></p>
+      <p class="oh-lead lead" data-t="3" data-fx="nudge">Real jobs from a Largo plumber, photographed on the job. <span class="d">Scroll or drag to turn the table.</span><span class="m">Swipe to turn the table.</span></p>
     </div>
-    <div class="oh-sheet" data-t="4">
-      <div class="oh-rail" aria-hidden="true"><span class="oh-prog" data-oh-prog></span></div>
-      <ul class="oh-strip" role="list" aria-label="Recent job photos: pick one to open it">
-        {shots.map((s, i) => (
-          <li class:list={['oh-f', i === 0 && 'is-on']} data-oh-f style={`--tone:${s.tone}`}>
-            <button type="button" class="oh-b" aria-pressed={i === 0 ? 'true' : 'false'} data-oh-b>
-              <span class="sr-only">{`Photo ${i + 1} of ${shots.length}: ${s.k}, ${s.v}`}</span>
-              <span class="oh-ph"><Img name={s.img} alt="" focus={s.focus} sizes="(min-width: 1280px) 760px, (min-width: 768px) 60vw, 62vw" box={760 / 440} boxM={230 / 300} priority={i === 0} widths={[360, 540, 760, 1100, 1520]} /></span>
-            </button>
-            <p class="oh-tag" aria-hidden={i === 0 ? undefined : 'true'}><span class="oh-tk">{s.k}</span><span class="oh-tv">{s.v}</span></p>
-          </li>
-        ))}
+
+    <div class="oh-stage" data-t="4" data-fx="up" data-no-px data-oh-stage style={`--n:${N}`}>
+      <div class="oh-view" aria-hidden="true">
+        <div class="oh-ring" data-oh-ring>
+          {tiles.map((t, i) => (
+            <figure class:list={['oh-t', t.img ? 'oh-t--ph' : 'oh-t--spec']} style={`--i:${i}`}>
+              {t.img ? (
+                <>
+                  <span class="oh-ph"><Img name={t.img} alt="" focus={t.focus} sizes="(min-width: 768px) 270px, 150px" box={270 / 360} boxM={150 / 200} priority={i === 0} widths={[160, 300, 540]} draggable="false" /></span>
+                  <figcaption class="oh-cap"><span>{t.k}</span>{t.v}</figcaption>
+                </>
+              ) : (
+                <figcaption class="oh-spec"><i class="rv" /><i class="rv" /><span class="oh-sk">{t.k}</span><span class="oh-sv">{t.v}</span></figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+        <span class="oh-base"><i class="rv" /><i class="rv" /><i class="rv" /></span>
+      </div>
+      <ul class="sr-only" aria-label="On the turntable">
+        {tiles.map((t) => <li>{t.alt ? `${t.alt}. ` : ''}{t.k}: {t.v}</li>)}
       </ul>
+      <div class="oh-ctl">
+        <button type="button" class="oh-b" data-oh-step="-1" aria-label="Turn to the previous tile"><svg viewBox="0 0 20 16" width="18" height="14" aria-hidden="true"><path d="M19 8H1M8 15 1 8l7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+        <p class="oh-read" aria-live="polite"><span class="oh-rn" data-oh-n>01</span><span class="oh-rk" data-oh-k>{tiles[0].k}</span><span class="oh-rv" data-oh-v>{tiles[0].v}</span></p>
+        <button type="button" class="oh-b" data-oh-step="1" aria-label="Turn to the next tile"><svg viewBox="0 0 20 16" width="18" height="14" aria-hidden="true"><path d="M1 8h18M12 15l7-7-7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
+      </div>
       <a class="oh-more" href={SITE.social.instagram} target="_blank" rel="noopener">See the posts on Instagram <span aria-hidden="true">→</span><span class="sr-only"> (opens in a new tab)</span></a>
-      <p class="oh-count" aria-hidden="true"><span data-oh-n>01</span> / {pad(shots.length)}</p>
-      <p class="sr-only" aria-live="polite" data-oh-live></p>
+      <script type="application/json" data-oh-data set:html={JSON.stringify(tiles.map((t) => [t.k, t.v]))} />
     </div>
   </div>
 </section>
 <script>
-  document.querySelectorAll<HTMLElement>('[data-oh]').forEach((root) => {
-    const items = [...root.querySelectorAll<HTMLElement>('[data-oh-f]')];
-    const btns = items.map((li) => li.querySelector<HTMLButtonElement>('[data-oh-b]')!);
-    const n = root.querySelector<HTMLElement>('[data-oh-n]');
-    const prog = root.querySelector<HTMLElement>('[data-oh-prog]');
-    const live = root.querySelector<HTMLElement>('[data-oh-live]');
-    const pick = (i: number, focus = false) => {
-      items.forEach((li, j) => {
-        const on = j === i;
-        li.classList.toggle('is-on', on);
-        btns[j].setAttribute('aria-pressed', on ? 'true' : 'false');
-        const tag = li.querySelector('.oh-tag'); if (tag) on ? tag.removeAttribute('aria-hidden') : tag.setAttribute('aria-hidden', 'true');
-      });
-      root.style.setProperty('--tone', items[i].style.getPropertyValue('--tone'));
-      if (n) n.textContent = String(i + 1).padStart(2, '0');
-      if (prog) prog.style.setProperty('--p', String((i + 1) / items.length));
-      if (live) live.textContent = btns[i].querySelector('.sr-only')?.textContent || '';
-      if (focus) btns[i].focus();
+  // Angle model: a = step angle (picked tile, deg) + scroll turn + drag. One writer: the --a variable on the ring.
+  document.querySelectorAll<HTMLElement>('[data-oh-stage]').forEach((stage) => {
+    const ring = stage.querySelector<HTMLElement>('[data-oh-ring]')!;
+    const data: [string, string][] = JSON.parse(stage.querySelector('[data-oh-data]')!.textContent || '[]');
+    const N = data.length, STEP = 360 / N;
+    const nEl = stage.querySelector<HTMLElement>('[data-oh-n]')!, kEl = stage.querySelector<HTMLElement>('[data-oh-k]')!, vEl = stage.querySelector<HTMLElement>('[data-oh-v]')!;
+    const motion = document.documentElement.classList.contains('motion');
+    let base = 0, drag = 0, scrollA = 0, shown = 0, raf = 0, onScreen = false;
+    const front = () => { const a = base + drag + scrollA; return ((Math.round(-a / STEP) % N) + N) % N; };
+    const write = () => {
+      raf = 0;
+      ring.style.setProperty('--a', `${base + drag + scrollA}deg`);
+      const f = front();
+      if (f !== shown) { shown = f; nEl.textContent = String(f + 1).padStart(2, '0'); kEl.textContent = data[f][0]; vEl.textContent = data[f][1]; }
     };
-    btns.forEach((b, i) => {
-      b.addEventListener('click', () => pick(i));
-      b.addEventListener('keydown', (e) => {
-        const k = e.key; let t = -1;
-        if (k === 'ArrowRight' || k === 'ArrowDown') t = (i + 1) % btns.length;
-        else if (k === 'ArrowLeft' || k === 'ArrowUp') t = (i - 1 + btns.length) % btns.length;
-        else if (k === 'Home') t = 0; else if (k === 'End') t = btns.length - 1;
-        if (t >= 0) { e.preventDefault(); pick(t, true); }
-      });
+    const queue = () => { if (!raf) raf = requestAnimationFrame(write); };
+    const step = (d: number) => { base = Math.round((base + scrollA) / STEP) * STEP - scrollA - d * STEP; queue(); };
+    stage.querySelectorAll<HTMLButtonElement>('[data-oh-step]').forEach((b) => b.addEventListener('click', () => step(Number(b.dataset.ohStep))));
+    stage.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } });
+    // Drag / swipe the table (horizontal only; vertical moves keep scrolling the page).
+    const view = stage.querySelector<HTMLElement>('.oh-view')!;
+    let x0 = 0, y0 = 0, id = -1, horiz = false;
+    view.addEventListener('pointerdown', (e) => { if (e.button !== 0) return; id = e.pointerId; x0 = e.clientX; y0 = e.clientY; horiz = false; });
+    view.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== id) return;
+      const dx = e.clientX - x0, dy = e.clientY - y0;
+      if (!horiz) { if (Math.abs(dx) < 8) return; if (Math.abs(dy) > Math.abs(dx)) { id = -1; return; } horiz = true; view.setPointerCapture(id); ring.classList.add('is-drag'); }
+      drag = dx * 0.35; queue();
     });
-    // Swipe on phones: a horizontal drag over the strip moves one frame.
-    const strip = root.querySelector<HTMLElement>('.oh-strip');
-    let x0: number | null = null;
-    strip?.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
-    strip?.addEventListener('pointerup', (e) => {
-      if (x0 == null) return; const dx = e.clientX - x0; x0 = null;
-      if (Math.abs(dx) < 40) return;
-      const cur = items.findIndex((li) => li.classList.contains('is-on'));
-      pick(Math.min(items.length - 1, Math.max(0, cur + (dx < 0 ? 1 : -1))));
-    });
-    if (prog) prog.style.setProperty('--p', String(1 / items.length));
+    const up = (e: PointerEvent) => {
+      if (e.pointerId !== id) return; id = -1; ring.classList.remove('is-drag');
+      if (!horiz) return;
+      const a = base + drag + scrollA; base = Math.round(a / STEP) * STEP - scrollA; drag = 0; queue();
+    };
+    view.addEventListener('pointerup', up); view.addEventListener('pointercancel', up);
+    // Scroll turns the table while the hero is on screen (one tile per 120 px). Motion only.
+    if (motion && 'IntersectionObserver' in window) {
+      new IntersectionObserver((es) => { onScreen = es.some((x) => x.isIntersecting); }).observe(stage);
+      const onScroll = () => { if (!onScreen) return; scrollA = -(window.scrollY * STEP) / 120; queue(); };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+    stage.classList.add('is-js');
   });
 </script>
 <style>
-  .oh { padding: 76px 0 150px; overflow-x: clip; }
-  /* The band re-grades: a soft glow in the picked photo's tone behind the sheet (the band itself stays ink, so seams match). */
-  .oh-sheet::before { content: ''; position: absolute; inset: -80px -10% -40px; z-index: -1; background: radial-gradient(60% 60% at 40% 50%, var(--tone), transparent 70%); opacity: .55; transition: background .8s var(--ease-io); pointer-events: none; }
-  .oh-sheet { isolation: isolate; }
+  .oh { padding: 76px 0 110px; overflow-x: clip; }
   .oh-top { display: grid; justify-items: center; text-align: center; }
   .oh :global(.oh-eb) { margin-top: 0; justify-content: center; }
   .oh :global(.oh-eb .m) { display: none; }
   .oh-h { --fs: 76px; --fs-m: 40px; margin-top: 14px; line-height: 1.04; }
-  .oh-lead { margin-top: 16px; max-width: 560px; color: var(--white); }
-  .oh-ig { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; margin: 14px 0 0; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); font: 500 12px/16px var(--f-m); letter-spacing: .04em; color: var(--white); }
-  .oh-ig b { font-weight: 700; color: var(--powder); }
-  .oh-read { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; color: rgba(255,255,255,.8); }
-  .oh-dot { color: rgba(255,255,255,.5); }
+  .oh-lead { margin-top: 16px; max-width: 600px; color: var(--white); }
+  .oh-lead .m { display: none; }
 
-  /* The contact sheet: one film rail, frames hang from it (shared top edge). */
-  .oh-sheet { position: relative; margin-top: 40px; }
-  .oh-rail { position: relative; height: 22px; border-radius: 4px 4px 0 0; background: var(--steel);
-    background-image: radial-gradient(circle at 50% 50%, var(--ink) 0 3.5px, transparent 4px); background-size: 24px 22px; background-position: 6px 0;
-    box-shadow: inset 0 0 0 1.5px var(--steel2); }
-  .oh-prog { position: absolute; left: 0; bottom: -4px; height: 4px; width: calc(var(--p, .25) * 100%); background: var(--powder); transition: width .7s var(--ease-io); }
-  .oh-strip { display: flex; gap: 14px; height: 440px; margin: 0; padding: 0; list-style: none; align-items: flex-start; }
-  .oh-f { position: relative; flex: 1 1 0; min-width: 0; height: 58%; transition: flex-grow .8s var(--ease-io), height .8s var(--ease-io); }
-  .oh-f.is-on { flex-grow: 5.2; height: 100%; }
-  .oh-b { display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 0 0 6px 6px; background: none; cursor: pointer; }
+  /* The turntable: --R = ring radius, --w / --h = tile size. Tiles face outwards; their backs are hidden, so only the
+     front half of the ring shows. The steel base is the depth layer under the tiles. */
+  .oh-stage { --w: 270px; --h: 360px; --R: 450px; position: relative; margin-top: 30px; }
+  .oh-view { position: relative; height: calc(var(--h) + 150px); perspective: 1500px; perspective-origin: 50% 20%; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+  .oh-ring { --a: 0deg; position: absolute; left: 50%; top: 40px; width: var(--w); height: var(--h); margin-left: calc(var(--w) / -2); transform-style: preserve-3d;
+    transform: translateZ(calc(var(--R) * -1)) rotateX(-7deg) rotateY(var(--a)); transition: transform .9s var(--ease-io); z-index: 2; }
+  .oh-ring.is-drag { transition: none; }
+  .oh-stage.is-js .oh-ring { transition: transform .25s ease-out; }
+  .oh-t { position: absolute; inset: 0; margin: 0; transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--R)); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .oh-t--ph { border-radius: 6px; overflow: hidden; background: var(--ink2); box-shadow: inset 0 0 0 2px var(--white); }
+  .oh-ph { position: absolute; inset: 0; isolation: isolate; }
+  .oh-ph :global(.img) { position: absolute; inset: 0; z-index: -1; pointer-events: none; -webkit-user-drag: none; }
+  .oh-ph::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--white); border-radius: 6px; }
+  .oh-cap { position: absolute; left: 12px; right: 12px; bottom: 12px; display: grid; padding: 9px 11px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2);
+    font: 700 12px/15px var(--f-b); color: var(--ink); }
+  .oh-cap span { font: 500 10px/13px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: #3D4244; }
+  .oh-spec { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; padding: 22px 20px; border-radius: 6px;
+    background: var(--ink2); box-shadow: inset 0 0 0 2px var(--powder); color: var(--white); }
+  .oh-sk { font: 700 11px/15px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .oh-sv { font: 800 28px/1.08 var(--f-h); letter-spacing: -.02em; overflow-wrap: anywhere; }
+  .oh-spec .rv { position: absolute; top: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--steel2); }
+  .oh-spec .rv:first-child { left: 12px; } .oh-spec .rv:nth-child(2) { right: 12px; }
+  .oh-base { position: absolute; left: 50%; bottom: 12px; z-index: 1; width: calc(var(--R) * 2.15); height: 120px; translate: -50% 0; border: 2px solid var(--ink); border-radius: 50%;
+    background: radial-gradient(60% 55% at 50% 40%, #E3E8EA, var(--steel) 55%, var(--steel2)); box-shadow: 0 14px 0 var(--powder); }
+  .oh-base .rv { position: absolute; top: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--ink3); }
+  .oh-base .rv:nth-child(1) { left: 8%; } .oh-base .rv:nth-child(2) { left: 50%; top: 82%; } .oh-base .rv:nth-child(3) { right: 8%; }
+
+  .oh-ctl { display: flex; align-items: center; justify-content: center; gap: 22px; margin-top: 34px; }
+  .oh-b { display: grid; place-items: center; width: 52px; height: 52px; border: 1.5px solid rgb(255 255 255 / .5); border-radius: 50%; background: transparent; color: var(--white); cursor: pointer;
+    transition: background-color .35s var(--ease-io), color .35s var(--ease-io), border-color .35s var(--ease-io); }
+  .oh-b:hover { background: var(--powder); border-color: var(--powder); color: var(--ink); }
   .oh-b:focus-visible { outline: 3px solid var(--powder); outline-offset: 3px; }
-  .oh-ph { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; border-radius: 0 0 6px 6px; box-shadow: inset 0 0 0 2px var(--white); transition: box-shadow .8s var(--ease-io), filter .6s var(--ease-io); }
-  .oh-ph :global(.img) { position: absolute; inset: 0; z-index: -1; }
-  .oh-ph { isolation: isolate; }
-  .oh-f:not(.is-on) .oh-ph { filter: saturate(.55) brightness(.8); }
-  .oh-f:not(.is-on):hover .oh-ph { filter: none; }
-  .oh-f.is-on .oh-ph { box-shadow: inset 0 0 0 2px var(--white), 12px 12px 0 var(--powder); overflow: hidden; }
-  .oh-tag { position: absolute; left: 18px; bottom: 18px; display: grid; grid-template-columns: auto 1fr; column-gap: 16px; margin: 0; padding: 10px 12px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2);
-    font: 700 11px/14px var(--f-m); letter-spacing: .04em; color: var(--ink); white-space: nowrap; pointer-events: none;
-    opacity: 0; translate: -10px 0; transition: opacity .45s var(--ease-io), translate .45s var(--ease-io); }
-  .oh-tk { font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: #3D4244; }
-  .oh-f.is-on .oh-tag { opacity: 1; translate: 0 0; transition-delay: .35s; }
-  .oh-count { position: absolute; right: 0; bottom: -34px; margin: 0; font: 700 12px/16px var(--f-m); letter-spacing: .1em; color: var(--powder); }
-  .oh-more { position: absolute; left: 0; bottom: -44px; display: inline-flex; align-items: center; min-height: 44px; font: 700 15px/1 var(--f-b); color: var(--white); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--powder); }
+  .oh-read { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: baseline; min-width: 260px; margin: 0; text-align: left; }
+  .oh-rn { grid-row: span 2; font: 800 34px/1 var(--f-h); color: var(--powder); }
+  .oh-rk { font: 500 11px/15px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: rgb(255 255 255 / .8); }
+  .oh-rv { font: 700 16px/1.3 var(--f-b); color: var(--white); }
+  .oh-stage:not(.is-js) .oh-ctl { display: none; }
+  .oh-more { display: flex; justify-content: center; align-items: center; gap: 6px; width: max-content; min-height: 44px; margin: 14px auto 0; font: 700 15px/1 var(--f-b); color: var(--white); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--powder); }
   .oh-more:hover { color: var(--powder); }
-  @media (prefers-reduced-motion: reduce) { .oh, .oh-f, .oh-ph, .oh-tag, .oh-prog { transition: none !important; } }
-  @media (min-width: 768px) and (max-width: 1279px) { .oh-strip { height: 380px; } }
+  :global(html:not(.motion)) .oh-ring { transition: none !important; }
+
+  @media (min-width: 768px) and (max-width: 1279px) { .oh-stage { --w: 210px; --h: 280px; --R: 350px; } }
   @media (max-width: 767px) {
     .oh { padding: 44px 0 64px; }
     .oh :global(.oh-eb .d) { display: none; } .oh :global(.oh-eb .m) { display: inline; }
     .oh-h { margin-top: 10px; line-height: 1.02; }
     .oh-h .tone { display: block; }
     .oh-lead { margin-top: 12px; font-size: 16px; }
-    .oh-ig { font-size: 11px; }
-    .oh-sheet { margin-top: 26px; }
-    .oh-strip { gap: 8px; height: 320px; touch-action: pan-y; }
-    .oh-f.is-on { flex-grow: 6; }
-    .oh-f.is-on .oh-ph { box-shadow: inset 0 0 0 2px var(--white), 7px 7px 0 var(--powder); }
-    .oh-tag { left: 10px; right: 10px; bottom: 10px; grid-template-columns: 1fr; white-space: normal; font-size: 10px; line-height: 13px; }
-    .oh-count { bottom: -30px; }
+    .oh-lead .d { display: none; } .oh-lead .m { display: inline; }
+    .oh-stage { --w: 150px; --h: 200px; --R: 236px; margin-top: 14px; }
+    .oh-view { height: calc(var(--h) + 104px); perspective: 900px; }
+    .oh-ring { top: 26px; }
+    .oh-cap { left: 7px; right: 7px; bottom: 7px; padding: 6px 7px; font-size: 11px; line-height: 13px; }
+    .oh-cap span { font-size: 9px; line-height: 11px; }
+    .oh-spec { padding: 14px 12px; gap: 5px; }
+    .oh-sk { font-size: 9px; line-height: 12px; }
+    .oh-sv { font-size: 18px; }
+    .oh-base { height: 76px; bottom: 6px; box-shadow: 0 8px 0 var(--powder); }
+    .oh-ctl { gap: 12px; margin-top: 20px; }
+    .oh-read { min-width: 0; flex: 1; }
+    .oh-rn { font-size: 26px; }
+    .oh-rv { font-size: 14px; }
+    .oh-b { width: 48px; height: 48px; flex: none; }
   }
 </style>

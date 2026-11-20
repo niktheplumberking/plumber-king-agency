@@ -1,7 +1,8 @@
 ---
 // Reviews hero, round 2 (Nick 20 Nov: "pretty empty", breadcrumb must go). Proof at first sight: the two Google profiles as
 // steel meters (5.0 / 104 and 5.0 / 77, read 17 Nov 2026, never summed) + a hand-dealt stack of five real review slips,
-// word for word, over a crew photo. Tap "Next review", press an arrow key or drag the top slip to deal it to the back.
+// word for word, over a job photo (fix R3 D1: was a single crew face under slips naming Kody/Zach; now the finished
+// shower from the Instagram, no face anywhere in the hero). Tap "Next review", press an arrow key or drag the top slip to deal it to the back.
 // 21st.dev refs: "Card Stack" (manuarora700) + "Hero Section with Cards" (scrollxui), adapted to vanilla TS, re-skinned as
 // paper slips on Glass's steel/powder system. No breadcrumb on the page (BreadcrumbList JSON-LD only, in reviews.astro).
 // Without JS: the stack is a static fan (top slip readable), button hidden. Reduced motion: dealing is instant.
@@ -45,7 +46,7 @@ const slips = PICK.map((n) => { const r = REVIEWS.find((x) => x.name === n); if 
 
     <div class="rh-deck" data-deck data-t="4" data-fx="scale">
       <figure class="rh-ph" aria-hidden="true">
-        <Img name="crew-selfie" alt="" sizes="(min-width: 1280px) 300px, (min-width: 768px) 34vw, 46vw" focus="50% 66%" box={270 / 230} boxM={170 / 150} />
+        <Img name="shower-remodel" alt="" sizes="(min-width: 1280px) 300px, (min-width: 768px) 34vw, 46vw" focus="50% 58%" box={270 / 230} boxM={170 / 150} />
       </figure>
       <ol class="rh-slips" role="list" aria-label="Five Google reviews, newest first" data-deck-list>
         {slips.map((r, i) => (

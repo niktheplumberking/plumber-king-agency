@@ -140,7 +140,7 @@ const lic = SITE.licence;
     .ft-brand :global(.ft-plate) { margin-top: 0; max-width: 380px; }
   }
   /* Room for the fixed call bar (MobileCallBar, < 1024 px) under the bumper, as in the Figma mobile frames. */
-  @media (max-width: 1023px) { .ft-bar { padding-bottom: calc(76px + env(safe-area-inset-bottom)); } }
+  @media (max-width: 1023px) { .ft-bar { padding-bottom: calc(92px + env(safe-area-inset-bottom)); } }
   @media (max-width: 767px) {
     .ft { box-shadow: inset 0 8px 0 var(--powder); }
     .ft-in { padding: 40px 0 40px; }
@@ -164,8 +164,11 @@ const lic = SITE.licence;
     .ft-pm::after { transform: rotate(90deg); }
     .ft-tog[aria-expanded='true'] .ft-pm::after { transform: rotate(0); }
     .ft-list { margin: 0; padding: 0 0 16px; }
-    .ft-list li + li { margin-top: 4px; }
-    .ft-list a { padding: 8px 0; margin: -4px 0; }
+    /* R3 hit areas (fixer E, RECHECK axe at 390): each link is itself a 44 px row, so the target no longer relies on a
+       pseudo box that the next link overlaps. */
+    .ft-list li + li { margin-top: 0; }
+    .ft-list a { display: flex; align-items: center; min-height: 44px; padding: 0; margin: 0; }
+    .ft-list a::after { bottom: 8px; }
     /* Closed by default once JS runs (ui.ts); without JS every list stays open. */
     :global(html.js) .ft-col:not(.is-open) .ft-list { display: none; }
     .ft-off { min-height: 60px; margin-top: 32px; gap: 12px; font-size: 14px; }

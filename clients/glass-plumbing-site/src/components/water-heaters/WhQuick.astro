@@ -1,144 +1,151 @@
 ---
-// Quick answer, R2 rebuild (Nick 20 Nov: no text-left / plate-right slop; every section answers the visitor).
-// "One question decides": a centred head, then a symmetric console: REPAIR verdict | the tank | REPLACE verdict. A two-way
-// switch above the tank ("The tank is dry" / "The tank itself leaks") lights one verdict and dims the other; the tank
-// drains to a puddle when it leaks. The full quick answer stays as one readable paragraph under the console (AI-overview
-// text, with its source), and the Job facts plate is pinned over the console's corner (depth layer).
-// 21st.dev: "Segmented Control" (ddoemonn, id 23552: radio group, sliding thumb, arrow keys) + "Two-Plan Diff Pricing
-// Comparison Table" (dhxwhy, id 37513: A/B pick that lights the winning column), re-skinned: housing tank, steel plate,
-// powder offset shadow. No JS: both verdicts read fully lit; the switch is a real radio group that works by keyboard.
-import Plate from '../kit/Plate.astro';
+// Quick answer, fix round 3 (E, RECHECK MAJOR 3: the "tank is dry / tank leaks" two-way switch with REPAIR | tank |
+// REPLACE verdicts read like Mike's RepairInstall). New idea, SORT THE SYMPTOMS: the visitor's symptom is a chip on the
+// bench; tap it and it slides (FLIP) into the pile it usually belongs to (Usually a repair / It depends / Usually a
+// replacement), turning over to show why. Three steel trays, symmetric, the "it depends" pile in the middle because that
+// is the honest answer for two of them. Copy per symptom is the page's own Problems copy (WhProblems), hedged "usually /
+// often"; the full quick answer stays as one readable paragraph under the trays (AI-overview text, with its source).
+// 21st.dev: diceui "Kanban" (cards that move between columns, keyboard operable) + ddoemonn "Reorder List" (FLIP card
+// motion), rebuilt in vanilla TS (tap / Enter instead of drag), re-skinned with Glass steel trays, ink chips, powder shadow.
+// No JS: every chip shows its pile and reason in place on the bench; reduced motion: chips move without the slide.
 import Eyebrow from '../kit/Eyebrow.astro';
-import { SITE } from '../../data/site';
+const C = [
+  { t: 'No hot water', p: 'rep', w: 'Element, pilot or thermostat. Often a part, not the tank.' },
+  { t: 'Rusty water', p: 'rep', w: 'Often the anode rod is used up.' },
+  { t: 'Runs out fast', p: 'dep', w: 'A failing element, or a tank too small for the house.' },
+  { t: 'Relief valve dripping', p: 'rep', w: 'A safety part. For a licensed plumber.' },
+  { t: 'Rumbling and popping', p: 'dep', w: 'Scale at the bottom. Pinellas water is hard.' },
+  { t: 'The tank itself leaks', p: 'rpl', w: 'If the tank shell leaks, it usually needs replacing.' },
+];
+const P = [
+  { k: 'rep', l: 'Usually a repair' },
+  { k: 'dep', l: 'It depends' },
+  { k: 'rpl', l: 'Usually a replacement' },
+];
 ---
-<section class="qa" data-m-section data-qa>
+<section class="qa" data-m-section data-qs aria-labelledby="qa-h">
   <div class="wrap">
     <div class="qa-top">
-      <Eyebrow text="Quick answer · repair or replace?" />
-      <h2 class="h2 qa-h" data-t="2" style="--h2:52px;--h2m:30px">Repair or replace?<br /><span class="tone">One question usually decides.</span></h2>
+      <Eyebrow text="Quick answer · repair or replace" />
+      <h2 class="h2 qa-h" id="qa-h" data-t="2" style="--h2:52px;--h2m:30px">Sort your symptom.<br /><span class="tone">See which pile it lands in.</span></h2>
+      <p class="qa-lead" data-t="3">Tap what your heater is doing.</p>
     </div>
-    <div class="qa-con" data-t="4">
-      <div class="qa-v qa-rep" data-qa-v="dry">
-        <p class="qa-vk">Verdict A</p>
-        <p class="qa-vt">Repair it</p>
-        <p class="qa-vd">The tank is dry and the problem is usually a part, like an element, thermostat or valve.</p>
-      </div>
-      <div class="qa-mid">
-        <fieldset class="qa-sw" data-qa-sw>
-          <legend class="sr-only">Is the tank itself leaking?</legend>
-          <span class="qa-thumb" aria-hidden="true"></span>
-          <label><input type="radio" name="qa-tank" value="dry" checked /><span>The tank is dry</span></label>
-          <label><input type="radio" name="qa-tank" value="leak" /><span>The tank itself leaks</span></label>
-        </fieldset>
-        <svg class="qa-tank" viewBox="0 0 220 300" aria-hidden="true" focusable="false">
-          <rect x="84" y="2" width="52" height="12" rx="2" fill="var(--ink)" />
-          <rect x="34" y="12" width="152" height="22" rx="4" fill="var(--ink)" />
-          <path d="M40 32h140v196a28 28 0 0 1-28 28H68a28 28 0 0 1-28-28Z" fill="var(--white)" />
-          <g clip-path="url(#qa-clip)"><rect class="qa-water" x="40" y="70" width="140" height="190" fill="var(--powder)" /><rect class="qa-men" x="42" y="70" width="136" height="3" fill="#fff" opacity=".7" /></g>
-          <clipPath id="qa-clip"><path d="M40 32h140v196a28 28 0 0 1-28 28H68a28 28 0 0 1-28-28Z" /></clipPath>
-          <rect x="58" y="48" width="7" height="170" rx="3.5" fill="#fff" opacity=".8" />
-          <path d="M40 32h140v196a28 28 0 0 1-28 28H68a28 28 0 0 1-28-28Z" fill="none" stroke="var(--ink)" stroke-width="3" />
-          <g class="qa-crack"><path d="M150 176l8 10-6 8 9 11" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" /></g>
-          <g class="qa-drops" fill="var(--pdeep)"><circle cx="162" cy="214" r="4" /><circle cx="168" cy="236" r="3.4" /><circle cx="158" cy="252" r="3" /></g>
-          <ellipse class="qa-pud" cx="128" cy="286" rx="78" ry="9" fill="var(--powder)" />
-          <rect x="30" y="262" width="160" height="12" rx="3" fill="var(--steel2)" />
-        </svg>
-      </div>
-      <div class="qa-v qa-rpl" data-qa-v="leak">
-        <p class="qa-vk">Verdict B</p>
-        <p class="qa-vt">Replace it</p>
-        <p class="qa-vd">The tank itself leaks. A replacement usually needs a permit; which office depends on your address.</p>
-      </div>
-      <div class="qa-pl">
-        <Plate class="d" title="Job facts · water heater" pad={20} size={12} tsize={13} kx={130} pitch={21} t={false} shadow="ink"
-          rows={[['Permit', 'Usually; office depends on address'], ['Type', 'Tank or tankless'], ['Brands seen', 'State, Rinnai (from his posts)'], ['Done by', `Licensed plumber, ${SITE.licence.number}`], ['Often', 'Next day (from reviews)']]} />
-        <Plate class="m" title="Job facts" pad={16} size={11} tsize={12} kx={106} pitch={21} t={false}
-          rows={[['Permit', 'Usually, by address'], ['Type', 'Tank or tankless'], ['Brands', 'State, Rinnai'], ['Done by', `Licensed, ${SITE.licence.number}`]]} />
-      </div>
+    <div class="qs-bench" data-t="4">
+      <p class="qs-bl" aria-hidden="true">On the bench</p>
+      <ul class="qs-chips" role="list" data-qs-bench>
+        {C.map((c) => (
+          <li class="qs-it" data-p={c.p}>
+            <button type="button" class="qs-c" aria-expanded="false">
+              <span class="qs-t">{c.t}</span>
+              <span class="qs-w"><b>{P.find((p) => p.k === c.p)!.l}.</b> {c.w}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
+    <div class="qs-trays" data-t="4">
+      {P.map((p) => (
+        <div class:list={['qs-tray', `qs-${p.k}`]}>
+          <i class="qs-rv" aria-hidden="true"></i><i class="qs-rv" aria-hidden="true"></i>
+          <h3 class="qs-tl">{p.l}</h3>
+          <ul class="qs-pile" role="list" data-qs-pile={p.k} aria-live="polite"></ul>
+        </div>
+      ))}
+    </div>
+    <p class="qs-reset-w"><button type="button" class="qs-reset" data-qs-reset hidden>Put them back on the bench</button></p>
     <div class="qa-ans" data-t="3">
       <p class="qa-a">If the tank is dry and the problem is a part, like an element, thermostat or valve, a repair is usually enough. A tank that leaks usually needs replacing. A replacement usually needs a permit: Pinellas County lists a “Water Heater Equal Change Out, Tank or Tankless” express permit for unincorporated areas, and Clearwater requires water heater permits. In Largo or another city, check with the city’s permit office.</p>
       <p class="qa-src"><span class="d">Source: pinellas.gov express permits · myclearwater.com, read 17 Nov 2026</span><span class="m">Source: pinellas.gov, read 17 Nov 2026</span></p>
     </div>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-qs]').forEach((root) => {
+    root.classList.add('qs-js');
+    const bench = root.querySelector<HTMLElement>('[data-qs-bench]')!;
+    const reset = root.querySelector<HTMLButtonElement>('[data-qs-reset]')!;
+    const items = [...root.querySelectorAll<HTMLElement>('.qs-it')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // FLIP: measure, move in the DOM, measure again, play the difference (only on a tap, never on scroll).
+    const move = (it: HTMLElement, to: HTMLElement) => {
+      const a = it.getBoundingClientRect();
+      to.appendChild(it);
+      if (still) return;
+      const b = it.getBoundingClientRect();
+      it.animate([{ translate: `${a.left - b.left}px ${a.top - b.top}px`, rotate: '-3deg' }, { translate: '0 0', rotate: '0deg' }], { duration: 650, easing: 'cubic-bezier(.65,0,.35,1)' });
+    };
+    items.forEach((it) => {
+      const b = it.querySelector<HTMLButtonElement>('.qs-c')!;
+      b.addEventListener('click', () => {
+        if (it.parentElement === bench) {
+          move(it, root.querySelector<HTMLElement>(`[data-qs-pile="${it.dataset.p}"]`)!);
+          b.setAttribute('aria-expanded', 'true'); it.classList.add('is-in');
+          reset.hidden = false; b.focus();
+        }
+      });
+    });
+    reset.addEventListener('click', () => {
+      items.forEach((it) => { if (it.parentElement !== bench) { move(it, bench); it.classList.remove('is-in'); it.querySelector('.qs-c')!.setAttribute('aria-expanded', 'false'); } });
+      reset.hidden = true; items[0].querySelector<HTMLButtonElement>('.qs-c')!.focus();
+    });
+  });
+</script>
+
 <style>
   .qa { background: var(--frost); padding: 100px 0 110px; }
   .qa-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .qa-h { margin-top: 16px; }
-
-  .qa-con { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 360px minmax(0, 1fr); align-items: center; gap: 32px; margin-top: 52px; padding: 40px 40px 72px; border-radius: 8px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 12px 12px 0 var(--powder); }
-  .qa-v { padding: 28px 26px 30px; border-radius: 6px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--frost3); transition: background-color .6s var(--ease-io), color .6s var(--ease-io), box-shadow .6s var(--ease-io), opacity .6s var(--ease-io), scale .6s var(--ease-io); }
-  .qa-vk { font: 700 10px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); transition: color .6s var(--ease-io); }
-  .qa-vt { margin-top: 14px; font: 800 40px/1 var(--f-h); letter-spacing: -.025em; }
-  .qa-vd { margin-top: 14px; font-size: 16px; line-height: 1.5; }
-  .qa-v.is-on { background: var(--ink); color: var(--white); box-shadow: 8px 8px 0 var(--powder); }
-  .qa-v.is-on .qa-vk { color: var(--powder); }
-  .qa-v { position: relative; cursor: pointer; }
-  .qa-v::after { content: ''; position: absolute; inset: 0; border-radius: 6px; background: var(--frost); opacity: 0; pointer-events: none; transition: opacity .6s var(--ease-io); }
-  .qa-v.is-off { scale: .97; }
-  .qa-v.is-off::after { opacity: .5; }
-  .qa-mid { display: flex; flex-direction: column; align-items: center; gap: 22px; }
-
-  .qa-sw { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin: 0; padding: 4px; border: 0; border-radius: 26px; background: var(--frost); box-shadow: inset 0 0 0 1.2px var(--ink); }
-  .qa-thumb { position: absolute; top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 22px; background: var(--ink); transition: translate .55s var(--ease-io); }
-  .qa-sw:has(input[value='leak']:checked) .qa-thumb { translate: 100% 0; }
-  .qa-sw label { position: relative; z-index: 1; display: grid; place-items: center; min-height: 44px; padding: 0 10px; border-radius: 22px; cursor: pointer; text-align: center; }
-  .qa-sw input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .qa-sw span { font: 600 13px/1.2 var(--f-b); color: var(--ink); transition: color .45s var(--ease-io); }
-  .qa-sw input:checked + span { color: var(--white); }
-  .qa-sw label:has(input:focus-visible) { outline: 3px solid var(--pdeep); outline-offset: 2px; }
-
-  .qa-tank { width: 220px; height: 300px; overflow: visible; }
-  .qa-water, .qa-men { transition: translate .9s var(--ease-io); }
-  .qa-crack, .qa-drops, .qa-pud { opacity: 0; transition: opacity .5s var(--ease-io), translate .7s var(--ease-io), scale .9s var(--ease-io); }
-  .qa-drops { translate: 0 -10px; }
-  .qa-pud { scale: .2 1; transform-origin: 160px 286px; transform-box: view-box; }
-  .qa[data-st='leak'] .qa-water, .qa[data-st='leak'] .qa-men { translate: 0 110px; }
-  .qa[data-st='leak'] .qa-crack { opacity: 1; }
-  .qa[data-st='leak'] .qa-drops { opacity: 1; translate: 0 0; transition-delay: .2s; }
-  .qa[data-st='leak'] .qa-pud { opacity: .9; scale: 1 1; transition-delay: .35s; }
-
-  .qa-pl { position: absolute; right: 36px; bottom: -40px; rotate: 1.5deg; }
-  .qa-pl :global(.m) { display: none; }
-  .qa-ans { max-width: 820px; margin: 88px auto 0; text-align: center; }
+  .qa-lead { margin-top: 16px; font-size: 17px; color: var(--muted); }
+  .qs-bench { position: relative; max-width: 1000px; margin: 40px auto 0; padding: 26px 24px 22px; border-radius: 8px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 8px 8px 0 var(--powder); }
+  .qs-bl { position: absolute; left: 22px; top: -11px; padding: 3px 10px; border-radius: 4px; background: var(--ink); color: var(--white); font: 700 10px/1.3 var(--f-m); letter-spacing: .1em; text-transform: uppercase; }
+  .qs-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; min-height: 52px; margin: 0; padding: 0; list-style: none; }
+  .qs-js .qs-chips:empty::after { content: 'All sorted.'; align-self: center; font: 700 13px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .qs-it { display: flex; }
+  .qs-c { display: grid; gap: 6px; min-height: 48px; padding: 12px 18px; border: 0; border-radius: 24px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); font: 700 15px/1.2 var(--f-b); text-align: left; cursor: pointer;
+    transition: background-color .45s var(--ease-io), color .45s var(--ease-io), box-shadow .45s var(--ease-io), border-radius .45s var(--ease-io); }
+  .qs-c:hover { box-shadow: inset 0 0 0 2px var(--pdeep), 4px 4px 0 var(--powder); }
+  .qs-c:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .qs-w { display: block; font: 500 13px/1.45 var(--f-b); }
+  .qs-w b { font-weight: 800; }
+  .qs-js .qs-chips .qs-w { display: none; }
+  .qs-js .qs-chips .qs-c::after { content: 'Tap to sort'; font: 500 10px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .qs-pile .qs-it, .qs-pile .qs-c { width: 100%; }
+  .qs-pile .qs-c { border-radius: 6px; cursor: default; background: var(--ink); color: var(--white); box-shadow: 4px 4px 0 var(--powder); }
+  .qs-pile .qs-w b { display: none; }
+  /* Three trays, symmetric. */
+  .qs-trays { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; max-width: 1000px; margin: 30px auto 0; }
+  .qs-tray { position: relative; min-height: 160px; padding: 22px 18px 20px; border-radius: 6px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2), inset 0 10px 0 rgb(22 19 15 / .06); }
+  .qs-rv { position: absolute; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .qs-rv:nth-of-type(1) { left: 8px; } .qs-rv:nth-of-type(2) { right: 8px; }
+  .qs-tl { padding-bottom: 10px; border-bottom: 1.5px dashed rgb(22 19 15 / .35); font: 800 20px/1.1 var(--f-h); letter-spacing: -.01em; text-align: center; color: var(--ink); }
+  .qs-dep .qs-tl { color: var(--ink); }
+  .qs-rpl .qs-tl::before, .qs-rep .qs-tl::before, .qs-dep .qs-tl::before { content: ''; display: block; width: 26px; height: 6px; margin: 0 auto 10px; border-radius: 3px; background: var(--powder); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .qs-dep .qs-tl::before { background: var(--cream); } .qs-rpl .qs-tl::before { background: var(--pdeep); }
+  .qs-pile { display: grid; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+  .qs-reset-w { display: flex; justify-content: center; min-height: 44px; margin-top: 18px; }
+  .qs-reset { min-height: 44px; padding: 0 18px; border: 0; border-radius: 22px; background: none; box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); font: 700 14px/1 var(--f-b); cursor: pointer; }
+  .qs-reset[hidden] { display: none; }
+  .qs-reset:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .qa-ans { max-width: 820px; margin: 40px auto 0; text-align: center; }
   .qa-a { font-weight: 500; font-size: 19px; line-height: 1.55; }
   .qa-src { margin-top: 16px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .02em; color: var(--muted); }
-
-  @media (max-width: 1279px) {
-    .qa-con { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 32px 28px 64px; }
-    .qa-mid { grid-column: 1 / -1; grid-row: 1; }
-    .qa-pl { position: static; grid-column: 1 / -1; justify-self: end; rotate: 0deg; }
-    .qa-ans { margin-top: 56px; }
-  }
+  .qa-src .m { display: none; }
+  @media (prefers-reduced-motion: reduce) { .qs-c { transition: none; } }
   @media (max-width: 767px) {
     .qa { padding: 56px 0 64px; }
     .qa-h { margin-top: 10px; }
-    .qa-con { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 28px; padding: 20px 16px 22px; box-shadow: inset 0 0 0 1.5px var(--ink), 8px 8px 0 var(--powder); }
-    .qa-tank { width: 150px; height: 205px; }
-    .qa-v { padding: 16px 16px 18px; }
-    .qa-vt { margin-top: 8px; font-size: 26px; }
-    .qa-vd { margin-top: 8px; font-size: 14px; }
-    .qa-v.is-on { box-shadow: 6px 6px 0 var(--powder); }
-    .qa-pl { justify-self: start; margin-top: 8px; }
-    .qa-pl :global(.d) { display: none; } .qa-pl :global(.m) { display: block; }
-    .qa-sw span { font-size: 12px; }
-    .qa-ans { margin-top: 36px; text-align: left; }
+    .qa-lead { font-size: 15px; }
+    .qs-bench { margin-top: 28px; padding: 22px 12px 14px; box-shadow: inset 0 0 0 1.5px var(--ink), 5px 5px 0 var(--powder); }
+    .qs-chips { gap: 8px; }
+    .qs-c { padding: 10px 14px; font-size: 14px; }
+    .qs-trays { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 22px; }
+    .qs-tray { min-height: 0; padding: 18px 12px 14px; }
+    .qs-js .qs-pile:empty { min-height: 24px; }
+    .qs-tl { font-size: 17px; }
+    .qa-ans { margin-top: 28px; text-align: left; }
     .qa-a { font-size: 16px; }
     .qa-src { font-size: 9px; line-height: 12px; }
+    .qa-src .d { display: none; } .qa-src .m { display: inline; }
   }
 </style>
-<script>
-  const root = document.querySelector<HTMLElement>('[data-qa]');
-  if (root) {
-    const vs = [...root.querySelectorAll<HTMLElement>('[data-qa-v]')];
-    const set = (v: string) => {
-      root.dataset.st = v;
-      vs.forEach((el) => { const on = el.dataset.qaV === v; el.classList.toggle('is-on', on); el.classList.toggle('is-off', !on); });
-    };
-    root.querySelectorAll<HTMLInputElement>('input[name="qa-tank"]').forEach((i) => i.addEventListener('change', () => i.checked && set(i.value)));
-    // A verdict card is also a target: clicking it flips the switch.
-    vs.forEach((el) => el.addEventListener('click', () => { const i = root.querySelector<HTMLInputElement>(`input[value="${el.dataset.qaV}"]`)!; i.checked = true; set(i.value); }));
-    set('dry');
-  }
-</script>

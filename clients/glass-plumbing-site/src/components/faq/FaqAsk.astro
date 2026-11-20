@@ -5,7 +5,7 @@
 // not set (preview) -> straight to /thank-you, nothing leaves the browser. forms.ts needs a name field this box does not
 // have, so the box has its own small submit script with the same rule (lib/form.ts).
 // R2 polish (Nick praised the questions; rule 17 + 15): the head is centred, and a text-message bubble pinned over the
-// box's corner shows the question as Kody will get it, live as you type (21st.dev "Chat bubble / message preview" idea,
+// box's corner shows the question as it will arrive, live as you type (21st.dev "Chat bubble / message preview" idea,
 // re-skinned as an SMS slip with the powder offset). The bubble is aria-hidden: the field itself is the real content.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
@@ -19,7 +19,7 @@ import { SITE } from '../../data/site';
     </div>
     <div class="fa-wrap">
     <div class="fa-sms" aria-hidden="true" data-ask-sms>
-      <p class="fa-to">To Kody · {SITE.phone}</p>
+      <p class="fa-to">To Glass Plumbing · {SITE.phone}</p>
       <p class="fa-bub" data-ask-bub data-empty="Your question shows up here, as a text."></p>
     </div>
     <form class="fa-box" data-ask novalidate data-t="3" data-fx="frame" enctype="multipart/form-data">
@@ -33,7 +33,7 @@ import { SITE } from '../../data/site';
           <span data-ask-photo-label>+ Add a photo</span>
         </label>
         <button type="submit" class="fa-send" aria-disabled="true" aria-describedby="fa-hint">
-          <span>Send to Kody</span>
+          <span>Send the question</span>
           <svg width="14" height="12" viewBox="0 0 14 12" aria-hidden="true"><path d="M.9 5.9h12M7.9 10.9l5-5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>

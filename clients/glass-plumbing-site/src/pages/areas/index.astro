@@ -2,11 +2,10 @@
 // /areas (Figma 721:525 desktop / 722:445 mobile): every section between the emergency strip and the footer.
 // SEO-PLAN: title "Plumber Serving Pinellas County · Glass Plumbing", H1 = the Figma H1. BreadcrumbList (Breadcrumbs.astro)
 // and FAQPage (AreasFaq.astro, the three visible texts) are emitted by their components.
-// R2 (20 Nov): "One base" and "Towns grouped" merged into one map locator (AreasBase); Distance rebuilt as a radius dial.
+// R2 (20 Nov): "One base" and "Towns grouped" merged into one map locator (AreasBase); R3 (E): the Distance slider is gone (it repeated the 20 towns + miles right under the locator); AreasBase keeps the one full list.
 import Base from '../../layouts/Base.astro';
 import AreasHero from '../../components/areas/AreasHero.astro';
 import AreasBase from '../../components/areas/AreasBase.astro';
-import AreasDistance from '../../components/areas/AreasDistance.astro';
 import AreasFacts from '../../components/areas/AreasFacts.astro';
 import AreasReviews from '../../components/areas/AreasReviews.astro';
 import AreasFaq from '../../components/areas/AreasFaq.astro';
@@ -18,7 +17,6 @@ import TownsStrip from '../../components/global/TownsStrip.astro';
   path="/areas" og="van-night" ogAlt="The Glass Plumbing Services van at night with the phone number on its side" estimate="#estimate">
   <AreasHero />
   <AreasBase />
-  <AreasDistance />
   <AreasFacts />
   <AreasReviews />
   <AreasFaq />

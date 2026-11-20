@@ -7,8 +7,10 @@
 // page that only covers unincorporated Pinellas. Now, per research LOCAL-FACTS section 3 (read 17 Nov 2026):
 //   unincorporated -> Pinellas County lists an Express Permit for each of the three job types (FACT, pinellas.gov/express-permits);
 //                     "each needs a permit" stays hedged ("likely", "ask the county") because research marks it INFERRING;
-//   City of Seminole -> we have NO wording from the city: "ask the City of Seminole building department"; Glass, a licensed
-//                     contractor, can tell you on the call. No promise that Glass pulls or files the permit (no source).
+//   City of Seminole -> fix R3 (E, RECHECK MAJOR 4): looked up live on the city's own site, myseminole.com/187/Building
+//                     (read 20 Nov 2026): the city has a Building Division (9199 113th St, 727-391-0204) that takes building
+//                     permit applications. It does not say which plumbing jobs need one, so the slip says "ask the city's
+//                     Building Division"; no promise that Glass pulls or files the permit (no source).
 //   not sure        -> how to tell, plus the call.
 // No JS: the slip shows the "not sure" answer (both offices).
 const jobs = [
@@ -18,9 +20,9 @@ const jobs = [
 ];
 // Each answer: permit line, office line, next step, stamp, source. `{x}` = the county's own Express Permit name for the job.
 const where = [
-  { v: 'city', l: 'City of Seminole', p: 'Ask the city: we don’t have its wording', o: 'City of Seminole building department', n: 'Glass is a licensed contractor (FL CFC1432488) and can tell you what applies on the call.', st: 'Ask the city', src: 'Research: no City of Seminole permit wording found (17 Nov 2026)' },
+  { v: 'city', l: 'City of Seminole', p: 'Ask the city what your job needs', o: 'City of Seminole Building Division, (727) 391-0204', n: 'Or ask us on the call: Glass is a licensed contractor (FL CFC1432488).', st: 'Ask the city', src: 'Source: myseminole.com/187/Building, read 20 Nov 2026' },
   { v: 'county', l: 'Unincorporated Pinellas', p: 'Likely. The county lists an Express Permit: “{x}”', o: 'Pinellas County Building & Development Review Services, (727) 464-3888', n: 'Ask the county to confirm for your address, or ask us on the call.', st: 'Express permit', src: 'Source: pinellas.gov/express-permits, read 17 Nov 2026' },
-  { v: 'unsure', l: 'Not sure', p: 'Depends on who has jurisdiction over the address', o: 'City of Seminole inside city limits; Pinellas County in unincorporated areas', n: 'Ask us on the call: we can tell you which office applies.', st: 'Check address', src: 'Source: pinellas.gov/express-permits (county areas only), read 17 Nov 2026' },
+  { v: 'unsure', l: 'Not sure', p: 'Depends on who has jurisdiction over the address', o: 'Your city or the county, by address', n: 'Ask us on the call: we tell you which office applies.', st: 'Check address', src: 'Sources: myseminole.com/187/Building (20 Nov 2026), pinellas.gov/express-permits (17 Nov 2026)' },
 ];
 const start = where[2];
 ---
@@ -28,7 +30,7 @@ const start = where[2];
   <div class="wrap">
     <div class="tq-head">
       <h2 id="tperm-h" class="tq-h" data-t="2">Do you need a plumbing<br /><span class="tone">permit in Seminole?</span></h2>
-      <p class="tq-p" data-t="3"><span class="d">Often, yes, for jobs like a water heater swap or a repipe. Who decides depends on the address: inside the City of Seminole, the city’s building department; in unincorporated Pinellas, the county. Pick your job and address below.</span><span class="m">Often, yes. Inside the City of Seminole the city decides; in unincorporated Pinellas, the county. Pick yours below.</span></p>
+      <p class="tq-p" data-t="3"><span class="d">Often, yes, for jobs like a water heater swap or a repipe. Which office handles it depends on the address: your city or the county. We tell you on the call. Pick your job and address below.</span><span class="m">Often, yes. Your city or the county handles it, by address; we tell you on the call. Pick yours below.</span></p>
     </div>
     <div class="pf" data-t="4" data-permit>
       <div class="pf-qs">
@@ -46,7 +48,7 @@ const start = where[2];
         <dl>
           <div><dt>Job</dt><dd data-pf-job>{jobs[0].l}</dd></div>
           <div><dt>Permit</dt><dd data-pf-p>{start.p}</dd></div>
-          <div><dt>Who decides</dt><dd data-pf-office>{start.o}</dd></div>
+          <div><dt>Office</dt><dd data-pf-office>{start.o}</dd></div>
           <div><dt>Next step</dt><dd data-pf-n>{start.n}</dd></div>
         </dl>
         <span class="pf-stamp" aria-hidden="true" data-pf-stamp>{start.st}</span>
@@ -78,7 +80,9 @@ const start = where[2];
 </script>
 
 <style>
-  .tperm { position: relative; background: var(--white); padding: 110px 0 110px; }
+  .tperm { position: relative; background: var(--white); padding: 110px 0 130px; }
+  /* R3 (E, RECHECK minor): the ink panel kept clear of the section edge (it read as running into the dark band below). */
+  .tperm .pf { margin-bottom: 0; }
   .tq-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .tq-h { font-family: var(--f-h); font-weight: 800; font-size: 52px; line-height: 1.02; letter-spacing: -.02em; color: var(--ink); }
   .tq-h .tone { color: var(--pdeep); }

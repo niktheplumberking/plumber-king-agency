@@ -18,7 +18,7 @@ type Step = { t: string; s: string; d: string; q?: { name: string; text: string 
 const steps: Step[] = [
   { t: 'Call or text a photo', s: 'Call or text', d: 'Any hour. A photo helps us bring the right part.',
     q: quote('Jen James', 'I took a few pictures of the valve that needed replaced and he was at my home the next day !!') },
-  { t: 'We come out', s: 'We come out', d: 'Kody or the crew, in the white Glass van.',
+  { t: 'We come out', s: 'We come out', d: 'The Glass crew, in the white van.',
     q: quote('John Rooney', 'He always does a great job and shows up when he says he’s going to, with the right equipment and attitude.') },
   { t: 'Price before any work', s: 'Price first', d: 'You hear the price and the plan first.',
     q: quote('Parker L', 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.') },
@@ -26,7 +26,7 @@ const steps: Step[] = [
   // unincorporated Pinellas. "Usually" because the research only infers which jobs need one.
   { t: 'Permit if needed', s: 'Permit', d: 'Water heater swaps and repipes usually need one. Largo and Clearwater issue their own; the county covers unincorporated Pinellas. We tell you on the call if yours needs one.',
     plate: [['Usually', 'Heater swaps · repipes'], ['Issued by', 'Your city or county'], ['Filed by', 'A licensed contractor']] },
-  { t: 'Fixed, tested, cleaned up', s: 'Fixed & clean', d: 'We test it with you and leave it clean.',
+  { t: 'Fixed and tested', s: 'Fixed & tested', d: 'We test it with you before we go.',
     q: quote('Jacob Gars', 'He even went above and beyond to clean the bathroom spotless after!') },
 ];
 const at = (i: number) => (i * 0.2).toFixed(2);
@@ -39,7 +39,7 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
         <div class="pr-head">
           <Eyebrow text="How a job goes" class="pr-eb" />
           <h2 id="pr-h" class="h2 pr-h" data-t="2">Five steps. <span class="tone">No surprises.</span></h2>
-          <p class="pr-lead" data-t="3">From your first call to a clean floor, this is what happens. <span class="pin-only">Scroll, or pick a step.</span></p>
+          <p class="pr-lead" data-t="3">From your first call to the finished job, this is what happens. <span class="pin-only">Scroll, or pick a step.</span></p>
         </div>
 
         <div class="rail-w">

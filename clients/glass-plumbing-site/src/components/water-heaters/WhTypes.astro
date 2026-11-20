@@ -1,152 +1,136 @@
 ---
-// Tank vs tankless, R2 rebuild (Nick 20 Nov: two photos side by side + a paragraph = simple layout).
-// One wide frame holds both of Glass's own installs, the tank on the left and the tankless pair on the right, split by a
-// draggable glass divider shaped like a housing (drag, click the frame, or arrow keys; Home / End jump to a side). The
-// two steel plates ride on their own side and fade as their side shrinks. As the section scrolls in the divider sweeps
-// from the tank side to the middle (scroll-driven, so no pause is needed). The "which fits" line sits centred under it.
-// 21st.dev: "Compare Reveal" (rmahammad, id 23419: draggable handle, keyboard control, intro sweep, double-click to
-// centre) + "Compare Slider" (diceui, id 20283: labels per side), re-skinned: housing handle, steel plates, powder offset.
-// No JS: the frame shows both photos at 50 / 50 and both plates; the handle is hidden.
+// Tank vs tankless, fix round 3 (E, RECHECK MAJOR 2: the drag compare slider matched Khinda's SvCompare). New idea,
+// "WHAT RUNS AT ONCE": the FAQ answer on this page says the choice "depends on how much hot water you use at once", so the
+// visitor turns on what their house runs at the same time (shower, second shower, kitchen sink, dishwasher, washer: real
+// toggle buttons). Two steel stations answer side by side, symmetric under the switches: the TANK (Glass's own Rheem
+// install) shows its stored hot water dropping a step for each thing running; the TANKLESS (Glass's own Rinnai pair) lights
+// one segment of its "heating now" meter per thing running, with a marker where a single unit usually tops out, so the
+// pair reads as the answer for a busy house. No numbers (no gallons, no flow rates, no prices): only "usually" wording
+// backed by the page copy and FACTS-CHECK services (tank + tankless, single units and pairs).
+// RECHECK minor: the tank photo is water-heater-softener-nolabel (the EnergyGuide figure that read like a price, "$489",
+// is blurred in that copy).
+// 21st.dev: kuratlielia "Usage Meter" (an allowance broken into categories with a segmented bar that warns near the limit)
+// + aadilghani1 "Usage Meter" (a gauge that climbs as you press a key), rebuilt in vanilla TS with Glass housings and plates.
+// No JS / reduced motion: one shower on (the default state, server-rendered); levels change without easing under reduced motion.
 import Eyebrow from '../kit/Eyebrow.astro';
 import Plate from '../kit/Plate.astro';
 import Img from '../ui/Img.astro';
-const T = [
-  { photo: 'water-heater-softener', alt: 'A tank water heater on a platform beside a water softener', title: 'Tank', focus: '45% 50%',
-    d: [['Stores', 'Hot water in the tank'], ['Space', 'Floor space, like this one'], ['Seen', 'Rheem 40 gal on a Holdrite platform']],
-    m: [['Stores', 'Hot water in the tank'], ['Seen', 'Rheem 40 gal, Holdrite']] },
-  { photo: 'tankless-pair', alt: 'Two tankless water heaters mounted on a brick wall', title: 'Tankless', focus: '55% 45%',
-    d: [['Heats', 'Water on demand'], ['Space', 'Mounted on the wall'], ['Seen', 'Rinnai RE199E pair, primary + secondary']],
-    m: [['Heats', 'On demand'], ['Seen', 'Rinnai RE199E pair']] },
-] as const;
+const FIX = [
+  { k: 'shower', l: 'Shower', on: true },
+  { k: 'shower2', l: 'Second shower' },
+  { k: 'sink', l: 'Kitchen sink' },
+  { k: 'dish', l: 'Dishwasher' },
+  { k: 'washer', l: 'Washer' },
+];
 ---
 <section class="ty" id="types" data-m-section data-ty>
   <div class="wrap">
     <div class="ty-top">
       <Eyebrow text="Tank or tankless?" />
-      <h2 class="h2 ty-h" data-t="2" style="--h2:52px;--h2m:28px">Two ways to get<br /><span class="tone">hot water.</span></h2>
-      <p class="ty-hint" data-t="3" aria-hidden="true"><span class="d">Drag the glass to compare</span><span class="m">Drag to compare</span></p>
+      <h2 class="h2 ty-h" data-t="2" style="--h2:52px;--h2m:28px">It depends on<br /><span class="tone">what runs at once.</span></h2>
+      <p class="ty-lead" data-t="3">Turn on what your house uses at the same time.</p>
     </div>
-    <div class="ty-cmp" data-t="4" data-no-px>
-      <div class="ty-frame" data-ty-frame data-drift-off data-no-px>
-        <figure class="ty-side ty-b">
-          <Img name={T[1].photo} alt={T[1].alt} focus={T[1].focus} sizes="(min-width:1280px) 1200px, 92vw" widths={[480, 800, 1200, 1600, 2000]} box={1200 / 560} boxM={350 / 360} />
-        </figure>
-        <figure class="ty-side ty-a" data-ty-a>
-          <Img name={T[0].photo} alt={T[0].alt} focus="50% 0" sizes="(min-width:1280px) 1824px, 155vw" widths={[640, 960, 1400, 1824, 2400]} />
-        </figure>
-        <span class="ty-tag ty-tag-a" aria-hidden="true">Tank</span>
-        <span class="ty-tag ty-tag-b" aria-hidden="true">Tankless</span>
-        <div class="ty-handle" role="slider" tabindex="0" aria-label="Compare tank and tankless: share of the frame showing the tank" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="Half tank, half tankless" data-ty-handle hidden>
-          <span class="ty-cap"></span><span class="ty-glass"><span class="ty-arw">‹ ›</span></span>
+    <div class="ty-sw" role="group" aria-label="Running at the same time" data-t="5">
+      {FIX.map((f) => <button type="button" class="ty-b" aria-pressed={f.on ? 'true' : 'false'} data-fx-k={f.k}><i aria-hidden="true"></i>{f.l}</button>)}
+    </div>
+    <div class="ty-st" data-t="4" data-n="1">
+      <article class="st st-tank">
+        <div class="st-ph"><Img name="water-heater-softener-nolabel" alt="A tank water heater Glass installed on a platform, a water softener below it" focus="50% 30%" sizes="(min-width:1280px) 260px, (min-width:768px) 24vw, 40vw" box={260 / 340} boxM={0.8} widths={[260, 400, 520, 780]} /></div>
+        <div class="st-body">
+          <h3 class="st-h">Tank</h3>
+          <p class="st-k">Stored hot water</p>
+          <div class="st-tankg" aria-hidden="true"><span class="st-cap"></span><span class="st-glass"><span class="st-water"></span></span></div>
+          <p class="st-out" aria-live="polite" data-tank-out>Plenty in store.</p>
+          <Plate rows={[['Stores', 'Hot water in the tank'], ['Seen', 'Rheem 40 gal, Holdrite platform']]} size={10} kx={60} pitch={19} pad={12} shadow="pdeep" />
         </div>
-      </div>
-      <div class="ty-plates">
-        {T.map((t, i) => (
-          <div class:list={['ty-pw', i === 0 ? 'ty-pa' : 'ty-pb']}>
-            <Plate class="ty-pl d" title={t.title} rows={t.d.map((r) => [...r]) as [string, string][]} w={400} pad={18} size={12} tsize={16} kx={88} pitch={22} t={false} />
-            <Plate class="ty-pl m" title={t.title} rows={t.m.map((r) => [...r]) as [string, string][]} w={300} wm={300} pad={12} size={10} tsize={13} kx={68} pitch={19} t={false} />
-          </div>
-        ))}
-      </div>
+      </article>
+      <article class="st st-tl">
+        <div class="st-ph"><Img name="tankless-pair" alt="Two tankless water heaters Glass mounted side by side on a brick wall" focus="55% 45%" sizes="(min-width:1280px) 260px, (min-width:768px) 24vw, 40vw" box={260 / 340} boxM={0.8} widths={[260, 400, 520, 780]} /></div>
+        <div class="st-body">
+          <h3 class="st-h">Tankless</h3>
+          <p class="st-k">Heating now</p>
+          <div class="st-seg" aria-hidden="true">{FIX.map((_, i) => <span class:list={['sg', i === 2 && 'sg-lim']}></span>)}<em>single unit</em></div>
+          <p class="st-out" aria-live="polite" data-tl-out>One unit keeps up.</p>
+          <Plate rows={[['Heats', 'Water on demand'], ['Seen', 'Rinnai RE199E pair']]} size={10} kx={60} pitch={19} pad={12} shadow="pdeep" />
+        </div>
+      </article>
     </div>
-    <p class="ty-note" data-t="3"><span class="d">Which fits your home depends on how many bathrooms you run at once, gas or electric, and where it can go.</span><span class="m">Which fits depends on how many bathrooms run at once, gas or electric, and where it can go.</span></p>
+    <p class="ty-foot" data-t="3">Gas or electric matters too. Text a photo of your heater label and we tell you which fits on the call.</p>
   </div>
 </section>
+
+<script>
+  // Tank: the stored level drops a step per fixture running. Tankless: one segment per fixture; past the third, a single
+  // unit usually falls short, so the readout points to a pair. Words only, no numbers.
+  const TANK = ['Full and waiting.', 'Plenty in store.', 'Draining faster.', 'Can run short on a long run.', 'Usually runs short.', 'Usually runs short.'];
+  const TL = ['Off until a tap opens.', 'One unit keeps up.', 'One unit keeps up.', 'Near what one unit does.', 'A pair, like this one, usually covers it.', 'A pair, like this one, usually covers it.'];
+  document.querySelectorAll<HTMLElement>('[data-ty]').forEach((ty) => {
+    const st = ty.querySelector<HTMLElement>('.ty-st')!;
+    const btns = [...ty.querySelectorAll<HTMLButtonElement>('.ty-b')];
+    const segs = [...ty.querySelectorAll<HTMLElement>('.sg')];
+    const tOut = ty.querySelector<HTMLElement>('[data-tank-out]')!, lOut = ty.querySelector<HTMLElement>('[data-tl-out]')!;
+    const upd = () => {
+      const n = btns.filter((b) => b.getAttribute('aria-pressed') === 'true').length;
+      st.dataset.n = String(n);
+      st.style.setProperty('--lv', String(1 - n * 0.17));
+      segs.forEach((s, i) => s.classList.toggle('is-on', i < n));
+      tOut.textContent = TANK[n]; lOut.textContent = TL[n];
+    };
+    btns.forEach((b) => b.addEventListener('click', () => { b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); upd(); }));
+    upd();
+  });
+</script>
+
 <style>
-  .ty { background: var(--frost); padding: 110px 0 96px; --s: 50; }
+  .ty { background: var(--frost); padding: 110px 0 100px; }
   .ty-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .ty-h { margin-top: 16px; }
-  .ty-hint { margin-top: 18px; font: 700 10px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
-  html:not(.js) .ty-hint { display: none; }
-  .ty-cmp { position: relative; margin-top: 40px; }
-  .ty-frame { position: relative; height: 560px; border-radius: 8px; overflow: hidden; box-shadow: 12px 12px 0 var(--powder); touch-action: pan-y; user-select: none; -webkit-user-select: none; }
-  .ty-frame::after { content: ''; position: absolute; inset: 0; z-index: 4; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--ink); pointer-events: none; }
-  .ty-side { position: absolute; inset: 0; margin: 0; }
-  .ty-a { clip-path: inset(0 calc(100% - var(--s) * 1%) 0 0); }
-  /* Fix round C (review: tank side cropped to blank wall). The tank photo is portrait with the tank right of centre, so a
-     plain cover crop puts it under the tankless half. The tank layer's photo is scaled past the frame (cover still holds:
-     its right edge stays beyond the frame) and shifted so the tank's centre (54 % across the photo) sits in the middle of
-     the tank half at rest; top offset shows the tank's top (logo + labels). */
-  .ty-a :global(img) { position: absolute; left: -52%; top: -96px; width: 152%; max-width: none; height: auto; aspect-ratio: 3 / 4; object-position: 50% 0; }
-  .ty-tag { position: absolute; top: 20px; z-index: 3; padding: 8px 12px; border-radius: 4px; background: var(--ink); color: var(--white); font: 700 11px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; transition: opacity .3s var(--ease-io); }
-  .ty-tag-a { left: 20px; opacity: clamp(0, (var(--s) - 12) / 10, 1); }
-  .ty-tag-b { right: 20px; opacity: clamp(0, (88 - var(--s)) / 10, 1); }
+  .ty-lead { margin-top: 16px; font-size: 17px; color: var(--muted); }
+  .ty-sw { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px; }
+  .ty-b { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px 0 12px; border: 0; border-radius: 24px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); font: 700 15px/1 var(--f-b); cursor: pointer;
+    transition: background-color .45s var(--ease-io), color .45s var(--ease-io), box-shadow .45s var(--ease-io); }
+  .ty-b i { position: relative; width: 30px; height: 18px; border-radius: 9px; background: var(--frost2); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .ty-b i::after { content: ''; position: absolute; left: 3px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); transition: translate .45s var(--ease-io), background-color .45s var(--ease-io); }
+  .ty-b[aria-pressed='true'] { background: var(--ink); color: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 4px 4px 0 var(--powder); }
+  .ty-b[aria-pressed='true'] i { background: var(--powder); }
+  .ty-b[aria-pressed='true'] i::after { translate: 12px 0; background: var(--white); }
+  .ty-b:hover { box-shadow: inset 0 0 0 2px var(--pdeep); }
+  .ty-b:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
 
-  .ty-handle { position: absolute; top: 0; bottom: 0; left: calc(var(--s) * 1%); z-index: 5; width: 56px; margin-left: -28px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: ew-resize; outline: none; }
-  .ty-handle[hidden] { display: none; }
-  .ty-handle::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; background: var(--white); box-shadow: 0 0 0 1px rgba(22,19,15,.35); }
-  .ty-cap { position: relative; width: 56px; height: 12px; border-radius: 3px; background: var(--ink); }
-  .ty-glass { position: relative; display: grid; place-items: center; width: 44px; height: 76px; margin-top: -2px; border-radius: 0 0 16px 16px; background: rgba(238,243,244,.92); box-shadow: inset 0 0 0 2px var(--ink), 5px 5px 0 var(--powder); overflow: hidden; transition: scale .3s var(--ease-io); }
-  .ty-glass::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 40%; background: var(--powder); box-shadow: inset 0 3px 0 rgba(255,255,255,.7); }
-  .ty-arw { position: relative; z-index: 1; font: 800 15px/1 var(--f-h); letter-spacing: .1em; color: var(--ink); }
-  .ty-handle:hover .ty-glass, .ty-handle.is-drag .ty-glass { scale: 1.08; }
-  .ty-handle:focus-visible .ty-glass { outline: 3px solid var(--pdeep); outline-offset: 4px; }
-
-  .ty-plates { position: relative; display: flex; justify-content: space-between; margin-top: -64px; padding: 0 28px; pointer-events: none; z-index: 6; }
-  .ty-pw { transition: opacity .3s var(--ease-io), translate .3s var(--ease-io); }
-  .ty-pa { opacity: clamp(.25, (var(--s) - 10) / 25, 1); }
-  .ty-pb { opacity: clamp(.25, (90 - var(--s)) / 25, 1); }
-  .ty-pw :global(.ty-pl.m) { display: none; }
-  .ty-note { max-width: 760px; margin: 60px auto 0; text-align: center; font-size: 18px; line-height: 1.5; }
-
-  @media (max-width: 1279px) { .ty-a :global(img) { top: -80px; } .ty-frame { height: 460px; } .ty-plates { padding: 0 16px; gap: 16px; } }
-  @media (max-width: 1023px) {
-    .ty-plates { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; padding: 0; pointer-events: auto; }
-    .ty-pa, .ty-pb { opacity: 1; }
+  .ty-st { --lv: .83; display: grid; grid-template-columns: repeat(2, minmax(0, 560px)); justify-content: center; gap: 32px; margin-top: 40px; }
+  .st { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding: 20px; background: var(--white); border-radius: 8px; box-shadow: inset 0 0 0 1.5px var(--ink), 10px 10px 0 var(--powder); }
+  .st-ph { height: 300px; overflow: hidden; border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .st-body { display: flex; flex-direction: column; gap: 10px; }
+  .st-h { font-family: var(--f-h); font-weight: 800; font-size: 32px; letter-spacing: -.02em; color: var(--ink); }
+  .st-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--pdeep); }
+  .st-out { min-height: 44px; font-weight: 700; font-size: 16px; line-height: 1.35; color: var(--ink); }
+  /* Tank gauge: a lying housing whose water drops with --lv. */
+  .st-tankg { display: flex; align-items: center; height: 44px; }
+  .st-cap { width: 12px; height: 44px; border-radius: 4px 0 0 4px; background: var(--ink); }
+  .st-glass { position: relative; flex: 1; height: 34px; overflow: hidden; border-radius: 0 17px 17px 0; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .st-water { position: absolute; inset: 3px auto 3px 3px; width: calc((100% - 6px) * var(--lv)); border-radius: 0 14px 14px 0; background: var(--pdeep); transition: width .8s var(--ease-io); }
+  /* Tankless meter: five segments, the third marked as where a single unit usually tops out. */
+  .st-seg { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; height: 44px; padding-bottom: 12px; }
+  .sg { border-radius: 4px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink); transition: background-color .5s var(--ease-io); }
+  .sg.is-on { background: var(--powder); }
+  .sg.is-on:nth-child(n + 4) { background: var(--pdeep); }
+  .sg-lim { position: relative; }
+  .sg-lim::after { content: ''; position: absolute; right: -4px; top: -6px; bottom: -6px; width: 3px; background: var(--ink); }
+  .st-seg em { position: absolute; left: 60%; bottom: -6px; translate: -50% 0; font-style: normal; font-family: var(--f-m); font-weight: 700; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .ty-foot { max-width: 620px; margin: 36px auto 0; text-align: center; font-size: 16px; line-height: 1.5; color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .st-water, .sg, .ty-b, .ty-b i::after { transition: none; } }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ty-st { grid-template-columns: 1fr; max-width: 620px; margin-inline: auto; }
   }
   @media (max-width: 767px) {
-    .ty { padding: 64px 0 62px; }
-    .ty-h { margin-top: 10px; }
-    .ty-cmp { margin-top: 22px; }
-    .ty-frame { height: 360px; box-shadow: 8px 8px 0 var(--powder); }
-    .ty-a :global(img) { left: -66%; width: 168%; top: -26px; }
-    .ty-tag { top: 12px; font-size: 10px; padding: 6px 8px; }
-    .ty-tag-a { left: 12px; } .ty-tag-b { right: 12px; }
-    .ty-glass { width: 36px; height: 60px; }
-    .ty-cap { width: 46px; }
-    .ty-pw :global(.ty-pl.d) { display: none; } .ty-pw :global(.ty-pl.m) { display: block; }
-    .ty-note { margin-top: 28px; font-size: 15px; text-align: left; }
+    .ty { padding: 60px 0 64px; }
+    .ty-lead { font-size: 15px; }
+    .ty-sw { gap: 8px; margin-top: 22px; }
+    .ty-b { min-height: 44px; font-size: 14px; padding: 0 14px 0 10px; }
+    .ty-st { grid-template-columns: 1fr; gap: 22px; margin-top: 26px; }
+    .st { grid-template-columns: 116px 1fr; gap: 14px; padding: 14px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+    .st-ph { height: 180px; }
+    .st-h { font-size: 24px; }
+    .st-out { font-size: 14px; min-height: 38px; }
   }
 </style>
-<script>
-  import { hasMotion } from '../services/progress';
-  const root = document.querySelector<HTMLElement>('[data-ty]');
-  if (root) {
-    const frame = root.querySelector<HTMLElement>('[data-ty-frame]')!;
-    const h = root.querySelector<HTMLElement>('[data-ty-handle]')!;
-    h.hidden = false;
-    let s = 50, touched = false;
-    const text = (v: number) => (v >= 95 ? 'All tank' : v <= 5 ? 'All tankless' : v === 50 ? 'Half tank, half tankless' : `${Math.round(v)} percent tank`);
-    const set = (v: number) => {
-      s = Math.min(100, Math.max(0, v));
-      root.style.setProperty('--s', s.toFixed(2));
-      h.setAttribute('aria-valuenow', String(Math.round(s)));
-      h.setAttribute('aria-valuetext', text(Math.round(s)));
-    };
-    const fromX = (x: number) => { const r = frame.getBoundingClientRect(); set(((x - r.left) / r.width) * 100); };
-    let drag = false;
-    frame.addEventListener('pointerdown', (e) => { drag = true; touched = true; h.classList.add('is-drag'); frame.setPointerCapture(e.pointerId); fromX(e.clientX); });
-    frame.addEventListener('pointermove', (e) => { if (drag) fromX(e.clientX); });
-    const end = () => { drag = false; h.classList.remove('is-drag'); };
-    frame.addEventListener('pointerup', end); frame.addEventListener('pointercancel', end);
-    frame.addEventListener('dblclick', () => set(50));
-    h.addEventListener('keydown', (e) => {
-      const k = e.key, step = e.shiftKey ? 10 : 5;
-      if (k === 'ArrowLeft' || k === 'ArrowDown') set(s - step); else if (k === 'ArrowRight' || k === 'ArrowUp') set(s + step);
-      else if (k === 'Home') set(0); else if (k === 'End') set(100); else return;
-      touched = true; e.preventDefault();
-    });
-    // Intro sweep tied to the scroll: tank side full -> middle, until the visitor touches it.
-    if (hasMotion()) {
-      let raf = 0;
-      const run = () => {
-        raf = 0; if (touched) return;
-        const r = frame.getBoundingClientRect(), vh = innerHeight;
-        const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.75)));
-        set(88 - 38 * p);
-      };
-      addEventListener('scroll', () => { if (!raf && !touched) raf = requestAnimationFrame(run); }, { passive: true });
-      run();
-    } else set(50);
-  }
-</script>

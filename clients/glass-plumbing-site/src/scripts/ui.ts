@@ -233,7 +233,8 @@ function hscroll() {
     if (scrolls) el.setAttribute('tabindex', '0');
     else if (el.hasAttribute('tabindex')) el.toggleAttribute('tabindex', false);
   });
-  set();
+  // R3 (TBT): no forced layout while the module boots; measured once the page has loaded (and on resize).
+  if (document.readyState === 'complete') set();
   window.addEventListener('resize', set, { passive: true });
   window.addEventListener('load', set);
 }

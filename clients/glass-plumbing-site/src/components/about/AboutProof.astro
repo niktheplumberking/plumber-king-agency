@@ -8,9 +8,11 @@ import Img from '../ui/Img.astro';
 import { quote, STARS } from '../areas/reviews';
 import { SITE } from '../../data/site';
 const cards = [
-  { by: 'John Rooney', d: quote('John Rooney', 'As a contractor it’s always hard to find reliable, trustworthy subs you can count on. Kody is one of those guys.') },
+  // Fix round 3 (D): the reel shows one crew member's face, so no card in this group names anyone (was John Rooney's
+  // "Kody is one of those guys" and Emily's "Kody and Zak"): quotes without a name in them.
+  { by: 'Cary Cannon', d: quote('Cary Cannon', 'He showed up on time, explained everything clearly, and did excellent work without overcharging.') },
   { by: 'David Peek', d: quote('David Peek', 'These guys know their stuff - commercial or residential. … Trusted and dependable.'), m: quote('David Peek', 'These guys know their stuff - commercial or residential.') },
-  { by: 'Emily Van Den Langenberg', d: quote('Emily Van Den Langenberg', 'Through multiple moves, Kody and Zak are our go-to plumbers.'), dOnly: true },
+  { by: 'Michael Marks', d: quote('Michael Marks', 'Glass plumbing was fantastic from first contact to completion.'), dOnly: true },
 ];
 ---
 <section class="bproof" data-m-section aria-labelledby="bproof-h">

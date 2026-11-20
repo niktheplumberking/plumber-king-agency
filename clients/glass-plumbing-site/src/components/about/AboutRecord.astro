@@ -24,7 +24,7 @@ const grid = [
   { n: 'water-line-excavator', c: 'Water line dig' },
   { n: 'manifold-install', c: 'Manifold install' },
   { n: 'tankless-pair', c: 'Two tankless units' },
-  { n: 'crew-crawlspace', c: 'In the crawlspace', f: '50% 30%' },
+  { n: 'water-filters', c: 'Whole-house filters' },
   { n: 'shower-remodel', c: 'Finished shower' },
   { n: 'van-night', c: 'The van, after hours' },
 ];
@@ -73,7 +73,7 @@ const ext = '<path d="M5 2h7v7M12 2 4.5 9.5M9 12H2V5" fill="none" stroke="curren
             <dl class="rec-rows">
               {recRows.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
             </dl>
-            <blockquote class="rec-q"><p>“Officially up and running as a Licensed and insured master plumber.”</p><footer>Kody, on Instagram</footer></blockquote>
+            <blockquote class="rec-q"><p>“Officially up and running as a Licensed and insured master plumber.”</p><footer>Posted on {ig.instagramHandle}</footer></blockquote>
             <a class="rec-link" href={L.url} target="_blank" rel="noopener">Look up {L.number} on DBPR<svg viewBox="0 0 14 14" width="12" height="12" aria-hidden="true" set:html={ext} /><span class="sr-only"> (opens in a new tab)</span></a>
           </div>
         </div>

@@ -1,58 +1,121 @@
 ---
-// /areas "Local quirks" (Figma 721:525 y 3135 h 850 / mobile y 3089 h 772). White. Four sourced local facts (copy and
-// sources exactly as the frames; LOCAL-FACTS.md backs them). Each card's housing fills to its own level as it enters.
+// /areas "Four local facts", fix round 3 (E, RECHECK MAJOR 5: four plain 2x2 text cards). New idea, THE TEST STRIP: the
+// way you check water at home, turned into a reading of Pinellas. One long dip strip lies across the section with four
+// pads (PERMITS, WATER, HOMES, STORMS). As the strip scrolls through, the pads take their colour one after another, like a
+// strip coming out of the water (kit/scrub.ts class-mode stops, the scroll drives it). Each pad is a tab: pick it and the
+// steel "colour key" card under the strip reads that fact with its source; a powder pointer slides to the picked pad.
+// Facts and sources: LOCAL-FACTS sections 3, 4 and 5. RECHECK MAJOR 4: "supply lines and drains are often original" was not
+// in research and is gone; the 1978 median is labelled as a third-party figure.
+// 21st.dev: thegridcn "Energy Meter" (segmented level with a staggered fill) + balick segmented control (sliding indicator),
+// rebuilt in vanilla TS and re-skinned as a Glass test strip (cream pads, powder pointer, steel key card with rivets).
+// Reduced motion / no JS: every pad shows its colour; the first fact is open (no JS: the first fact shows; the pads still read as one strip).
 import Head from './Head.astro';
-import Housing from '../kit/Housing.astro';
 const facts = [
-  { t: 'Permits depend on the city', d: 'Pinellas County handles unincorporated areas. Largo and Clearwater issue their own.', m: 'Pinellas County handles unincorporated areas. Largo and Clearwater issue their own.',
-    s: 'Source: pinellas.gov · largo.com · myclearwater.com', sm: 'Source: pinellas.gov · largo.com · myclearwater.com', f: 0.192 },
-  { t: 'Hard, treated water', d: 'Tampa Bay Water supply, treated with chloramine, 217 ppm hardness on average.', m: 'Tampa Bay Water supply, chloramine-treated, 217 ppm hardness on average.',
-    s: 'Source: PCU 2025 Consumer Confidence Report', sm: 'Source: PCU 2025 report', f: 0.576 },
-  { t: 'Older homes', d: 'Largo’s median home was built in 1978, so supply lines and drains are often original.', m: 'Largo’s median home was built in 1978.',
-    s: 'Source: ACS 2023 via city-stats.com (third party)', sm: 'Source: ACS 2023 via city-stats.com (third party)', f: 0.384 },
-  { t: 'Storm surge', d: 'Hurricane Helene (2024) pushed about 6.5 ft of surge into Clearwater Beach.', m: 'Helene (2024) pushed about 6.5 ft of surge into Clearwater Beach.',
-    s: 'Source: axios.com/local/tampa-bay', sm: 'Source: axios.com', f: 0.816 },
+  { k: 'Permits', c: 'var(--cream)', t: 'Permits depend on the city.', d: 'Pinellas County handles permits for unincorporated areas. Largo and Clearwater issue their own. Your address decides which office.', s: 'pinellas.gov/express-permits · largo.com · myclearwater.com (read 17 Nov 2026)' },
+  { k: 'Water', c: 'var(--powder)', t: 'Hard, treated water.', d: 'Pinellas County Utilities water averages 217 ppm hardness and is treated with chloramine. Hard water leaves scale in heaters and fixtures.', s: 'PCU 2025 Consumer Confidence Report' },
+  { k: 'Homes', c: 'var(--steel2)', t: 'A 1978 median home.', d: 'Largo’s median home was built in 1978, by a third-party summary of Census figures.', s: 'ACS 2023 via city-stats.com (third party)' },
+  { k: 'Storms', c: 'var(--pdeep)', t: 'Surge reaches the coast.', d: 'Hurricane Helene (2024) pushed about 6.5 ft of surge into Clearwater Beach.', s: 'axios.com/local/tampa-bay' },
 ];
 ---
 <section class="afacts" data-m-section aria-labelledby="afacts-h">
   <div class="wrap">
-    <Head eyebrow="Good to know in Pinellas" l1="Four local facts" l2="that change the job." id="afacts-h" />
-    <ul class="af-grid" role="list" data-t="4" data-stagger>
-      {facts.map((f) => (
-        <li class="fc">
-          <Housing w={40} h={62} wm={28} hm={42} r={10} rm={8} fill={f.f} class="fc-jar" />
-          <div class="fc-txt">
-            <h3 class="fc-h">{f.t}</h3>
-            <p class="fc-p"><span class="d">{f.d}</span><span class="m">{f.m}</span></p>
-            <p class="fc-src"><span class="d">{f.s}</span><span class="m">{f.sm}</span></p>
+    <div class="af-head"><Head eyebrow="Good to know in Pinellas" l1="Four readings" l2="that change the job." id="afacts-h" /></div>
+    <p class="af-lead" data-t="3">Dip the strip: pick a pad to read it.</p>
+    <div class="ts" data-ts data-scrub data-start="top 85%" data-end="center 55%" data-start-m="top 90%" data-end-m="center 60%" data-t="4">
+      <div class="ts-strip" role="tablist" aria-label="Local facts">
+        <span class="ts-grip" aria-hidden="true">PINELLAS · TEST STRIP</span>
+        {facts.map((f, i) => (
+          <button class="ts-pad" type="button" role="tab" id={`ts-tab-${i}`} aria-controls={`ts-p-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
+            data-stop data-at={String(0.15 + i * 0.22)} style={`--c:${f.c}`}>
+            <span class="ts-c" aria-hidden="true"></span><span class="ts-k">{f.k}</span>
+          </button>
+        ))}
+      </div>
+      <div class="ts-key">
+        <i class="ts-ptr" aria-hidden="true"></i>
+        {facts.map((f, i) => (
+          <div class="ts-p" role="tabpanel" id={`ts-p-${i}`} aria-labelledby={`ts-tab-${i}`} data-i={i} hidden={i !== 0}>
+            <span class="ts-sw" style={`--c:${f.c}`} aria-hidden="true"></span>
+            <div>
+              <p class="ts-n">Reading 0{i + 1} · {f.k}</p>
+              <h3 class="ts-t">{f.t}</h3>
+              <p class="ts-d">{f.d}</p>
+              <p class="ts-s">Source: {f.s}</p>
+            </div>
           </div>
-        </li>
-      ))}
-    </ul>
+        ))}
+        <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
+      </div>
+    </div>
   </div>
 </section>
 
-<style>
-  .afacts { position: relative; background: var(--white); padding: 110px 0 114px; }
-  .af-grid { display: grid; grid-template-columns: repeat(2, 588px); justify-content: space-between; row-gap: 24px; margin-top: 52px; }
-  .fc { display: flex; gap: 24px; min-height: 206px; padding: 28px 36px 26px 28px; background: var(--frost); border-radius: 6px; }
-  .fc-txt { display: flex; flex-direction: column; flex: 1; }
-  .fc-h { font-family: var(--f-h); font-weight: 800; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
-  .fc-p { margin-top: 15px; font-size: 16px; line-height: 1.5; color: var(--ink); }
-  .fc-src { margin-top: auto; padding-top: 18px; font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .01em; color: var(--pdeep); }
-  .m { display: none; }
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ts]').forEach((ts) => {
+    const tabs = [...ts.querySelectorAll<HTMLButtonElement>('.ts-pad')];
+    const panels = [...ts.querySelectorAll<HTMLElement>('.ts-p')];
+    const key = ts.querySelector<HTMLElement>('.ts-key')!;
+    const show = (i: number, focus = false) => {
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      panels.forEach((p, k) => { p.hidden = k !== i; });
+      key.style.setProperty('--ptr', String(i));
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      t.addEventListener('keydown', (e) => {
+        const n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : -9;
+        if (n === -9) return; e.preventDefault(); show((n + tabs.length) % tabs.length, true);
+      });
+    });
+    show(0);
+  });
+</script>
 
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .afacts { padding: 96px 0 104px; }
-    .af-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
-  }
+<style>
+  .afacts { position: relative; background: var(--white); padding: 110px 0 120px; }
+  .af-head { display: flex; justify-content: center; text-align: center; }
+  .af-head :global(.ah-eb) { justify-content: center; }
+  .af-lead { margin-top: 16px; text-align: center; font-size: 17px; color: var(--muted); }
+  .ts { --n: 4; width: min(1040px, 100%); margin: 48px auto 0; }
+  .ts-strip { display: grid; grid-template-columns: 200px repeat(var(--n), minmax(0, 1fr)); gap: 18px; align-items: center; padding: 18px 22px; background: var(--white); border-radius: 10px; box-shadow: inset 0 0 0 1.5px var(--ink), 8px 8px 0 var(--powder); }
+  .ts-grip { align-self: stretch; display: grid; place-items: center; padding: 0 12px; border-right: 1.5px dashed rgb(22 19 15 / .3); font-family: var(--f-m); font-weight: 800; font-size: 11px; letter-spacing: .12em; color: var(--pdeep); text-align: center; }
+  .ts-pad { position: relative; display: grid; justify-items: center; gap: 10px; padding: 0 0 4px; border: 0; background: none; cursor: pointer; color: var(--ink); }
+  .ts-c { width: 100%; height: 104px; border-radius: 6px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink); position: relative; overflow: hidden; }
+  .ts-c::after { content: ''; position: absolute; inset: 0; background: var(--c); transform-origin: 50% 100%; transition: scale .9s var(--ease-io); }
+  :global(html.motion) .ts-pad:not(.is-on) .ts-c::after { scale: 1 0; }
+  .ts-k { font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+  .ts-pad[aria-selected='true'] .ts-c { box-shadow: inset 0 0 0 3px var(--ink), 0 0 0 4px var(--white), 0 0 0 6px var(--ink); }
+  .ts-pad:hover .ts-c { box-shadow: inset 0 0 0 2.5px var(--pdeep); }
+  .ts-pad:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 4px; border-radius: 6px; }
+  /* Colour key: a steel card under the strip; the powder pointer sits under the picked pad. */
+  .ts-key { --ptr: 0; position: relative; margin: 30px 0 0 auto; width: calc(100% - 222px); min-height: 190px; padding: 30px 34px 26px; background: var(--steel); border-radius: 4px; box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--ink); }
+  .ts-ptr { position: absolute; top: -14px; left: calc((100% - 44px) / 4 * var(--ptr) + (100% - 44px) / 8 + 22px - 12px); width: 24px; height: 24px; background: var(--steel); rotate: 45deg; box-shadow: -1px -1px 0 var(--steel2); transition: left .6s var(--ease-io); }
+  .ts-p { display: grid; grid-template-columns: 64px 1fr; gap: 24px; align-items: start; }
+  .ts-p[hidden] { display: none; }
+  .ts-sw { width: 64px; height: 64px; border-radius: 6px; background: var(--c); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .ts-n { font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+  .ts-t { margin-top: 8px; font-family: var(--f-h); font-weight: 800; font-size: 30px; line-height: 1.05; letter-spacing: -.02em; color: var(--ink); }
+  .ts-d { margin-top: 12px; max-width: 560px; font-size: 17px; line-height: 1.5; color: var(--ink); }
+  .ts-s { margin-top: 14px; font-family: var(--f-m); font-weight: 500; font-size: 11px; color: rgb(22 19 15 / .75); }
+  .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-of-type(2) { left: 7px; top: 7px; } .rv:nth-of-type(3) { right: 7px; top: 7px; }
+  .rv:nth-of-type(4) { left: 7px; bottom: 7px; } .rv:nth-of-type(5) { right: 7px; bottom: 7px; }
+  @media (prefers-reduced-motion: reduce) { .ts-c::after, .ts-ptr { transition: none; } }
+  @media (min-width: 768px) and (max-width: 1279px) { .ts-strip { grid-template-columns: 120px repeat(4, minmax(0, 1fr)); } .ts-key { width: calc(100% - 142px); } }
   @media (max-width: 767px) {
-    .afacts { padding: 56px 0 60px; }
-    .af-grid { grid-template-columns: 1fr; row-gap: 12px; margin-top: 24px; }
-    .fc { min-height: 0; gap: 14px; padding: 18px 16px 18px 16px; }
-    .fc-h { font-size: 18px; }
-    .fc-p { margin-top: 6px; font-size: 14px; }
-    .fc-src { margin-top: 0; padding-top: 10px; font-size: 9px; line-height: 12px; }
-    .d { display: none; } .m { display: inline; }
+    .afacts { padding: 56px 0 64px; }
+    .af-lead { font-size: 15px; }
+    .ts { margin-top: 26px; }
+    .ts-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 12px; box-shadow: inset 0 0 0 1.5px var(--ink), 5px 5px 0 var(--powder); }
+    .ts-grip { display: none; }
+    .ts-c { height: 64px; }
+    .ts-k { font-size: 9px; letter-spacing: .04em; }
+    .ts-key { width: 100%; margin-top: 22px; padding: 20px 16px 18px; box-shadow: inset 0 0 0 1px var(--steel2), 5px 5px 0 var(--ink); }
+    .ts-ptr { left: calc((100% - 24px) / 4 * var(--ptr) + (100% - 24px) / 8 + 12px - 10px); width: 20px; height: 20px; top: -11px; }
+    .ts-p { grid-template-columns: 1fr; gap: 12px; }
+    .ts-sw { width: 40px; height: 40px; }
+    .ts-t { font-size: 22px; }
+    .ts-d { font-size: 15px; }
   }
 </style>

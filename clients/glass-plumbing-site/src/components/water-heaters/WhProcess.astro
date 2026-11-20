@@ -1,56 +1,144 @@
 ---
-// Process (fix round C: five steps; the unconfirmed haul-away step and price promise removed) (Figma 719:437 y 3248 h 620 / mobile y 3569 h 768): six steps, each a little frost sight glass that fills a bit
-// more per step (the Figma's levels) over a steel plate. Phone: a vertical list, gauge left of each plate.
+// "From a photo to hot water", fix round 3 (E, RECHECK MAJOR 8: five steel plates in a row read as a plain list). New idea,
+// THE PIPE RUN: the five steps are five valves on one horizontal copper-free pipe (ink line, powder water). The pipe fills
+// with water as the section scrolls (kit/scrub.ts data-scrub-fill), and each valve is a tab: pick it (click, arrows, Home,
+// End, or Prev / Next) and the one stage in the middle MORPHS its line drawing into that step (photo of a label -> estimate
+// sheet -> permit card -> heater on its stand -> an open tap), with the step's line in the caption plate under it.
+// Step 04 keeps its label: "3 of the 16 reviews we hold mention the next day" (research/reviews-0/1.json, 3 matches).
+// 21st.dev: shadcnspace "stepper-03" (numbered stepper with a connector line and a content panel per step) + the
+// "Morphing illustration" idea (one stage, cross-scaled drawings), rebuilt as vanilla TS, skinned with Glass ink lines,
+// steel caption plate with rivets and the powder offset shadow. No Mike laminated card, no scroll-lit list.
+// No JS: step 01 is open and every step's text is readable in the tabs' accessible names; reduced motion: no morph easing.
 import Eyebrow from '../kit/Eyebrow.astro';
-import Housing from '../kit/Housing.astro';
 const S = [
-  { k: '01 Photo or visit', d: 'Text the label, or ask for a visit.', f: 0.15 },
-  { k: '02 Estimate', d: 'One review: estimate the same day, work the next.', f: 0.3 },
-  { k: '03 Permit', d: 'Usually needed. The office depends on your address.', f: 0.45 },
-  { k: '04 Install day', d: 'Often the next day (from reviews).', f: 0.6 },
-  { k: '05 Test', d: 'Hot water on, no leaks.', f: 0.77 },
+  { k: 'Photo or visit', d: 'Text a photo of the heater label, or ask for a visit.' },
+  { k: 'Estimate', d: 'One review: an estimate the same day, the work the next.' },
+  { k: 'Permit', d: 'Usually needed for a replacement. The office depends on your address.' },
+  { k: 'Install day', d: 'Not promised for every job: 3 of the 16 reviews we hold mention the next day.' },
+  { k: 'Test', d: 'Hot water on, no leaks, then we leave.' },
+];
+// One drawing per step, 200 x 150 units, ink strokes.
+const ART = [
+  '<rect x="66" y="14" width="68" height="122" rx="10"/><rect x="76" y="34" width="48" height="58" rx="3"/><path d="M84 46h32M84 56h24M84 66h28M84 76h18"/><circle cx="100" cy="118" r="6"/><path d="M150 40l18-10M152 56h22M150 72l18 10"/>',
+  '<rect x="52" y="12" width="96" height="126" rx="4"/><rect x="82" y="6" width="36" height="14" rx="3"/><path d="M68 44h64M68 62h50M68 80h58M68 98h40"/><path d="M110 114l8 8 18-20"/>',
+  '<rect x="40" y="26" width="120" height="98" rx="6"/><path d="M56 48h56M56 64h40M56 80h48"/><circle cx="128" cy="92" r="18"/><path d="M120 92l6 6 11-12"/>',
+  '<path d="M72 18h56v96a14 14 0 0 1-14 14H86a14 14 0 0 1-14-14z"/><rect x="66" y="10" width="68" height="12" rx="3"/><path d="M88 4v6M112 4v6"/><rect x="58" y="128" width="84" height="10" rx="2"/><path d="M84 40v60"/>',
+  '<path d="M40 40h70a16 16 0 0 1 16 16v20"/><path d="M40 30v20"/><rect x="66" y="22" width="28" height="10" rx="3"/><path d="M80 22v-8M70 14h20"/><path d="M126 86c0 6-4 10-4 14a4 4 0 0 0 8 0c0-4-4-8-4-14zM118 112c0 5-3 8-3 11a3 3 0 0 0 6 0c0-3-3-6-3-11zM136 108c0 5-3 8-3 11a3 3 0 0 0 6 0c0-3-3-6-3-11z"/><path d="M60 136h120"/>',
 ];
 ---
-<section class="ps" data-m-section>
+<section class="ps" data-m-section data-ps aria-labelledby="ps-h">
   <div class="wrap">
-    <Eyebrow text="How the job goes" />
-    <h2 class="h2 ps-h" data-t="2" style="--h2:52px;--h2m:28px">From a photo<br /><span class="tone">to hot water.</span></h2>
-    <ol class="ps-list" role="list" data-t="3" data-stagger>
-      {S.map((s) => (
-        <li class="ps-it">
-          <Housing w={40} h={64} wm={28} hm={50} r={20} rm={14} cap={14} tone="frost" fill={s.f} class="ps-g" />
-          <div class="ps-pl">
-            <i></i><i></i><i></i><i></i>
-            <h3 class="ps-k">{s.k}</h3>
-            <p class="ps-d">{s.d}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <div class="ps-top">
+      <Eyebrow text="How the job goes" />
+      <h2 class="h2 ps-h" id="ps-h" data-t="2" style="--h2:52px;--h2m:28px">From a photo<br /><span class="tone">to hot water.</span></h2>
+      <p class="ps-lead" data-t="3">Five valves on one run. Open each to see the step.</p>
+    </div>
+    <div class="ps-run" data-scrub data-start="top 85%" data-end="center 50%" data-t="4">
+      <div class="ps-pipe" aria-hidden="true"><span class="ps-water" data-scrub-fill data-axis="x"></span></div>
+      <div class="ps-tabs" role="tablist" aria-label="Steps of a water heater job">
+        {S.map((s, i) => (
+          <button type="button" role="tab" class="ps-v" id={`ps-t-${i}`} aria-controls="ps-stage" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-i={i}>
+            <span class="ps-wheel" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" /><path d="M20 5v30M5 20h30" /></svg></span>
+            <span class="ps-n">0{i + 1}</span>
+            <span class="ps-k">{s.k}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+    <div class="ps-stage" id="ps-stage" role="tabpanel" aria-labelledby="ps-t-0" aria-live="polite" data-t="4">
+      <div class="ps-art" aria-hidden="true">
+        {ART.map((a, i) => <svg class:list={['ps-d', i === 0 && 'is-on']} viewBox="0 0 200 150" set:html={a} />)}
+      </div>
+      <div class="ps-cap">
+        <i></i><i></i><i></i><i></i>
+        <p class="ps-cn" data-ps-n>Step 01 of 05 · {S[0].k}</p>
+        <p class="ps-ct" data-ps-d>{S[0].d}</p>
+        <div class="ps-nav">
+          <button type="button" class="ps-b" data-ps-step="-1" aria-label="Previous step">←</button>
+          <button type="button" class="ps-b" data-ps-step="1" aria-label="Next step">→</button>
+        </div>
+      </div>
+    </div>
   </div>
+  <script type="application/json" data-ps-data set:html={JSON.stringify(S)} />
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ps]').forEach((root) => {
+    const S: { k: string; d: string }[] = JSON.parse(root.querySelector('[data-ps-data]')!.textContent || '[]');
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.ps-v')];
+    const arts = [...root.querySelectorAll<SVGElement>('.ps-d')];
+    const stage = root.querySelector<HTMLElement>('.ps-stage')!;
+    const n = root.querySelector<HTMLElement>('[data-ps-n]')!, d = root.querySelector<HTMLElement>('[data-ps-d]')!;
+    let cur = 0;
+    const show = (i: number, focus = false) => {
+      cur = (i + S.length) % S.length;
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === cur)); t.tabIndex = k === cur ? 0 : -1; t.classList.toggle('is-past', k < cur); });
+      arts.forEach((a, k) => a.classList.toggle('is-on', k === cur));
+      stage.setAttribute('aria-labelledby', `ps-t-${cur}`);
+      n.textContent = `Step 0${cur + 1} of 05 · ${S[cur].k}`; d.textContent = S[cur].d;
+      if (focus) tabs[cur].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      t.addEventListener('keydown', (e) => {
+        const m = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? S.length - 1 : null;
+        if (m === null) return; e.preventDefault(); show(m, true);
+      });
+    });
+    root.querySelectorAll<HTMLButtonElement>('[data-ps-step]').forEach((b) => b.addEventListener('click', () => show(cur + Number(b.dataset.psStep))));
+  });
+</script>
+
 <style>
-  .ps { background: var(--white); padding: 120px 0 145px; }
+  .ps { background: var(--white); padding: 110px 0 120px; }
+  .ps-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .ps-h { margin-top: 16px; }
-  .ps-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; margin: 42px 0 0; padding: 0; list-style: none; }
-  .ps-it { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
-  .ps-pl { position: relative; width: 100%; min-height: 91px; padding: 16px 14px 16px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2); transition: box-shadow .35s var(--ease-io), translate .35s var(--ease-io); }
-  .ps-it:first-child .ps-pl, .ps-it:hover .ps-pl { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--powder); }
-  .ps-list:hover .ps-it:first-child:not(:hover) .ps-pl { box-shadow: inset 0 0 0 1px var(--steel2); }
-  .ps-pl i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
-  .ps-pl i:nth-child(1) { left: 6px; top: 6px; } .ps-pl i:nth-child(2) { right: 6px; top: 6px; }
-  .ps-pl i:nth-child(3) { left: 6px; bottom: 6px; } .ps-pl i:nth-child(4) { right: 6px; bottom: 6px; }
-  .ps-k { padding-bottom: 3px; border-bottom: 1px solid rgba(22,19,15,.3); font-family: var(--f-m); font-weight: 800; font-size: 11px; line-height: 15px; letter-spacing: .1em; text-transform: uppercase; }
-  .ps-d { margin-top: 6px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 1.5; letter-spacing: .04em; }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .ps-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 24px; }
-  }
+  .ps-lead { margin-top: 16px; font-size: 17px; color: var(--muted); }
+  .ps-run { position: relative; max-width: 1000px; margin: 48px auto 0; }
+  .ps-pipe { position: absolute; left: 10%; right: 10%; top: 25px; height: 14px; border-radius: 7px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink); overflow: hidden; }
+  .ps-water { position: absolute; inset: 3px; border-radius: 4px; background: var(--powder); transform-origin: 0 50%; }
+  .ps-tabs { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .ps-v { display: grid; justify-items: center; gap: 6px; padding: 0 4px 6px; border: 0; background: none; color: var(--ink); cursor: pointer; }
+  .ps-wheel { display: grid; place-items: center; width: 64px; height: 64px; margin-top: -0px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); transition: background-color .45s var(--ease-io), box-shadow .45s var(--ease-io); }
+  .ps-wheel svg { width: 38px; height: 38px; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; transition: rotate .6s var(--ease-io), stroke .45s var(--ease-io); }
+  .ps-n { margin-top: 6px; font: 700 11px/1 var(--f-m); letter-spacing: .1em; color: var(--pdeep); }
+  .ps-k { font: 800 17px/1.1 var(--f-h); letter-spacing: -.01em; text-align: center; }
+  .ps-v.is-past .ps-wheel { background: var(--powder); }
+  .ps-v[aria-selected='true'] .ps-wheel { background: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink), 4px 4px 0 var(--powder); }
+  .ps-v[aria-selected='true'] .ps-wheel svg { stroke: var(--white); rotate: 90deg; }
+  .ps-v:hover .ps-wheel { box-shadow: inset 0 0 0 2.5px var(--pdeep); }
+  .ps-v:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; border-radius: 8px; }
+  /* The stage: one drawing area, the caption plate under it, centred. */
+  .ps-stage { display: grid; justify-items: center; width: min(640px, 100%); margin: 40px auto 0; }
+  .ps-art { display: grid; width: 100%; height: 260px; padding: 20px; border-radius: 8px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink), 10px 10px 0 var(--powder); }
+  .ps-d { grid-area: 1 / 1; width: 100%; height: 100%; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; scale: .7; rotate: -6deg; filter: blur(4px);
+    transition: opacity .5s var(--ease-io), scale .6s var(--ease-io), rotate .6s var(--ease-io), filter .5s var(--ease-io); }
+  .ps-d.is-on { opacity: 1; scale: 1; rotate: 0deg; filter: none; }
+  .ps-cap { position: relative; width: calc(100% - 60px); margin-top: -22px; padding: 22px 26px 18px; border-radius: 4px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); text-align: center; }
+  .ps-cap i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .ps-cap i:nth-child(1) { left: 7px; top: 7px; } .ps-cap i:nth-child(2) { right: 7px; top: 7px; } .ps-cap i:nth-child(3) { left: 7px; bottom: 7px; } .ps-cap i:nth-child(4) { right: 7px; bottom: 7px; }
+  .ps-cn { font: 700 11px/1.3 var(--f-m); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+  .ps-ct { min-height: 50px; margin-top: 8px; font-weight: 700; font-size: 18px; line-height: 1.4; color: var(--ink); }
+  .ps-nav { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
+  .ps-b { width: 48px; height: 48px; border: 0; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); font: 700 18px/1 var(--f-b); color: var(--ink); cursor: pointer; }
+  .ps-b:hover { background: var(--ink); color: var(--white); }
+  .ps-b:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .ps-d, .ps-wheel, .ps-wheel svg { transition: none; } .ps-d { filter: none; } }
   @media (max-width: 767px) {
-    .ps { padding: 64px 0 62px; }
-    .ps-h { margin-top: 10px; }
-    .ps-list { grid-template-columns: minmax(0, 1fr); gap: 22px; margin-top: 28px; }
-    .ps-it { flex-direction: row; align-items: center; gap: 12px; }
-    .ps-pl { min-height: 70px; padding: 14px 12px 14px; }
-    .ps-k { padding-bottom: 2px; }
+    .ps { padding: 60px 0 64px; }
+    .ps-lead { font-size: 15px; }
+    .ps-run { margin-top: 28px; }
+    .ps-pipe { top: 19px; height: 10px; left: 9%; right: 9%; }
+    .ps-water { inset: 2px; }
+    .ps-v { padding: 0 0 4px; gap: 4px; }
+    .ps-wheel { width: 48px; height: 48px; }
+    .ps-wheel svg { width: 28px; height: 28px; }
+    .ps-n { margin-top: 2px; font-size: 9px; }
+    .ps-k { font-size: 12px; }
+    .ps-stage { margin-top: 24px; }
+    .ps-art { height: 190px; padding: 14px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+    .ps-cap { width: calc(100% - 24px); padding: 18px 16px 14px; box-shadow: inset 0 0 0 1px var(--steel2), 5px 5px 0 var(--ink); }
+    .ps-ct { font-size: 15px; }
   }
 </style>

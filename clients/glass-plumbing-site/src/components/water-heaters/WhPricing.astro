@@ -1,117 +1,102 @@
 ---
-// What it costs, R2 rebuild (Nick 20 Nov: text left + six items right = slop; every section interactive).
-// "Build your work order": no prices (facts rule), so the visitor flips the six things that apply to their house on a
-// steel work-order plate. Each switch that goes on writes its line onto the order and raises the water in the "job"
-// housing a sixth; the counter reads "3 of 6 apply". The promise line and the call button close the order.
-// 21st.dev: "Plan Add-on Selector" (cnippet-dev, id 24942: checkbox rows with a live total) re-skinned as a Glass work
-// order: steel plate with rivets, mono labels, housing gauge instead of a price total, powder offset shadow.
-// No JS / reduced motion: the switches are real checkboxes (labels always show their line); the gauge just follows.
+// What it costs, fix round 3 (E, RECHECK BLOCKER 2: the flip-what-applies work order with "N OF 6 APPLY" and the "Every
+// house is different, so there is no price list here" line were Khinda's SvPricing). New idea, THE JOB, TAKEN APART: an
+// exploded view. One water-heater job is a stack of six slabs lying flat (isometric planes); as the section scrolls they
+// lift apart (kit/scrub.ts data-scrub-tw, the scroll drives it) and each slab's leader line and label slide out, left and
+// right in turn, so the stack sits in the middle with the labels balanced on both sides. Point at a slab or its label and
+// the pair lights. No counter, no checkboxes, no "no price list" sentence; the close is "text a photo of the label" + call.
+// Copy per layer: the page's earlier factor copy (hedged "usually"), FACTS-CHECK services (tank, tankless, gas, electric).
+// 21st.dev: hello_54e122be "Hairline Exploded" (an isometric stack that separates into labelled layers), rebuilt with CSS
+// 3D planes and the kit scrub engine, re-skinned with Glass tokens (ink hairlines, powder / steel / cream slabs).
+// No JS / reduced motion: the stack shows fully exploded with every label out.
 import Eyebrow from '../kit/Eyebrow.astro';
-import Housing from '../kit/Housing.astro';
 import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
-const F = [
-  { t: 'Tank or tankless', d: 'Tankless units usually cost more to fit.', q: 'Going tankless?' },
-  { t: 'Gas or electric', d: 'Gas can add venting and gas-line work.', q: 'Gas heater?' },
-  { t: 'Size', d: 'More bathrooms at once usually means a bigger unit.', q: 'Several bathrooms at once?' },
-  { t: 'Venting', d: 'Gas units usually need a safe vent path.', q: 'Needs a vent path?' },
-  { t: 'Permit', d: 'Usually needed for a replacement; the office depends on your address.', q: 'Replacing it?' },
-  { t: 'Access', d: 'Attic, closet or garage can change the job.', q: 'Attic, closet or garage?' },
+const L = [
+  { t: 'The unit', d: 'Tank or tankless. Tankless usually costs more to fit.', c: 'var(--white)' },
+  { t: 'Gas or electric', d: 'Gas can add venting and gas-line work.', c: 'var(--powder)' },
+  { t: 'Size', d: 'More bathrooms at once usually means a bigger unit.', c: 'var(--frost)' },
+  { t: 'Venting', d: 'Gas units usually need a safe vent path.', c: 'var(--steel)' },
+  { t: 'Where it sits', d: 'Attic, closet or garage can change the job.', c: 'var(--cream)' },
+  { t: 'Permit', d: 'Usually needed for a replacement; the office depends on your address.', c: 'var(--frost2)' },
 ];
 ---
-<section class="pc seam-host" data-m-section data-pc>
+<section class="pc seam-host" data-m-section aria-labelledby="pc-h">
   <Seam from="var(--frost)" to="var(--white)" d={48} dm={32} />
   <div class="wrap">
     <div class="pc-top">
-      <Eyebrow text="What it costs" />
-      <h2 class="h2 pc-h" data-t="2" style="--h2:52px;--h2m:28px">No price list.<br /><span class="tone">Here’s what changes it.</span></h2>
-      <p class="pc-lead" data-t="3"><span class="d">Every house is different, so there is no price list here. </span>Call or text a photo of the label for your price.</p>
+      <Eyebrow text="What sets the price" />
+      <h2 class="h2 pc-h" id="pc-h" data-t="2" style="--h2:52px;--h2m:28px">One heater,<br /><span class="tone">six layers of job.</span></h2>
+      <p class="pc-lead" data-t="3">Scroll to take the job apart. Your house decides each layer.</p>
     </div>
-    <div class="pc-order" data-t="4">
-      <i class="pc-rv" aria-hidden="true"></i><i class="pc-rv" aria-hidden="true"></i><i class="pc-rv" aria-hidden="true"></i><i class="pc-rv" aria-hidden="true"></i>
-      <fieldset class="pc-set">
-        <legend class="pc-lg">Work order · water heater · <span class="pc-ask">flip what applies to your house</span></legend>
-        <ul class="pc-list" role="list">
-          {F.map((f, i) => (
-            <li>
-              <label class="pc-row">
-                <input type="checkbox" value={i} />
-                <span class="pc-sw" aria-hidden="true"><span></span></span>
-                <span class="pc-tx"><span class="pc-t">{f.t}<span class="pc-q"> · {f.q}</span></span><span class="pc-d">{f.d}</span></span>
-              </label>
-            </li>
-          ))}
-        </ul>
-      </fieldset>
-      <div class="pc-gauge">
-        <Housing w={120} h={220} wm={84} hm={150} r={30} rm={22} tone="frost" fill={1} shadow={8} shadowm={6} class="pc-hs" />
-        <p class="pc-c" aria-live="polite"><b data-pc-n>0</b> of 6 apply</p>
-        <p class="pc-cs">No price list. Call or text a photo of the label for your price.</p>
-      </div>
+    <ol class="ex" role="list" data-scrub data-start="top 80%" data-end="center 45%" data-start-m="top 85%" data-end-m="center 50%" data-t="4">
+      {L.map((l, i) => (
+        <li class:list={['ex-r', i % 2 ? 'ex-rt' : 'ex-lt']} style={`--i:${i};--c:${l.c}`}>
+          <span class="ex-slab" aria-hidden="true" data-scrub-tw={JSON.stringify({ y: (2.5 - i) * 72 })}><span class="ex-pl"><b>0{i + 1}</b></span></span>
+          <span class="ex-lab" data-scrub-tw={JSON.stringify({ opacity: 0, x: i % 2 ? -40 : 40 })} data-win={`${0.3 + i * 0.1},${0.6 + i * 0.07}`}>
+            <span class="ex-ln" aria-hidden="true"></span>
+            <span class="ex-tx"><span class="ex-n">Layer 0{i + 1}</span><span class="ex-t">{l.t}</span><span class="ex-d">{l.d}</span></span>
+          </span>
+        </li>
+      ))}
+    </ol>
+    <div class="pc-close" data-t="3">
+      <p class="pc-cl">Text a photo of your heater label. We tell you the price for your layers on the call.</p>
+      <Btn sub="Get your price" size="l" w={300} />
     </div>
-    <div class="pc-cta" data-t="3"><Btn sub="Get your price" size="l" w={300} /></div>
   </div>
 </section>
+
 <style>
-  .pc { position: relative; background: var(--white); padding: 110px 0 104px; }
+  .pc { position: relative; background: var(--white); padding: 110px 0 104px; overflow-x: clip; }
   .pc-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .pc-h { margin-top: 16px; }
-  .pc-lead { margin-top: 20px; max-width: 520px; font-size: 17px; line-height: 1.5; }
-
-  .pc-order { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 40px; max-width: 1000px; margin: 52px auto 0; padding: 36px 40px 40px; border-radius: 6px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2), 10px 10px 0 var(--ink); }
-  .pc-rv { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--steel2); }
-  .pc-rv:nth-of-type(1) { left: 12px; top: 12px; } .pc-rv:nth-of-type(2) { right: 12px; top: 12px; } .pc-rv:nth-of-type(3) { left: 12px; bottom: 12px; } .pc-rv:nth-of-type(4) { right: 12px; bottom: 12px; }
-  .pc-set { min-width: 0; margin: 0; padding: 0; border: 0; }
-  .pc-lg { width: 100%; padding: 0 0 12px; font: 700 12px/1.3 var(--f-m); letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid rgba(22,19,15,.3); }
-  .pc-ask { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-  .pc-list { margin: 0; padding: 0; list-style: none; }
-  .pc-list li { border-bottom: 1px solid rgba(22,19,15,.16); }
-  .pc-row { position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 16px; align-items: center; min-height: 66px; padding: 10px 6px; cursor: pointer; border-radius: 4px; transition: background-color .4s var(--ease-io); }
-  .pc-row:hover { background: rgba(255,255,255,.35); }
-  .pc-row input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-  .pc-sw { position: relative; width: 48px; height: 28px; border-radius: 14px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); transition: background-color .45s var(--ease-io); }
-  .pc-sw span { position: absolute; left: 4px; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); transition: translate .45s var(--ease-io), background-color .45s var(--ease-io); }
-  .pc-row input:checked + .pc-sw { background: var(--pdeep); }
-  .pc-row input:checked + .pc-sw span { translate: 20px 0; background: var(--white); }
-  .pc-row input:focus-visible + .pc-sw { outline: 3px solid var(--pdeep); outline-offset: 3px; }
-  .pc-tx { display: flex; flex-direction: column; gap: 3px; }
-  .pc-t { font: 800 19px/1.1 var(--f-h); letter-spacing: -.02em; }
-  .pc-q { font: 500 14px/1.1 var(--f-b); letter-spacing: 0; color: var(--ink); }
-  .pc-d { font: 500 12px/1.45 var(--f-m); color: var(--ink); }
-  .pc-row input:checked ~ .pc-tx .pc-d { font-weight: 700; }
-  .pc-row input:checked ~ .pc-tx .pc-d::before { content: '+ '; color: var(--pdeep); font-weight: 700; }
-
-  .pc-gauge { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px 16px; border-radius: 6px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .pc-gauge :global(.pc-hs) { --lvl: var(--on, 0) !important; }
-  .pc-gauge :global(.pc-hs .hs-water) { transition: height .7s var(--ease-io), translate 1.2s var(--ease-io); }
-  .pc-c { margin-top: 22px; font: 700 12px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; }
-  .pc-c b { font: 800 34px/1 var(--f-h); letter-spacing: -.02em; margin-right: 6px; color: var(--pdeep); }
-  .pc-cs { margin-top: 12px; font-size: 14px; line-height: 1.45; color: var(--muted); }
-  .pc-cta { display: flex; justify-content: center; margin-top: 44px; }
-
-  @media (max-width: 1023px) { .pc-order { grid-template-columns: minmax(0, 1fr); } .pc-gauge { flex-direction: row; gap: 20px; text-align: left; } .pc-c { margin-top: 0; } }
+  .pc-lead { margin-top: 18px; max-width: 520px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  /* The stack: each row is [label | slab | label]; the label sits on the left for even rows and the right for odd ones. */
+  .ex { position: relative; display: grid; gap: 0; max-width: 1080px; margin: 40px auto 0; padding: 0; list-style: none; }
+  .ex-r { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 300px minmax(0, 1fr); align-items: center; height: 96px; z-index: calc(10 - var(--i)); }
+  .ex-slab { grid-column: 2; display: grid; place-items: center; height: 96px; perspective: 900px; }
+  .ex-pl { position: relative; display: grid; place-items: center; width: 220px; height: 220px; background: var(--c); border-radius: 14px; box-shadow: inset 0 0 0 2px var(--ink), 8px 8px 0 var(--ink);
+    transform: rotateX(62deg) rotateZ(-45deg); transition: background-color .4s var(--ease-io), box-shadow .4s var(--ease-io); }
+  .ex-pl b { font: 800 46px/1 var(--f-h); color: var(--ink); rotate: 45deg; opacity: .85; }
+  .ex-lab { display: flex; align-items: center; gap: 0; min-width: 0; }
+  .ex-lt .ex-lab { grid-column: 1; grid-row: 1; flex-direction: row-reverse; text-align: right; }
+  .ex-rt .ex-lab { grid-column: 3; grid-row: 1; }
+  .ex-ln { flex: 0 0 64px; height: 1.5px; background: var(--ink); position: relative; }
+  .ex-ln::before { content: ''; position: absolute; top: -4px; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); }
+  .ex-lt .ex-ln::before { right: -4px; } .ex-rt .ex-ln::before { left: -4px; }
+  .ex-tx { display: grid; gap: 3px; max-width: 320px; padding: 0 14px; }
+  .ex-n { font: 700 10px/1.2 var(--f-m); letter-spacing: .1em; text-transform: uppercase; color: var(--pdeep); }
+  .ex-t { font: 800 22px/1.1 var(--f-h); letter-spacing: -.02em; color: var(--ink); }
+  .ex-d { font-size: 15px; line-height: 1.45; color: var(--ink); }
+  .ex-r:hover .ex-pl, .ex-r:focus-within .ex-pl { background: var(--ink); }
+  .ex-r:hover .ex-pl b { color: var(--white); }
+  .ex-r:hover .ex-t { color: var(--pdeep); }
+  .pc-close { display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 70px; text-align: center; }
+  .pc-cl { max-width: 520px; font-weight: 700; font-size: 19px; line-height: 1.45; color: var(--ink); }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .ex-r { grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr); }
+    .ex-pl { width: 170px; height: 170px; }
+    .ex-ln { flex-basis: 36px; }
+    .ex-tx { padding: 0 10px; }
+    .ex-d { font-size: 14px; }
+  }
   @media (max-width: 767px) {
-    .pc { padding: 64px 0 60px; }
-    .pc-h { margin-top: 10px; }
-    .pc-lead { margin-top: 12px; font-size: 15px; }
-    .pc-order { margin-top: 28px; padding: 22px 16px 18px; gap: 18px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); }
-    .pc-lg { font-size: 10px; }
-    .pc-row { grid-template-columns: 46px minmax(0, 1fr); gap: 12px; padding: 10px 2px; }
-    .pc-sw { width: 44px; height: 26px; } .pc-sw span { width: 18px; height: 18px; } .pc-row input:checked + .pc-sw span { translate: 18px 0; }
-    .pc-t { font-size: 16px; } .pc-q { display: none; }
-    .pc-gauge { flex-wrap: wrap; justify-content: flex-start; }
-    .pc-cs { flex-basis: 100%; margin-top: 4px; }
-    .pc-cta :global(a) { width: 100%; }
+    .pc { padding: 60px 0 64px; }
+    .pc-lead { font-size: 15px; }
+    .ex { margin-top: 26px; }
+    .ex-r { grid-template-columns: 112px minmax(0, 1fr); height: auto; min-height: 92px; }
+    .ex-slab { grid-column: 1; grid-row: 1; height: 92px; }
+    .ex-pl { width: 84px; height: 84px; border-radius: 8px; }
+    .ex-pl { box-shadow: inset 0 0 0 1.5px var(--ink), 4px 4px 0 var(--ink); }
+    .ex-pl b { font-size: 24px; }
+    .ex-lt .ex-lab, .ex-rt .ex-lab { grid-column: 2; grid-row: 1; flex-direction: row; text-align: left; }
+    .ex-lt .ex-ln::before { right: auto; left: -4px; }
+    .ex-ln { flex-basis: 16px; }
+    .ex-tx { padding: 6px 0 6px 10px; }
+    .ex-t { font-size: 18px; }
+    .ex-d { font-size: 14px; }
+    .pc-close { margin-top: 40px; }
+    .pc-cl { font-size: 16px; }
   }
 </style>
-<script>
-  const root = document.querySelector<HTMLElement>('[data-pc]');
-  if (root) {
-    const boxes = [...root.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')];
-    const n = root.querySelector<HTMLElement>('[data-pc-n]')!;
-    const hs = root.querySelector<HTMLElement>('.pc-hs')!;
-    const upd = () => { const k = boxes.filter((b) => b.checked).length; n.textContent = String(k); hs.style.setProperty('--on', String(Math.max(0.04, k / 6))); };
-    boxes.forEach((b) => b.addEventListener('change', upd));
-    upd();
-  }
-</script>

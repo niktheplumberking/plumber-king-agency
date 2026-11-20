@@ -1,117 +1,125 @@
 ---
-// /about "CTA talk to a brother" (Figma y 5627 h 620 / mobile y 5179 h 776). White. Status pill, call + text buttons and
-// the "Who picks up" switchboard: Kody / Zak / Chase with their review counts (data.ts, from reviews.ts). INTERACTION note:
-// the "Ringing" highlight moves between the three names every 2 s and pauses on hover; a visible Pause button stops it
-// (WCAG 2.2.2). Reduced motion: static on Kody, no button.
+// /about final CTA, fix round 3 (D, RECHECK MAJOR 1 + BLOCKER 1b). Was "Talk to the crew": a second Kody / Zak / Chase list
+// with "Named in N of 16" (the first one is "The names in the reviews" above) and "When you call, one of these picks up"
+// (who answers is not confirmed). Both are gone. New idea, "Keep the card": Kody's real business card, large and centred,
+// is the call to action. It tilts toward the pointer and turns over on a tap (front: the whole logo, 24/7, licensed and
+// insured; back: Kody Glass, Owner, the number, the licence). It moved here from the hero, so "Kody Glass, Owner" is never
+// in the same view as the single crew face at the top of the page (no names beside a single face, at any width).
+// 21st.dev: "Holographic Business Card" (@aakashmehra, id 44447: tilts toward the pointer, lifts on hover, flips on click),
+// adapted to vanilla TS + CSS 3D, re-skinned: no foil, a soft light that follows the pointer, the Glass powder offset shadow; the turn-over pill bites
+// the card's lower edge (the depth layer).
+// Nearest match: Glass home Crew also flips this card (there it sits on the van photo inside the crew section); here it is
+// the whole section, centred, with tilt, and the page's last call buttons. Mike's CTAs are a tear-off flyer, hex swell,
+// road sign, wall calendar; Khinda's a wall switch and a viewfinder; none is a card.
+// JS: two listeners on the card (pointer tilt, gated to fine pointers + motion) and the flip; nothing runs while idle.
+// Reduced motion: no tilt, the flip is a short cross-fade. No JS: the front shows and hover turns it over.
 import Head from '../areas/Head.astro';
 import Btn from '../kit/Btn.astro';
-import { Image } from 'astro:assets';
-import logo from '../../assets/brand/logo-glass.png';
-import { KODY, ZAK, CHASE, REVIEW_TOTAL } from './data';
-const rows = [
-  { n: 'Kody', s: `Owner · named in ${KODY} of ${REVIEW_TOTAL} reviews` },
-  { n: 'Zak', s: `Named in ${ZAK} of ${REVIEW_TOTAL} reviews` },
-  { n: 'Chase', s: `Named in ${CHASE} of ${REVIEW_TOTAL} reviews` },
-];
+import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
 ---
 <section class="bcall" data-m-section aria-labelledby="bcall-h">
-  <div class="wrap bk-grid">
-    <div class="bk-copy">
-      <Head eyebrow="Who picks up" l1="Talk to" l2="the crew." size={60} sizeM={38} id="bcall-h" />
-      <p class="bk-status" data-t="3"><span class="bk-live" aria-hidden="true"></span>Line open now · 24/7</p>
-      <div class="bk-btns">
-        <Btn look="call" sub="Call now · 24/7" size="l" w={300} wm={350} t="3" />
-        <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={220} wm={350} hm={56} t="3" />
-      </div>
+  <div class="wrap bk-in">
+    <div class="bk-head">
+      <Head eyebrow="Keep the card" l1="One number," l2="any hour." size={64} sizeM={40} id="bcall-h" br={false} />
+      <p class="bk-lead" data-t="3">It is the number on the van and on the card. Call it, or text a photo of the problem first.</p>
     </div>
-    <div class="bk-board" data-switchboard data-t="4" data-fx="frame">
-      <div class="bk-top">
-        <p class="bk-k"><span class="d">When you call, one of these picks up</span><span class="m">One of these picks up</span></p>
-        <button class="bk-pause" type="button" aria-pressed="false" data-sb-pause>Pause</button>
+
+    <div class="bk-stage" data-t="4" data-fx="pop">
+      <div class="bk-tilt" data-bk-tilt>
+        <button class="bk-card" type="button" aria-pressed="false" data-bcard>
+          <span class="sr-only" data-bcard-label>Kody Glass's business card, front. Turn it over</span>
+          <span class="bk-inner" aria-hidden="true">
+            <span class="bk-face bk-front">
+              <Img name="business-card" alt="" sizes="(min-width:768px) 520px, 300px" fit="cover" widths={[340, 520, 700, 1040]} />
+            </span>
+            <span class="bk-face bk-back">
+              <Img name="business-card" alt="" sizes="(min-width:768px) 520px, 300px" fit="cover" widths={[340, 520, 700, 1040]} />
+            </span>
+          </span>
+        </button>
       </div>
-      <ul class="bk-rows" role="list">
-        {rows.map((r, i) => (
-          <li class:list={['bk-row', i === 0 && 'is-on']} data-sb-row>
-            <span class="bk-seal" aria-hidden="true"><Image src={logo} alt="" width={90} height={58} class="bk-logo" /></span>
-            <span class="bk-who"><span class="bk-n">{r.n}</span><span class="bk-s">{r.s}</span></span>
-            <span class="bk-chip" aria-hidden="true">Ringing</span>
-          </li>
-        ))}
-      </ul>
+      <p class="bk-hint" aria-hidden="true" data-bk-hint-wrap><svg viewBox="0 0 16 16" width="12" height="12"><path d="M2.5 8a5.5 5.5 0 0 1 9.6-3.7M13.5 8a5.5 5.5 0 0 1-9.6 3.7M12.6 1.6v3h-3M3.4 14.4v-3h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-bcard-hint>Tap the card to turn it over</span></p>
+      <p class="sr-only">Front: Glass Plumbing Services, commercial and residential, {SITE.phone}, 24/7 emergency service, licensed and insured. Back: Kody Glass, Owner, {SITE.phone}, kodyglassplumbing@gmail.com, licensed and insured, {SITE.licence.number}.</p>
+    </div>
+
+    <p class="bk-status" data-t="3"><span class="bk-live" aria-hidden="true"></span>Line open · 24/7</p>
+    <div class="bk-btns">
+      <Btn look="call" sub="Call now · 24/7" size="l" w={300} wm={350} t="3" />
+      <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={240} wm={350} hm={56} t="3" />
     </div>
   </div>
 </section>
 
 <script>
-  // Switchboard: the "Ringing" highlight steps Kody -> Zak -> Chase every 2 s. Pauses on hover / focus inside; the Pause
-  // button stops it for good (WCAG 2.2.2). Reduced motion (no html.motion): it never starts.
-  document.querySelectorAll<HTMLElement>('[data-switchboard]').forEach((board) => {
-    const rows = [...board.querySelectorAll<HTMLElement>('[data-sb-row]')];
-    const btn = board.querySelector<HTMLButtonElement>('[data-sb-pause]')!;
-    if (!document.documentElement.classList.contains('motion') || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    board.classList.add('is-live');
-    let i = 0, hover = false, stopped = false, timer = 0;
-    const tick = () => { if (hover || stopped || document.hidden) return; rows[i].classList.remove('is-on'); i = (i + 1) % rows.length; rows[i].classList.add('is-on'); };
-    const start = () => { clearInterval(timer); timer = window.setInterval(tick, 2000); };
-    board.addEventListener('pointerenter', () => { hover = true; });
-    board.addEventListener('pointerleave', () => { hover = false; });
-    board.addEventListener('focusin', () => { hover = true; });
-    board.addEventListener('focusout', () => { hover = false; });
-    btn.addEventListener('click', () => {
-      stopped = !stopped;
-      btn.setAttribute('aria-pressed', String(stopped));
-      btn.textContent = stopped ? 'Play' : 'Pause';
-      if (!stopped) start();
+  document.querySelectorAll<HTMLButtonElement>('.bcall [data-bcard]').forEach((b) => {
+    const label = b.querySelector<HTMLElement>('[data-bcard-label]')!;
+    const stage = b.closest<HTMLElement>('.bk-stage')!;
+    const hint = stage.querySelector<HTMLElement>('[data-bcard-hint]')!;
+    stage.classList.add('is-js');
+    b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(on));
+      label.textContent = on ? "Kody Glass's business card, back: Kody Glass, Owner. Turn it back" : "Kody Glass's business card, front. Turn it over";
+      hint.textContent = on ? 'Tap again for the front' : 'Tap the card to turn it over';
     });
-    start();
+    // Tilt toward the pointer (fine pointers + motion only). The rect is read once on enter, never per frame.
+    const tilt = stage.querySelector<HTMLElement>('[data-bk-tilt]')!;
+    if (!document.documentElement.classList.contains('motion') || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    let r: DOMRect | null = null, raf = 0, px = 0, py = 0;
+    const paint = () => { raf = 0; tilt.style.setProperty('--ry', `${(px - .5) * 14}deg`); tilt.style.setProperty('--rx', `${(.5 - py) * 10}deg`); tilt.style.setProperty('--gx', `${px * 100}%`); };
+    tilt.addEventListener('pointerenter', () => { r = tilt.getBoundingClientRect(); tilt.classList.add('is-over'); });
+    tilt.addEventListener('pointermove', (e) => { if (!r) return; px = (e.clientX - r.left) / r.width; py = (e.clientY - r.top) / r.height; if (!raf) raf = requestAnimationFrame(paint); });
+    tilt.addEventListener('pointerleave', () => { r = null; tilt.classList.remove('is-over'); tilt.style.setProperty('--rx', '0deg'); tilt.style.setProperty('--ry', '0deg'); });
   });
 </script>
 
 <style>
-  .bcall { position: relative; background: var(--white); padding: 110px 0 130px; }
-  .bk-grid { display: grid; grid-template-columns: 540px 600px; justify-content: space-between; align-items: start; }
-  .bk-status { display: flex; align-items: center; gap: 10px; width: 300px; height: 36px; margin-top: 30px; padding: 0 16px; border: 1.5px solid var(--ink); border-radius: 18px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .bcall { position: relative; background: var(--white); padding: 112px 0 128px; }
+  .bk-in { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .bk-head { display: flex; flex-direction: column; align-items: center; }
+  .bk-head :global(.ah-eb) { justify-content: center; }
+  .bk-lead { max-width: 520px; margin-top: 18px; font-size: 18px; line-height: 1.5; color: var(--ink); }
+
+  /* The card, large and centred; the turn-over pill sits over its lower edge. */
+  .bk-stage { position: relative; width: 520px; margin-top: 56px; padding-bottom: 46px; }
+  .bk-tilt { --rx: 0deg; --ry: 0deg; --gx: 50%; position: relative; z-index: 2; perspective: 1600px; }
+  .bk-card { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; rotate: -3deg; transition: rotate .6s var(--ease-io), translate .6s var(--ease-io); }
+  .bk-tilt.is-over .bk-card { rotate: 0deg; translate: 0 -6px; }
+  .bk-inner { position: relative; display: block; aspect-ratio: 1341 / 765; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform .8s var(--ease-io); }
+  .bk-tilt.is-over .bk-inner { transition: transform .25s ease-out; }
+  .bk-card[aria-pressed='true'] .bk-inner { transform: rotateX(var(--rx)) rotateY(calc(180deg + var(--ry))); }
+  .bk-tilt.is-over .bk-card[aria-pressed='true'] .bk-inner, .bk-tilt.is-over .bk-card .bk-inner { transition: transform .8s var(--ease-io); }
+  .bk-face { position: absolute; inset: 0; overflow: hidden; border-radius: 8px; background: var(--white); box-shadow: 12px 12px 0 var(--powder); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .bk-face::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 8px; pointer-events: none;
+    background: linear-gradient(105deg, transparent calc(var(--gx) - 30%), rgb(255 255 255 / .28) var(--gx), transparent calc(var(--gx) + 30%)); }
+  /* The source photo holds the front (x 22-1363, y 30-795 of 1385 x 1628) above the back (y 847-1612): each face is a
+     1341:765 window onto the same file, so both sides show whole (the logo is never cut). */
+  .bk-face :global(picture) { display: contents; }
+  .bk-face :global(img) { position: absolute; left: -1.641%; top: 0; width: 103.28%; height: auto; max-width: none; translate: 0 -1.843%; }
+  .bk-back { transform: rotateY(180deg); }
+  .bk-back :global(img) { translate: 0 -52.03%; }
+  :global(html:not(.js)) .bk-card:hover .bk-inner { transform: rotateY(180deg); }
+  .bk-card:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 8px; border-radius: 10px; }
+  .bk-hint { position: absolute; left: 50%; bottom: 26px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 14px; translate: -50% 0; border-radius: 15px;
+    background: var(--ink); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .bk-stage:not(.is-js) .bk-hint { display: none; }
+
+  .bk-status { display: inline-flex; align-items: center; gap: 10px; height: 36px; margin-top: 48px; padding: 0 16px; border: 1.5px solid var(--ink); border-radius: 18px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
   .bk-live { width: 12px; height: 12px; border-radius: 50%; background: var(--pdeep); box-shadow: 0 0 0 3px var(--powder); }
-  .bk-btns { display: flex; gap: 16px; margin-top: 30px; }
-  .bk-board { position: relative; padding: 28px 20px 32px; background: var(--ink); border-radius: 8px; box-shadow: 10px 10px 0 var(--powder); color: var(--white); }
-  .bk-top { display: flex; justify-content: space-between; align-items: center; min-height: 15px; padding: 0 8px; }
-  .bk-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
-  .bk-pause { display: none; min-height: 32px; margin: -9px 0; padding: 0 12px; border: 1px solid var(--ink3); border-radius: 16px; background: transparent; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); cursor: pointer; }
-  .bk-pause:hover { border-color: var(--powder); }
-  .bk-pause:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
-  .is-live .bk-pause { display: inline-flex; align-items: center; }
-  .bk-rows { display: grid; row-gap: 12px; margin-top: 29px; }
-  .bk-row { position: relative; display: flex; align-items: center; height: 84px; padding: 0 20px 0 16px; background: var(--ink2); border-radius: 6px; box-shadow: inset 0 0 0 1px var(--ink3); transition: background-color .5s var(--ease-io), box-shadow .5s var(--ease-io); }
-  .bk-row.is-on { background: var(--ink3); box-shadow: inset 0 0 0 1px var(--powder); }
-  .bk-seal { display: grid; place-items: center; flex: none; width: 56px; height: 56px; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); }
-  .bk-seal :global(.bk-logo) { width: 45px; height: auto; }
-  .bk-who { display: flex; flex-direction: column; flex: 1; margin-left: 18px; }
-  .bk-n { font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.04; letter-spacing: -.02em; }
-  .bk-s { margin-top: 7px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: rgb(255 255 255 / .7); }
-  .bk-chip { padding: 6px 13px; border-radius: 16px; background: var(--powder); font-weight: 600; font-size: 12px; line-height: 18px; color: var(--ink); clip-path: inset(0 0 0 100% round 16px); transition: clip-path .4s var(--ease-io); } /* fix B: wipe, not a fade (axe caught the half-faded text) */
-  .is-on .bk-chip { clip-path: inset(0 0 0 0 round 16px); }
-  .m { display: none; }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .bk-grid { grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); column-gap: 40px; }
-    .bk-btns { flex-wrap: wrap; }
-  }
+  .bk-btns { display: flex; justify-content: center; gap: 16px; margin-top: 22px; }
+  @media (prefers-reduced-motion: reduce) { .bk-inner, .bk-card { transition: none; } }
+  :global(html:not(.motion)) .bk-inner { transition: none; }
+
+  @media (min-width: 768px) and (max-width: 1279px) { .bk-stage { width: min(480px, 70vw); } }
   @media (max-width: 767px) {
-    .bcall { padding: 64px 0 90px; }
-    .bk-grid { display: flex; flex-direction: column; align-items: stretch; }
-    .bk-copy { display: contents; }
-    .bk-status { display: none; }
-    .bk-btns { order: 2; flex-direction: column; gap: 16px; margin-top: 30px; }
-    .bk-board { order: 1; margin-top: 24px; padding: 20px 12px 22px; box-shadow: 6px 6px 0 var(--powder); }
-    .bk-top { padding: 0 6px; }
-    .bk-k { font-size: 10px; line-height: 13px; }
-    .bk-rows { margin-top: 17px; }
-    .bk-row { height: 78px; padding: 0 12px; }
-    .bk-seal { width: 50px; height: 50px; }
-    .bk-seal :global(.bk-logo) { width: 40px; }
-    .bk-who { margin-left: 14px; }
-    .bk-n { font-size: 22px; }
-    .bk-s { margin-top: 9px; font-size: 10px; line-height: 13px; }
-    .bk-chip { display: none; }
-    .d { display: none; } .m { display: inline; }
+    .bcall { padding: 64px 0 88px; }
+    .bk-lead { margin-top: 12px; font-size: 16px; }
+    .bk-stage { width: min(300px, 100% - 40px); margin-top: 36px; padding-bottom: 36px; }
+    .bk-card { rotate: -2deg; }
+    .bk-face { box-shadow: 7px 7px 0 var(--powder); }
+    .bk-status { margin-top: 40px; }
+    .bk-btns { flex-direction: column; align-items: stretch; width: 100%; max-width: 350px; gap: 14px; }
   }
 </style>

@@ -5,13 +5,15 @@
 // ends on the grid edge and its focal point is the face (52% 80% of the portrait file). The business card used to be a
 // cover crop of the two-sided photo (front + back stacked), which cut the logo in half -> it is now a real two-sided card:
 // the front shows the whole logo, a tap flips it to "Kody Glass, Owner" (21st.dev skyleen77/flip-card, re-skinned).
-// Fix round B (independent review): no name next to a single face. The card sits beside the call button, never on the
-// photo; the H1 no longer says "Glass Brothers" (that phrase is only used inside David Peek's quoted review). Visible breadcrumbs are gone site-wide (Nick):
+// Fix round 3 (D, RECHECK BLOCKER 1b): at 390 the flip card ("Kody Glass, Owner") still stacked right above the single
+// face. The card now lives in the page's last section (AboutCall, "Keep the card"), far from any face at every width; the
+// hero keeps the centred photo (Nick's fix) and gets the licence line beside the call button instead. Earlier (fix B): the H1 no longer says "Glass Brothers" (that phrase is only used inside David Peek's quoted review). Visible breadcrumbs are gone site-wide (Nick):
 // Breadcrumbs stays for its BreadcrumbList JSON-LD and its nav is hidden here.
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
 import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
 ---
 <section class="bhero" data-m-section data-m-hero aria-labelledby="bhero-h">
   <div class="wrap bh-grid">
@@ -22,22 +24,8 @@ import Img from '../ui/Img.astro';
       <h1 id="bhero-h" class="bh-h" data-t="2">Meet the crew<br /><span class="tone">behind the van.</span></h1>
       <p class="bh-lead" data-t="3" data-fx="nudge"><span class="d">A Florida-licensed plumbing contractor and his crew, fixing homes and businesses across Pinellas County from Largo.</span><span class="m">A Florida-licensed plumbing contractor and his crew, fixing homes and businesses across Pinellas from Largo.</span></p>
       <div class="bh-act">
-      <div class="bh-btn"><Btn look="call" sub="Call or text · 24/7" size="l" w={320} wm={350} t="3" /></div>
-      <div class="bh-card-wrap" data-t="5" data-fx="pop">
-        <button class="bh-card" type="button" aria-pressed="false" data-bcard>
-          <span class="sr-only" data-bcard-label>Kody Glass's business card, front. Flip to the back</span>
-          <span class="bh-inner" aria-hidden="true">
-            <span class="bh-face bh-front">
-              <Img name="business-card" alt="" sizes="(min-width:768px) 280px, 250px" fit="cover" widths={[340, 520, 700]} />
-            </span>
-            <span class="bh-face bh-back">
-              <Img name="business-card" alt="" sizes="(min-width:768px) 280px, 250px" fit="cover" widths={[340, 520, 700]} />
-            </span>
-          </span>
-          <span class="bh-hint" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M2.5 8a5.5 5.5 0 0 1 9.6-3.7M13.5 8a5.5 5.5 0 0 1-9.6 3.7M12.6 1.6v3h-3M3.4 14.4v-3h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-bcard-hint>Flip the card</span></span>
-        </button>
-        <p class="sr-only">Front: Glass Plumbing Services, commercial and residential, 727-512-0673, 24/7 emergency service, licensed and insured. Back: Kody Glass, Owner, 727-512-0673, kodyglassplumbing@gmail.com, licensed and insured, CFC1432488.</p>
-      </div>
+        <div class="bh-btn"><Btn look="call" sub="Call or text · 24/7" size="l" w={320} wm={350} t="3" /></div>
+        <p class="bh-lic" data-t="4">Florida licence {SITE.licence.number} · active on DBPR</p>
       </div>
     </div>
     <div class="bh-media">
@@ -48,22 +36,6 @@ import Img from '../ui/Img.astro';
     </div>
   </div>
 </section>
-
-<script>
-  // Business card flip: a real button (aria-pressed). The 3D turn is a CSS transition (0.8 s ease-in-out); reduced motion
-  // swaps the faces with a short cross-fade instead. Without JS the card shows its front (whole logo) and flips on hover.
-  document.querySelectorAll<HTMLButtonElement>('[data-bcard]').forEach((b) => {
-    const label = b.querySelector<HTMLElement>('[data-bcard-label]')!;
-    const hint = b.querySelector<HTMLElement>('[data-bcard-hint]')!;
-    b.closest('.bh-card-wrap')?.classList.add('is-js');
-    b.addEventListener('click', () => {
-      const on = b.getAttribute('aria-pressed') !== 'true';
-      b.setAttribute('aria-pressed', String(on));
-      label.textContent = on ? "Kody Glass's business card, back: Kody Glass, Owner. Flip to the front" : "Kody Glass's business card, front. Flip to the back";
-      hint.textContent = on ? 'Flip back' : 'Flip the card';
-    });
-  });
-</script>
 
 <style>
   .bhero { position: relative; background: var(--white); padding: 72px 0 84px; }
@@ -80,28 +52,7 @@ import Img from '../ui/Img.astro';
   .bh-photo :global(picture), .bh-photo :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; }
   .bh-photo::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 6px; pointer-events: none; }
 
-  /* Business card: the source photo holds the front (x 22-1363, y 30-795 of 1385 x 1628) above the back (y 847-1612).
-     Each face is a 1341:765 window onto the same file, so both sides show whole, never cropped. */
-  .bh-card-wrap { position: relative; flex: none; width: 280px; padding-bottom: 40px; margin-bottom: -40px; rotate: -4deg; z-index: 2; }
-  .bh-card { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; perspective: 1400px; text-align: left; }
-  .bh-inner { position: relative; display: block; aspect-ratio: 1341 / 765; transform-style: preserve-3d; transition: transform .8s var(--ease-io); }
-  .bh-face { position: absolute; inset: 0; overflow: hidden; border-radius: 6px; background: var(--white); box-shadow: 8px 8px 0 var(--ink); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .bh-face::after { content: ''; position: absolute; inset: 0; border: 1.5px solid var(--ink); border-radius: 6px; pointer-events: none; }
-  .bh-face :global(picture) { display: contents; }
-  .bh-face :global(img) { position: absolute; left: -1.641%; top: 0; width: 103.28%; height: auto; max-width: none; translate: 0 -1.843%; }
-  .bh-back { transform: rotateY(180deg); }
-  .bh-back :global(img) { translate: 0 -52.03%; }
-  .bh-card[aria-pressed='true'] .bh-inner { transform: rotateY(180deg); }
-  :global(html:not(.js)) .bh-card:hover .bh-inner { transform: rotateY(180deg); }
-  .bh-card:hover .bh-face { box-shadow: 10px 10px 0 var(--ink); }
-  .bh-card:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 8px; }
-  .bh-hint { position: absolute; right: 0; bottom: -42px; display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 12px; border-radius: 15px; background: var(--ink); color: var(--white);
-    font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; rotate: 4deg; transition: background-color .3s var(--ease-io); }
-  .bh-card:hover .bh-hint { background: var(--pdeep); }
-  .bh-card-wrap:not(.is-js) .bh-hint { display: none; }
-  @media (prefers-reduced-motion: reduce) {
-    .bh-inner { transition: none; }
-  }
+  .bh-lic { font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 1.5; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); max-width: 220px; }
   .m { display: none; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
@@ -110,7 +61,6 @@ import Img from '../ui/Img.astro';
     .bh-media { width: 100%; }
     .bh-photo { width: 100%; height: auto; aspect-ratio: 460 / 560; }
     .bh-act { flex-direction: column; align-items: flex-start; gap: 36px; }
-    .bh-card-wrap { width: 260px; margin-left: 12px; }
   }
   @media (max-width: 767px) {
     .bhero { padding: 32px 0 88px; }
@@ -123,10 +73,6 @@ import Img from '../ui/Img.astro';
     .d { display: none; } .m { display: inline; }
     .bh-media { align-self: center; width: 280px; margin-top: 44px; }
     .bh-photo { width: 280px; height: 340px; box-shadow: 8px 8px 0 var(--powder); }
-    .bh-card-wrap { align-self: center; width: 250px; margin: 0; }
-    .bh-face { box-shadow: 6px 6px 0 var(--ink); }
-  }
-  @media (max-width: 374px) {
-    .bh-card-wrap { width: 230px; }
+    .bh-lic { max-width: none; text-align: center; }
   }
 </style>

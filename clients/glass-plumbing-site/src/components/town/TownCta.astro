@@ -1,6 +1,6 @@
 ---
 // /areas/seminole "CTA Seminole price" (Figma y 6203 h 734 / mobile y 5824 h 700). Ink, meniscus rise over the white
-// nearby-towns band. Price request form (#estimate, forms.ts) with name, phone, street, job and an ink "Send to Kody"
+// nearby-towns band. Price request form (#estimate, forms.ts) with name, phone, street, job and an ink "Send the job"
 // button; desktop also has the lead and the call button (phones: neither, as the frame).
 import Head from '../areas/Head.astro';
 import Btn from '../kit/Btn.astro';
@@ -11,7 +11,7 @@ import Seam from '../kit/Seam.astro';
   <div class="wrap tc-grid">
     <div class="tc-copy">
       <Head eyebrow="Seminole" l1="Get a price" l2="in Seminole." size={60} sizeM={32} dark id="tcta-h" />
-      <p class="tc-lead" data-t="3">Tell us the job and your street. Kody or the crew will call you back.</p>
+      <p class="tc-lead" data-t="3">Tell us the job and your street. We call you back.</p>
       <Btn look="call" sub="Or call · 24/7" size="l" w={300} t="3" class="tc-call" />
     </div>
     <form class="tc-form" id="estimate" action="/thank-you" method="get" data-estimate-form data-t="4" aria-labelledby="tc-fh" novalidate>
@@ -26,7 +26,7 @@ import Seam from '../kit/Seam.astro';
       <input id="tc-job" class="tc-in" name="job" type="text" placeholder="Describe the job" />
       <input type="hidden" name="form" value="seminole-price" />
       <input type="hidden" name="town" value="Seminole" />
-      <Btn look="ink" type="submit" label="Send to Kody" block h={60} hm={58} class="tc-send" />
+      <Btn look="ink" type="submit" label="Send the job" block h={60} hm={58} class="tc-send" />
       <p class="tc-msg" data-form-msg role="status" aria-live="polite"></p>
     </form>
   </div>

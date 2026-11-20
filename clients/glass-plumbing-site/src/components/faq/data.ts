@@ -16,7 +16,7 @@ export const FAQ_GROUPS: Group[] = [
     id: 'water-heaters', name: 'Water heaters', items: [
       { q: 'Tank or tankless for a Florida home?', a: 'It depends on how much hot water you use at once and whether you have gas. Tankless heats on demand and hangs on the wall. A tank stores hot water and usually costs less to fit.' },
       { q: 'Do I need a permit to replace a water heater?', a: 'Usually, yes. Pinellas County lists a “Water Heater Equal Change Out, Tank or Tankless” express permit for unincorporated areas, and Clearwater requires permits for water heaters. Largo and other cities: check with the city’s permit office.', src: 'Source · pinellas.gov Express Permits · myclearwater.com, read 17 Nov 2026' },
-      { q: 'How fast can you put in a new one?', a: 'Often the next day. One customer wrote: “called and had one installed the next day”.', src: 'Source · Kevin Kelleman, Google review' },
+      { q: 'How fast can you put in a new one?', a: 'It depends on the job and the unit. One customer wrote: “called and had one installed the next day”.', src: 'Source · Kevin Kelleman, Google review' },
     ],
   },
   {

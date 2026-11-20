@@ -139,9 +139,23 @@ export function initScrub() {
   const mm = gsap.matchMedia();
   mm.add({ phone: '(max-width: 767px)', tab: '(min-width: 768px) and (max-width: 1023px)', lap: '(min-width: 1024px) and (max-width: 1279px)', wide: '(min-width: 1280px)' }, (ctx) => {
     const phone = !!ctx.conditions?.phone;
-    const undo = roots.filter(vis).map((r) => build(r, phone));
-    requestRefresh();
-    return () => undo.forEach((u) => u());
+    // R3 (TBT): each moment is built lazily, when it comes within ~1.5 viewports (or is already above the viewport, so it
+    // shows its scrolled-past state), one per task, instead of all of them in one frame after the handoff.
+    const undo: (() => void)[] = [];
+    let alive = true;
+    const make = (r: HTMLElement) => { if (alive) ctx.add(() => { if (vis(r)) undo.push(build(r, phone)); }); };
+    let io: IntersectionObserver | null = null;
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (!e.isIntersecting && e.boundingClientRect.bottom >= 0) return;
+        io!.unobserve(e.target);
+        const r = e.target as HTMLElement;
+        const run = () => make(r);
+        if ('requestIdleCallback' in window) (window as any).requestIdleCallback(run, { timeout: 200 }); else setTimeout(run, 30);
+      }), { rootMargin: '0px 0px 150% 0px' });
+      roots.forEach((r) => io!.observe(r));
+    } else roots.forEach(make);
+    return () => { alive = false; io?.disconnect(); undo.forEach((u) => u()); };
   });
   settled().then(() => requestRefresh(0));
 }

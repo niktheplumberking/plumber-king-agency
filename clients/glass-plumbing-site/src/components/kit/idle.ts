@@ -67,7 +67,7 @@ const halfIn = (el: Element) => {
 };
 const blocked = () => document.hidden || busy || !document.documentElement.classList.contains('motion')
   || document.documentElement.classList.contains('intro') || performance.now() - lastScroll < 800
-  || Math.abs((window as any).__pbpLenis?.velocity ?? 0) > 0.05
+  || Math.abs((window as any).__glassLenis?.velocity ?? 0) > 0.05
   || !!document.querySelector('input:focus, textarea:focus, select:focus, a:hover, button:hover, summary:hover, [role="button"]:hover, label:hover');
 
 export function startIdle() {

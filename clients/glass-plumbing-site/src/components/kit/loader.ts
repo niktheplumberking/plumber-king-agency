@@ -29,7 +29,7 @@ export function runLoader({ onCover = () => {}, onDone }: { onCover?: () => void
   if (!ld || !html.classList.contains('intro')) { html.classList.remove('cv'); onDone(); return; }
   const num = ld.querySelector<HTMLElement>('[data-ld-num]');
   const sheet = sheetOf(ld);
-  (window as any).__pbpLenis?.stop();
+  (window as any).__glassLenis?.stop();
   // Base.astro .cv: the sections below the hero skipped layout for the first paint. Once the page has loaded they are let
   // back in one at a time (small tasks, no long main-thread block), all under the cover.
   const cvList = Array.from(document.querySelectorAll<HTMLElement>('main > :not([data-m-hero]), body > footer'));
@@ -82,7 +82,7 @@ export function runLoader({ onCover = () => {}, onDone }: { onCover?: () => void
     let handed = false;
     const hand = () => {
       if (handed) return; handed = true;
-      (window as any).__pbpLenis?.start();
+      (window as any).__glassLenis?.start();
       onDone();
     };
     // Top up to full (0.35 s), then the screen is the clear front layer: the page takes its pre-states unseen, the

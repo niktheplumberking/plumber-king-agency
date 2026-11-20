@@ -1,6 +1,6 @@
 ---
-// Utility bar (Figma Home 712:448 y 0, 40 px ink; mobile 715:560, 34 px). Desktop: stars + "5.0 on Google · 104 + 77
-// reviews" left (two profiles, never summed), licence centre (links to the DBPR lookup, FS 489.119), "24/7 emergency ·
+// Utility bar (Figma Home 712:448 y 0, 40 px ink; mobile 715:560, 34 px). Desktop: stars + "5.0 · 104 reviews | 5.0 · 77
+// reviews" left, each its own profile link (fix round A: no plus sign, nothing that reads as a sum), licence centre (links to the DBPR lookup, FS 489.119), "24/7 emergency ·
 // phone" right. Mobile copy differs (Figma): "24/7 · (727) 512-0673 · CFC1432488", centred. JetBrains Mono 11 / 10, +2 %.
 // data-intro="topbar": motion.ts fades its children in at the handoff (introChrome).
 import { SITE } from '../../data/site';
@@ -11,7 +11,7 @@ const STARS = '<path d="M6 0L7.58702 3.81565L11.7063 4.1459L8.56785 6.83435L9.52
 <aside class="ub" data-intro="topbar" aria-label="Rating, licence and phone">
   <p class="ub-rate">
     <svg class="ub-stars" viewBox="0 0 75 12" width="75" height="12" fill="#F9B50D" aria-hidden="true" focusable="false" set:html={STARS} />
-    <span>{g.a.value} on Google · <a href={g.a.url} target="_blank" rel="noopener">{g.a.count}<span class="sr-only"> reviews on Google profile 1 (opens in a new tab)</span></a> + <a href={g.b.url} target="_blank" rel="noopener">{g.b.count}<span class="sr-only"> reviews on Google profile 2 (opens in a new tab)</span></a> reviews</span>
+    <span><a href={g.a.url} target="_blank" rel="noopener">{g.a.value} · {g.a.count} reviews<span class="sr-only"> on Google profile 1 (opens in a new tab)</span></a> <span class="ub-sep" aria-hidden="true">|</span> <a href={g.b.url} target="_blank" rel="noopener">{g.b.value} · {g.b.count} reviews<span class="sr-only"> on Google profile 2 (opens in a new tab)</span></a><span class="sr-only"> (two separate Google profiles)</span></span>
   </p>
   <p class="ub-lic"><a href={SITE.licence.url} target="_blank" rel="noopener">FL licence {SITE.licence.number}<span class="sr-only"> (verify on the Florida DBPR site, opens in a new tab)</span></a> · Licensed &amp; insured</p>
   <p class="ub-call"><span>24/7 emergency ·</span> <a href={SITE.tel}>{SITE.phone}</a></p>
@@ -25,6 +25,7 @@ const STARS = '<path d="M6 0L7.58702 3.81565L11.7063 4.1459L8.56785 6.83435L9.52
   .ub a:focus-visible { outline-color: var(--powder); }
   .ub-rate { display: flex; align-items: center; gap: 9px; }
   .ub-stars { flex: none; }
+  .ub-sep { margin: 0 4px; opacity: .5; }
   .ub-lic { position: absolute; left: 50%; translate: -50% 0; }
   .ub-call { margin-left: auto !important; font-weight: 700; }
   .ub-m { display: none; }

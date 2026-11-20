@@ -11,10 +11,10 @@ import Seam from '../kit/Seam.astro';
 import { TOWNS } from '../../data/towns';
 const towns = [...TOWNS].sort((a, b) => a.name.localeCompare(b.name));
 const steps = [
-  { n: '01', t: 'We read it', d: 'Kody or the crew reads every message.', f: 0.24 },
+  { n: '01', t: 'Describe it', d: 'The job, your town and a photo if you have one.', f: 0.24 },
   // Figma body is "." (extraction finding, BUILD-BRIEF 11): the lead's line.
   { n: '02', t: 'We call you back', d: 'Leave your name and number. We call you back on it.', f: 0.54 },
-  { n: '03', t: 'Price before work', d: 'You hear the price before we start.', f: 0.83 },
+  { n: '03', t: 'Then the estimate', d: 'One review: “came out the same day I called to give an estimate”.', f: 0.83 },
 ];
 ---
 <section id="estimate" class="cx-sec cx-ink cf on-ink" data-m-section aria-labelledby="cf-h">

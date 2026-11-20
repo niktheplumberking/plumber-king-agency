@@ -2,15 +2,16 @@
 // /areas/seminole (Figma 723:437 desktop / 723:1034 mobile): every section between the emergency strip and the footer.
 // SEO-PLAN: title "Plumber in Seminole, FL · Glass Plumbing Services", H1 = the Figma H1. BreadcrumbList (Breadcrumbs.astro)
 // and FAQPage (TownFaq.astro, the three visible answers) come from their components.
+// Fix round B: hero (quick answer) -> local facts (clipboard, permits, neighbourhoods) -> services (parts cabinet) ->
+// reviews (job board) -> nearby (departures board) -> emergency (practice pipe) -> FAQ -> CTA. Map + plate and the
+// brothers band are gone (TownDistance, TownProblems, TownFamily deleted).
 import Base from '../../layouts/Base.astro';
 import TownHero from '../../components/town/TownHero.astro';
-import TownDistance from '../../components/town/TownDistance.astro';
-import TownProblems from '../../components/town/TownProblems.astro';
+import TownFacts from '../../components/town/TownFacts.astro';
 import TownServices from '../../components/town/TownServices.astro';
 import TownHoods from '../../components/town/TownHoods.astro';
 import TownPermits from '../../components/town/TownPermits.astro';
 import TownReview from '../../components/town/TownReview.astro';
-import TownFamily from '../../components/town/TownFamily.astro';
 import TownEmergency from '../../components/town/TownEmergency.astro';
 import TownFaq from '../../components/town/TownFaq.astro';
 import TownNearby from '../../components/town/TownNearby.astro';
@@ -21,16 +22,14 @@ import TownsStrip from '../../components/global/TownsStrip.astro';
   description="Glass Plumbing Services fixes leaks, drains, water heaters and showers in Seminole, a short drive from our Largo base. Licensed CFC1432488."
   path="/areas/seminole" og="tub-job" ogAlt="A tub spout and shower valve over a green bathtub, from a recent tub job" estimate="#estimate">
   <TownHero />
-  <TownDistance />
-  <TownProblems />
-  <TownServices />
-  <TownHoods />
+  <TownFacts />
   <TownPermits />
+  <TownHoods />
+  <TownServices />
   <TownReview />
-  <TownFamily />
+  <TownNearby />
   <TownEmergency />
   <TownFaq />
-  <TownNearby />
   <TownCta />
   <TownsStrip />
 </Base>

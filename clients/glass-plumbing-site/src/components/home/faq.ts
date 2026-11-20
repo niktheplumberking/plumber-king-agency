@@ -9,8 +9,8 @@ export type Qa = {
 export const TOPICS = ['Emergency', 'Water heaters', 'Water', 'Money', 'Photos'];
 export const FAQ: Qa[] = [
   { id: 'q01', q: 'Do you really answer 24/7?', a: `Yes. For emergencies, call ${SITE.phone} any hour, day or night.`, topic: 'Emergency', chip: 'Emergency',
-    photo: 'van-night', alt: 'The white Glass Plumbing van parked at night', focus: '50% 50%', link: { href: SITE.tel, label: `Call ${SITE.phone} →` } },
-  { id: 'q02', q: 'Do I need a permit to replace a water heater in Pinellas?', a: 'Usually, yes. Pinellas County lists a “Water Heater Equal Change Out” permit, and Clearwater requires permits for water heaters. We handle it for you.',
+    photo: 'crew-crawlspace', alt: 'A Glass plumber in a cap smiling from under a floor in a crawlspace', focus: '50% 40%', link: { href: SITE.tel, label: `Call ${SITE.phone} →` } },
+  { id: 'q02', q: 'Do I need a permit to replace a water heater in Pinellas?', a: 'Usually, yes. Pinellas County lists a “Water Heater Equal Change Out” permit for unincorporated areas, Clearwater requires permits for water heaters, and Largo issues its own. Ask us on the call and we’ll tell you what yours needs.',
     topic: 'Water heaters', chip: 'Water heaters', photo: 'water-heater-expansion-tank', alt: 'A new water heater being installed in a closet, its expansion tank on the floor beside it, with the words “Floor Drain Built In” on the photo', focus: '50% 40%',
     plate: [['Source', 'Pinellas County permits'], ['Also', 'City of Clearwater']], link: { href: '/services/water-heaters', label: 'See the water heater page →', m: 'Water heater page →' } },
   { id: 'q03', q: 'How hard is Pinellas County water?', a: 'Very hard. It averages 217 ppm, which is 11.1 to 14.3 grains per gallon. That builds scale inside tanks and tankless units.',

@@ -15,13 +15,13 @@ import { SITE } from '../../data/site';
   <div class="wrap">
     <div class="qa-top">
       <Eyebrow text="Quick answer · repair or replace?" />
-      <h2 class="h2 qa-h" data-t="2" style="--h2:52px;--h2m:30px">Repair or replace?<br /><span class="tone">One question decides.</span></h2>
+      <h2 class="h2 qa-h" data-t="2" style="--h2:52px;--h2m:30px">Repair or replace?<br /><span class="tone">One question usually decides.</span></h2>
     </div>
     <div class="qa-con" data-t="4">
       <div class="qa-v qa-rep" data-qa-v="dry">
         <p class="qa-vk">Verdict A</p>
         <p class="qa-vt">Repair it</p>
-        <p class="qa-vd">The tank is dry and the problem is a part, like an element, thermostat or valve.</p>
+        <p class="qa-vd">The tank is dry and the problem is usually a part, like an element, thermostat or valve.</p>
       </div>
       <div class="qa-mid">
         <fieldset class="qa-sw" data-qa-sw>
@@ -47,18 +47,18 @@ import { SITE } from '../../data/site';
       <div class="qa-v qa-rpl" data-qa-v="leak">
         <p class="qa-vk">Verdict B</p>
         <p class="qa-vt">Replace it</p>
-        <p class="qa-vd">The tank itself leaks. In Pinellas County that needs a permit, and a licensed plumber pulls it.</p>
+        <p class="qa-vd">The tank itself leaks. A replacement usually needs a permit; which office depends on your address.</p>
       </div>
       <div class="qa-pl">
         <Plate class="d" title="Job facts · water heater" pad={20} size={12} tsize={13} kx={130} pitch={21} t={false} shadow="ink"
-          rows={[['Permit', 'Yes (Pinellas express permit)'], ['Type', 'Tank or tankless'], ['Brands seen', 'State, Rinnai (from his posts)'], ['Done by', `Licensed plumber, ${SITE.licence.number}`], ['Often', 'Next day (from reviews)']]} />
+          rows={[['Permit', 'Usually; office depends on address'], ['Type', 'Tank or tankless'], ['Brands seen', 'State, Rinnai (from his posts)'], ['Done by', `Licensed plumber, ${SITE.licence.number}`], ['Often', 'Next day (from reviews)']]} />
         <Plate class="m" title="Job facts" pad={16} size={11} tsize={12} kx={106} pitch={21} t={false}
-          rows={[['Permit', 'Yes (express permit)'], ['Type', 'Tank or tankless'], ['Brands', 'State, Rinnai'], ['Done by', `Licensed, ${SITE.licence.number}`]]} />
+          rows={[['Permit', 'Usually, by address'], ['Type', 'Tank or tankless'], ['Brands', 'State, Rinnai'], ['Done by', `Licensed, ${SITE.licence.number}`]]} />
       </div>
     </div>
     <div class="qa-ans" data-t="3">
-      <p class="qa-a">Repair it if the tank is dry and the problem is a part, like an element, thermostat or valve. Replace it if the tank itself leaks. In Pinellas County a replacement needs a permit (the county lists a “Water Heater Equal Change Out, Tank or Tankless” express permit), and a licensed plumber pulls it.</p>
-      <p class="qa-src"><span class="d">Source: pinellas.gov express permits, read 17 Nov 2026</span><span class="m">Source: pinellas.gov, read 17 Nov 2026</span></p>
+      <p class="qa-a">If the tank is dry and the problem is a part, like an element, thermostat or valve, a repair is usually enough. A tank that leaks usually needs replacing. A replacement usually needs a permit: Pinellas County lists a “Water Heater Equal Change Out, Tank or Tankless” express permit for unincorporated areas, and Clearwater requires water heater permits. In Largo or another city, check with the city’s permit office.</p>
+      <p class="qa-src"><span class="d">Source: pinellas.gov express permits · myclearwater.com, read 17 Nov 2026</span><span class="m">Source: pinellas.gov, read 17 Nov 2026</span></p>
     </div>
   </div>
 </section>

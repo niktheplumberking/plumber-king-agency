@@ -6,9 +6,9 @@ import Eyebrow from '../kit/Eyebrow.astro';
 import { SITE } from '../../data/site';
 const P = [
   { t: 'No hot water', d: 'Element, pilot or thermostat. Often a part, not the tank.' },
-  { t: 'Runs out fast', d: 'A failing element or a tank too small for the house.' },
+  { t: 'Runs out fast', d: 'Often a failing element, or a tank too small for the house.' },
   { t: 'Rusty water', d: 'Often the anode rod is used up.' },
-  { t: 'Leaking tank', d: 'If the tank shell leaks, it needs replacing.' },
+  { t: 'Leaking tank', d: 'If the tank shell leaks, it usually needs replacing.' },
   { t: 'Rumbling and popping', d: 'Scale at the bottom. Pinellas water averages 217 ppm hardness.', dm: 'Scale at the bottom. Pinellas water averages 217\u00a0ppm.' },
   { t: 'Relief valve dripping', d: 'A safety part. This one is for a licensed plumber.', dm: 'A safety part. For a licensed plumber.' },
 ];
@@ -17,7 +17,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <section class="pb" data-m-section>
   <div class="wrap">
     <Eyebrow text="What’s wrong with it?" />
-    <h2 class="h2 pb-h" data-t="2" style="--h2:52px;--h2m:28px">Six ways a water heater<br /><span class="tone">tells you it’s done.</span></h2>
+    <h2 class="h2 pb-h" data-t="2" style="--h2:52px;--h2m:28px">Six ways a water heater<br /><span class="tone">tells you something’s wrong.</span></h2>
     <div class="pb-grid">
       <svg class="pb-tank" viewBox="0 0 320 620" width="320" height="620" aria-hidden="true" focusable="false" data-t="3">
         <rect x="111" y="1" width="20" height="58" fill="#AEB6BA" stroke="#16130F" stroke-width="2" />

@@ -32,7 +32,7 @@ const T = [
           <Img name={T[1].photo} alt={T[1].alt} focus={T[1].focus} sizes="(min-width:1280px) 1200px, 92vw" widths={[480, 800, 1200, 1600, 2000]} box={1200 / 560} boxM={350 / 360} />
         </figure>
         <figure class="ty-side ty-a" data-ty-a>
-          <Img name={T[0].photo} alt={T[0].alt} focus={T[0].focus} sizes="(min-width:1280px) 1200px, 92vw" widths={[480, 800, 1200, 1600, 2000]} box={1200 / 560} boxM={350 / 360} />
+          <Img name={T[0].photo} alt={T[0].alt} focus="50% 0" sizes="(min-width:1280px) 1824px, 155vw" widths={[640, 960, 1400, 1824, 2400]} />
         </figure>
         <span class="ty-tag ty-tag-a" aria-hidden="true">Tank</span>
         <span class="ty-tag ty-tag-b" aria-hidden="true">Tankless</span>
@@ -49,7 +49,7 @@ const T = [
         ))}
       </div>
     </div>
-    <p class="ty-note" data-t="3"><span class="d">Which fits your home depends on how many bathrooms you run at once, gas or electric, and where it can go. We’ll tell you straight.</span><span class="m">Which fits depends on how many bathrooms run at once, gas or electric, and where it can go.</span></p>
+    <p class="ty-note" data-t="3"><span class="d">Which fits your home depends on how many bathrooms you run at once, gas or electric, and where it can go.</span><span class="m">Which fits depends on how many bathrooms run at once, gas or electric, and where it can go.</span></p>
   </div>
 </section>
 <style>
@@ -63,6 +63,11 @@ const T = [
   .ty-frame::after { content: ''; position: absolute; inset: 0; z-index: 4; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--ink); pointer-events: none; }
   .ty-side { position: absolute; inset: 0; margin: 0; }
   .ty-a { clip-path: inset(0 calc(100% - var(--s) * 1%) 0 0); }
+  /* Fix round C (review: tank side cropped to blank wall). The tank photo is portrait with the tank right of centre, so a
+     plain cover crop puts it under the tankless half. The tank layer's photo is scaled past the frame (cover still holds:
+     its right edge stays beyond the frame) and shifted so the tank's centre (54 % across the photo) sits in the middle of
+     the tank half at rest; top offset shows the tank's top (logo + labels). */
+  .ty-a :global(img) { position: absolute; left: -52%; top: -96px; width: 152%; max-width: none; height: auto; aspect-ratio: 3 / 4; object-position: 50% 0; }
   .ty-tag { position: absolute; top: 20px; z-index: 3; padding: 8px 12px; border-radius: 4px; background: var(--ink); color: var(--white); font: 700 11px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; transition: opacity .3s var(--ease-io); }
   .ty-tag-a { left: 20px; opacity: clamp(0, (var(--s) - 12) / 10, 1); }
   .ty-tag-b { right: 20px; opacity: clamp(0, (88 - var(--s)) / 10, 1); }
@@ -84,7 +89,7 @@ const T = [
   .ty-pw :global(.ty-pl.m) { display: none; }
   .ty-note { max-width: 760px; margin: 60px auto 0; text-align: center; font-size: 18px; line-height: 1.5; }
 
-  @media (max-width: 1279px) { .ty-frame { height: 460px; } .ty-plates { padding: 0 16px; gap: 16px; } }
+  @media (max-width: 1279px) { .ty-a :global(img) { top: -80px; } .ty-frame { height: 460px; } .ty-plates { padding: 0 16px; gap: 16px; } }
   @media (max-width: 1023px) {
     .ty-plates { flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 24px; padding: 0; pointer-events: auto; }
     .ty-pa, .ty-pb { opacity: 1; }
@@ -94,6 +99,7 @@ const T = [
     .ty-h { margin-top: 10px; }
     .ty-cmp { margin-top: 22px; }
     .ty-frame { height: 360px; box-shadow: 8px 8px 0 var(--powder); }
+    .ty-a :global(img) { left: -66%; width: 168%; top: -26px; }
     .ty-tag { top: 12px; font-size: 10px; padding: 6px 8px; }
     .ty-tag-a { left: 12px; } .ty-tag-b { right: 12px; }
     .ty-glass { width: 36px; height: 60px; }

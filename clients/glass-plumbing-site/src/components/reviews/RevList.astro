@@ -22,7 +22,11 @@ if (ORDER.length !== REVIEWS.length || ORDER.some((n) => !byName.has(n))) throw 
 const COLS: string[][] = [[], [], []];
 const len = [0, 0, 0];
 ORDER.forEach((n) => { const k = len.indexOf(Math.min(...len)); COLS[k].push(n); len[k] += byName.get(n)!.text.length + 260; });
-const DRIFT = 320; // px over the whole pass (768 and up)
+// Fix round A (review: "subtle, plain white cards"): a bigger travel per column (left +560, middle -620, right +440 px
+// over the pass) and cards in the Glass system: outer columns are paper review SLIPS (perforated top, powder offset
+// shadow, slight tilt), the middle column steel spec PLATES with rivets; every card has gold stars and a Google profile mark.
+const DRIFTS = [560, -620, 440];
+const PADW = Math.max(...DRIFTS.map(Math.abs)); // wall padding = the largest half-travel on each side
 ---
 <section class="cx-sec cx-white rl" data-m-section aria-labelledby="rl-h">
   <Seam from="var(--frost)" to="var(--white)" />
@@ -32,19 +36,22 @@ const DRIFT = 320; // px over the whole pass (768 and up)
       <h2 id="rl-h" class="cx-h rl-h" data-t="2">Newest first.</h2>
       <p class="rl-sum" data-t="3"><Stars w={84} /><span>16 reviews · every one 5 stars · from both Google profiles</span></p>
     </div>
-    <div class="rl-wall" data-no-px data-scrub data-start="top bottom" data-end="bottom top" data-lag="0.8" style={`--drift:${DRIFT}px`}>
+    <div class="rl-wall" data-no-px data-scrub data-start="top bottom" data-end="bottom top" data-lag="0.8" style={`--drift:${PADW}px`}>
       {COLS.map((col, c) => (
-        <ul class:list={['rl-col', c === 1 ? 'rl-up' : 'rl-down']} role="list" data-scrub-y={c === 1 ? -DRIFT : DRIFT}>
+        <ul class:list={['rl-col', c === 1 ? 'rl-up' : 'rl-down']} role="list" data-scrub-y={DRIFTS[c]} style={`--d:${DRIFTS[c]}px`}>
           {col.map((name) => {
             const r = byName.get(name)!;
             const o = ORDER.indexOf(name);
             return (
               <li class:list={['rl-c', o % 2 && 'rl-odd']} style={`--o:${o}`}>
-                <article>
-                  <div class="rl-top"><Stars w={80} label="5 out of 5 stars" /><span class="rl-when">{r.when}</span></div>
+                <article class:list={[c === 1 ? 'rl-plate' : 'rl-slip']}>
+                  {c === 1 && <><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span><span class="rv" aria-hidden="true"></span></>}
+                  <div class="rl-top"><Stars w={92} label="5 out of 5 stars" /><span class="rl-when">{r.when}</span></div>
                   <blockquote class="rl-t"><p>{r.text}</p></blockquote>
-                  <p class="rl-n">{r.name}</p>
-                  <p class="rl-src">Google · profile {r.profile === 'a' ? 1 : 2}</p>
+                  <div class="rl-foot">
+                    <span class="rl-g" aria-hidden="true">G</span>
+                    <span><span class="rl-n">{r.name}</span><span class="rl-src">Google · profile {r.profile === 'a' ? 1 : 2}</span></span>
+                  </div>
                 </article>
               </li>
             );
@@ -66,25 +73,44 @@ const DRIFT = 320; // px over the whole pass (768 and up)
     -webkit-mask-image: linear-gradient(transparent, #000 110px, #000 calc(100% - 110px), transparent);
             mask-image: linear-gradient(transparent, #000 110px, #000 calc(100% - 110px), transparent); }
   .rl-col { position: relative; margin: 0; padding: 0; list-style: none; display: grid; gap: 24px; }
-  html.motion .rl-down { top: calc(-1 * var(--drift) / 2); }
-  html.motion .rl-up { top: calc(var(--drift) / 2); }
+  /* Frame 0 of the scrub: each column starts half its travel back, so it ends half its travel past (never clipped). */
+  html.motion .rl-col { top: calc(-1 * var(--d) / 2); }
 
-  .rl-c article { position: relative; padding: 28px 24px 18px; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--white); overflow: hidden;
-    transition: box-shadow .45s var(--ease-io), transform .45s var(--ease-io); }
-  .rl-up .rl-c article { background: var(--frost); }
-  .rl-c article::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--powder); }
-  .rl-c article:hover { box-shadow: 8px 8px 0 var(--powder); transform: translate(-2px, -2px); }
-  .rl-top { display: flex; align-items: center; justify-content: space-between; height: 13px; }
-  .rl-when { font: 500 10px/13px var(--f-m); letter-spacing: .01em; color: var(--muted); }
-  .rl-t { margin: 15px 0 0; }
-  .rl-t p { margin: 0; font: 400 15px/1.5 var(--f-b); color: var(--ink); white-space: pre-wrap; overflow-wrap: break-word; }
-  .rl-n { margin: 16px 0 0; font: 800 16px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
-  .rl-src { margin: 9px 0 0; font: 700 9px/12px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .rl-c article { position: relative; padding: 30px 26px 20px; border: 1.5px solid var(--ink); border-radius: 4px; color: var(--ink);
+    rotate: var(--tilt, 0deg); transition: box-shadow .45s var(--ease-io), translate .45s var(--ease-io), rotate .45s var(--ease-io); }
+  .rl-c:nth-child(odd) { --tilt: -1.2deg; } .rl-c:nth-child(even) { --tilt: .9deg; }
+  .rl-up .rl-c:nth-child(odd) { --tilt: .8deg; } .rl-up .rl-c:nth-child(even) { --tilt: -.7deg; }
+  /* Paper slip: white, a perforated tear line under a powder band, powder offset shadow. */
+  .rl-slip { background: var(--white); box-shadow: 10px 10px 0 var(--powder); }
+  .rl-slip::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: var(--powder); border-radius: 2px 2px 0 0; }
+  .rl-slip::after { content: ''; position: absolute; left: 10px; right: 10px; top: 13px; height: 2px;
+    background: radial-gradient(circle, var(--frost3) 1px, transparent 1.5px) 0 0 / 8px 2px repeat-x; }
+  /* Steel plate: brushed steel, four rivets, ink offset shadow. */
+  .rl-plate { background: linear-gradient(160deg, #D5DBDE 0%, var(--steel) 45%, #BAC2C6 100%); box-shadow: inset 0 0 0 1px var(--steel2), 10px 10px 0 var(--ink); }
+  .rl-plate .rv { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #EEF1F2, var(--steel2) 70%); box-shadow: 0 0 0 1px rgb(22 19 15 / .25); }
+  .rl-plate .rv:nth-of-type(1) { left: 8px; top: 8px; } .rl-plate .rv:nth-of-type(2) { right: 8px; top: 8px; }
+  .rl-plate .rv:nth-of-type(3) { left: 8px; bottom: 8px; } .rl-plate .rv:nth-of-type(4) { right: 8px; bottom: 8px; }
+  .rl-c article:hover { rotate: 0deg; translate: -3px -3px; }
+  .rl-slip:hover { box-shadow: 13px 13px 0 var(--powder); }
+  .rl-plate:hover { box-shadow: inset 0 0 0 1px var(--steel2), 13px 13px 0 var(--ink); }
+  .rl-top { display: flex; align-items: center; justify-content: space-between; min-height: 15px; }
+  .rl-when { font: 500 10px/13px var(--f-m); letter-spacing: .02em; color: var(--muted); }
+  .rl-plate .rl-when { color: var(--ink); }
+  .rl-t { margin: 16px 0 0; }
+  .rl-t p { margin: 0; font: 400 15px/1.55 var(--f-b); color: var(--ink); white-space: pre-wrap; overflow-wrap: break-word; }
+  .rl-foot { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px dashed rgb(22 19 15 / .3); }
+  .rl-g { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--ink); color: var(--white); font: 800 17px/1 var(--f-h); }
+  .rl-plate .rl-g { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .rl-n { display: block; font: 800 16px/1.1 var(--f-h); letter-spacing: -0.02em; color: var(--ink); }
+  .rl-src { display: block; margin-top: 5px; font: 700 9px/12px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); }
+  .rl-plate .rl-src { color: var(--ink); }
+  :global(html:not(.motion)) .rl-c article { transition: none; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .rl-wall { column-gap: 14px; }
     .rl-col { gap: 14px; }
-    .rl-c article { padding: 22px 16px 16px; }
+    .rl-c article { padding: 26px 16px 16px; }
+    .rl-slip { box-shadow: 7px 7px 0 var(--powder); } .rl-plate { box-shadow: inset 0 0 0 1px var(--steel2), 7px 7px 0 var(--ink); }
     .rl-t p { font-size: 14px; }
   }
   @media (max-width: 767px) {
@@ -94,12 +120,12 @@ const DRIFT = 320; // px over the whole pass (768 and up)
     .rl-wall, html.motion .rl-wall { display: flex; flex-direction: column; gap: 16px; margin: 30px 0 0; padding: 0; -webkit-mask-image: none; mask-image: none; }
     .rl-col { display: contents; }
     .rl-c { order: var(--o); }
-    .rl-c article { padding: 23px 18px 15px; }
-    .rl-c article::before { height: 5px; }
-    .rl-top :global(.cx-stars) { width: 75px; height: 12px; }
+    .rl-c article { padding: 26px 18px 15px; rotate: 0deg; }
+    .rl-slip { box-shadow: 6px 6px 0 var(--powder); } .rl-plate { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); }
+    .rl-top :global(.cx-stars) { width: 80px; height: 13px; }
     .rl-t { margin-top: 13px; }
-    .rl-n { margin-top: 14px; font-size: 15px; }
-    .rl-src { margin-top: 8px; }
+    .rl-n { font-size: 15px; }
+    .rl-g { width: 30px; height: 30px; font-size: 15px; }
     /* Gentle opposite drift: even cards slide one way, odd ones the other, as each passes through the viewport. */
     @supports (animation-timeline: view()) {
       html.motion .rl-c { animation: rl-drift linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }

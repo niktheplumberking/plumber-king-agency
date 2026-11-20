@@ -1,45 +1,147 @@
 ---
-// /areas/seminole "Nearby towns" (Figma y 5943 h 260 / mobile y 5518 h 306). White. Three cards, straight-line miles from
-// towns.ts, each to /areas (no town pages yet besides Seminole; R2: no cross-page hash links).
+// /areas/seminole "Nearby towns" (fix round B, third pass: the split-flap board repeated Home Areas and the tear-off flyer
+// repeated Mike's emergency TearOff). Glass's own idea from the Clear Water motif: a DROP IN STILL WATER. Seen from
+// above, our Largo base is the drop; rings spread out from it at 2, 4, 6, 8 and 10 miles; each nearby town floats as a
+// chip on its own distance (towns.ts straight-line miles, Census points). The water surface fills out from the base to
+// the town you point at (hover / focus; a white meniscus line rides its edge) and the steel spec plate under it reads
+// that town. Seminole is filled at rest ("you are here"). When the pond scrolls in, three ripples run out once (one-shot,
+// 2.4 s). Not a map: the copy says directions are not to scale. 21st.dev felix-au/ripple-wave-cursor (concentric rings
+// from a dropped stone) + ruixen.ui/ripple-circles, rebuilt in SVG + CSS + a few lines of TS, skinned with the Glass
+// water tones, meniscus line and spec plate. Each chip is a link to /areas. Reduced motion / no JS: Seminole filled, still.
 import { TOWNS } from '../../data/towns';
-const near = ['largo', 'pinellas-park', 'madeira-beach'].map((s) => TOWNS.find((t) => t.slug === s)!);
+const R = 46; // % of the stage from centre to the 10-mile ring
+const rad = (mi: number) => 7 + (R - 7) * (mi / 10); // keeps 1.3 mi clear of the base drop
+const spots: Record<string, number> = { largo: -90, 'belleair-bluffs': 0, clearwater: 180, seminole: 135, 'pinellas-park': -40, 'madeira-beach': 60 }; // degrees; spread so close towns sit on opposite sides
+const near = Object.keys(spots).map((s) => TOWNS.find((t) => t.slug === s)!).map((t) => {
+  const a = (spots[t.slug] * Math.PI) / 180, r = rad(t.mi);
+  return { ...t, x: 50 + r * Math.cos(a), y: 50 + r * Math.sin(a), f: (rad(t.mi) / R).toFixed(4) };
+});
+const sem = near.find((t) => t.slug === 'seminole')!;
 ---
 <section class="tnear" data-m-section aria-labelledby="tnear-h">
   <div class="wrap">
-    <h2 id="tnear-h" class="tn-k" data-t="1">Nearby towns</h2>
-    <ul class="tn-grid" role="list" data-t="3" data-stagger>
-      {near.map((t) => (
-        <li><a class="tn" href={t.page ?? '/areas'}>
-          <span class="tn-t">Plumber in {t.name}</span>
-          <span class="tn-mi">{t.mi} mi from base<span class="sr-only"> (straight line)</span></span>
-          <svg class="tn-ar" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true"><path d="M1 5h10M7 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
-        </a></li>
-      ))}
-    </ul>
+    <div class="tn-head">
+      <p class="tn-k" data-t="1">Nearby towns</p>
+      <h2 id="tnear-h" class="tn-h" data-t="2">One drop in Largo. <span class="tone">Every town around it.</span></h2>
+      <p class="tn-p" data-t="3">Point at a town: the water reaches it.</p>
+    </div>
+    <div class="pond" data-t="4" data-pond style={`--f:${sem.f}`}>
+      <div class="pd-stage">
+        <svg class="pd-svg" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="pd-bg" cx="50" cy="50" r={R + 3} />
+          <circle class="pd-fill" cx="50" cy="50" r={R} />
+          {[2, 4, 6, 8, 10].map((m) => <circle class="pd-ring" cx="50" cy="50" r={rad(m)} />)}
+          {[0, 1, 2].map((k) => <circle class="pd-wave" cx="50" cy="50" r={R} style={`--k:${k}`} />)}
+          {[2, 4, 6, 8, 10].map((m) => <text class="pd-mi" x="50" y={50 - rad(m) - .8}>{m} mi</text>)}
+        </svg>
+        <span class="pd-base" aria-hidden="true"><i></i><b>Largo base</b></span>
+        <ul class="pd-towns" role="list">
+          {near.map((t) => (
+            <li style={`left:${t.x.toFixed(2)}%;top:${t.y.toFixed(2)}%`}>
+              {t.slug === 'seminole'
+                ? <span class="pd-chip is-here" data-pond-town data-f={t.f} data-n={t.name} data-mi={t.mi}>{t.name}<em>you are here</em><span class="sr-only">, {t.mi} miles from our Largo base</span></span>
+                : <a class="pd-chip" href={t.page ?? '/areas'} data-pond-town data-f={t.f} data-n={t.name} data-mi={t.mi}>{t.name}<span class="sr-only">: plumber in {t.name}, {t.mi} miles from our Largo base in a straight line</span></a>}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="pd-plate" aria-hidden="true">
+        <p class="pd-pt">Reading</p>
+        <dl>
+          <div><dt>Town</dt><dd data-pond-n>{sem.name}</dd></div>
+          <div><dt>From base</dt><dd><span data-pond-mi>{sem.mi}</span> mi</dd></div>
+          <div><dt>Status</dt><dd>Covered</dd></div>
+        </dl>
+        <i class="rv"></i><i class="rv"></i><i class="rv"></i><i class="rv"></i>
+      </div>
+    </div>
+    <p class="tn-foot" data-t="3">Rings are straight-line miles from our Largo base (Census map points). Not a map: directions are not to scale; driving is longer. <a href="/areas">See all 20 towns</a></p>
   </div>
 </section>
 
+<script>
+  import { onEnter } from '../areas/inview';
+  document.querySelectorAll<HTMLElement>('[data-pond]').forEach((pond) => {
+    const n = pond.querySelector<HTMLElement>('[data-pond-n]')!;
+    const mi = pond.querySelector<HTMLElement>('[data-pond-mi]')!;
+    const towns = [...pond.querySelectorAll<HTMLElement>('[data-pond-town]')];
+    const rest = towns.find((t) => t.classList.contains('is-here'))!;
+    const show = (t: HTMLElement) => {
+      pond.style.setProperty('--f', t.dataset.f!);
+      n.textContent = t.dataset.n!; mi.textContent = t.dataset.mi!;
+      towns.forEach((x) => x.classList.toggle('is-on', x === t));
+    };
+    towns.forEach((t) => {
+      t.addEventListener('pointerenter', () => show(t));
+      t.addEventListener('focus', () => show(t));
+      t.addEventListener('pointerleave', () => { if (document.activeElement !== t) show(rest); });
+      t.addEventListener('blur', () => show(rest));
+    });
+    show(rest);
+    onEnter(pond, () => pond.classList.add('is-in'), '0px 0px -20% 0px');
+  });
+</script>
+
 <style>
-  .tnear { position: relative; background: var(--white); padding: 60px 0 68px; }
-  .tn-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-  .tn-grid { display: grid; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin-top: 21px; }
-  .tn { position: relative; display: flex; flex-direction: column; height: 96px; padding: 20px 24px; border: 1.5px solid var(--ink); border-radius: 4px; color: var(--ink); text-decoration: none; transition: background-color .3s var(--ease-io); }
-  .tn:hover { background: var(--frost); }
-  .tn:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
-  .tn-t { font-family: var(--f-h); font-weight: 800; font-size: 20px; line-height: 1.04; letter-spacing: -.02em; }
-  .tn-mi { margin-top: 15px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: var(--muted); }
-  .tn-ar { position: absolute; right: 24px; top: 26px; transition: translate .3s var(--ease-io); }
-  .tn:hover .tn-ar { translate: 4px 0; }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .tn-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-    .tn { height: auto; min-height: 96px; padding-right: 44px; }
-  }
+  .tnear { position: relative; background: var(--white); padding: 110px 0 100px; }
+  .tn-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .tn-k { font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .tn-h { max-width: 760px; margin-top: 14px; font-family: var(--f-h); font-weight: 800; font-size: 48px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
+  .tn-h .tone { color: var(--pdeep); }
+  .tn-p { margin-top: 14px; font-size: 17px; color: var(--muted); }
+
+  .pond { position: relative; display: flex; flex-direction: column; align-items: center; margin-top: 40px; }
+  .pd-stage { position: relative; width: min(600px, 100%); aspect-ratio: 1; }
+  .pd-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .pd-bg { fill: var(--frost); stroke: var(--ink); stroke-width: .35; }
+  .pd-fill { fill: var(--powder); fill-opacity: .55; stroke: var(--white); stroke-width: .9; transform-box: view-box; transform-origin: 50px 50px; scale: var(--f); transition: scale .9s var(--ease-io); }
+  .pd-ring { fill: none; stroke: var(--pdeep); stroke-width: .22; stroke-dasharray: .8 .8; opacity: .7; }
+  .pd-mi { font-family: var(--f-m); font-weight: 700; font-size: 2.1px; letter-spacing: .05em; fill: var(--pdeep); text-anchor: middle; }
+  .pd-wave { fill: none; stroke: var(--pdeep); stroke-width: .5; opacity: 0; transform-box: view-box; transform-origin: 50px 50px; }
+  :global(html.motion) .pond.is-in .pd-wave { animation: pd-ripple 2.4s var(--ease-io) calc(var(--k) * .45s) 1; }
+  @keyframes pd-ripple { 0% { scale: .05; opacity: .9; } 100% { scale: 1; opacity: 0; } }
+  :global(html.motion) .pond:not(.is-in) .pd-fill { scale: 0; }
+
+  .pd-base { position: absolute; left: 50%; top: 50%; translate: -50% -50%; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+  .pd-base i { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 4px var(--white), 0 0 0 6px var(--ink); }
+  .pd-base b { position: absolute; top: 30px; padding: 3px 8px; border-radius: 3px; background: var(--ink); color: var(--white); font-family: var(--f-m); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+
+  .pd-towns { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+  .pd-towns li { position: absolute; translate: -50% -50%; }
+  .pd-chip { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; min-height: 44px; padding: 6px 14px; border-radius: 22px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 4px 4px 0 var(--ink); color: var(--ink); font-weight: 700; font-size: 15px; line-height: 1.1; text-decoration: none; white-space: nowrap;
+    transition: background-color .4s var(--ease-io), box-shadow .4s var(--ease-io), translate .4s var(--ease-io); }
+  .pd-chip em { font-style: normal; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .pd-chip.is-here { background: var(--cream); cursor: default; }
+  .pd-chip.is-on { background: var(--pdeep); color: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 5px 5px 0 var(--powder); translate: -1px -1px; }
+  .pd-chip.is-on em { color: var(--white); }
+  .pd-chip:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+
+  .pd-plate { position: relative; width: 300px; margin-top: 18px; padding: 14px 18px 12px; background: var(--steel); border-radius: 3px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); font-family: var(--f-m); color: var(--ink); }
+  .pd-pt { padding-bottom: 8px; border-bottom: 1px solid rgb(22 19 15 / .3); font-weight: 800; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+  .pd-plate dl { margin: 0; }
+  .pd-plate dl > div { display: grid; grid-template-columns: 90px 1fr; padding: 6px 0; border-bottom: 1px dashed rgb(22 19 15 / .2); }
+  .pd-plate dl > div:last-child { border-bottom: 0; }
+  .pd-plate dt { font-weight: 500; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: rgb(22 19 15 / .7); }
+  .pd-plate dd { margin: 0; font-weight: 800; font-size: 13px; }
+  .rv { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-of-type(1) { left: 5px; top: 5px; } .rv:nth-of-type(2) { right: 5px; top: 5px; }
+  .rv:nth-of-type(3) { left: 5px; bottom: 5px; } .rv:nth-of-type(4) { right: 5px; bottom: 5px; }
+  @media (prefers-reduced-motion: reduce) { .pd-fill, .pd-chip { transition: none; } }
+
+  .tn-foot { max-width: 640px; margin: 30px auto 0; text-align: center; font-size: 14px; line-height: 1.5; color: var(--muted); }
+  .tn-foot a { display: inline-flex; align-items: center; min-height: 44px; margin-left: 6px; font-weight: 700; color: var(--pdeep); }
+
+  @media (min-width: 768px) and (max-width: 1279px) { .tn-h { font-size: 40px; } }
   @media (max-width: 767px) {
-    .tnear { padding: 32px 0 40px; }
-    .tn-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 13px; }
-    .tn { height: 62px; padding: 12px 16px; }
-    .tn-t { font-size: 16px; }
-    .tn-mi { margin-top: 9px; font-size: 9px; line-height: 12px; }
-    .tn-ar { right: 18px; top: 26px; }
+    .tnear { padding: 60px 0 64px; }
+    .tn-h { font-size: 28px; }
+    .tn-p { font-size: 15px; }
+    .pond { margin-top: 24px; }
+    .pd-chip { min-height: 44px; padding: 4px 9px; font-size: 12px; box-shadow: inset 0 0 0 1.5px var(--ink), 3px 3px 0 var(--ink); }
+    .pd-chip em { font-size: 9px; }
+    .pd-base i { width: 16px; height: 16px; }
+    .pd-base b { top: 24px; font-size: 8px; }
+    .pd-plate { width: 100%; max-width: 320px; }
+    .tn-foot { font-size: 13px; }
   }
 </style>

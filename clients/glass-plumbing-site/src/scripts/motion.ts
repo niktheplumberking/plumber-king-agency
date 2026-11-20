@@ -15,7 +15,7 @@ import { initMarquees } from '../components/kit/marquee';
 import { startIdle } from '../components/kit/idle';
 import { settled, requestRefresh } from '../components/kit/settle';
 
-declare global { interface Window { __pbpMotion?: boolean; __pbpLenis?: Lenis } }
+declare global { interface Window { __glassMotion?: boolean; __glassLenis?: Lenis } }
 
 const html = document.documentElement;
 const MOTION = html.classList.contains('motion');
@@ -701,7 +701,7 @@ function introChrome(tl: gsap.core.Timeline) {
 
 function boot() {
   if (!MOTION) return;
-  window.__pbpMotion = true;
+  window.__glassMotion = true;
   window.addEventListener('keydown', (e) => { if (e.key === 'Tab') keyboardRelease(); }, true);
   document.addEventListener('focusin', (e) => {
     const host = (e.target as Element).closest?.('[data-m-section] [data-t]');
@@ -712,7 +712,7 @@ function boot() {
   // independent (damp), so it feels the same at 60 and 120 Hz. One clock: Lenis is driven by the GSAP ticker and
   // ScrollTrigger updates on every Lenis scroll, so no scrollerProxy is needed (Lenis scrolls the real window).
   const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false, anchors: { offset: -96 * (parseFloat(document.documentElement.style.zoom) || 1) }, autoRaf: false });
-  window.__pbpLenis = lenis;
+  window.__glassLenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
   lenis.on('scroll', (l: Lenis) => { if (Math.abs(l.velocity) < 1) catchUp(); });
   gsap.ticker.add((t) => lenis.raf(t * 1000));
@@ -764,7 +764,7 @@ function boot() {
     // Fix round 2: the handoff now fires while the cover is ~75 % off, so the hero starts with the header (0.05 s), and the
     // H1 begins as the cover clears (no dead time).
     if (hero) { if (chrome.duration() > 0.02) gsap.delayedCall(0.05, () => { hero.play(); }); else hero.play(); }
-    window.dispatchEvent(new CustomEvent('pbp:handoff'));
+    window.dispatchEvent(new CustomEvent('glass:handoff'));
     // Everything below the hero is built right after the handoff, in idle slices (tweens and line splits up front,
     // so no layout work happens mid-scroll); then signatures, pointer, and the parallax in its own slice.
     const idle = (f: () => void, timeout: number) => ('requestIdleCallback' in window ? (window as any).requestIdleCallback(f, { timeout }) : setTimeout(f, 200));

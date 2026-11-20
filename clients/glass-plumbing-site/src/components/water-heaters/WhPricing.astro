@@ -11,12 +11,12 @@ import Housing from '../kit/Housing.astro';
 import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
 const F = [
-  { t: 'Tank or tankless', d: 'Tankless units cost more to fit.', q: 'Going tankless?' },
-  { t: 'Gas or electric', d: 'Gas adds venting and gas-line work.', q: 'Gas heater?' },
-  { t: 'Size', d: 'More bathrooms, bigger unit.', q: 'Several bathrooms at once?' },
-  { t: 'Venting', d: 'Gas units need a safe vent path.', q: 'Needs a vent path?' },
-  { t: 'Permit', d: 'Needed for a replacement in Pinellas.', q: 'Replacing it?' },
-  { t: 'Access', d: 'Attic, closet or garage changes the job.', q: 'Attic, closet or garage?' },
+  { t: 'Tank or tankless', d: 'Tankless units usually cost more to fit.', q: 'Going tankless?' },
+  { t: 'Gas or electric', d: 'Gas can add venting and gas-line work.', q: 'Gas heater?' },
+  { t: 'Size', d: 'More bathrooms at once usually means a bigger unit.', q: 'Several bathrooms at once?' },
+  { t: 'Venting', d: 'Gas units usually need a safe vent path.', q: 'Needs a vent path?' },
+  { t: 'Permit', d: 'Usually needed for a replacement; the office depends on your address.', q: 'Replacing it?' },
+  { t: 'Access', d: 'Attic, closet or garage can change the job.', q: 'Attic, closet or garage?' },
 ];
 ---
 <section class="pc seam-host" data-m-section data-pc>
@@ -25,7 +25,7 @@ const F = [
     <div class="pc-top">
       <Eyebrow text="What it costs" />
       <h2 class="h2 pc-h" data-t="2" style="--h2:52px;--h2m:28px">No price list.<br /><span class="tone">Here’s what changes it.</span></h2>
-      <p class="pc-lead" data-t="3"><span class="d">Every house is different, so we don’t post prices. </span>We give you the price before any work starts.</p>
+      <p class="pc-lead" data-t="3"><span class="d">Every house is different, so there is no price list here. </span>Call or text a photo of the label for your price.</p>
     </div>
     <div class="pc-order" data-t="4">
       <i class="pc-rv" aria-hidden="true"></i><i class="pc-rv" aria-hidden="true"></i><i class="pc-rv" aria-hidden="true"></i><i class="pc-rv" aria-hidden="true"></i>
@@ -46,7 +46,7 @@ const F = [
       <div class="pc-gauge">
         <Housing w={120} h={220} wm={84} hm={150} r={30} rm={22} tone="frost" fill={1} shadow={8} shadowm={6} class="pc-hs" />
         <p class="pc-c" aria-live="polite"><b data-pc-n>0</b> of 6 apply</p>
-        <p class="pc-cs">No price list. You hear the price before any work starts.</p>
+        <p class="pc-cs">No price list. Call or text a photo of the label for your price.</p>
       </div>
     </div>
     <div class="pc-cta" data-t="3"><Btn sub="Get your price" size="l" w={300} /></div>

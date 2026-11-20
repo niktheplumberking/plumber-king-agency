@@ -1,8 +1,11 @@
 ---
 // Home crew (Figma 712:448 "Crew" y 3120 h 974; mobile 715:560 y 3674 h 1265). Ink band. Kody's business card tilted over
 // the top edge, the crawlspace photo in a steel-capped housing, "A licensed plumber. And his crew.", Kody's own line from
-// Instagram, the three names with how many of the 16 reviews name them, David Peek's quote and the call button.
-// No names on the photo (we cannot tell Kody from Zak).
+// Instagram, the three names (each opens a review that names them), David Peek's quote and the call button.
+// Fix round A (independent review BLOCKER 1, "name on a face"): the card bearing "Kody Glass, OWNER" sat over the
+// crawl-space face photo. The housing now holds the white Glass van (no face), so no name sits next to a single face;
+// the crawl-space photo moved to the home FAQ (emergency row, no name in that answer). The "named in N of 16" tallies
+// are gone (home Why us no longer counts themes either).
 import Img from '../ui/Img.astro';
 import Btn from '../kit/Btn.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
@@ -11,10 +14,10 @@ import { quote } from './fig';
 import { SITE } from '../../data/site';
 const dp = quote('David Peek', 'These guys know their stuff - commercial or residential.');
 const crew = [
-  { n: 'Kody', d: `Owner · licence holder · FL ${SITE.licence.number}`, dm: `Owner · licence holder · ${SITE.licence.number}`, c: 8,
+  { n: 'Kody', d: `Owner · licence holder · FL ${SITE.licence.number}`, dm: `Owner · licence holder · ${SITE.licence.number}`, 
     q: quote('Eduardo “EddieZoRz” Perea', "I can't tell you other than saying Kody was a lifesaver.") },
-  { n: 'Zak', d: 'On the crew · commercial and new builds', c: 6, q: quote('Jordan Carlson', 'Zak was professional, punctual, and very friendly.') },
-  { n: 'Chase', d: 'On the crew', c: 2, q: quote('Nelson Whitesell', 'Zak and Chase are great to work with.') },
+  { n: 'Zak', d: 'On the crew · commercial and new builds', q: quote('Jordan Carlson', 'Zak was professional, punctual, and very friendly.') },
+  { n: 'Chase', d: 'On the crew', q: quote('Nelson Whitesell', 'Zak and Chase are great to work with.') },
 ];
 // The business card photo is the FRONT and the BACK of the card stacked (1385 x 1628). Round 2 (Nick, 20 Nov: "logo cut in
 // half"): each face shows exactly one side, cropped to the card's own edges (front y 30-795, back y 847-1612, x 22-1363),
@@ -25,7 +28,7 @@ const crew = [
     <div class="ph">
       <div data-t="4" data-fx="frame">
       <Housing tone="photo" fluid w={330} h={440} wm={250} hm={320} cap={31} capm={22} shadow={12} shadowm={10} class="crew-can">
-        <Img name="crew-crawlspace" alt="A Glass plumber in a cap smiling from under a floor in a crawlspace" sizes="(min-width: 768px) 330px, 250px" widths={[250, 330, 500, 660]} box={330 / 411} boxM={250 / 300} focus="50% 45%" />
+        <Img name="van-night" alt="The white Glass Plumbing Services van at night, the logo and phone number on its side" sizes="(min-width: 768px) 330px, 250px" widths={[250, 330, 500, 660]} box={330 / 411} boxM={250 / 300} focus="46% 50%" />
       </Housing>
       </div>
       <div class="bc-w" data-t="5" data-fx="toss">
@@ -51,7 +54,7 @@ const crew = [
           <li>
             <details class="nrow" data-acc name="crew-names" open={i === 0}>
               <summary>
-                <span class="nm">{p.n}</span><span class="cnt">Named in {p.c} of 16 reviews</span>
+                <span class="nm">{p.n}</span><span class="cnt">Review</span>
                 <span class="nd">{p.dm ? <><span class="d">{p.d}</span><span class="m">{p.dm}</span></> : p.d}</span>
                 <span class="tg" aria-hidden="true"></span>
               </summary>

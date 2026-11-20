@@ -39,7 +39,7 @@ import { MI, QUICK } from './data';
   /* R2 (Nick): no visible breadcrumbs on any page; Breadcrumbs stays for its BreadcrumbList JSON-LD. */
   .thero :global(.th-crumbs) { display: none; }
   .thero { position: relative; background: var(--white); min-height: 676px; }
-  .th-media { position: absolute; left: 0; top: 0; bottom: 0; width: 640px; margin: 0; }
+  .th-media { position: absolute; left: 0; top: 0; bottom: 0; width: 640px; margin: 0; overflow: clip; } /* fix B: the drift-scaled img must not widen the page at 360 */
   .th-media :global(picture), .th-media :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }
   .th-plate { position: absolute; z-index: 2; left: 360px; top: 470px; }
   .th-wrap { display: flex; justify-content: flex-end; }

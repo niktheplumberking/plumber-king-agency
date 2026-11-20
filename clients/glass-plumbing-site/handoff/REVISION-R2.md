@@ -49,3 +49,11 @@ Also from the skill (lead found): "No cross-page hash links: link the real page 
   use the copy the earlier QA used if present in a node_modules; never npm install). Save before/after PNGs in
   handoff/qa/r2/<your-area>/.
 - Your own dev port; stop it when done. Do not commit. Final reply: per section what changed + evidence + 21st.dev source.
+
+## Fix round after the independent R2 review (lead, 20 Nov)
+Source: handoff/qa/r2/independent/REVIEW.md. Fact rule for this round: business-specific claims (what Glass does,
+promises, local permit/water/housing facts) need a line in src/data/*.ts or research/FACTS-CHECK.md / LOCAL-FACTS.md, and
+INFERRING items must be hedged ("usually", "check with your permit office") or removed. General trade knowledge may stay
+only if accurate and phrased generally (no numbers). Keep "24/7" (his own site and card). Remove the trip-charge line and
+"we haul the old one" (unconfirmed). No names next to a single face; "the Glass brothers" only as a quote from a review.
+Maps: /areas keeps the map; home Areas, /contact shop and Seminole distance must not be "map + plate" again.

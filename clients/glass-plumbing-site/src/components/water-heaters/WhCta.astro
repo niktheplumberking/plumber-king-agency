@@ -1,63 +1,126 @@
 ---
-// CTA "send the label" (Figma 719:437 y 8814 h 560 / mobile y 9231 h 673): ink section with a meniscus rise, the rating
-// plate mock (tilted -3 deg) and the two buttons. Phone: heading, lead, label mock, then the buttons full width.
+// CTA "send the label", fix round C (audit vs rule 14: text left / rating plate right). New idea, "Label viewfinder": one
+// centred composition on ink. The water heater's rating plate sits inside a phone-camera viewfinder (corner brackets,
+// focus box). Press the shutter: a scan line runs down the plate, each field it passes gets a "found" tick and lights up,
+// the frame flashes once, and the "Text the label" button below takes the powder outline: the visitor has rehearsed the
+// one thing we ask for. Hovering or focusing a field shows what it tells the plumber. Buttons centred under the frame.
+// 21st.dev: "Stamping Press" (@aadilghani1/stamping-press, id 43184: one press runs the machine and advances a counter) +
+// "Thumbnail image viewer" location tags (@ibrandify/thumbnail-image-viewer, id 37501), adapted to Astro + vanilla TS + CSS
+// transitions, re-skinned: pdeep plate header, powder viewfinder brackets, ink band, meniscus seam (kept).
+// No JS: the plate reads as a plain list (shutter hidden). Reduced motion: the result shows without the scan.
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
 import { SITE } from '../../data/site';
-const F = [['Brand', 'e.g. Rheem, State'], ['Model no.', 'on the plate'], ['Serial no.', 'tells its age'], ['Capacity', 'gallons'], ['Fuel', 'gas or electric']];
+const F = [
+  ['Brand', 'e.g. Rheem, State', 'Which maker, so the right parts fit.'],
+  ['Model no.', 'on the plate', 'The exact unit and its size.'],
+  ['Serial no.', 'tells its age', 'Most makers code the build date in it.'],
+  ['Capacity', 'gallons', 'How much hot water it stores.'],
+  ['Fuel', 'gas or electric', 'Gas or electric changes the job.'],
+];
 ---
-<section class="wc on-ink seam-host" data-m-section>
+<section class="wc on-ink seam-host" data-m-section data-wc>
   <Seam from="var(--frost)" to="var(--ink)" flip d={40} dm={32} />
-  <div class="wrap wc-grid">
-    <div class="wc-l">
-      <Eyebrow text="Fastest way to a price" />
-      <h2 class="h2 wc-h" data-t="2" style="--h2:52px;--h2m:28px">Send a photo of your<br /><span class="tone">water heater label.</span></h2>
-      <p class="wc-lead" data-t="3">The label tells us the brand, size and fuel.<span class="d"> Text it to <span class="nowrap">{SITE.phone}</span> with your town.</span></p>
+  <div class="wrap wc-in">
+    <Eyebrow text="Get a price" />
+    <h2 class="h2 wc-h" data-t="2" style="--h2:52px;--h2m:28px">Send a photo of your<br /><span class="tone">water heater label.</span></h2>
+    <p class="wc-lead" data-t="3">The label shows the brand, size and fuel.<span class="d"> Text it to <span class="nowrap">{SITE.phone}</span> with your town.</span></p>
+    <div class="wc-vf" data-t="4">
+      <span class="wc-br wc-br1" aria-hidden="true"></span><span class="wc-br wc-br2" aria-hidden="true"></span><span class="wc-br wc-br3" aria-hidden="true"></span><span class="wc-br wc-br4" aria-hidden="true"></span>
+      <span class="wc-rec" aria-hidden="true">Photo · label</span>
+      <div class="wc-mock">
+        <p class="wc-mt">Rating plate · photograph this</p>
+        <dl>
+          {F.map(([k, v, h], i) => (
+            <div class="wc-row" tabindex="0" style={`--i:${i}`}>
+              <dt>{k}</dt><dd><span class="wc-f"><span class="wc-v">{v}</span><span class="wc-ok" aria-hidden="true">Found</span></span><span class="wc-hint">{h}</span></dd>
+            </div>
+          ))}
+        </dl>
+        <span class="wc-scan" aria-hidden="true"></span>
+      </div>
+      <span class="wc-flash" aria-hidden="true"></span>
+      <button type="button" class="wc-shut" data-wc-shut hidden><span class="wc-dot" aria-hidden="true"></span><span>Practise the photo</span></button>
+      <p class="sr-only" aria-live="polite" data-wc-live></p>
     </div>
     <div class="wc-btns" data-t="3">
-      <Btn look="line" icon="camera" label="Text the label" sub={`TO ${SITE.phone}`} arrow size="l" w={280} h={64} hm={60} class="wc-b" />
+      <Btn look="line" icon="camera" label="Text the label" sub={`TO ${SITE.phone}`} arrow size="l" w={280} h={64} hm={60} class="wc-b wc-text" />
       <Btn sub="OR CALL · 24/7" size="l" w={280} h={64} hm={60} class="wc-b" />
-    </div>
-    <div class="wc-mock" aria-hidden="true" data-t="4">
-      <p class="wc-mt">Rating plate · photograph this</p>
-      <dl>
-        {F.map(([k, v]) => <div class:list={[k === 'Serial no.' && 'wc-ser']}><dt>{k}</dt><dd>{v}</dd></div>)}
-      </dl>
     </div>
   </div>
 </section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-wc]').forEach((root) => {
+    const b = root.querySelector<HTMLButtonElement>('[data-wc-shut]');
+    const live = root.querySelector<HTMLElement>('[data-wc-live]');
+    if (!b) return;
+    b.hidden = false;
+    b.addEventListener('click', () => {
+      root.classList.remove('is-shot'); void root.offsetWidth; root.classList.add('is-shot');
+      if (live) live.textContent = 'Brand, model, serial, capacity and fuel found. Now text the photo to (727) 512-0673.';
+    });
+  });
+</script>
 <style>
   .wc { position: relative; padding: 130px 0 116px; }
-  .wc-grid { display: grid; grid-template-columns: minmax(0, 660px) 460px; grid-template-areas: 'l mock' 'btn mock'; grid-template-rows: auto 1fr; justify-content: space-between; }
-  .wc-l { grid-area: l; }
+  .wc-in { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .wc-h { margin-top: 16px; color: var(--white); }
-  .wc-lead { margin-top: 32px; max-width: 520px; font-size: 18px; line-height: 1.5; color: var(--white); }
-  .wc-btns { grid-area: btn; display: flex; flex-wrap: wrap; gap: 16px; margin-top: 26px; }
-  .wc-mock { grid-area: mock; align-self: start; width: 460px; margin-top: -20px; border-radius: 4px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 2px var(--steel2), 12px 12px 0 var(--powder); rotate: 3deg; overflow: hidden; } /* Figma rot -3 = clockwise */
-  .wc-mt { height: 52px; padding: 18px 20px 0; background: var(--pdeep); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; }
-  .wc-mock dl { margin: 0; padding: 18px 20px 30px; display: grid; gap: 22px; }
-  .wc-mock dl div { display: grid; grid-template-columns: 130px 1fr; align-items: center; }
-  .wc-mock dt { font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .wc-mock dd { margin: 0; height: 30px; padding: 4px 12px; border-radius: 2px; background: var(--frost); font-size: 14px; line-height: 1.5; color: var(--muted); }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .wc-grid { grid-template-columns: minmax(0, 1fr) 360px; gap: 0 40px; }
-    .wc-mock { width: 360px; }
-    .wc-mock dl div { grid-template-columns: 100px 1fr; }
-  }
+  .wc-lead { margin-top: 20px; max-width: 560px; font-size: 18px; line-height: 1.5; color: var(--white); }
+
+  /* Viewfinder: four powder brackets around the plate, a rec label and the shutter. */
+  .wc-vf { position: relative; width: 600px; max-width: 100%; margin-top: 40px; padding: 40px 50px 84px; }
+  .wc-br { position: absolute; width: 44px; height: 44px; border: 0 solid var(--powder); }
+  .wc-br1 { left: 0; top: 0; border-width: 4px 0 0 4px; border-radius: 10px 0 0 0; }
+  .wc-br2 { right: 0; top: 0; border-width: 4px 4px 0 0; border-radius: 0 10px 0 0; }
+  .wc-br3 { left: 0; bottom: 0; border-width: 0 0 4px 4px; border-radius: 0 0 0 10px; }
+  .wc-br4 { right: 0; bottom: 0; border-width: 0 4px 4px 0; border-radius: 0 0 10px 0; }
+  .wc-rec { position: absolute; left: 56px; top: 12px; font: 700 10px/13px var(--f-m); letter-spacing: .1em; text-transform: uppercase; color: var(--powder); }
+  .wc-rec::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--powder); }
+  .wc-mock { position: relative; overflow: hidden; border-radius: 4px; background: var(--white); color: var(--ink); text-align: left; box-shadow: inset 0 0 0 2px var(--steel2), 12px 12px 0 var(--powder); rotate: -1.5deg; }
+  .wc-mt { height: 52px; padding: 18px 20px 0; background: var(--pdeep); color: var(--white); font: 700 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; }
+  .wc-mock dl { margin: 0; padding: 14px 20px 22px; display: grid; gap: 8px; }
+  .wc-row { position: relative; display: grid; grid-template-columns: 120px 1fr; align-items: center; padding: 6px 8px; border-radius: 4px; outline: none; transition: background-color .35s var(--ease-io); }
+  .wc-row:hover, .wc-row:focus-visible { background: rgba(132,179,199,.18); }
+  .wc-row:focus-visible { box-shadow: 0 0 0 3px var(--pdeep); }
+  .wc-mock dt { font: 700 10px/13px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: #4A4E50; }
+  .wc-mock dd { margin: 0; }
+  .wc-f { display: flex; justify-content: space-between; align-items: center; min-height: 30px; padding: 4px 12px; border-radius: 2px; background: var(--frost); font-size: 14px; line-height: 1.5; color: var(--muted); transition: background-color .4s var(--ease-io), color .4s var(--ease-io); }
+  .wc-ok { font: 700 10px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--white); opacity: 0; transition: opacity .3s var(--ease-io); }
+  .wc-hint { display: block; margin: 0; max-height: 0; overflow: hidden; font-size: 13px; line-height: 1.4; color: var(--ink); opacity: 0; transition: max-height .4s var(--ease-io), opacity .4s var(--ease-io), margin .4s var(--ease-io); }
+  .wc-row:hover .wc-hint, .wc-row:focus-visible .wc-hint { max-height: 40px; margin-top: 6px; opacity: 1; }
+  .wc-scan { position: absolute; left: 0; right: 0; top: 52px; height: 3px; background: var(--powder); box-shadow: 0 0 14px 4px rgba(132,179,199,.6); opacity: 0; pointer-events: none; }
+  .wc.is-shot .wc-f { background: var(--pdeep); color: var(--white); transition-delay: calc(var(--i) * .22s + .1s); }
+  .wc.is-shot .wc-ok { opacity: 1; transition-delay: calc(var(--i) * .22s + .2s); }
+  html.motion .wc.is-shot .wc-scan { animation: wc-scan 1.3s var(--ease-io) forwards; }
+  @keyframes wc-scan { 0% { opacity: 1; top: 52px; } 92% { opacity: 1; top: calc(100% - 6px); } 100% { opacity: 0; top: calc(100% - 6px); } }
+  .wc-flash { position: absolute; inset: 0; border-radius: 10px; background: var(--white); opacity: 0; pointer-events: none; }
+  html.motion .wc.is-shot .wc-flash { animation: wc-flash .5s var(--ease-io) 1.3s; }
+  @keyframes wc-flash { 0% { opacity: 0; } 30% { opacity: .55; } 100% { opacity: 0; } }
+  .wc-shut { position: absolute; left: 50%; bottom: 14px; translate: -50% 0; display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 20px 0 8px; border: 0; border-radius: 999px; background: var(--white); color: var(--ink); font: 700 15px/1 var(--f-b); cursor: pointer; box-shadow: 4px 4px 0 var(--powder); transition: translate .3s var(--ease-io); }
+  .wc-shut:hover { translate: -50% -2px; }
+  .wc-shut:focus-visible { outline: 3px solid var(--powder); outline-offset: 3px; }
+  .wc-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--ink); box-shadow: inset 0 0 0 4px var(--white), inset 0 0 0 7px var(--ink); }
+  .wc-shut[hidden] { display: none; }
+  .wc-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 26px; }
+  .wc :global(.wc-text) { transition: box-shadow .4s var(--ease-io); }
+  .wc.is-shot :global(.wc-text) { box-shadow: 4px 4px 0 var(--powder); transition-delay: 1.4s; }
+  html:not(.motion) .wc.is-shot *, html:not(.motion) .wc.is-shot :global(.wc-text) { transition-delay: 0s !important; }
+  @media (prefers-reduced-motion: reduce) { .wc-f, .wc-ok, .wc-hint, .wc-row { transition: none !important; } }
   @media (max-width: 767px) {
     .wc { padding: 64px 0 56px; }
-    .wc-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'mock' 'btn'; }
     .wc-h { margin-top: 10px; }
-    .wc-lead { margin-top: 16px; font-size: 15px; }
-    .wc-mock { justify-self: center; width: 310px; max-width: calc(100% - 20px); margin-top: 32px; box-shadow: inset 0 0 0 2px var(--steel2), 8px 8px 0 var(--powder); }
+    .wc-lead { margin-top: 14px; font-size: 15px; }
+    .wc-vf { margin-top: 26px; padding: 34px 14px 78px; }
+    .wc-br { width: 30px; height: 30px; }
+    .wc-rec { left: 40px; top: 10px; font-size: 9px; }
+    .wc-mock { rotate: -1deg; box-shadow: inset 0 0 0 2px var(--steel2), 7px 7px 0 var(--powder); }
     .wc-mt { height: 40px; padding: 14px 14px 0; font-size: 9px; line-height: 12px; }
-    .wc-mock dl { padding: 12px 16px 24px 14px; gap: 14px; }
-    .wc-mock dl div { grid-template-columns: 96px 1fr; }
+    .wc-mock dl { padding: 10px 10px 16px; gap: 4px; }
+    .wc-row { grid-template-columns: 86px 1fr; padding: 5px 4px; }
     .wc-mock dt { font-size: 9px; line-height: 12px; }
-    .wc-mock dd { height: 28px; padding: 4px 10px; font-size: 13px; }
-    .wc-ser { display: none !important; }
-    .wc-btns { flex-direction: column; gap: 12px; margin-top: 40px; }
+    .wc-f { min-height: 28px; padding: 4px 8px; font-size: 13px; }
+    .wc-btns { flex-direction: column; align-self: stretch; gap: 12px; margin-top: 20px; }
     .wc-btns :global(.wc-b) { width: 100%; }
   }
 </style>

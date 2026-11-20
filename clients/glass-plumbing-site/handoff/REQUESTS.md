@@ -41,3 +41,21 @@
   my copy `components/contact/TownsStrip.astro` is deleted (nothing else imported it).
 - (HOME builder, 19 Nov, later) Resolved: the kit now writes `-d` / `-m` inline vars; re-checked Home at 390 (hero plate no
   longer wraps, Housing caps correct). Nothing open from HOME.
+
+## FIX ROUND A (home + reviews + shared, 20 Nov)
+- Renamed the Paul leftovers: `window.__pbpMotion` -> `window.__glassMotion`, `window.__pbpLenis` -> `window.__glassLenis`, and the
+  event `pbp:handoff` -> `glass:handoff` (definitions in scripts/motion.ts; readers in kit/curtain, idle, loader, scrub, settle,
+  scripts/ui, scripts/objects, layouts/Base, home/Process). A grep of all of `src` found no reader in a page folder I do not own.
+  Anyone adding a reader: use the `__glass*` names and `glass:handoff`.
+- MOTION.md (root, not in my areas) still names the old sessionStorage keys `pbp-intro` / `pbp-nav` (the code uses
+  `gps-intro` / `gps-nav`); the lead may want to correct those two lines.
+- Page transition shortened (kit/curtain.ts): fill 0.6 s + drain 0.6 s (was 0.9 + 1.0); the loader's exit uses the same drain.
+- Home FAQ emergency row now shows crew-crawlspace (was van-night) so home Crew can use the van photo without a face under
+  Kody's card. /about still shows the card over a face (not mine: about/AboutHero).
+
+## FIX ROUND B (about/areas/seminole fixer, 20 Nov) -> fixer A / home owner (shared motion)
+- **1024 px, motion on: transient 16 px horizontal scroll** (scrollWidth 1040; `window.scrollTo(200, 0)` really moves to
+  scrollX 16 while entrances are pending; `body { overflow-x: clip }` propagates to the viewport as hidden, which still
+  allows programmatic scroll). Cause: the `right` entrance pre-state (x +80) of side columns below the fold. On my pages I
+  clipped the two culprits (`.tcta`, `.brec` now `overflow-x: clip`): /about and /areas/seminole read 1024 now. **Home still
+  shows 1040 at 1024** (not mine). Suggest `overflow-x: clip` on `html` (or `main`) once, or a smaller x for `right` under 1280.

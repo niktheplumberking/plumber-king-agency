@@ -11,7 +11,7 @@ import { SITE } from '../../data/site';
 const people = [
   { id: 'kody', role: 'Owner · licence holder', name: 'Kody Glass', d: `Florida licence ${SITE.licence.number}.`, n: KODY,
     q: quote('Eduardo “EddieZoRz” Perea', 'Kody was a lifesaver.'), by: 'Eduardo “EddieZoRz” Perea' },
-  { id: 'zak', role: 'Brother · on the crew', name: 'Zak', d: 'Commercial and new builds.', n: ZAK,
+  { id: 'zak', role: 'On the crew', name: 'Zak', d: 'Named next to Kody in reviews.', n: ZAK,
     q: quote('Jordan Carlson', 'Zak was professional, punctual, and very friendly.'), by: 'Jordan Carlson' },
   { id: 'chase', role: 'On the crew', name: 'Chase', d: 'Named next to Zak in both of his reviews.', n: CHASE,
     q: quote('Nelson Whitesell', 'Zak and Chase are great to work with.'), by: 'Nelson Whitesell' },
@@ -20,7 +20,7 @@ const people = [
 <section class="bcrew" data-m-section aria-labelledby="bcrew-h">
   <div class="wrap">
     <div class="bc-top">
-      <Head eyebrow="Who is who" l1="Two brothers." l2="One crew." id="bcrew-h" />
+      <Head eyebrow="Who is who" l1="The names" l2="in the reviews." id="bcrew-h" />
       <p class="bc-note" data-t="3">We don’t put names on photos, because faces change job to job. Here is who you’ll talk to, and what customers say about each of them.</p>
     </div>
     <ul class="bc-row" role="list" data-t="4" data-crew>
@@ -32,10 +32,12 @@ const people = [
           </button>
           <p class="bc-d">{p.d}</p>
           <p class="bc-more" aria-hidden="true">Read the review →</p>
-          <figure class="bc-q" id={`bc-q-${p.id}`}>
-            <blockquote><p>“{p.q}”</p></blockquote>
-            <figcaption>{p.by} · Google</figcaption>
-          </figure>
+          <div class="bc-qw" id={`bc-q-${p.id}`}>
+            <figure class="bc-q">
+              <blockquote><p>“{p.q}”</p></blockquote>
+              <figcaption>{p.by} · Google</figcaption>
+            </figure>
+          </div>
           <div class="bc-gauge">
             <span class="bc-tube" aria-hidden="true"><span class="bc-water"></span></span>
             <span class="bc-gl">Named in <b>{p.n}</b> of {REVIEW_TOTAL} reviews</span>
@@ -49,17 +51,27 @@ const people = [
 
 <script>
   import { onEnter } from '../areas/inview';
-  // One plate open at a time (desktop/tablet). Opens on hover, focus or click; the row remembers the last one opened.
+  // Desktop / tablet: one plate open at a time (hover, focus or click). Phones (fix round B): each plate is its own
+  // disclosure; a tap toggles it open / closed and aria-expanded follows. Switching layout keeps one open on wide screens.
   document.querySelectorAll<HTMLElement>('[data-crew]').forEach((row) => {
     const items = [...row.querySelectorAll<HTMLElement>('[data-crew-item]')];
-    const open = (k: number) => items.forEach((it, i) => {
-      it.classList.toggle('is-open', i === k);
-      it.querySelector('[data-crew-btn]')!.setAttribute('aria-expanded', String(i === k));
-    });
+    const phone = matchMedia('(max-width: 767px)');
+    const set = (it: HTMLElement, on: boolean) => {
+      it.classList.toggle('is-open', on);
+      it.querySelector('[data-crew-btn]')!.setAttribute('aria-expanded', String(on));
+    };
+    const open = (k: number) => items.forEach((it, i) => set(it, i === k));
     items.forEach((it, i) => {
-      it.addEventListener('pointerenter', (e) => { if ((e as PointerEvent).pointerType === 'mouse') open(i); });
-      it.querySelector('[data-crew-btn]')!.addEventListener('click', () => open(i));
-      it.addEventListener('focusin', () => open(i));
+      it.addEventListener('pointerenter', (e) => { if (!phone.matches && (e as PointerEvent).pointerType === 'mouse') open(i); });
+      it.querySelector('[data-crew-btn]')!.addEventListener('click', () => {
+        if (phone.matches) set(it, !it.classList.contains('is-open')); else open(i);
+      });
+      it.addEventListener('focusin', () => { if (!phone.matches) open(i); });
+    });
+    phone.addEventListener('change', () => {
+      if (phone.matches) return;
+      const k = items.findIndex((it) => it.classList.contains('is-open'));
+      open(k < 0 ? 0 : k);
     });
     onEnter(row, () => row.classList.add('is-in'));
   });
@@ -81,8 +93,10 @@ const people = [
   .bc-d { width: 240px; margin-top: 12px; font-size: 15px; line-height: 1.5; color: var(--ink); }
   .bc-more { margin-top: 18px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); transition: opacity .4s var(--ease-io); }
   .is-open .bc-more { opacity: 0; }
+  .bc-qw { display: contents; }
   .bc-q { position: absolute; left: 28px; top: 170px; width: 480px; max-width: calc(100vw - 80px); margin: 0; opacity: 0; translate: 0 12px; transition: opacity .5s var(--ease-io), translate .5s var(--ease-io); }
   .is-open .bc-q { opacity: 1; translate: 0 0; transition-delay: .25s; }
+  :global(html.js) .bc:not(.is-open) .bc-q { visibility: hidden; transition: opacity .5s var(--ease-io), translate .5s var(--ease-io), visibility 0s linear .5s; }
   .bc-q blockquote { margin: 0; font-family: var(--f-h); font-weight: 600; font-size: 26px; line-height: 1.18; letter-spacing: -.01em; color: var(--pdeep); }
   .bc-q figcaption { margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--ink); }
   .bc-gauge { margin-top: auto; padding-top: 16px; border-top: 1px solid rgb(22 19 15 / .3); }
@@ -94,14 +108,14 @@ const people = [
   .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
   .rv:nth-of-type(1) { left: 6px; top: 6px; } .rv:nth-of-type(2) { right: 6px; top: 6px; }
   .rv:nth-of-type(3) { left: 6px; bottom: 6px; } .rv:nth-of-type(4) { right: 6px; bottom: 6px; }
-  @media (prefers-reduced-motion: reduce) { .bc, .bc-q { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .bc, .bc-q, .bc-qw, .bc-btn::after { transition: none; } }
 
   @media (min-width: 768px) and (max-width: 1279px) {
     .bc-row { gap: 16px; }
     .bc { height: 400px; padding: 26px 20px 22px; }
     .bc-name { font-size: 34px; }
     .bc-q { width: 340px; }
-    .bc-q blockquote { font-size: 21px; }
+    .bc-q blockquote { font-size: 24px; }
     .bc-d { width: auto; }
     .bc-q { left: 20px; top: 190px; }
   }
@@ -110,13 +124,21 @@ const people = [
     .bc-note { font-size: 15px; margin-top: 14px; }
     .bc-row { flex-direction: column; gap: 18px; margin-top: 28px; }
     .bc, .bc.is-open { flex: none; height: auto; padding: 22px 20px 20px; box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); }
-    .bc:first-child { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--pdeep); }
-    .bc-btn { pointer-events: none; }
+    .bc-btn { width: 100%; min-height: 44px; }
+    :global(html:not(.js)) .bc-btn::after { display: none; }
+    .bc-btn::after { content: ''; position: absolute; right: 18px; top: 26px; width: 12px; height: 12px; border-right: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink); rotate: 45deg; transition: rotate .5s var(--ease-io), translate .5s var(--ease-io); }
+    .is-open .bc-btn::after { rotate: 225deg; translate: 0 6px; }
+    .bc.is-open { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--pdeep); }
+    .bc-qw { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .6s var(--ease-io); }
+    :global(html.js) .bc:not(.is-open) .bc-qw { grid-template-rows: 0fr; }
+    .bc-qw > .bc-q { min-height: 0; overflow: hidden; }
     .bc-role { font-size: 10px; }
     .bc-name { margin-top: 8px; font-size: 30px; }
     .bc-d { width: auto; margin-top: 8px; font-size: 14px; }
     .bc-more { display: none; }
-    .bc-q { position: static; width: auto; max-width: none; margin-top: 14px; opacity: 1; translate: none; }
+    .bc-q { position: static; width: auto; max-width: none; margin: 0; opacity: 1; translate: none; transition: opacity .5s var(--ease-io) .1s; }
+    :global(html.js) .bc:not(.is-open) .bc-q { opacity: 0; transition: opacity .3s var(--ease-io), visibility 0s linear .6s; }
+    .bc-q blockquote { padding-top: 14px; }
     .bc-q blockquote { font-size: 20px; font-weight: 700; }
     .bc-gauge { margin-top: 18px; }
   }

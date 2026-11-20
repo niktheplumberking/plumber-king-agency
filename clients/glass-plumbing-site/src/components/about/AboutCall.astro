@@ -17,7 +17,7 @@ const rows = [
 <section class="bcall" data-m-section aria-labelledby="bcall-h">
   <div class="wrap bk-grid">
     <div class="bk-copy">
-      <Head eyebrow="Who picks up" l1="Talk to a" l2="Glass brother." size={60} sizeM={38} id="bcall-h" />
+      <Head eyebrow="Who picks up" l1="Talk to" l2="the crew." size={60} sizeM={38} id="bcall-h" />
       <p class="bk-status" data-t="3"><span class="bk-live" aria-hidden="true"></span>Line open now · 24/7</p>
       <div class="bk-btns">
         <Btn look="call" sub="Call now · 24/7" size="l" w={300} wm={350} t="3" />
@@ -88,8 +88,8 @@ const rows = [
   .bk-who { display: flex; flex-direction: column; flex: 1; margin-left: 18px; }
   .bk-n { font-family: var(--f-h); font-weight: 800; font-size: 26px; line-height: 1.04; letter-spacing: -.02em; }
   .bk-s { margin-top: 7px; font-family: var(--f-m); font-weight: 500; font-size: 11px; line-height: 15px; letter-spacing: .02em; color: rgb(255 255 255 / .7); }
-  .bk-chip { padding: 6px 13px; border-radius: 16px; background: var(--powder); font-weight: 600; font-size: 12px; line-height: 18px; color: var(--ink); opacity: 0; scale: .8; transition: opacity .4s var(--ease-io), scale .4s var(--ease-io); }
-  .is-on .bk-chip { opacity: 1; scale: 1; }
+  .bk-chip { padding: 6px 13px; border-radius: 16px; background: var(--powder); font-weight: 600; font-size: 12px; line-height: 18px; color: var(--ink); clip-path: inset(0 0 0 100% round 16px); transition: clip-path .4s var(--ease-io); } /* fix B: wipe, not a fade (axe caught the half-faded text) */
+  .is-on .bk-chip { clip-path: inset(0 0 0 0 round 16px); }
   .m { display: none; }
   @media (min-width: 768px) and (max-width: 1279px) {
     .bk-grid { grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); column-gap: 40px; }

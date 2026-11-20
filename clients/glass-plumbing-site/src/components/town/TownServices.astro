@@ -1,55 +1,115 @@
 ---
-// /areas/seminole "Top services" (Figma y 2367 h 666 / mobile y 2167 h 608). Ink. Six numbered rows linking to the service
-// families on /services (and the built water-heater page). R2: no cross-page hash links (Nick): rows link the real page. Phones drop "in Seminole" from each name (as the frame).
+// /areas/seminole "Six jobs" (fix round B rebuild: the R2 two-column list of links was plain). Ink. Centred head, then a
+// steel PARTS CABINET: six drawers (3 x 2; phones one column), each with a card in a label holder ("01 Drain cleaning")
+// and a pull. Hover / focus / tap-hold pulls the drawer: its front slides down and a real job photo rises out of it
+// with a caption; the drawer is the link to the service page. 21st.dev hello_54e122be/hairline-drawer (a cabinet drawer
+// that slides out under the pointer) + hyperiux/interactive-list-preview (row reveals a clipped preview), rebuilt in CSS
+// and re-skinned as Glass steel. Phones: every drawer shows a small photo in its holder (no hover on touch).
+// Services = the ones seen in real reviews/posts (FACTS-CHECK "services"); photos are his own (photos/ig), captions say
+// what the photo shows, never that it was taken in Seminole. No cross-page hash links.
 import Head from '../areas/Head.astro';
+import Img from '../ui/Img.astro';
 const rows = [
-  { n: 'Drain cleaning', href: '/services' },
-  { n: 'Shower & tub valves', href: '/services' },
-  { n: 'Water heaters', href: '/services/water-heaters' },
-  { n: 'Water softeners & filtration', m: 'Softeners & filtration', href: '/services' },
-  { n: 'Leak repair', href: '/services' },
-  { n: 'Toilets & faucets', href: '/services' },
+  { n: 'Drain cleaning', href: '/services', img: 'water-heater-expansion-tank', alt: 'A floor drain built in beside a water heater', cap: 'Floor drain built in · Pinellas', f: '50% 60%' },
+  { n: 'Shower & tub valves', href: '/services', img: 'shower-valve', alt: 'A matte black shower valve and rain head on a tiled wall', cap: 'Shower valve · Pinellas', f: '50% 40%' },
+  { n: 'Water heaters', href: '/services/water-heaters', img: 'water-heater-tank', alt: 'A new tank water heater with copper lines', cap: 'Tank water heater · Pinellas', f: '50% 45%' },
+  { n: 'Water softeners & filtration', m: 'Softeners & filtration', href: '/services', img: 'water-softener', alt: 'A water softener tank with its control valve outside a house', cap: 'Water softener · Pinellas', f: '50% 35%' },
+  { n: 'Leak repair', href: '/services', img: 'corroded-pipe', alt: 'A corroded pipe and valve on a wall before a leak repair', cap: 'Before a leak repair · Pinellas', f: '50% 50%' },
+  { n: 'Toilets & faucets', href: '/services', img: 'kitchen-faucet', alt: 'A brushed pull-down kitchen faucet over a granite counter', cap: 'Kitchen faucet · Pinellas', f: '50% 45%' },
 ];
 ---
 <section class="tsvc on-ink" data-m-section aria-labelledby="tsvc-h">
   <div class="wrap">
-    <Head eyebrow="Most called-for in Seminole" l1="Six jobs we do" l2="in Seminole." dark id="tsvc-h" />
-    <ol class="ts-grid" role="list" data-t="4" data-stagger>
-      {rows.map((r, i) => (
-        <li>
-          <a class="ts-row" href={r.href}>
-            <span class="ts-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <span class="ts-t"><span class="d">{r.n} in Seminole</span><span class="m">{r.m ?? r.n}<span class="sr-only"> in Seminole</span></span></span>
-            <svg class="ts-ar" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true"><path d="M1 5h10M7 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </a>
-        </li>
-      ))}
-    </ol>
+    <div class="ts-head">
+      <Head eyebrow="Most called-for in Seminole" l1="Six jobs we do" l2="in Seminole." dark id="tsvc-h" />
+      <p class="ts-lead" data-t="3"><span class="d">Pull a drawer to see one of our own jobs, then open the service.</span><span class="m">Tap a drawer to open the service.</span></p>
+    </div>
+    <div class="cab" data-t="4">
+      <ul class="cab-grid" role="list">
+        {rows.map((r, i) => (
+          <li class="dw">
+            <a class="dw-a" href={r.href}>
+              <span class="dw-ph" aria-hidden="true">
+                <Img name={r.img} alt="" focus={r.f} sizes="(min-width:1280px) 300px, (min-width:768px) 24vw, 64px" box={300 / 150} boxM={1} widths={[64, 128, 300, 450, 600]} />
+                <span class="dw-cap">{r.cap}</span>
+              </span>
+              <span class="dw-front">
+                <span class="dw-holder">
+                  <span class="dw-n">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="dw-t"><span class="d">{r.n}</span><span class="m">{r.m ?? r.n}</span><span class="sr-only"> in Seminole</span></span>
+                </span>
+                <span class="dw-pull" aria-hidden="true"></span>
+                <svg class="dw-ar" viewBox="0 0 12 10" width="12" height="10" aria-hidden="true"><path d="M1 5h10M7 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              </span>
+            </a>
+            <span class="sr-only">Photo: {r.alt}.</span>
+          </li>
+        ))}
+      </ul>
+      <span class="cab-foot" aria-hidden="true"><i></i><i></i></span>
+    </div>
   </div>
 </section>
 
 <style>
-  .tsvc { position: relative; background: var(--ink); padding: 110px 0 106px; }
-  .ts-grid { display: grid; grid-template-columns: repeat(2, 588px); justify-content: space-between; row-gap: 16px; margin-top: 52px; }
-  .ts-row { display: flex; align-items: center; height: 76px; padding: 0 24px; background: var(--ink2); border: 1px solid var(--ink3); border-radius: 4px; color: var(--white); text-decoration: none; transition: background-color .3s var(--ease-io), border-color .3s var(--ease-io); }
-  .ts-row:hover { background: var(--ink3); border-color: var(--powder); }
-  .ts-row:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
-  .ts-n { width: 48px; flex: none; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; color: var(--powder); }
-  .ts-t { flex: 1; font-family: var(--f-h); font-weight: 800; font-size: 21px; line-height: 1.04; letter-spacing: -.02em; }
-  .ts-ar { flex: none; color: var(--powder); transition: translate .3s var(--ease-io); }
-  .ts-row:hover .ts-ar { translate: 4px 0; }
+  .tsvc { position: relative; background: var(--ink); padding: 110px 0 120px; }
+  .ts-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .ts-head :global(.ah-eb) { justify-content: center; }
+  .ts-lead { margin-top: 18px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .8); }
   .m { display: none; }
+
+  /* the cabinet: steel carcass, drawers in a 3 x 2 grid. Each cell keeps 200 px of headroom above its front so the photo
+     can rise out of it; the cabinet sits 150 px under the head so the top row's photos never cover the lead. */
+  .cab { position: relative; max-width: 1080px; margin: 150px auto 0; padding: 26px 26px 30px; background: var(--steel); border-radius: 8px; box-shadow: inset 0 0 0 2px var(--steel2), 12px 12px 0 var(--powder); }
+  .cab-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+  .cab-foot { position: absolute; left: 0; right: 0; bottom: -18px; display: flex; justify-content: space-between; padding: 0 40px; pointer-events: none; }
+  .cab-foot i { width: 60px; height: 18px; border-radius: 0 0 6px 6px; background: var(--steel2); }
+  .dw { position: relative; }
+  .dw-a { position: relative; display: block; height: 128px; color: var(--ink); text-decoration: none; isolation: isolate; }
+  /* drawer cavity: dark slot behind the front */
+  .dw-a::before { content: ''; position: absolute; inset: 0; z-index: -2; border-radius: 4px; background: var(--ink2); box-shadow: inset 0 6px 10px rgb(0 0 0 / .45); }
+  .dw-front { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 14px; background: linear-gradient(#d3d9dc, var(--steel)); border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--steel2), 0 3px 0 var(--steel2);
+    transition: translate .6s var(--ease-io), box-shadow .6s var(--ease-io); }
+  .dw-holder { position: relative; display: flex; align-items: center; gap: 10px; min-width: 76%; max-width: 100%; padding: 9px 14px; background: var(--white); border-radius: 2px; box-shadow: 0 0 0 3px var(--steel2), 0 0 0 4.5px var(--ink); }
+  .dw-n { font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; color: var(--pdeep); }
+  .dw-t { font-family: var(--f-h); font-weight: 800; font-size: 18px; line-height: 1.1; letter-spacing: -.01em; }
+  .dw-pull { width: 84px; height: 14px; border-radius: 7px; background: var(--ink); box-shadow: inset 0 -3px 0 var(--ink3); }
+  .dw-ar { position: absolute; right: 14px; bottom: 14px; color: var(--ink); opacity: 0; translate: -6px 0; transition: opacity .4s var(--ease-io), translate .4s var(--ease-io); }
+  /* the photo inside the drawer: hidden in the cavity, rises above the cabinet top when pulled */
+  .dw-ph { position: absolute; z-index: 0; left: 8%; right: 8%; bottom: 10px; height: 150px; border-radius: 4px; overflow: hidden; background: var(--ink3); box-shadow: 0 0 0 2px var(--ink), 6px 6px 0 var(--pdeep);
+    opacity: 0; translate: 0 0; transition: translate .6s var(--ease-io), opacity .3s var(--ease-io) .1s; }
+  .dw-ph :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .dw-cap { position: absolute; left: 8px; bottom: 8px; padding: 4px 8px; border-radius: 3px; background: rgb(22 19 15 / .82); color: var(--white); font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .02em; }
+  .dw:hover, .dw:focus-within { z-index: 3; }
+  .dw-a:hover .dw-front, .dw-a:focus-visible .dw-front { translate: 0 22px; box-shadow: inset 0 0 0 1.5px var(--steel2), 0 3px 0 var(--steel2), 0 14px 18px rgb(0 0 0 / .25); }
+  .dw-a:hover .dw-ph, .dw-a:focus-visible .dw-ph { opacity: 1; translate: 0 -124px; transition: translate .6s var(--ease-io), opacity .25s var(--ease-io); }
+  .dw-a:hover .dw-ar, .dw-a:focus-visible .dw-ar { opacity: 1; translate: 0 0; }
+  .dw-a:focus-visible .dw-front { outline: 3px solid var(--powder); outline-offset: 3px; }
+  .dw-a:focus-visible { outline: none; }
+  @media (prefers-reduced-motion: reduce) { .dw-front, .dw-ph, .dw-ar { transition: opacity .2s linear; } .dw-a:hover .dw-front, .dw-a:focus-visible .dw-front { translate: none; } .dw-a:hover .dw-ph, .dw-a:focus-visible .dw-ph { translate: 0 -124px; } }
+
   @media (min-width: 768px) and (max-width: 1279px) {
-    .tsvc { padding: 96px 0 96px; }
-    .ts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; }
-    .ts-t { font-size: 18px; }
+    .tsvc { padding: 96px 0 104px; }
+    .dw-t { font-size: 16px; }
+    .dw-holder { min-width: 0; width: 100%; }
+    .dw-ph { left: 4%; right: 4%; height: 140px; }
   }
   @media (max-width: 767px) {
-    .tsvc { padding: 56px 0 56px; }
-    .ts-grid { grid-template-columns: 1fr; row-gap: 8px; margin-top: 24px; }
-    .ts-row { height: 58px; padding: 0 18px 0 16px; }
-    .ts-n { width: 32px; font-size: 9px; line-height: 12px; }
-    .ts-t { font-size: 17px; }
+    .tsvc { padding: 60px 0 72px; }
+    .ts-lead { margin-top: 12px; font-size: 15px; }
     .d { display: none; } .m { display: inline; }
+    .cab { margin-top: 32px; padding: 14px 14px 18px; box-shadow: inset 0 0 0 2px var(--steel2), 6px 6px 0 var(--powder); }
+    .cab-grid { grid-template-columns: 1fr; gap: 10px; }
+    .cab-foot { padding: 0 24px; }
+    .dw-a { height: 84px; }
+    .dw-front { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 10px 12px 10px 86px; }
+    .dw-holder { flex: 1; min-width: 0; padding: 8px 10px; }
+    .dw-t { font-size: 16px; }
+    .dw-pull { width: 8px; height: 40px; flex: none; }
+    .dw-ar { display: none; }
+    /* the photo sits in the drawer front's left window (touch: no hover to pull) */
+    .dw-ph { z-index: 2; left: 10px; right: auto; top: 10px; bottom: 10px; width: 64px; height: auto; opacity: 1; box-shadow: 0 0 0 2px var(--ink); translate: none !important; }
+    .dw-cap { display: none; }
+    .dw-a:hover .dw-front, .dw-a:focus-visible .dw-front { translate: 0 4px; }
   }
 </style>

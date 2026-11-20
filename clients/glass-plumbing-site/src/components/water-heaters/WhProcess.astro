@@ -1,15 +1,14 @@
 ---
-// Process (Figma 719:437 y 3248 h 620 / mobile y 3569 h 768): six steps, each a little frost sight glass that fills a bit
+// Process (fix round C: five steps; the unconfirmed haul-away step and price promise removed) (Figma 719:437 y 3248 h 620 / mobile y 3569 h 768): six steps, each a little frost sight glass that fills a bit
 // more per step (the Figma's levels) over a steel plate. Phone: a vertical list, gauge left of each plate.
 import Eyebrow from '../kit/Eyebrow.astro';
 import Housing from '../kit/Housing.astro';
 const S = [
-  { k: '01 Photo or visit', d: 'Text the label, or we come look.', f: 0.13 },
-  { k: '02 Price', d: 'You hear it before work.', f: 0.256 },
-  { k: '03 Permit', d: 'We file it with the right office.', f: 0.385 },
-  { k: '04 Install day', d: 'Often the next day.', f: 0.513 },
-  { k: '05 Old unit out', d: 'We haul the old one.', f: 0.64 },
-  { k: '06 Test', d: 'Hot water, no leaks, clean floor.', f: 0.77 },
+  { k: '01 Photo or visit', d: 'Text the label, or ask for a visit.', f: 0.15 },
+  { k: '02 Estimate', d: 'One review: estimate the same day, work the next.', f: 0.3 },
+  { k: '03 Permit', d: 'Usually needed. The office depends on your address.', f: 0.45 },
+  { k: '04 Install day', d: 'Often the next day (from reviews).', f: 0.6 },
+  { k: '05 Test', d: 'Hot water on, no leaks.', f: 0.77 },
 ];
 ---
 <section class="ps" data-m-section>
@@ -33,7 +32,7 @@ const S = [
 <style>
   .ps { background: var(--white); padding: 120px 0 145px; }
   .ps-h { margin-top: 16px; }
-  .ps-list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; margin: 42px 0 0; padding: 0; list-style: none; }
+  .ps-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; margin: 42px 0 0; padding: 0; list-style: none; }
   .ps-it { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
   .ps-pl { position: relative; width: 100%; min-height: 91px; padding: 16px 14px 16px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2); transition: box-shadow .35s var(--ease-io), translate .35s var(--ease-io); }
   .ps-it:first-child .ps-pl, .ps-it:hover .ps-pl { box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--powder); }

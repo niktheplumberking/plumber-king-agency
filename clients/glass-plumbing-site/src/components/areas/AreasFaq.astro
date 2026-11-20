@@ -1,7 +1,11 @@
 ---
-// /areas "FAQ" as a text thread (Figma 721:525 y 4665 h 838 / mobile y 4321 h 835). INTERACTION note: the questions and
-// answers pop in one by one like a text thread as it scrolls in (0.25 s apart), ending on the typing dots. Tapping the
-// thread opens a text to (727) 512-0673. FAQPage JSON-LD for exactly these three.
+// /areas "Area questions" (fix round B rebuild: the R2 head-left / thread-right left the left column empty). White.
+// Centred head, then ONE phone thread in the middle with "ask" chips under it: the first question is already answered,
+// tapping a chip sends that question as your text, shows the typing dots, then our answer. 21st.dev elements-/suggested-actions
+// (prompt chips) + support_596fe4b8/suggestions (chips that fill a chat), rebuilt in vanilla TS as Glass's text thread.
+// FAQPage JSON-LD = exactly these three. No JS: the whole thread shows, chips hidden. Reduced motion: no typing delay.
+// Fix round B facts: the trip-fee answer is gone (unconfirmed promise); the third question is the commercial / residential
+// scope from site.ts.
 import Head from './Head.astro';
 import { Image } from 'astro:assets';
 import logo from '../../assets/brand/logo-glass.png';
@@ -9,94 +13,122 @@ import { SITE } from '../../data/site';
 const AREA_FAQ = [
   { q: 'Do you go to the beaches?', a: 'Yes. From Belleair Beach and Indian Rocks Beach down to St. Pete Beach.' },
   { q: 'Do you come to Tampa?', a: 'Our base is Pinellas County. Call and ask about jobs across the bay.' },
-  { q: 'Is there a trip fee?', a: 'We tell you about any trip charge before we come out.' },
+  { q: 'Do you do commercial jobs?', a: 'Yes. Commercial and residential, all over Pinellas County.' },
 ];
 const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: AREA_FAQ.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })) };
 ---
 <section class="afaq" data-m-section aria-labelledby="afaq-h">
-  <div class="wrap afaq-grid">
-    <div class="afaq-copy">
+  <div class="wrap">
+    <div class="afaq-head">
       <Head eyebrow="Area questions" l1="Before you ask." l2="We already got this text." id="afaq-h" sizeM={34} />
-      <p class="afaq-lead" data-t="3">The three things people text us most about where we go.</p>
+      <p class="afaq-lead" data-t="3">The three things people text us most about where we go. Tap one.</p>
     </div>
-    <div class="th" data-thread>
+    <div class="th" data-thread data-t="4">
       <div class="th-bar">
         <span class="th-seal"><Image src={logo} alt="" width={72} height={47} class="th-logo" /></span>
         <span class="th-who"><span class="th-name">Glass Plumbing</span><span class="th-num">Text {SITE.phone}</span></span>
       </div>
-      <dl class="th-body">
+      <dl class="th-body" aria-live="polite">
         {AREA_FAQ.map((i, n) => (
-          <>
-            <dt class="bub bub--you" style={`--n:${n * 2}`}>{i.q}</dt>
-            <dd class="bub bub--us" style={`--n:${n * 2 + 1}`}>{i.a}</dd>
-          </>
+          <div class:list={['th-pair', n === 0 && 'is-sent']} data-pair={n}>
+            <dt class="bub bub--you">{i.q}</dt>
+            <dd class="bub bub--us">{i.a}</dd>
+          </div>
         ))}
       </dl>
-      <span class="th-dots" style={`--n:${AREA_FAQ.length * 2}`} aria-hidden="true"><i></i><i></i><i></i></span>
-      <a class="th-link" href={SITE.sms}><span class="sr-only">Text us your own question at {SITE.phone}</span></a>
+      <span class="th-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    </div>
+    <div class="ask" data-ask>
+      <p class="ask-k">Ask</p>
+      <div class="ask-chips">
+        {AREA_FAQ.map((i, n) => <button class="ask-chip" type="button" aria-pressed={n === 0 ? 'true' : 'false'} data-ask-chip={n}>{i.q}</button>)}
+      </div>
+      <a class="ask-own" href={SITE.sms}>Text your own question<span class="sr-only"> to {SITE.phone}</span><svg viewBox="0 0 12 10" width="12" height="10" aria-hidden="true"><path d="M1 5h10M7 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></a>
     </div>
   </div>
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 </section>
 
 <script>
-  import { onEnter } from './inview';
-  document.querySelectorAll<HTMLElement>('[data-thread]').forEach((t) => onEnter(t, () => t.classList.add('is-in'), '0px 0px -12% 0px'));
+  import { motionOn } from './inview';
+  // A chip sends its pair to the bottom of the thread (question at once, then typing dots, then the answer). A pair
+  // already sent moves down again, like re-asking. Sent chips stay pressed.
+  document.querySelectorAll<HTMLElement>('[data-thread]').forEach((t) => {
+    t.classList.add('is-js');
+    const body = t.querySelector<HTMLElement>('.th-body')!;
+    const dots = t.querySelector<HTMLElement>('.th-dots')!;
+    const ask = t.parentElement!.querySelector<HTMLElement>('[data-ask]')!;
+    ask.classList.add('is-js');
+    let timer = 0;
+    ask.querySelectorAll<HTMLButtonElement>('[data-ask-chip]').forEach((chip) => chip.addEventListener('click', () => {
+      const pair = body.querySelector<HTMLElement>(`[data-pair="${chip.dataset.askChip}"]`)!;
+      chip.setAttribute('aria-pressed', 'true');
+      window.clearTimeout(timer);
+      body.querySelectorAll('.is-typing').forEach((p) => { p.classList.remove('is-typing'); });
+      body.appendChild(pair);
+      pair.classList.remove('is-sent');
+      void pair.offsetWidth;
+      pair.classList.add('is-sent', 'is-typing');
+      t.classList.add('is-typing');
+      timer = window.setTimeout(() => { pair.classList.remove('is-typing'); t.classList.remove('is-typing'); }, motionOn() ? 1100 : 0);
+    }));
+    void dots;
+  });
 </script>
 
 <style>
   .afaq { position: relative; background: var(--white); padding: 110px 0 120px; }
-  .afaq-grid { display: grid; grid-template-columns: 460px 660px; justify-content: space-between; align-items: start; }
-  .afaq-lead { max-width: 420px; margin-top: 24px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  .afaq-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .afaq-head :global(.ah-eb) { justify-content: center; }
+  .afaq-lead { max-width: 460px; margin-top: 18px; font-size: 17px; line-height: 1.5; color: var(--muted); }
 
-  .th { position: relative; display: flex; flex-direction: column; min-height: 608px; padding-bottom: 24px; background: var(--frost); border-radius: 20px; box-shadow: 10px 10px 0 var(--powder); }
+  .th { position: relative; display: flex; flex-direction: column; width: 600px; max-width: 100%; min-height: 340px; margin: 48px auto 0; padding-bottom: 22px; background: var(--frost); border-radius: 22px; box-shadow: 10px 10px 0 var(--powder); }
   .th::after { content: ''; position: absolute; inset: 0; border: 1.5px solid var(--ink); border-radius: inherit; pointer-events: none; }
-  .th-bar { display: flex; align-items: center; gap: 12px; height: 64px; padding: 0 20px; background: var(--ink); border-radius: 20px 20px 0 0; }
-  .th-seal { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); box-shadow: 0 0 0 0 var(--ink); }
+  .th-bar { display: flex; align-items: center; gap: 12px; height: 64px; padding: 0 20px; background: var(--ink); border-radius: 22px 22px 0 0; }
+  .th-seal { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--cream); border: 2px solid var(--ink); }
   .th-seal :global(.th-logo) { width: 35px; height: auto; }
   .th-who { display: flex; flex-direction: column; }
   .th-name { font-weight: 700; font-size: 16px; line-height: 24px; color: var(--white); }
-  .th-num { font-family: var(--f-m); font-weight: 500; font-size: 9px; line-height: 12px; letter-spacing: .02em; color: var(--powder); }
-  .th-body { display: flex; flex-direction: column; margin: 0; padding: 28px 24px 0; }
-  .bub { margin: 0; padding: 12px 20px; font-size: 16px; line-height: 24px; }
-  .bub--you { align-self: flex-end; width: 340px; padding: 11px 19px; background: var(--white); border: 1px solid var(--frost3); border-radius: 16px 16px 4px 16px; font-weight: 600; color: var(--ink); }
-  .bub--us { align-self: flex-start; width: 400px; margin-top: 10px; background: var(--pdeep); border-radius: 16px 16px 16px 4px; color: var(--white); }
-  .bub--us + .bub--you { margin-top: 22px; }
-  .th-dots { display: flex; gap: 8px; align-self: flex-start; margin: 22px 0 0 24px; padding: 13px 15px; background: var(--white); border: 1px solid var(--frost3); border-radius: 18px; }
-  .th-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--pdeep); opacity: .4; }
-  .th-dots i:nth-child(2) { opacity: .6; } .th-dots i:nth-child(3) { opacity: .8; }
-  .th-link { position: absolute; inset: 0; z-index: 2; border-radius: 20px; }
-  .th-link:focus-visible { outline-offset: 4px; }
-  .th:hover::after { border-color: var(--pdeep); transition: border-color .4s var(--ease-io); }
+  .th-num { font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 13px; letter-spacing: .02em; color: var(--powder); }
+  .th-body { display: flex; flex-direction: column; margin: 0; padding: 24px 22px 0; }
+  .th-pair { display: flex; flex-direction: column; }
+  .th-pair + .th-pair { margin-top: 20px; }
+  .bub { margin: 0; padding: 11px 18px; font-size: 16px; line-height: 24px; max-width: 82%; }
+  .bub--you { align-self: flex-end; background: var(--white); border: 1px solid var(--frost3); border-radius: 16px 16px 4px 16px; font-weight: 600; color: var(--ink); transform-origin: 100% 100%; }
+  .bub--us { align-self: flex-start; margin-top: 10px; background: var(--pdeep); border-radius: 16px 16px 16px 4px; color: var(--white); transform-origin: 0 100%; }
+  .th-dots { display: none; gap: 7px; align-self: flex-start; margin: 14px 0 0 22px; padding: 12px 14px; background: var(--white); border: 1px solid var(--frost3); border-radius: 18px; }
+  .th-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--pdeep); opacity: .5; animation: th-type 1s var(--ease-io) infinite; }
+  .th-dots i:nth-child(2) { animation-delay: .15s; } .th-dots i:nth-child(3) { animation-delay: .3s; }
+  @keyframes th-type { 0%, 100% { translate: 0 0; } 40% { translate: 0 -4px; } }
+  /* JS: only sent pairs show; while typing, the answer waits behind the dots */
+  .th.is-js .th-pair:not(.is-sent) { display: none; }
+  .th.is-js.is-typing .th-dots { display: flex; }
+  .th.is-js .th-pair.is-typing .bub--us { display: none; }
+  :global(html.motion) .th.is-js .th-pair.is-sent .bub { animation: th-pop .45s var(--ease-io) both; }
+  @keyframes th-pop { from { opacity: 0; scale: .92; translate: 0 10px; } }
 
-  /* motion: each bubble pops in 0.25 s after the one before (no-motion / no-JS: all shown) */
-  .bub, .th-dots { transition: opacity .5s var(--ease-io) calc(var(--n) * .25s), translate .5s var(--ease-io) calc(var(--n) * .25s), scale .5s var(--ease-io) calc(var(--n) * .25s); }
-  .bub--you { transform-origin: 100% 100%; } .bub--us, .th-dots { transform-origin: 0 100%; }
-  :global(html.motion) .th:not(.is-in) :is(.bub, .th-dots) { opacity: 0; translate: 0 12px; scale: .94; }
-  :global(html.motion) .th.is-in .th-dots i { animation: th-type 1.2s var(--ease-io) calc(var(--d) + 1.8s) 3; }
-  .th-dots i:nth-child(1) { --d: 0s; } .th-dots i:nth-child(2) { --d: .2s; } .th-dots i:nth-child(3) { --d: .4s; }
-  @keyframes th-type { 0%, 100% { translate: 0 0; } 30% { translate: 0 -4px; } 60% { translate: 0 0; } }
+  .ask { display: none; flex-direction: column; align-items: center; margin-top: 30px; text-align: center; }
+  .ask.is-js { display: flex; }
+  .ask-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .ask-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
+  .ask-chip { min-height: 46px; padding: 0 18px; border: 0; border-radius: 23px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink), 4px 4px 0 var(--powder); font-family: var(--f-b); font-weight: 600; font-size: 15px; color: var(--ink); cursor: pointer;
+    transition: background-color .4s var(--ease-io), translate .4s var(--ease-io), box-shadow .4s var(--ease-io); }
+  .ask-chip:hover { translate: -2px -2px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+  .ask-chip[aria-pressed='true'] { background: var(--frost2); }
+  .ask-chip:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .ask-own { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 14px; font-weight: 700; font-size: 15px; color: var(--pdeep); }
+  @media (prefers-reduced-motion: reduce) { .th-dots i { animation: none; } .ask-chip { transition: none; } }
 
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .afaq { padding: 96px 0 112px; }
-    .afaq-grid { grid-template-columns: minmax(0, .75fr) minmax(0, 1fr); column-gap: 40px; }
-    .bub--you { width: auto; max-width: 80%; } .bub--us { width: auto; max-width: 86%; }
-  }
   @media (max-width: 767px) {
-    .afaq { padding: 64px 0 100px; }
-    .afaq-grid { display: block; }
-    .afaq-lead { display: none; }
-    .th { min-height: 0; margin-top: 28px; padding-bottom: 18px; border-radius: 18px; box-shadow: 6px 6px 0 var(--powder); }
+    .afaq { padding: 64px 0 96px; }
+    .afaq-lead { font-size: 15px; margin-top: 12px; }
+    .th { min-height: 0; margin-top: 28px; padding-bottom: 16px; border-radius: 18px; box-shadow: 6px 6px 0 var(--powder); }
     .th-bar { height: 56px; padding: 0 14px; gap: 10px; border-radius: 18px 18px 0 0; }
     .th-seal { width: 40px; height: 40px; }
     .th-seal :global(.th-logo) { width: 32px; }
-    .th-name { font-size: 15px; line-height: 23px; }
-    .th-body { padding: 20px 16px 0; }
-    .bub { padding: 10px 16px; font-size: 15px; line-height: 23px; }
-    .bub--you { width: 250px; padding: 9px 15px; border-radius: 14px; }
-    .bub--us { width: 272px; border-radius: 14px; }
-    .bub--us + .bub--you { margin-top: 18px; }
-    .th-dots { margin: 18px 0 0 16px; }
-    .th-link { border-radius: 18px; }
+    .th-body { padding: 18px 14px 0; }
+    .bub { padding: 10px 14px; font-size: 15px; line-height: 23px; max-width: 88%; }
+    .th-dots { margin-left: 14px; }
+    .ask-chip { font-size: 14px; padding: 0 14px; }
   }
 </style>

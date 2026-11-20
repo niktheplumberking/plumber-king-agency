@@ -1,57 +1,114 @@
 ---
-// "Largo base" + Pinellas map, round 2 (audit against rules 14-18: plate top-left, map right, empty space under the plate =
-// left/right slop). Rebuilt as one centred composition: the whole county map (uncropped, so the pin stays on Largo) in the
-// middle, the "Largo base" spec plate bolted over its left edge and the 24/7 line card over its right edge (depth), and a
-// pin on Largo that drops in and rings when the map enters (CSS, three rings, then still). The plate's phone and email are
-// links. 21st.dev refs: "Location Map" (Mazyar kawa: pulsing marker) + "Expanded Map" (dev.shejanmahamud: card over map),
-// re-skinned with the kit Plate and Glass's powder offset shadows. A meniscus seam dips from the ink band above.
-// Street address: site.ts says "Largo, FL" only until Kody confirms (Figma shows the street).
+// "Largo base", fix round C (independent R2 review: the map + plate device was used three times; /areas owns the map).
+// New idea, "Any hour, same number": what the visitor wants from the base block is WHEN they can reach it. A four-way
+// "when is it?" switch (weekday / evening / weekend / 3 a.m.) re-lights a drawn Largo street: the sky grades from day to
+// night, the sun sets and the moon rises, the house windows light up, the Glass van's headlights come on, and the ink
+// answer card bolted over the scene's corner (depth layer) swaps its line. On load the switch jumps to the real time in
+// Largo (America/New_York) and prints it. Under the scene a steel base rail carries the contact facts as 44 px links.
+// Facts: site.ts only (Largo, FL; phone; email; licence; "24/7 emergency calls"). No opening hours are claimed.
+// 21st.dev: "Sun Moon Dark Mode Theme Toggle" (@dhxwhy/sun-moon-theme-toggle, id 36079: a tiny sky where the sun and moon
+// swap and day cross-fades to night, reduced-motion aware) + "Sky Toggle" (@ravikatiyar162/sky-toggle, id 5254), adapted
+// from a toggle into a scene-sized four-state segmented switch, re-skinned with the Glass system (ink frame, powder offset
+// shadow, steel rail with rivets, housing-cap radios). Vanilla TS, no React.
+// No JS: real radios + CSS :has() drive the scene (weekday is the default); reduced motion: states swap without tweens.
 import './cx.css';
-import Plate from '../kit/Plate.astro';
 import Seam from '../kit/Seam.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
-import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
-const rows: [string, string | { text: string; href: string; external?: boolean }][] = [
-  ['Name', SITE.name],
-  ['Base', `${SITE.city}, ${SITE.region}`],
-  ['Phone', { text: SITE.phone, href: SITE.tel }],
-  ['Email', { text: SITE.email, href: `mailto:${SITE.email}` }],
-  ['Hours', '24/7 emergency line'],
-  ['Licence', { text: `FL ${SITE.licence.number}`, href: SITE.licence.url, external: true }],
+const W = [
+  { id: 'day', tab: 'Weekday', k: 'Weekday · daytime', t: 'Call or text the number. Or send the job with the form above.' },
+  { id: 'eve', tab: 'Evening', k: 'Weekday · evening', t: 'Leak after dinner? Emergency calls go to the same number.' },
+  { id: 'wkd', tab: 'Weekend', k: 'Saturday or Sunday', t: 'Weekend leak? Same number, 24/7 for emergencies.' },
+  { id: 'night', tab: '3 a.m.', k: '3 a.m.', t: 'Water coming in at 3 a.m.? Call. The 24/7 emergency line is this number.' },
 ];
 ---
-<section class="cx-sec cx-white cs" data-m-section aria-labelledby="cs-h">
+<section class="cx-sec cx-white cs" data-m-section aria-labelledby="cs-h" data-cs data-when="day">
   <Seam from="var(--ink)" to="var(--white)" />
   <div class="wrap">
     <div class="shead cs-head">
-      <Eyebrow text="Largo base" tone="pdeep" class="cs-eb" />
-      <h2 id="cs-h" class="cx-h cs-h" data-t="2"><span class="ln">Based in Largo.</span> <span class="ln tone">All of {SITE.county}.</span></h2>
+      <Eyebrow text="Largo base · any hour" tone="pdeep" class="cs-eb" />
+      <h2 id="cs-h" class="cx-h cs-h" data-t="2"><span class="ln">Based in Largo.</span> <span class="ln tone">Any hour, same number.</span></h2>
+      <p class="cs-now" data-t="3" data-cs-now hidden>Largo time now: <b data-cs-clock></b></p>
     </div>
-    <div class="cs-stage">
-      <figure class="cs-map" data-t="4" data-fx="frame" data-pin-map data-no-px>
-        <Img name="map-pinellas" alt="Map of Pinellas County, from Tarpon Springs and Clearwater down to St. Petersburg, with Largo in the middle" sizes="(min-width: 1280px) 460px, (min-width: 768px) 46vw, 92vw" fit="cover" focus="50% 50%" box={700 / 1000} boxM={700 / 1000} />
-        <span class="cs-pin" aria-hidden="true"><span class="cs-ring"></span><span class="cs-ring"></span><span class="cs-ring"></span><span class="cs-drop"></span></span>
-        <span class="cs-flag" aria-hidden="true">Glass Plumbing · Largo</span>
-      </figure>
-      <div class="cs-plate" data-t="4" data-fx="left">
-        <Plate rows={rows} title="Largo base" w={420} kx={86} size={12} pitch={24} shadow="pdeep" class="cs-p" />
+    <fieldset class="cs-sw" data-t="3">
+      <legend class="sr-only">When is your plumbing problem?</legend>
+      {W.map((w, i) => (
+        <label class="cs-opt"><input type="radio" name="cs-when" value={w.id} checked={i === 0} data-cs-r /><span>{w.tab}</span></label>
+      ))}
+    </fieldset>
+    <div class="cs-stage" data-t="4" data-no-px>
+      <div class="cs-scene" aria-hidden="true">
+        <span class="cs-sky cs-sky-n"></span>
+        <span class="cs-stars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="cs-sun"></span>
+        <span class="cs-moon"></span>
+        <svg class="cs-street" viewBox="0 0 1100 300" preserveAspectRatio="xMidYMax slice" focusable="false">
+          <g transform="translate(-70 0)">
+          <!-- palm -->
+          <g class="cs-palm"><path d="M182 270 C186 210 190 170 200 128" fill="none" stroke="var(--ink)" stroke-width="7" stroke-linecap="round" />
+            <path d="M200 128c-20-14-44-14-62-4M200 128c-8-22-28-34-50-34M200 128c14-20 38-26 60-18M200 128c22-6 44 4 56 22M200 128c-4 18-18 32-34 40" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" /></g>
+          <!-- house -->
+          <path d="M300 270V176l110-62 110 62v94Z" fill="var(--white)" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round" />
+          <path d="M286 182l124-72 124 72" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+          <rect class="cs-win" x="326" y="196" width="46" height="40" rx="2" stroke="var(--ink)" stroke-width="3" />
+          <rect class="cs-win" x="448" y="196" width="46" height="40" rx="2" stroke="var(--ink)" stroke-width="3" />
+          <rect x="390" y="208" width="40" height="62" rx="2" fill="var(--ink3)" />
+          </g>
+          <!-- van -->
+          <g transform="translate(-170 0)"><g class="cs-van">
+            <path class="cs-beam" d="M1010 236 L1100 214 L1100 276 L1010 252Z" />
+            <path d="M700 266V178a12 12 0 0 1 12-12h196c14 0 24 6 34 18l46 50c8 8 12 16 12 26v6a10 10 0 0 1-10 10H710a10 10 0 0 1-10-10Z" fill="var(--white)" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round" />
+            <path d="M914 182h24l36 46h-60Z" fill="var(--frost3)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" />
+            <text x="740" y="216" font-family="Schibsted Grotesk, system-ui, sans-serif" font-weight="800" font-style="italic" font-size="40" fill="var(--ink)">Glass</text>
+            <text x="742" y="244" font-family="JetBrains Mono, monospace" font-weight="700" font-size="15" letter-spacing="1" fill="var(--ink)">(727) 512-0673</text>
+            <rect class="cs-lamp" x="1000" y="236" width="10" height="12" rx="2" stroke="var(--ink)" stroke-width="2" />
+            <circle cx="760" cy="270" r="20" fill="var(--ink)" /><circle cx="760" cy="270" r="8" fill="var(--steel2)" />
+            <circle cx="950" cy="270" r="20" fill="var(--ink)" /><circle cx="950" cy="270" r="8" fill="var(--steel2)" />
+          </g></g>
+          <rect x="0" y="282" width="1100" height="18" fill="var(--ink)" />
+          <path d="M40 291h60M180 291h60M320 291h60M460 291h60M600 291h60M740 291h60M880 291h60M1020 291h60" stroke="var(--powder)" stroke-width="3" />
+        </svg>
       </div>
-      <div class="cs-line on-ink" data-t="4" data-fx="right">
-        <p class="cs-ll">Night or weekend leak?</p>
-        <p class="cs-lt">The 24/7 line is the same number.</p>
+      <div class="cs-card on-ink" aria-live="polite">
+        <div class="cs-ans-wrap">
+          {W.map((w) => (
+            <div class="cs-ans" data-a={w.id}>
+              <p class="cs-ak">{w.k}</p>
+              <p class="cs-at">{w.t}</p>
+            </div>
+          ))}
+        </div>
         <Btn look="call" label="Call now" sub={SITE.phone} href={SITE.tel} block class="cs-btn" />
       </div>
     </div>
+    <ul class="cs-rail" role="list" data-t="4">
+      <li><span class="cs-rk">Base</span><span class="cs-rv">{SITE.city}, {SITE.region}</span></li>
+      <li><span class="cs-rk">Phone</span><a class="cs-rv cs-ln" href={SITE.tel}>{SITE.phone}</a></li>
+      <li><span class="cs-rk">Email</span><a class="cs-rv cs-ln" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+      <li><span class="cs-rk">Licence</span><a class="cs-rv cs-ln" href={SITE.licence.url} target="_blank" rel="noopener">FL {SITE.licence.number}<span class="sr-only"> (DBPR licence search, opens in a new tab)</span></a></li>
+    </ul>
   </div>
 </section>
 <script>
-  // The pin drops and rings once the map is half in view (class only; CSS animations, 3 rings then still).
-  document.querySelectorAll<HTMLElement>('[data-pin-map]').forEach((m) => {
-    if (!document.documentElement.classList.contains('motion') || !('IntersectionObserver' in window)) { m.classList.add('is-pinned'); return; }
-    const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { m.classList.add('is-pinned'); io.disconnect(); } }, { threshold: 0.5 });
-    io.observe(m);
+  document.querySelectorAll<HTMLElement>('[data-cs]').forEach((root) => {
+    const radios = [...root.querySelectorAll<HTMLInputElement>('[data-cs-r]')];
+    const set = (v: string) => { root.dataset.when = v; };
+    root.dataset.js = '';
+    radios.forEach((r) => r.addEventListener('change', () => { if (r.checked) set(r.value); }));
+    // Start on the real time in Largo (Eastern time).
+    try {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', hourCycle: 'h23' }).formatToParts(now);
+      const wd = parts.find((p) => p.type === 'weekday')?.value || 'Mon';
+      const h = Number(parts.find((p) => p.type === 'hour')?.value || 12);
+      const v = h < 6 || h >= 22 ? 'night' : wd === 'Sat' || wd === 'Sun' ? 'wkd' : h >= 17 ? 'eve' : 'day';
+      const r = radios.find((x) => x.value === v);
+      if (r) { r.checked = true; set(v); }
+      const clock = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short', hour: 'numeric', minute: '2-digit' }).format(now);
+      const out = root.querySelector<HTMLElement>('[data-cs-clock]'); const line = root.querySelector<HTMLElement>('[data-cs-now]');
+      if (out && line) { out.textContent = clock; line.hidden = false; }
+    } catch { /* no Intl time zones: stay on weekday */ }
   });
 </script>
 <style>
@@ -59,42 +116,98 @@ const rows: [string, string | { text: string; href: string; external?: boolean }
   .cs-head { display: grid; justify-items: center; text-align: center; }
   .cs-head :global(.cs-eb) { justify-content: center; }
   .cs-h { --fs: 52px; --fs-m: 30px; margin-top: 16px; }
-  .cs-stage { position: relative; display: grid; grid-template-columns: 1fr 460px 1fr; align-items: center; margin-top: 48px; }
-  .cs-map { grid-column: 2; grid-row: 1; position: relative; aspect-ratio: 700 / 1000; margin: 0; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden;
-    box-shadow: 12px 12px 0 var(--powder); }
-  .cs-map :global(.img) { position: absolute; inset: 0; }
-  /* Largo on the map image: 34.7 % across, 43.6 % down (the label); the drop's tip sits just above it. */
-  .cs-pin { position: absolute; left: 34.7%; top: 41.5%; width: 0; height: 0; z-index: 2; }
-  .cs-drop { position: absolute; left: -15px; top: -40px; width: 30px; height: 30px; border-radius: 50% 50% 50% 0; rotate: -45deg; background: var(--ink);
-    box-shadow: inset 0 0 0 8px var(--ink), inset 0 0 0 15px var(--powder); }
-  .cs-ring { position: absolute; left: -14px; top: -7px; width: 28px; height: 14px; border-radius: 50%; border: 2px solid var(--pdeep); opacity: 0; }
-  html.motion .cs-map:not(.is-pinned) .cs-drop { translate: 0 -40px; opacity: 0; }
-  .cs-drop { transition: translate .7s var(--ease-back), opacity .4s var(--ease-io); }
-  html.motion .cs-map.is-pinned .cs-ring { animation: cs-ring 1.6s var(--ease-io) 3; }
-  html.motion .cs-map.is-pinned .cs-ring:nth-child(2) { animation-delay: .5s; }
-  html.motion .cs-map.is-pinned .cs-ring:nth-child(3) { animation-delay: 1s; }
-  @keyframes cs-ring { 0% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(2.6); } }
-  .cs-flag { position: absolute; left: calc(34.7% + 22px); top: calc(41.5% - 52px); z-index: 2; padding: 6px 9px; border-radius: 3px; background: var(--white); border: 1.5px solid var(--ink);
-    box-shadow: 3px 3px 0 var(--ink); font: 700 10px/13px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
-  .cs-plate { grid-column: 1; grid-row: 1; justify-self: end; z-index: 3; margin-right: -90px; rotate: -2deg; }
-  .cs-line { grid-column: 3; grid-row: 1; justify-self: start; align-self: end; z-index: 3; width: 320px; margin: 0 0 70px -70px; padding: 22px 22px 22px; border-radius: 8px;
-    background: var(--ink); color: var(--white); box-shadow: 10px 10px 0 var(--powder); rotate: 2deg; }
-  .cs-ll { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
-  .cs-lt { margin: 8px 0 18px; font: 800 22px/1.15 var(--f-h); letter-spacing: -0.02em; }
+  .cs-now { margin: 14px 0 0; font: 500 12px/16px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .cs-now b { color: var(--ink); font-weight: 700; }
+
+  /* The switch: four housing-cap tabs on one steel bar. */
+  .cs-sw { display: flex; justify-content: center; gap: 6px; width: max-content; max-width: 100%; margin: 28px auto 0; padding: 6px; border: 0; border-radius: 10px; background: var(--steel); box-shadow: inset 0 0 0 1.5px var(--steel2); }
+  .cs-opt { position: relative; }
+  .cs-opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .cs-opt span { display: grid; place-items: center; min-width: 120px; min-height: 44px; padding: 0 18px; border-radius: 6px; font: 700 15px/1 var(--f-b); color: var(--ink); transition: background-color .45s var(--ease-io), color .45s var(--ease-io), box-shadow .45s var(--ease-io); }
+  .cs-opt:hover span { background: rgba(255,255,255,.55); }
+  .cs-opt input:checked + span { background: var(--ink); color: var(--white); box-shadow: 4px 4px 0 var(--powder); }
+  .cs-opt input:focus-visible + span { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+
+  /* Stage: the scene with the answer card bolted over its lower-right corner. */
+  .cs-stage { position: relative; margin-top: 32px; padding-bottom: 56px; }
+  .cs-scene { position: relative; height: 380px; border-radius: 8px; overflow: hidden; box-shadow: inset 0 0 0 2px var(--ink), 12px 12px 0 var(--powder);
+    --t: .9s; background: linear-gradient(180deg, #BFD9E4 0%, var(--frost) 78%); }
+  .cs-scene::after { content: ''; position: absolute; inset: 0; border-radius: 8px; box-shadow: inset 0 0 0 2px var(--ink); pointer-events: none; z-index: 5; }
+  .cs-sky { position: absolute; inset: 0; opacity: 0; transition: opacity var(--t) var(--ease-io); }
+  .cs-sky-n { background: var(--sky-n, linear-gradient(180deg, var(--ink) 0%, var(--ink3) 80%)); }
+  .cs-stars { position: absolute; inset: 0 0 40% 0; opacity: 0; transition: opacity var(--t) var(--ease-io); }
+  .cs-stars i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--frost); }
+  .cs-stars i:nth-child(1) { left: 8%; top: 22%; } .cs-stars i:nth-child(2) { left: 18%; top: 48%; } .cs-stars i:nth-child(3) { left: 33%; top: 16%; }
+  .cs-stars i:nth-child(4) { left: 47%; top: 38%; } .cs-stars i:nth-child(5) { left: 58%; top: 12%; } .cs-stars i:nth-child(6) { left: 71%; top: 30%; }
+  .cs-stars i:nth-child(7) { left: 84%; top: 18%; } .cs-stars i:nth-child(8) { left: 93%; top: 44%; }
+  .cs-sun, .cs-moon { position: absolute; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%;
+    transition: left var(--t) var(--ease-io), top var(--t) var(--ease-io), opacity var(--t) var(--ease-io), background-color var(--t) var(--ease-io); }
+  .cs-sun { left: 72%; top: 22%; background: var(--gold); box-shadow: 0 0 0 10px rgba(249,181,13,.2); }
+  .cs-moon { left: 16%; top: 80%; opacity: 0; background: var(--frost); box-shadow: inset -14px -6px 0 var(--frost3); }
+  .cs-street { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 300px; }
+  .cs-win { fill: var(--frost2); transition: fill var(--t) var(--ease-io); }
+  .cs-lamp { fill: var(--frost2); transition: fill var(--t) var(--ease-io); }
+  .cs-beam { fill: var(--cream); opacity: 0; transition: opacity var(--t) var(--ease-io); }
+  .cs-van { transition: translate var(--t) var(--ease-io); }
+
+  /* States (JS writes data-when; without JS the radios drive the same values through :has). */
+  .cs[data-js][data-when="eve"] .cs-sun, .cs:not([data-js]):has(input[value="eve"]:checked) .cs-sun { left: 60%; top: 50%; background: #E98A3C; }
+  .cs[data-js][data-when="eve"] .cs-sky-n, .cs:not([data-js]):has(input[value="eve"]:checked) .cs-sky-n { --sky-n: linear-gradient(180deg, var(--pdeep) 0%, #E9B07A 85%); opacity: 1; }
+  .cs[data-js][data-when="wkd"] .cs-sun, .cs:not([data-js]):has(input[value="wkd"]:checked) .cs-sun { left: 38%; top: 18%; }
+  .cs[data-js][data-when="night"] .cs-sun, .cs:not([data-js]):has(input[value="night"]:checked) .cs-sun { left: 96%; top: 110%; opacity: 0; }
+  .cs[data-js][data-when="night"] .cs-moon, .cs:not([data-js]):has(input[value="night"]:checked) .cs-moon { left: 22%; top: 24%; opacity: 1; }
+  .cs[data-js][data-when="night"] .cs-sky-n, .cs:not([data-js]):has(input[value="night"]:checked) .cs-sky-n { opacity: 1; }
+  .cs[data-js][data-when="night"] .cs-stars, .cs:not([data-js]):has(input[value="night"]:checked) .cs-stars { opacity: 1; }
+  .cs[data-js][data-when="eve"] .cs-win, .cs[data-js][data-when="night"] .cs-win,
+  .cs:not([data-js]):has(input[value="eve"]:checked) .cs-win, .cs:not([data-js]):has(input[value="night"]:checked) .cs-win { fill: var(--cream); }
+  .cs[data-js][data-when="night"] .cs-lamp, .cs[data-js][data-when="eve"] .cs-lamp { fill: var(--cream); }
+  .cs[data-js][data-when="night"] .cs-beam, .cs:not([data-js]):has(input[value="night"]:checked) .cs-beam { opacity: .55; }
+  .cs[data-js][data-when="wkd"] .cs-van { translate: -30px 0; }
+
+  /* The answer card: four lines stacked in one cell, the current one shown (cross-fade). */
+  .cs-card { position: absolute; right: -24px; bottom: 0; z-index: 6; width: 380px; padding: 22px; border-radius: 8px; background: var(--ink); color: var(--white); box-shadow: 10px 10px 0 var(--powder); rotate: 1.5deg; }
+  .cs-ans-wrap { display: grid; }
+  .cs-ans { grid-area: 1 / 1; opacity: 0; visibility: hidden; translate: 0 8px; transition: opacity .5s var(--ease-io), translate .5s var(--ease-io), visibility 0s linear .5s; }
+  .cs[data-js][data-when="day"] [data-a="day"], .cs[data-js][data-when="eve"] [data-a="eve"], .cs[data-js][data-when="wkd"] [data-a="wkd"], .cs[data-js][data-when="night"] [data-a="night"],
+  .cs:not([data-js]) [data-a="day"], .cs:not([data-js]):has(input[value="eve"]:checked) [data-a="eve"], .cs:not([data-js]):has(input[value="wkd"]:checked) [data-a="wkd"], .cs:not([data-js]):has(input[value="night"]:checked) [data-a="night"] {
+    opacity: 1; visibility: visible; translate: 0 0; transition: opacity .5s var(--ease-io), translate .5s var(--ease-io), visibility 0s; }
+  .cs:not([data-js]):has(input:not([value="day"]):checked) [data-a="day"] { opacity: 0; visibility: hidden; }
+  .cs-ak { margin: 0; font: 700 11px/15px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .cs-at { margin: 8px 0 18px; font: 800 22px/1.18 var(--f-h); letter-spacing: -0.02em; text-wrap: balance; }
+
+  /* Steel base rail: the contact facts, each a 44 px row/link. */
+  .cs-rail { position: relative; display: grid; grid-template-columns: 1fr 1fr 1.6fr 1.2fr; margin: 8px 0 0; padding: 10px 14px; list-style: none; border-radius: 6px; background: var(--steel); box-shadow: inset 0 0 0 1.5px var(--steel2), 6px 6px 0 var(--ink); }
+  .cs-rail::before, .cs-rail::after { content: ''; position: absolute; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: var(--steel2); }
+  .cs-rail::before { left: 6px; } .cs-rail::after { right: 6px; }
+  .cs-rail li { display: flex; flex-direction: column; justify-content: center; min-height: 52px; padding: 0 16px; border-left: 1px solid rgba(22,19,15,.2); }
+  .cs-rail li:first-child { border-left: 0; }
+  .cs-rk { font: 500 10px/13px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: #4A4E50; }
+  .cs-rv { font: 700 14px/18px var(--f-m); color: var(--ink); overflow-wrap: anywhere; }
+  .cs-ln { display: inline-flex; align-items: center; align-self: flex-start; min-height: 44px; margin: -10px 0 -12px; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+  .cs-ln:hover { color: var(--pdeep); }
+
+  @media (prefers-reduced-motion: reduce) { .cs-scene, .cs-ans, .cs-opt span { --t: 0s; transition: none; } .cs-sun, .cs-moon, .cs-sky, .cs-stars, .cs-win, .cs-beam, .cs-van, .cs-lamp { transition: none; } }
   @media (min-width: 768px) and (max-width: 1279px) {
-    .cs-stage { grid-template-columns: 1fr 46% 1fr; }
-    .cs-plate { margin-right: -120px; }
-    .cs-plate :global(.cs-p) { width: 340px !important; }
-    .cs-line { width: 260px; margin-left: -110px; }
+    .cs-scene { height: 340px; }
+    .cs-card { right: -8px; width: 340px; }
+    .cs-rail { grid-template-columns: 1fr 1fr; row-gap: 6px; }
+    .cs-rail li:nth-child(3) { border-left: 0; }
   }
   @media (max-width: 767px) {
     .cs { padding: 72px 0 64px; }
     .cs-h { margin-top: 12px; }
-    .cs-stage { grid-template-columns: 1fr; margin-top: 28px; }
-    .cs-map { grid-column: 1; box-shadow: 8px 8px 0 var(--powder); }
-    .cs-plate { grid-column: 1; grid-row: 2; justify-self: stretch; margin: -70px 10px 0; rotate: -1deg; }
-    .cs-plate :global(.cs-p) { width: 100% !important; }
-    .cs-line { grid-column: 1; grid-row: 3; justify-self: stretch; width: auto; margin: 24px 0 0; rotate: 0deg; box-shadow: 7px 7px 0 var(--powder); }
-    .cs-lt { font-size: 19px; }
+    .cs-sw { display: grid; grid-template-columns: 1fr 1fr; width: 100%; margin-top: 22px; }
+    .cs-opt span { min-width: 0; padding: 0 10px; font-size: 14px; }
+    .cs-stage { margin-top: 22px; padding-bottom: 0; }
+    .cs-scene { height: 220px; box-shadow: inset 0 0 0 2px var(--ink), 8px 8px 0 var(--powder); }
+    .cs-street { height: 200px; }
+    .cs-sun, .cs-moon { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+    .cs-card { position: relative; right: auto; bottom: auto; width: auto; margin: -36px 10px 0; padding: 18px; rotate: -1deg; box-shadow: 7px 7px 0 var(--powder); }
+    .cs-at { font-size: 19px; }
+    .cs-rail { grid-template-columns: 1fr; margin-top: 24px; padding: 8px 12px; box-shadow: inset 0 0 0 1.5px var(--steel2), 5px 5px 0 var(--ink); }
+    .cs-rail::before, .cs-rail::after { top: 10px; margin-top: 0; }
+    .cs-rail li { border-left: 0; border-top: 1px solid rgba(22,19,15,.2); min-height: 56px; padding: 6px 8px; }
+    .cs-rail li:first-child { border-top: 0; }
+    .cs-ln { margin: -8px 0 -10px; }
   }
 </style>

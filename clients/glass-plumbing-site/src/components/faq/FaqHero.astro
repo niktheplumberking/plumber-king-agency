@@ -1,71 +1,167 @@
 ---
-// FAQ hero (Figma "Hero" y 172 h 510 / mobile y 158 h 582). Frost band: crumbs, eyebrow, H1, lead, and five topic tiles
-// (question count + group name + arrow) that jump to the group. Tile 01 is ink with the 6/6 pdeep offset shadow.
-// Phones: shorter eyebrow and lead (as the 390 frame), tiles become a 56 px list with a down arrow.
+// FAQ hero, fix round C (audit vs rules 14-18: heading + lead left, five topic tiles right = text-left / cards-right).
+// New idea, "Ask the sight glass": one centred composition. Under the H1 sits a wide search housing (ink cap band over a
+// frost glass). As you type, the water in the glass rises with the number of matching answers and a result tray drops out
+// of it: each match shows its group, the question with the typed words marked, and opens that answer below when picked
+// (arrow keys move through the tray, Enter opens, Esc clears). Three suggestion chips fill the box in one tap. Under it,
+// the five topic gauges: each a lying tube filled to its share of the 17 questions, linking to its group.
+// 21st.dev: "Searchable FAQ Accordion" (@cnippet-dev/v-accordion-11, id 24932: live keyword filter over an accordion) +
+// "Real Estate Search Hero" (@felipemenezes098/hero-09, id 19080: a centred hero built around one rounded search bar),
+// adapted to Astro + vanilla TS (results computed from faq/data.ts, combobox + listbox pattern), re-skinned: housing cap,
+// frost glass with a powder water line, steel topic tubes, pdeep marks. No JS: the search is hidden; the topic gauges
+// (real links to #faq-<group>, same-page anchors) carry the hero.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import { FAQ_GROUPS, FAQ_ALL } from './data';
 const pad = (n: number) => String(n).padStart(2, '0');
+const index = FAQ_GROUPS.flatMap((g) => g.items.map((x, i) => ({ id: `q-${g.id}-${i + 1}`, g: g.name, q: x.q, a: x.a })));
+const max = Math.max(...FAQ_GROUPS.map((g) => g.items.length));
 ---
-<section class="cx-sec cx-frost fh" data-m-section data-m-hero aria-labelledby="fh-h">
-  <div class="wrap fh-g">
-    <div class="fh-tx">
-      <Eyebrow tone="pdeep" class="fh-eb"><span class="d">Straight answers from a licensed plumber</span><span class="m">Straight answers</span></Eyebrow>
-      <h1 id="fh-h" class="cx-h fh-h" data-t="2"><span class="ln">Plumbing Questions,</span> <span class="ln tone">Answered.</span></h1>
-      <p class="fh-lead" data-t="3"><span class="d">{FAQ_ALL.length} questions Pinellas homeowners ask us, in five groups. Where a fact comes from a public source, the source is under the answer.</span><span class="m">{FAQ_ALL.length} questions in five groups. Sources sit under the answers.</span></p>
+<section class="cx-sec cx-frost fh" data-m-section data-m-hero aria-labelledby="fh-h" data-fh>
+  <div class="wrap fh-in">
+    <Eyebrow tone="pdeep" class="fh-eb"><span class="d">Straight answers from a licensed plumber</span><span class="m">Straight answers</span></Eyebrow>
+    <h1 id="fh-h" class="cx-h fh-h" data-t="2"><span class="ln">Plumbing Questions,</span> <span class="ln tone">Answered.</span></h1>
+    <p class="fh-lead" data-t="3"><span class="d">{FAQ_ALL.length} questions Pinellas homeowners ask, in five groups. Where a fact comes from a public source, the source is under the answer.</span><span class="m">{FAQ_ALL.length} questions in five groups. Sources sit under the answers.</span></p>
+    <div class="fh-search" data-t="4" data-fh-search hidden>
+      <div class="fh-glass" style="--lvl:0">
+        <span class="fh-cap" aria-hidden="true"></span>
+        <span class="fh-water" aria-hidden="true"></span>
+        <label for="fh-q" class="sr-only">Search the {FAQ_ALL.length} answers</label>
+        <svg class="fh-ic" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="9.5" cy="9.5" r="7" fill="none" stroke="currentColor" stroke-width="2.2" /><path d="M14.8 14.8 20 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" /></svg>
+        <input id="fh-q" class="fh-q" type="search" autocomplete="off" placeholder="Type a word: permit, softener, leak…" role="combobox" aria-expanded="false" aria-controls="fh-res" aria-autocomplete="list" data-fh-q />
+        <span class="fh-n" aria-hidden="true" data-fh-n></span>
+      </div>
+      <ul id="fh-res" class="fh-res" role="listbox" aria-label="Matching questions" data-fh-res hidden></ul>
+      <p class="fh-sr sr-only" aria-live="polite" data-fh-live></p>
+      <div class="fh-try"><span class="fh-tl">Try</span>
+        {['permit', 'softener', 'burst', '24/7'].map((w) => <button type="button" class="fh-chip" data-fh-try={w}>{w}</button>)}
+      </div>
     </div>
-    <nav class="fh-tiles" aria-label="FAQ topics" data-t="3" data-stagger>
-      {FAQ_GROUPS.map((g, i) => (
-        <a class:list={['fh-tile', i === 0 && 'is-ink', i === FAQ_GROUPS.length - 1 && 'is-wide']} href={`#faq-${g.id}`}>
-          <span class="fh-n">{pad(g.items.length)}<span class="sr-only"> questions:</span></span>
-          <span class="fh-l">{g.name}</span>
-          <svg class="fh-ar fh-ar-d" width="14" height="12" viewBox="0 0 14 12" aria-hidden="true"><path d="M.9 5.9h12M7.9 10.9l5-5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <svg class="fh-ar fh-ar-m" width="12" height="14" viewBox="0 0 12 14" aria-hidden="true"><path d="M5.9.9v12M10.9 7.9l-5 5-5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <nav class="fh-gauges" aria-label="FAQ topics" data-t="3" data-stagger>
+      {FAQ_GROUPS.map((g) => (
+        <a class="fh-g" href={`#faq-${g.id}`} style={`--f:${g.items.length / max}`}>
+          <span class="fh-gl">{g.name}</span>
+          <span class="fh-tube" aria-hidden="true"><span></span></span>
+          <span class="fh-gn">{pad(g.items.length)}<span class="sr-only"> questions</span></span>
         </a>
       ))}
     </nav>
   </div>
+  <script type="application/json" data-fh-index set:html={JSON.stringify(index)} />
 </section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-fh]').forEach((root) => {
+    const box = root.querySelector<HTMLElement>('[data-fh-search]');
+    const q = root.querySelector<HTMLInputElement>('[data-fh-q]');
+    const res = root.querySelector<HTMLUListElement>('[data-fh-res]');
+    const glass = root.querySelector<HTMLElement>('.fh-glass');
+    const cnt = root.querySelector<HTMLElement>('[data-fh-n]');
+    const live = root.querySelector<HTMLElement>('[data-fh-live]');
+    const raw = root.querySelector('[data-fh-index]')?.textContent;
+    if (!box || !q || !res || !glass || !raw) return;
+    const idx: { id: string; g: string; q: string; a: string }[] = JSON.parse(raw);
+    box.hidden = false;
+    let cur = -1; let hits: typeof idx = [];
+    const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+    const mark = (s: string, words: string[]) => {
+      let out = esc(s);
+      words.forEach((w) => { const re = new RegExp(`(${w.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')})`, 'ig'); out = out.replace(re, '<mark>$1</mark>'); });
+      return out;
+    };
+    const open = (id: string) => {
+      const d = document.getElementById(id) as HTMLDetailsElement | null;
+      if (!d) return;
+      d.open = true;
+      d.scrollIntoView({ behavior: document.documentElement.classList.contains('motion') ? 'smooth' : 'auto', block: 'center' });
+      d.querySelector<HTMLElement>('summary')?.focus({ preventScroll: true });
+    };
+    const setCur = (i: number) => {
+      cur = i;
+      [...res.children].forEach((li, j) => li.setAttribute('aria-selected', j === i ? 'true' : 'false'));
+      if (i >= 0) q.setAttribute('aria-activedescendant', `fh-o-${i}`); else q.removeAttribute('aria-activedescendant');
+    };
+    const run = () => {
+      const words = q.value.toLowerCase().split(/\s+/).filter((w) => w.length > 1 || w === '?');
+      hits = words.length ? idx.filter((x) => words.every((w) => (x.q + ' ' + x.a + ' ' + x.g).toLowerCase().includes(w))) : [];
+      glass.style.setProperty('--lvl', String(words.length ? Math.min(1, 0.18 + hits.length / 6) : 0));
+      if (cnt) cnt.textContent = words.length ? `${hits.length} ${hits.length === 1 ? 'answer' : 'answers'}` : '';
+      res.innerHTML = hits.slice(0, 5).map((x, i) => `<li id="fh-o-${i}" role="option" aria-selected="false" data-id="${x.id}"><span class="fh-rg">${esc(x.g)}</span><span class="fh-rq">${mark(x.q, words)}</span></li>`).join('')
+        + (words.length && !hits.length ? '<li class="fh-none" role="option" aria-disabled="true">No answer with that word. Ask a real plumber below, or call (727) 512-0673.</li>' : '');
+      const show = words.length > 0;
+      res.hidden = !show; q.setAttribute('aria-expanded', show ? 'true' : 'false');
+      root.classList.toggle('is-open', show);
+      if (live) live.textContent = show ? `${hits.length} matching ${hits.length === 1 ? 'question' : 'questions'}` : '';
+      setCur(-1);
+    };
+    q.addEventListener('input', run);
+    q.addEventListener('keydown', (e) => {
+      const n = Math.min(5, hits.length);
+      if (e.key === 'ArrowDown' && n) { e.preventDefault(); setCur((cur + 1) % n); }
+      else if (e.key === 'ArrowUp' && n) { e.preventDefault(); setCur((cur - 1 + n) % n); }
+      else if (e.key === 'Enter' && n) { e.preventDefault(); open(hits[Math.max(0, cur)].id); }
+      else if (e.key === 'Escape') { q.value = ''; run(); }
+    });
+    res.addEventListener('click', (e) => { const li = (e.target as HTMLElement).closest<HTMLElement>('li[data-id]'); if (li) open(li.dataset.id!); });
+    root.querySelectorAll<HTMLButtonElement>('[data-fh-try]').forEach((b) => b.addEventListener('click', () => { q.value = b.dataset.fhTry!; run(); q.focus(); }));
+  });
+</script>
 <style>
-  .fh { padding: 76px 0 0; height: 510px; box-sizing: border-box; }
-  .fh-g { display: grid; grid-template-columns: 1fr 520px; column-gap: 40px; }
-  .fh-tx :global(.fh-eb) { margin-top: 0; }
+  .fh { padding: 76px 0 80px; }
+  .fh-in { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .fh-in :global(.fh-eb) { margin-top: 0; justify-content: center; }
   .fh-h { --fs: 64px; --fs-m: 32px; margin-top: 16px; }
-  .fh-lead { margin: 24px 0 0; max-width: 540px; font: 400 18px/1.5 var(--f-b); color: var(--ink); }
+  .fh-lead { margin: 20px 0 0; max-width: 620px; font: 400 18px/1.5 var(--f-b); color: var(--ink); }
   .m { display: none; }
-  .fh-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 0; align-content: start; }
-  .fh-tile { position: relative; display: block; height: 116px; padding: 16px 20px; box-sizing: border-box; border-radius: 6px; background: var(--white);
-    box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); text-decoration: none; transition: translate .25s var(--ease-out, ease), box-shadow .25s; }
-  .fh-tile.is-wide { grid-column: 1 / -1; }
-  .fh-tile.is-ink { background: var(--ink); color: var(--white); box-shadow: 6px 6px 0 var(--pdeep); }
-  .fh-n { display: block; font: 800 34px/1.04 var(--f-h); letter-spacing: -0.02em; color: var(--pdeep); }
-  .fh-tile.is-ink .fh-n { color: var(--powder); }
-  .fh-l { display: block; margin-top: 13px; font: 800 19px/1.04 var(--f-h); letter-spacing: -0.02em; }
-  .fh-ar { position: absolute; right: 22px; top: 24px; }
-  .fh-ar-m { display: none; }
-  .fh-tile:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
-  @media (hover: hover) and (pointer: fine) {
-    .fh-tile:hover { translate: 0 -3px; }
-    .fh-tile:not(.is-ink):hover { box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
-  }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .fh { height: auto; padding-bottom: 64px; }
-    .fh-g { grid-template-columns: 1fr; row-gap: 40px; }
-    .fh-tiles { margin-top: 0; }
-  }
+
+  /* Search housing: ink cap band, frost glass, water that rises with the matches. */
+  .fh-search { position: relative; z-index: 3; width: 760px; max-width: 100%; margin-top: 36px; }
+  .fh-glass { position: relative; display: flex; align-items: center; gap: 14px; height: 76px; padding: 12px 22px 0; border-radius: 0 0 22px 22px; background: var(--white); box-shadow: inset 0 0 0 2px var(--ink), 10px 10px 0 var(--powder); overflow: hidden; color: var(--ink); }
+  .fh-cap { position: absolute; left: -2px; right: -2px; top: 0; height: 12px; background: var(--ink); }
+  .fh-water { position: absolute; left: 2px; right: 2px; bottom: 2px; height: calc(var(--lvl) * 62px); border-radius: 0 0 20px 20px; background: var(--powder); opacity: .45; box-shadow: inset 0 3px 0 rgba(255,255,255,.8); transition: height .6s var(--ease-io); }
+  .fh-ic, .fh-q, .fh-n { position: relative; }
+  .fh-q { flex: 1; min-width: 0; height: 52px; border: 0; background: transparent; font: 600 20px/1 var(--f-b); color: var(--ink); outline: none; }
+  .fh-q::placeholder { color: #5B5F61; }
+  .fh-q::-webkit-search-cancel-button { cursor: pointer; }
+  .fh-glass:focus-within { box-shadow: inset 0 0 0 2px var(--ink), 10px 10px 0 var(--powder), 0 0 0 3px var(--pdeep); }
+  .fh-n { font: 700 12px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--pdeep); white-space: nowrap; }
+  .fh-res { position: absolute; left: 14px; right: 14px; top: 76px; margin: 0; padding: 8px; list-style: none; text-align: left; border-radius: 0 0 10px 10px; background: var(--ink); color: var(--white); box-shadow: 8px 8px 0 var(--powder); max-height: 360px; overflow: auto; }
+  .fh-res :global(li) { display: grid; gap: 2px; min-height: 44px; padding: 10px 12px; border-radius: 6px; cursor: pointer; transition: background-color .25s var(--ease-io); }
+  .fh-res :global(li[aria-selected="true"]), .fh-res :global(li[data-id]:hover) { background: var(--ink3); }
+  .fh-res :global(.fh-rg) { font: 700 10px/13px var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .fh-res :global(.fh-rq) { font: 700 16px/1.3 var(--f-b); }
+  .fh-res :global(mark) { padding: 0 2px; border-radius: 2px; background: var(--powder); color: var(--ink); }
+  .fh-res :global(.fh-none) { cursor: default; font: 500 14px/1.4 var(--f-b); color: rgba(255,255,255,.85); }
+  .fh-try { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin-top: 22px; }
+  .fh.is-open .fh-try { visibility: hidden; }
+  .fh-tl { font: 700 11px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .fh-chip { min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); font: 700 14px/1 var(--f-m); color: var(--ink); cursor: pointer; transition: background-color .3s var(--ease-io), color .3s var(--ease-io); }
+  .fh-chip:hover { background: var(--ink); color: var(--white); }
+  .fh-chip:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; }
+
+  /* Topic gauges: five lying tubes, filled to each group's share. */
+  .fh-gauges { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; width: 100%; margin-top: 40px; }
+  .fh-g { display: grid; gap: 10px; padding: 16px 16px 14px; border-radius: 6px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); text-decoration: none; text-align: left; transition: translate .35s var(--ease-io), box-shadow .35s var(--ease-io); }
+  .fh-g:hover { translate: 0 -3px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+  .fh-g:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .fh-gl { font: 800 17px/1.1 var(--f-h); letter-spacing: -0.02em; }
+  .fh-tube { position: relative; height: 14px; border-radius: 7px; background: var(--frost); box-shadow: inset 0 0 0 2px var(--ink); overflow: hidden; }
+  .fh-tube span { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--f) * 100%); background: var(--powder); box-shadow: inset 0 0 0 2px var(--ink); transition: width .6s var(--ease-io); }
+  .fh-g:hover .fh-tube span { background: var(--pdeep); }
+  .fh-gn { font: 700 12px/1 var(--f-m); letter-spacing: .06em; color: var(--pdeep); }
+  @media (prefers-reduced-motion: reduce) { .fh-water, .fh-g, .fh-tube span { transition: none; } }
+  @media (min-width: 768px) and (max-width: 1279px) { .fh-gauges { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (max-width: 767px) {
-    .fh { height: auto; padding: 44px 0 39px; }
-    .fh-g { grid-template-columns: 1fr; }
+    .fh { padding: 44px 0 44px; }
     .d { display: none; } .m { display: inline; }
-    .fh-tx :global(.fh-eb) { margin-top: 0; }
     .fh-h { margin-top: 10px; }
     .fh-lead { margin-top: 14px; font-size: 16px; }
-    .fh-tiles { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }
-    .fh-tile { display: flex; align-items: center; gap: 14px; height: 56px; padding: 0 16px; border-radius: 4px; box-shadow: inset 0 0 0 1.2px var(--ink); }
-    .fh-tile.is-ink { box-shadow: none; }
-    .fh-n { width: 28px; font-size: 22px; }
-    .fh-l { margin: 0; font-size: 17px; }
-    .fh-ar { top: 21px; }
-    .fh-ar-d { display: none; } .fh-ar-m { display: block; }
+    .fh-search { margin-top: 24px; }
+    .fh-glass { height: 64px; gap: 10px; padding: 10px 14px 0; box-shadow: inset 0 0 0 2px var(--ink), 6px 6px 0 var(--powder); }
+    .fh-q { font-size: 16px; }
+    .fh-n { display: none; }
+    .fh-res { top: 64px; left: 6px; right: 6px; }
+    .fh-gauges { grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 28px; }
+    .fh-g { padding: 12px; }
+    .fh-gl { font-size: 15px; }
   }
 </style>

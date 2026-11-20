@@ -29,9 +29,9 @@ export const JOBS: { name: string; covers: string; href?: string }[] = [
   { name: 'Tankless water heaters', covers: 'Single units and pairs', href: fam('hot-water') },
   { name: 'Water softeners & filtration', covers: 'Softeners, whole-house filters', href: fam('hot-water') },
   { name: 'Drain cleaning', covers: 'Sinks, showers, sewer lines', href: fam('drains-fixtures') },
-  { name: 'Leak repair', covers: 'Pipes, fittings, slab and wall', href: fam('leaks-lines') },
+  { name: 'Leak repair', covers: 'Pipes and fittings', href: fam('leaks-lines') },
   { name: 'Water line repair', covers: 'Main to the house', href: fam('leaks-lines') },
-  { name: 'Repiping', covers: 'Whole-house and partial', href: fam('leaks-lines') },
+  { name: 'Repiping', covers: 'For remodels and new builds', href: fam('leaks-lines') },
   { name: 'Shower & tub valves', covers: 'Valve upgrades and trims', href: fam('drains-fixtures') },
   { name: 'Toilets & faucets', covers: 'Repair and replace', href: fam('drains-fixtures') },
   { name: 'Remodel & new construction', covers: 'Rough-in to finish', href: fam('remodel-commercial') },
@@ -59,9 +59,9 @@ export const SYMPTOMS: { name: string; nameM?: string; job: string; jobM?: strin
 export type Faq = { q: string; a: string; chip?: { label: string; href: string } };
 export const FAQ_TABS: { id: string; name: string; items: Faq[] }[] = [
   { id: 'hot', name: 'Hot water', items: [
-    { q: 'Tank or tankless for a Florida home?', a: 'It depends on how much hot water you use at once and whether you have gas. Tankless heats on demand and hangs on the wall. A tank stores hot water and costs less to fit.', chip: { label: 'See water heaters →', href: WH } },
+    { q: 'Tank or tankless for a Florida home?', a: 'It depends on how much hot water you use at once and whether you have gas. Tankless heats on demand and hangs on the wall. A tank stores hot water and usually costs less to fit.', chip: { label: 'See water heaters →', href: WH } },
     { q: 'How fast can you put in a new one?', a: 'Often the next day. One customer wrote: “called and had one installed the next day”.' },
-    { q: 'My water heater sat in storm flood water. Can I use it?', a: 'Don’t turn it on. A heater that sat in flood water, salt water above all, usually needs replacing. Call and we check it first.' },
+    { q: 'My water heater sat in storm flood water. Can I use it?', a: 'Don’t turn it on. A heater that sat in flood water, salt water above all, usually needs replacing. Have a licensed plumber look at it before you use it.' },
   ] },
   { id: 'leaks', name: 'Leaks & lines', items: [
     { q: 'A pipe burst. What do I do first?', a: 'Close your main shut-off valve to stop the water, then call (727) 512-0673.' },
@@ -71,16 +71,16 @@ export const FAQ_TABS: { id: string; name: string; items: Faq[] }[] = [
   { id: 'drains', name: 'Drains & fixtures', items: [
     { q: 'What drains do you clear?', a: 'Showers that will not drain, clogged sewer lines, floor drains.' },
     { q: 'How hard is Pinellas County water?', a: 'Very hard. It averages 217 ppm, which is 11.1 to 14.3 grains per gallon. That builds scale inside tanks and tankless units.' },
-    { q: 'Do I get the price before you start?', a: 'Yes. You get the price first, then you decide.' },
+    { q: 'How do I get a price?', a: 'Call (727) 512-0673 or text a photo of the job. One customer wrote: “Kody came out the same day I called to give an estimate, and returned the next day to do the work.”' },
   ] },
   { id: 'remodel', name: 'Remodel & commercial', items: [
     { q: 'Can you do the whole bathroom?', a: 'Yes. Remodels and new builds, from rough-in to the finished shower.', chip: { label: 'See remodel & new construction →', href: fam('remodel-commercial') } },
     { q: 'Do you do commercial build-outs?', a: 'Yes. One customer wrote: “These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.”' },
-    { q: 'Do you pull the permit?', a: 'It depends on your address. Largo homes go to the Largo Building Division, Clearwater files online, and unincorporated areas go to Pinellas County. We check and file it.' },
+    { q: 'Which office issues the permit?', a: 'It depends on your address. Unincorporated areas go to Pinellas County, Clearwater takes permits online, and Largo has its own Building Division. If you are not sure which applies, ask your city.' },
   ] },
   { id: 'photos', name: 'Photos & permits', items: [
     { q: 'Can I send a photo first?', a: 'Yes. Text it to (727) 512-0673 with your town and what is going on.' },
-    { q: 'Do I need a permit to replace a water heater?', a: 'Usually, yes. Pinellas County lists a “Water Heater Equal Change Out, Tank or Tankless” permit, and Clearwater requires permits for water heaters. We file it for you.' },
-    { q: 'Does a repipe need a permit?', a: 'Yes. Pinellas County lists a “Re-pipe Water Distribution Interior Only” permit. We pull it before work starts.' },
+    { q: 'Do I need a permit to replace a water heater?', a: 'Usually, yes. Pinellas County lists a “Water Heater Equal Change Out, Tank or Tankless” express permit for unincorporated areas, and Clearwater requires permits for water heaters. Largo and other cities: check with the city’s permit office.' },
+    { q: 'Does a repipe need a permit?', a: 'Usually, yes. Pinellas County lists a “Re-pipe Water Distribution Interior Only” permit for unincorporated areas. Inside a city, check with that city’s permit office.' },
   ] },
 ];

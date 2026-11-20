@@ -3,13 +3,14 @@
 // cards right, empty space = slop). Rebuilt as ONE centred object: Kody's Instagram line set large, its words lighting up
 // one by one as you scroll (kit scrub: data-scrub-tw per word, windows spread over the pass), the logo seal biting the
 // opening quote mark (depth), then a strip of platform tags: Instagram live (verified, 34 posts, 653 followers, read
-// 17 Nov 2026), Facebook named without a link (no URL in site.ts yet), and Angi / Nextdoor / Yelp as empty dashed tags
-// (we only show what we can read). 21st.dev ref: "Text Reveal" scroll-driven word reveal (magicui text-reveal pattern) +
+// 17 Nov 2026) and the two Google profiles (each linked, never summed). Fix round A: only real, linked platforms
+// (the Facebook "link coming" and Angi / Nextdoor / Yelp placeholders are gone). 21st.dev ref: "Text Reveal" scroll-driven word reveal (magicui text-reveal pattern) +
 // "Logo cloud" tags; adapted to the kit scrub engine. Distinct from /about "On the record" (licence wallet + IG grid bento).
 // Reduced motion / no JS: all words full strength.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Seam from '../kit/Seam.astro';
+import Stars from '../contact/Stars.astro';
 import { SITE } from '../../data/site';
 import logo from '../../assets/brand/logo-glass.png';
 import { Image } from 'astro:assets';
@@ -38,7 +39,7 @@ const tick = '<path d="M12 1.5l2.6 1.9 3.2-.1 1 3 2.6 1.9-1 3 1 3-2.6 1.9-1 3-3.
     </figure>
 
     <div class="ro-strip" data-t="4" data-fx="up">
-      <p class="ro-sl">Other places to find us</p>
+      <p class="ro-sl">Where to find us</p>
       <ul class="ro-tags" role="list">
         <li>
           <a class="ro-tag ro-ig" href={SITE.social.instagram} target="_blank" rel="noopener">
@@ -48,15 +49,21 @@ const tick = '<path d="M12 1.5l2.6 1.9 3.2-.1 1 3 2.6 1.9-1 3 1 3-2.6 1.9-1 3-3.
             <span class="sr-only"> (verified Instagram profile, opens in a new tab)</span>
           </a>
         </li>
-        <li>
-          <span class="ro-tag ro-fb">
-            <svg class="ro-ico" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13.2 19v-6h2.2l.4-2.6h-2.6V8.9c0-.8.3-1.3 1.4-1.3h1.3V5.3a17 17 0 0 0-2-.1c-2 0-3.3 1.2-3.3 3.4v1.8H8.4V13h2.2v6" fill="currentColor"/></svg>
-            <span class="ro-tx"><b>Facebook</b><span>{SITE.name} · link coming</span></span>
-          </span>
-        </li>
-        <li><span class="ro-tag ro-empty"><span class="ro-tx"><b>Angi · Nextdoor · Yelp</b><span>Added once we can read them</span></span></span></li>
+        {[['a', 1], ['b', 2]].map(([k, n]) => {
+          const p = SITE.google[k as 'a' | 'b'];
+          return (
+            <li>
+              <a class="ro-tag ro-ig ro-g" href={p.url} target="_blank" rel="noopener">
+                <span class="ro-gm" aria-hidden="true">G</span>
+                <span class="ro-tx"><b>Google profile {n} <Stars w={70} /></b><span>{p.value} · {p.count} reviews · read {SITE.google.checked}</span></span>
+                <span class="ro-go" aria-hidden="true">→</span>
+                <span class="sr-only"> ({p.value} stars, opens in a new tab)</span>
+              </a>
+            </li>
+          );
+        })}
       </ul>
-      <p class="ro-note">We only show counts we can read ourselves.</p>
+      <p class="ro-note">Two separate Google profiles, never added up. We only show counts we can read ourselves.</p>
     </div>
   </div>
 </section>
@@ -83,8 +90,8 @@ const tick = '<path d="M12 1.5l2.6 1.9 3.2-.1 1 3 2.6 1.9-1 3 1 3-2.6 1.9-1 3-3.
   .ro-ig:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 4px; }
   .ro-ig .ro-tick { display: inline-block; vertical-align: -2px; transition: transform .45s var(--ease-back); }
   .ro-ig:hover .ro-tick { transform: scale(1.25) rotate(-12deg); }
-  .ro-fb { background: var(--white); border-color: var(--frost3); }
-  .ro-empty { border: 1.5px dashed var(--muted2); background: transparent; }
+  .ro-g .ro-tx b { display: flex; align-items: center; gap: 8px; }
+  .ro-gm { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--white); font: 800 16px/1 var(--f-h); }
   .ro-tx { display: grid; gap: 2px; }
   .ro-tx b { font: 800 17px/1.15 var(--f-h); letter-spacing: -0.02em; }
   .ro-tx > span { font: 500 11px/15px var(--f-m); letter-spacing: .02em; color: var(--muted); }

@@ -1,0 +1,264 @@
+---
+// /areas/seminole "Local facts" (fix round B: replaces TownDistance "map + plate" and TownProblems "three plain cards").
+// Frost. Centred head, then ONE object: a clipboard (ink board, steel clip) holding a white field sheet with four
+// divider tabs down its right edge (phones: across its top). Each tab is a reading with its own little instrument that
+// runs when the page opens: 01 a straight route drawn mile by mile with a rolling odometer, 02 the USGS hardness scale
+// with the county average marker sliding in, 03 a 12-month strip that fills Jun-Nov, 04 a 1960-2000 build-year bar
+// with the polybutylene window. 21st.dev wensity/animated-tabs (physical stack + tab triggers) + shadcn/tabs (ARIA),
+// rebuilt in vanilla TS and re-skinned as a Glass clipboard. Facts (research LOCAL-FACTS.md, read 17 Nov 2026):
+// miles = Census points (section 1); 217 ppm / 11.1-14.3 gpg = PCU 2025 report (section 4; county utility, NOT claimed
+// for Seminole); hurricane season + shut-off advice (section 7); polybutylene 1978-1995 = INFERRING, third-party,
+// hedged and labelled (section 5). No Seminole housing-age claim: research has none.
+// No JS: all four pages show stacked, tabs hidden. Reduced motion: instruments show their end state.
+import Head from '../areas/Head.astro';
+import Seam from '../kit/Seam.astro';
+import { TOWN } from './data';
+const tabs = [
+  { id: 'dist', n: '01', l: 'Distance', k: `${TOWN.mi} mi` },
+  { id: 'water', n: '02', l: 'Water', k: '217 ppm' },
+  { id: 'storm', n: '03', l: 'Storm season', k: 'Jun–Nov' },
+  { id: 'pipes', n: '04', l: 'Older pipes', k: '1978–95' },
+];
+const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+const mx = (mi: number) => 30 + (mi / 6) * 340;
+---
+<section class="tfacts" data-m-section aria-labelledby="tfacts-h">
+  <Seam from="var(--white)" to="var(--frost)" />
+  <div class="wrap">
+    <div class="tf-head">
+      <Head eyebrow="Local facts" l1="Four things to know" l2="before you call." size={52} sizeM={30} id="tfacts-h" />
+      <p class="tf-lead" data-t="3">Read from public records, with the source on every page. Tap a tab.</p>
+    </div>
+    <div class="cb" data-t="4" data-facts>
+      <span class="cb-clip" aria-hidden="true"><i></i></span>
+      <div class="cb-tabs" role="tablist" aria-label="Seminole local facts" data-facts-tabs>
+        {tabs.map((t, i) => (
+          <button class="cb-tab" type="button" role="tab" id={`tf-tab-${t.id}`} aria-controls={`tf-p-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-facts-tab>
+            <span class="cb-n">{t.n}</span><span class="cb-l">{t.l}</span><span class="cb-k">{t.k}</span>
+          </button>
+        ))}
+      </div>
+      <div class="cb-sheet">
+        <section class="fp is-on" id="tf-p-dist" role="tabpanel" aria-labelledby="tf-tab-dist" data-facts-panel>
+          <div class="fp-txt">
+            <p class="fp-k">Reading 01 · Distance</p>
+            <h3 class="fp-big"><span data-odo={TOWN.mi}>{TOWN.mi}</span> mi</h3>
+            <p class="fp-p">From our Largo base to Seminole, in a straight line between Census map points. Driving is longer: call and we tell you when we can come.</p>
+            <p class="fp-src">Source: US Census 2024 Gazetteer points, read 17 Nov 2026</p>
+          </div>
+          <figure class="fp-viz">
+            <svg class="rt" viewBox="0 0 400 130" aria-hidden="true">
+              <path class="rt-base" d={`M30 70H${mx(6)}`} />
+              {[0, 1, 2, 3, 4, 5, 6].map((m) => <g><path class="rt-tick" d={`M${mx(m)} 62V78`} /><text class="rt-mi" x={mx(m)} y="98">{m}</text></g>)}
+              <path class="rt-run" d={`M30 70H${mx(TOWN.mi)}`} pathLength="1" />
+              <circle class="rt-a" cx="30" cy="70" r="9" /><circle class="rt-b" cx={mx(TOWN.mi)} cy="70" r="9" />
+              <text class="rt-lab" x="30" y="40">LARGO BASE</text><text class="rt-lab rt-lab--b" x={mx(TOWN.mi)} y="40" text-anchor="end">SEMINOLE</text>
+              <text class="rt-unit" x="200" y="124" text-anchor="middle">MILES, STRAIGHT LINE</text>
+            </svg>
+            <figcaption class="sr-only">Seminole is {TOWN.mi} miles from our Largo base in a straight line.</figcaption>
+          </figure>
+        </section>
+        <section class="fp" id="tf-p-water" role="tabpanel" aria-labelledby="tf-tab-water" data-facts-panel>
+          <div class="fp-txt">
+            <p class="fp-k">Reading 02 · Water</p>
+            <h3 class="fp-big">217 <small>ppm</small></h3>
+            <p class="fp-p">Average hardness of Pinellas County Utilities water, or 11.1 to 14.3 grains per gallon. Hard water leaves scale in water heaters and crust on fixtures. Your water bill shows which utility serves your home.</p>
+            <p class="fp-src">Source: PCU 2025 water quality report; USGS hardness scale</p>
+          </div>
+          <figure class="fp-viz">
+            <div class="hs" aria-hidden="true">
+              <div class="hs-bar"><i style="--w:24%">Soft</i><i style="--w:24%">Moderate</i><i style="--w:24%">Hard</i><i style="--w:28%">Very hard</i></div>
+              <span class="hs-range" style="left:75.6%;width:22%"></span>
+              <span class="hs-mark" style="--x:86.8%"><b>217</b></span>
+              <div class="hs-scale"><span style="left:0">0</span><span style="left:24%">60</span><span style="left:48%">120</span><span style="left:72%">180</span><span style="left:100%">250 ppm</span></div>
+            </div>
+            <figcaption class="fp-cap">Shaded: the report’s range, 189 to 244 ppm.</figcaption>
+          </figure>
+        </section>
+        <section class="fp" id="tf-p-storm" role="tabpanel" aria-labelledby="tf-tab-storm" data-facts-panel>
+          <div class="fp-txt">
+            <p class="fp-k">Reading 03 · Storm season</p>
+            <h3 class="fp-big">Jun 1 – Nov 30</h3>
+            <p class="fp-p">Hurricane season. Find and label your main shut-off before a storm. If a pipe bursts, close it first, then call.</p>
+            <p class="fp-src">Source: NOAA season dates; Pinellas County pipe advice</p>
+          </div>
+          <figure class="fp-viz">
+            <ol class="ms" aria-hidden="true">{months.map((m, i) => <li class:list={[i >= 5 && i <= 10 && 'is-s']} style={`--i:${i - 5}`}>{m}</li>)}</ol>
+            <figcaption class="fp-cap">Six months of the year, June to November.</figcaption>
+          </figure>
+        </section>
+        <section class="fp" id="tf-p-pipes" role="tabpanel" aria-labelledby="tf-tab-pipes" data-facts-panel>
+          <div class="fp-txt">
+            <p class="fp-k">Reading 04 · Older pipes</p>
+            <h3 class="fp-big">1978–1995</h3>
+            <p class="fp-p">Florida homes built around these years often got grey polybutylene supply pipe, and many insurers limit it. We have no count for Seminole. Not sure what you have? Text us a photo of the pipe under a sink.</p>
+            <p class="fp-src">Source: third-party (NBC 6 Responds, barchart.com), read 17 Nov 2026</p>
+          </div>
+          <figure class="fp-viz">
+            <div class="yb" aria-hidden="true">
+              <div class="yb-bar"><span class="yb-win" style="left:45%;width:42.5%"><b>Polybutylene years</b></span></div>
+              <div class="yb-scale"><span>1960</span><span>1970</span><span>1980</span><span>1990</span><span>2000</span></div>
+            </div>
+            <figcaption class="fp-cap">Build year of the home, Florida-wide pattern.</figcaption>
+          </figure>
+        </section>
+        <i class="cb-hole" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { onEnter, motionOn } from '../areas/inview';
+  // Tabs (ARIA tablist): click, arrows (both axes), Home / End. The panels share one grid cell, so the sheet keeps the
+  // tallest page's height and nothing below jumps. The odometer rolls once, when the distance page is first seen.
+  document.querySelectorAll<HTMLElement>('[data-facts]').forEach((root) => {
+    root.classList.add('is-js');
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-facts-tab]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-facts-panel]')];
+    const odo = root.querySelector<HTMLElement>('[data-odo]');
+    const go = (k: number, focus = false) => {
+      tabs.forEach((t, i) => { t.setAttribute('aria-selected', String(i === k)); t.tabIndex = i === k ? 0 : -1; });
+      panels.forEach((p, i) => { p.classList.toggle('is-on', i === k); p.inert = i !== k; });
+      if (focus) tabs[k].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => go(i));
+      t.addEventListener('keydown', (e) => {
+        const n = tabs.length;
+        const k = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? (i + 1) % n : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? (i - 1 + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : -1;
+        if (k < 0) return;
+        e.preventDefault(); go(k, true);
+      });
+    });
+    go(0);
+    onEnter(root, () => {
+      root.classList.add('is-in');
+      if (!odo || !motionOn()) return;
+      const end = parseFloat(odo.dataset.odo!);
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const p = Math.min(1, (now - t0) / 1400);
+        const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        odo.textContent = (end * e).toFixed(1);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, '0px 0px -15% 0px');
+  });
+</script>
+
+<style>
+  .tfacts { position: relative; background: var(--frost); padding: 120px 0 110px; }
+  .tf-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .tf-head :global(.ah-eb) { justify-content: center; }
+  .tf-lead { max-width: 560px; margin-top: 18px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+
+  /* the clipboard */
+  .cb { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 210px; max-width: 1060px; margin: 64px auto 0; padding: 44px 0 30px 30px; background: var(--ink); border-radius: 14px; box-shadow: 12px 12px 0 var(--powder); }
+  .cb-clip { position: absolute; z-index: 3; left: 50%; top: -22px; width: 200px; height: 56px; margin-left: -100px; background: var(--steel); border-radius: 10px 10px 16px 16px; box-shadow: inset 0 0 0 1.5px var(--steel2), 0 6px 0 var(--ink3); }
+  .cb-clip i { position: absolute; left: 50%; top: 12px; width: 64px; height: 14px; margin-left: -32px; border-radius: 7px; background: var(--ink); }
+  .cb-sheet { position: relative; grid-column: 1; grid-row: 1; display: grid; background: var(--white); border-radius: 4px 0 4px 4px; box-shadow: inset 0 0 0 1px var(--frost3); }
+  .cb-hole { display: none; }
+  .cb-tabs { grid-column: 2; grid-row: 1; display: none; flex-direction: column; gap: 8px; padding-top: 28px; }
+  .cb.is-js .cb-tabs { display: flex; }
+  .cb-tab { position: relative; display: grid; grid-template-columns: 30px 1fr; align-items: baseline; row-gap: 2px; width: 196px; min-height: 76px; padding: 14px 16px 14px 18px; text-align: left; border: 0; border-radius: 0 10px 10px 0; background: var(--ink3); color: var(--white); cursor: pointer;
+    transition: background-color .5s var(--ease-io), color .5s var(--ease-io), translate .5s var(--ease-io); }
+  .cb-tab:hover { background: var(--pdeep); }
+  .cb-tab[aria-selected='true'] { background: var(--white); color: var(--ink); translate: -1px 0; }
+  .cb-tab:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .cb-n { grid-row: span 2; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; color: var(--powder); }
+  .cb-tab[aria-selected='true'] .cb-n { color: var(--pdeep); }
+  .cb-l { font-family: var(--f-h); font-weight: 800; font-size: 19px; line-height: 1.1; letter-spacing: -.01em; }
+  .cb-k { font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; opacity: .75; }
+
+  /* pages: stacked without JS; one grid cell with JS */
+  .fp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 48px 48px 44px; }
+  .fp + .fp { border-top: 1px dashed var(--frost3); }
+  .cb.is-js .fp { grid-area: 1 / 1; border-top: 0; opacity: 0; visibility: hidden; translate: 0 14px; transition: opacity .5s var(--ease-io), translate .5s var(--ease-io), visibility 0s linear .5s; }
+  .cb.is-js .fp.is-on { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .5s var(--ease-io) .15s, translate .5s var(--ease-io) .15s, visibility 0s; }
+  .fp-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .fp-big { margin-top: 12px; font-family: var(--f-h); font-weight: 800; font-size: 72px; line-height: 1; letter-spacing: -.03em; color: var(--ink); white-space: nowrap; }
+  .fp-big small { font-size: .45em; letter-spacing: 0; color: var(--pdeep); }
+  .fp-p { margin-top: 18px; font-size: 16px; line-height: 1.55; color: var(--ink); }
+  .fp-src { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--frost3); font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 1.4; letter-spacing: .02em; color: var(--muted); }
+  .fp-viz { margin: 0; padding: 26px 24px; background: var(--frost); border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .fp-cap { margin-top: 14px; font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .02em; color: var(--muted); }
+
+  /* 01 route */
+  .rt { display: block; width: 100%; height: auto; overflow: visible; }
+  .rt-base { stroke: var(--frost3); stroke-width: 10; stroke-linecap: round; }
+  .rt-tick { stroke: var(--ink); stroke-width: 1.5; }
+  .rt-mi { font-family: var(--f-m); font-size: 11px; font-weight: 700; fill: var(--muted); text-anchor: middle; }
+  .rt-run { fill: none; stroke: var(--pdeep); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .rt-a { fill: var(--ink); stroke: var(--white); stroke-width: 3; }
+  .rt-b { fill: var(--powder); stroke: var(--ink); stroke-width: 3; }
+  .rt-lab { font-family: var(--f-m); font-size: 12px; font-weight: 800; letter-spacing: .06em; fill: var(--ink); }
+  .rt-unit { font-family: var(--f-m); font-size: 10px; font-weight: 500; letter-spacing: .08em; fill: var(--muted); }
+
+  /* 02 hardness scale */
+  .hs { position: relative; padding-top: 44px; }
+  .hs-bar { display: flex; height: 44px; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
+  .hs-bar i { display: grid; place-items: center; width: var(--w); font-style: normal; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
+  .hs-bar i:nth-child(1) { background: var(--white); } .hs-bar i:nth-child(2) { background: var(--frost2); }
+  .hs-bar i:nth-child(3) { background: var(--frost3); } .hs-bar i:nth-child(4) { background: var(--powder); }
+  .hs-range { position: absolute; top: 44px; height: 44px; background: repeating-linear-gradient(-45deg, rgb(47 97 120 / .35) 0 4px, transparent 4px 8px); pointer-events: none; }
+  .hs-mark { position: absolute; top: 30px; left: var(--x); width: 4px; height: 72px; margin-left: -2px; background: var(--ink); border-radius: 2px; }
+  .hs-mark b { position: absolute; bottom: 100%; left: 50%; translate: -50% -4px; padding: 3px 8px; border-radius: 4px; background: var(--ink); color: var(--white); font-family: var(--f-m); font-size: 12px; }
+  .hs-scale { position: relative; height: 14px; margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 10px; color: var(--muted); }
+  .hs-scale span { position: absolute; top: 0; translate: -50% 0; white-space: nowrap; }
+  .hs-scale span:first-child { translate: 0 0; } .hs-scale span:last-child { translate: -100% 0; }
+
+  /* 03 months */
+  .ms { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; margin: 0; padding: 0; list-style: none; }
+  .ms li { display: grid; place-items: end center; height: 96px; padding-bottom: 8px; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--frost3); font-family: var(--f-m); font-weight: 700; font-size: 12px; color: var(--muted); }
+  .ms li.is-s { background: var(--white) linear-gradient(var(--powder), var(--powder)) bottom / 100% 100% no-repeat; box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); }
+
+  /* 04 build years */
+  .yb { padding-top: 40px; }
+  .yb-bar { position: relative; height: 44px; border: 2px solid var(--ink); border-radius: 22px; background: var(--white); }
+  .yb-win { position: absolute; top: -2px; bottom: -2px; border-radius: 22px; background: var(--steel); box-shadow: inset 0 0 0 2px var(--ink); transform-origin: left center; }
+  .yb-win b { position: absolute; bottom: 100%; left: 0; margin-bottom: 8px; font-family: var(--f-m); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .yb-scale { display: flex; justify-content: space-between; margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 10px; color: var(--muted); }
+
+  /* instruments run when their page opens (motion only; reduced motion / no JS = end state) */
+  :global(html.motion) .cb.is-js .fp .rt-run { transition: stroke-dashoffset 1.3s var(--ease-io) .35s; }
+  :global(html.motion) .cb.is-js:not(.is-in) .rt-run, :global(html.motion) .cb.is-js .fp:not(.is-on) .rt-run { stroke-dashoffset: 1; transition-delay: 0s; transition-duration: 0s; }
+  :global(html.motion) .cb.is-js .hs-mark { transition: left 1s var(--ease-io) .35s; }
+  :global(html.motion) .cb.is-js .fp:not(.is-on) .hs-mark { left: 0; transition: none; }
+  :global(html.motion) .cb.is-js .fp.is-on .ms li.is-s { animation: ms-fill .6s var(--ease-io) calc(.3s + var(--i) * .1s) both; }
+  @keyframes ms-fill { from { background-size: 100% 0; } }
+  :global(html.motion) .cb.is-js .yb-win { transition: scale .9s var(--ease-io) .35s; }
+  :global(html.motion) .cb.is-js .fp:not(.is-on) .yb-win { scale: 0 1; transition: none; }
+  @media (prefers-reduced-motion: reduce) { .cb-tab, .cb.is-js .fp { transition: none !important; } }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .cb { grid-template-columns: minmax(0, 1fr) 170px; }
+    .cb-tab { width: 160px; padding: 12px 12px 12px 14px; grid-template-columns: 24px 1fr; }
+    .cb-l { font-size: 16px; }
+    .fp { grid-template-columns: 1fr; gap: 24px; padding: 36px 32px; }
+    .fp-big { font-size: 60px; }
+  }
+  @media (max-width: 767px) {
+    .tfacts { padding: 72px 0 64px; }
+    .tf-lead { font-size: 15px; margin-top: 12px; }
+    .cb { display: flex; flex-direction: column; margin-top: 44px; padding: 34px 10px 12px; border-radius: 12px; box-shadow: 6px 6px 0 var(--powder); }
+    .cb-clip { width: 140px; height: 44px; margin-left: -70px; top: -18px; }
+    .cb-clip i { width: 48px; height: 12px; margin-left: -24px; top: 10px; }
+    .cb-tabs { order: -1; display: none; flex-direction: row; gap: 4px; padding: 0; }
+    .cb.is-js .cb-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cb-tab { width: auto; min-height: 58px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: 8px 6px 8px 8px; border-radius: 8px 8px 0 0; }
+    .cb-tab[aria-selected='true'] { translate: 0 1px; }
+    .cb-n { font-size: 9px; }
+    .cb-l { font-size: 12px; line-height: 1.1; }
+    .cb-k { display: none; }
+    .cb-sheet { border-radius: 0 0 4px 4px; }
+    .fp { grid-template-columns: 1fr; gap: 20px; padding: 24px 16px 22px; }
+    .fp-big { font-size: 46px; white-space: normal; }
+    .fp-p { margin-top: 12px; font-size: 15px; }
+    .fp-viz { padding: 18px 14px; }
+    .ms { gap: 3px; }
+    .ms li { height: 64px; font-size: 10px; }
+    .hs-bar i { font-size: 8px; letter-spacing: 0; }
+  }
+</style>

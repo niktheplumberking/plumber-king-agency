@@ -1,45 +1,56 @@
 ---
-// /areas CTA "Town not listed?" (Figma 721:525 y 5503 h 677 / mobile y 5156 h 657). Ink, meniscus seam rising over the
-// white FAQ. INTERACTION note: live town checker. Type a town: it matches against the Pinellas County town list
-// (towns.ts) and answers "Yes, we cover it" with a check, or "Call and ask" for anywhere else. Enter submits nothing; it
-// only answers. Built as an ARIA 1.2 combobox (input + listbox of matching towns) with a polite live result.
+// /areas "Town not listed?" (fix round B rebuild: the R2 head + checker left / plate + buttons right left a gap). Ink,
+// meniscus seam rising over the white FAQ. Centred head, then ONE object: a steel COVERAGE TICKET console. The search
+// field (ARIA 1.2 combobox over towns.ts) sits on top; under it the ticket prints the town name big, a stamp
+// (COVERED / CALL AND ASK) and the straight-line miles from our Largo base (towns.ts, Census points); "Try" chips fill
+// the field. Enter only answers, it never submits. 21st.dev educalvolpz/rolling-text (value rolls in) + the original
+// live checker, re-skinned as a Glass spec ticket. Buttons centred under it. No JS: the ticket shows the starting answer.
 import Head from './Head.astro';
 import Btn from '../kit/Btn.astro';
-import Plate from '../kit/Plate.astro';
 import Seam from '../kit/Seam.astro';
 import { TOWNS } from '../../data/towns';
-import { SITE } from '../../data/site';
-const names = TOWNS.map((t) => t.name).sort((a, b) => a.localeCompare(b));
+const names = [...TOWNS].sort((a, b) => a.name.localeCompare(b.name)).map((t) => ({ n: t.name, mi: t.mi }));
 const start = 'Oldsmar';
+const startMi = TOWNS.find((t) => t.name === start)!.mi;
+const tries = ['Dunedin', 'Gulfport', 'Tampa'];
 ---
 <section class="acheck on-ink" data-m-section aria-labelledby="acheck-h">
   <Seam from="var(--white)" to="var(--ink)" flip />
-  <div class="wrap acheck-grid">
-    <div class="acheck-copy">
+  <div class="wrap">
+    <div class="ac-head">
       <Head eyebrow="Town not listed?" l1="Type your town." l2="We’ll tell you straight." size={56} sizeM={36} dark id="acheck-h" />
-      <div class="tc" data-town-check data-towns={JSON.stringify(names)} data-t="4">
-        <label class="sr-only" for="tc-in">Your town</label>
-        <div class="tc-box">
-          <svg class="tc-ring" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="2" /></svg>
-          <input id="tc-in" class="tc-in" type="text" value={start} placeholder="Type your town" autocomplete="off" autocapitalize="words" spellcheck="false"
-            role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tc-list" aria-describedby="tc-res" enterkeyhint="done" />
-          <ul class="tc-list" id="tc-list" role="listbox" aria-label="Towns we cover" hidden></ul>
+    </div>
+    <div class="tc" data-town-check data-towns={JSON.stringify(names)} data-t="4">
+      <label class="tc-lab" for="tc-in">Your town</label>
+      <div class="tc-box">
+        <svg class="tc-ring" viewBox="0 0 18 18" width="18" height="18" aria-hidden="true"><circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+        <input id="tc-in" class="tc-in" type="text" value={start} placeholder="Type your town" autocomplete="off" autocapitalize="words" spellcheck="false"
+          role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tc-list" aria-describedby="tc-res" enterkeyhint="done" />
+        <ul class="tc-list" id="tc-list" role="listbox" aria-label="Towns we cover" hidden></ul>
+      </div>
+      <div class="tc-try"><span>Try</span>{tries.map((t) => <button type="button" class="tc-chip" data-tc-try={t}>{t}</button>)}</div>
+      <div class="tk" aria-hidden="true">
+        <p class="tk-k">Coverage ticket · Glass Plumbing</p>
+        <p class="tk-town" data-tc-town>{start}</p>
+        <div class="tk-row">
+          <span class="tk-cell"><i>County</i><b>Pinellas</b></span>
+          <span class="tk-cell"><i>From Largo base</i><b data-tc-mi>{startMi} mi</b></span>
+          <span class="tk-cell"><i>Hours</i><b>24/7 emergencies</b></span>
         </div>
-        <div class="tc-res is-yes" id="tc-res" role="status" aria-live="polite" aria-atomic="true">
-          <span class="tc-ic" aria-hidden="true">
-            <svg class="tc-ic-yes" viewBox="0 0 15 11" width="15" height="11"><path d="M1.1 5.1l4 4 8-8" fill="none" stroke="#16130F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-            <svg class="tc-ic-ask" viewBox="0 0 24 24" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.18 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="#16130F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </span>
-          <span class="tc-txt" data-tc-txt>{start} is in Pinellas County. Yes, we cover it.</span>
-        </div>
+        <span class="tk-stamp" data-tc-stamp>Covered</span>
+        <i class="rv"></i><i class="rv"></i><i class="rv"></i><i class="rv"></i>
+      </div>
+      <div class="tc-res is-yes" id="tc-res" role="status" aria-live="polite" aria-atomic="true">
+        <span class="tc-ic" aria-hidden="true">
+          <svg class="tc-ic-yes" viewBox="0 0 15 11" width="15" height="11"><path d="M1.1 5.1l4 4 8-8" fill="none" stroke="#16130F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          <svg class="tc-ic-ask" viewBox="0 0 24 24" width="14" height="14"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.18 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="#16130F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </span>
+        <span class="tc-txt" data-tc-txt>{start} is in Pinellas County, {startMi} mi from our Largo base in a straight line. Yes, we cover it.</span>
       </div>
     </div>
-    <div class="acheck-side">
-      <div class="acheck-plate" data-t="4"><Plate title="Service area" rows={[['Base', 'Largo, FL'], ['Covers', 'All of Pinellas County'], ['Across the bay', 'Call and ask'], ['Hours', '24/7 for emergencies']]} w={560} pad={18} size={12} tsize={12} kx={150} pitch={22} tone="ink" shadow="powder" /></div>
-      <div class="acheck-btns">
-        <Btn look="call" sub="Call now · 24/7" size="l" w={300} wm={350} class="acheck-call" t="3" />
-        <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={244} wm={350} hm={56} class="acheck-text" t="3" />
-      </div>
+    <div class="acheck-btns">
+      <Btn look="call" sub="Call now · 24/7" size="l" w={300} wm={350} class="acheck-call" t="3" />
+      <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={244} wm={350} hm={56} class="acheck-text" t="3" />
     </div>
   </div>
 </section>
@@ -50,7 +61,12 @@ const start = 'Oldsmar';
     .replace(/\bsaint\b/g, 'st').replace(/\s+/g, ' ').trim();
   const ALIAS: Record<string, string> = { 'st pete': 'St. Petersburg', stpete: 'St. Petersburg', 'st petersburg': 'St. Petersburg', 'st pete beach': 'St. Pete Beach' };
   document.querySelectorAll<HTMLElement>('[data-town-check]').forEach((root) => {
-    const towns: string[] = JSON.parse(root.dataset.towns || '[]');
+    const list0: { n: string; mi: number }[] = JSON.parse(root.dataset.towns || '[]');
+    const towns = list0.map((t) => t.n);
+    const miOf = (n: string) => list0.find((t) => t.n === n)?.mi;
+    const tTown = root.querySelector<HTMLElement>('[data-tc-town]')!;
+    const tMi = root.querySelector<HTMLElement>('[data-tc-mi]')!;
+    const tStamp = root.querySelector<HTMLElement>('[data-tc-stamp]')!;
     const input = root.querySelector<HTMLInputElement>('input[role="combobox"]')!;
     const list = root.querySelector<HTMLUListElement>('[role="listbox"]')!;
     const res = root.querySelector<HTMLElement>('.tc-res')!;
@@ -68,13 +84,18 @@ const start = 'Oldsmar';
       window.setTimeout(() => {
         res.classList.remove('is-yes', 'is-ask', 'is-idle', 'is-more'); res.classList.add(`is-${state}`);
         txt.textContent = text; res.classList.remove('is-swap');
+        const hit = state === 'yes' ? exact(input.value.trim()) : null;
+        tTown.textContent = hit ?? (input.value.trim() || 'Your town');
+        const mi = hit ? miOf(hit) : undefined;
+        tMi.textContent = mi != null ? `${mi} mi` : '–';
+        tStamp.textContent = state === 'yes' ? 'Covered' : state === 'ask' ? 'Call and ask' : 'Checking';
       }, document.documentElement.classList.contains('motion') ? 160 : 0);
     };
     const answer = () => {
       const v = input.value.trim();
       const hit = exact(v);
       if (!v) say('idle', 'Type a town in Pinellas County and we answer here.');
-      else if (hit) say('yes', `${hit} is in Pinellas County. Yes, we cover it.`);
+      else if (hit) say('yes', `${hit} is in Pinellas County, ${miOf(hit) ?? ''} mi from our Largo base in a straight line. Yes, we cover it.`.replace(',  mi from our Largo base in a straight line', ''));
       else if (matches(v).length) say('more', 'Keep typing, or pick your town from the list.');
       else say('ask', `${v} is not on our Pinellas list. Call and ask: ${'(727) 512-0673'}.`);
     };
@@ -109,28 +130,47 @@ const start = 'Oldsmar';
         if (!list.hidden) { e.preventDefault(); close(); }
       }
     });
+    root.querySelectorAll<HTMLButtonElement>('[data-tc-try]').forEach((b) => b.addEventListener('click', () => { input.value = b.dataset.tcTry!; close(); answer(); }));
     list.addEventListener('pointerdown', (e) => e.preventDefault());
     list.addEventListener('click', (e) => { const o = (e.target as HTMLElement).closest('[role="option"]'); if (o) pick(o.textContent || ''); });
   });
 </script>
 
 <style>
-  .acheck { position: relative; background: var(--ink); color: var(--white); padding: 120px 0 162px; }
-  .acheck-grid { display: grid; grid-template-columns: 560px 560px; justify-content: space-between; align-items: start; }
-  .acheck-side { padding-top: 20px; }
+  .acheck { position: relative; background: var(--ink); color: var(--white); padding: 120px 0 150px; }
+  .ac-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .ac-head :global(.ah-eb) { justify-content: center; }
 
-  .tc { margin-top: 44px; }
-  .tc-box { position: relative; display: flex; align-items: center; gap: 14px; height: 64px; padding: 0 20px; background: var(--white); border-radius: 4px; box-shadow: 6px 6px 0 var(--powder); color: var(--ink); }
+  .tc { position: relative; max-width: 720px; margin: 48px auto 0; padding: 28px 28px 24px; background: var(--ink2); border-radius: 10px; box-shadow: inset 0 0 0 1px var(--ink3), 12px 12px 0 var(--powder); }
+  .tc-lab { display: block; margin-bottom: 10px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .tc-box { position: relative; display: flex; align-items: center; gap: 14px; height: 64px; padding: 0 20px; background: var(--white); border-radius: 4px; color: var(--ink); }
   .tc-box:focus-within { outline: 3px solid var(--powder); outline-offset: 3px; }
   .tc-ring { flex: none; }
-  .tc-in { flex: 1; min-width: 0; height: 100%; padding: 0; background: none; border: 0; font-weight: 600; font-size: 18px; line-height: 27px; color: var(--ink); caret-color: var(--pdeep); }
+  .tc-in { flex: 1; min-width: 0; height: 100%; padding: 0; background: none; border: 0; font-weight: 600; font-size: 19px; color: var(--ink); caret-color: var(--pdeep); }
   .tc-in::placeholder { color: var(--muted); opacity: 1; font-weight: 400; }
   .tc-in:focus, .tc-in:focus-visible { outline: none; }
   .tc-list { position: absolute; z-index: 6; left: 0; right: 0; top: calc(100% + 8px); margin: 0; padding: 6px; list-style: none; background: var(--white); border: 1px solid var(--frost3); border-radius: 4px; box-shadow: 6px 6px 0 var(--ink3); }
   .tc-list :global([role='option']) { display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 3px; font-weight: 600; font-size: 16px; color: var(--ink); cursor: pointer; transition: background-color .3s var(--ease-io); }
   .tc-list :global([role='option']:hover), .tc-list :global([role='option'][aria-selected='true']) { background: var(--frost); }
+  .tc-try { display: none; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: rgb(255 255 255 / .7); }
+  :global(html.js) .tc-try { display: flex; }
+  .tc-chip { min-height: 44px; padding: 0 16px; border: 0; border-radius: 22px; background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink3); color: var(--white); font-family: var(--f-b); font-weight: 600; font-size: 14px; letter-spacing: 0; text-transform: none; cursor: pointer; transition: box-shadow .3s var(--ease-io), background-color .3s var(--ease-io); }
+  .tc-chip:hover { box-shadow: inset 0 0 0 1.5px var(--powder); }
 
-  .tc-res { display: flex; align-items: center; gap: 14px; min-height: 64px; margin-top: 20px; padding: 10px 18px; background: var(--ink2); border: 1px solid var(--ink3); border-radius: 4px; transition: opacity .16s var(--ease-io); }
+  /* the ticket */
+  .tk { position: relative; margin-top: 22px; padding: 22px 26px 22px; background: var(--steel); border-radius: 4px; box-shadow: inset 0 0 0 1px var(--steel2); color: var(--ink); }
+  .tk-k { font-family: var(--f-m); font-weight: 800; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgb(22 19 15 / .3); }
+  .tk-town { margin-top: 14px; padding-right: 170px; font-family: var(--f-h); font-weight: 800; font-size: 54px; line-height: 1; letter-spacing: -.02em; overflow-wrap: anywhere; transition: opacity .16s var(--ease-io); }
+  .tk-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; padding-top: 12px; border-top: 1px dashed rgb(22 19 15 / .3); }
+  .tk-cell { display: flex; flex-direction: column; gap: 4px; }
+  .tk-cell i { font-style: normal; font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: rgb(22 19 15 / .7); }
+  .tk-cell b { font-family: var(--f-m); font-weight: 800; font-size: 15px; }
+  .tk-stamp { position: absolute; right: 26px; top: 48px; padding: 8px 12px; border: 3px solid var(--pdeep); border-radius: 6px; font-family: var(--f-h); font-weight: 800; font-size: 17px; letter-spacing: .02em; text-transform: uppercase; color: var(--ink); rotate: -8deg; background: rgb(199 206 209 / .9); transition: scale .4s var(--ease-io); }
+  .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
+  .rv:nth-of-type(1) { left: 6px; top: 6px; } .rv:nth-of-type(2) { right: 6px; top: 6px; }
+  .rv:nth-of-type(3) { left: 6px; bottom: 6px; } .rv:nth-of-type(4) { right: 6px; bottom: 6px; }
+
+  .tc-res { display: flex; align-items: center; gap: 14px; min-height: 56px; margin-top: 16px; padding: 8px 4px; transition: opacity .16s var(--ease-io); }
   .tc-res.is-swap { opacity: 0; }
   .tc-ic { display: grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--powder); transition: background-color .4s var(--ease-io); }
   .tc-ic svg { display: none; }
@@ -139,24 +179,19 @@ const start = 'Oldsmar';
   .is-idle .tc-ic, .is-more .tc-ic { background: transparent; box-shadow: inset 0 0 0 2px var(--ink3); }
   .tc-txt { font-weight: 600; font-size: 16px; line-height: 24px; color: var(--white); }
 
-  .acheck-btns { display: flex; gap: 16px; margin-top: 132px; }
+  .acheck-btns { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; margin-top: 44px; }
 
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .acheck { padding: 112px 0 120px; }
-    .acheck-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; }
-    .acheck-btns { flex-wrap: wrap; margin-top: 48px; }
-  }
   @media (max-width: 767px) {
     .acheck { padding: 80px 0 100px; }
-    .acheck-grid { display: block; }
-    .tc { margin-top: 28px; }
-    .tc-box { height: 56px; padding: 0 16px; gap: 12px; box-shadow: 5px 5px 0 var(--powder); }
+    .tc { margin-top: 28px; padding: 18px 14px 14px; box-shadow: inset 0 0 0 1px var(--ink3), 6px 6px 0 var(--powder); }
+    .tc-box { height: 56px; padding: 0 14px; gap: 12px; }
     .tc-in { font-size: 17px; }
-    .tc-res { min-height: 72px; margin-top: 16px; padding: 12px 16px; align-items: flex-start; }
-    .tc-ic { margin-top: 0; }
+    .tk { padding: 16px 14px; }
+    .tk-town { padding-right: 0; font-size: 34px; }
+    .tk-stamp { position: static; display: inline-block; margin-top: 12px; font-size: 13px; rotate: -3deg; }
+    .tk-row { grid-template-columns: 1fr 1fr; }
+    .tk-cell:last-child { grid-column: 1 / -1; }
     .tc-txt { font-size: 15px; line-height: 23px; }
-    .acheck-side { padding-top: 34px; }
-    .acheck-plate { display: none; }
-    .acheck-btns { flex-direction: column; gap: 16px; margin-top: 0; }
+    .acheck-btns { flex-direction: column; margin-top: 28px; }
   }
 </style>

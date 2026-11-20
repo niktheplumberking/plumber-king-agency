@@ -111,7 +111,7 @@ function mobileMenu() {
   };
   const open = () => {
     menu.hidden = false; openBtn.setAttribute('aria-expanded', 'true');
-    html.style.overflow = 'hidden'; (window as any).__pbpLenis?.stop();
+    html.style.overflow = 'hidden'; (window as any).__glassLenis?.stop();
     document.addEventListener('keydown', onKey);
     if (MOTION()) {
       const r = openBtn.getBoundingClientRect();
@@ -125,7 +125,7 @@ function mobileMenu() {
     if (menu.hidden) return;
     const done = () => {
       menu.hidden = true; openBtn.setAttribute('aria-expanded', 'false');
-      html.style.overflow = ''; (window as any).__pbpLenis?.start();
+      html.style.overflow = ''; (window as any).__glassLenis?.start();
       document.removeEventListener('keydown', onKey);
       if (restore) openBtn.focus();
     };

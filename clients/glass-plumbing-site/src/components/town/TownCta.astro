@@ -7,7 +7,7 @@ import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
 ---
 <section class="tcta on-ink" data-m-section aria-labelledby="tcta-h">
-  <Seam from="var(--white)" to="var(--ink)" flip />
+  <Seam from="var(--frost)" to="var(--ink)" flip />
   <div class="wrap tc-grid">
     <div class="tc-copy">
       <Head eyebrow="Seminole" l1="Get a price" l2="in Seminole." size={60} sizeM={32} dark id="tcta-h" />
@@ -33,7 +33,7 @@ import Seam from '../kit/Seam.astro';
 </section>
 
 <style>
-  .tcta { position: relative; background: var(--ink); color: var(--white); padding: 110px 0 110px; }
+  .tcta { position: relative; overflow-x: clip; background: var(--ink); color: var(--white); padding: 110px 0 110px; }
   .tc-grid { display: grid; grid-template-columns: 560px 560px; justify-content: space-between; align-items: start; }
   .tc-copy { padding-top: 20px; }
   .tc-lead { margin-top: 36px; max-width: 480px; font-size: 18px; line-height: 1.5; color: var(--white); }

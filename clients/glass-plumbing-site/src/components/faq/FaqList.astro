@@ -30,7 +30,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
           <h2 class="fl-gh" id={`faq-${g.id}-h`} data-t="2">{pad(gi + 1)} · {g.name}</h2>
           <div class="fl-rows" data-t="3" data-stagger>
             {g.items.map((x, i) => (
-              <details class="fl-r" data-acc open data-first={i === 0 ? '' : undefined}>
+              <details class="fl-r" id={`q-${g.id}-${i + 1}`} data-acc open data-first={i === 0 ? '' : undefined}>
                 <summary><h3 class="fl-q">{x.q}</h3><span class="fl-i" aria-hidden="true"><i></i><i class="v"></i></span></summary>
                 <div class="fl-a">
                   <p>{x.a}</p>

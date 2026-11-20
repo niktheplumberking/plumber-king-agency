@@ -146,7 +146,7 @@ export function initScrub() {
   settled().then(() => requestRefresh(0));
 }
 
-// Built after the hero handoff (motion.ts fires pbp:handoff), so the first paint is not slowed down; 4.5 s safety.
+// Built after the hero handoff (motion.ts fires glass:handoff), so the first paint is not slowed down; 4.5 s safety.
 // Turns have no CSS start state (their angles live in the markup), so they take their first angle as soon as this module
 // runs, before the handoff, with no timeline yet: the same value the timeline starts from.
 if (html.classList.contains('motion')) {
@@ -154,6 +154,6 @@ if (html.classList.contains('motion')) {
     const from = Number((t.dataset.scrubTurn || '0').split(',')[0]);
     gsap.set(t, { rotation: from, ...(t.dataset.origin ? { svgOrigin: t.dataset.origin } : {}) });
   });
-  window.addEventListener('pbp:handoff', () => requestAnimationFrame(initScrub), { once: true });
+  window.addEventListener('glass:handoff', () => requestAnimationFrame(initScrub), { once: true });
   window.setTimeout(initScrub, 4500);
 }

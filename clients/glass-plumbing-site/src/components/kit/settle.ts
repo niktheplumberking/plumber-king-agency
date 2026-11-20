@@ -6,7 +6,7 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 type LenisLike = { velocity: number; isScrolling?: boolean | string; resize: () => void };
-const lenis = () => (window as unknown as { __pbpLenis?: LenisLike }).__pbpLenis;
+const lenis = () => (window as unknown as { __glassLenis?: LenisLike }).__glassLenis;
 
 let settledP: Promise<void> | null = null;
 export function settled(): Promise<void> {

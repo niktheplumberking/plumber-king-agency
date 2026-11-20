@@ -1,49 +1,56 @@
 ---
-// /areas/seminole "Local permits" (R2 rebuild: the R1 text-left / plate-right was rule-14 slop). White. Centred head and
-// answer, then one "permit finder" object: an ink panel with two questions as real radio groups (what is the job? where
-// is the address?) and a steel permit slip that prints the answer: permit needed, which office issues it, who files it.
-// 21st.dev sean0205/c-questionnaire-2 (live answers -> summary card), rebuilt in vanilla TS and re-skinned as Glass's spec
-// plate. Facts only from the R1 copy and its source (pinellas.gov/express-permits, read 17 Nov 2026): the three job types
-// all need a permit; the city's building office or Pinellas County (unincorporated) issues it; Glass files it.
-// No JS: the slip lists both offices.
+// /areas/seminole "Local permits" (R2 rebuild: text-left / plate-right was rule-14 slop). White. Centred head and answer,
+// then one "permit finder" object: an ink panel with two questions as real radio groups (what is the job? where is the
+// address?) and a steel slip that prints the answer. 21st.dev sean0205/c-questionnaire-2 (live answers -> summary card),
+// rebuilt in vanilla TS, re-skinned as Glass's spec plate.
+// Fix round B (independent review BLOCKER 2): the R2 slip printed "Permit: Needed" for every choice and cited a county
+// page that only covers unincorporated Pinellas. Now, per research LOCAL-FACTS section 3 (read 17 Nov 2026):
+//   unincorporated -> Pinellas County lists an Express Permit for each of the three job types (FACT, pinellas.gov/express-permits);
+//                     "each needs a permit" stays hedged ("likely", "ask the county") because research marks it INFERRING;
+//   City of Seminole -> we have NO wording from the city: "ask the City of Seminole building department"; Glass, a licensed
+//                     contractor, can tell you on the call. No promise that Glass pulls or files the permit (no source).
+//   not sure        -> how to tell, plus the call.
+// No JS: the slip shows the "not sure" answer (both offices).
 const jobs = [
-  { v: 'wh', l: 'Water heater swap' },
-  { v: 'repipe', l: 'Interior repipe' },
-  { v: 'sewer', l: 'Sewer / water service' },
+  { v: 'wh', l: 'Water heater swap', x: 'Water Heater Equal Change Out, Tank or Tankless' },
+  { v: 'repipe', l: 'Interior repipe', x: 'Re-pipe Water Distribution Interior Only' },
+  { v: 'sewer', l: 'Sewer / water service', x: 'Emergency Sewer/Water Service Replacement Only' },
 ];
+// Each answer: permit line, office line, next step, stamp, source. `{x}` = the county's own Express Permit name for the job.
 const where = [
-  { v: 'city', l: 'Inside city limits', o: 'Your city’s building office' },
-  { v: 'county', l: 'Unincorporated area', o: 'Pinellas County' },
-  { v: 'unsure', l: 'Not sure', o: 'City or Pinellas County: we check your address' },
+  { v: 'city', l: 'City of Seminole', p: 'Ask the city: we don’t have its wording', o: 'City of Seminole building department', n: 'Glass is a licensed contractor (FL CFC1432488) and can tell you what applies on the call.', st: 'Ask the city', src: 'Research: no City of Seminole permit wording found (17 Nov 2026)' },
+  { v: 'county', l: 'Unincorporated Pinellas', p: 'Likely. The county lists an Express Permit: “{x}”', o: 'Pinellas County Building & Development Review Services, (727) 464-3888', n: 'Ask the county to confirm for your address, or ask us on the call.', st: 'Express permit', src: 'Source: pinellas.gov/express-permits, read 17 Nov 2026' },
+  { v: 'unsure', l: 'Not sure', p: 'Depends on who has jurisdiction over the address', o: 'City of Seminole inside city limits; Pinellas County in unincorporated areas', n: 'Ask us on the call: we can tell you which office applies.', st: 'Check address', src: 'Source: pinellas.gov/express-permits (county areas only), read 17 Nov 2026' },
 ];
+const start = where[2];
 ---
 <section class="tperm" data-m-section aria-labelledby="tperm-h">
   <div class="wrap">
     <div class="tq-head">
       <h2 id="tperm-h" class="tq-h" data-t="2">Do you need a plumbing<br /><span class="tone">permit in Seminole?</span></h2>
-      <p class="tq-p" data-t="3"><span class="d">Most replacement jobs, like a water heater or a repipe, need one. Which office issues it depends on the address: your city’s building office, or Pinellas County for unincorporated areas. We check the address and file it for you.</span><span class="m">Most replacement jobs, like a water heater or a repipe, need one. Your city or Pinellas County issues it, depending on the address. We check and file it.</span></p>
+      <p class="tq-p" data-t="3"><span class="d">Often, yes, for jobs like a water heater swap or a repipe. Who decides depends on the address: inside the City of Seminole, the city’s building department; in unincorporated Pinellas, the county. Pick your job and address below.</span><span class="m">Often, yes. Inside the City of Seminole the city decides; in unincorporated Pinellas, the county. Pick yours below.</span></p>
     </div>
     <div class="pf" data-t="4" data-permit>
       <div class="pf-qs">
         <fieldset class="pf-q">
           <legend><span class="pf-n">1</span>What is the job?</legend>
-          <div class="pf-opts">{jobs.map((j, i) => <label><input type="radio" name="pf-job" value={j.v} data-l={j.l} checked={i === 0} /><span>{j.l}</span></label>)}</div>
+          <div class="pf-opts">{jobs.map((j, i) => <label><input type="radio" name="pf-job" value={j.v} data-l={j.l} data-x={j.x} checked={i === 0} /><span>{j.l}</span></label>)}</div>
         </fieldset>
         <fieldset class="pf-q">
           <legend><span class="pf-n">2</span>Where is the address?</legend>
-          <div class="pf-opts">{where.map((w, i) => <label><input type="radio" name="pf-where" value={w.v} data-o={w.o} checked={i === 2} /><span>{w.l}</span></label>)}</div>
+          <div class="pf-opts">{where.map((w) => <label><input type="radio" name="pf-where" value={w.v} data-p={w.p} data-o={w.o} data-n={w.n} data-st={w.st} data-src={w.src} checked={w === start} /><span>{w.l}</span></label>)}</div>
         </fieldset>
       </div>
       <div class="pf-slip" aria-live="polite">
         <p class="pf-t">Permit slip · Seminole</p>
         <dl>
-          <div><dt>Job</dt><dd data-pf-job>Water heater swap, interior repipe or sewer / water service</dd></div>
-          <div><dt>Permit</dt><dd>Needed</dd></div>
-          <div><dt>Issued by</dt><dd data-pf-office>Your city’s building office, or Pinellas County for unincorporated areas</dd></div>
-          <div><dt>Who files</dt><dd>Glass Plumbing</dd></div>
+          <div><dt>Job</dt><dd data-pf-job>{jobs[0].l}</dd></div>
+          <div><dt>Permit</dt><dd data-pf-p>{start.p}</dd></div>
+          <div><dt>Who decides</dt><dd data-pf-office>{start.o}</dd></div>
+          <div><dt>Next step</dt><dd data-pf-n>{start.n}</dd></div>
         </dl>
-        <span class="pf-stamp" aria-hidden="true" data-pf-stamp>We file it</span>
-        <p class="pf-src">Source: pinellas.gov/express-permits, read 17 Nov 2026</p>
+        <span class="pf-stamp" aria-hidden="true" data-pf-stamp>{start.st}</span>
+        <p class="pf-src" data-pf-src>{start.src}</p>
         <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
       </div>
     </div>
@@ -52,12 +59,17 @@ const where = [
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-permit]').forEach((pf) => {
-    const job = pf.querySelector<HTMLElement>('[data-pf-job]')!;
-    const office = pf.querySelector<HTMLElement>('[data-pf-office]')!;
-    const stamp = pf.querySelector<HTMLElement>('[data-pf-stamp]')!;
+    const $ = (k: string) => pf.querySelector<HTMLElement>(`[data-pf-${k}]`)!;
+    const stamp = $('stamp');
     const upd = (press: boolean) => {
-      job.textContent = pf.querySelector<HTMLInputElement>('input[name="pf-job"]:checked')!.dataset.l!;
-      office.textContent = pf.querySelector<HTMLInputElement>('input[name="pf-where"]:checked')!.dataset.o!;
+      const j = pf.querySelector<HTMLInputElement>('input[name="pf-job"]:checked')!.dataset;
+      const w = pf.querySelector<HTMLInputElement>('input[name="pf-where"]:checked')!.dataset;
+      $('job').textContent = j.l!;
+      $('p').textContent = w.p!.replace('{x}', j.x!);
+      $('office').textContent = w.o!;
+      $('n').textContent = w.n!;
+      $('src').textContent = w.src!;
+      stamp.textContent = w.st!;
       if (press) { stamp.classList.remove('is-press'); void stamp.offsetWidth; stamp.classList.add('is-press'); }
     };
     pf.querySelectorAll('input').forEach((i) => i.addEventListener('change', () => upd(true)));
@@ -86,11 +98,10 @@ const where = [
   .pf-opts input:focus-visible + span { outline: 3px solid var(--white); outline-offset: 2px; }
   .pf-slip { position: relative; padding: 24px 26px 20px; background: var(--steel); border-radius: 3px; box-shadow: inset 0 0 0 1px var(--steel2), 8px 8px 0 var(--pdeep); color: var(--ink); font-family: var(--f-m); rotate: 1.2deg; }
   .pf-t { padding-bottom: 12px; border-bottom: 1px solid rgb(22 19 15 / .3); font-weight: 800; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
-  .pf-slip dl > div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px dashed rgb(22 19 15 / .2); }
+  .pf-slip dl > div { display: grid; grid-template-columns: 104px 1fr; gap: 12px; padding: 9px 0; border-bottom: 1px dashed rgb(22 19 15 / .2); }
   .pf-slip dt { font-weight: 500; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: rgb(22 19 15 / .7); padding-top: 2px; }
-  .pf-slip dl > div:nth-child(-n+2) dd { padding-right: 120px; }
   .pf-slip dd { margin: 0; font-weight: 700; font-size: 13px; line-height: 1.4; }
-  .pf-stamp { position: absolute; right: 22px; top: 54px; padding: 8px 12px; border: 3px solid var(--pdeep); border-radius: 6px; color: var(--ink); font-family: var(--f-h); font-weight: 800; font-size: 16px; letter-spacing: .02em; text-transform: uppercase; rotate: -10deg; background: rgb(199 206 209 / .85); }
+  .pf-stamp { position: absolute; right: 18px; top: -20px; padding: 8px 12px; border: 3px solid var(--pdeep); border-radius: 6px; color: var(--ink); font-family: var(--f-h); font-weight: 800; font-size: 16px; letter-spacing: .02em; text-transform: uppercase; rotate: -10deg; background: rgb(199 206 209 / .85); }
   .pf-stamp.is-press { animation: pf-press .6s var(--ease-io); }
   @keyframes pf-press { 0% { scale: 1.4; opacity: 0; } 60% { scale: .94; opacity: 1; } 100% { scale: 1; opacity: 1; } }
   .pf-src { margin-top: 14px; font-weight: 500; font-size: 10px; color: rgb(22 19 15 / .75); }
@@ -114,8 +125,6 @@ const where = [
     .pf-opts span { min-height: 44px; padding: 0 14px; font-size: 14px; }
     .pf-slip { padding: 18px 16px 16px; rotate: 0deg; box-shadow: inset 0 0 0 1px var(--steel2), 5px 5px 0 var(--pdeep); }
     .pf-slip dl > div { grid-template-columns: 78px 1fr; }
-    .pf-slip dl > div:nth-child(-n+2) dd { padding-right: 0; }
-    .pf-src { padding-right: 96px; }
-    .pf-stamp { top: auto; bottom: 46px; right: 14px; font-size: 12px; padding: 6px 9px; }
+    .pf-stamp { position: static; display: inline-block; margin: 12px 0 2px; font-size: 12px; padding: 6px 9px; rotate: -3deg; }
   }
 </style>

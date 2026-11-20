@@ -32,7 +32,7 @@ motion the end state is applied at once.
 
 ### `scrub.ts`: the one engine for scroll-scrubbed moments
 Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is built after the hero handoff
-(`pbp:handoff`, 4.5 s fallback) and rebuilt per layout band (≤767, 768–1023, 1024–1279, ≥1280).
+(`glass:handoff`, 4.5 s fallback) and rebuilt per layout band (≤767, 768–1023, 1024–1279, ≥1280).
 
 | Attribute | On | Meaning |
 |---|---|---|
@@ -61,9 +61,9 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
   meniscus (centre lower than the walls while it moves, flat at rest), the white meniscus line rides the front surface.
   Fill = back layer first; drain = front layer first. One channel: the paths' `d` attribute, written only by `draw()`.
 - `park()` (boot): draws the sheet empty unless this page arrived under the curtain; resets on a bfcache restore.
-- `cover(href)`: 0.9 s fill (logo floats up into the frost from 55 %), and only at 100 % does it navigate.
+- `cover(href)`: 0.6 s fill (logo floats up into the frost from 55 %), and only at 100 % does it navigate.
 - `reveal(onHandoff, onDone)` (html.pt-in): resting markup is full, so the page is covered at first paint;
-  `history.scrollRestoration = 'manual'`, page to the top under the cover, then `drain()`: logo sinks and fades (0.3 s), the
+  `history.scrollRestoration = 'manual'`, page to the top under the cover, then `drain()`: logo sinks and fades (0.22 s), the
   water drains 1.0 s; `onHandoff` (hero timeline) at 55 % of the drain, `onDone` at the end (`pt-in` off, restoration `auto`).
 - `drain(host, onHandoff, onDone, mark?, delay?)`: shared with the loader's exit.
 - `interceptLinks()`, `toTop()`: unchanged (cross-page `#hash` dropped, new tabs / modifiers / downloads / `data-no-curtain` skipped).

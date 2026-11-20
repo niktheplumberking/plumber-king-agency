@@ -3,7 +3,7 @@
 @import '../components/kit/kit.css';
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 24px); background: var(--ink); }
+html { overflow-x: clip; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 24px); background: var(--ink); }
 body {
   margin: 0; background: var(--white); color: var(--ink);
   font-family: var(--f-b); font-size: 17px; line-height: 1.5; font-weight: 400;

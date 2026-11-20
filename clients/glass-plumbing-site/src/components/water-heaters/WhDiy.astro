@@ -12,7 +12,7 @@ import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
 const CAN = ['Check the breaker (electric) or the pilot (gas).', 'If it leaks, close the cold-water valve on top.', 'Take a photo of the label on the side.'];
-const PRO = ['Replacing the water heater.', 'Anything on the gas line.', 'The relief valve.'];
+const PRO = ['Replacing the water heater (usually a permit job too).', 'Anything on the gas line.', 'The relief valve.'];
 ---
 <section class="dy on-ink seam-host" data-m-section data-dy>
   <Seam from="var(--white)" to="var(--ink)" flip d={48} dm={32} />
@@ -33,7 +33,7 @@ const PRO = ['Replacing the water heater.', 'Anything on the gas line.', 'The re
         <span class="dy-valve"><span class="dy-body"></span><span class="dy-handle"></span><span class="dy-nut"></span></span>
         <span class="dy-lab">Licence line</span>
       </div>
-      <h3 class="dy-k dy-k2">Needs a licensed plumber + permit</h3>
+      <h3 class="dy-k dy-k2">Best left to a licensed plumber</h3>
       <div class="dy-lock">
         <span class="dy-fill" aria-hidden="true"></span>
         <ol class="dy-list dy-pro" role="list">
@@ -41,7 +41,7 @@ const PRO = ['Replacing the water heater.', 'Anything on the gas line.', 'The re
             <li class="dy-row"><span class="dy-ic dy-ic2" aria-hidden="true"></span><span class="dy-tx">{c}</span><span class="dy-who">Licensed</span></li>
           ))}
         </ol>
-        <span class="dy-stamp" aria-hidden="true">Licensed<br />+ permit</span>
+        <span class="dy-stamp" aria-hidden="true">Licensed<br />plumber</span>
       </div>
       <Btn sub="CALL A LICENSED PLUMBER" size="l" w={320} h={64} hm={60} class="dy-btn" />
     </div>

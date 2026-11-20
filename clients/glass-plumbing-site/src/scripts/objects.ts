@@ -6,7 +6,7 @@
 // Rules (MOTION.md B1): the CSS start state under html.motion equals frame 0 of the timeline (each component writes it),
 // every move is an ease-in-out (or a gentle out-settle) tween, one writer per property (these entrances own `transform`
 // and `opacity` of the elements they are given; component hover uses `translate`, idle uses `rotate` / `scale` on an inner
-// child). Built after the hero handoff (pbp:handoff, 4.5 s fallback), like the rest of the motion. An element already above
+// child). Built after the hero handoff (glass:handoff, 4.5 s fallback), like the rest of the motion. An element already above
 // the viewport when built is put in its end state; one on screen or below plays once when it reaches `start`. The first Tab
 // finishes them all. Without html.motion nothing runs and the CSS shows the final state.
 import { gsap } from 'gsap';
@@ -47,7 +47,7 @@ export function enter(el: Element | null, make: () => gsap.core.Timeline, start 
 export function afterHandoff(fn: () => void) {
   let ran = false;
   const run = () => { if (ran) return; ran = true; requestAnimationFrame(fn); };
-  window.addEventListener('pbp:handoff', run, { once: true });
+  window.addEventListener('glass:handoff', run, { once: true });
   window.setTimeout(run, 4500);
 }
 

@@ -1,28 +1,137 @@
 ---
-// /areas/seminole "City emergency band" (Figma y 4827 h 200 / mobile y 4412 h 206). White, 10 px powder bar on top (8 on
-// phones), call button.
+// /areas/seminole "Burst pipe" (fix round B rebuild: the R2 band was text left, button right). Ink. Centred head, then a
+// PRACTICE PIPE: a supply line with a ball valve (the main shut-off) and a burst further down that sprays. The valve's
+// lever is a real button (aria-pressed): turn it a quarter turn across the pipe and the spray stops, the line drains and
+// step 2 lights up with the call button. Physical logic: a ball valve is open when its lever lies along the pipe and
+// closed across it. 21st.dev theutkarshmail/lever-switch (a lever toggled like a machine handle) + daiwiikharihar/
+// industrial-switch (heavy switch with status LEDs), rebuilt in SVG + vanilla TS and re-skinned in Glass steel/powder.
+// The spray runs 4 x 1.1 s (< 5 s, so no pause needed) and only with motion on; reduced motion: still drops, instant turn.
+// Copy: "24/7" (his own site and card); "find and label your main shut-off" = Pinellas County advice (LOCAL-FACTS 7).
 import Btn from '../kit/Btn.astro';
+import { SITE } from '../../data/site';
+const drops = [[-38, -70], [-14, -92], [12, -96], [34, -74], [52, -40], [-56, -38], [0, -60], [24, -50]];
 ---
-<section class="temg" data-m-section aria-labelledby="temg-h">
-  <div class="wrap te-grid">
-    <div>
+<section class="temg on-ink" data-m-section aria-labelledby="temg-h">
+  <div class="wrap">
+    <div class="te-head">
+      <p class="te-k" data-t="1">Emergency · Seminole</p>
       <h2 id="temg-h" class="te-h" data-t="2">Burst pipe in Seminole?</h2>
-      <p class="te-p" data-t="3">Close the main shut-off, then call. We answer 24/7.</p>
+      <p class="te-p" data-t="3">Two moves. Practise the first one here: turn the lever.</p>
     </div>
-    <Btn look="call" sub="Call now · 24/7" size="l" w={280} wm={350} t="3" class="te-btn" />
+    <div class="em" data-t="4" data-burst>
+      <div class="em-stage">
+        <svg class="em-svg" viewBox="0 0 1000 220" aria-hidden="true">
+          <rect class="em-pipe" x="0" y="100" width="1000" height="44" rx="6" />
+          <rect class="em-w em-w--in" x="0" y="108" width="300" height="28" />
+          <rect class="em-w em-w--out" x="300" y="108" width="700" height="28" />
+          <g class="em-joint"><rect x="140" y="92" width="26" height="60" rx="4" /><rect x="560" y="92" width="26" height="60" rx="4" /><rect x="860" y="92" width="26" height="60" rx="4" /></g>
+          <path class="em-crack" d="M688 100l8 10-6 8 10 8-4 8" />
+          <g class="em-spray">{drops.map(([x, y], i) => <circle cx="700" cy="98" r={i % 3 === 0 ? 7 : 5} style={`--x:${x}px;--y:${y}px;--d:${(i * 0.13).toFixed(2)}s`} />)}</g>
+          <g class="em-valve"><rect x="262" y="84" width="76" height="76" rx="10" /><circle cx="300" cy="122" r="16" /></g>
+          <g class="em-lever"><rect class="em-handle" x="296" y="112" width="150" height="20" rx="10" /><circle cx="300" cy="122" r="12" /></g>
+        </svg>
+        <span class="em-tag em-tag--v" aria-hidden="true">Main shut-off</span>
+        <span class="em-tag em-tag--b" aria-hidden="true">Burst</span>
+        <button class="em-btn" type="button" aria-pressed="false" data-burst-lever>
+          <span class="sr-only">Practice: turn the main shut-off lever to close it</span>
+        </button>
+      </div>
+      <p class="em-status" role="status" aria-live="polite" data-burst-status>Water is running. Turn the lever across the pipe.</p>
+      <ol class="em-steps" role="list">
+        <li class="em-step is-on" data-step="1">
+          <span class="em-n">1</span>
+          <div><p class="em-st">Close the main shut-off.</p><p class="em-sd">Find and label it before you need it.</p></div>
+        </li>
+        <li class="em-step" data-step="2">
+          <span class="em-n">2</span>
+          <div><p class="em-st">Then call. We answer 24/7.</p><p class="em-sd">{SITE.phone}</p></div>
+          <Btn look="call" sub="Call now · 24/7" size="m" w={240} wm={350} class="em-call" />
+        </li>
+      </ol>
+    </div>
   </div>
 </section>
 
+<script>
+  import { onEnter } from '../areas/inview';
+  document.querySelectorAll<HTMLElement>('[data-burst]').forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('[data-burst-lever]')!;
+    const status = root.querySelector<HTMLElement>('[data-burst-status]')!;
+    const steps = root.querySelectorAll<HTMLElement>('[data-step]');
+    onEnter(root, () => root.classList.add('is-in'), '0px 0px -20% 0px');
+    btn.addEventListener('click', () => {
+      const off = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(off));
+      root.classList.toggle('is-off', off);
+      steps[0].classList.toggle('is-done', off);
+      steps[1].classList.toggle('is-on', off);
+      btn.querySelector('.sr-only')!.textContent = off ? 'Practice: turn the main shut-off lever to open it again' : 'Practice: turn the main shut-off lever to close it';
+      status.textContent = off ? 'Water off. Now step 2: call us.' : 'Water is running. Turn the lever across the pipe.';
+    });
+  });
+</script>
+
 <style>
-  .temg { position: relative; background: var(--white); border-top: 10px solid var(--powder); padding: 54px 0 56px; }
-  .te-grid { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
-  .te-h { font-family: var(--f-h); font-weight: 800; font-size: 40px; line-height: 1.04; letter-spacing: -.02em; color: var(--ink); }
-  .te-p { margin-top: 12px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+  .temg { position: relative; background: var(--ink); padding: 110px 0 110px; color: var(--white); }
+  .te-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .te-k { font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
+  .te-h { margin-top: 14px; font-family: var(--f-h); font-weight: 800; font-size: 56px; line-height: 1.02; letter-spacing: -.02em; color: var(--white); }
+  .te-p { margin-top: 14px; font-size: 18px; line-height: 1.5; color: rgb(255 255 255 / .8); }
+
+  .em { max-width: 1000px; margin: 48px auto 0; }
+  .em-stage { position: relative; padding: 10px 0 0; border-radius: 10px; background: var(--ink2); box-shadow: inset 0 0 0 1px var(--ink3); }
+  .em-svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .em-pipe { fill: var(--steel); stroke: var(--ink); stroke-width: 3; }
+  .em-w { fill: var(--powder); }
+  .em-w--out { transform-box: fill-box; transform-origin: 100% 50%; transition: scale .9s var(--ease-io), opacity .9s var(--ease-io); }
+  .is-off .em-w--out { scale: 0 1; opacity: .3; }
+  .em-joint rect { fill: var(--steel2); stroke: var(--ink); stroke-width: 3; }
+  .em-crack { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .em-spray circle { fill: var(--powder); stroke: var(--ink); stroke-width: 2; translate: var(--x) var(--y); transition: opacity .5s var(--ease-io); }
+  .is-off .em-spray circle { opacity: 0; }
+  :global(html.motion) .em.is-in:not(.is-off) .em-spray circle { animation: em-spray 1.1s var(--ease-io) var(--d) 4; }
+  @keyframes em-spray { 0% { translate: 0 0; opacity: 0; } 25% { opacity: 1; } 100% { translate: var(--x) var(--y); opacity: 1; } }
+  .em-valve rect { fill: var(--pdeep); stroke: var(--ink); stroke-width: 3; }
+  .em-valve circle { fill: var(--ink); }
+  .em-lever { transform-box: view-box; transform-origin: 300px 122px; transition: rotate .7s var(--ease-io); }
+  .em-handle { fill: var(--cream); stroke: var(--ink); stroke-width: 3; }
+  .em-lever circle { fill: var(--steel); stroke: var(--ink); stroke-width: 3; }
+  .is-off .em-lever { rotate: -90deg; }
+  .em-tag { position: absolute; padding: 5px 10px; border-radius: 4px; background: var(--white); color: var(--ink); font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+  .em-tag--v { left: 30%; top: 82%; translate: -50% 0; }
+  .em-tag--b { left: 70%; top: 82%; translate: -50% 0; background: var(--powder); transition: opacity .5s var(--ease-io); }
+  .is-off .em-tag--b { opacity: .35; }
+  /* the hit area: valve + lever, never smaller than 44 px */
+  .em-btn { position: absolute; left: 24%; top: 6%; width: max(44px, 22%); height: max(44px, 70%); padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: pointer; }
+  .em-btn:hover { background: rgb(132 179 199 / .1); }
+  .em-btn:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .em-status { margin-top: 18px; text-align: center; font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
+
+  .em-steps { display: grid; grid-template-columns: 1fr 1.3fr; gap: 20px; margin: 26px 0 0; padding: 0; list-style: none; }
+  .em-step { display: flex; align-items: center; gap: 16px; padding: 20px 22px; border-radius: 8px; background: var(--ink2); box-shadow: inset 0 0 0 1.5px var(--ink3); transition: box-shadow .6s var(--ease-io), background-color .6s var(--ease-io); }
+  .em-step.is-on { box-shadow: inset 0 0 0 2px var(--powder); }
+  .em-step.is-done { background: rgb(132 179 199 / .12); }
+  .em-n { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--ink3); font-family: var(--f-m); font-weight: 800; font-size: 15px; color: var(--white); transition: background-color .6s var(--ease-io), color .6s var(--ease-io); }
+  .is-on .em-n { background: var(--powder); color: var(--ink); }
+  .em-step > div { flex: 1; min-width: 0; }
+  .em-st { font-family: var(--f-h); font-weight: 800; font-size: 21px; line-height: 1.15; letter-spacing: -.01em; }
+  .em-sd { margin-top: 4px; font-size: 14px; color: rgb(255 255 255 / .75); }
+  .temg :global(.em-call) { flex: none; }
+  @media (prefers-reduced-motion: reduce) { .em-lever, .em-w--out, .em-step, .em-n { transition: none; } }
+
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .te-h { font-size: 46px; }
+    .em-steps { grid-template-columns: 1fr; }
+  }
   @media (max-width: 767px) {
-    .temg { border-top-width: 8px; padding: 32px 0 36px; }
-    .te-grid { flex-direction: column; gap: 0; }
-    .te-h { font-size: 24px; }
-    .te-p { margin-top: 9px; font-size: 14px; }
-    .temg :global(.te-btn) { margin-top: 15px; }
+    .temg { padding: 60px 0 64px; }
+    .te-h { font-size: 30px; }
+    .te-p { font-size: 15px; }
+    .em { margin-top: 28px; }
+    .em-tag { font-size: 9px; padding: 3px 6px; top: 80%; }
+    .em-steps { grid-template-columns: 1fr; gap: 12px; }
+    .em-step { flex-wrap: wrap; padding: 16px; }
+    .em-st { font-size: 18px; }
+    .temg :global(.em-call) { width: 100%; }
   }
 </style>

@@ -1,62 +1,152 @@
 ---
-// Our work hero (Figma 727:993 "Hero" y 172 h 690 / 729:1033 y 158 h 540). Ink band, three photos with steel tags
-// (phones: a clipped swipe row with mono captions). Photos mapped by hash (IMAGE-HASHES.md).
+// Our work hero, fix round C (independent R2 review: three equal photo cards under a heading read plain; rule 11 asks for
+// a unique hero). New idea, "Contact sheet": the four newest job photos hang from one film rail (sprocket holes, a shared
+// top edge). The picked frame unrolls to full height and width while the others stay clipped to half height, the band's
+// ink re-grades a shade toward the picked photo's tone, its steel tag slides in, and a frame counter + rail progress
+// follow. Click / tap a frame, or use the arrow keys, Home and End. No autoplay (nothing moves on its own).
+// The Instagram count carries its read date from site.ts (SITE.social.instagramStats).
+// 21st.dev: "Hero Carousel" (@crafterui/hero-carousel, id 24752: a filmstrip whose focused card unfurls to full height while
+// its neighbours stay clipped to half, background re-grades to the focused photo; wheel, drag, click, arrows) + "Thumbnail
+// image viewer" (@ibrandify/thumbnail-image-viewer, id 37501: keyboard-navigable strip with location tags). Adapted to Astro
+// + vanilla TS with CSS transitions (flex-grow / height), re-skinned: film rail in steel with sprocket holes, kit-style steel
+// spec tags, powder offset shadow on the picked frame. No JS: frame 1 is open, the rest show as half-height frames.
 import '../contact/cx.css';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Img from '../ui/Img.astro';
+import { SITE } from '../../data/site';
+const ig = SITE.social.instagramStats;
 const shots = [
-  { img: 'manifold-install', alt: 'A manifold install with copper lines and valves inside an open wall panel', k: 'Recent install', v: 'On a real job', m: 'Recent install' },
-  { img: 'van-night', alt: 'The Glass Plumbing Services van at night, the mascot and phone number on its side', k: 'The van', v: 'Glass Plumbing Services', m: 'The van', sh: true },
-  { img: 'water-heater-expansion-tank', alt: 'A new water heater being installed in a closet, its expansion tank on the floor beside it, with the words “Floor Drain Built In” on the photo', k: 'Water heater', v: 'With expansion tank', m: 'Water heater + exp. tank' },
+  { img: 'manifold-install', alt: 'A manifold install with copper lines and valves inside an open wall panel', k: 'Recent install', v: 'Manifold, in the wall', focus: '50% 45%', tone: '#84B3C7' },
+  { img: 'van-night', alt: 'The Glass Plumbing Services van at night, the mascot and phone number on its side', k: 'The van', v: 'Glass Plumbing Services', focus: '45% 50%', tone: '#FDE7B8' },
+  { img: 'water-heater-expansion-tank', alt: 'A new water heater being installed in a closet, its expansion tank on the floor beside it, with the words “Floor Drain Built In” on the photo', k: 'Water heater', v: 'With expansion tank', focus: '50% 55%', tone: '#2F6178' },
+  { img: 'water-heater-tank-2', alt: 'A new tank water heater piped in copper, in a laundry closet', k: 'Tank water heater', v: 'Piped in copper', focus: '50% 30%', tone: '#C7CED1' },
 ];
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
-<section class="cx-sec cx-ink oh on-ink" data-m-section data-m-hero aria-labelledby="oh-h">
+<section class="cx-sec cx-ink oh on-ink" data-m-section data-m-hero aria-labelledby="oh-h" data-oh style={`--tone:${shots[0].tone}`}>
   <div class="wrap">
-    <Eyebrow tone="light" class="oh-eb"><span class="d">From our Instagram · @glassplumbingservices</span><span class="m">From our Instagram</span></Eyebrow>
-    <h1 id="oh-h" class="cx-h oh-h" data-t="2">Recent Work <span class="tone">Across Pinellas</span></h1>
-    <p class="oh-lead lead" data-t="3" data-fx="nudge">Real jobs, real photos, straight from the van. 34 posts and counting.</p>
-    <p class="oh-swipe" aria-hidden="true">Swipe →</p>
-    <ul class="oh-row cx-scroll" role="list" data-track data-hscroll aria-label="Recent job photos">
-      {shots.map((s, i) => (
-        <li class:list={['oh-c', s.sh && 'oh-sh']} data-t="4" data-fx={i === 0 ? 'frame' : 'up'}>
-          <figure>
-            <div class="oh-ph"><Img name={s.img} alt={s.alt} sizes="(min-width: 1280px) 384px, (min-width: 768px) 30vw, 260px" box={384 / 300} boxM={260 / 220} priority={i === 0} /></div>
-            <figcaption><dl class="cx-tag oh-tag"><dt>{s.k}</dt><dd>{s.v}</dd></dl><span class="oh-mc">{s.m}</span></figcaption>
-          </figure>
-        </li>
-      ))}
-    </ul>
+    <div class="oh-top">
+      <Eyebrow tone="light" class="oh-eb"><span class="d">From our Instagram · {SITE.social.instagramHandle}</span><span class="m">From our Instagram</span></Eyebrow>
+      <h1 id="oh-h" class="cx-h oh-h" data-t="2">Recent Work <span class="tone">Across Pinellas</span></h1>
+      <p class="oh-lead lead" data-t="3" data-fx="nudge">Real jobs, real photos, straight from the van.</p>
+      <p class="oh-ig" data-t="3"><b>{ig.posts} posts</b> on Instagram<span class="oh-dot" aria-hidden="true">·</span><span class="oh-read">read {ig.checked}</span></p>
+    </div>
+    <div class="oh-sheet" data-t="4">
+      <div class="oh-rail" aria-hidden="true"><span class="oh-prog" data-oh-prog></span></div>
+      <ul class="oh-strip" role="list" aria-label="Recent job photos: pick one to open it">
+        {shots.map((s, i) => (
+          <li class:list={['oh-f', i === 0 && 'is-on']} data-oh-f style={`--tone:${s.tone}`}>
+            <button type="button" class="oh-b" aria-pressed={i === 0 ? 'true' : 'false'} data-oh-b>
+              <span class="sr-only">{`Photo ${i + 1} of ${shots.length}: ${s.k}, ${s.v}`}</span>
+              <span class="oh-ph"><Img name={s.img} alt="" focus={s.focus} sizes="(min-width: 1280px) 760px, (min-width: 768px) 60vw, 62vw" box={760 / 440} boxM={230 / 300} priority={i === 0} widths={[360, 540, 760, 1100, 1520]} /></span>
+            </button>
+            <p class="oh-tag" aria-hidden={i === 0 ? undefined : 'true'}><span class="oh-tk">{s.k}</span><span class="oh-tv">{s.v}</span></p>
+          </li>
+        ))}
+      </ul>
+      <a class="oh-more" href={SITE.social.instagram} target="_blank" rel="noopener">See the posts on Instagram <span aria-hidden="true">→</span><span class="sr-only"> (opens in a new tab)</span></a>
+      <p class="oh-count" aria-hidden="true"><span data-oh-n>01</span> / {pad(shots.length)}</p>
+      <p class="sr-only" aria-live="polite" data-oh-live></p>
+    </div>
   </div>
 </section>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-oh]').forEach((root) => {
+    const items = [...root.querySelectorAll<HTMLElement>('[data-oh-f]')];
+    const btns = items.map((li) => li.querySelector<HTMLButtonElement>('[data-oh-b]')!);
+    const n = root.querySelector<HTMLElement>('[data-oh-n]');
+    const prog = root.querySelector<HTMLElement>('[data-oh-prog]');
+    const live = root.querySelector<HTMLElement>('[data-oh-live]');
+    const pick = (i: number, focus = false) => {
+      items.forEach((li, j) => {
+        const on = j === i;
+        li.classList.toggle('is-on', on);
+        btns[j].setAttribute('aria-pressed', on ? 'true' : 'false');
+        const tag = li.querySelector('.oh-tag'); if (tag) on ? tag.removeAttribute('aria-hidden') : tag.setAttribute('aria-hidden', 'true');
+      });
+      root.style.setProperty('--tone', items[i].style.getPropertyValue('--tone'));
+      if (n) n.textContent = String(i + 1).padStart(2, '0');
+      if (prog) prog.style.setProperty('--p', String((i + 1) / items.length));
+      if (live) live.textContent = btns[i].querySelector('.sr-only')?.textContent || '';
+      if (focus) btns[i].focus();
+    };
+    btns.forEach((b, i) => {
+      b.addEventListener('click', () => pick(i));
+      b.addEventListener('keydown', (e) => {
+        const k = e.key; let t = -1;
+        if (k === 'ArrowRight' || k === 'ArrowDown') t = (i + 1) % btns.length;
+        else if (k === 'ArrowLeft' || k === 'ArrowUp') t = (i - 1 + btns.length) % btns.length;
+        else if (k === 'Home') t = 0; else if (k === 'End') t = btns.length - 1;
+        if (t >= 0) { e.preventDefault(); pick(t, true); }
+      });
+    });
+    // Swipe on phones: a horizontal drag over the strip moves one frame.
+    const strip = root.querySelector<HTMLElement>('.oh-strip');
+    let x0: number | null = null;
+    strip?.addEventListener('pointerdown', (e) => { x0 = e.clientX; });
+    strip?.addEventListener('pointerup', (e) => {
+      if (x0 == null) return; const dx = e.clientX - x0; x0 = null;
+      if (Math.abs(dx) < 40) return;
+      const cur = items.findIndex((li) => li.classList.contains('is-on'));
+      pick(Math.min(items.length - 1, Math.max(0, cur + (dx < 0 ? 1 : -1))));
+    });
+    if (prog) prog.style.setProperty('--p', String(1 / items.length));
+  });
+</script>
 <style>
-  .oh { padding: 76px 0 90px; }
-  .oh :global(.oh-eb) { margin-top: 0; }
-  .oh :global(.oh-eb .m), .oh-swipe { display: none; }
+  .oh { padding: 76px 0 150px; overflow-x: clip; }
+  /* The band re-grades: a soft glow in the picked photo's tone behind the sheet (the band itself stays ink, so seams match). */
+  .oh-sheet::before { content: ''; position: absolute; inset: -80px -10% -40px; z-index: -1; background: radial-gradient(60% 60% at 40% 50%, var(--tone), transparent 70%); opacity: .55; transition: background .8s var(--ease-io); pointer-events: none; }
+  .oh-sheet { isolation: isolate; }
+  .oh-top { display: grid; justify-items: center; text-align: center; }
+  .oh :global(.oh-eb) { margin-top: 0; justify-content: center; }
+  .oh :global(.oh-eb .m) { display: none; }
   .oh-h { --fs: 76px; --fs-m: 40px; margin-top: 14px; line-height: 1.04; }
-  .oh-lead { margin-top: 18px; max-width: 520px; color: var(--white); }
-  .oh-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 31px 0 0; padding: 0; list-style: none; overflow: visible; }
-  .oh-c figure { position: relative; margin: 0; }
-  .oh-ph { position: relative; height: 300px; border: 2px solid var(--white); border-radius: 6px; overflow: hidden; }
-  .oh-sh .oh-ph { box-shadow: 10px 10px 0 var(--powder); }
-  .oh-tag { left: 16px; bottom: 23px; width: 250px; grid-template-columns: 98px 1fr; box-shadow: none; }
-  .oh-mc { display: none; }
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .oh-ph { height: auto; aspect-ratio: 384 / 300; }
-    .oh-tag { width: auto; right: 16px; }
-  }
+  .oh-lead { margin-top: 16px; max-width: 560px; color: var(--white); }
+  .oh-ig { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; margin: 14px 0 0; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); font: 500 12px/16px var(--f-m); letter-spacing: .04em; color: var(--white); }
+  .oh-ig b { font-weight: 700; color: var(--powder); }
+  .oh-read { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; color: rgba(255,255,255,.8); }
+  .oh-dot { color: rgba(255,255,255,.5); }
+
+  /* The contact sheet: one film rail, frames hang from it (shared top edge). */
+  .oh-sheet { position: relative; margin-top: 40px; }
+  .oh-rail { position: relative; height: 22px; border-radius: 4px 4px 0 0; background: var(--steel);
+    background-image: radial-gradient(circle at 50% 50%, var(--ink) 0 3.5px, transparent 4px); background-size: 24px 22px; background-position: 6px 0;
+    box-shadow: inset 0 0 0 1.5px var(--steel2); }
+  .oh-prog { position: absolute; left: 0; bottom: -4px; height: 4px; width: calc(var(--p, .25) * 100%); background: var(--powder); transition: width .7s var(--ease-io); }
+  .oh-strip { display: flex; gap: 14px; height: 440px; margin: 0; padding: 0; list-style: none; align-items: flex-start; }
+  .oh-f { position: relative; flex: 1 1 0; min-width: 0; height: 58%; transition: flex-grow .8s var(--ease-io), height .8s var(--ease-io); }
+  .oh-f.is-on { flex-grow: 5.2; height: 100%; }
+  .oh-b { display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 0 0 6px 6px; background: none; cursor: pointer; }
+  .oh-b:focus-visible { outline: 3px solid var(--powder); outline-offset: 3px; }
+  .oh-ph { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; border-radius: 0 0 6px 6px; box-shadow: inset 0 0 0 2px var(--white); transition: box-shadow .8s var(--ease-io), filter .6s var(--ease-io); }
+  .oh-ph :global(.img) { position: absolute; inset: 0; z-index: -1; }
+  .oh-ph { isolation: isolate; }
+  .oh-f:not(.is-on) .oh-ph { filter: saturate(.55) brightness(.8); }
+  .oh-f:not(.is-on):hover .oh-ph { filter: none; }
+  .oh-f.is-on .oh-ph { box-shadow: inset 0 0 0 2px var(--white), 12px 12px 0 var(--powder); overflow: hidden; }
+  .oh-tag { position: absolute; left: 18px; bottom: 18px; display: grid; grid-template-columns: auto 1fr; column-gap: 16px; margin: 0; padding: 10px 12px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2);
+    font: 700 11px/14px var(--f-m); letter-spacing: .04em; color: var(--ink); white-space: nowrap; pointer-events: none;
+    opacity: 0; translate: -10px 0; transition: opacity .45s var(--ease-io), translate .45s var(--ease-io); }
+  .oh-tk { font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: #3D4244; }
+  .oh-f.is-on .oh-tag { opacity: 1; translate: 0 0; transition-delay: .35s; }
+  .oh-count { position: absolute; right: 0; bottom: -34px; margin: 0; font: 700 12px/16px var(--f-m); letter-spacing: .1em; color: var(--powder); }
+  .oh-more { position: absolute; left: 0; bottom: -44px; display: inline-flex; align-items: center; min-height: 44px; font: 700 15px/1 var(--f-b); color: var(--white); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--powder); }
+  .oh-more:hover { color: var(--powder); }
+  @media (prefers-reduced-motion: reduce) { .oh, .oh-f, .oh-ph, .oh-tag, .oh-prog { transition: none !important; } }
+  @media (min-width: 768px) and (max-width: 1279px) { .oh-strip { height: 380px; } }
   @media (max-width: 767px) {
-    .oh { padding: 44px 0 45px; }
-    .oh :global(.oh-eb) { margin-top: 0; }
+    .oh { padding: 44px 0 64px; }
     .oh :global(.oh-eb .d) { display: none; } .oh :global(.oh-eb .m) { display: inline; }
     .oh-h { margin-top: 10px; line-height: 1.02; }
     .oh-h .tone { display: block; }
-    .oh-lead { margin-top: 14px; font-size: 16px; }
-    .oh-swipe { display: block; margin: 6px 0 0; text-align: right; padding-right: 14px; font: 700 10px/13px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
-    .oh-row { display: flex; gap: 16px; margin: 9px calc(-1 * var(--gutter)) 0 0; padding-right: var(--gutter); overflow-x: auto; }
-    .oh-c { width: 260px; }
-    .oh-ph { height: 220px; }
-    .oh-sh .oh-ph { box-shadow: none; }
-    .oh-tag { display: none; }
-    .oh-mc { display: block; margin-top: 12px; font: 700 10px/13px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: var(--white); }
+    .oh-lead { margin-top: 12px; font-size: 16px; }
+    .oh-ig { font-size: 11px; }
+    .oh-sheet { margin-top: 26px; }
+    .oh-strip { gap: 8px; height: 320px; touch-action: pan-y; }
+    .oh-f.is-on { flex-grow: 6; }
+    .oh-f.is-on .oh-ph { box-shadow: inset 0 0 0 2px var(--white), 7px 7px 0 var(--powder); }
+    .oh-tag { left: 10px; right: 10px; bottom: 10px; grid-template-columns: 1fr; white-space: normal; font-size: 10px; line-height: 13px; }
+    .oh-count { bottom: -30px; }
   }
 </style>

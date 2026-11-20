@@ -1,139 +1,199 @@
 ---
-// Prevention tips (Figma 719:437 y 6720 h 772 / mobile y 7145 h 942): the "Annual care tag". The tag swings in on scroll
-// (rotate -3 deg to 0, spring, motion only). Tick a box: the task strikes through, the counter updates and "Last done" fills
-// with today's date. Saved in this browser only (localStorage, try/catch). Starts at 0 of 3 (the Figma's 1 of 3 is an example).
+// "Three things to do once a year", fix round C (independent R2 review: text left / checklist tag right = slop). New idea,
+// "Practice bench": a centred head, then one steel bench with three bays, one per yearly job. Each bay holds the part you
+// work on, drawn as the real thing: the drain valve at the tank's foot (a hose runs from it and the water in the hose
+// turns from rusty to clear), the relief valve (its lever lifts and snaps back, a puff of steam), and the cold shut-off on
+// top of the heater (the handle turns a quarter turn to closed). Pressing a bay's button runs that part's motion and
+// fills the button like a housing (the water motif), then stamps the bay "Done" with today's date. A pipe along the bench
+// fills a third per job: "2 of 3 done this year". Saved in this browser only (try/catch); a second press undoes it.
+// Copy: general, hedged maintenance knowledge (no numbers) + the sourced 217 ppm (Pinellas County Utilities 2025 CCR).
+// 21st.dev: "Hold Action Button" (@starc007/hold-action-button, id 29383: the button fills with liquid as it confirms) +
+// "Stamping Press" (@aadilghani1/stamping-press, id 43184: press a button, the machine runs, a counter rolls forward),
+// adapted to Astro + vanilla TS with CSS transitions (press = run, no hold needed, so keyboard and switch users get the
+// same thing), re-skinned: steel bench with rivets, ink parts, powder water, pdeep stamp. aria-pressed carries the state.
+// No JS: the three bays read as a plain list with their steps (buttons hidden). Reduced motion: states swap without tweens.
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
+import { SITE } from '../../data/site';
 const T = [
-  { id: 'flush', t: 'Flush the tank', d: 'Turn off power or gas. Hook a hose to the drain valve at the bottom and run it until the water comes out clear.' },
-  { id: 'relief', t: 'Test the relief valve', d: 'Lift the lever for a second, then let it snap back. If it keeps dripping after, call us.' },
-  { id: 'shutoff', t: 'Know your shut-off', d: 'Find the cold valve on top of the heater and the main for the house. Show everyone at home.', dm: 'Find the cold valve on top of the heater and the main for the house.' },
+  { id: 'flush', n: '01', t: 'Flush the tank', d: 'Power or gas off. Hose on the drain valve at the bottom; run it until the water comes out clear.', b: 'Flush it' },
+  { id: 'relief', n: '02', t: 'Test the relief valve', d: 'Lift the lever for a second and let it snap back. If it keeps dripping after, call a licensed plumber.', b: 'Lift the lever' },
+  { id: 'shutoff', n: '03', t: 'Know your shut-off', d: 'Find the cold valve on top of the heater and the main for the house. Show everyone at home.', b: 'Turn it off' },
 ];
 ---
-<section class="cr" data-m-section>
-  <div class="wrap cr-grid">
-    <div class="cr-l">
+<section class="cr" data-m-section data-care>
+  <div class="wrap">
+    <div class="cr-top">
       <Eyebrow text="Make it last" />
-      <h2 class="h2 cr-h" data-t="2" style="--h2:52px;--h2m:36px">Three things<br /><span class="tone">to do once a year.</span></h2>
-      <p class="cr-lead" data-t="3">Pinellas water is hard: 217 ppm on average (Pinellas County Utilities, 2025). Scale settles at the bottom of the tank. <span class="d">These three keep it working longer.</span></p>
-      <Btn label="Rather we do it? Call" sub="(727) 512-0673" w={320} h={60} class="cr-btn cr-btn-d" t="4" />
+      <h2 class="h2 cr-h" data-t="2" style="--h2:52px;--h2m:32px">Three things<br /><span class="tone">to do once a year.</span></h2>
+      <p class="cr-lead" data-t="3">Pinellas water is hard: 217 ppm on average (Pinellas County Utilities, 2025), and scale tends to settle in the tank. <span class="d">Press each job to see how it goes, and keep your own tally.</span></p>
     </div>
-    <div class="cr-tag" data-care>
-      <i class="cr-hole" aria-hidden="true"></i><i class="cr-rv" aria-hidden="true"></i><i class="cr-rv" aria-hidden="true"></i><i class="cr-rv" aria-hidden="true"></i><i class="cr-rv" aria-hidden="true"></i>
-      <div class="cr-top">
-        <h3 class="cr-title" id="cr-title"><span class="d">Annual care tag · water heater</span><span class="m">Annual care tag</span></h3>
-        <p class="cr-count" aria-live="polite"><span data-care-n>0</span> of 3 done</p>
-      </div>
-      <ul class="cr-list" role="list" aria-labelledby="cr-title">
-        {T.map((t, i) => (
-          <li class="cr-it" data-care-it={t.id}>
-            <input class="cr-cb" type="checkbox" id={`cr-${t.id}`} data-care-cb />
-            <label class="cr-lab" for={`cr-${t.id}`}>
-              <span class="cr-box" aria-hidden="true"><svg viewBox="0 0 21 15" width="18" height="12" aria-hidden="true" focusable="false"><path d="M1.3 7.3L7.3 13.3L19.3 1.3" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
-              <span class="cr-t">0{i + 1}&nbsp;&nbsp;{t.t}</span>
-            </label>
-            <p class="cr-d">{t.dm ? <><span class="d">{t.d}</span><span class="m">{t.dm}</span></> : t.d}</p>
-            <p class="cr-last">Last done: <span data-care-date>_ _ / _ _</span></p>
+    <div class="cr-bench" data-t="4">
+      <i class="cr-rv" aria-hidden="true"></i><i class="cr-rv" aria-hidden="true"></i><i class="cr-rv" aria-hidden="true"></i><i class="cr-rv" aria-hidden="true"></i>
+      <ol class="cr-bays" role="list">
+        {T.map((t) => (
+          <li class="cr-bay" data-care-it={t.id}>
+            <div class="cr-art" aria-hidden="true">
+              {t.id === 'flush' && (
+                <svg viewBox="0 0 220 150" focusable="false">
+                  <path d="M20 0h110v104a14 14 0 0 1-14 14H34a14 14 0 0 1-14-14Z" fill="var(--white)" stroke="var(--ink)" stroke-width="3" />
+                  <rect x="20" y="70" width="110" height="46" fill="var(--powder)" opacity=".55" />
+                  <g class="cr-sed" fill="#8A6A44"><circle cx="40" cy="108" r="3" /><circle cx="58" cy="110" r="2.5" /><circle cx="78" cy="107" r="3" /><circle cx="96" cy="110" r="2.5" /><circle cx="112" cy="108" r="3" /></g>
+                  <rect x="130" y="96" width="18" height="12" rx="2" fill="var(--steel2)" stroke="var(--ink)" stroke-width="2.5" />
+                  <path class="cr-hose" d="M148 102 C178 102 182 122 196 132 S212 142 214 146" fill="none" stroke="var(--ink)" stroke-width="10" stroke-linecap="round" />
+                  <path class="cr-flow" d="M148 102 C178 102 182 122 196 132 S212 142 214 146" fill="none" stroke-width="5" stroke-linecap="round" pathLength="100" />
+                </svg>
+              )}
+              {t.id === 'relief' && (
+                <svg viewBox="0 0 220 150" focusable="false">
+                  <rect x="20" y="20" width="120" height="130" rx="10" fill="var(--white)" stroke="var(--ink)" stroke-width="3" />
+                  <rect x="140" y="56" width="30" height="16" fill="var(--steel2)" stroke="var(--ink)" stroke-width="2.5" />
+                  <rect x="160" y="50" width="22" height="30" rx="3" fill="var(--steel)" stroke="var(--ink)" stroke-width="2.5" />
+                  <path d="M171 80v54" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" />
+                  <g class="cr-lever"><path d="M171 50 L200 32" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" /><circle cx="171" cy="50" r="4" fill="var(--ink)" /></g>
+                  <g class="cr-puff" fill="var(--frost3)"><circle cx="171" cy="140" r="7" /><circle cx="182" cy="134" r="6" /><circle cx="162" cy="133" r="5" /></g>
+                </svg>
+              )}
+              {t.id === 'shutoff' && (
+                <svg viewBox="0 0 220 150" focusable="false">
+                  <rect x="40" y="70" width="140" height="80" rx="10" fill="var(--white)" stroke="var(--ink)" stroke-width="3" />
+                  <path d="M80 70V30h-30" fill="none" stroke="var(--pdeep)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M140 70V30h30" fill="none" stroke="var(--red)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+                  <rect x="70" y="38" width="20" height="18" rx="3" fill="var(--steel)" stroke="var(--ink)" stroke-width="2.5" />
+                  <g class="cr-handle"><rect x="58" y="22" width="44" height="10" rx="5" fill="var(--ink)" /><circle cx="80" cy="27" r="4" fill="var(--steel2)" /></g>
+                  <text x="112" y="116" font-family="JetBrains Mono, monospace" font-weight="700" font-size="13" fill="var(--ink)" text-anchor="middle">COLD</text>
+                </svg>
+              )}
+            </div>
+            <p class="cr-n">{t.n}</p>
+            <h3 class="cr-t">{t.t}</h3>
+            <p class="cr-d">{t.d}</p>
+            <button type="button" class="cr-go" aria-pressed="false" data-care-cb hidden>
+              <span class="cr-fill" aria-hidden="true"></span>
+              <span class="cr-gl"><span class="cr-gt">{t.b}</span><span class="cr-gd">Done · undo</span></span>
+            </button>
+            <p class="cr-stamp" aria-hidden="true">Done <span data-care-date>_ _ / _ _</span></p>
           </li>
         ))}
-      </ul>
+      </ol>
+      <div class="cr-tally">
+        <span class="cr-pipe" aria-hidden="true"><span class="cr-pw" data-care-pipe></span></span>
+        <p class="cr-count" aria-live="polite"><span data-care-n>0</span> of 3 done this year <span class="cr-local">(saved in this browser only)</span></p>
+      </div>
     </div>
-    <Btn label="Rather we do it? Call" sub="(727) 512-0673" block h={60} class="cr-btn cr-btn-m" />
+    <div class="cr-cta">
+      <Btn label="Rather have it done? Call" sub={SITE.phone} w={340} h={60} class="cr-btn" />
+    </div>
   </div>
 </section>
 <style>
-  .cr { background: var(--frost); padding: 96px 0 120px; }
-  .cr-grid { display: grid; grid-template-columns: 460px 600px; grid-template-areas: 'l tag'; justify-content: space-between; padding-right: 80px; align-items: start; }
-  .cr-l { grid-area: l; padding-top: 24px; }
+  .cr { background: var(--frost); padding: 100px 0 110px; }
+  .cr-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .cr-h { margin-top: 16px; }
-  .cr-lead { margin-top: 20px; max-width: 440px; font-size: 17px; line-height: 1.5; color: var(--muted); }
-  .cr :global(.cr-btn-d) { margin-top: 28px; }
-  .cr :global(.cr-btn-m) { display: none; }
-  .cr-tag { grid-area: tag; position: relative; padding: 62px 36px 22px; border-radius: 10px; background: var(--steel); box-shadow: inset 0 0 0 1.5px var(--steel2), 8px 8px 0 var(--ink); transform-origin: 50% 28px; }
-  :global(html.motion) .cr-tag:not(.in) { rotate: -3deg; }
-  .cr-tag { transition: rotate 1.1s cubic-bezier(.34, 1.56, .64, 1); }
-  .cr-hole { position: absolute; left: 50%; top: 14px; width: 28px; height: 28px; margin-left: -14px; border-radius: 50%; background: var(--frost); box-shadow: inset 0 0 0 2px var(--steel2); }
+  .cr-lead { margin-top: 18px; max-width: 620px; font-size: 17px; line-height: 1.5; color: var(--muted); }
+
+  .cr-bench { position: relative; margin-top: 44px; padding: 28px 28px 22px; border-radius: 10px; background: var(--steel); box-shadow: inset 0 0 0 1.5px var(--steel2), 12px 12px 0 var(--ink); }
   .cr-rv { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--steel2); }
-  .cr-rv:nth-of-type(2) { left: 14px; top: 14px; } .cr-rv:nth-of-type(3) { right: 14px; top: 14px; }
-  .cr-rv:nth-of-type(4) { left: 14px; bottom: 14px; } .cr-rv:nth-of-type(5) { right: 14px; bottom: 14px; }
-  .cr-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 9px; border-bottom: 1.5px solid rgba(22,19,15,.4); }
-  .cr-title { font-family: var(--f-m); font-weight: 700; font-size: 13px; line-height: 17px; letter-spacing: .1em; text-transform: uppercase; }
-  .cr-count { font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: #275468; white-space: nowrap; } /* pdeep darkened: 5.2:1 on the steel tag */
-  .cr-list { margin: 0; padding: 0; list-style: none; }
-  .cr-it { position: relative; padding: 16px 0 14px 52px; border-top: 1px solid rgba(22,19,15,.2); }
-  .cr-it:first-child { border-top: 0; }
-  @media (min-width: 768px) {
-    .cr-it:first-child { padding-top: 24px; }
-    .cr-it:last-child { padding-bottom: 36px; }
-    .cr-it:not(:first-child) .cr-cb, .cr-it:not(:first-child) .cr-box { top: 20px; }
-  }
-  .cr-cb { position: absolute; left: 0; top: 28px; width: 32px; height: 32px; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
-  .cr-lab { display: block; cursor: pointer; }
-  .cr-box { position: absolute; left: 0; top: 28px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 2px var(--ink); transition: background-color .25s var(--ease-io); }
-  .cr-box svg { opacity: 0; scale: .6; transition: opacity .25s var(--ease-io), scale .3s var(--ease-io); }
-  .cr-cb:checked + .cr-lab .cr-box { background: var(--ink); }
-  .cr-cb:checked + .cr-lab .cr-box svg { opacity: 1; scale: 1; }
-  .cr-cb:focus-visible + .cr-lab .cr-box { outline: 3px solid var(--pdeep); outline-offset: 3px; }
-  .cr-t { display: inline-block; padding-top: 4px; font-family: var(--f-h); font-weight: 800; font-size: 24px; line-height: 1.04; letter-spacing: -.02em; white-space: pre-wrap; text-decoration: line-through; text-decoration-color: transparent; text-decoration-thickness: 2px; transition: color .3s var(--ease-io), text-decoration-color .3s var(--ease-io); }
-  .cr-cb:checked + .cr-lab .cr-t { color: rgba(22,19,15,.6); text-decoration-color: rgba(22,19,15,.6); }
-  .cr-d { margin-top: 13px; font-family: var(--f-m); font-weight: 500; font-size: 12px; line-height: 1.55; letter-spacing: .01em; }
-  .cr-last { margin-top: 12px; font-family: var(--f-m); font-weight: 700; font-size: 10px; line-height: 13px; letter-spacing: .06em; text-transform: uppercase; color: #4A4E50; } /* muted darkened: 5.3:1 on steel */
+  .cr-rv:nth-of-type(1) { left: 12px; top: 12px; } .cr-rv:nth-of-type(2) { right: 12px; top: 12px; }
+  .cr-rv:nth-of-type(3) { left: 12px; bottom: 12px; } .cr-rv:nth-of-type(4) { right: 12px; bottom: 12px; }
+  .cr-bays { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 0; padding: 0; list-style: none; }
+  .cr-bay { position: relative; display: flex; flex-direction: column; padding: 18px 20px 20px; border-radius: 8px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); transition: box-shadow .4s var(--ease-io), translate .4s var(--ease-io); }
+  .cr-bay:hover { translate: 0 -4px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
+  .cr-art { height: 140px; margin: 0 -6px 6px; border-radius: 6px; background: var(--frost); display: grid; place-items: center; overflow: hidden; }
+  .cr-art svg { width: 100%; max-width: 230px; height: 130px; }
+  .cr-n { margin: 6px 0 0; font: 700 12px/16px var(--f-m); letter-spacing: .1em; color: var(--pdeep); }
+  .cr-t { margin-top: 4px; font: 800 24px/1.06 var(--f-h); letter-spacing: -0.02em; }
+  .cr-d { margin: 10px 0 16px; flex: 1; font-size: 15px; line-height: 1.5; color: var(--muted); }
+
+  /* Parts in motion (state set by aria-pressed on the bay's button, mirrored as .is-done on the bay). */
+  .cr-flow { stroke: #9A6B3A; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1s var(--ease-io), stroke .9s var(--ease-io) .7s; }
+  .cr-sed { transition: opacity .9s var(--ease-io) .5s; }
+  .is-done .cr-flow { stroke-dashoffset: 0; stroke: var(--powder); }
+  .is-done .cr-sed { opacity: 0; }
+  .cr-lever { transform-box: fill-box; transform-origin: 0% 100%; }
+  .cr-puff { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
+  html.motion .is-run .cr-lever { animation: cr-lever 1s var(--ease-io); }
+  html.motion .is-run .cr-puff { animation: cr-puff 1s var(--ease-io); }
+  @keyframes cr-lever { 0%, 100% { rotate: 0deg; } 35%, 60% { rotate: -32deg; } }
+  @keyframes cr-puff { 0%, 30% { opacity: 0; scale: .4; } 55% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: 1.4; translate: 0 -16px; } }
+  .cr-handle { transform-box: fill-box; transform-origin: 50% 50%; transition: rotate .8s var(--ease-io); }
+  .is-done .cr-handle { rotate: 90deg; }
+
+  /* The button fills like a housing, then reads "Done". */
+  .cr-go { position: relative; display: block; width: 100%; min-height: 52px; padding: 0 16px; overflow: hidden; border: 0; border-radius: 6px; background: var(--white); box-shadow: inset 0 0 0 2px var(--ink); color: var(--ink); cursor: pointer; font: 700 16px/1 var(--f-b); text-align: left; }
+  .cr-go:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .cr-fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--ink); box-shadow: inset 0 3px 0 var(--powder); transition: height .7s var(--ease-io); }
+  .cr-go[aria-pressed="true"] .cr-fill { height: 100%; }
+  .cr-gl { position: relative; display: grid; }
+  .cr-gt, .cr-gd { grid-area: 1 / 1; transition: opacity .35s var(--ease-io); }
+  .cr-gd { opacity: 0; color: var(--white); }
+  .cr-go[aria-pressed="true"] .cr-gt { opacity: 0; }
+  .cr-go[aria-pressed="true"] .cr-gd { opacity: 1; transition-delay: .35s; }
+  .cr-stamp { position: absolute; right: 14px; top: 14px; margin: 0; padding: 6px 10px; border: 2px solid var(--pdeep); border-radius: 4px; color: var(--pdeep); font: 800 12px/14px var(--f-m); letter-spacing: .1em; text-transform: uppercase; rotate: -8deg;
+    opacity: 0; scale: 1.6; transition: opacity .3s var(--ease-io), scale .4s var(--ease-back); }
+  .is-done .cr-stamp { opacity: 1; scale: 1; transition-delay: .5s; }
+  html:not(.js) .cr-stamp { display: none; }
+
+  .cr-tally { display: flex; align-items: center; gap: 18px; margin-top: 22px; }
+  .cr-pipe { position: relative; flex: 1; height: 16px; border-radius: 8px; background: var(--white); box-shadow: inset 0 0 0 2px var(--ink); overflow: hidden; }
+  .cr-pw { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--p, 0) * 100%); background: var(--powder); box-shadow: inset 0 0 0 2px var(--ink); transition: width .8s var(--ease-io); }
+  .cr-count { margin: 0; font: 700 13px/17px var(--f-m); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .cr-local { font-weight: 500; text-transform: none; letter-spacing: 0; color: #4A4E50; }
+  html:not(.js) .cr-tally { display: none; }
+  .cr-cta { display: flex; justify-content: center; margin-top: 40px; }
+  @media (prefers-reduced-motion: reduce) { .cr-bay, .cr-flow, .cr-sed, .cr-handle, .cr-fill, .cr-gt, .cr-gd, .cr-stamp, .cr-pw { transition: none !important; } }
   @media (min-width: 768px) and (max-width: 1279px) {
-    .cr-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'tag'; gap: 48px; padding-right: 0; }
-    .cr-tag { max-width: 600px; }
+    .cr-bays { gap: 14px; }
+    .cr-bay { padding: 14px 14px 16px; }
+    .cr-t { font-size: 20px; }
   }
   @media (max-width: 767px) {
-    .cr { padding: 64px 0 90px; }
-    .cr-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'tag'; padding-right: 0; }
-    .cr-l { padding-top: 0; }
+    .cr { padding: 64px 0 80px; }
     .cr-h { margin-top: 12px; }
-    .cr-lead { margin-top: 16px; font-size: 15px; }
-    .cr :global(.cr-btn-d) { display: none; }
-    .cr :global(.cr-btn-m) { display: flex; margin-top: 28px; }
-    .cr-tag { margin-top: 28px; padding: 50px 20px 10px; box-shadow: inset 0 0 0 1.5px var(--steel2), 6px 6px 0 var(--ink); }
-    .cr-hole { top: 12px; width: 24px; height: 24px; margin-left: -12px; }
-    .cr-rv { display: none; }
-    .cr-title { font-size: 11px; line-height: 15px; letter-spacing: .06em; }
-    .cr-count { font-size: 10px; line-height: 13px; }
-    .cr-top { padding-bottom: 7px; }
-    .cr-it { padding: 20px 0 16px 42px; }
-    .cr-cb, .cr-box { top: 22px; width: 28px; height: 28px; }
-    .cr-box svg { width: 15px; height: 10px; }
-    .cr-t { padding-top: 2px; font-size: 18px; }
-    .cr-d { margin-top: 8px; font-size: 11px; }
-    .cr-last { margin-top: 10px; font-size: 9px; line-height: 12px; }
+    .cr-lead { margin-top: 14px; font-size: 15px; }
+    .cr-bench { margin-top: 28px; padding: 18px 14px 16px; box-shadow: inset 0 0 0 1.5px var(--steel2), 7px 7px 0 var(--ink); }
+    .cr-bays { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .cr-art { height: 110px; } .cr-art svg { height: 104px; }
+    .cr-t { font-size: 21px; }
+    .cr-d { font-size: 14px; }
+    .cr-tally { flex-direction: column; align-items: stretch; gap: 10px; }
+    .cr-count { white-space: normal; font-size: 12px; }
+    .cr-cta :global(.btn) { width: 100%; }
   }
 </style>
 <script>
   const root = document.querySelector<HTMLElement>('[data-care]');
   if (root) {
     const KEY = 'glass-care-tag-v1';
-    type S = Record<string, string>;
-    let st: S = {};
+    let st: Record<string, string> = {};
     try { st = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch { st = {}; }
     const items = [...root.querySelectorAll<HTMLElement>('[data-care-it]')];
     const n = root.querySelector<HTMLElement>('[data-care-n]')!;
+    const pipe = root.querySelector<HTMLElement>('[data-care-pipe]');
     const fmt = (iso: string) => { const d = new Date(iso); return isNaN(+d) ? '_ _ / _ _' : `${String(d.getMonth() + 1).padStart(2, '0')} / ${String(d.getDate()).padStart(2, '0')}`; };
     const paint = () => {
       let done = 0;
       items.forEach((it) => {
-        const id = it.dataset.careIt!; const cb = it.querySelector<HTMLInputElement>('[data-care-cb]')!; const dt = it.querySelector<HTMLElement>('[data-care-date]')!;
-        cb.checked = !!st[id]; if (st[id]) done++;
-        dt.textContent = st[id] ? fmt(st[id]) : '_ _ / _ _';
+        const id = it.dataset.careIt!; const b = it.querySelector<HTMLButtonElement>('[data-care-cb]')!;
+        const on = !!st[id]; if (on) done++;
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        it.classList.toggle('is-done', on);
+        it.querySelector<HTMLElement>('[data-care-date]')!.textContent = on ? fmt(st[id]) : '_ _ / _ _';
       });
       n.textContent = String(done);
+      pipe?.style.setProperty('--p', String(done / 3));
     };
-    items.forEach((it) => it.querySelector<HTMLInputElement>('[data-care-cb]')!.addEventListener('change', (e) => {
-      const id = it.dataset.careIt!;
-      if ((e.target as HTMLInputElement).checked) st[id] = new Date().toISOString(); else delete st[id];
-      try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* private mode: still works for this visit */ }
-      paint();
-    }));
+    items.forEach((it) => {
+      const b = it.querySelector<HTMLButtonElement>('[data-care-cb]')!;
+      b.hidden = false;
+      b.addEventListener('click', () => {
+        const id = it.dataset.careIt!;
+        if (st[id]) delete st[id]; else { st[id] = new Date().toISOString(); it.classList.remove('is-run'); void it.offsetWidth; it.classList.add('is-run'); }
+        try { localStorage.setItem(KEY, JSON.stringify(st)); } catch { /* private mode: still works for this visit */ }
+        paint();
+      });
+      it.addEventListener('animationend', () => it.classList.remove('is-run'));
+    });
     paint();
-    // Swing in on scroll (motion only; the CSS start state is -3deg under html.motion, 0 otherwise).
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { root.classList.add('in'); io.disconnect(); } }), { rootMargin: '0px 0px -20% 0px' });
-      io.observe(root);
-    } else root.classList.add('in');
   }
 </script>

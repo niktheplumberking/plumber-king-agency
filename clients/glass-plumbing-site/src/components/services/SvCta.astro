@@ -1,78 +1,172 @@
 ---
-// CTA "text a photo" (Figma 718:522 y 7240 h 700 / mobile y 7269 h 776). Ink section with a meniscus rise, two buttons and a
-// phone mock showing an example text (the valve photo). Phone: heading, phone mock, then the two buttons full width.
+// CTA "text a photo", fix round C (audit vs rule 14: text left / phone mock right). New idea, "Tag the part": one centred
+// composition on ink. A drawn under-sink cabinet (doors open: basin, two shut-off valves, braided supply lines, disposal,
+// P-trap, drain arm) is the stage. Pick a part (chips under the cabinet, or tap its pulsing ring): it lights up, the rest
+// dims, a string draws from the part down to a steel tag that names it, says what it does, how to photograph it and gives
+// an example text. The visitor learns the one word they lacked, then the Text button sits right under the tag.
+// 21st.dev: "Hairline Exploded" (@hello_54e122be/hairline-exploded, id 36593: highlights the layer under the pointer,
+// dims the rest) + "Doodle Callout" (@adrielzimbril/doodle-callout, id 32677: a line draws itself to a label), adapted
+// to Astro + radios + CSS :has (works with no JS; arrow keys native), re-skinned: ink cabinet, steel tag with punched
+// hole, powder string and glow, meniscus seam (kept). Reduced motion: the string and tag show without drawing.
+// Copy: no promise to identify; only "text a photo".
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
 import Seam from '../kit/Seam.astro';
-import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
+// id, chip label, anchor x/y in the 800 x 470 viewBox, what it is, how to photograph it, example text
+const P = [
+  ['valve', 'Shut-off valve', 200, 338, 'The small handle on the pipe coming out of the wall. Turning it stops the water to this sink.', 'Snap the handle and the pipe it sits on.', 'The shut-off under my sink drips.'],
+  ['supply', 'Supply line', 246, 236, 'The braided hose from the shut-off up to the tap. Drips often start at the nut on either end.', 'Snap both ends of the hose.', 'Water on the supply line hose.'],
+  ['disposal', 'Disposal', 400, 212, 'The motor under the drain, if your sink has one.', 'Snap the bottom and the side label.', 'The disposal hums but won’t spin.'],
+  ['trap', 'P-trap', 548, 322, 'The U-bend under the drain. It holds a little water that keeps sewer smell out.', 'Snap the bend and the nuts on it.', 'The U-bend under the sink leaks.'],
+  ['drain', 'Drain arm', 640, 274, 'Where the drain pipe goes into the wall.', 'Snap where it meets the wall.', 'Leak where the drain meets the wall.'],
+] as const;
+const css = P.map(([id]) => `
+.ct:has(#ct-p-${id}:checked) .ct-pt[data-p="${id}"]{opacity:1;filter:drop-shadow(0 0 6px rgba(132,179,199,.85))}
+.ct:has(#ct-p-${id}:checked) .ct-pt[data-p="${id}"] .hl{stroke:var(--powder);stroke-width:4}
+.ct:has(#ct-p-${id}:checked) .ct-str[data-p="${id}"]{stroke-dashoffset:0;opacity:1}
+.ct:has(#ct-p-${id}:checked) .ct-knot[data-p="${id}"]{opacity:1}
+.ct:has(#ct-p-${id}:checked) .ct-tag[data-p="${id}"]{display:grid}
+.ct:has(#ct-p-${id}:checked) .ct-hot[data-p="${id}"]{--ring:var(--powder)}
+.ct:has(#ct-p-${id}:checked) .ct-chip[for="ct-p-${id}"]{background:var(--powder);color:var(--ink);border-color:var(--powder)}`).join('');
 ---
-<section class="ct on-ink seam-host" data-m-section>
+<section class="ct on-ink seam-host" data-m-section data-ct>
   <Seam from="var(--frost)" to="var(--ink)" flip d={48} dm={32} />
-  <div class="wrap ct-grid" data-ct>
-    <div class="ct-l">
-      <Eyebrow text="Not sure what it’s called?" />
-      <h2 class="h2 ct-h" data-t="2" style="--h2:56px;--h2m:30px">Text a photo.<br /><span class="tone">We’ll tell you what it is.</span></h2>
-      <p class="ct-lead" data-t="3">Snap the leak, the label or the valve and send it to <span class="nowrap">{SITE.phone}</span> with your town.</p>
-    </div>
+  <style is:inline set:html={css}></style>
+  <div class="wrap ct-in">
+    <Eyebrow text="Not sure what it’s called?" />
+    <h2 class="h2 ct-h" data-t="2" style="--h2:56px;--h2m:30px">Point to it.<br /><span class="tone">Then text a photo.</span></h2>
+    <p class="ct-lead" data-t="3">Pick the part under your sink to see its name. Then snap it and send it to <span class="nowrap">{SITE.phone}</span> with your town.</p>
+
+    <fieldset class="ct-pick" data-t="4">
+      <legend class="sr-only">Pick a part under the sink</legend>
+      {P.map(([id], i) => <input class="ct-r sr-only" type="radio" name="ct-part" id={`ct-p-${id}`} value={id} checked={i === 0} />)}
+      <div class="ct-stage">
+        <svg class="ct-svg" viewBox="0 0 800 470" aria-hidden="true" focusable="false">
+          <!-- cabinet -->
+          <rect x="60" y="30" width="680" height="410" rx="6" fill="var(--ink2)" stroke="var(--steel2)" stroke-width="2" />
+          <rect x="50" y="20" width="700" height="34" rx="4" fill="var(--steel)" />
+          <rect x="104" y="54" width="592" height="372" fill="var(--ink3)" />
+          <polygon points="60,54 104,70 104,410 60,440" fill="var(--ink2)" stroke="var(--steel2)" stroke-width="2" />
+          <polygon points="740,54 696,70 696,410 740,440" fill="var(--ink2)" stroke="var(--steel2)" stroke-width="2" />
+          <rect x="84" y="220" width="6" height="40" rx="3" fill="var(--steel2)" /><rect x="710" y="220" width="6" height="40" rx="3" fill="var(--steel2)" />
+          <line x1="104" y1="412" x2="696" y2="412" stroke="var(--ink2)" stroke-width="4" />
+          <!-- basin -->
+          <path d="M250 54 H550 V110 a30 30 0 0 1 -30 30 H280 a30 30 0 0 1 -30 -30 Z" fill="var(--steel2)" />
+          <rect x="290" y="132" width="14" height="14" fill="var(--steel)" /><rect x="324" y="132" width="14" height="14" fill="var(--steel)" />
+          <rect x="392" y="138" width="16" height="24" fill="var(--steel)" />
+          <!-- supply lines -->
+          <g class="ct-pt" data-p="supply">
+            <path class="hl" d="M200 318 C200 250 297 230 297 146" fill="none" stroke="var(--steel2)" stroke-width="3" stroke-linecap="round" />
+            <path d="M200 318 C200 250 297 230 297 146" fill="none" stroke="var(--frost3)" stroke-width="7" stroke-linecap="round" stroke-dasharray="5 3" />
+            <path class="hl" d="M268 318 C268 252 331 232 331 146" fill="none" stroke="var(--steel2)" stroke-width="3" stroke-linecap="round" />
+            <path d="M268 318 C268 252 331 232 331 146" fill="none" stroke="var(--frost3)" stroke-width="7" stroke-linecap="round" stroke-dasharray="5 3" />
+          </g>
+          <!-- shut-off valves -->
+          <g class="ct-pt" data-p="valve">
+            {[200, 268].map((x) => (
+              <g>
+                <circle cx={x} cy="372" r="14" fill="var(--steel2)" />
+                <rect x={x - 5} y="330" width="10" height="42" fill="var(--steel)" />
+                <rect class="hl" x={x - 13} y="318" width="26" height="22" rx="4" fill="var(--steel)" stroke="var(--steel2)" stroke-width="2" />
+                <ellipse class="hl" cx={x + 22} cy="329" rx="10" ry="6" fill="var(--frost)" stroke="var(--steel2)" stroke-width="2" />
+              </g>
+            ))}
+          </g>
+          <!-- disposal -->
+          <g class="ct-pt" data-p="disposal">
+            <rect class="hl" x="352" y="160" width="96" height="108" rx="20" fill="var(--steel)" stroke="var(--steel2)" stroke-width="2" />
+            <rect x="352" y="186" width="96" height="8" fill="var(--steel2)" />
+            <circle cx="400" cy="240" r="8" fill="var(--ink3)" />
+          </g>
+          <!-- P-trap -->
+          <g class="ct-pt" data-p="trap">
+            <path class="hl" d="M448 222 H520 V300 a28 28 0 0 0 56 0 V274" fill="none" stroke="var(--frost2)" stroke-width="16" stroke-linejoin="round" />
+            <rect x="512" y="262" width="16" height="10" fill="var(--steel2)" /><rect x="568" y="288" width="16" height="10" fill="var(--steel2)" />
+          </g>
+          <!-- drain arm -->
+          <g class="ct-pt" data-p="drain">
+            <path class="hl" d="M576 274 H646" fill="none" stroke="var(--frost2)" stroke-width="16" />
+            <circle class="hl" cx="652" cy="274" r="16" fill="var(--steel2)" stroke="var(--steel2)" stroke-width="2" />
+          </g>
+          <!-- strings to the tag -->
+          {P.map(([id, , x, y]) => <path class="ct-str" data-p={id} d={`M${x} ${y} Q ${(x + 400) / 2} ${y + 90} 400 468`} pathLength="1" />)}
+          {P.map(([id, , x, y]) => <circle class="ct-knot" data-p={id} cx={x} cy={y} r="5" />)}
+        </svg>
+        {P.map(([id, name, x, y]) => (
+          <label class="ct-hot" data-p={id} for={`ct-p-${id}`} style={`left:${(x / 800) * 100}%;top:${(y / 470) * 100}%`} aria-hidden="true" title={name}><span></span></label>
+        ))}
+      </div>
+      <div class="ct-chips" role="presentation">
+        {P.map(([id, name]) => <label class="ct-chip" for={`ct-p-${id}`}>{name}</label>)}
+      </div>
+      <div class="ct-tags" aria-live="polite">
+        {P.map(([id, name, , , what, snap, ex]) => (
+          <div class="ct-tag" data-p={id}>
+            <i class="ct-hole" aria-hidden="true"></i>
+            <p class="ct-tn">{name}</p>
+            <p class="ct-tw">{what}</p>
+            <p class="ct-ts"><span>Photo</span>{snap}</p>
+            <p class="ct-tx"><span>Example text</span>“{ex} Largo.”</p>
+          </div>
+        ))}
+      </div>
+    </fieldset>
+
     <div class="ct-btns" data-t="3">
       <Btn look="line" icon="camera" label="Text a photo" sub={`TO ${SITE.phone}`} arrow size="l" w={280} h={64} hm={60} class="ct-b" />
       <Btn sub="OR CALL · 24/7" size="l" w={280} h={64} hm={60} class="ct-b" />
     </div>
-    <div class="ct-phone" data-t="4" aria-hidden="true">
-      <div class="ct-scr">
-        <i class="ct-notch"></i>
-        <p class="ct-to">To: {SITE.phone}</p>
-        <div class="ct-ph"><Img name="valve" alt="" sizes="(min-width:768px) 160px, 112px" box={160 / 200} boxM={112 / 140} widths={[240, 320, 480]} /></div>
-        <p class="ct-msg">This valve drips. Largo.</p>
-        <p class="ct-ex">Example</p>
-      </div>
-    </div>
   </div>
 </section>
 <style>
-  .ct { position: relative; padding: 90px 0 90px; }
-  .ct-grid { display: grid; grid-template-columns: minmax(0, 640px) 280px; grid-template-areas: 'l phone' 'btn phone'; grid-template-rows: auto 1fr; justify-content: space-between; align-items: start; padding-right: 140px; }
-  .ct-l { grid-area: l; padding-top: 50px; }
+  .ct { position: relative; padding: 110px 0 100px; }
+  .ct-in { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .ct-h { margin-top: 16px; color: var(--white); }
-  .ct-lead { margin-top: 34px; max-width: 520px; font-size: 18px; line-height: 1.5; color: var(--white); }
-  .ct-btns { grid-area: btn; display: flex; flex-wrap: wrap; gap: 16px; margin-top: 26px; }
-  .ct-phone { grid-area: phone; position: relative; width: 280px; height: 520px; padding: 14px; border-radius: 36px; background: var(--ink3); box-shadow: inset 0 0 0 2px var(--steel2), 12px 12px 0 var(--powder); }
-  .ct-scr { position: relative; height: 100%; border-radius: 26px; background: var(--frost); color: var(--ink); }
-  .ct-notch { position: absolute; left: 90px; top: 10px; width: 72px; height: 18px; border-radius: 9px; background: var(--ink3); }
-  .ct-to { position: absolute; left: 16px; top: 48px; font-family: var(--f-m); font-weight: 700; font-size: 9px; line-height: 12px; letter-spacing: .01em; }
-  .ct-ph { position: absolute; left: 82px; top: 82px; width: 160px; height: 200px; border-radius: 16px; overflow: hidden; }
-  .ct-msg { position: absolute; left: 42px; top: 296px; width: 200px; height: 64px; padding: 20px 16px; border-radius: 16px; background: var(--pdeep); color: var(--white); font-weight: 600; font-size: 14px; line-height: 1.5; }
-  /* R2 polish: the example text arrives like a real one when the phone scrolls in: photo, then message, then "Delivered". */
-  :global(html.motion) .ct-ph, :global(html.motion) .ct-msg, :global(html.motion) .ct-ex { opacity: 0; translate: 0 14px; scale: .96; transition: opacity .5s var(--ease-io), translate .6s var(--ease-io), scale .6s var(--ease-io); }
-  :global(html.motion) .ct-grid.is-in .ct-ph, :global(html.motion) .ct-grid.is-in .ct-msg, :global(html.motion) .ct-grid.is-in .ct-ex { opacity: 1; translate: 0 0; scale: 1; }
-  :global(html.motion) .ct-grid.is-in .ct-msg { transition-delay: .55s; } :global(html.motion) .ct-grid.is-in .ct-ex { transition-delay: 1s; }
-  .ct-ex { position: absolute; left: 182px; top: 370px; font-family: var(--f-m); font-weight: 700; font-size: 9px; line-height: 12px; letter-spacing: .01em; color: var(--muted); }
+  .ct-lead { margin-top: 22px; max-width: 560px; font-size: 18px; line-height: 1.5; color: var(--white); }
 
-  @media (min-width: 768px) and (max-width: 1279px) {
-    .ct-grid { grid-template-columns: minmax(0, 1fr) 280px; gap: 0 40px; padding-right: 0; }
-  }
+  .ct-pick { width: 800px; max-width: 100%; margin: 40px 0 0; padding: 0; border: 0; min-width: 0; }
+  .ct-stage { position: relative; }
+  .ct-svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .ct-pt { opacity: .5; transition: opacity .35s var(--ease-io), filter .35s var(--ease-io); }
+  .ct-pt .hl { transition: stroke .35s var(--ease-io); }
+  .ct-str { fill: none; stroke: var(--powder); stroke-width: 2.5; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; transition: stroke-dashoffset .7s var(--ease-io), opacity .2s; }
+  .ct-knot { fill: var(--powder); opacity: 0; transition: opacity .3s; }
+  .ct-hot { position: absolute; width: 44px; height: 44px; translate: -50% -50%; border-radius: 50%; cursor: pointer; --ring: rgba(132,179,199,.55); }
+  .ct-hot span { position: absolute; inset: 10px; border-radius: 50%; border: 2px solid var(--ring); transition: border-color .3s; }
+  html.motion .ct-hot span { animation: ct-pulse 2.4s var(--ease-io) infinite; }
+  @keyframes ct-pulse { 0%, 100% { scale: 1; } 50% { scale: 1.25; } }
+  .ct-hot:hover span { border-color: var(--powder); }
+
+  .ct-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+  .ct-chip { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1.5px solid rgba(238,243,244,.4); border-radius: 999px; color: var(--white); font: 700 13px/1 var(--f-m); letter-spacing: .04em; text-transform: uppercase; cursor: pointer; transition: background-color .3s var(--ease-io), color .3s var(--ease-io), border-color .3s; }
+  .ct-chip:hover { border-color: var(--powder); }
+  .ct-pick:has(.ct-r:focus-visible) .ct-chips { outline: 3px solid var(--powder); outline-offset: 6px; border-radius: 28px; }
+
+  .ct-tags { margin-top: 22px; min-width: 0; }
+  .ct-tag { display: none; position: relative; box-sizing: border-box; width: 520px; max-width: 100%; margin: 0 auto; grid-template-columns: minmax(0, 1fr); padding: 30px 28px 24px; gap: 10px; border-radius: 6px 6px 6px 6px; background: var(--steel); color: var(--ink); text-align: left; box-shadow: inset 0 0 0 1.5px var(--steel2), 8px 8px 0 var(--powder); }
+  html.motion .ct-tag { animation: ct-tag .45s var(--ease-io) .35s both; }
+  @keyframes ct-tag { from { opacity: 0; translate: 0 -10px; rotate: -1.5deg; } to { opacity: 1; translate: 0 0; rotate: 0deg; } }
+  .ct-hole { position: absolute; left: 50%; top: 10px; width: 12px; height: 12px; translate: -50% 0; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 3px var(--powder); }
+  .ct-tn { margin: 0; font: 800 26px/1.1 var(--f-h); letter-spacing: -0.02em; }
+  .ct-tw { margin: 0; font-size: 16px; line-height: 1.5; }
+  .ct-ts, .ct-tx { margin: 0; font-size: 15px; line-height: 1.5; }
+  .ct-ts span, .ct-tx span { display: inline-block; margin-right: 10px; padding: 3px 8px; border-radius: 2px; background: var(--ink); color: var(--white); font: 700 10px/14px var(--f-m); letter-spacing: .08em; text-transform: uppercase; vertical-align: 2px; }
+  .ct-tx { font-weight: 700; color: var(--ink); }
+
+  .ct-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 30px; }
+  @media (prefers-reduced-motion: reduce) { .ct-str, .ct-pt, .ct-pt .hl, .ct-chip { transition: none !important; } }
+  html:not(.motion) .ct-str { transition: none; }
   @media (max-width: 767px) {
     .ct { padding: 64px 0 64px; }
-    .ct-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'l' 'phone' 'btn'; padding: 0; }
-    .ct-l { padding-top: 0; }
     .ct-h { margin-top: 10px; }
-    .ct-lead { display: none; }
-    .ct-phone { justify-self: center; width: 200px; height: 370px; margin-top: 28px; padding: 10px; border-radius: 28px; box-shadow: inset 0 0 0 2px var(--steel2), 8px 8px 0 var(--powder); }
-    .ct-scr { border-radius: 20px; }
-    .ct-notch { left: 64px; top: 8px; width: 52px; height: 13px; border-radius: 7px; }
-    .ct-to { left: 12px; top: 34px; font-size: 8px; line-height: 11px; }
-    .ct-ph { left: 60px; top: 56px; width: 112px; height: 140px; border-radius: 12px; }
-    .ct-msg { left: 30px; top: 208px; width: 142px; height: 48px; padding: 15px 12px; border-radius: 12px; font-size: 11px; }
-    .ct-ex { left: 126px; top: 264px; font-size: 8px; line-height: 11px; }
-    .ct-btns { flex-direction: column; gap: 12px; margin-top: 30px; }
+    .ct-lead { margin-top: 14px; font-size: 15px; }
+    .ct-pick { margin-top: 24px; }
+    .ct-chips { gap: 6px; margin-top: 16px; }
+    .ct-chip { padding: 0 12px; font-size: 11px; }
+    .ct-tag { padding: 28px 18px 20px; box-shadow: inset 0 0 0 1.5px var(--steel2), 6px 6px 0 var(--powder); }
+    .ct-tn { font-size: 21px; } .ct-tw { font-size: 15px; } .ct-ts, .ct-tx { font-size: 14px; }
+    .ct-btns { flex-direction: column; align-self: stretch; gap: 12px; margin-top: 24px; }
     .ct-btns :global(.ct-b) { width: 100%; }
   }
 </style>
-<script>
-  const ct = document.querySelector<HTMLElement>('[data-ct]');
-  if (ct) {
-    if ('IntersectionObserver' in window) { const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { ct.classList.add('is-in'); io.disconnect(); } }), { rootMargin: '0px 0px -20% 0px' }); io.observe(ct.querySelector('.ct-phone')!); }
-    else ct.classList.add('is-in');
-  }
-</script>

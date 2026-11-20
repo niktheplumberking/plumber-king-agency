@@ -2,8 +2,8 @@
 // /thank-you (noindex). Figma 731:437 desktop / 731:637 mobile: Confirmation (frost: pdeep check disc, two-tone H1, red
 // call button, "Work order" spec plate), What happens next (three numbered housings filling a third at a time), Call or
 // follow (ink, meniscus rise; call panel + Instagram panel), While you wait (two framed photos), Towns strip, footer.
-// "Kody to confirm" (NOTES): how fast he replies, so no reply time is shown; "You hear the price before any work starts"
-// is the Figma copy (home NOTES: Kody to confirm the price-first promise).
+// "Kody to confirm" (NOTES): how fast he replies, so no reply time is shown. Fix round C: the unconfirmed price-first
+// promise is replaced by Parker L's review line (reviews.ts, word for word).
 // R2 polish (services-work-faq builder): section heads centred (rule 17); the step housings fill one after another and
 // lift on hover; the Instagram panel shows the public record (653 followers, verified, 34 posts, read 17 Nov 2026 per
 // REVISION-R2 point 8); the two photos lift with their offset shadow on hover.
@@ -17,9 +17,9 @@ import Img from '../components/ui/Img.astro';
 import TownsStrip from '../components/global/TownsStrip.astro';
 import { SITE } from '../data/site';
 const STEPS = [
-  { n: '1', fill: 0.25, t: 'We read it', p: 'Your message and photos go straight to the crew, not a call centre.' },
+  { n: '1', fill: 0.25, t: 'We read it', p: 'Your message and photos reach Glass Plumbing Services.' },
   { n: '2', fill: 0.5, t: 'We call or text back', p: 'We reply to the number you gave us.' },
-  { n: '3', fill: 0.75, t: 'You get the price', p: 'You hear the price before any work starts.' },
+  { n: '3', fill: 0.75, t: 'Then the estimate', p: 'One customer wrote: “Kody came out the same day I called to give an estimate”.' },
 ];
 ---
 <Base title={`Thank you · ${SITE.name}`} description="Your message is in. Water coming in right now? Call Glass Plumbing Services on (727) 512-0673, 24/7." path="/thank-you" noindex loader={false}>

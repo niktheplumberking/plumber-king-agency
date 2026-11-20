@@ -13,7 +13,7 @@ import AboutGiving from '../components/about/AboutGiving.astro';
 import AboutCall from '../components/about/AboutCall.astro';
 import TownsStrip from '../components/global/TownsStrip.astro';
 import { BUSINESS_ID } from '../lib/schema';
-const description = 'A Florida-licensed plumbing contractor, his brother and their crew, fixing homes and businesses across Pinellas County from Largo.';
+const description = 'A Florida-licensed plumbing contractor and his crew, fixing homes and businesses across Pinellas County from Largo.';
 const jsonld = [{ '@context': 'https://schema.org', '@type': 'AboutPage', about: { '@id': BUSINESS_ID() }, mainEntity: { '@id': BUSINESS_ID() } }];
 ---
 <Base title="About Glass Plumbing Services · Largo, FL Plumbers" description={description} path="/about" og="crew-water-heater-tank"

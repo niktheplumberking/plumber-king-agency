@@ -36,8 +36,8 @@ const IG = { posts: SITE.social.instagramStats.posts, followers: SITE.social.ins
           <p class="of-nm">{SITE.name} · {SITE.city}, {SITE.region}</p>
         </div>
         <dl class="of-st">
-          <div><dt>posts</dt><dd data-count={IG.posts}>{IG.posts}</dd></div>
-          <div><dt>followers</dt><dd data-count={IG.followers}>{IG.followers}</dd></div>
+          <div><dt>posts</dt><dd>{IG.posts}</dd></div>
+          <div><dt>followers</dt><dd>{IG.followers}</dd></div>
         </dl>
         <Btn look="light" label="Follow on Instagram" href={SITE.social.instagram} external arrow w={260} class="of-btn" />
         <p class="of-read">Counts read {IG.read}</p>

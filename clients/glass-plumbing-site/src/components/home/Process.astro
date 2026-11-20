@@ -22,8 +22,10 @@ const steps: Step[] = [
     q: quote('John Rooney', 'He always does a great job and shows up when he says he’s going to, with the right equipment and attitude.') },
   { t: 'Price before any work', s: 'Price first', d: 'You hear the price and the plan first.',
     q: quote('Parker L', 'Kody came out the same day I called to give an estimate, and returned the next day to do the work.') },
-  { t: 'Permit if needed', s: 'Permit', d: 'Water heater swaps and repipes in Pinellas need one. We file it.',
-    plate: [['Needs one', 'Heater swaps · repipes'], ['Where', 'Pinellas County'], ['Files it', 'We do']] },
+  // Fix round A (LOCAL-FACTS 3): hedged. Largo and Clearwater run their own building divisions; the county covers
+  // unincorporated Pinellas. "Usually" because the research only infers which jobs need one.
+  { t: 'Permit if needed', s: 'Permit', d: 'Water heater swaps and repipes usually need one. Largo and Clearwater issue their own; the county covers unincorporated Pinellas. We tell you on the call if yours needs one.',
+    plate: [['Usually', 'Heater swaps · repipes'], ['Issued by', 'Your city or county'], ['Filed by', 'A licensed contractor']] },
   { t: 'Fixed, tested, cleaned up', s: 'Fixed & clean', d: 'We test it with you and leave it clean.',
     q: quote('Jacob Gars', 'He even went above and beyond to clean the bathroom spotless after!') },
 ];
@@ -101,7 +103,7 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
       const r = track.getBoundingClientRect();
       const run = track.offsetHeight - stage.offsetHeight;
       const y = window.scrollY + r.top + run * Math.min(0.9, i * 0.2 + 0.1);
-      const lenis = (window as any).__pbpLenis;
+      const lenis = (window as any).__glassLenis;
       if (lenis) lenis.scrollTo(y, { duration: 1.1 }); else window.scrollTo({ top: y, behavior: 'smooth' });
     }));
     const sync = () => {
@@ -164,11 +166,12 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
     :global(html.motion) .pin-only { display: inline; }
     :global(html.motion) .pr-h .tone { display: inline; }
     :global(html.motion) .pnls { display: grid; margin-top: 36px; }
+    /* Fix round A: never two panels legible at once. The old panel fades out in 0.25 s; the new one starts only after it. */
     :global(html.motion) .pnl { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden; translate: 0 16px;
-      transition: opacity .45s var(--ease-io), translate .45s var(--ease-io), visibility 0s linear .45s; }
+      transition: opacity .25s var(--ease-io), translate .25s var(--ease-io), visibility 0s linear .25s; }
     :global(html.motion) .pnl:first-child,
-    :global(html.motion) .pr-track.is-scrub .pnl.is-on:not(:has(~ .is-on)) { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .45s var(--ease-io) .1s, translate .45s var(--ease-io) .1s, visibility 0s; }
-    :global(html.motion) .pr-track.is-scrub .pnl:first-child:has(~ .is-on) { opacity: 0; visibility: hidden; translate: 0 16px; transition: opacity .45s var(--ease-io), translate .45s var(--ease-io), visibility 0s linear .45s; }
+    :global(html.motion) .pr-track.is-scrub .pnl.is-on:not(:has(~ .is-on)) { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .4s var(--ease-io) .28s, translate .4s var(--ease-io) .28s, visibility 0s linear .28s; }
+    :global(html.motion) .pr-track.is-scrub .pnl:first-child:has(~ .is-on) { opacity: 0; visibility: hidden; translate: 0 16px; transition: opacity .25s var(--ease-io), translate .25s var(--ease-io), visibility 0s linear .25s; }
     /* The step the water has reached lifts; steps not reached yet are dimmer. */
     :global(html.motion) .pr-track.is-scrub .st:not(.is-on) .st-l { color: rgb(255 255 255 / .6); }
     :global(html.motion) .st.is-on:not(:has(~ .is-on)) .st-l { color: var(--white); }

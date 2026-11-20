@@ -86,7 +86,10 @@ const R = [
     .lf-w { margin-top: 28px; }
     .lf { perspective: 1000px; }
     .lf { grid-template-columns: minmax(0, 1fr); filter: drop-shadow(6px 6px 0 var(--powder)); }
-    .lf-p { min-height: 0; padding: 20px 18px 14px; transform-origin: 50% 0; transform: rotateX(calc(var(--f) * -70deg * var(--d, 1))); }
+    /* R4 (re-check R3 MINOR: panels ran past the screen edges at 390 while unfolding): every panel now tips AWAY from the
+       viewer (odd panels hinge at the top, even at the bottom), so perspective only ever makes them smaller, never wider. */
+    .lf-p { min-height: 0; padding: 20px 18px 14px; transform-origin: 50% 0; transform: rotateX(calc(var(--f) * -55deg)); }
+    .lf-p:nth-child(even) { transform-origin: 50% 100%; transform: rotateX(calc(var(--f) * 55deg)); }
     .lf-p + .lf-p { margin-left: 0; margin-top: -1.5px; }
     .lf-p:first-child { border-radius: 8px 8px 0 0; } .lf-p:last-child { border-radius: 0 0 8px 8px; }
     .lf-p::after, .lf-p:nth-child(even)::after { background: linear-gradient(180deg, rgb(22 19 15 / calc(var(--f) * .22)), transparent 60%); }

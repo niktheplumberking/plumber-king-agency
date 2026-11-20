@@ -1,14 +1,18 @@
 ---
-// /about hero (Figma 724:746 y 172 h 740 / mobile 725:439 y 158 h 932). White. Eyebrow, H1 (= SEO H1), lead, the call
-// button, the crew photo (no names on faces: the alt says "a crew member") and Kody's business card.
-// R2 (Nick 20 Nov): the photo sat 120 px short of the grid's right edge with the face low in the frame -> the photo now
-// ends on the grid edge and its focal point is the face (52% 80% of the portrait file). The business card used to be a
-// cover crop of the two-sided photo (front + back stacked), which cut the logo in half -> it is now a real two-sided card:
-// the front shows the whole logo, a tap flips it to "Kody Glass, Owner" (21st.dev skyleen77/flip-card, re-skinned).
-// Fix round 3 (D, RECHECK BLOCKER 1b): at 390 the flip card ("Kody Glass, Owner") still stacked right above the single
-// face. The card now lives in the page's last section (AboutCall, "Keep the card"), far from any face at every width; the
-// hero keeps the centred photo (Nick's fix) and gets the licence line beside the call button instead. Earlier (fix B): the H1 no longer says "Glass Brothers" (that phrase is only used inside David Peek's quoted review). Visible breadcrumbs are gone site-wide (Nick):
-// Breadcrumbs stays for its BreadcrumbList JSON-LD and its nav is hidden here.
+// /about hero, R4 (independent re-check R3 MAJOR 4: text left / photo right with nothing to touch, rules 14 + 15; Nick R2
+// point 8: centre the photo). New idea, THE WINDOW OPENS: one centred column. Eyebrow, H1 (= SEO H1), lead, the call
+// button and the licence line sit centred on top; under them the crew photo is centred and first seen through a narrow
+// pill-shaped window, the shape of a filter-housing glass. As you scroll, the window opens to the whole photo (kit scrub
+// data-scrub-ft scrubs one custom property, --o, from 1 to 0, which drives the clip-path inset and radius), and the
+// powder offset shadow follows the window's shape (drop-shadow on the frame). No name anywhere in the section: the only
+// face on screen is never beside a name (the alt says "a crew member").
+// 21st.dev: "Scroll media expansion hero" (@arunachalam, id 1932: media expands as you scroll) + "Video Scroll Hero"
+// (@isaiahbjork, id 7512: centred media scales up with the scroll), rebuilt on the kit scrub engine, no React, re-skinned
+// as the Glass housing window.
+// Nearest match: Glass AboutRecord / home Hero (photo housings with plates, static), Glass reviews TownReview (photo seen
+// through letters), Mike about AHero (logo in hex halos + polaroid), Khinda city Owner (layers shift toward the pointer).
+// None opens a window onto the photo with the scroll.
+// No JS / reduced motion: the window is fully open.
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
 import Btn from '../kit/Btn.astro';
@@ -16,63 +20,56 @@ import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
 ---
 <section class="bhero" data-m-section data-m-hero aria-labelledby="bhero-h">
-  <div class="wrap bh-grid">
-    <div class="bh-copy">
-      <Breadcrumbs items={[{ label: 'About', href: '/about' }]} class="bh-crumbs" t={false} />
-      <Eyebrow text="Glass Plumbing Services · Largo, FL" t="1" class="bh-eb bh-eb--d" />
-      <Eyebrow text="Glass Plumbing Services · Largo" t="1" class="bh-eb bh-eb--m" />
-      <h1 id="bhero-h" class="bh-h" data-t="2">Meet the crew<br /><span class="tone">behind the van.</span></h1>
-      <p class="bh-lead" data-t="3" data-fx="nudge"><span class="d">A Florida-licensed plumbing contractor and his crew, fixing homes and businesses across Pinellas County from Largo.</span><span class="m">A Florida-licensed plumbing contractor and his crew, fixing homes and businesses across Pinellas from Largo.</span></p>
-      <div class="bh-act">
-        <div class="bh-btn"><Btn look="call" sub="Call or text · 24/7" size="l" w={320} wm={350} t="3" /></div>
-        <p class="bh-lic" data-t="4">Florida licence {SITE.licence.number} · active on DBPR</p>
+  <div class="wrap bh-in">
+    <Breadcrumbs items={[{ label: 'About', href: '/about' }]} class="bh-crumbs" t={false} />
+    <Eyebrow text="Glass Plumbing Services · Largo, FL" t="1" class="bh-eb" />
+    <h1 id="bhero-h" class="bh-h" data-t="2">Meet the crew <span class="tone">behind the van.</span></h1>
+    <p class="bh-lead" data-t="3" data-fx="nudge">A Florida-licensed plumbing contractor and his crew, fixing homes and businesses across Pinellas County from Largo.</p>
+    <div class="bh-act">
+      <Btn look="call" sub="Call or text · 24/7" size="l" w={320} wm={350} t="3" />
+      <p class="bh-lic" data-t="4">Florida licence {SITE.licence.number} · active on DBPR</p>
+    </div>
+    <figure class="bh-fig" data-scrub data-start="top 72%" data-end="top 12%" data-start-m="top 88%" data-end-m="top 22%" data-lag="0.4">
+      <div class="bh-fr" data-scrub-ft='{"from":{"--o":1},"to":{"--o":0}}'>
+        <div class="bh-win">
+          <Img name="crew-selfie" alt="A Glass Plumbing crew member in a cap and sunglasses, taking a selfie in the work van" priority focus="50% 62%"
+            sizes="(min-width:768px) 520px, 320px" box={520 / 640} boxM={320 / 400} widths={[320, 520, 640, 1040]} />
+        </div>
       </div>
-    </div>
-    <div class="bh-media">
-      <figure class="bh-photo" data-t="4" data-fx="frame">
-        <Img name="crew-selfie" alt="A Glass Plumbing crew member in a cap and sunglasses, taking a selfie in the work van" priority focus="52% 80%"
-          sizes="(min-width:1280px) 460px, (min-width:768px) 38vw, 280px" box={460 / 560} boxM={280 / 340} widths={[280, 460, 560, 920]} />
-      </figure>
-    </div>
+    </figure>
   </div>
 </section>
 
 <style>
-  .bhero { position: relative; background: var(--white); padding: 72px 0 84px; }
+  .bhero { position: relative; background: var(--white); padding: 64px 0 96px; }
   .bhero :global(.bh-crumbs) { display: none; }
-  .bh-grid { display: grid; grid-template-columns: minmax(0, 640px) 460px; justify-content: space-between; align-items: center; }
-  .bhero :global(.bh-eb) { margin-top: 0; }
-  .bhero :global(.bh-eb--m) { display: none; }
-  .bh-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 88px; line-height: .96; letter-spacing: -.02em; color: var(--ink); white-space: nowrap; }
-  .bh-h .tone { color: var(--pdeep); }
-  .bh-lead { margin-top: 24px; max-width: 560px; font-size: 19px; line-height: 1.5; color: var(--ink); }
-  .bh-act { display: flex; align-items: center; gap: 44px; margin-top: 36px; }
-  .bh-media { position: relative; width: 460px; }
-  .bh-photo { position: relative; margin: 0; width: 460px; height: 560px; border-radius: 6px; box-shadow: 12px 12px 0 var(--powder); }
-  .bh-photo :global(picture), .bh-photo :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 6px; }
-  .bh-photo::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 6px; pointer-events: none; }
+  .bh-in { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .bhero :global(.bh-eb) { margin-top: 0; justify-content: center; }
+  .bh-h { margin-top: 16px; font-family: var(--f-h); font-weight: 800; font-size: 88px; line-height: .98; letter-spacing: -.02em; color: var(--ink); }
+  .bh-h .tone { display: block; color: var(--pdeep); }
+  .bh-lead { margin-top: 22px; max-width: 620px; font-size: 19px; line-height: 1.5; color: var(--ink); }
+  .bh-act { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 32px; }
+  .bh-lic { font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 1.5; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
 
-  .bh-lic { font-family: var(--f-m); font-weight: 700; font-size: 12px; line-height: 1.5; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); max-width: 220px; }
-  .m { display: none; }
+  /* The window: --o = 1 a narrow housing-glass pill, 0 the whole photo. Static CSS = open; html.motion starts closed. */
+  .bh-fig { margin: 52px 0 0; }
+  .bh-fr { --o: 0; filter: drop-shadow(2px 0 0 var(--ink)) drop-shadow(-2px 0 0 var(--ink)) drop-shadow(0 2px 0 var(--ink)) drop-shadow(0 -2px 0 var(--ink)) drop-shadow(12px 12px 0 var(--powder)); }
+  :global(html.motion) .bh-fr { --o: 1; }
+  .bh-win { position: relative; width: 520px; height: 640px; overflow: hidden;
+    clip-path: inset(calc(var(--o) * 4%) calc(var(--o) * 25%) round calc(var(--o) * 240px + 8px)); }
+  .bh-win :global(picture), .bh-win :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; }
 
   @media (min-width: 768px) and (max-width: 1279px) {
-    .bh-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .72fr); column-gap: 48px; }
-    .bh-h { font-size: clamp(52px, 6.6vw, 88px); white-space: normal; }
-    .bh-media { width: 100%; }
-    .bh-photo { width: 100%; height: auto; aspect-ratio: 460 / 560; }
-    .bh-act { flex-direction: column; align-items: flex-start; gap: 36px; }
+    .bh-h { font-size: clamp(56px, 7vw, 88px); }
   }
   @media (max-width: 767px) {
-    .bhero { padding: 32px 0 88px; }
-    .bh-grid { display: flex; flex-direction: column; align-items: stretch; }
-    .bhero :global(.bh-eb--d) { display: none; }
-    .bhero :global(.bh-eb--m) { display: flex; }
-    .bh-h { margin-top: 10px; font-size: 44px; line-height: 1.02; white-space: normal; }
+    .bhero { padding: 32px 0 72px; }
+    .bh-h { margin-top: 10px; font-size: 44px; line-height: 1.02; }
     .bh-lead { margin-top: 14px; font-size: 16px; }
-    .bh-act { flex-direction: column; align-items: stretch; gap: 32px; margin-top: 28px; }
-    .d { display: none; } .m { display: inline; }
-    .bh-media { align-self: center; width: 280px; margin-top: 44px; }
-    .bh-photo { width: 280px; height: 340px; box-shadow: 8px 8px 0 var(--powder); }
-    .bh-lic { max-width: none; text-align: center; }
+    .bh-act { align-self: stretch; margin-top: 26px; }
+    .bh-act > :global(*) { width: 100%; max-width: 350px; }
+    .bh-fig { margin-top: 36px; }
+    .bh-fr { filter: drop-shadow(1.5px 0 0 var(--ink)) drop-shadow(-1.5px 0 0 var(--ink)) drop-shadow(0 1.5px 0 var(--ink)) drop-shadow(0 -1.5px 0 var(--ink)) drop-shadow(7px 7px 0 var(--powder)); }
+    .bh-win { width: min(320px, calc(100vw - 56px)); height: 400px; clip-path: inset(calc(var(--o) * 4%) calc(var(--o) * 20%) round calc(var(--o) * 150px + 6px)); }
   }
 </style>

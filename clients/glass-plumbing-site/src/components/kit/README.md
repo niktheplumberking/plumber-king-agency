@@ -46,6 +46,7 @@ Progress follows the scroll (ScrollTrigger scrub on Lenis), never a clock. It is
 | `data-scrub-fill` (+ `data-axis`, `data-axis-m`, `data-rev`) | an element | Scaled 0 → 1 (or 1 → 0) along x or y. CSS sets the origin and the start scale. |
 | `data-scrub-turn="a,b"` (+ `data-origin="x y"`) | an element | Rotation a → b degrees. |
 | `data-scrub-tw='{json}'` | an element | Tweened from these vars to its CSS state. |
+| `data-scrub-ft='{"from":{},"to":{}}'` | an element | Tweened from `from` to `to` (R4). The static CSS holds the end state; the component's `html.motion` CSS holds the start state (e.g. a custom property), so frame 0 = the CSS before the build. |
 | `data-scrub-y="px"` | an element | Drifts down by px over the pass. |
 | `data-stop` (+ `data-at`, `data-at-m`, `data-at-el`, `data-rot`, `data-scale`) | an element | A numbered stop. Class mode: `.is-on` once the water reaches it. Pop mode: swells and turns, then settles; a `[data-lit]` child flashes. |
 

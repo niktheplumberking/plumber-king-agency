@@ -1,76 +1,92 @@
 ---
-// /about final CTA, fix round 3 (D, RECHECK MAJOR 1 + BLOCKER 1b). Was "Talk to the crew": a second Kody / Zak / Chase list
-// with "Named in N of 16" (the first one is "The names in the reviews" above) and "When you call, one of these picks up"
-// (who answers is not confirmed). Both are gone. New idea, "Keep the card": Kody's real business card, large and centred,
-// is the call to action. It tilts toward the pointer and turns over on a tap (front: the whole logo, 24/7, licensed and
-// insured; back: Kody Glass, Owner, the number, the licence). It moved here from the hero, so "Kody Glass, Owner" is never
-// in the same view as the single crew face at the top of the page (no names beside a single face, at any width).
-// 21st.dev: "Holographic Business Card" (@aakashmehra, id 44447: tilts toward the pointer, lifts on hover, flips on click),
-// adapted to vanilla TS + CSS 3D, re-skinned: no foil, a soft light that follows the pointer, the Glass powder offset shadow; the turn-over pill bites
-// the card's lower edge (the depth layer).
-// Nearest match: Glass home Crew also flips this card (there it sits on the van photo inside the crew section); here it is
-// the whole section, centred, with tilt, and the page's last call buttons. Mike's CTAs are a tear-off flyer, hex swell,
-// road sign, wall calendar; Khinda's a wall switch and a viewfinder; none is a card.
-// JS: two listeners on the card (pointer tilt, gated to fine pointers + motion) and the flip; nothing runs while idle.
-// Reduced motion: no tilt, the flip is a short cross-fade. No JS: the front shows and hover turns it over.
+// /about final CTA, R4 (independent re-check R3 MAJOR 2: Kody's business card turned over here AND in home Crew, the same
+// object and interaction twice; MINOR: its "Tap the card" pill covered the card's 24/7 strip). The card now lives on home
+// Crew only. New idea, THE KEYPAD: the one thing to keep from this page is the number, so the section is a steel phone
+// keypad under an ink display. As the keypad scrolls into view, the display types (727) 512-0673 digit by digit (kit
+// scrub class-mode stops, the scroll drives it). The twelve keys are real buttons: dial it yourself and the display
+// follows; at ten digits it says whether that is our number. The red key under the pad is the real call link (tel:).
+// 21st.dev: "Number Pad" (@bankkroll, id 3711: button + keyboard entry with phone formatting) + "PIN Keypad Unlock"
+// (@ziegfiroyt, id 22111: full keypad, display, backspace), rebuilt in vanilla TS, re-skinned: steel body with rivets,
+// ink keys with the powder offset shadow, a frost-on-ink mono display.
+// Nearest match: Glass /contact ConHero (a switchboard of five channel keys that fill like housings: it picks HOW to reach
+// us, nothing is dialled), Glass footer / home Emergency (the number set huge: static type), Mike drain PhoneCta (giant
+// number), Khinda contact (bell, drawers). None is a keypad you dial.
+// No JS: the display shows the number, the keys are hidden, the call and text buttons stay. Reduced motion: the number is
+// shown at once; the keys still work.
 import Head from '../areas/Head.astro';
 import Btn from '../kit/Btn.astro';
-import Img from '../ui/Img.astro';
 import { SITE } from '../../data/site';
+const NUM = SITE.phone; // (727) 512-0673
+const chars = [...NUM];
+const digits = chars.filter((c) => /\d/.test(c)).length;
+let k = 0;
+const at = chars.map((c) => (/\d/.test(c) ? (++k / digits) * 0.85 : null));
+const KEYS: [string, string][] = [['1', ''], ['2', 'ABC'], ['3', 'DEF'], ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'], ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'], ['*', ''], ['0', '+'], ['#', '']];
 ---
 <section class="bcall" data-m-section aria-labelledby="bcall-h">
   <div class="wrap bk-in">
     <div class="bk-head">
-      <Head eyebrow="Keep the card" l1="One number," l2="any hour." size={64} sizeM={40} id="bcall-h" br={false} />
-      <p class="bk-lead" data-t="3">It is the number on the van and on the card. Call it, or text a photo of the problem first.</p>
+      <Head eyebrow="Keep the number" l1="One number," l2="any hour." size={64} sizeM={40} id="bcall-h" br={false} />
+      <p class="bk-lead" data-t="3">The number on the van and on every page. Call it, or text a photo of the problem first.</p>
     </div>
 
-    <div class="bk-stage" data-t="4" data-fx="pop">
-      <div class="bk-tilt" data-bk-tilt>
-        <button class="bk-card" type="button" aria-pressed="false" data-bcard>
-          <span class="sr-only" data-bcard-label>Kody Glass's business card, front. Turn it over</span>
-          <span class="bk-inner" aria-hidden="true">
-            <span class="bk-face bk-front">
-              <Img name="business-card" alt="" sizes="(min-width:768px) 520px, 300px" fit="cover" widths={[340, 520, 700, 1040]} />
-            </span>
-            <span class="bk-face bk-back">
-              <Img name="business-card" alt="" sizes="(min-width:768px) 520px, 300px" fit="cover" widths={[340, 520, 700, 1040]} />
-            </span>
-          </span>
-        </button>
+    <div class="kp" data-kp data-scrub data-start="top 85%" data-end="center 45%" data-start-m="top 90%" data-end-m="center 55%" data-t="4" data-fx="up">
+      <i class="kp-rv" aria-hidden="true"></i><i class="kp-rv" aria-hidden="true"></i><i class="kp-rv" aria-hidden="true"></i><i class="kp-rv" aria-hidden="true"></i>
+      <div class="kp-scr">
+        <p class="kp-lb" aria-hidden="true"><span class="kp-dot"></span><span data-kp-lb>Line open · 24/7</span></p>
+        <p class="kp-num" data-kp-num>
+          <span class="kp-auto"><span class="sr-only">{NUM}</span><span aria-hidden="true">{chars.map((c, i) => at[i] == null ? <span class="ch">{c}</span> : <span class="ch dg" data-stop data-at={at[i]!.toFixed(3)}>{c}</span>)}</span></span>
+          <span class="kp-user" aria-hidden="true" data-kp-user></span>
+        </p>
+        <p class="kp-msg" data-kp-msg aria-live="polite"></p>
       </div>
-      <p class="bk-hint" aria-hidden="true" data-bk-hint-wrap><svg viewBox="0 0 16 16" width="12" height="12"><path d="M2.5 8a5.5 5.5 0 0 1 9.6-3.7M13.5 8a5.5 5.5 0 0 1-9.6 3.7M12.6 1.6v3h-3M3.4 14.4v-3h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-bcard-hint>Tap the card to turn it over</span></p>
-      <p class="sr-only">Front: Glass Plumbing Services, commercial and residential, {SITE.phone}, 24/7 emergency service, licensed and insured. Back: Kody Glass, Owner, {SITE.phone}, kodyglassplumbing@gmail.com, licensed and insured, {SITE.licence.number}.</p>
+      <div class="kp-keys" role="group" aria-label="Keypad: dial our number yourself">
+        {KEYS.map(([d, l]) => (
+          <button type="button" class="kk" data-kk={d} aria-label={d === '*' ? 'star' : d === '#' ? 'hash' : d}>
+            <span class="kk-d" aria-hidden="true">{d}</span><span class="kk-l" aria-hidden="true">{l}</span>
+          </button>
+        ))}
+      </div>
+      <div class="kp-foot">
+        <button type="button" class="kp-clr" data-kp-clr>Clear</button>
+        <Btn look="call" sub="Call now · 24/7" size="l" w={260} wm={200} class="kp-call" />
+      </div>
     </div>
 
-    <p class="bk-status" data-t="3"><span class="bk-live" aria-hidden="true"></span>Line open · 24/7</p>
     <div class="bk-btns">
-      <Btn look="call" sub="Call now · 24/7" size="l" w={300} wm={350} t="3" />
-      <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={240} wm={350} hm={56} t="3" />
+      <Btn look="line" label="Text a photo" icon="camera" arrow size="l" w={260} wm={350} hm={56} t="3" />
     </div>
   </div>
 </section>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>('.bcall [data-bcard]').forEach((b) => {
-    const label = b.querySelector<HTMLElement>('[data-bcard-label]')!;
-    const stage = b.closest<HTMLElement>('.bk-stage')!;
-    const hint = stage.querySelector<HTMLElement>('[data-bcard-hint]')!;
-    stage.classList.add('is-js');
-    b.addEventListener('click', () => {
-      const on = b.getAttribute('aria-pressed') !== 'true';
-      b.setAttribute('aria-pressed', String(on));
-      label.textContent = on ? "Kody Glass's business card, back: Kody Glass, Owner. Turn it back" : "Kody Glass's business card, front. Turn it over";
-      hint.textContent = on ? 'Tap again for the front' : 'Tap the card to turn it over';
-    });
-    // Tilt toward the pointer (fine pointers + motion only). The rect is read once on enter, never per frame.
-    const tilt = stage.querySelector<HTMLElement>('[data-bk-tilt]')!;
-    if (!document.documentElement.classList.contains('motion') || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    let r: DOMRect | null = null, raf = 0, px = 0, py = 0;
-    const paint = () => { raf = 0; tilt.style.setProperty('--ry', `${(px - .5) * 14}deg`); tilt.style.setProperty('--rx', `${(.5 - py) * 10}deg`); tilt.style.setProperty('--gx', `${px * 100}%`); };
-    tilt.addEventListener('pointerenter', () => { r = tilt.getBoundingClientRect(); tilt.classList.add('is-over'); });
-    tilt.addEventListener('pointermove', (e) => { if (!r) return; px = (e.clientX - r.left) / r.width; py = (e.clientY - r.top) / r.height; if (!raf) raf = requestAnimationFrame(paint); });
-    tilt.addEventListener('pointerleave', () => { r = null; tilt.classList.remove('is-over'); tilt.style.setProperty('--rx', '0deg'); tilt.style.setProperty('--ry', '0deg'); });
+  // Keypad: each key types into the user line (formatted like (727) 512-0673); at ten digits the message says whether it
+  // is our number. Clear empties it and brings the scroll-typed number back.
+  document.querySelectorAll<HTMLElement>('[data-kp]').forEach((kp) => {
+    kp.classList.add('is-js');
+    const user = kp.querySelector<HTMLElement>('[data-kp-user]')!;
+    const msg = kp.querySelector<HTMLElement>('[data-kp-msg]')!;
+    const ours = '7275120673';
+    let typed = '';
+    const fmt = (s: string) => {
+      const d = s.replace(/[^0-9]/g, '');
+      if (s !== d || d.length > 10) return s;
+      if (d.length <= 3) return d.length ? `(${d}` : '';
+      if (d.length <= 6) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+      return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+    };
+    const paint = () => {
+      kp.classList.toggle('is-user', typed.length > 0);
+      user.textContent = fmt(typed);
+      const d = typed.replace(/[^0-9]/g, '');
+      msg.textContent = typed.length >= 10 ? (d === ours && typed.length === 10 ? 'That’s us. Tap Call.' : 'Not our number. Ours is (727) 512-0673.') : '';
+      kp.classList.toggle('is-ours', d === ours && typed.length === 10);
+    };
+    kp.querySelectorAll<HTMLButtonElement>('[data-kk]').forEach((b) => b.addEventListener('click', () => {
+      if (typed.length >= 14) typed = '';
+      typed += b.dataset.kk; paint();
+    }));
+    kp.querySelector('[data-kp-clr]')!.addEventListener('click', () => { typed = ''; paint(); });
   });
 </script>
 
@@ -81,45 +97,53 @@ import { SITE } from '../../data/site';
   .bk-head :global(.ah-eb) { justify-content: center; }
   .bk-lead { max-width: 520px; margin-top: 18px; font-size: 18px; line-height: 1.5; color: var(--ink); }
 
-  /* The card, large and centred; the turn-over pill sits over its lower edge. */
-  .bk-stage { position: relative; width: 520px; margin-top: 56px; padding-bottom: 46px; }
-  .bk-tilt { --rx: 0deg; --ry: 0deg; --gx: 50%; position: relative; z-index: 2; perspective: 1600px; }
-  .bk-card { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; rotate: -3deg; transition: rotate .6s var(--ease-io), translate .6s var(--ease-io); }
-  .bk-tilt.is-over .bk-card { rotate: 0deg; translate: 0 -6px; }
-  .bk-inner { position: relative; display: block; aspect-ratio: 1341 / 765; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry));
-    transition: transform .8s var(--ease-io); }
-  .bk-tilt.is-over .bk-inner { transition: transform .25s ease-out; }
-  .bk-card[aria-pressed='true'] .bk-inner { transform: rotateX(var(--rx)) rotateY(calc(180deg + var(--ry))); }
-  .bk-tilt.is-over .bk-card[aria-pressed='true'] .bk-inner, .bk-tilt.is-over .bk-card .bk-inner { transition: transform .8s var(--ease-io); }
-  .bk-face { position: absolute; inset: 0; overflow: hidden; border-radius: 8px; background: var(--white); box-shadow: 12px 12px 0 var(--powder); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .bk-face::after { content: ''; position: absolute; inset: 0; border: 2px solid var(--ink); border-radius: 8px; pointer-events: none;
-    background: linear-gradient(105deg, transparent calc(var(--gx) - 30%), rgb(255 255 255 / .28) var(--gx), transparent calc(var(--gx) + 30%)); }
-  /* The source photo holds the front (x 22-1363, y 30-795 of 1385 x 1628) above the back (y 847-1612): each face is a
-     1341:765 window onto the same file, so both sides show whole (the logo is never cut). */
-  .bk-face :global(picture) { display: contents; }
-  .bk-face :global(img) { position: absolute; left: -1.641%; top: 0; width: 103.28%; height: auto; max-width: none; translate: 0 -1.843%; }
-  .bk-back { transform: rotateY(180deg); }
-  .bk-back :global(img) { translate: 0 -52.03%; }
-  :global(html:not(.js)) .bk-card:hover .bk-inner { transform: rotateY(180deg); }
-  .bk-card:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 8px; border-radius: 10px; }
-  .bk-hint { position: absolute; left: 50%; bottom: 26px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 14px; translate: -50% 0; border-radius: 15px;
-    background: var(--ink); color: var(--white); font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
-  .bk-stage:not(.is-js) .bk-hint { display: none; }
+  /* The keypad: a steel body, an ink display, twelve ink keys, the red call key. */
+  .kp { position: relative; width: 440px; margin-top: 52px; padding: 26px 26px 24px; border-radius: 22px; background: var(--steel); box-shadow: inset 0 0 0 1.5px var(--steel2), 14px 14px 0 var(--powder), 14px 14px 0 1.5px var(--ink); }
+  .kp-rv { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--steel2); box-shadow: inset 0 0 0 1px rgb(22 19 15 / .3); }
+  .kp-rv:nth-child(1) { left: 11px; top: 11px; } .kp-rv:nth-child(2) { right: 11px; top: 11px; }
+  .kp-rv:nth-child(3) { left: 11px; bottom: 11px; } .kp-rv:nth-child(4) { right: 11px; bottom: 11px; }
+  .kp-scr { padding: 16px 18px 14px; border-radius: 10px; background: var(--ink); color: var(--frost); text-align: left; box-shadow: inset 0 3px 0 rgb(0 0 0 / .4); }
+  .kp-lb { display: flex; align-items: center; gap: 8px; font: 700 10px/1 var(--f-m); letter-spacing: .1em; text-transform: uppercase; color: var(--powder); }
+  .kp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--powder); }
+  .kp-num { position: relative; display: grid; margin-top: 12px; font: 700 34px/1.1 var(--f-m); letter-spacing: -.01em; color: var(--white); white-space: nowrap; }
+  .kp-auto, .kp-user { grid-area: 1 / 1; min-height: 1.1em; }
+  .kp-user { display: none; }
+  .kp.is-user .kp-auto { visibility: hidden; }
+  .kp.is-user .kp-user { display: block; }
+  .kp.is-ours .kp-user { color: var(--powder); }
+  .ch { transition: opacity .3s var(--ease-io); }
+  :global(html.motion) .kp:not(.is-scrub) .dg, :global(html.motion) .kp.is-scrub .dg:not(.is-on) { opacity: 0; }
+  .kp-msg { min-height: 18px; margin-top: 8px; font: 500 12px/1.4 var(--f-m); color: var(--frost); }
+  .kp-keys { display: none; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+  .kp.is-js .kp-keys { display: grid; }
+  .kk { display: grid; place-items: center; align-content: center; height: 64px; border: 0; border-radius: 12px; background: var(--ink); color: var(--white); cursor: pointer;
+    box-shadow: 0 4px 0 var(--ink3); transition: translate .15s var(--ease-io), box-shadow .15s var(--ease-io), background-color .3s var(--ease-io); }
+  .kk:hover { background: var(--ink2); }
+  .kk:active { translate: 0 3px; box-shadow: 0 1px 0 var(--ink3); }
+  .kk:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .kk-d { font: 800 26px/1 var(--f-h); }
+  .kk-l { min-height: 10px; margin-top: 3px; font: 700 9px/1 var(--f-m); letter-spacing: .14em; color: var(--powder); }
+  .kp-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+  .kp-clr { display: none; min-height: 56px; padding: 0 18px; border: 0; border-radius: 4px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); font: 700 15px/1 var(--f-b); cursor: pointer; }
+  .kp.is-js .kp-clr { display: block; }
+  .kp-clr:hover { background: var(--frost); }
+  .kp-clr:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
+  .kp:not(.is-js) .kp-foot { justify-content: center; }
+  .bk-btns { display: flex; justify-content: center; gap: 16px; margin-top: 44px; }
+  @media (prefers-reduced-motion: reduce) { .ch, .kk { transition: none; } }
 
-  .bk-status { display: inline-flex; align-items: center; gap: 10px; height: 36px; margin-top: 48px; padding: 0 16px; border: 1.5px solid var(--ink); border-radius: 18px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-  .bk-live { width: 12px; height: 12px; border-radius: 50%; background: var(--pdeep); box-shadow: 0 0 0 3px var(--powder); }
-  .bk-btns { display: flex; justify-content: center; gap: 16px; margin-top: 22px; }
-  @media (prefers-reduced-motion: reduce) { .bk-inner, .bk-card { transition: none; } }
-  :global(html:not(.motion)) .bk-inner { transition: none; }
-
-  @media (min-width: 768px) and (max-width: 1279px) { .bk-stage { width: min(480px, 70vw); } }
   @media (max-width: 767px) {
     .bcall { padding: 64px 0 88px; }
     .bk-lead { margin-top: 12px; font-size: 16px; }
-    .bk-stage { width: min(300px, 100% - 40px); margin-top: 36px; padding-bottom: 36px; }
-    .bk-card { rotate: -2deg; }
-    .bk-face { box-shadow: 7px 7px 0 var(--powder); }
-    .bk-status { margin-top: 40px; }
-    .bk-btns { flex-direction: column; align-items: stretch; width: 100%; max-width: 350px; gap: 14px; }
+    .kp { width: 100%; max-width: 340px; margin-top: 36px; padding: 18px 16px 18px; border-radius: 18px; box-shadow: inset 0 0 0 1.5px var(--steel2), 8px 8px 0 var(--powder), 8px 8px 0 1.5px var(--ink); }
+    .kp-scr { padding: 12px 14px 10px; }
+    .kp-num { font-size: 26px; }
+    .kp-keys { gap: 9px; margin-top: 14px; }
+    .kk { height: 54px; }
+    .kk-d { font-size: 22px; }
+    .kp-foot { margin-top: 14px; }
+    .kp-clr { padding: 0 14px; }
+    .bk-btns { width: 100%; max-width: 350px; margin-top: 36px; }
+    .bk-btns > :global(*) { width: 100%; }
   }
 </style>

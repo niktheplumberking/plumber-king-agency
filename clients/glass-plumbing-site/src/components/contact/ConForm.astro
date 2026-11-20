@@ -74,7 +74,7 @@ const steps = [
       const a = v('message').length >= 3 || photo;
       const b = v('name').length >= 2 && v('phone').replace(/\D/g, '').length >= 10;
       st('01')?.classList.toggle('is-on', a); st('02')?.classList.toggle('is-on', b); st('03')?.classList.toggle('is-on', a && b);
-      const msg = a && b ? 'All set. Send it to Kody.' : '';
+      const msg = a && b ? 'All set. Send the job.' : '';
       if (live && msg !== last) { live.textContent = msg; last = msg; }
     };
     f.addEventListener('input', upd); f.addEventListener('change', upd);

@@ -2,7 +2,8 @@
 // /about "Owners and crew" (R2 rebuild: the R1 head-left / note-right + three static plates read as slop under rule 14).
 // White. Centred head + note, then three steel name plates as an expanding row (21st.dev vaib215/expanding-cards,
 // rebuilt in vanilla TS): the open plate grows and shows a word-for-word review that names that person; every plate
-// carries a lying water tube that fills to "named in X of 16 reviews" (counted from reviews.ts, data.ts). Hover, focus or
+// carries the plain line "named in X of 16 reviews" (counted from reviews.ts, data.ts; R4: the fill tube was the N/16
+// tally device, now plain text). Hover, focus or
 // click opens a plate. Phones: all three open, stacked. No photos (the page says why). Reduced motion: no width tween.
 import Head from '../areas/Head.astro';
 import { KODY, ZAK, CHASE, REVIEW_TOTAL } from './data';
@@ -25,7 +26,7 @@ const people = [
     </div>
     <ul class="bc-row" role="list" data-t="4" data-crew>
       {people.map((p, i) => (
-        <li class:list={['bc', i === 0 && 'is-open']} data-crew-item style={`--fill:${(p.n / REVIEW_TOTAL).toFixed(4)}`}>
+        <li class:list={['bc', i === 0 && 'is-open']} data-crew-item>
           <button class="bc-btn" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`bc-q-${p.id}`} data-crew-btn>
             <span class="bc-role">{p.role}</span>
             <span class="bc-name">{p.name}</span>
@@ -39,7 +40,6 @@ const people = [
             </figure>
           </div>
           <div class="bc-gauge">
-            <span class="bc-tube" aria-hidden="true"><span class="bc-water"></span></span>
             <span class="bc-gl">Named in <b>{p.n}</b> of {REVIEW_TOTAL} reviews</span>
           </div>
           <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
@@ -100,10 +100,7 @@ const people = [
   .bc-q blockquote { margin: 0; font-family: var(--f-h); font-weight: 600; font-size: 26px; line-height: 1.18; letter-spacing: -.01em; color: var(--pdeep); }
   .bc-q figcaption { margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--ink); }
   .bc-gauge { margin-top: auto; padding-top: 16px; border-top: 1px solid rgb(22 19 15 / .3); }
-  .bc-tube { position: relative; display: block; height: 22px; background: var(--white); border: 2px solid var(--ink); border-radius: 11px; overflow: hidden; }
-  .bc-water { position: absolute; inset: 0 auto 0 0; width: calc(var(--fill) * 100%); min-width: 14px; background: var(--powder); border-right: 2px solid var(--pdeep); transition: clip-path 1.2s var(--ease-io); clip-path: inset(0 0 0 0); }
-  :global(html.motion) .bc-row:not(.is-in) .bc-water { clip-path: inset(0 100% 0 0); }
-  .bc-gl { display: block; margin-top: 9px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--ink); white-space: nowrap; }
+  .bc-gl { display: block; margin-top: 0; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--ink); white-space: nowrap; }
   .bc-gl b { font-weight: 800; }
   .rv { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
   .rv:nth-of-type(1) { left: 6px; top: 6px; } .rv:nth-of-type(2) { right: 6px; top: 6px; }

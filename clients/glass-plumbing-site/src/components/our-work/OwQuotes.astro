@@ -10,18 +10,20 @@
 // the Glass ink with kit rivets; no carousel.
 // Nearest match: /reviews RevList (a moving three-column wall), home Reviews (three cards beside two housings), Mike
 // OWall / Khinda Work (photo walls), Mike RevSpotlight (one sheet at a time). None pairs jobs and reviews on a checkerboard.
+// R4 (re-check R3 MINOR, rule 16): the job tiles carry real job photos from the crew's Instagram that are not used anywhere
+// else on /our-work (job-state-heater, job-rough-in, job-vanity, job-supply-lines; cropped below the burnt-in captions, no
+// faces). Only four such photos exist, so the quilt is four jobs; the note says the photo shows that kind of job.
 // Quotes: word for word (the build fails if one is not a substring of its review in reviews.ts).
 import '../contact/cx.css';
 import Stars from '../contact/Stars.astro';
+import Img from '../ui/Img.astro';
 import { REVIEWS } from '../../data/reviews';
 import { SITE } from '../../data/site';
 const Q = [
-  { job: 'Shower drain', sub: 'Seminole', href: '/services', who: 'Cody Weaver', q: 'Kody came out and fixed my shower in Seminole that refused to drain.' },
-  { job: 'Water heater', sub: 'New install', href: '/services/water-heaters', who: 'Kevin Kelleman', q: 'Needed a new Water Heater, called and had one installed the next day at a great price.' },
-  { job: 'Water softener', sub: 'Replaced', href: '/services', who: 'Parker L', q: 'I hired Glass Plumbing Services to replace my water softener and was thoroughly pleased with the work!' },
-  { job: 'Shower faucet', sub: 'Leak fixed', href: '/services', who: 'Seth Nye', q: 'Hired glass plumbing services for a leaky shower faucet, Mr. Glass was here same day to replace pipes/ fittings and new kit and left here good as new!' },
-  { job: 'Build-out', sub: 'Commercial', href: '/services', who: 'Peter Van Buskirk', q: 'These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.' },
-  { job: 'New home', sub: 'Plumbing', href: '/services', who: 'Nelson Whitesell', q: 'His attention to detail has been excellent on my new home.' },
+  { job: 'Water heater', sub: 'New install', href: '/services/water-heaters', img: 'job-state-heater', alt: 'A new State water heater installed against a block wall, copper lines on top', who: 'Kevin Kelleman', q: 'Needed a new Water Heater, called and had one installed the next day at a great price.' },
+  { job: 'New construction', sub: 'Rough-in', href: '/services', img: 'job-rough-in', alt: 'Supply lines run through steel studs on a new build', who: 'John Rooney', q: 'Highly recommend him for any new construction or home remodels/repairs.' },
+  { job: 'Bathroom remodel', sub: 'Residential', href: '/services', img: 'job-vanity', alt: 'A new dark vanity with a stone top in a remodelled bathroom', who: 'Peter Van Buskirk', q: 'These guys can handle anything from a residential bathroom remodel to a high end commercial build-out.' },
+  { job: 'Pipes & fittings', sub: 'Leak fixed', href: '/services', img: 'job-supply-lines', alt: 'A hand on new braided supply lines under a sink', who: 'Seth Nye', q: 'Hired glass plumbing services for a leaky shower faucet, Mr. Glass was here same day to replace pipes/ fittings and new kit and left here good as new!' },
 ];
 Q.forEach(({ who, q }) => { const r = REVIEWS.find((x) => x.name === who); if (!r || !r.text.replace(/\s+/g, ' ').includes(q)) throw new Error(`OwQuotes: "${q}" is not in ${who}'s review`); });
 const g = SITE.google;
@@ -30,7 +32,7 @@ const g = SITE.google;
   <div class="wrap">
     <div class="oq-top">
       <p class="oq-eb" data-t="1">What customers say</p>
-      <h2 class="cx-h oq-h" id="oq-h" data-t="2"><span class="ln">Six jobs.</span> <span class="ln tone">Six customers’ words.</span></h2>
+      <h2 class="cx-h oq-h" id="oq-h" data-t="2"><span class="ln">Four jobs.</span> <span class="ln tone">Four customers’ words.</span></h2>
       <ul class="oq-rec" role="list" data-t="3">
         {[g.a, g.b].map((p, i) => (
           <li><a class="oq-pf" href={p.url} target="_blank" rel="noopener"><span class="oq-g" aria-hidden="true">G</span><b>{p.value}</b><Stars w={70} /><span class="oq-n">{p.count} reviews · profile {i + 1}</span><span class="sr-only"> on Google, read {g.checked} (opens in a new tab)</span></a></li>
@@ -41,6 +43,7 @@ const g = SITE.google;
       {Q.map((x, i) => (
         <li class:list={['pair', `p${i}`]}>
           <a class="job" href={x.href}>
+            <span class="job-ph"><Img name={x.img} alt={x.alt} sizes="(min-width:1024px) 250px, (min-width:768px) 290px, 150px" widths={[160, 250, 320, 500]} /></span>
             <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
             <span class="job-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             <span class="job-t">{x.job}</span>
@@ -54,7 +57,7 @@ const g = SITE.google;
         </li>
       ))}
     </ul>
-    <p class="oq-note" data-t="3"><span class="d">Point at a job to light its review.</span><span class="m">Tap a job to see its service.</span> Every quote is word for word from Google.</p>
+    <p class="oq-note" data-t="3"><span class="d">Point at a job to light its review.</span><span class="m">Tap a job to see its service.</span> Every quote is word for word from Google. Job photos are from the crew’s Instagram and show the same kind of job, not the reviewer’s own home.</p>
   </div>
 </section>
 <style>
@@ -74,16 +77,22 @@ const g = SITE.google;
   .pair { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
   .p2, .p3 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
   .p2 .job, .p3 .job { order: 2; }
-  .job { position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 230px; padding: 26px 24px; background: var(--ink); color: var(--white); text-decoration: none;
+  .job { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; min-height: 260px; padding: 26px 24px; background: var(--ink); color: var(--white); text-decoration: none;
     box-shadow: inset 0 0 0 1px var(--ink3); transition: background-color .45s var(--ease-io); }
-  .job .rv { position: absolute; top: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--ink3); }
+  .job-ph { position: absolute; inset: 0; overflow: hidden; }
+  .job-ph :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; transition: scale .6s var(--ease-io); }
+  .job-ph::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(22 19 15 / .35) 0%, rgb(22 19 15 / .1) 35%, rgb(22 19 15 / .88) 100%); transition: background-color .45s var(--ease-io); }
+  .job:hover .job-ph :global(img), .job:focus-visible .job-ph :global(img) { scale: 1.05; }
+  .job:hover .job-ph::after, .job:focus-visible .job-ph::after { background-color: rgb(47 97 120 / .45); }
+  .job > :not(.job-ph) { position: relative; z-index: 1; }
+  .job .job-n { position: absolute; }
+  .job .rv { position: absolute; z-index: 1; top: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--steel2); }
   .job .rv:first-child { left: 12px; } .job .rv:nth-child(2) { right: 12px; }
   .job-n { position: absolute; left: 24px; top: 26px; font: 700 12px/1 var(--f-m); letter-spacing: .08em; color: var(--powder); }
   .job-t { font: 800 30px/1.04 var(--f-h); letter-spacing: -.02em; }
-  .job-s { font: 500 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255 / .8); }
+  .job-s { font: 500 11px/15px var(--f-m); letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255 / .92); }
   .job-go { opacity: 0; transition: opacity .35s var(--ease-io); }
   .job:hover .job-go, .job:focus-visible .job-go { opacity: 1; }
-  .job:hover, .job:focus-visible { background: var(--pdeep); }
   .job:hover .job-n, .job:focus-visible .job-n { color: var(--white); }
   .job:focus-visible { outline: 3px solid var(--powder); outline-offset: -6px; }
   .rev { position: relative; z-index: 1; display: flex; flex-direction: column; margin: 0; padding: 26px 26px 22px; background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--frost3);
@@ -103,14 +112,14 @@ const g = SITE.google;
   .pair:has(.job:hover) .rev :global(.rev-st path:nth-child(4)) { transition-delay: .18s; } .pair:has(.job:hover) .rev :global(.rev-st path:nth-child(5)) { transition-delay: .24s; }
   .oq-note { margin-top: 30px; text-align: center; font: 500 11px/16px var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: rgb(255 255 255 / .8); }
   .oq-note .m { display: none; }
-  :global(html:not(.motion)) .rev, :global(html:not(.motion)) .job { transition: none; }
+  :global(html:not(.motion)) .rev, :global(html:not(.motion)) .job, :global(html:not(.motion)) .job-ph :global(img) { transition: none; }
 
   @media (min-width: 768px) and (max-width: 1023px) {
     .quilt { grid-template-columns: 1fr; }
     .p2, .p3 { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
     .p2 .job, .p3 .job { order: 0; }
-    .p1 .job, .p3 .job, .p5 .job { order: 2; }
-    .p1, .p3, .p5 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+    .p1 .job, .p3 .job { order: 2; }
+    .p1, .p3 { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
   }
   @media (max-width: 767px) {
     .oq { padding: 60px 0 64px; }
@@ -119,9 +128,9 @@ const g = SITE.google;
     .quilt { grid-template-columns: 1fr; margin-top: 30px; box-shadow: 8px 8px 0 var(--powder); }
     .pair, .p2, .p3 { grid-template-columns: minmax(0, .42fr) minmax(0, .58fr); }
     .p2 .job, .p3 .job { order: 0; }
-    .p1, .p3, .p5 { grid-template-columns: minmax(0, .58fr) minmax(0, .42fr); }
-    .p1 .job, .p3 .job, .p5 .job { order: 2; }
-    .job { min-height: 0; padding: 40px 14px 16px; gap: 4px; }
+    .p1, .p3 { grid-template-columns: minmax(0, .58fr) minmax(0, .42fr); }
+    .p1 .job, .p3 .job { order: 2; }
+    .job { min-height: 200px; padding: 40px 14px 16px; gap: 4px; }
     .job-n { left: 14px; top: 18px; font-size: 10px; }
     .job .rv:first-child { display: none; }
     .job-t { font-size: 20px; }

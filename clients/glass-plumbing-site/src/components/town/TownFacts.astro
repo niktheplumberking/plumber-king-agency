@@ -1,150 +1,101 @@
 ---
-// /areas/seminole "Local facts" (fix round B: replaces TownDistance "map + plate" and TownProblems "three plain cards").
-// Frost. Centred head, then ONE object: a clipboard (ink board, steel clip) holding a white field sheet with four
-// divider tabs down its right edge (phones: across its top). Each tab is a reading with its own little instrument that
-// runs when the page opens: 01 a straight route drawn mile by mile with a rolling odometer, 02 the USGS hardness scale
-// with the county average marker sliding in, 03 a 12-month strip that fills Jun-Nov, 04 a 1960-2000 build-year bar
-// with the polybutylene window. 21st.dev wensity/animated-tabs (physical stack + tab triggers) + shadcn/tabs (ARIA),
-// rebuilt in vanilla TS and re-skinned as a Glass clipboard. Facts (research LOCAL-FACTS.md, read 17 Nov 2026):
-// miles = Census points (section 1); 217 ppm / 11.1-14.3 gpg = PCU 2025 report (section 4; county utility, NOT claimed
-// for Seminole); hurricane season + shut-off advice (section 7); polybutylene 1978-1995 = INFERRING, third-party,
-// hedged and labelled (section 5). No Seminole housing-age claim: research has none.
-// No JS: all four pages show stacked, tabs hidden. Reduced motion: instruments show their end state.
+// /areas/seminole "Local facts", R4 (independent re-check R3 MAJOR 3: this clipboard of four tabs and /areas AreasFacts
+// were the same device, four tabs + a "READING 0N" card, sharing 217 ppm and the storm facts; both close to Khinda /areas
+// Rules). The county-wide facts now live on /areas only (and 217 ppm in this page's FAQ, as before); this section keeps
+// what is about Seminole and its homes. New idea, THE TAPE MEASURE: two tapes on one steel bench.
+//   1. Distance: a tape measure case marked LARGO; as the bench scrolls in, the tape runs out of the case, mile marks
+//      0-6, until its hook catches at SEMINOLE, 5.9 mi (kit scrub data-scrub-ft, the scroll drives it).
+//   2. Your home: a second tape of build years 1950-2020 with the polybutylene years (1978-1995, third-party, Florida-wide)
+//      hatched on it. Drag the hook (a real range input: arrows, Page Up / Down, Home / End) to your home's build year and
+//      the line under it says whether that year sits inside the window, and what to do (text a photo of the pipe).
+// 21st.dev: "Marks Slider" (@ai2, id 29217: a ruler-style range with labelled ticks) + "Time Ruler" (@romanvasnev,
+// id 40126: a value picked on a draggable ruler with a badge), rebuilt as a native range input + CSS, re-skinned as a
+// cream tape with ink ticks on a steel bench with rivets.
+// Nearest match: Glass /areas AreasFacts (fogged panes you wipe), Glass home Areas (split-flap board), Glass Seminole
+// TownNearby (stamps with miles), Khinda city Distance (a cable drawn on a map screenshot), Khinda SvPricing (a range that
+// prices a job). No tape measure, and no build-year check, on either site.
+// Facts: miles = Census Gazetteer points (LOCAL-FACTS 1, towns.ts); polybutylene 1978-1995 = third-party, labelled and
+// hedged ("often"), no Seminole count (research has none). No JS: the readout shows the default year's line; the tape is out.
 import Head from '../areas/Head.astro';
 import Seam from '../kit/Seam.astro';
 import { TOWN } from './data';
-const tabs = [
-  { id: 'dist', n: '01', l: 'Distance', k: `${TOWN.mi} mi` },
-  { id: 'water', n: '02', l: 'Water', k: '217 ppm' },
-  { id: 'storm', n: '03', l: 'Storm season', k: 'Jun–Nov' },
-  { id: 'pipes', n: '04', l: 'Older pipes', k: '1978–95' },
-];
-const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-const mx = (mi: number) => 30 + (mi / 6) * 340;
+const MAX = 6;
+const miPct = (TOWN.mi / MAX) * 100;
+const Y0 = 1950, Y1 = 2020, PB0 = 1978, PB1 = 1995, DEF = 1985;
+const yPct = (y: number) => ((y - Y0) / (Y1 - Y0)) * 100;
+const verdict = (y: number) => y >= PB0 && y <= PB1
+  ? `Inside the 1978–1995 window. Florida homes built in these years often got grey polybutylene supply pipe, and many insurers limit it. Text us a photo of the pipe under a sink.`
+  : `Outside the 1978–1995 polybutylene window. Not sure what you have? Text us a photo of the pipe under a sink.`;
 ---
 <section class="tfacts" data-m-section aria-labelledby="tfacts-h">
   <Seam from="var(--white)" to="var(--frost)" />
   <div class="wrap">
     <div class="tf-head">
-      <Head eyebrow="Local facts" l1="Four things to know" l2="before you call." size={52} sizeM={30} id="tfacts-h" />
-      <p class="tf-lead" data-t="3">Read from public records, with the source on every page. Tap a tab.</p>
+      <Head eyebrow="Local facts" l1="Two things to measure" l2="before you call." size={52} sizeM={30} id="tfacts-h" />
+      <p class="tf-lead" data-t="3">How far Seminole is from our base, and whether your home’s build year matters for its pipes.</p>
     </div>
-    <div class="cb" data-t="4" data-facts>
-      <span class="cb-clip" aria-hidden="true"><i></i></span>
-      <div class="cb-tabs" role="tablist" aria-label="Seminole local facts" data-facts-tabs>
-        {tabs.map((t, i) => (
-          <button class="cb-tab" type="button" role="tab" id={`tf-tab-${t.id}`} aria-controls={`tf-p-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-facts-tab>
-            <span class="cb-n">{t.n}</span><span class="cb-l">{t.l}</span><span class="cb-k">{t.k}</span>
-          </button>
-        ))}
+
+    <div class="bench" data-t="4" data-fx="up">
+      <i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i><i class="rv" aria-hidden="true"></i>
+
+      <div class="row">
+        <div class="rd">
+          <p class="rd-k">01 · Distance</p>
+          <p class="rd-v">{TOWN.mi} <small>mi</small></p>
+          <p class="rd-d">From our Largo base to Seminole, in a straight line between Census map points. Driving is longer: call and we tell you when we can come.</p>
+        </div>
+        <div class="tm" data-scrub data-start="top 85%" data-end="center 45%" data-start-m="top 92%" data-end-m="center 55%" data-lag="0.5" aria-hidden="true">
+          <div class="tm-case"><span class="tm-hub"></span><span class="tm-lb">Largo</span></div>
+          <div class="tm-run">
+            <div class="tm-tape" data-scrub-ft='{"from":{"x":0,"xPercent":-100},"to":{"x":0,"xPercent":0}}'>
+              <div class="tm-scale" style={`--to:${miPct}%`}>
+                {Array.from({ length: MAX * 2 + 1 }, (_, i) => <span class:list={['tk', i % 2 === 0 && 'tk-big']} style={`left:${(i / (MAX * 2)) * 100}%`}>{i % 2 === 0 && <b>{i / 2}</b>}</span>)}
+              </div>
+              <span class="tm-hook" style={`left:${miPct}%`}><span data-scrub-ft='{"from":{"opacity":0},"to":{"opacity":1}}' data-win="0.8,1">Seminole</span></span>
+            </div>
+          </div>
+        </div>
+        <p class="sr-only">Seminole is {TOWN.mi} miles from our Largo base in a straight line.</p>
+        <p class="src">Source: US Census 2024 Gazetteer points, read 17 Nov 2026</p>
       </div>
-      <div class="cb-sheet">
-        <section class="fp is-on" id="tf-p-dist" role="tabpanel" aria-labelledby="tf-tab-dist" data-facts-panel>
-          <div class="fp-txt">
-            <p class="fp-k">Reading 01 · Distance</p>
-            <h3 class="fp-big"><span data-odo={TOWN.mi}>{TOWN.mi}</span> mi</h3>
-            <p class="fp-p">From our Largo base to Seminole, in a straight line between Census map points. Driving is longer: call and we tell you when we can come.</p>
-            <p class="fp-src">Source: US Census 2024 Gazetteer points, read 17 Nov 2026</p>
+
+      <div class="row row-y" data-yr>
+        <div class="rd">
+          <p class="rd-k">02 · Your home</p>
+          <p class="rd-v"><label for="tf-yr">Built in</label> <output for="tf-yr" data-yr-out>{DEF}</output></p>
+          <p class="rd-d" data-yr-v aria-live="polite">{verdict(DEF)}</p>
+        </div>
+        <div class="yr">
+          <div class="yr-tape" aria-hidden="true">
+            <span class="yr-pb" style={`left:${yPct(PB0)}%;width:${yPct(PB1) - yPct(PB0)}%`}><b>Polybutylene years</b></span>
+            {Array.from({ length: (Y1 - Y0) / 5 + 1 }, (_, i) => { const y = Y0 + i * 5; return <span class:list={['tk', y % 10 === 0 && 'tk-big']} style={`left:${yPct(y)}%`}>{y % 10 === 0 && <b>{y}</b>}</span>; })}
           </div>
-          <figure class="fp-viz">
-            <svg class="rt" viewBox="0 0 400 130" aria-hidden="true">
-              <path class="rt-base" d={`M30 70H${mx(6)}`} />
-              {[0, 1, 2, 3, 4, 5, 6].map((m) => <g><path class="rt-tick" d={`M${mx(m)} 62V78`} /><text class="rt-mi" x={mx(m)} y="98">{m}</text></g>)}
-              <path class="rt-run" d={`M30 70H${mx(TOWN.mi)}`} pathLength="1" />
-              <circle class="rt-a" cx="30" cy="70" r="9" /><circle class="rt-b" cx={mx(TOWN.mi)} cy="70" r="9" />
-              <text class="rt-lab" x="30" y="40">LARGO BASE</text><text class="rt-lab rt-lab--b" x={mx(TOWN.mi)} y="40" text-anchor="end">SEMINOLE</text>
-              <text class="rt-unit" x="200" y="124" text-anchor="middle">MILES, STRAIGHT LINE</text>
-            </svg>
-            <figcaption class="sr-only">Seminole is {TOWN.mi} miles from our Largo base in a straight line.</figcaption>
-          </figure>
-        </section>
-        <section class="fp" id="tf-p-water" role="tabpanel" aria-labelledby="tf-tab-water" data-facts-panel>
-          <div class="fp-txt">
-            <p class="fp-k">Reading 02 · Water</p>
-            <h3 class="fp-big">217 <small>ppm</small></h3>
-            <p class="fp-p">Average hardness of Pinellas County Utilities water, or 11.1 to 14.3 grains per gallon. Hard water leaves scale in water heaters and crust on fixtures. Your water bill shows which utility serves your home.</p>
-            <p class="fp-src">Source: PCU 2025 water quality report; USGS hardness scale</p>
-          </div>
-          <figure class="fp-viz">
-            <div class="hs" aria-hidden="true">
-              <div class="hs-bar"><i style="--w:24%">Soft</i><i style="--w:24%">Moderate</i><i style="--w:24%">Hard</i><i style="--w:28%">Very hard</i></div>
-              <span class="hs-range" style="left:75.6%;width:22%"></span>
-              <span class="hs-mark" style="--x:86.8%"><b>217</b></span>
-              <div class="hs-scale"><span style="left:0">0</span><span style="left:24%">60</span><span style="left:48%">120</span><span style="left:72%">180</span><span style="left:100%">250 ppm</span></div>
-            </div>
-            <figcaption class="fp-cap">Shaded: the report’s range, 189 to 244 ppm.</figcaption>
-          </figure>
-        </section>
-        <section class="fp" id="tf-p-storm" role="tabpanel" aria-labelledby="tf-tab-storm" data-facts-panel>
-          <div class="fp-txt">
-            <p class="fp-k">Reading 03 · Storm season</p>
-            <h3 class="fp-big">Jun 1 – Nov 30</h3>
-            <p class="fp-p">Hurricane season. Find and label your main shut-off before a storm. If a pipe bursts, close it first, then call.</p>
-            <p class="fp-src">Source: NOAA season dates; Pinellas County pipe advice</p>
-          </div>
-          <figure class="fp-viz">
-            <ol class="ms" aria-hidden="true">{months.map((m, i) => <li class:list={[i >= 5 && i <= 10 && 'is-s']} style={`--i:${i - 5}`}>{m}</li>)}</ol>
-            <figcaption class="fp-cap">Six months of the year, June to November.</figcaption>
-          </figure>
-        </section>
-        <section class="fp" id="tf-p-pipes" role="tabpanel" aria-labelledby="tf-tab-pipes" data-facts-panel>
-          <div class="fp-txt">
-            <p class="fp-k">Reading 04 · Older pipes</p>
-            <h3 class="fp-big">1978–1995</h3>
-            <p class="fp-p">Florida homes built around these years often got grey polybutylene supply pipe, and many insurers limit it. We have no count for Seminole. Not sure what you have? Text us a photo of the pipe under a sink.</p>
-            <p class="fp-src">Source: third-party (NBC 6 Responds, barchart.com), read 17 Nov 2026</p>
-          </div>
-          <figure class="fp-viz">
-            <div class="yb" aria-hidden="true">
-              <div class="yb-bar"><span class="yb-win" style="left:45%;width:42.5%"><b>Polybutylene years</b></span></div>
-              <div class="yb-scale"><span>1960</span><span>1970</span><span>1980</span><span>1990</span><span>2000</span></div>
-            </div>
-            <figcaption class="fp-cap">Build year of the home, Florida-wide pattern.</figcaption>
-          </figure>
-        </section>
-        <i class="cb-hole" aria-hidden="true"></i>
+          <input class="yr-in" id="tf-yr" type="range" min={Y0} max={Y1} step="1" value={DEF} aria-describedby="tf-yr-hint" data-yr-in />
+          <p class="yr-hint" id="tf-yr-hint">Drag the hook to the year your home was built.</p>
+        </div>
+        <p class="src">Source: third-party, Florida-wide pattern (NBC 6 Responds, barchart.com), read 17 Nov 2026. We have no count for Seminole.</p>
       </div>
     </div>
   </div>
 </section>
 
 <script>
-  import { onEnter, motionOn } from '../areas/inview';
-  // Tabs (ARIA tablist): click, arrows (both axes), Home / End. The panels share one grid cell, so the sheet keeps the
-  // tallest page's height and nothing below jumps. The odometer rolls once, when the distance page is first seen.
-  document.querySelectorAll<HTMLElement>('[data-facts]').forEach((root) => {
-    root.classList.add('is-js');
-    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-facts-tab]')];
-    const panels = [...root.querySelectorAll<HTMLElement>('[data-facts-panel]')];
-    const odo = root.querySelector<HTMLElement>('[data-odo]');
-    const go = (k: number, focus = false) => {
-      tabs.forEach((t, i) => { t.setAttribute('aria-selected', String(i === k)); t.tabIndex = i === k ? 0 : -1; });
-      panels.forEach((p, i) => { p.classList.toggle('is-on', i === k); p.inert = i !== k; });
-      if (focus) tabs[k].focus();
+  document.querySelectorAll<HTMLElement>('[data-yr]').forEach((row) => {
+    const inp = row.querySelector<HTMLInputElement>('[data-yr-in]')!;
+    const out = row.querySelector<HTMLOutputElement>('[data-yr-out]')!;
+    const v = row.querySelector<HTMLElement>('[data-yr-v]')!;
+    let last = '';
+    const upd = () => {
+      const y = Number(inp.value); out.textContent = String(y);
+      const inside = y >= 1978 && y <= 1995;
+      row.classList.toggle('is-in', inside);
+      const t = inside
+        ? 'Inside the 1978–1995 window. Florida homes built in these years often got grey polybutylene supply pipe, and many insurers limit it. Text us a photo of the pipe under a sink.'
+        : 'Outside the 1978–1995 polybutylene window. Not sure what you have? Text us a photo of the pipe under a sink.';
+      if (t !== last) { v.textContent = t; last = t; }
+      inp.style.setProperty('--p', String((y - 1950) / 70));
     };
-    tabs.forEach((t, i) => {
-      t.addEventListener('click', () => go(i));
-      t.addEventListener('keydown', (e) => {
-        const n = tabs.length;
-        const k = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? (i + 1) % n : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? (i - 1 + n) % n : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : -1;
-        if (k < 0) return;
-        e.preventDefault(); go(k, true);
-      });
-    });
-    go(0);
-    onEnter(root, () => {
-      root.classList.add('is-in');
-      if (!odo || !motionOn()) return;
-      const end = parseFloat(odo.dataset.odo!);
-      const t0 = performance.now();
-      const step = (now: number) => {
-        const p = Math.min(1, (now - t0) / 1400);
-        const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-        odo.textContent = (end * e).toFixed(1);
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }, '0px 0px -15% 0px');
+    inp.addEventListener('input', upd); upd();
   });
 </script>
 
@@ -154,111 +105,75 @@ const mx = (mi: number) => 30 + (mi / 6) * 340;
   .tf-head :global(.ah-eb) { justify-content: center; }
   .tf-lead { max-width: 560px; margin-top: 18px; font-size: 17px; line-height: 1.5; color: var(--muted); }
 
-  /* the clipboard */
-  .cb { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 210px; max-width: 1060px; margin: 64px auto 0; padding: 44px 0 30px 30px; background: var(--ink); border-radius: 14px; box-shadow: 12px 12px 0 var(--powder); }
-  .cb-clip { position: absolute; z-index: 3; left: 50%; top: -22px; width: 200px; height: 56px; margin-left: -100px; background: var(--steel); border-radius: 10px 10px 16px 16px; box-shadow: inset 0 0 0 1.5px var(--steel2), 0 6px 0 var(--ink3); }
-  .cb-clip i { position: absolute; left: 50%; top: 12px; width: 64px; height: 14px; margin-left: -32px; border-radius: 7px; background: var(--ink); }
-  .cb-sheet { position: relative; grid-column: 1; grid-row: 1; display: grid; background: var(--white); border-radius: 4px 0 4px 4px; box-shadow: inset 0 0 0 1px var(--frost3); }
-  .cb-hole { display: none; }
-  .cb-tabs { grid-column: 2; grid-row: 1; display: none; flex-direction: column; gap: 8px; padding-top: 28px; }
-  .cb.is-js .cb-tabs { display: flex; }
-  .cb-tab { position: relative; display: grid; grid-template-columns: 30px 1fr; align-items: baseline; row-gap: 2px; width: 196px; min-height: 76px; padding: 14px 16px 14px 18px; text-align: left; border: 0; border-radius: 0 10px 10px 0; background: var(--ink3); color: var(--white); cursor: pointer;
-    transition: background-color .5s var(--ease-io), color .5s var(--ease-io), translate .5s var(--ease-io); }
-  .cb-tab:hover { background: var(--pdeep); }
-  .cb-tab[aria-selected='true'] { background: var(--white); color: var(--ink); translate: -1px 0; }
-  .cb-tab:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
-  .cb-n { grid-row: span 2; font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .06em; color: var(--powder); }
-  .cb-tab[aria-selected='true'] .cb-n { color: var(--pdeep); }
-  .cb-l { font-family: var(--f-h); font-weight: 800; font-size: 19px; line-height: 1.1; letter-spacing: -.01em; }
-  .cb-k { font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; opacity: .75; }
+  /* The bench: one steel plate with rivets holding both tapes. */
+  .bench { position: relative; max-width: 1080px; margin: 56px auto 0; padding: 48px 56px 44px; border-radius: 10px; background: var(--steel); box-shadow: inset 0 0 0 1.5px var(--steel2), 12px 12px 0 var(--ink); }
+  .rv { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--steel2); box-shadow: inset 0 0 0 1px rgb(22 19 15 / .3); }
+  .rv:nth-child(1) { left: 12px; top: 12px; } .rv:nth-child(2) { right: 12px; top: 12px; } .rv:nth-child(3) { left: 12px; bottom: 12px; } .rv:nth-child(4) { right: 12px; bottom: 12px; }
+  .row + .row { margin-top: 44px; padding-top: 40px; border-top: 1.5px dashed rgb(22 19 15 / .35); }
+  .rd { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 32px; align-items: end; }
+  .rd-k { grid-column: 1 / -1; font: 700 12px/1 var(--f-m); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+  .rd-v { margin-top: 10px; font: 800 64px/1 var(--f-h); letter-spacing: -.03em; color: var(--ink); white-space: nowrap; }
+  .rd-v small { font-size: .45em; letter-spacing: 0; color: var(--pdeep); }
+  .rd-v label { font-size: .45em; letter-spacing: 0; color: var(--pdeep); }
+  .rd-v output { font-variant-numeric: tabular-nums; }
+  .rd-d { max-width: 560px; font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .src { margin-top: 14px; font: 500 11px/1.4 var(--f-m); color: rgb(22 19 15 / .78); }
 
-  /* pages: stacked without JS; one grid cell with JS */
-  .fp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; padding: 48px 48px 44px; }
-  .fp + .fp { border-top: 1px dashed var(--frost3); }
-  .cb.is-js .fp { grid-area: 1 / 1; border-top: 0; opacity: 0; visibility: hidden; translate: 0 14px; transition: opacity .5s var(--ease-io), translate .5s var(--ease-io), visibility 0s linear .5s; }
-  .cb.is-js .fp.is-on { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .5s var(--ease-io) .15s, translate .5s var(--ease-io) .15s, visibility 0s; }
-  .fp-k { font-family: var(--f-m); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
-  .fp-big { margin-top: 12px; font-family: var(--f-h); font-weight: 800; font-size: 72px; line-height: 1; letter-spacing: -.03em; color: var(--ink); white-space: nowrap; }
-  .fp-big small { font-size: .45em; letter-spacing: 0; color: var(--pdeep); }
-  .fp-p { margin-top: 18px; font-size: 16px; line-height: 1.55; color: var(--ink); }
-  .fp-src { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--frost3); font-family: var(--f-m); font-weight: 500; font-size: 10px; line-height: 1.4; letter-spacing: .02em; color: var(--muted); }
-  .fp-viz { margin: 0; padding: 26px 24px; background: var(--frost); border-radius: 6px; box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .fp-cap { margin-top: 14px; font-family: var(--f-m); font-weight: 500; font-size: 10px; letter-spacing: .02em; color: var(--muted); }
+  /* Tape 1: the case on the left, the tape running out to the right. */
+  .tm { display: flex; align-items: center; margin-top: 26px; }
+  .tm-case { position: relative; z-index: 2; flex: none; display: grid; place-items: center; width: 108px; height: 108px; border-radius: 26px; background: var(--ink); box-shadow: 6px 6px 0 var(--powder); }
+  .tm-hub { width: 46px; height: 46px; border-radius: 50%; background: var(--powder); box-shadow: inset 0 0 0 8px var(--ink2), 0 0 0 2px var(--powder); }
+  .tm-lb { position: absolute; bottom: 10px; font: 700 9px/1 var(--f-m); letter-spacing: .14em; text-transform: uppercase; color: var(--frost); }
+  .tm-run { position: relative; flex: 1; margin-left: -4px; padding: 28px 70px 30px 0; overflow: hidden; }
+  .tm-tape { position: relative; height: 48px; }
+  :global(html.motion) .tm:not(.is-scrub) .tm-tape { transform: translateX(-100%); }
+  :global(html.motion) .tm:not(.is-scrub) .tm-hook span { opacity: 0; }
+  .tm-scale { position: absolute; inset: 0; border-radius: 0 4px 4px 0; background: var(--cream); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .tk { position: absolute; top: 0; width: 1.5px; height: 12px; margin-left: -.75px; background: var(--ink); }
+  .tk-big { height: 22px; }
+  .tk b { position: absolute; top: 24px; left: 50%; translate: -50% 0; font: 700 11px/1 var(--f-m); color: var(--ink); }
+  .tm-hook { position: absolute; top: -8px; bottom: -8px; width: 14px; margin-left: -7px; border-radius: 3px; background: var(--ink); }
+  .tm-hook span { position: absolute; left: 50%; bottom: calc(100% + 6px); translate: -50% 0; padding: 5px 9px; border-radius: 4px; background: var(--ink); color: var(--white); font: 700 11px/1 var(--f-m); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
 
-  /* 01 route */
-  .rt { display: block; width: 100%; height: auto; overflow: visible; }
-  .rt-base { stroke: var(--frost3); stroke-width: 10; stroke-linecap: round; }
-  .rt-tick { stroke: var(--ink); stroke-width: 1.5; }
-  .rt-mi { font-family: var(--f-m); font-size: 11px; font-weight: 700; fill: var(--muted); text-anchor: middle; }
-  .rt-run { fill: none; stroke: var(--pdeep); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
-  .rt-a { fill: var(--ink); stroke: var(--white); stroke-width: 3; }
-  .rt-b { fill: var(--powder); stroke: var(--ink); stroke-width: 3; }
-  .rt-lab { font-family: var(--f-m); font-size: 12px; font-weight: 800; letter-spacing: .06em; fill: var(--ink); }
-  .rt-unit { font-family: var(--f-m); font-size: 10px; font-weight: 500; letter-spacing: .08em; fill: var(--muted); }
-
-  /* 02 hardness scale */
-  .hs { position: relative; padding-top: 44px; }
-  .hs-bar { display: flex; height: 44px; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
-  .hs-bar i { display: grid; place-items: center; width: var(--w); font-style: normal; font-family: var(--f-m); font-weight: 700; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
-  .hs-bar i:nth-child(1) { background: var(--white); } .hs-bar i:nth-child(2) { background: var(--frost2); }
-  .hs-bar i:nth-child(3) { background: var(--frost3); } .hs-bar i:nth-child(4) { background: var(--powder); }
-  .hs-range { position: absolute; top: 44px; height: 44px; background: repeating-linear-gradient(-45deg, rgb(47 97 120 / .35) 0 4px, transparent 4px 8px); pointer-events: none; }
-  .hs-mark { position: absolute; top: 30px; left: var(--x); width: 4px; height: 72px; margin-left: -2px; background: var(--ink); border-radius: 2px; }
-  .hs-mark b { position: absolute; bottom: 100%; left: 50%; translate: -50% -4px; padding: 3px 8px; border-radius: 4px; background: var(--ink); color: var(--white); font-family: var(--f-m); font-size: 12px; }
-  .hs-scale { position: relative; height: 14px; margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 10px; color: var(--muted); }
-  .hs-scale span { position: absolute; top: 0; translate: -50% 0; white-space: nowrap; }
-  .hs-scale span:first-child { translate: 0 0; } .hs-scale span:last-child { translate: -100% 0; }
-
-  /* 03 months */
-  .ms { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; margin: 0; padding: 0; list-style: none; }
-  .ms li { display: grid; place-items: end center; height: 96px; padding-bottom: 8px; border-radius: 4px; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--frost3); font-family: var(--f-m); font-weight: 700; font-size: 12px; color: var(--muted); }
-  .ms li.is-s { background: var(--white) linear-gradient(var(--powder), var(--powder)) bottom / 100% 100% no-repeat; box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); }
-
-  /* 04 build years */
-  .yb { padding-top: 40px; }
-  .yb-bar { position: relative; height: 44px; border: 2px solid var(--ink); border-radius: 22px; background: var(--white); }
-  .yb-win { position: absolute; top: -2px; bottom: -2px; border-radius: 22px; background: var(--steel); box-shadow: inset 0 0 0 2px var(--ink); transform-origin: left center; }
-  .yb-win b { position: absolute; bottom: 100%; left: 0; margin-bottom: 8px; font-family: var(--f-m); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
-  .yb-scale { display: flex; justify-content: space-between; margin-top: 10px; font-family: var(--f-m); font-weight: 500; font-size: 10px; color: var(--muted); }
-
-  /* instruments run when their page opens (motion only; reduced motion / no JS = end state) */
-  :global(html.motion) .cb.is-js .fp .rt-run { transition: stroke-dashoffset 1.3s var(--ease-io) .35s; }
-  :global(html.motion) .cb.is-js:not(.is-in) .rt-run, :global(html.motion) .cb.is-js .fp:not(.is-on) .rt-run { stroke-dashoffset: 1; transition-delay: 0s; transition-duration: 0s; }
-  :global(html.motion) .cb.is-js .hs-mark { transition: left 1s var(--ease-io) .35s; }
-  :global(html.motion) .cb.is-js .fp:not(.is-on) .hs-mark { left: 0; transition: none; }
-  :global(html.motion) .cb.is-js .fp.is-on .ms li.is-s { animation: ms-fill .6s var(--ease-io) calc(.3s + var(--i) * .1s) both; }
-  @keyframes ms-fill { from { background-size: 100% 0; } }
-  :global(html.motion) .cb.is-js .yb-win { transition: scale .9s var(--ease-io) .35s; }
-  :global(html.motion) .cb.is-js .fp:not(.is-on) .yb-win { scale: 0 1; transition: none; }
-  @media (prefers-reduced-motion: reduce) { .cb-tab, .cb.is-js .fp { transition: none !important; } }
+  /* Tape 2: a build-year rule with the polybutylene years hatched; the range input's thumb is the hook. */
+  .yr { position: relative; margin-top: 34px; padding-top: 30px; --th: 28px; }
+  .yr-tape { position: absolute; left: calc(var(--th) / 2); right: calc(var(--th) / 2); top: 30px; height: 48px; border-radius: 4px; background: var(--cream); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .yr-pb { position: absolute; top: 0; bottom: 0; background: repeating-linear-gradient(-45deg, rgb(47 97 120 / .35) 0 5px, transparent 5px 10px); box-shadow: inset 0 0 0 1.5px var(--pdeep); }
+  .yr-pb b { position: absolute; bottom: calc(100% + 6px); left: 0; font: 700 11px/1 var(--f-m); letter-spacing: .04em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .yr-in { position: relative; z-index: 2; display: block; width: 100%; height: 48px; margin: 0; background: none; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  .yr-in::-webkit-slider-runnable-track { height: 48px; background: transparent; }
+  .yr-in::-moz-range-track { height: 48px; background: transparent; }
+  .yr-in::-webkit-slider-thumb { -webkit-appearance: none; width: var(--th); height: 64px; margin-top: -8px; border: 0; border-radius: 4px; background: var(--ink); box-shadow: 4px 4px 0 var(--powder); }
+  .yr-in::-moz-range-thumb { width: var(--th); height: 64px; border: 0; border-radius: 4px; background: var(--ink); box-shadow: 4px 4px 0 var(--powder); }
+  .yr-in:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 6px; border-radius: 6px; }
+  .row-y.is-in .rd-v output { color: var(--pdeep); }
+  .yr-hint { margin-top: 30px; font: 500 12px/1.4 var(--f-m); color: var(--ink); }
 
   @media (min-width: 768px) and (max-width: 1279px) {
-    .cb { grid-template-columns: minmax(0, 1fr) 170px; }
-    .cb-tab { width: 160px; padding: 12px 12px 12px 14px; grid-template-columns: 24px 1fr; }
-    .cb-l { font-size: 16px; }
-    .fp { grid-template-columns: 1fr; gap: 24px; padding: 36px 32px; }
-    .fp-big { font-size: 60px; }
+    .bench { padding: 40px 36px; }
+    .rd { grid-template-columns: 1fr; }
+    .rd-d { margin-top: 12px; }
   }
   @media (max-width: 767px) {
     .tfacts { padding: 72px 0 64px; }
     .tf-lead { font-size: 15px; margin-top: 12px; }
-    .cb { display: flex; flex-direction: column; margin-top: 44px; padding: 34px 10px 12px; border-radius: 12px; box-shadow: 6px 6px 0 var(--powder); }
-    .cb-clip { width: 140px; height: 44px; margin-left: -70px; top: -18px; }
-    .cb-clip i { width: 48px; height: 12px; margin-left: -24px; top: 10px; }
-    .cb-tabs { order: -1; display: none; flex-direction: row; gap: 4px; padding: 0; }
-    .cb.is-js .cb-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .cb-tab { width: auto; min-height: 58px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: 8px 6px 8px 8px; border-radius: 8px 8px 0 0; }
-    .cb-tab[aria-selected='true'] { translate: 0 1px; }
-    .cb-n { font-size: 9px; }
-    .cb-l { font-size: 12px; line-height: 1.1; }
-    .cb-k { display: none; }
-    .cb-sheet { border-radius: 0 0 4px 4px; }
-    .fp { grid-template-columns: 1fr; gap: 20px; padding: 24px 16px 22px; }
-    .fp-big { font-size: 46px; white-space: normal; }
-    .fp-p { margin-top: 12px; font-size: 15px; }
-    .fp-viz { padding: 18px 14px; }
-    .ms { gap: 3px; }
-    .ms li { height: 64px; font-size: 10px; }
-    .hs-bar i { font-size: 8px; letter-spacing: 0; }
+    .bench { margin-top: 36px; padding: 28px 16px 24px; box-shadow: inset 0 0 0 1.5px var(--steel2), 6px 6px 0 var(--ink); }
+    .row + .row { margin-top: 30px; padding-top: 26px; }
+    .rd { grid-template-columns: 1fr; }
+    .rd-v { font-size: 46px; }
+    .rd-d { margin-top: 10px; font-size: 15px; }
+    .tm { margin-top: 18px; }
+    .tm-case { width: 64px; height: 64px; border-radius: 16px; box-shadow: 4px 4px 0 var(--powder); }
+    .tm-hub { width: 26px; height: 26px; box-shadow: inset 0 0 0 5px var(--ink2), 0 0 0 1.5px var(--powder); }
+    .tm-lb { bottom: 5px; font-size: 7px; }
+    .tm-run { padding: 30px 46px 28px 0; }
+    .tm-tape { height: 38px; }
+    .tk-big { height: 16px; }
+    .tk b { top: 18px; font-size: 9px; }
+    .tm-hook span { font-size: 9px; padding: 4px 6px; }
+    .yr { --th: 24px; }
+    .yr .tk:not(.tk-big) { display: none; }
+    .yr .tk b { font-size: 8px; }
+    .yr-pb b { font-size: 9px; }
   }
 </style>

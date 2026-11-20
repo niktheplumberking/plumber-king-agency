@@ -1,0 +1,373 @@
+[
+ {
+  "url": "/",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas/seminole",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas/seminole",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas/seminole",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/areas/seminole",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/our-work",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/our-work",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/our-work",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/our-work",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/about",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/reviews",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/reviews",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/reviews",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/reviews",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/contact",
+  "w": 1440,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/contact",
+  "w": 1440,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/contact",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/contact",
+  "w": 390,
+  "rm": true,
+  "overflow": 0,
+  "errors": []
+ },
+ {
+  "url": "/services/water-heaters",
+  "w": 390,
+  "rm": false,
+  "overflow": 0,
+  "errors": []
+ }
+]

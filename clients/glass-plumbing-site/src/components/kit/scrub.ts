@@ -12,6 +12,8 @@
 //                                 data-rev = 1 -> 0 (a shade that drains away). data-win as above.
 //     [data-scrub-turn="a,b"]     rotation a -> b degrees (data-origin="x y" = SVG origin). data-win as above.
 //     [data-scrub-tw='{json}']    tweened FROM these vars TO its CSS state. data-win as above.
+//     [data-scrub-ft='{"from":{..},"to":{..}}']  tweened from `from` to `to` (both explicit, so the CSS can hold the start
+//                                 state under html.motion while the static CSS holds the end state; R4). data-win as above.
 //     [data-scrub-y="px"]         drifts down by px over the pass
 //     [data-stop]                 a numbered stop at data-at (0-1; data-at-m on phones; else measured along the first path
 //                                 or fill; data-at-el="#id" = when that element reaches the trigger line). Class mode: gets
@@ -54,6 +56,7 @@ function build(root: HTMLElement, phone: boolean) {
   const fills = all<HTMLElement>(root, '[data-scrub-fill]').filter((f) => own(f) && vis(f));
   const turns = all<HTMLElement>(root, '[data-scrub-turn]').filter(own);
   const tws = all<HTMLElement>(root, '[data-scrub-tw]').filter(own);
+  const fts = all<HTMLElement>(root, '[data-scrub-ft]').filter(own);
   const drift = all<HTMLElement>(root, '[data-scrub-y]').filter((d) => own(d) && vis(d));
   const stops = all<HTMLElement>(root, '[data-stop]').filter((s) => own(s) && vis(s));
   const pop = root.dataset.stopMode === 'pop';
@@ -102,6 +105,7 @@ function build(root: HTMLElement, phone: boolean) {
     tl.fromTo(t, { rotation: from, ...org }, { rotation: to, ...org, duration: d }, a);
   });
   tws.forEach((el) => { const { a, d } = win(el); tl.from(el, { ...JSON.parse(el.dataset.scrubTw || '{}'), duration: d }, a); });
+  fts.forEach((el) => { const { a, d } = win(el); const v = JSON.parse(el.dataset.scrubFt || '{}'); tl.fromTo(el, v.from || {}, { ...(v.to || {}), duration: d }, a); });
   drift.forEach((d) => tl.fromTo(d, { y: 0 }, { y: num(d.dataset.scrubY, 0), duration: 1 }, 0));
   if (pop) marks.forEach(({ s, at }, i) => {
     const rot = num(s.dataset.rot, i % 2 ? -3 : 3); const sc = num(s.dataset.scale, 1.08);
@@ -125,7 +129,7 @@ function build(root: HTMLElement, phone: boolean) {
     root.classList.remove('is-scrub');
     marks.forEach((m) => m.s.classList.remove('is-on'));
     paths.forEach((p) => { p.style.strokeDashoffset = ''; });
-    gsap.set([...fills, ...turns, ...tws, ...drift, ...stops], { clearProps: 'transform' });
+    gsap.set([...fills, ...turns, ...tws, ...fts, ...drift, ...stops], { clearProps: 'transform' });
   };
 }
 

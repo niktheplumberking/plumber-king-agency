@@ -1,0 +1,388 @@
+{
+ "/@768": {
+  "over": []
+ },
+ "/about@768": {
+  "over": []
+ },
+ "/areas@768": {
+  "over": []
+ },
+ "/areas/seminole@768": {
+  "over": []
+ },
+ "/contact@768": {
+  "over": []
+ },
+ "/faq@768": {
+  "over": []
+ },
+ "/our-work@768": {
+  "over": []
+ },
+ "/reviews@768": {
+  "over": []
+ },
+ "/services@768": {
+  "over": []
+ },
+ "/services/water-heaters@768": {
+  "over": []
+ },
+ "/privacy@768": {
+  "over": []
+ },
+ "/terms@768": {
+  "over": []
+ },
+ "/thank-you@768": {
+  "over": []
+ },
+ "/@1024": {
+  "over": []
+ },
+ "/about@1024": {
+  "over": []
+ },
+ "/areas@1024": {
+  "over": []
+ },
+ "/areas/seminole@1024": {
+  "over": []
+ },
+ "/contact@1024": {
+  "over": []
+ },
+ "/faq@1024": {
+  "over": []
+ },
+ "/our-work@1024": {
+  "over": []
+ },
+ "/reviews@1024": {
+  "over": []
+ },
+ "/services@1024": {
+  "over": []
+ },
+ "/services/water-heaters@1024": {
+  "over": []
+ },
+ "/privacy@1024": {
+  "over": []
+ },
+ "/terms@1024": {
+  "over": []
+ },
+ "/thank-you@1024": {
+  "over": []
+ },
+ "/@768-rm": {
+  "over": []
+ },
+ "/about@768-rm": {
+  "over": []
+ },
+ "/areas@768-rm": {
+  "over": []
+ },
+ "/areas/seminole@768-rm": {
+  "over": []
+ },
+ "/contact@768-rm": {
+  "over": []
+ },
+ "/faq@768-rm": {
+  "over": []
+ },
+ "/our-work@768-rm": {
+  "over": []
+ },
+ "/reviews@768-rm": {
+  "over": []
+ },
+ "/services@768-rm": {
+  "over": []
+ },
+ "/services/water-heaters@768-rm": {
+  "over": []
+ },
+ "/privacy@768-rm": {
+  "over": []
+ },
+ "/terms@768-rm": {
+  "over": []
+ },
+ "/thank-you@768-rm": {
+  "over": []
+ },
+ "/@1024-rm": {
+  "over": []
+ },
+ "/about@1024-rm": {
+  "over": []
+ },
+ "/areas@1024-rm": {
+  "over": []
+ },
+ "/areas/seminole@1024-rm": {
+  "over": []
+ },
+ "/contact@1024-rm": {
+  "over": []
+ },
+ "/faq@1024-rm": {
+  "over": []
+ },
+ "/our-work@1024-rm": {
+  "over": []
+ },
+ "/reviews@1024-rm": {
+  "over": []
+ },
+ "/services@1024-rm": {
+  "over": []
+ },
+ "/services/water-heaters@1024-rm": {
+  "over": []
+ },
+ "/privacy@1024-rm": {
+  "over": []
+ },
+ "/terms@1024-rm": {
+  "over": []
+ },
+ "/thank-you@1024-rm": {
+  "over": []
+ },
+ "/@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/about@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/areas@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/areas/seminole@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/contact@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/faq@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/our-work@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/reviews@1440": {
+  "over": [],
+  "axe": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "n": 10,
+    "t": [
+     "span[data-win=\"0,0.2\"] :: Fix any of the following:\n  Element has insufficient color contrast of 1.4 (foreground color: #cbcfcf, background color: #eef3f4, font size: 48.0pt (64px), font",
+     ".ro-w[data-scrub-tw=\"{\\\"opacity\\\":0.16}\"][data-astro-cid-ioz5tjpo=\"\"]:nth-child(3) :: Fix any of the following:\n  Element has insufficient color contrast of 1.4 (foreground color: #cbcfcf, background color: #eef3f4, font size: 48.0pt (64px), font",
+     ".ro-w[data-scrub-tw=\"{\\\"opacity\\\":0.16}\"][data-astro-cid-ioz5tjpo=\"\"]:nth-child(4) :: Fix any of the following:\n  Element has insufficient color contrast of 1.4 (foreground color: #cbcfcf, background color: #eef3f4, font size: 48.0pt (64px), font"
+    ]
+   }
+  ]
+ },
+ "/services@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/services/water-heaters@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/privacy@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/terms@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/thank-you@1440": {
+  "over": [],
+  "axe": []
+ },
+ "/@390": {
+  "over": [],
+  "axe": []
+ },
+ "/about@390": {
+  "over": [],
+  "axe": []
+ },
+ "/areas@390": {
+  "over": [],
+  "axe": []
+ },
+ "/areas/seminole@390": {
+  "over": [],
+  "axe": []
+ },
+ "/contact@390": {
+  "over": [],
+  "axe": []
+ },
+ "/faq@390": {
+  "over": [],
+  "axe": []
+ },
+ "/our-work@390": {
+  "over": [],
+  "axe": []
+ },
+ "/reviews@390": {
+  "over": [],
+  "axe": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "n": 10,
+    "t": [
+     "span[data-win=\"0,0.2\"] :: Fix any of the following:\n  Element has insufficient color contrast of 1.4 (foreground color: #cbcfcf, background color: #eef3f4, font size: 22.5pt (30px), font",
+     ".ro-w[data-scrub-tw=\"{\\\"opacity\\\":0.16}\"][data-astro-cid-ioz5tjpo=\"\"]:nth-child(3) :: Fix any of the following:\n  Element has insufficient color contrast of 1.4 (foreground color: #cbcfcf, background color: #eef3f4, font size: 22.5pt (30px), font",
+     ".ro-w[data-scrub-tw=\"{\\\"opacity\\\":0.16}\"][data-astro-cid-ioz5tjpo=\"\"]:nth-child(4) :: Fix any of the following:\n  Element has insufficient color contrast of 1.4 (foreground color: #cbcfcf, background color: #eef3f4, font size: 22.5pt (30px), font"
+    ]
+   }
+  ]
+ },
+ "/services@390": {
+  "over": [],
+  "axe": []
+ },
+ "/services/water-heaters@390": {
+  "over": [],
+  "axe": []
+ },
+ "/privacy@390": {
+  "over": [],
+  "axe": []
+ },
+ "/terms@390": {
+  "over": [],
+  "axe": []
+ },
+ "/thank-you@390": {
+  "over": [],
+  "axe": []
+ },
+ "/@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/about@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/areas@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/areas/seminole@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/contact@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/faq@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/our-work@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/reviews@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/services@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/services/water-heaters@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/privacy@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/terms@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/thank-you@1440-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/about@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/areas@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/areas/seminole@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/contact@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/faq@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/our-work@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/reviews@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/services@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/services/water-heaters@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/privacy@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/terms@390-rm": {
+  "over": [],
+  "axe": []
+ },
+ "/thank-you@390-rm": {
+  "over": [],
+  "axe": []
+ }
+}

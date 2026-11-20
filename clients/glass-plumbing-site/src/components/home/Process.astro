@@ -1,17 +1,22 @@
 ---
-// Home process (round 2 rebuild, Nick 20 Nov: "idea good, layout shit, nothing interactive"). Ink band.
-// A pinned scroll sequence (21st.dev hyperiux/timeline "Product Timeline", adapted: no React, no SplitText, no horizontal
-// slide; the kit scrub engine drives it, so Lenis + ScrollTrigger stay the one clock):
-//   the stage sticks while the track scrolls; water runs along one pipe through five filter housings (one per step); each
-//   housing fills as the water reaches it, lifts, and the work-order panel below swaps to that step (its own words plus a
-//   review that says it happened, word for word). Clicking a housing scrolls to its step.
-// Scrub map (kit/scrub.ts): progress p 0-1 over the track. Pipe fills over 0-0.8, so it reaches housing i at p = 0.2 i,
-// which is where housing i fills (window 0.2 i .. 0.2 i + 0.14) and its stop (data-at) turns on; p 0.8-1 dwells on step 5.
-// Reduced motion / no JS / short screens (under 680 px tall, phones under 720): not pinned; housings full, all five panels listed. The section still ends ink, so
-// the meniscus seam into Emergency (Emergency.astro) is unchanged.
+// Home process, R4 (independent re-check R3 MAJOR 1; Nick 20 Nov: "idea is good (5 steps, no surprises), but the layout is
+// shit, and it does not show anything interactable"). The R2/R3 pinned pipe that filled with the scroll was Mike's home
+// Process device (scrub.ts water along a pipe, stops light) and WhProcess repeated it. New idea, THE JOB PAD: the five steps
+// are the five pages of one top-bound job pad lying on the ink band. Only the top page is readable; the pages under it show
+// as paper edges. "Next" (on the page), a tick box under the pad, a swipe up / left on the pad, or the arrow keys turn the
+// page: it flips up over the binding (CSS 3D rotateX about the top edge, 0.7 s ease-in-out) and the next page rises to the
+// top; "Back" flips the last page down again. Each page you pass ticks its box in the "No surprises" row under the pad.
+// 21st.dev: "3D Journal Page Carousel" (@kedhareswer, id 44662: pages turned by click, drag or arrow keys, the rest in a
+// receding stack) + "Photo Deck" (@sajad, id 46730: step through a stack, counter and caption hand over), rebuilt in
+// vanilla TS + CSS 3D, re-skinned: white ruled paper, powder margin rule, steel binding bar with rivets, powder offset shadow.
+// Nearest match: Mike about ANext (a wall calendar: ONE page swings on scroll, nothing to touch), Mike FinalCta / Tickets
+// (job tickets: a form and hover cards), Khinda HubTrack (cards land on a pile with the scroll), Glass WhWhy (a leaflet that
+// unfolds), Glass home Crew card (one card turns over sideways). None is a pad of pages you turn yourself, one at a time.
+// Facts: hedged as before (permit step "usually", Largo / Clearwater / county; "Price first" stays for Kody to confirm).
+// No JS: the five pages are listed one under another. Reduced motion: pages swap with no flip. The section still ends on
+// ink, so the meniscus seam into Emergency (Emergency.astro, Nick's keep list) is unchanged.
 import Btn from '../kit/Btn.astro';
 import Eyebrow from '../kit/Eyebrow.astro';
-import Housing from '../kit/Housing.astro';
 import Plate from '../kit/Plate.astro';
 import { quote } from './fig';
 type Step = { t: string; s: string; d: string; q?: { name: string; text: string }; plate?: [string, string][] };
@@ -29,55 +34,53 @@ const steps: Step[] = [
   { t: 'Fixed and tested', s: 'Fixed & tested', d: 'We test it with you before we go.',
     q: quote('Jacob Gars', 'He even went above and beyond to clean the bathroom spotless after!') },
 ];
-const at = (i: number) => (i * 0.2).toFixed(2);
 const pad = (i: number) => String(i + 1).padStart(2, '0');
 ---
 <section class="pr on-ink" aria-labelledby="pr-h" data-m-section>
-  <div class="pr-track" data-pr data-no-px data-scrub data-start="top top" data-end="bottom bottom" data-lag="0.5">
-    <div class="pr-stage">
-      <div class="wrap pr-in">
-        <div class="pr-head">
-          <Eyebrow text="How a job goes" class="pr-eb" />
-          <h2 id="pr-h" class="h2 pr-h" data-t="2">Five steps. <span class="tone">No surprises.</span></h2>
-          <p class="pr-lead" data-t="3">From your first call to the finished job, this is what happens. <span class="pin-only">Scroll, or pick a step.</span></p>
-        </div>
-
-        <div class="rail-w">
-          <span class="pipe" aria-hidden="true"><span class="pipe-w" data-scrub-fill data-axis="x" data-win="0,0.8"></span></span>
-          <ol class="rail" role="list" aria-label="The five steps">
-            {steps.map((s, i) => (
-              <li class="st" data-stop data-at={at(i)}>
-                <button class="st-b" type="button" data-go={i} aria-controls={`pr-p${i}`} aria-label={`${pad(i)} ${s.s}: step ${i + 1} of 5, ${s.t}`}>
-                  <Housing tone="ink" w={120} h={168} wm={54} hm={78} cap={16} capm={10} r={22} rm={12}>
-                    <span class="wtr" data-scrub-fill data-axis="y" data-win={`${at(i)},${(i * 0.2 + 0.14).toFixed(2)}`} aria-hidden="true"></span>
-                    <span class="num" aria-hidden="true">{pad(i)}</span>
-                  </Housing>
-                  <span class="st-l" aria-hidden="true">{s.s}</span>
-                </button>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <div class="pnls">
-          {steps.map((s, i) => (
-            <article class="pnl" id={`pr-p${i}`} data-stop data-at={at(i)} aria-labelledby={`pr-t${i}`}>
-              <div class="pnl-txt">
-                <p class="pnl-k"><span>Step {pad(i)}</span><span class="pnl-of">/ 05</span></p>
-                <h3 id={`pr-t${i}`} class="h3 pnl-t">{s.t}</h3>
-                <p class="pnl-d">{s.d}</p>
-              </div>
-              {s.q
-                ? <figure class="pnl-q"><blockquote><p>“{s.q.text}”</p></blockquote><figcaption>{s.q.name} · Google</figcaption></figure>
-                : <div class="pnl-pl"><Plate title="Permits" rows={s.plate!} w={300} wm={280} pad={14} size={11} kx={104} pitch={21} kxm={96} shadow="powder" tone="steel" /></div>}
-            </article>
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="wrap">
+    <div class="pr-head">
+      <Eyebrow text="How a job goes" class="pr-eb" />
+      <h2 id="pr-h" class="h2 pr-h" data-t="2">Five steps. <span class="tone">No surprises.</span></h2>
+      <p class="pr-lead" data-t="3">One page per step, in order. <span class="js-only">Turn the pages.</span></p>
+    </div>
+
+    <div class="jp" data-jp data-t="4" data-fx="up">
+      <div class="jp-bind" aria-hidden="true"><i></i><span>Job pad · Glass Plumbing</span><i></i></div>
+      <ol class="jp-pages" role="list" aria-label="The five steps">
+        {steps.map((s, i) => (
+          <li class:list={['pg', i === 0 && 'is-top']} id={`pr-p${i}`} data-pg style={`--d:${i}`}>
+            <div class="pg-in">
+              <p class="pg-k"><span>Step {pad(i)} <span class="pg-of">/ 05</span></span><span class="pg-s">{s.s}</span></p>
+              <h3 class="pg-t" tabindex="-1">{s.t}</h3>
+              <p class="pg-d">{s.d}</p>
+              {s.q
+                ? <figure class="pg-q"><blockquote><p>“{s.q.text}”</p></blockquote><figcaption>{s.q.name} · Google</figcaption></figure>
+                : <div class="pg-pl"><Plate title="Permits" rows={s.plate!} w={300} wm={270} pad={14} size={11} kx={104} pitch={21} kxm={92} shadow="ink" tone="steel" /></div>}
+              <div class="pg-nav js-only">
+                {i > 0 && <button type="button" class="pg-b pg-back" data-jp-go={i - 1}><span aria-hidden="true">←</span> Back</button>}
+                {i < steps.length - 1
+                  ? <button type="button" class="pg-b pg-next" data-jp-go={i + 1}>Next: {steps[i + 1].s} <span aria-hidden="true">↑</span></button>
+                  : <button type="button" class="pg-b pg-next" data-jp-go="0">Back to step 01 <span aria-hidden="true">↺</span></button>}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="jp-ticks js-only" data-t="4">
+      <p class="jp-tl" aria-hidden="true">No surprises</p>
+      <ol class="jp-row" role="list" aria-label="Go to a step">
+        {steps.map((s, i) => (
+          <li><button type="button" class:list={['tk', i === 0 && 'is-cur']} data-jp-go={i} aria-controls={`pr-p${i}`} aria-current={i === 0 ? 'step' : undefined}>
+            <span class="tk-box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.6" /></svg></span>
+            <span class="tk-n" aria-hidden="true">{pad(i)}</span><span class="tk-l"><span class="sr-only">Step {i + 1}: </span>{s.s}</span>
+          </button></li>
+        ))}
+      </ol>
+      <p class="sr-only" aria-live="polite" data-jp-live></p>
+    </div>
+
     <div class="bar" data-t="3">
       <div class="bar-t"><p class="bt">Step 1 starts here.</p><p class="bs">Call or text any hour</p></div>
       <div class="bar-b">
@@ -89,133 +92,157 @@ const pad = (i: number) => String(i + 1).padStart(2, '0');
 </section>
 
 <script>
-  // Step buttons: jump to that step's point in the pinned track (Lenis when it runs), or to its panel when not pinned.
-  // aria-current follows the step the scrub engine has reached (the last .is-on).
-  const track = document.querySelector<HTMLElement>('[data-pr]');
-  if (track) {
-    const btns = Array.from(track.querySelectorAll<HTMLButtonElement>('[data-go]'));
-    const steps = Array.from(track.querySelectorAll<HTMLElement>('.st'));
-    const pnls = Array.from(track.querySelectorAll<HTMLElement>('.pnl'));
-    const stage = track.querySelector<HTMLElement>('.pr-stage')!;
-    const pinned = () => getComputedStyle(stage).position === 'sticky' && track.classList.contains('is-scrub');
-    btns.forEach((b, i) => b.addEventListener('click', () => {
-      if (!pinned()) { pnls[i].scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-      const r = track.getBoundingClientRect();
-      const run = track.offsetHeight - stage.offsetHeight;
-      const y = window.scrollY + r.top + run * Math.min(0.9, i * 0.2 + 0.1);
-      const lenis = (window as any).__glassLenis;
-      if (lenis) lenis.scrollTo(y, { duration: 1.1 }); else window.scrollTo({ top: y, behavior: 'smooth' });
-    }));
-    const sync = () => {
-      let cur = 0; steps.forEach((s, i) => { if (s.classList.contains('is-on')) cur = i; });
-      const live = track.classList.contains('is-scrub');
-      btns.forEach((b, i) => { if (live && i === cur) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+  // The job pad: one state (cur). Pages before cur are flipped up over the binding (.is-up), cur is on top (.is-top), the
+  // rest wait under it (--d = depth). Inactive pages are inert, so only the top page's buttons can be reached.
+  document.querySelectorAll<HTMLElement>('[data-jp]').forEach((jp) => {
+    const sec = jp.closest('section')!;
+    sec.classList.add('jp-on');
+    const pages = Array.from(jp.querySelectorAll<HTMLElement>('[data-pg]'));
+    const ticks = Array.from(sec.querySelectorAll<HTMLButtonElement>('.tk'));
+    const live = sec.querySelector<HTMLElement>('[data-jp-live]');
+    const n = pages.length;
+    let cur = 0;
+    const show = (k: number, focus = false) => {
+      cur = Math.max(0, Math.min(n - 1, k));
+      pages.forEach((p, i) => {
+        p.classList.toggle('is-up', i < cur); p.classList.toggle('is-top', i === cur);
+        p.style.setProperty('--d', String(Math.max(0, i - cur)));
+        p.inert = i !== cur; p.setAttribute('aria-hidden', String(i !== cur));
+      });
+      ticks.forEach((t, i) => {
+        t.classList.toggle('is-done', i < cur); t.classList.toggle('is-cur', i === cur);
+        if (i === cur) t.setAttribute('aria-current', 'step'); else t.removeAttribute('aria-current');
+      });
+      if (live) live.textContent = `Step ${cur + 1} of ${n}: ${pages[cur].querySelector('.pg-t')!.textContent}`;
+      if (focus) pages[cur].querySelector<HTMLElement>('.pg-next')?.focus({ preventScroll: true });
     };
-    new MutationObserver(sync).observe(track, { subtree: true, attributes: true, attributeFilter: ['class'] });
-    sync();
-  }
+    sec.querySelectorAll<HTMLButtonElement>('[data-jp-go]').forEach((b) => b.addEventListener('click', () => show(Number(b.dataset.jpGo), !!b.closest('[data-pg]'))));
+    jp.addEventListener('keydown', (e) => {
+      const k = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? cur + 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? cur - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : null;
+      if (k === null || (e.target as HTMLElement).closest('a')) return;
+      e.preventDefault(); show(k, true);
+    });
+    // Swipe on the pad: up or left = next, down or right = back (a deliberate 48 px stroke; taps stay taps).
+    let sx = 0, sy = 0, on = false;
+    jp.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') return; on = true; sx = e.clientX; sy = e.clientY; });
+    jp.addEventListener('pointerup', (e) => {
+      if (!on) return; on = false;
+      const dx = e.clientX - sx, dy = e.clientY - sy;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) show(cur + (dx < 0 ? 1 : -1));
+    });
+    jp.addEventListener('pointercancel', () => { on = false; });
+    show(0);
+  });
 </script>
 
 <style>
-  .pr { position: relative; background: var(--ink); color: var(--white); padding: 0 0 110px; }
-  .pr-track { position: relative; }
-  .pr-stage { padding: 110px 0 0; }
+  .pr { position: relative; background: var(--ink); color: var(--white); padding: 110px 0 110px; }
   .pr-head { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .pr-h { margin-top: 16px; color: var(--white); }
   .pr-lead { margin-top: 14px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .85); }
-  .pin-only { display: none; }
+  .js-only { display: none; }
+  .jp-on .js-only { display: revert; }
+  .jp-on .pg-nav.js-only { display: flex; }
+  .jp-on .jp-ticks.js-only { display: flex; }
 
-  /* Rail: one pipe through five housings. */
-  .rail-w { position: relative; margin-top: 48px; }
-  .pipe { position: absolute; left: 10%; right: 10%; top: 92px; height: 14px; border: 2px solid var(--steel2); border-radius: 7px; background: var(--ink2); overflow: hidden; }
-  .pipe-w { display: block; height: 100%; background: var(--powder); transform-origin: 0 50%; }
-  .rail { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
-  .st { display: flex; justify-content: center; }
-  .st-b { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 8px 8px 4px; border: 0; border-radius: 8px; background: none; color: inherit; font: inherit; cursor: pointer; }
-  .st-b :global(.hs) { transition: translate .5s var(--ease-io); }
-  .st-b:hover :global(.hs) { translate: 0 -4px; }
-  .st-b:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
-  .wtr { position: absolute; left: 0; right: 0; bottom: 0; top: 0; background: var(--powder); transform-origin: 50% 100%; }
-  .num { position: relative; z-index: 1; padding: 4px 8px 5px; border-radius: 6px; background: var(--ink); font-family: var(--f-h); font-weight: 800; font-size: 36px; line-height: 1; letter-spacing: -.02em; color: var(--white); }
-  .st-l { font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: rgb(255 255 255 / .7); transition: color .5s var(--ease-io); }
-  .st-b:hover .st-l { color: var(--white); }
+  /* The pad: a steel binding bar on top, white ruled pages under it. */
+  .jp { position: relative; width: min(820px, 100%); margin: 48px auto 0; }
+  .jp-bind { position: relative; z-index: 30; display: flex; align-items: center; justify-content: center; gap: 18px; height: 46px; margin: 0 -14px; border-radius: 6px;
+    background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2), 0 6px 0 var(--ink3); color: var(--ink); font: 700 11px/1 var(--f-m); letter-spacing: .12em; text-transform: uppercase; }
+  .jp-bind i { width: 10px; height: 10px; border-radius: 50%; background: var(--steel2); box-shadow: inset 0 0 0 1.5px rgb(22 19 15 / .35); }
+  .jp-pages { margin: 0; padding: 0; list-style: none; }
+  .pg { position: relative; background: var(--white); color: var(--ink); border-radius: 0 0 8px 8px; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .pg + .pg { margin-top: 16px; border-radius: 8px; }
+  .pg-in { position: relative; padding: 40px 56px 32px 88px; min-height: 100%;
+    background: repeating-linear-gradient(transparent 0 31px, rgb(47 97 120 / .12) 31px 32px) 0 22px / 100% calc(100% - 44px) no-repeat; }
+  .pg-in::before { content: ''; position: absolute; left: 60px; top: 0; bottom: 0; width: 2px; background: var(--powder); }
+  .pg-k { display: flex; justify-content: space-between; gap: 16px; font: 700 12px/1 var(--f-m); letter-spacing: .08em; text-transform: uppercase; color: var(--pdeep); }
+  .pg-of { color: var(--muted); }
+  .pg-s { color: var(--ink); }
+  .pg-t { margin-top: 14px; font: 800 44px/1.04 var(--f-h); letter-spacing: -.02em; color: var(--ink); outline: none; }
+  .pg-d { margin-top: 14px; max-width: 600px; font-size: 18px; line-height: 1.5; color: var(--ink); }
+  .pg-q { margin-top: 22px; padding: 16px 20px; border-left: 4px solid var(--pdeep); background: var(--frost); }
+  .pg-q p { font: 700 20px/1.3 var(--f-h); letter-spacing: -.01em; color: var(--ink); }
+  .pg-q figcaption { margin-top: 10px; font: 500 11px/1.3 var(--f-m); letter-spacing: .02em; color: var(--pdeep); }
+  .pg-pl { margin-top: 22px; }
+  .pg-nav { justify-content: space-between; gap: 12px; margin-top: 26px; padding-top: 18px; border-top: 1px dashed rgb(22 19 15 / .3); }
+  .pg-b { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px; border: 0; border-radius: 4px; cursor: pointer;
+    font: 700 15px/1 var(--f-b); transition: background-color .35s var(--ease-io), color .35s var(--ease-io); }
+  .pg-back { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .pg-next { margin-left: auto; background: var(--ink); color: var(--white); box-shadow: 4px 4px 0 var(--powder); }
+  .pg-back:hover { background: var(--frost); }
+  .pg-next:hover { background: var(--pdeep); }
+  .pg-b:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
 
-  /* Panels: the work order of each step. */
-  .pnls { margin-top: 40px; }
-  .pnl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 48px; padding: 32px 40px; border: 1px solid var(--ink3); border-radius: 8px; background: var(--ink2); }
-  .pnl + .pnl { margin-top: 16px; }
-  .pnl-k { display: flex; gap: 8px; font-family: var(--f-m); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--powder); }
-  .pnl-of { color: rgb(255 255 255 / .6); }
-  .pnl-t { margin-top: 10px; --h3: 40px; color: var(--white); }
-  .pnl-d { margin-top: 12px; font-size: 17px; line-height: 1.5; color: rgb(255 255 255 / .85); }
-  .pnl-q { padding: 20px 24px; border-left: 4px solid var(--powder); background: rgb(255 255 255 / .04); }
-  .pnl-q p { font-family: var(--f-h); font-weight: 700; font-size: 21px; line-height: 1.3; letter-spacing: -.01em; }
-  .pnl-q figcaption { margin-top: 12px; font-family: var(--f-m); font-weight: 500; font-size: 11px; letter-spacing: .02em; color: var(--powder); }
-  .pnl-pl { display: flex; justify-content: center; }
+  /* With JS: one grid cell, the pages stacked; the pad keeps the tallest page's height, so nothing below jumps. */
+  .jp-on .jp-pages { display: grid; perspective: 2000px; perspective-origin: 50% 0; filter: drop-shadow(14px 14px 0 var(--powder)); }
+  .jp-on .pg { grid-area: 1 / 1; margin: 0; border-radius: 0 0 8px 8px; transform-origin: 50% 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    z-index: calc(20 - var(--d)); transform: translateY(calc(min(var(--d), 3) * 12px)) scale(calc(1 - min(var(--d), 3) * .025));
+    box-shadow: inset 0 0 0 1.5px var(--ink), 0 1px 0 var(--ink);
+    transition: transform .7s var(--ease-io), opacity .7s var(--ease-io), visibility 0s linear 0s; }
+  .jp-on .pg:not(.is-top) .pg-in > * { opacity: 0; transition: opacity .25s var(--ease-io); }
+  .jp-on .pg.is-top .pg-in > * { opacity: 1; transition: opacity .35s var(--ease-io) .3s; }
+  .jp-on .pg:nth-child(n + 5):not(.is-top):not(.is-up) { opacity: 0; }
+  /* Turned: up and over the binding, toward you (rotateX about the top edge), then hidden behind it. */
+  .jp-on .pg.is-up { z-index: 25; transform: rotateX(178deg); opacity: 0; visibility: hidden;
+    transition: transform .7s var(--ease-io), opacity .2s linear .5s, visibility 0s linear .7s; }
+  :global(html:not(.motion)) .jp-on .pg, :global(html:not(.motion)) .jp-on .pg .pg-in > * { transition: none; }
+
+  /* The "No surprises" row: one tick box per step; passed steps are ticked. */
+  .jp-ticks { flex-direction: column; align-items: center; margin-top: 36px; }
+  .jp-tl { font: 700 11px/1 var(--f-m); letter-spacing: .12em; text-transform: uppercase; color: var(--powder); }
+  .jp-row { display: flex; justify-content: center; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+  .tk { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px 0 10px; border: 0; border-radius: 24px; background: var(--ink2); box-shadow: inset 0 0 0 1px var(--ink3);
+    color: var(--white); font: 600 14px/1 var(--f-b); cursor: pointer; transition: background-color .4s var(--ease-io), box-shadow .4s var(--ease-io); }
+  .tk:hover { box-shadow: inset 0 0 0 1.5px var(--powder); }
+  .tk:focus-visible { outline: 3px solid var(--powder); outline-offset: 2px; }
+  .tk-box { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / .7); transition: background-color .4s var(--ease-io); }
+  .tk-box svg { width: 16px; height: 16px; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 16; stroke-dashoffset: 16; transition: stroke-dashoffset .45s var(--ease-io) .1s; }
+  .tk-n { font: 700 11px/1 var(--f-m); letter-spacing: .06em; color: var(--powder); }
+  .tk.is-done .tk-box { background: var(--powder); box-shadow: none; }
+  .tk.is-done .tk-box svg { stroke-dashoffset: 0; }
+  .tk.is-cur { background: var(--white); color: var(--ink); }
+  .tk.is-cur .tk-n { color: var(--pdeep); }
+  .tk.is-cur .tk-box { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  :global(html:not(.motion)) .tk-box svg, :global(html:not(.motion)) .tk { transition: none; }
 
   .bar { display: flex; align-items: center; justify-content: space-between; height: 100px; margin-top: 56px; padding: 0 32px; border: 1px solid var(--ink3); border-radius: 6px; background: var(--ink2); }
   .bt { font-family: var(--f-h); font-weight: 800; font-size: 28px; line-height: 1.04; letter-spacing: -.02em; }
   .bs { margin-top: 8px; font-family: var(--f-m); font-weight: 700; font-size: 11px; line-height: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--powder); }
   .bar-b { display: flex; gap: 16px; }
 
-  /* ---- Pinned (motion on, tall enough screen). CSS start state = the scrub's frame 0: step 1 on, others waiting. */
-  @media (min-width: 768px) and (min-height: 680px), (max-width: 767px) and (min-height: 720px) {
-    :global(html.motion) .pr-track { height: calc(var(--vh100) * 3.4); }
-    :global(html.motion) .pr-stage { position: sticky; top: 0; display: flex; flex-direction: column; justify-content: center;
-      height: calc(100svh / var(--zoom)); padding: calc(var(--header-h) + 8px) 0 24px; }
-    :global(html.motion) .pin-only { display: inline; }
-    :global(html.motion) .pr-h .tone { display: inline; }
-    :global(html.motion) .pnls { display: grid; margin-top: 36px; }
-    /* Fix round A: never two panels legible at once. The old panel fades out in 0.25 s; the new one starts only after it. */
-    :global(html.motion) .pnl { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden; translate: 0 16px;
-      transition: opacity .25s var(--ease-io), translate .25s var(--ease-io), visibility 0s linear .25s; }
-    :global(html.motion) .pnl:first-child,
-    :global(html.motion) .pr-track.is-scrub .pnl.is-on:not(:has(~ .is-on)) { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .4s var(--ease-io) .28s, translate .4s var(--ease-io) .28s, visibility 0s linear .28s; }
-    :global(html.motion) .pr-track.is-scrub .pnl:first-child:has(~ .is-on) { opacity: 0; visibility: hidden; translate: 0 16px; transition: opacity .25s var(--ease-io), translate .25s var(--ease-io), visibility 0s linear .25s; }
-    /* The step the water has reached lifts; steps not reached yet are dimmer. */
-    :global(html.motion) .pr-track.is-scrub .st:not(.is-on) .st-l { color: rgb(255 255 255 / .6); }
-    :global(html.motion) .st.is-on:not(:has(~ .is-on)) .st-l { color: var(--white); }
-    :global(html.motion) .st.is-on:not(:has(~ .is-on)) :global(.hs) { translate: 0 -10px; }
-    :global(html.motion) .bar { margin-top: 8px; }
-  }
-  /* Phones and tablets: keep the panel clear of the sticky call bar (global/MobileCallBar, under 1024). */
-  @media (min-width: 768px) and (max-width: 1023px) and (min-height: 680px), (max-width: 767px) and (min-height: 720px) {
-    :global(html.motion) .pr-stage { padding-bottom: 88px; }
-  }
-
   @media (min-width: 768px) and (max-width: 1279px) {
-    .pnl { gap: 28px; padding: 28px; }
-    .pnl-t { --h3: 32px; }
+    .pg-t { font-size: 38px; }
+    .tk { padding: 0 12px 0 8px; font-size: 13px; }
     .bar { flex-wrap: wrap; height: auto; padding: 24px; gap: 20px; }
   }
+  @media (min-width: 768px) and (max-width: 1023px) { .tk-l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
   @media (max-width: 767px) {
-    .pr { padding: 0 0 80px; }
-    .pr-stage { padding-top: 72px; }
+    .pr { padding: 72px 0 80px; }
     .pr-h { margin-top: 10px; }
-    .pr-lead { margin-top: 8px; font-size: 14px; }
-    .rail-w { margin-top: 28px; }
-    .pipe { top: 44px; height: 10px; border-width: 1.5px; }
-    .st-b { gap: 8px; padding: 4px; }
-    .num { padding: 2px 4px 3px; border-radius: 4px; font-size: 17px; }
-    .st-l { display: none; }
-    .pnls { margin-top: 24px; }
-    .pnl { grid-template-columns: 1fr; gap: 16px; padding: 20px 18px; }
-    .pnl-t { --h3m: 24px; margin-top: 6px; }
-    .pnl-d { margin-top: 8px; font-size: 15px; }
-    .pnl-q { padding: 12px 14px; }
-    .pnl-q p { font-size: 16px; }
-    .pnl-q figcaption { margin-top: 8px; font-size: 10px; }
-    .pnl-pl { justify-content: flex-start; }
+    .pr-h .tone { display: block; }
+    .pr-lead { margin-top: 8px; font-size: 15px; }
+    .jp { margin-top: 30px; }
+    .jp-bind { height: 38px; margin: 0 -8px; gap: 10px; font-size: 9px; }
+    .pg-in { padding: 24px 16px 18px 36px; background-position: 0 14px; }
+    .pg-in::before { left: 20px; }
+    .pg-k { font-size: 10px; }
+    .pg-t { margin-top: 10px; font-size: 27px; }
+    .pg-d { margin-top: 10px; font-size: 15px; }
+    .pg-q { margin-top: 16px; padding: 12px 14px; }
+    .pg-q p { font-size: 16px; }
+    .pg-q figcaption { font-size: 10px; }
+    .pg-pl { margin-top: 16px; }
+    .pg-nav { margin-top: 18px; padding-top: 14px; }
+    .pg-b { padding: 0 14px; font-size: 14px; }
+    .jp-on .jp-pages { filter: drop-shadow(7px 7px 0 var(--powder)); }
+    .jp-on .pg { transform: translateY(calc(min(var(--d), 3) * 8px)) scale(calc(1 - min(var(--d), 3) * .025)); }
+    .jp-ticks { margin-top: 28px; }
+    .jp-row { gap: 6px; }
+    .tk { flex-direction: column; justify-content: center; gap: 4px; width: 56px; min-height: 60px; padding: 6px 0; border-radius: 10px; }
+    .tk-l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     .bar { display: block; height: auto; margin-top: 32px; padding: 0; border: 0; background: none; }
     .bar-t { display: none; }
     .bar-b { flex-direction: column-reverse; gap: 12px; }
-  }
-  @media (max-width: 767px) and (min-height: 720px) {
-    :global(html.motion) .pr-stage { padding: calc(var(--header-h) + 4px) 0 84px; }
-    :global(html.motion) .pr-h .tone { display: block; }
-    :global(html.motion) .pin-only { display: none; }
-    :global(html.motion) .pr-lead { display: none; }
-    :global(html.motion) .pnl-q p { font-size: 15px; }
-    :global(html.motion) .st.is-on:not(:has(~ .is-on)) :global(.hs) { translate: 0 -6px; }
   }
 </style>

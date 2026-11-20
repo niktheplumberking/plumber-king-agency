@@ -1,144 +1,101 @@
 ---
-// "From a photo to hot water", fix round 3 (E, RECHECK MAJOR 8: five steel plates in a row read as a plain list). New idea,
-// THE PIPE RUN: the five steps are five valves on one horizontal copper-free pipe (ink line, powder water). The pipe fills
-// with water as the section scrolls (kit/scrub.ts data-scrub-fill), and each valve is a tab: pick it (click, arrows, Home,
-// End, or Prev / Next) and the one stage in the middle MORPHS its line drawing into that step (photo of a label -> estimate
-// sheet -> permit card -> heater on its stand -> an open tap), with the step's line in the caption plate under it.
-// Step 04 keeps its label: "3 of the 16 reviews we hold mention the next day" (research/reviews-0/1.json, 3 matches).
-// 21st.dev: shadcnspace "stepper-03" (numbered stepper with a connector line and a content panel per step) + the
-// "Morphing illustration" idea (one stage, cross-scaled drawings), rebuilt as vanilla TS, skinned with Glass ink lines,
-// steel caption plate with rivets and the powder offset shadow. No Mike laminated card, no scroll-lit list.
-// No JS: step 01 is open and every step's text is readable in the tabs' accessible names; reduced motion: no morph easing.
+// "From a photo to hot water", R4 (independent re-check R3 MAJOR 1: the R3 pipe run with five valves repeated the home
+// Process pipe, and both were Mike's home Process device). New idea, THE STORYBOARD: the water-heater job as a four-panel
+// strip, the way a job is sketched before it is shot: 01 a phone over the heater's label, 02 the van at the curb, 03 the
+// heater on its stand with a wrench (swap or repair), 04 an open tap. Each panel's line drawing draws itself, stroke by
+// stroke, as the strip scrolls through the screen (kit/scrub.ts data-scrub-path, one window per panel: 01 first, 04
+// last), and its caption plate lifts in when its drawing completes. Pointing at (or focusing) a panel lifts it.
+// 21st.dev: "Line Draw SVG" (@pulkitxm, id 18352: a path that draws itself on scroll) + "Sketchbook Reveal Card"
+// (@dhileepkumargm, id 7217: hand-drawn card content drawn in as you scroll), rebuilt on the kit scrub engine (no React,
+// no per-frame code of its own), re-skinned: ink strokes on frost panels, ink comic gutters, steel caption plates.
+// Nearest match: Glass home Process (now a job pad of pages you turn: nothing drawn, nothing scroll-driven), Glass
+// WhRelated / WhDiy (pipes), Mike home Process (water along a pipe), Mike water-heater CaseFile (case lines light up),
+// Khinda SvProcess (a cable pulled through studs, pinned). None is a strip of panels whose drawings draw themselves.
+// Facts: 03 keeps the permit hedge ("usually", "depends on your address") and the next-day label ("3 of the 16 reviews we
+// hold"); 02 keeps Parker L's estimate line as a review mention.
+// No JS / reduced motion: every drawing is complete and every caption shows.
 import Eyebrow from '../kit/Eyebrow.astro';
+// Small path helpers so every shape is a <path> (pathLength="1" is drawn by the kit).
+const R = (x: number, y: number, w: number, h: number, r = 0) => r
+  ? `M${x + r} ${y}h${w - 2 * r}a${r} ${r} 0 0 1 ${r} ${r}v${h - 2 * r}a${r} ${r} 0 0 1 -${r} ${r}h-${w - 2 * r}a${r} ${r} 0 0 1 -${r} -${r}v-${h - 2 * r}a${r} ${r} 0 0 1 ${r} -${r}z`
+  : `M${x} ${y}h${w}v${h}h-${w}z`;
+const C = (cx: number, cy: number, r: number) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 -${2 * r} 0z`;
 const S = [
-  { k: 'Photo or visit', d: 'Text a photo of the heater label, or ask for a visit.' },
-  { k: 'Estimate', d: 'One review: an estimate the same day, the work the next.' },
-  { k: 'Permit', d: 'Usually needed for a replacement. The office depends on your address.' },
-  { k: 'Install day', d: 'Not promised for every job: 3 of the 16 reviews we hold mention the next day.' },
-  { k: 'Test', d: 'Hot water on, no leaks, then we leave.' },
+  { k: 'Photo of the label', d: 'Text a photo of the heater’s label, or ask for a visit. The label shows the size and type.',
+    art: [R(30, 30, 90, 110, 6), 'M42 52h66M42 66h50M42 80h58M42 94h36', R(118, 18, 52, 96, 9), R(126, 32, 36, 58, 2), C(144, 102, 5), 'M98 56l20 6M98 92l20-6'] },
+  { k: 'The visit', d: 'We come out and look at the heater and the space around it. One review: an estimate the same day, the work the next.',
+    art: ['M14 112h172', R(30, 50, 96, 54, 6), 'M126 66h30l22 22v16h-52', 'M140 72h18l12 14h-30z', C(56, 110, 12), C(150, 110, 12), 'M44 66h56M44 78h36'] },
+  { k: 'Swap or repair', d: 'A part, or a new heater. A replacement usually needs a permit; the office depends on your address. Not promised for every job: 3 of the 16 reviews we hold mention the next day.',
+    art: [R(60, 26, 64, 98, 14), R(54, 18, 76, 12, 3), 'M78 18v-8M106 18v-8', R(48, 124, 88, 10, 2), 'M74 50h36M74 62h24', 'M150 40l20-20a8 8 0 0 1 10 10l-20 20M150 40l-6 6 10 10 6-6'] },
+  { k: 'Test', d: 'Hot water on, no leaks, then we leave.',
+    art: ['M24 40h76a18 18 0 0 1 18 18v18', 'M24 30v20', R(56, 22, 30, 10, 3), 'M71 22v-8M60 14h22', 'M118 92c0 6-5 10-5 15a5 5 0 0 0 10 0c0-5-5-9-5-15z', 'M106 118c0 5-4 8-4 12a4 4 0 0 0 8 0c0-4-4-7-4-12zM132 116c0 5-4 8-4 12a4 4 0 0 0 8 0c0-4-4-7-4-12z', 'M70 140h96'] },
 ];
-// One drawing per step, 200 x 150 units, ink strokes.
-const ART = [
-  '<rect x="66" y="14" width="68" height="122" rx="10"/><rect x="76" y="34" width="48" height="58" rx="3"/><path d="M84 46h32M84 56h24M84 66h28M84 76h18"/><circle cx="100" cy="118" r="6"/><path d="M150 40l18-10M152 56h22M150 72l18 10"/>',
-  '<rect x="52" y="12" width="96" height="126" rx="4"/><rect x="82" y="6" width="36" height="14" rx="3"/><path d="M68 44h64M68 62h50M68 80h58M68 98h40"/><path d="M110 114l8 8 18-20"/>',
-  '<rect x="40" y="26" width="120" height="98" rx="6"/><path d="M56 48h56M56 64h40M56 80h48"/><circle cx="128" cy="92" r="18"/><path d="M120 92l6 6 11-12"/>',
-  '<path d="M72 18h56v96a14 14 0 0 1-14 14H86a14 14 0 0 1-14-14z"/><rect x="66" y="10" width="68" height="12" rx="3"/><path d="M88 4v6M112 4v6"/><rect x="58" y="128" width="84" height="10" rx="2"/><path d="M84 40v60"/>',
-  '<path d="M40 40h70a16 16 0 0 1 16 16v20"/><path d="M40 30v20"/><rect x="66" y="22" width="28" height="10" rx="3"/><path d="M80 22v-8M70 14h20"/><path d="M126 86c0 6-4 10-4 14a4 4 0 0 0 8 0c0-4-4-8-4-14zM118 112c0 5-3 8-3 11a3 3 0 0 0 6 0c0-3-3-6-3-11zM136 108c0 5-3 8-3 11a3 3 0 0 0 6 0c0-3-3-6-3-11z"/><path d="M60 136h120"/>',
-];
+const N = S.length;
+const pad = (i: number) => String(i + 1).padStart(2, '0');
 ---
-<section class="ps" data-m-section data-ps aria-labelledby="ps-h">
+<section class="ps" data-m-section aria-labelledby="ps-h">
   <div class="wrap">
     <div class="ps-top">
       <Eyebrow text="How the job goes" />
       <h2 class="h2 ps-h" id="ps-h" data-t="2" style="--h2:52px;--h2m:28px">From a photo<br /><span class="tone">to hot water.</span></h2>
-      <p class="ps-lead" data-t="3">Five valves on one run. Open each to see the step.</p>
+      <p class="ps-lead" data-t="3">Four panels, in the order it happens.</p>
     </div>
-    <div class="ps-run" data-scrub data-start="top 85%" data-end="center 50%" data-t="4">
-      <div class="ps-pipe" aria-hidden="true"><span class="ps-water" data-scrub-fill data-axis="x"></span></div>
-      <div class="ps-tabs" role="tablist" aria-label="Steps of a water heater job">
-        {S.map((s, i) => (
-          <button type="button" role="tab" class="ps-v" id={`ps-t-${i}`} aria-controls="ps-stage" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-i={i}>
-            <span class="ps-wheel" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" /><path d="M20 5v30M5 20h30" /></svg></span>
-            <span class="ps-n">0{i + 1}</span>
-            <span class="ps-k">{s.k}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-    <div class="ps-stage" id="ps-stage" role="tabpanel" aria-labelledby="ps-t-0" aria-live="polite" data-t="4">
-      <div class="ps-art" aria-hidden="true">
-        {ART.map((a, i) => <svg class:list={['ps-d', i === 0 && 'is-on']} viewBox="0 0 200 150" set:html={a} />)}
-      </div>
-      <div class="ps-cap">
-        <i></i><i></i><i></i><i></i>
-        <p class="ps-cn" data-ps-n>Step 01 of 05 · {S[0].k}</p>
-        <p class="ps-ct" data-ps-d>{S[0].d}</p>
-        <div class="ps-nav">
-          <button type="button" class="ps-b" data-ps-step="-1" aria-label="Previous step">←</button>
-          <button type="button" class="ps-b" data-ps-step="1" aria-label="Next step">→</button>
-        </div>
-      </div>
-    </div>
+    <ol class="sb" role="list" data-scrub data-start="top 80%" data-end="bottom 80%" data-start-m="top 85%" data-end-m="bottom 88%" data-lag="0.5">
+      {S.map((s, i) => {
+        const a = (i / N) * 0.9, b = a + 0.9 / N;
+        return (
+          <li class="sb-p" data-stop data-at={b.toFixed(3)}>
+            <div class="sb-art" aria-hidden="true">
+              <span class="sb-n">{pad(i)}</span>
+              <svg viewBox="0 0 200 150">
+                {s.art.map((d, j) => <path d={d} pathLength="1" data-scrub-path data-win={`${(a + (j / s.art.length) * (b - a) * 0.75).toFixed(3)},${(a + ((j + 1) / s.art.length) * (b - a)).toFixed(3)}`} />)}
+              </svg>
+            </div>
+            <div class="sb-cap">
+              <i></i><i></i>
+              <h3 class="sb-k"><span class="sr-only">Panel {i + 1} of {N}: </span>{s.k}</h3>
+              <p class="sb-d">{s.d}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
   </div>
-  <script type="application/json" data-ps-data set:html={JSON.stringify(S)} />
 </section>
-
-<script>
-  document.querySelectorAll<HTMLElement>('[data-ps]').forEach((root) => {
-    const S: { k: string; d: string }[] = JSON.parse(root.querySelector('[data-ps-data]')!.textContent || '[]');
-    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.ps-v')];
-    const arts = [...root.querySelectorAll<SVGElement>('.ps-d')];
-    const stage = root.querySelector<HTMLElement>('.ps-stage')!;
-    const n = root.querySelector<HTMLElement>('[data-ps-n]')!, d = root.querySelector<HTMLElement>('[data-ps-d]')!;
-    let cur = 0;
-    const show = (i: number, focus = false) => {
-      cur = (i + S.length) % S.length;
-      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === cur)); t.tabIndex = k === cur ? 0 : -1; t.classList.toggle('is-past', k < cur); });
-      arts.forEach((a, k) => a.classList.toggle('is-on', k === cur));
-      stage.setAttribute('aria-labelledby', `ps-t-${cur}`);
-      n.textContent = `Step 0${cur + 1} of 05 · ${S[cur].k}`; d.textContent = S[cur].d;
-      if (focus) tabs[cur].focus();
-    };
-    tabs.forEach((t, i) => {
-      t.addEventListener('click', () => show(i));
-      t.addEventListener('keydown', (e) => {
-        const m = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? S.length - 1 : null;
-        if (m === null) return; e.preventDefault(); show(m, true);
-      });
-    });
-    root.querySelectorAll<HTMLButtonElement>('[data-ps-step]').forEach((b) => b.addEventListener('click', () => show(cur + Number(b.dataset.psStep))));
-  });
-</script>
 
 <style>
   .ps { background: var(--white); padding: 110px 0 120px; }
   .ps-top { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .ps-h { margin-top: 16px; }
   .ps-lead { margin-top: 16px; font-size: 17px; color: var(--muted); }
-  .ps-run { position: relative; max-width: 1000px; margin: 48px auto 0; }
-  .ps-pipe { position: absolute; left: 10%; right: 10%; top: 25px; height: 14px; border-radius: 7px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink); overflow: hidden; }
-  .ps-water { position: absolute; inset: 3px; border-radius: 4px; background: var(--powder); transform-origin: 0 50%; }
-  .ps-tabs { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .ps-v { display: grid; justify-items: center; gap: 6px; padding: 0 4px 6px; border: 0; background: none; color: var(--ink); cursor: pointer; }
-  .ps-wheel { display: grid; place-items: center; width: 64px; height: 64px; margin-top: -0px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); transition: background-color .45s var(--ease-io), box-shadow .45s var(--ease-io); }
-  .ps-wheel svg { width: 38px; height: 38px; fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; transition: rotate .6s var(--ease-io), stroke .45s var(--ease-io); }
-  .ps-n { margin-top: 6px; font: 700 11px/1 var(--f-m); letter-spacing: .1em; color: var(--pdeep); }
-  .ps-k { font: 800 17px/1.1 var(--f-h); letter-spacing: -.01em; text-align: center; }
-  .ps-v.is-past .ps-wheel { background: var(--powder); }
-  .ps-v[aria-selected='true'] .ps-wheel { background: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink), 4px 4px 0 var(--powder); }
-  .ps-v[aria-selected='true'] .ps-wheel svg { stroke: var(--white); rotate: 90deg; }
-  .ps-v:hover .ps-wheel { box-shadow: inset 0 0 0 2.5px var(--pdeep); }
-  .ps-v:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 2px; border-radius: 8px; }
-  /* The stage: one drawing area, the caption plate under it, centred. */
-  .ps-stage { display: grid; justify-items: center; width: min(640px, 100%); margin: 40px auto 0; }
-  .ps-art { display: grid; width: 100%; height: 260px; padding: 20px; border-radius: 8px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink), 10px 10px 0 var(--powder); }
-  .ps-d { grid-area: 1 / 1; width: 100%; height: 100%; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; scale: .7; rotate: -6deg; filter: blur(4px);
-    transition: opacity .5s var(--ease-io), scale .6s var(--ease-io), rotate .6s var(--ease-io), filter .5s var(--ease-io); }
-  .ps-d.is-on { opacity: 1; scale: 1; rotate: 0deg; filter: none; }
-  .ps-cap { position: relative; width: calc(100% - 60px); margin-top: -22px; padding: 22px 26px 18px; border-radius: 4px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2), 6px 6px 0 var(--ink); text-align: center; }
-  .ps-cap i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--steel2); }
-  .ps-cap i:nth-child(1) { left: 7px; top: 7px; } .ps-cap i:nth-child(2) { right: 7px; top: 7px; } .ps-cap i:nth-child(3) { left: 7px; bottom: 7px; } .ps-cap i:nth-child(4) { right: 7px; bottom: 7px; }
-  .ps-cn { font: 700 11px/1.3 var(--f-m); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
-  .ps-ct { min-height: 50px; margin-top: 8px; font-weight: 700; font-size: 18px; line-height: 1.4; color: var(--ink); }
-  .ps-nav { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
-  .ps-b { width: 48px; height: 48px; border: 0; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); font: 700 18px/1 var(--f-b); color: var(--ink); cursor: pointer; }
-  .ps-b:hover { background: var(--ink); color: var(--white); }
-  .ps-b:focus-visible { outline: 3px solid var(--pdeep); outline-offset: 3px; }
-  @media (prefers-reduced-motion: reduce) { .ps-d, .ps-wheel, .ps-wheel svg { transition: none; } .ps-d { filter: none; } }
+  /* The strip: four panels inside one ink frame with white gutters, like a comic page. */
+  .sb { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 52px 0 0; padding: 14px; list-style: none; border-radius: 10px; background: var(--ink); box-shadow: 12px 12px 0 var(--powder); }
+  .sb-p { display: flex; flex-direction: column; border-radius: 4px; background: var(--white); transition: translate .5s var(--ease-io); }
+  .sb-art { position: relative; aspect-ratio: 4 / 3; margin: 10px 10px 0; border-radius: 3px; background: var(--frost); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .sb-art svg { position: absolute; inset: 8% 6%; width: 88%; height: 84%; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+  .sb-n { position: absolute; left: 10px; top: 10px; display: grid; place-items: center; min-width: 34px; height: 26px; padding: 0 6px; border-radius: 4px; background: var(--ink); color: var(--white); font: 700 12px/1 var(--f-m); letter-spacing: .06em; }
+  .sb-cap { position: relative; flex: 1; margin: 12px 10px 10px; padding: 16px 16px 14px; border-radius: 3px; background: var(--steel); box-shadow: inset 0 0 0 1px var(--steel2);
+    transition: opacity .5s var(--ease-io), translate .5s var(--ease-io); }
+  .sb-cap i { position: absolute; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--steel2); }
+  .sb-cap i:first-child { left: 6px; } .sb-cap i:nth-child(2) { right: 6px; }
+  .sb-k { font: 800 20px/1.1 var(--f-h); letter-spacing: -.01em; color: var(--ink); }
+  .sb-d { margin-top: 8px; font-size: 15px; line-height: 1.45; color: var(--ink); }
+  .sb-p:hover, .sb-p:focus-within { translate: 0 -6px; }
+  /* Motion: the caption waits until its panel's drawing is done (class-mode stop at the end of its window). */
+  :global(html.motion) .sb:not(.is-scrub) .sb-cap, :global(html.motion) .sb.is-scrub .sb-p:not(.is-on) .sb-cap { opacity: 0; translate: 0 12px; }
+  @media (prefers-reduced-motion: reduce) { .sb-p, .sb-cap { transition: none; } }
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .sb { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   @media (max-width: 767px) {
     .ps { padding: 60px 0 64px; }
     .ps-lead { font-size: 15px; }
-    .ps-run { margin-top: 28px; }
-    .ps-pipe { top: 19px; height: 10px; left: 9%; right: 9%; }
-    .ps-water { inset: 2px; }
-    .ps-v { padding: 0 0 4px; gap: 4px; }
-    .ps-wheel { width: 48px; height: 48px; }
-    .ps-wheel svg { width: 28px; height: 28px; }
-    .ps-n { margin-top: 2px; font-size: 9px; }
-    .ps-k { font-size: 12px; }
-    .ps-stage { margin-top: 24px; }
-    .ps-art { height: 190px; padding: 14px; box-shadow: inset 0 0 0 1.5px var(--ink), 6px 6px 0 var(--powder); }
-    .ps-cap { width: calc(100% - 24px); padding: 18px 16px 14px; box-shadow: inset 0 0 0 1px var(--steel2), 5px 5px 0 var(--ink); }
-    .ps-ct { font-size: 15px; }
+    .sb { grid-template-columns: 1fr; gap: 10px; margin-top: 28px; padding: 10px; box-shadow: 6px 6px 0 var(--powder); }
+    .sb-p { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: stretch; }
+    .sb-art { aspect-ratio: auto; min-height: 104px; margin: 8px 0 8px 8px; }
+    .sb-n { left: 6px; top: 6px; min-width: 28px; height: 22px; font-size: 10px; }
+    .sb-cap { margin: 8px; padding: 12px 12px 10px; }
+    .sb-k { font-size: 17px; }
+    .sb-d { margin-top: 6px; font-size: 14px; }
   }
 </style>
